@@ -27,7 +27,7 @@ RUN npx expo export -p web
 RUN npm install -g pm2
 
 # Expose the port on which the web app will run
-EXPOSE 3003
+EXPOSE 80
 
 # Create a startup script for PM2
 COPY startup.sh /app/startup.sh
