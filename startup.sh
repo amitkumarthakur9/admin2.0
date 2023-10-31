@@ -5,7 +5,7 @@ service ssh start
 service nginx start
 
 # Start the PM2 process for serving the web app
-pm2-runtime start npx --name "serve" -- serve dist -s -p 3000 -i max
+pm2-runtime start 'config/ecosystem.config.js'
 
 # Keep the container running
 # pm2 logs
