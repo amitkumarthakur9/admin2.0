@@ -46,11 +46,11 @@ const ClientDataTable = () => {
         });
 
         if (response.code == 200) {
-            setData(response.accounts)
+            setData(response.data)
             // setItemsPerPage(response.count)
             setTotalItems(response.filterCount)
             setIsLoading(false)
-            setTotalPages(Math.ceil((response.filterCount || response.accounts.length) / itemsPerPage));
+            setTotalPages(Math.ceil((response.filterCount || response.data.length) / itemsPerPage));
 
         }
 
