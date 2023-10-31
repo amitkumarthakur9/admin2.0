@@ -26,6 +26,7 @@ RUN npx expo export -p web
 
 # Install PM2 globally
 RUN npm install -g pm2
+RUN npm install -g serve
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends dialog \
