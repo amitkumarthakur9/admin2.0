@@ -52,7 +52,7 @@ interface AccountsResponse {
     code: number;
     message: string;
     error: any[];
-    accounts: Account[];
+    data: Account[];
     count: number;
     filterCount: number;
     totalCount: number;

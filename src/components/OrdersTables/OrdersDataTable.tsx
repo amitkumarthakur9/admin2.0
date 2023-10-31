@@ -46,11 +46,11 @@ const OrderDataTable = () => {
         });
 
         if (response.code == 200) {
-            setData(response.orders)
+            setData(response.data)
             // setItemsPerPage(response.count)
             setTotalItems(response.filterCount)
             setIsLoading(false)
-            setTotalPages(Math.ceil((response.filterCount || response.orders.length) / itemsPerPage));
+            setTotalPages(Math.ceil((response.filterCount || response.data.length) / itemsPerPage));
 
         }
 
