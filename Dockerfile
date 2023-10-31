@@ -18,6 +18,7 @@ WORKDIR /app
 COPY . .
 
 # Install the project dependencies
+RUN rm -rf .git/hooks
 RUN npm install
 
 # Run the Expo export command to build the web app
