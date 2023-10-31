@@ -1,0 +1,613 @@
+{
+    "filterData": {
+        "rating": [
+            {
+                "title": "By Champ",
+                "key": "cleanerid",
+                "valueConfig": {
+                    "valueType": "select",
+                    "valueKey": [
+                        "value"
+                    ],
+                    "callApi": true,
+                    "apiConfig": {
+                        "APIurl": "https://api/api/cleaner/getSupervisorCleanerList",
+                        "method": "POST",
+                        "requestData": {
+                            "cleanerid": 489
+                        },
+                        "valueField": "id",
+                        "displayFields": [
+                            "first_name",
+                            "last_name",
+                            "phone"
+                        ],
+                        "displayStructure": "0 1 (2)"
+                    }
+                },
+                "operator": [
+                    {
+                        "name": "Is",
+                        "subKey": "=="
+                    },
+                    {
+                        "name": "Is Not",
+                        "subKey": "!="
+                    }
+                ]
+            },
+            {
+                "title": "Date",
+                "key": "date",
+                "valueConfig": {
+                    "valueType": "date",
+                    "valueKey": [
+                        "from",
+                        "to"
+                    ],
+                    "callApi": false
+                },
+                "operator": [
+                    {
+                        "name": "Is",
+                        "subKey": "=="
+                    },
+                    {
+                        "name": "Is Not",
+                        "subKey": "!="
+                    }
+                ]
+            },
+            {
+                "title": "Rate",
+                "key": "rate",
+                "valueConfig": {
+                    "valueType": "select",
+                    "valueKey": [
+                        "value"
+                    ],
+                    "callApi": true,
+                    "apiConfig": {
+                        "APIurl": "https://api/api/cleaner/getRatings",
+                        "method": "GET",
+                        "requestData": {},
+                        "valueField": "value",
+                        "displayFields": [
+                            "text"
+                        ],
+                        "displayStructure": "0"
+                    }
+                },
+                "operator": [
+                    {
+                        "name": "Is",
+                        "subKey": "=="
+                    },
+                    {
+                        "name": "Is Not",
+                        "subKey": "!="
+                    },
+                    {
+                        "name": "Less then",
+                        "subKey": "<"
+                    },
+                    {
+                        "name": "Greater then",
+                        "subKey": ">"
+                    }
+                ]
+            }
+        ],
+        "champVisitor": [
+            {
+                "title": "Created At",
+                "key": "createdAt",
+                "isDate": true,
+                "valueConfig": {
+                    "valueType": "date",
+                    "valueKey": [
+                        "from",
+                        "to",
+                        "isDate:true",
+                        "timestamp:true"
+                    ],
+                    "callApi": false
+                },
+                "operator": [
+                    {
+                        "name": "Between",
+                        "subKey": "between",
+                        "keyCount": 2
+                    }
+                ]
+            },
+            {
+                "title": "Updated At",
+                "key": "updatedAt",
+                "isDate": true,
+                "valueConfig": {
+                    "valueType": "date",
+                    "valueKey": [
+                        "from",
+                        "to",
+                        "isDate:true",
+                        "timestamp:true"
+                    ],
+                    "callApi": false
+                },
+                "operator": [
+                    {
+                        "name": "Between",
+                        "subKey": "between",
+                        "keyCount": 2
+                    }
+                ]
+            },
+            {
+                "title": "Due Date",
+                "key": "$cleanerTickets.last_date_resolution$",
+                "isDate": true,
+                "timestamp": false,
+                "valueConfig": {
+                    "valueType": "date",
+                    "valueKey": [
+                        "from",
+                        "to",
+                        "isDate:true",
+                        "timestamp:false"
+                    ],
+                    "callApi": false
+                },
+                "operator": [
+                    {
+                        "name": "Between",
+                        "subKey": "between",
+                        "keyCount": 2
+                    }
+                ]
+            },
+            {
+                "title": "Activation Date",
+                "key": "$champHistory.date$",
+                "isDate": true,
+                "timestamp": false,
+                "valueConfig": {
+                    "valueType": "date",
+                    "valueKey": [
+                        "from",
+                        "to"
+                    ],
+                    "callApi": false
+                },
+                "operator": [
+                    {
+                        "name": "Between",
+                        "subKey": "between"
+                    }
+                ]
+            },
+            {
+                "title": "Assigned Supervisor",
+                "key": "assignedsupervisorid",
+                "valueConfig": {
+                    "valueType": "select",
+                    "valueKey": [
+                        "value"
+                    ],
+                    "callApi": true,
+                    "apiConfig": {
+                        "APIurl": "https://api/api/admin/getSupervisorList",
+                        "method": "GET",
+                        "requestData": {},
+                        "valueField": "id",
+                        "displayFields": [
+                            "first_name",
+                            "last_name",
+                            "phone"
+                        ],
+                        "displayValue": "id",
+                        "displayStructure": "0 1 (2)"
+                    }
+                },
+                "operator": [
+                    {
+                        "name": "Is",
+                        "subKey": "==",
+                        "keyCount": 1
+                    },
+                    {
+                        "name": "Is Not",
+                        "subKey": "!=",
+                        "keyCount": 1
+                    }
+                ]
+            },
+            {
+                "title": "Assigned Admin",
+                "key": "assignedadminuserid",
+                "valueConfig": {
+                    "valueType": "select",
+                    "valueKey": [
+                        "value"
+                    ],
+                    "callApi": true,
+                    "apiConfig": {
+                        "APIurl": "https://api/api/admin/getAdminList",
+                        "method": "GET",
+                        "requestData": {},
+                        "valueField": "id",
+                        "displayFields": [
+                            "first_name",
+                            "last_name",
+                            "phone"
+                        ],
+                        "displayValue": "id",
+                        "displayStructure": "0 1 (2)"
+                    }
+                },
+                "operator": [
+                    {
+                        "name": "Is",
+                        "subKey": "==",
+                        "keyCount": 1
+                    },
+                    {
+                        "name": "Is Not",
+                        "subKey": "!=",
+                        "keyCount": 1
+                    }
+                ]
+            },
+            {
+                "title": "Lead Status",
+                "key": "status_id",
+                "valueConfig": {
+                    "valueType": "select",
+                    "valueKey": [
+                        "value"
+                    ],
+                    "callApi": true,
+                    "apiConfig": {
+                        "APIurl": "https://adminapi.carselonadaily.com/api/admin/getMasterReasonForVisitors?categoryId=7",
+                        "method": "GET",
+                        "requestData": {},
+                        "valueField": "id",
+                        "displayFields": [
+                            "name"
+                        ],
+                        "displayValue": "id",
+                        "displayStructure": "0"
+                    }
+                },
+                "operator": [
+                    {
+                        "name": "Is",
+                        "subKey": "==",
+                        "keyCount": 1
+                    },
+                    {
+                        "name": "Is Not",
+                        "subKey": "!=",
+                        "keyCount": 1
+                    }
+                ]
+            },
+            {
+                "title": "Ticket Status",
+                "key": "$cleanerTickets.status$",
+                "valueConfig": {
+                    "valueType": "select",
+                    "valueKey": [
+                        "value"
+                    ],
+                    "callApi": true,
+                    "apiConfig": {
+                        "APIurl": "https://adminapi.carselonadaily.com/api/admin/getTicketStatuses",
+                        "method": "GET",
+                        "requestData": {},
+                        "valueField": "id",
+                        "displayFields": [
+                            "name"
+                        ],
+                        "displayValue": "id",
+                        "displayStructure": "0"
+                    }
+                },
+                "operator": [
+                    {
+                        "name": "Is",
+                        "subKey": "==",
+                        "keyCount": 1
+                    },
+                    {
+                        "name": "Is Not",
+                        "subKey": "!=",
+                        "keyCount": 1
+                    }
+                ]
+            },
+            {
+                "title": "Source",
+                "key": "$cleanerTickets.source_id$",
+                "valueConfig": {
+                    "valueType": "select",
+                    "valueKey": [
+                        "value"
+                    ],
+                    "callApi": true,
+                    "apiConfig": {
+                        "APIurl": "https://api/api/admin/getTicketSources",
+                        "method": "GET",
+                        "requestData": {},
+                        "valueField": "id",
+                        "displayFields": [
+                            "name"
+                        ],
+                        "displayValue": "id",
+                        "displayStructure": "0"
+                    }
+                },
+                "operator": [
+                    {
+                        "name": "Is",
+                        "subKey": "==",
+                        "keyCount": 1
+                    },
+                    {
+                        "name": "Is Not",
+                        "subKey": "!=",
+                        "keyCount": 1
+                    }
+                ]
+            },
+            {
+                "title": "Vehicle Type",
+                "key": "own_vehicle",
+                "valueConfig": {
+                    "valueType": "select",
+                    "valueKey": [
+                        "value"
+                    ],
+                    "callApi": true,
+                    "apiConfig": {
+                        "APIurl": "https://adminapi.carselonadaily.com/api/admin/getVehicleTypesV2",
+                        "method": "GET",
+                        "requestData": {},
+                        "valueField": "value",
+                        "displayFields": [
+                            "name"
+                        ],
+                        "displayValue": "id",
+                        "displayStructure": "0"
+                    }
+                },
+                "operator": [
+                    {
+                        "name": "Is",
+                        "subKey": "=="
+                    },
+                    {
+                        "name": "Is Not",
+                        "subKey": "!="
+                    }
+                ]
+            },
+            {
+                "title": "Refer By",
+                "key": "referBy",
+                "valueConfig": {
+                    "valueType": "select",
+                    "valueKey": [
+                        "value"
+                    ],
+                    "callApi": true,
+                    "apiConfig": {
+                        "APIurl": "https://adminapi.carselonadaily.com/api/admin/getReferBySettings",
+                        "method": "GET",
+                        "requestData": {},
+                        "valueField": "id",
+                        "displayFields": [
+                            "first_name",
+                            "last_name",
+                            "phone"
+                        ],
+                        "displayValue": "id",
+                        "displayStructure": "0 1 (2)"
+                    }
+                },
+                "operator": [
+                    {
+                        "name": "Is",
+                        "subKey": "==",
+                        "keyCount": 1
+                    },
+                    {
+                        "name": "Is Not",
+                        "subKey": "!=",
+                        "keyCount": 1
+                    }
+                ]
+            },
+            {
+                "title": "Trainer",
+                "key": "trainer_id",
+                "valueConfig": {
+                    "valueType": "select",
+                    "valueKey": [
+                        "value"
+                    ],
+                    "callApi": true,
+                    "apiConfig": {
+                        "APIurl": "https://adminapi.carselonadaily.com/api/admin/getAllTrainers",
+                        "method": "GET",
+                        "requestData": {},
+                        "valueField": "id",
+                        "displayFields": [
+                            "first_name",
+                            "last_name",
+                            "phone"
+                        ],
+                        "displayValue": "id",
+                        "displayStructure": "0 1 (2)"
+                    }
+                },
+                "operator": [
+                    {
+                        "name": "Is",
+                        "subKey": "==",
+                        "keyCount": 1
+                    },
+                    {
+                        "name": "Is Not",
+                        "subKey": "!=",
+                        "keyCount": 1
+                    }
+                ]
+            },
+            {
+                "title": "Owner",
+                "key": "ownerData",
+                "valueConfig": {
+                    "valueType": "select",
+                    "valueKey": [
+                        "value"
+                    ],
+                    "callApi": true,
+                    "apiConfig": {
+                        "APIurl": "https://adminapi.carselonadaily.com/api/admin/getOwnerList",
+                        "method": "GET",
+                        "requestData": {},
+                        "valueField": "id",
+                        "displayFields": [
+                            "first_name",
+                            "last_name",
+                            "phone"
+                        ],
+                        "displayValue": "id",
+                        "displayStructure": "0 1 (2)"
+                    }
+                },
+                "operator": [
+                    {
+                        "name": "Is",
+                        "subKey": "==",
+                        "keyCount": 1
+                    },
+                    {
+                        "name": "Is Not",
+                        "subKey": "!=",
+                        "keyCount": 1
+                    }
+                ]
+            },
+            {
+                "title": "First Training Date",
+                "key": "first_training_done_date",
+                "isDate": true,
+                "valueConfig": {
+                    "valueType": "date",
+                    "valueKey": [
+                        "from",
+                        "to"
+                    ],
+                    "callApi": false
+                },
+                "operator": [
+                    {
+                        "name": "Between",
+                        "subKey": "between",
+                        "keyCount": 2
+                    }
+                ]
+            },
+            {
+                "title": "Second Training Date",
+                "key": "second_training_done_date",
+                "isDate": true,
+                "valueConfig": {
+                    "valueType": "date",
+                    "valueKey": [
+                        "from",
+                        "to",
+                        "isDate:true",
+                        "timestamp:false"
+                    ],
+                    "callApi": false
+                },
+                "operator": [
+                    {
+                        "name": "Between",
+                        "subKey": "between",
+                        "keyCount": 2
+                    }
+                ]
+            },
+            {
+                "title": "Third Training Date",
+                "key": "third_training_done_date",
+                "isDate": true,
+                "valueConfig": {
+                    "valueType": "date",
+                    "valueKey": [
+                        "from",
+                        "to",
+                        "isDate:true",
+                        "timestamp:false"
+                    ],
+                    "callApi": false
+                },
+                "operator": [
+                    {
+                        "name": "Between",
+                        "subKey": "between",
+                        "keyCount": 2
+                    }
+                ]
+            },
+            {
+                "title": "Verification Date",
+                "key": "verify_training_done_date",
+                "isDate": true,
+                "valueConfig": {
+                    "valueType": "date",
+                    "valueKey": [
+                        "from",
+                        "to",
+                        "isDate:true",
+                        "timestamp:false"
+                    ],
+                    "callApi": false
+                },
+                "operator": [
+                    {
+                        "name": "Between",
+                        "subKey": "between",
+                        "keyCount": 2
+                    }
+                ]
+            },
+            {
+                "title": "Material Distribution Date",
+                "key": "distribution_training_done_date",
+                "isDate": true,
+                "valueConfig": {
+                    "valueType": "date",
+                    "valueKey": [
+                        "from",
+                        "to",
+                        "isDate:true",
+                        "timestamp:false"
+                    ],
+                    "callApi": false
+                },
+                "operator": [
+                    {
+                        "name": "Between",
+                        "subKey": "between",
+                        "keyCount": 2
+                    }
+                ]
+            }
+        ]
+    }
+}
