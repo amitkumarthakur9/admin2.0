@@ -1,5 +1,7 @@
 #!/bin/sh
 
+service ssh start
+
 service nginx start
 
 # Start the PM2 process for serving the web app

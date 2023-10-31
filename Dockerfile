@@ -26,6 +26,21 @@ RUN npx expo export -p web
 # Install PM2 globally
 RUN npm install -g pm2
 
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends dialog \
+    && apt-get install -y --no-install-recommends openssh-server \
+    && echo "root:Docker!" | chpasswd \
+    && apt-get install -y nano 
+
+COPY sshd_config /etc/ssh/
+
+RUN apt-get update && \
+    apt-get install -yq tzdata && \
+    ln -fs /usr/share/zoneinfo/Asia/Kolkata /etc/localtime && \
+    dpkg-reconfigure -f noninteractive tzdata
+
+ENV TZ="Asia/Kolkata"
+
 # Expose the port on which the web app will run
 EXPOSE 80
 
