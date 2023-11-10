@@ -15,6 +15,9 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import Dashboard from '.';
 import OrdersScreen from './orders';
 import OrderDetail from './orders/[id]';
+import ClientsScreen from './clients';
+import SIPReportsScreen from './sip-reports';
+import AUMReportsScreen from './aum';
 
 
 NativeWindStyleSheet.setOutput({
@@ -90,7 +93,7 @@ export default function AppLayout() {
                             title: "Clients",
                         }}
                         initialParams={{}}
-                        component={OrdersScreen}
+                        component={ClientsScreen}
                     />
 
                     <Drawer.Screen
@@ -100,7 +103,7 @@ export default function AppLayout() {
                             title: "SIP Reports",
                         }}
                         initialParams={{}}
-                        component={OrdersScreen}
+                        component={SIPReportsScreen}
                     />
 
                     <Drawer.Screen
@@ -110,7 +113,7 @@ export default function AppLayout() {
                             title: "AUM Reports",
                         }}
                         initialParams={{}}
-                        component={OrdersScreen}
+                        component={AUMReportsScreen}
                     />
 
                     <Drawer.Screen
@@ -119,7 +122,7 @@ export default function AppLayout() {
                         options={{
                             drawerLabel: "OrderDetail",
                             title: "OrderDetail",
-                            // drawerItemStyle: { display: 'none' }
+                            drawerItemStyle: { display: 'none' }
                         }}
                         initialParams={{}}
                         component={OrderDetail}

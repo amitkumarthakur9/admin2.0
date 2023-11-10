@@ -1,7 +1,7 @@
 import { Platform, StyleProp, TextStyle, View, ViewStyle } from 'react-native';
 import AUMDataTable from '../../src/components/AUM/AUMDataTable';
 
-export default function Page() {
+export default function AUMReportsScreen() {
     let data = {
         customer_name: "KASHINATH NARAYAN MORE",
         client_code: "ZI3G3",

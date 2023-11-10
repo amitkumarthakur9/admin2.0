@@ -1,12 +1,12 @@
 import { View } from 'react-native';
-import { Link } from 'expo-router';
+import { Link, router, useLocalSearchParams } from 'expo-router';
 
 export default function OrderDetail() {
+    const { id } = useLocalSearchParams();
     return (
         <View>
-            <Link href="/about">About</Link>
+            <Link href="/">Order Detail Screen: {id}</Link>
 
-            <Link href="/user/bacon">View user</Link>
         </View>
     );
 }

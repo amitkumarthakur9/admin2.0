@@ -1,7 +1,7 @@
 import { Platform, StyleProp, TextStyle, View, ViewStyle } from 'react-native';
 import SIPDataTable from '../../src/components/SIP/SIPDataTable';
 
-export default function Page() {
+export default function SIPReportsScreen() {
     let data = {
         customer_name: "KASHINATH NARAYAN MORE",
         client_code: "ZI3G3",

@@ -176,7 +176,7 @@ export const OrdersRows = ({ data, schema }: { data: OrderInterface[], schema: a
                                 </View>
                             </View>
                             <View className='flex flex-row items-center lg:w-2/12 justify-end md:mt-2 lg:mt-0'>
-                                <Link replace
+                                <Link
                                     href={{
                                         pathname: "/orders/[id]",
                                         params: { id: order.id }

@@ -1,7 +1,7 @@
 import { Platform, StyleProp, TextStyle, View, ViewStyle } from 'react-native';
 import ClientDataTable from '../../src/components/ClientsTables/ClientsDataTable';
 
-export default function Page() {
+export default function ClientsScreen() {
     let data = {
         customer_name: "KASHINATH NARAYAN MORE",
         client_code: "ZI3G3",
