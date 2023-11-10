@@ -1,8 +1,8 @@
 import { View, Text, TouchableOpacity } from "react-native"
-import Popover from 'react-native-popover-view';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { OrderInterface } from "../../interfaces/OrderInterface";
 import { ClientInterface } from "../../interfaces/ClientInterface";
+import { Popover } from "native-base";
 
 const ReportBox = ({ data }: { data: Account }) => {
     const getInitials = (name: string) => {
@@ -28,15 +28,21 @@ const ReportBox = ({ data }: { data: Account }) => {
                 <View className='flex flex-col'>
                     <View className='flex flex-row items-center text-black font-semibold max-w-[240px] lg:max-w-[300px] break-all'>
                         <Text className='text-black font-semibold max-w-[240px] lg:max-w-[300px] break-all'>{data.name}&nbsp;</Text>
-                        <Popover
-                            from={(sourceRef, showPopover) => (
-                                <TouchableOpacity onPress={showPopover}>
-                                    <Icon name="info-circle" size={12} color="black" />
-                                </TouchableOpacity>
-                            )}>
-                            <View className='w-40 h-40'>
-                                <Text>This is the contents of the popover</Text>
-                            </View>
+                        <Popover trigger={triggerProps => {
+                            return <TouchableOpacity {...triggerProps}>
+                                <Icon name="info-circle" size={12} color="black" />
+                            </TouchableOpacity>;
+                        }}>
+                            <Popover.Content accessibilityLabel="Order Details" w="56">
+                                <Popover.Arrow />
+                                <Popover.CloseButton />
+                                <Popover.Header>Order Status</Popover.Header>
+                                <Popover.Body>
+                                    <View>
+                                        <Text>Status</Text>
+                                    </View>
+                                </Popover.Body>
+                            </Popover.Content>
                         </Popover>
                     </View>
                     <View className='flex flex-row items-center mt-1 md:mt-0 lg:mt-0'>
@@ -64,17 +70,21 @@ const ReportBox = ({ data }: { data: Account }) => {
             <View className='flex md:flex lg:hidden flex-row items-center justify-center w-2/12 bg-[#D7D7D9] rounded-full'>
                 <View className='flex flex-row items-center'>
                     <Text className='p-1 text-black text-end md:text-center text-xs'>{data.users[0].kycStatus.name}&nbsp;</Text>
-                    <Popover
-                        from={(_sourceRef, showPopover) => (
-                            // <View>
-                            <TouchableOpacity onPress={showPopover}>
-                                <Icon name="info-circle" size={12} color="black" />
-                            </TouchableOpacity>
-                            // </View>
-                        )}>
-                        <View className='w-40 h-40'>
-                            <Text>This is the contents of the popover</Text>
-                        </View>
+                    <Popover trigger={triggerProps => {
+                        return <TouchableOpacity {...triggerProps}>
+                            <Icon name="info-circle" size={12} color="black" />
+                        </TouchableOpacity>;
+                    }}>
+                        <Popover.Content accessibilityLabel="Order Details" w="56">
+                            <Popover.Arrow />
+                            <Popover.CloseButton />
+                            <Popover.Header>Order Status</Popover.Header>
+                            <Popover.Body>
+                                <View>
+                                    <Text>Status</Text>
+                                </View>
+                            </Popover.Body>
+                        </Popover.Content>
                     </Popover>
                 </View>
             </View>

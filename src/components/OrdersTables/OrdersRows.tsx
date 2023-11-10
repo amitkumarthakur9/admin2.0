@@ -2,13 +2,18 @@ import { Dimensions, Image, ImageBackground, StyleSheet, Text, TouchableOpacity,
 import { OrderInterface } from "../../interfaces/OrderInterface"
 import DynamicComponentRenderer from "../../helper/DynamicComponentRenderer"
 import { TouchableRipple } from "react-native-paper"
-import Popover from 'react-native-popover-view';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useEffect, useState } from "react";
+import { Popover } from "native-base";
+import moment from "moment";
+import { Link, router } from 'expo-router'
 
 export const OrdersRows = ({ data, schema }: { data: OrderInterface[], schema: any }) => {
 
     const [screenDimensions, setScreenDimensions] = useState<{ width: number, height: number }>(Dimensions.get('window'));
+    const detail = (id) => {
+        router.replace('/orders/' + id);
+    }
 
     useEffect(() => {
         const updateScreenDimensions = () => {
@@ -134,31 +139,35 @@ export const OrdersRows = ({ data, schema }: { data: OrderInterface[], schema: a
                         <View className='hidden md:flex lg:flex flex-row md:flex-col lg:flex-row w-full md:w-4/12 lg:w-6/12 justify-between'>
                             <View className='flex flex-row items-center sm:w-full md:w-full lg:w-4/12 md:justify-end lg:justify-center'>
                                 <View className='flex flex-col'>
-                                    <Text className='text-[#686868] font-semibold'>{order.createdAt}</Text>
+                                    <Text className='text-[#686868] font-semibold'>{moment(new Date(order.createdAt)).format("DD-MM-YYYY hh:mm:ss A")}</Text>
                                 </View>
                             </View>
                             <View className='flex flex-col-reverse md:flex-col-reverse lg:flex-row sm:w-full md:w-full lg:w-6/12  items-center'>
                                 <View className='flex flex-row md:flex-col lg:flex-row items-center md:items-end lg:items-center w-full lg:w-1/2  justify-start md:justify-end lg:justify-center'>
                                     <View className='flex flex-col md:flex-row lg:flex-col'>
                                         <Text className='text-black font-bold text-start md:text-center'>₹{order.amount}</Text>
-                                        <Text className='text-[#6C6A6A] text-xs'>({order.units} units)</Text>
+                                        {order.units && <Text className='text-[#6C6A6A] text-xs'>({order.units} units)</Text>}
                                     </View>
                                 </View>
 
                                 <View className='hidden md:hidden lg:flex flex-row items-center w-full lg:w-1/2 justify-start md:justify-center lg:justify-center'>
                                     <View className='flex flex-col bg-[#D7D7D7] px-2  rounded-full'>
                                         <View className='flex flex-row items-center'>
-                                            <Popover
-                                                from={(_sourceRef, showPopover) => (
-                                                    // <View>
-                                                    <TouchableOpacity onPress={showPopover}>
-                                                        <Icon name="info-circle" size={12} color="black" />
-                                                    </TouchableOpacity>
-                                                    // </View>
-                                                )}>
-                                                <View className='w-40 h-40'>
-                                                    <Text>This is the contents of the popover</Text>
-                                                </View>
+                                            <Popover trigger={triggerProps => {
+                                                return <TouchableOpacity {...triggerProps}>
+                                                    <Icon name="info-circle" size={12} color="black" />
+                                                </TouchableOpacity>;
+                                            }}>
+                                                <Popover.Content accessibilityLabel="Order Details" w="56">
+                                                    <Popover.Arrow />
+                                                    <Popover.CloseButton />
+                                                    <Popover.Header>Order Status</Popover.Header>
+                                                    <Popover.Body>
+                                                        <View>
+                                                            <Text>Status</Text>
+                                                        </View>
+                                                    </Popover.Body>
+                                                </Popover.Content>
                                             </Popover>
                                             <Text className='p-1 text-black text-end md:text-center text-xs'>{order.orderStatus.name}&nbsp;</Text>
 
@@ -167,9 +176,13 @@ export const OrdersRows = ({ data, schema }: { data: OrderInterface[], schema: a
                                 </View>
                             </View>
                             <View className='flex flex-row items-center lg:w-2/12 justify-end md:mt-2 lg:mt-0'>
-                                <TouchableRipple className='px-4 md:px-10 lg:px-4 py-1 rounded-full border-[0.4px]'>
+                                <Link replace
+                                    href={{
+                                        pathname: "/orders/[id]",
+                                        params: { id: order.id }
+                                    }} className='px-4 md:px-10 lg:px-4 py-1 rounded-full border-[0.4px]'>
                                     <Text className='text-black text-start md:text-center text-xs'>View Details</Text>
-                                </TouchableRipple>
+                                </Link>
                             </View>
                         </View>
                     </View>

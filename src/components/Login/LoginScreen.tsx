@@ -57,13 +57,13 @@ export default function LoginScreen({ navigation }) {
                 errorText={password.error}
                 secureTextEntry
             />
-            <View style={styles.forgotPassword}>
+            {/* <View style={styles.forgotPassword}>
                 <TouchableOpacity
                     onPress={() => navigation.navigate('ResetPasswordScreen')}
                 >
                     <Text style={styles.forgot}>Forgot your password?</Text>
                 </TouchableOpacity>
-            </View>
+            </View> */}
             <Button style={{}} mode="contained" onPress={onLoginPressed}>
                 Login
             </Button>

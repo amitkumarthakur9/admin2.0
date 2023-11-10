@@ -2,7 +2,7 @@ import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 
 // Create a new Axios instance with defaults
 const axiosInstance = axios.create({
-  baseURL: process.env.API_ENDPOINT,
+  baseURL: "https://vision-connect.azurewebsites.net/",
 
 });
 

@@ -1,6 +1,5 @@
-import { Animated, ButtonProps, Platform, StyleProp, Text, TextStyle, View, ViewStyle } from 'react-native';
-import OrderDataTable from '../../src/components/OrdersTables/OrdersDataTable';
-import ReportDataTable from '../../src/components/ReportTables/ReportDataTable';
+import { Platform, StyleProp, TextStyle, View, ViewStyle } from 'react-native';
+import AUMDataTable from '../../src/components/AUM/AUMDataTable';
 
 export default function Page() {
     let data = {
@@ -16,9 +15,9 @@ export default function Page() {
         processing_datetime: "24/08/2022  2:30:10 PM"
     }
 
-    return <View className='py-4 px-4' style={{}}>
+    return <View className='' style={{ backgroundColor: "white" }}>
 
-        <ReportDataTable data={Array(22).fill([data]).flat()} />
+        <AUMDataTable />
     </View>;
 }
 

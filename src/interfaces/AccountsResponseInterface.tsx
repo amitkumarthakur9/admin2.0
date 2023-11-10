@@ -35,7 +35,7 @@ interface DistributorCompany {
     name: string;
 }
 
-interface Account {
+interface AccountItem {
     id: string;
     name: string;
     dematAccount: DematAccount;
@@ -52,7 +52,7 @@ interface AccountsResponse {
     code: number;
     message: string;
     error: any[];
-    data: Account[];
+    data: AccountItem[];
     count: number;
     filterCount: number;
     totalCount: number;

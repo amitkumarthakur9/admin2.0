@@ -2,9 +2,9 @@ import { ImageBackground, StyleSheet, Text, TouchableOpacity, View } from "react
 import { OrderInterface } from "../../interfaces/OrderInterface"
 import DynamicComponentRenderer from "../../helper/DynamicComponentRenderer"
 import { TouchableRipple } from "react-native-paper"
-import Popover from 'react-native-popover-view';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { ClientInterface } from "../../interfaces/ClientInterface";
+import { Popover } from "native-base";
 
 export const ClientsRows = ({ data, schema }) => {
     return <>
@@ -47,7 +47,7 @@ export const ClientsRows = ({ data, schema }) => {
             }}
         />
         {
-            data.map((client: Account, index: number) => {
+            data.map((client: AccountItem, index: number) => {
 
                 return <View key={index}>
                     <View className={`flex flex-row p-2 justify-between flex-wrap`}>
@@ -96,17 +96,21 @@ export const ClientsRows = ({ data, schema }) => {
                                     <View className='flex flex-col bg-[#D7D7D7] px-2 py-1 rounded-full'>
                                         <View className='flex flex-row items-center'>
                                             <Text className='p-1 text-black text-end md:text-center text-xs'>{client.users[0].kycStatus.name}&nbsp;</Text>
-                                            <Popover
-                                                from={(_sourceRef, showPopover) => (
-                                                    // <View>
-                                                    <TouchableOpacity onPress={showPopover}>
-                                                        <Icon name="info-circle" size={12} color="black" />
-                                                    </TouchableOpacity>
-                                                    // </View>
-                                                )}>
-                                                <View className='w-40 h-40'>
-                                                    <Text>This is the contents of the popover</Text>
-                                                </View>
+                                            <Popover trigger={triggerProps => {
+                                                return <TouchableOpacity {...triggerProps}>
+                                                    <Icon name="info-circle" size={12} color="black" />
+                                                </TouchableOpacity>;
+                                            }}>
+                                                <Popover.Content accessibilityLabel="Order Details" w="56">
+                                                    <Popover.Arrow />
+                                                    <Popover.CloseButton />
+                                                    <Popover.Header>Order Status</Popover.Header>
+                                                    <Popover.Body>
+                                                        <View>
+                                                            <Text>Status</Text>
+                                                        </View>
+                                                    </Popover.Body>
+                                                </Popover.Content>
                                             </Popover>
                                         </View>
                                     </View>

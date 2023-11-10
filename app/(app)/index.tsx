@@ -5,7 +5,7 @@ import { Button } from 'react-native-paper';
 import { BaseButtonProperties } from 'react-native-gesture-handler';
 import DataTableExample from '../../src/components/Others/DataTableExample';
 
-export default function Page() {
+export default function Dashboard() {
     return <View className='py-4 px-4' style={{}}>
         <Text>Dashboard</Text>
     </View>;

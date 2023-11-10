@@ -1,0 +1,123 @@
+import { StyleSheet } from 'react-native';
+import {
+  DM_HEIGHT,
+  HEIGHT,
+  ITEM_ROW_HEOGHT,
+  ROOT_WIDTH,
+  SB_HEIGHT,
+  WIDTH,
+} from '../constants';
+
+export const styles = StyleSheet.create({
+  ITCTO: {
+    justifyContent: 'space-between',
+    height: ITEM_ROW_HEOGHT,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  ITCTO_2: {
+    justifyContent: 'space-between',
+    height: ITEM_ROW_HEOGHT,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginStart: 20,
+  },
+  ITCLabel: { color: 'black', fontSize: 18, paddingHorizontal: 5 },
+  ITCMark: { color: 'green', fontSize: 18 },
+  RSIBTO: {
+    // borderWidth: 0.5,
+    borderRadius: 4,
+    // paddingHorizontal: 10,
+    // paddingVertical: 5,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginHorizontal: 2,
+    justifyContent: 'center',
+    backgroundColor: "#e7e7e7",
+    padding: 5
+  },
+  RSIBDot: { fontSize: 10, color: 'green', paddingEnd: 4 },
+  RSIBLabel: { fontSize: 20, color: 'black', paddingHorizontal: 4 },
+  RSIBDelete: { fontSize: 15, color: 'red' },
+  RSIBScrollView: { flex: 1, },
+  RSIBOnlyTextExt: { fontSize: 18, color: 'white' },
+  DDPContainer: {
+    backgroundColor: 'black',
+    alignSelf: 'center',
+    height: DM_HEIGHT,
+    width: ROOT_WIDTH,
+    // display: "flex",
+    borderWidth: 1,
+    borderRadius: 4,
+    borderColor: 'rgb(212, 212, 212)',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingStart: 20,
+    // marginLeft: 20
+  },
+  DDPBadgeBelowPicker: {
+    backgroundColor: 'black',
+    alignSelf: 'center',
+    width: ROOT_WIDTH,
+    alignItems: 'center',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    paddingStart: 10,
+    paddingVertical: 5,
+  },
+  PLACEHOLDER: { fontSize: 14, color: '#a3a3a3', marginLeft: 4 },
+  DDPressable: { width: 20, alignItems: 'center', justifyContent: 'center', },
+  DDDArrow: { fontSize: 18, color: 'black', fontWeight: 'bold' },
+  DDDPlus: { fontSize: 30, color: 'white' },
+  DDFLStyle: {
+    position: 'absolute',
+    elevation: 1,
+    zIndex: 1,
+    width: '100%',
+  },
+  DDConStyle: {
+    backgroundColor: 'white',
+    alignSelf: 'center',
+    width: ROOT_WIDTH,
+    borderWidth: 0.5,
+    borderBottomStartRadius: 5,
+    borderBottomEndRadius: 5,
+    justifyContent: 'space-between',
+    paddingHorizontal: 10,
+  },
+  fullModeFL: {
+    backgroundColor: 'white',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: WIDTH,
+    height: HEIGHT,
+    paddingHorizontal: 10,
+  },
+  dropDown: {
+    backgroundColor: 'white',
+    position: 'absolute',
+    top: 36,
+    zIndex: 999999999999
+  },
+  fullModalXBtnView: {
+    marginTop: 10,
+    borderWidth: 1,
+    borderRadius: 15,
+    alignItems: 'center',
+    width: 30,
+    alignSelf: 'flex-end',
+    marginEnd: 20,
+  },
+  fullModalXBtnText: {
+    fontSize: 18,
+    color: 'black',
+    padding: 4,
+    fontWeight: 'bold',
+  },
+  HSTextStyle: { fontSize: 18, color: 'white' },
+});
+
+export const MainList = styles.ITCTO;
+export const SubList1 = styles.ITCTO_2;

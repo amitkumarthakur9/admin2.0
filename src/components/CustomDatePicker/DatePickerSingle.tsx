@@ -1,8 +1,8 @@
 import React from "react";
 import { useState } from "react"
 import { Button, Text, TouchableOpacity, View } from "react-native"
-import { DatePickerModal, DatePickerInput } from 'react-native-paper-dates';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { DatePickerModal } from "../DateSelector/Date/DatePickerModal";
 
 
 export default function DatePickerSingle() {

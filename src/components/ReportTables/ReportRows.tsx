@@ -6,7 +6,7 @@ import Popover from 'react-native-popover-view';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { ReportInterface } from "../../interfaces/ReportInterface";
 
-export const ReportRows = ({ data, schema }: { data: ReportInterface[], schema: any }) => {
+export const ReportRows = ({ data, schema }: { data: SIPReportItems[], schema: any }) => {
 
     const getInitials = (name: string) => {
         const words = name.split(' ');
@@ -64,7 +64,7 @@ export const ReportRows = ({ data, schema }: { data: ReportInterface[], schema: 
             }}
         />
         {
-            data.map((order: ReportInterface, index: number) => {
+            data.map((order: SIPReportItems, index: number) => {
 
                 return <View key={index}>
                     <View className={`flex flex-row p-2 justify-between flex-wrap`}>
@@ -72,11 +72,11 @@ export const ReportRows = ({ data, schema }: { data: ReportInterface[], schema: 
                             <View className='flex flex-row md:flex-row lg:flex-row items-center w-full lg:w-5/12 justify-between'>
                                 <View className='flex flex-row items-center justify-start w-10/12 lg:w-full'>
                                     <View className='flex flex-row rounded-full bg-[#e60202] mr-2 h-10 w-10 items-center justify-center'>
-                                        <Text className='text-white'>{getInitials(order.customer_name)}</Text>
+                                        <Text className='text-white'>{getInitials(order.account.name)}</Text>
                                     </View>
                                     <View className='flex flex-col'>
                                         <View className='flex flex-row items-center text-black font-semibold max-w-[240px] lg:max-w-[300px] break-all'>
-                                            <Text className='text-black font-semibold max-w-[240px] lg:max-w-[300px] break-all'>{order.customer_name}&nbsp;</Text>
+                                            <Text className='text-black font-semibold max-w-[240px] lg:max-w-[300px] break-all'>{order.account.name}&nbsp;</Text>
                                             <Popover
                                                 from={(sourceRef, showPopover) => (
                                                     <TouchableOpacity onPress={showPopover}>
@@ -89,7 +89,7 @@ export const ReportRows = ({ data, schema }: { data: ReportInterface[], schema: 
                                             </Popover>
                                         </View>
                                         <View className='flex flex-row items-center mt-1 md:mt-0 lg:mt-0'>
-                                            <Text className='text-[#6C6A6A] text-sm'>{order.client_code}</Text>
+                                            <Text className='text-[#6C6A6A] text-sm'>{order.account.clientId}</Text>
                                             {/* <View className='rounded-full bg-[#6C6A6A] h-2 w-2 mx-1'></View> */}
                                             {/* <View className='flex flex-row items-center'>
                                                 <Text className='text-[#6C6A6A] text-sm'>Folio No. {order.folio_no}&nbsp;</Text>
@@ -113,7 +113,7 @@ export const ReportRows = ({ data, schema }: { data: ReportInterface[], schema: 
 
                                 <View className='flex md:flex lg:hidden flex-row items-center justify-center w-2/12 bg-[#D7D7D9] rounded-full'>
                                     <View className='flex flex-row items-center'>
-                                        <Text className='p-1 text-black text-end md:text-center text-xs'>{order.order_status}&nbsp;</Text>
+                                        <Text className='p-1 text-black text-end md:text-center text-xs'>{order.orderStatus.name}&nbsp;</Text>
                                         <Popover
                                             from={(_sourceRef, showPopover) => (
                                                 // <View>
@@ -137,7 +137,7 @@ export const ReportRows = ({ data, schema }: { data: ReportInterface[], schema: 
                                     <Text className='text-[#6C6A6A] text-xs'>({order.units} units)</Text>
                                 </View>
                                 <View className='flex flex-col'>
-                                    <Text className='text-black text-xs'>{order.processing_datetime}</Text>
+                                    <Text className='text-black text-xs'>{order.startDate}</Text>
                                 </View>
                             </View>
 
@@ -187,21 +187,21 @@ export const ReportRows = ({ data, schema }: { data: ReportInterface[], schema: 
                         <View className='hidden md:flex lg:flex flex-row md:flex-col lg:flex-row w-full md:w-4/12 lg:w-5/12 justify-between'>
                             <View className='flex flex-row items-center sm:w-full md:w-full lg:w-4/12 md:justify-end lg:justify-center'>
                                 <View className='flex flex-col'>
-                                    <Text className='text-[#686868] font-semibold'>{order.processing_datetime}</Text>
+                                    <Text className='text-[#686868] font-semibold'>{order.startDate}</Text>
                                 </View>
                             </View>
                             <View className='flex flex-col-reverse md:flex-col-reverse lg:flex-row sm:w-full md:w-full lg:w-6/12  items-center'>
                                 <View className='flex flex-row md:flex-col lg:flex-row items-center md:items-end lg:items-center w-full lg:w-1/2  justify-start md:justify-end lg:justify-center'>
                                     <View className='flex flex-col md:flex-row lg:flex-col'>
                                         <Text className='text-black font-bold text-start md:text-center'>₹{order.amount}</Text>
-                                        <Text className='text-[#6C6A6A] text-xs'>({order.units} units)</Text>
+                                        {order.units && <Text className='text-[#6C6A6A] text-xs'>({order.units} units)</Text>}
                                     </View>
                                 </View>
 
                                 <View className='hidden md:hidden lg:flex flex-row items-center w-full lg:w-1/2 justify-start md:justify-center lg:justify-center'>
                                     <View className='flex flex-col bg-[#D7D7D7] px-2 py-1 rounded-full'>
                                         <View className='flex flex-row items-center'>
-                                            <Text className='p-1 text-black text-end md:text-center text-xs'>{order.order_status}&nbsp;</Text>
+                                            <Text className='p-1 text-black text-end md:text-center text-xs'>{order.orderStatus.name}&nbsp;</Text>
                                             <Popover
                                                 from={(_sourceRef, showPopover) => (
                                                     // <View>

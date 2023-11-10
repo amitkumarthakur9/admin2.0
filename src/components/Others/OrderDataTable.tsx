@@ -29,19 +29,19 @@ const OrderDataTable: React.FC<OrderDataTableProps> = ({ data = [] }) => {
         <View className='p-2'>
           <View className='flex flex-row items-center mb-5 mt-3'>
 
-            <Link href={"/user/12"} className='mr-4'>
+            <Link href={""} className='mr-4'>
               <Icon name="home" size={18} color="black" />
             </Link>
             <View className='mr-4'>
               <Icon name="angle-right" style={{ fontWeight: "100" }} size={18} color="black" />
             </View>
-            <Link className='mr-4' href={"/user/12"} style={{ color: "black", fontSize: 13 }}>
+            <Link className='mr-4' href={""} style={{ color: "black", fontSize: 13 }}>
               Home
             </Link>
             <View className='mr-4'>
               <Icon name="angle-right" style={{ fontWeight: "100" }} size={18} color="black" />
             </View>
-            <Link href={"/user/12"} style={{ color: "black", fontSize: 13 }}>
+            <Link href={""} style={{ color: "black", fontSize: 13 }}>
               Orders
             </Link>
           </View>

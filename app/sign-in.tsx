@@ -23,21 +23,23 @@ export default function SignIn() {
     const onLoginPressed = async () => {
         const emailError = emailValidator(email.value)
         const passwordError = passwordValidator(password.value)
-        // if (emailError || passwordError) {
-        //     setEmail({ ...email, error: emailError })
-        //     setPassword({ ...password, error: passwordError })
-        //     return
-        // }
+        if (emailError || passwordError) {
+            setEmail({ ...email, error: emailError })
+            setPassword({ ...password, error: passwordError })
+            return
+        }
         // navigation.reset({
         //     index: 0,
         //     routes: [{ name: 'Dashboard' }],
         // })
-        console.log(process.env.API_ENDPOINT);
+        // console.log(process.env.API_ENDPOINT);
 
         try {
-            const response: AuthInterface = await RemoteApi.post("/user/dummy-login");
+            const response: AuthInterface = await RemoteApi.post("/user/login", {
+                email: email.value, password: password.value
+            });
 
-            if (response.status == "Success") {
+            if (response.message == "Success") {
                 signIn(response.token)
             }
         } catch (err) {
@@ -74,22 +76,22 @@ export default function SignIn() {
                 errorText={password.error}
                 secureTextEntry
             />
-            <View style={styles.forgotPassword}>
+            {/* <View style={styles.forgotPassword}>
                 <TouchableOpacity
                     onPress={() => router.replace("/forgot-password")}
                 >
                     <Text style={styles.forgot}>Forgot your password?</Text>
                 </TouchableOpacity>
-            </View>
+            </View> */}
             <Button style={{ backgroundColor: "#013974" }} mode="contained" onPress={onLoginPressed}>
                 Login
             </Button>
-            <View style={styles.row}>
+            {/* <View style={styles.row}>
                 <Text>Don’t have an account? </Text>
                 <TouchableOpacity onPress={() => router.replace("/register")}>
                     <Text style={styles.link}>Sign up</Text>
                 </TouchableOpacity>
-            </View>
+            </View> */}
         </Background>
     )
 }

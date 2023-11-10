@@ -1,11 +1,14 @@
 import { Slot } from 'expo-router';
 import { SessionProvider } from '../src/services/ctx';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 export default function Root() {
     // Set up the auth context and render our layout inside of it.
     return (
-        <SessionProvider>
-            <Slot />
-        </SessionProvider>
+        <SafeAreaProvider>
+            <SessionProvider>
+                <Slot />
+            </SessionProvider>
+        </SafeAreaProvider>
     );
 }

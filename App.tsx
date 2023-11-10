@@ -4,7 +4,7 @@
 import 'react-native-gesture-handler';
 
 import * as React from 'react';
-import { View, TouchableOpacity, Image, Platform } from 'react-native';
+import { View, TouchableOpacity, Image, Platform, LogBox } from 'react-native';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -19,7 +19,7 @@ import { HomeScreen, SecondScreen } from './src/routes/navigator';
 NativeWindStyleSheet.setOutput({
   default: "native",
 });
-
+LogBox.ignoreAllLogs();
 export const useExampleTheme = () => useTheme<MD2Theme | MD3Theme>();
 
 export const theme = {

@@ -1,4 +1,4 @@
 export interface AuthInterface {
-    status: string;
+    message: string;
     token: string;
 }

@@ -1,7 +1,7 @@
 import { Animated, ButtonProps, Platform, StyleProp, Text, TextStyle, View, ViewStyle } from 'react-native';
-import OrderDataTable from '../../src/components/OrdersTables/OrdersDataTable';
+import OrderDataTable from '../../../src/components/OrdersTables/OrdersDataTable';
 
-export default function Page() {
+export default function OrdersScreen() {
     let data = {
         customer_name: "KASHINATH NARAYAN MORE",
         client_code: "ZI3G3",
