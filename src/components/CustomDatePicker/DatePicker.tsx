@@ -2,10 +2,10 @@ import moment from "moment";
 import React from "react";
 import { useState } from "react"
 import { Text, TouchableOpacity, View } from "react-native"
-import { DatePickerModal } from "../DateSelector/Date/DatePickerModal";
+import DatePickerModal from "../DateSelector/Date/DatePickerModal";
+import Icon from 'react-native-vector-icons/FontAwesome';
 
-
-export default function DatePickerComponent({ handleFilterChange, value }) {
+export default function DatePickerComponent({ handleFilterChange, value, fromName = "From", toName = "To", showCalendar = false }) {
     const [open, setOpen] = useState(false)
     const onDismiss = React.useCallback(() => {
         setOpen(false);
@@ -21,12 +21,17 @@ export default function DatePickerComponent({ handleFilterChange, value }) {
 
     return (
         <>
-            <TouchableOpacity onPress={() => setOpen(true)} className="flex flex-col rounded border-[0.2px] border-[#c7c7c7] px-4 py-2">
+            <TouchableOpacity onPress={() => setOpen(true)} className="flex items-center justify-center flex-col rounded border-[0.2px] border-[#c7c7c7] px-4 py-2">
                 <View className="flex flex-row justify-start w-full">
+                    {
+                        showCalendar && <View className="mr-2">
+                            <Icon name="calendar" style={{ fontWeight: "100" }} size={14} color="black" />
+                        </View>
+                    }
                     <View className="flex flex-col">
                         <Text className={"text-xs " + (value?.length > 0 ? "text-black" : "text-slate-400")}>
                             {
-                                value?.length > 0 ? value[0] : "From"
+                                value?.length > 0 ? value[0] : fromName
                             }
                         </Text>
                     </View>
@@ -36,7 +41,7 @@ export default function DatePickerComponent({ handleFilterChange, value }) {
                     <View className="flex flex-col">
                         <Text className={"text-xs " + (value?.length > 1 ? "text-black" : "text-slate-400")}>
                             {
-                                value?.length > 1 ? value[1] : "To"
+                                value?.length > 1 ? value[1] : toName
                             }
                         </Text>
                     </View>

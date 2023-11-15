@@ -18,6 +18,7 @@ import OrderDetail from './orders/[id]';
 import ClientsScreen from './clients';
 import SIPReportsScreen from './sip-reports';
 import AUMReportsScreen from './aum';
+import RTAReconciliationScreen from './rta-reconciliation';
 
 
 NativeWindStyleSheet.setOutput({
@@ -117,6 +118,16 @@ export default function AppLayout() {
                     />
 
                     <Drawer.Screen
+                        name="rta-reconciliation" // This is the name of the page and must match the url from root
+                        options={{
+                            drawerLabel: "RTA Reconciliation",
+                            title: "RTA Reconciliation",
+                        }}
+                        initialParams={{}}
+                        component={RTAReconciliationScreen}
+                    />
+
+                    <Drawer.Screen
 
                         name="orders/[id]" // This is the name of the page and must match the url from root
                         options={{
@@ -127,6 +138,9 @@ export default function AppLayout() {
                         initialParams={{}}
                         component={OrderDetail}
                     />
+
+
+
 
 
                     {/* </Drawer> */}

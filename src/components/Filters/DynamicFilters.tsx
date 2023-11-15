@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Text, TextInput, View } from "react-native"
-import { TouchableRipple } from "react-native-paper";
+import { Button, TouchableRipple } from "react-native-paper";
 import FilterForm from "../../helper/AllFilters";
-import { Badge, Divider, VStack, useToast } from "native-base";
+import { Badge, Box, Divider, Pressable, VStack, useToast } from "native-base";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { ToastAlert } from "../../helper/CustomToaster";
 
@@ -97,67 +97,74 @@ export const DynamicFilters = ({ filtersSchema, setCurrentPageNumber, getList, a
 
     })
 
-    return <View className='static' style={{}}>
-        <View ref={searchBoxRef} className={'flex flex-row justify-between items-center mx-2 w-12/12 lg:w-5/12 mt-5 flex static ' + (modalVisible ? 'border-x-[1px] border-t-[1px] rounded-t-lg ' : 'border-[#e4e4e4] border-[0.3px] rounded')}>
-            <TextInput
-                className='w-11/12 outline-transparent'
-                placeholder={'Type Name/Email/Mobile/ClientID/FE User ID/PAN No'}
-                underlineColorAndroid="transparent"
-                selectionColor="transparent"
-                placeholderTextColor={"#484848"}
-                cursorColor={"transparent"}
-                onFocus={handleSearchInputFocus}
-                style={searchInputStyle}
-                onChange={handleSearchInput}
-                value={filterValues.find((filter) => filter.key === "all")?.value || ""}
-            />
-            <View className='w-1/12 flex flex-row justify-end mr-2'>
+    return <View className="flex flex-row justify-between items-center mt-5">
+        <View className='static w-10/12 justify-center' style={{}}>
+            <View ref={searchBoxRef} className={'flex flex-row justify-between items-center mx-2 w-12/12 lg:w-6/12  flex static ' + (modalVisible ? 'border-x-[1px] border-t-[1px] rounded-t-lg ' : 'border-[#e4e4e4] border-[0.3px] rounded')}>
+                <TextInput
+                    className='w-11/12 outline-transparent'
+                    placeholder={'Type Name/Email/Mobile/ClientID/FE User ID/PAN No'}
+                    underlineColorAndroid="transparent"
+                    selectionColor="transparent"
+                    placeholderTextColor={"#484848"}
+                    cursorColor={"transparent"}
+                    onFocus={handleSearchInputFocus}
+                    style={searchInputStyle}
+                    onChange={handleSearchInput}
+                    value={filterValues.find((filter) => filter.key === "all")?.value || ""}
+                />
+                <View className='w-1/12 flex flex-row justify-end mr-2'>
 
-                <VStack>
-                    {
-                        appliedFilers.length > 0 && <Badge
-                            height={5}
-                            width={5}
-                            colorScheme="danger" rounded="full" mb={-4} mr={-4} zIndex={1} variant="solid" alignSelf="flex-end" _text={{
-                                fontSize: 12,
-                            }}>
-                            {appliedFilers.length}
-                        </Badge>
-                    }
-                    <Icon name="filter" size={25} color="#000000" />
+                    <VStack>
+                        {
+                            appliedFilers.length > 0 && <Badge
+                                height={5}
+                                width={5}
+                                colorScheme="danger" rounded="full" mb={-4} mr={-4} zIndex={1} variant="solid" alignSelf="flex-end" _text={{
+                                    fontSize: 12,
+                                }}>
+                                {appliedFilers.length}
+                            </Badge>
+                        }
+                        <Icon name="filter" size={25} color="#000000" />
 
-                </VStack>
+                    </VStack>
+                </View>
+
             </View>
 
-        </View>
-
-        {
-            modalVisible &&
-            <View className={" bg-white absolute z-[9999] top-14 w-fit lg:w-5/12 mx-2 rounded-b-lg " + (modalVisible ? 'border-x-[1px] border-b-[1px]' : 'border-[#e4e4e4] border-[0.3px]')} ref={filterModalRef}>
-                <Divider my="2" _light={{
-                    bg: "muted.200"
-                }} _dark={{
-                    bg: "muted.50"
-                }} />
-                <View className='p-2'>
-                    <View className='mb-4 flex flex-row justify-between'>
-                        <Text className='font-semibold'>Advance Filters</Text>
-                        <TouchableRipple rippleColor={"#e4e4e4"} onPress={clearFilters}>
-                            <Text className='text-xs underline underline-offset-4'>clear</Text>
+            {
+                modalVisible &&
+                <View className={" bg-white absolute z-[9999] top-10 w-fit lg:w-6/12 mx-2 rounded-b-lg " + (modalVisible ? 'border-x-[1px] border-b-[1px]' : 'border-[#e4e4e4] border-[0.3px]')} ref={filterModalRef}>
+                    <Divider my="2" _light={{
+                        bg: "muted.200"
+                    }} _dark={{
+                        bg: "muted.50"
+                    }} />
+                    <View className='p-2'>
+                        <View className='mb-4 flex flex-row justify-between'>
+                            <Text className='font-semibold'>Advance Filters</Text>
+                            <TouchableRipple rippleColor={"#e4e4e4"} onPress={clearFilters}>
+                                <Text className='text-xs underline underline-offset-4'>clear</Text>
+                            </TouchableRipple>
+                        </View>
+                        <FilterForm filtersSchema={filtersSchema} onFilterChange={handleFilterChange} filterValues={filterValues} />
+                    </View>
+                    <View className='bg-[#000000] rounded-b-lg'>
+                        <TouchableRipple className='py-3' onPress={applyFilters}>
+                            <View className='flex flex-row justify-center items-center'>
+                                <Text className='text-center text-sm mr-2 text-white'>Apply Filters</Text>
+                                <Icon name="filter" size={15} color="#ffffff" />
+                            </View>
                         </TouchableRipple>
                     </View>
-                    <FilterForm filtersSchema={filtersSchema} onFilterChange={handleFilterChange} filterValues={filterValues} />
                 </View>
-                <View className='bg-[#000000] rounded-b-lg'>
-                    <TouchableRipple className='py-3' onPress={applyFilters}>
-                        <View className='flex flex-row justify-center items-center'>
-                            <Text className='text-center text-sm mr-2 text-white'>Apply Filters</Text>
-                            <Icon name="filter" size={15} color="#ffffff" />
-                        </View>
-                    </TouchableRipple>
-                </View>
-            </View>
-        }
+            }
+        </View>
+        <View className="flex flex-row w-2/12 justify-end items-center">
+            <Pressable marginRight={4} onPress={() => console.log("hello world")} paddingX={9} paddingY={2} bg={"#000000"} rounded={4} borderColor={"#bfbfbf"} borderWidth={0.3}>
+                <Icon name="download" style={{ fontWeight: "100" }} size={14} color="white" />
+            </Pressable>
+        </View>
     </View>
 }
 
