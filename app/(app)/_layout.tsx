@@ -21,6 +21,7 @@ import AUMReportsScreen from './aum';
 import RTAReconciliationScreen from './rta-reconciliation';
 import ClientDetail from './clients/[id]';
 import SIPReportsDetail from './sip-reports/[id]';
+import AUMDetail from './aum/[id]';
 
 
 NativeWindStyleSheet.setOutput({
@@ -110,7 +111,7 @@ export default function AppLayout() {
                     />
 
                     <Drawer.Screen
-                        name="aum" // This is the name of the page and must match the url from root
+                        name="aum/index" // This is the name of the page and must match the url from root
                         options={{
                             drawerLabel: "AUM Reports",
                             title: "AUM Reports",
@@ -162,6 +163,18 @@ export default function AppLayout() {
                         }}
                         initialParams={{}}
                         component={SIPReportsDetail}
+                    />
+
+                    <Drawer.Screen
+
+                        name="aum/[id]" // This is the name of the page and must match the url from root
+                        options={{
+                            drawerLabel: "SipReportsDetail",
+                            title: "SipReportsDetail",
+                            drawerItemStyle: { display: 'none' }
+                        }}
+                        initialParams={{}}
+                        component={AUMDetail}
                     />
 
 
