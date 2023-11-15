@@ -1,5 +1,5 @@
 import { Platform, StyleProp, TextStyle, View, ViewStyle } from 'react-native';
-import SIPDataTable from '../../src/components/SIP/SIPDataTable';
+import SIPDataTable from '../../../src/components/SIP/SIPDataTable';
 
 export default function SIPReportsScreen() {
     let data = {

@@ -20,6 +20,7 @@ import SIPReportsScreen from './sip-reports';
 import AUMReportsScreen from './aum';
 import RTAReconciliationScreen from './rta-reconciliation';
 import ClientDetail from './clients/[id]';
+import SIPReportsDetail from './sip-reports/[id]';
 
 
 NativeWindStyleSheet.setOutput({
@@ -99,7 +100,7 @@ export default function AppLayout() {
                     />
 
                     <Drawer.Screen
-                        name="sip-reports" // This is the name of the page and must match the url from root
+                        name="sip-reports/index" // This is the name of the page and must match the url from root
                         options={{
                             drawerLabel: "SIP Reports",
                             title: "SIP Reports",
@@ -151,7 +152,17 @@ export default function AppLayout() {
                         component={ClientDetail}
                     />
 
+                    <Drawer.Screen
 
+                        name="sip-reports/[id]" // This is the name of the page and must match the url from root
+                        options={{
+                            drawerLabel: "SipReportsDetail",
+                            title: "SipReportsDetail",
+                            drawerItemStyle: { display: 'none' }
+                        }}
+                        initialParams={{}}
+                        component={SIPReportsDetail}
+                    />
 
 
                     {/* </Drawer> */}

@@ -6,6 +6,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { ReportInterface } from "../../interfaces/ReportInterface";
 import moment from "moment";
 import { Popover } from "native-base";
+import { Link } from "expo-router";
 
 export const SIPRows = ({ data, schema }: { data: SIPReportItems[], schema: any }) => {
 
@@ -256,9 +257,13 @@ export const SIPRows = ({ data, schema }: { data: SIPReportItems[], schema: any 
                                 </View>
                             </View>
                             <View className='flex flex-row items-center lg:w-2/12 justify-end md:mt-2 lg:mt-0'>
-                                <TouchableRipple className='px-4 md:px-10 lg:px-4 py-1 rounded-full border-[0.4px]'>
+                                <Link
+                                    href={{
+                                        pathname: "/sip-reports/[id]",
+                                        params: { id: order.id }
+                                    }} className='px-4 md:px-10 lg:px-4 py-1 rounded-full border-[0.4px]'>
                                     <Text className='text-black text-start md:text-center text-xs'>View Details</Text>
-                                </TouchableRipple>
+                                </Link>
                             </View>
                         </View>
                     </View>
