@@ -40,6 +40,7 @@ export const DynamicFilters = ({ filtersSchema, setCurrentPageNumber, getList, a
         }));
         setFilterValues(updatedFilterValues);
         setAppliedFilers([])
+        getList([], true)
     }
 
     const handleFilterChange = (key, value, operator) => {

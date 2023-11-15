@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 
 // Create a new Axios instance with defaults
 const axiosInstance = axios.create({
@@ -9,9 +9,9 @@ const axiosInstance = axios.create({
 // Set up a response interceptor to handle errors
 axiosInstance.interceptors.response.use(
   (response: AxiosResponse) => response,
-  (error) => {
+  (error: AxiosError) => {
     console.error('API Error:', error);
-    if (error.response.status) {
+    if (error.status == 401) {
       localStorage.removeItem('token')
       window.location.reload()
     } else {

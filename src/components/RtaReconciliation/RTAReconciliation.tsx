@@ -119,7 +119,7 @@ const RTAReconciliation = () => {
                     </View>
 
                     {
-                        !isLoading ? <View className='mt-4 z-[-1]'>
+                        !isLoading ? <View className={'mt-4 z-[-1] ' + (Dimensions.get("screen").width < 770 ? "overflow-scroll" : "")}>
                             <RTAReconciliationRows data={data} schema={null} />
                         </View> : <ActivityIndicator size={"large"} animating={true} color={"black"} />
                     }

@@ -1,4 +1,4 @@
-import { ImageBackground, StyleSheet, Text, TouchableOpacity, View } from "react-native"
+import { Dimensions, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import { OrderInterface } from "../../interfaces/OrderInterface"
 import DynamicComponentRenderer from "../../helper/DynamicComponentRenderer"
 import { TouchableRipple } from "react-native-paper"
@@ -23,7 +23,7 @@ export const RTAReconciliationRows = ({ data, schema }) => {
 
 
     return <>
-        <View className={`hidden md:hidden lg:flex flex-row py-4 px-2 justify-between flex-wrap`}>
+        <View className={`flex flex-row py-4 px-2 justify-between ` + (Dimensions.get("screen").width < 770 ? 'w-[1728px]' : '')}>
             <View className='flex flex-row w-3/12'>
                 <View className='flex flex-row items-center w-full justify-start'>
                     <Text className='font-semibold'>Client Name</Text>
@@ -82,9 +82,9 @@ export const RTAReconciliationRows = ({ data, schema }) => {
             data.map((client: AUMDataItem, index: number) => {
 
                 return <View key={index}>
-                    <View className={`flex flex-row p-2 justify-between flex-wrap`}>
+                    <View className={`flex flex-row p-2 justify-between ` + (Dimensions.get("screen").width < 770 ? 'w-[1728px]' : '')} >
                         <View className='flex flex-row w-3/12'>
-                            <View className='flex flex-row items-center justify-start lg:justify-start w-10/12 lg:w-full'>
+                            <View className='flex flex-row items-center justify-start w-full'>
                                 <View className='flex flex-row rounded-full bg-[#e60202] mr-2 h-10 w-10 items-center justify-center'>
                                     <Text className='text-white'>{getInitials(client.account.name)}</Text>
                                 </View>
@@ -110,12 +110,12 @@ export const RTAReconciliationRows = ({ data, schema }) => {
                                             </Popover.Content>
                                         </Popover>
                                     </View>
-                                    <View className='flex flex-row items-center mt-1 md:mt-0 lg:mt-0'>
+                                    <View className='flex flex-row items-center mt-0'>
                                         <Text className='text-[#6C6A6A] text-sm'>{"T97C5"}</Text>
                                         {/* <View className='rounded-full bg-[#6C6A6A] h-2 w-2 mx-1'></View> */}
 
                                     </View>
-                                    <View className='flex flex-row items-center mt-1 md:mt-0 lg:mt-0'>
+                                    <View className='flex flex-row items-center mt-0'>
                                         <Text className='text-[#6C6A6A] text-sm'>{"LAJPS2412N"}</Text>
                                         {/* <View className='rounded-full bg-[#6C6A6A] h-2 w-2 mx-1'></View> */}
 
@@ -123,7 +123,6 @@ export const RTAReconciliationRows = ({ data, schema }) => {
                                 </View>
                             </View>
                         </View>
-
                         <View className='flex flex-row  w-2/12 '>
                             <View className='flex flex-col '>
                                 <Text className='text-[#000000] font-bold whitespace-normal max-w-[200px] '>{"Dsp Flexi Cap Fund - Regular Plan - Idcw Reinvestment"}</Text>
@@ -147,7 +146,6 @@ export const RTAReconciliationRows = ({ data, schema }) => {
                                 </Text>
                             </View>
                         </View>
-
                         <View className="flex flex-row w-1/12">
                             <Text>
                                 {'898295595'}

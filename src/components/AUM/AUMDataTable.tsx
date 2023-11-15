@@ -87,7 +87,7 @@ const AUMDataTable = () => {
                     <DynamicFilters filtersSchema={filtersSchema} setCurrentPageNumber={setCurrentPageNumber} getList={getDataList} appliedFilers={appliedFilers} setAppliedFilers={setAppliedFilers} />
 
                     {
-                        !isLoading ? <View className='mt-4 z-[-1]'>
+                        !isLoading ? <View className={'mt-4 z-[-1] ' + (Dimensions.get("screen").width < 770 ? "overflow-scroll" : "")}>
                             <AUMRows data={data} schema={null} />
                         </View> : <ActivityIndicator size={"large"} animating={true} color={"black"} />
                     }
