@@ -5,6 +5,7 @@ import { TouchableRipple } from "react-native-paper"
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { ClientInterface } from "../../interfaces/ClientInterface";
 import { Popover } from "native-base";
+import { Link } from "expo-router";
 
 export const ClientsRows = ({ data, schema }) => {
     return <>
@@ -117,9 +118,13 @@ export const ClientsRows = ({ data, schema }) => {
                                 </View>
                             </View>
                             <View className='flex flex-row items-center lg:w-2/12 justify-center md:mt-2 lg:mt-0'>
-                                <TouchableRipple className='px-4 md:px-10 lg:px-4 py-1 rounded-full border-[0.4px]'>
+                                <Link
+                                    href={{
+                                        pathname: "/clients/[id]",
+                                        params: { id: client.id }
+                                    }} className='px-4 md:px-10 lg:px-4 py-1 rounded-full border-[0.4px]'>
                                     <Text className='text-black text-start md:text-center text-xs'>View Details</Text>
-                                </TouchableRipple>
+                                </Link>
                             </View>
                         </View>
                     </View>

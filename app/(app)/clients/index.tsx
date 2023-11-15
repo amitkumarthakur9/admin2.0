@@ -1,5 +1,5 @@
 import { Platform, StyleProp, TextStyle, View, ViewStyle } from 'react-native';
-import ClientDataTable from '../../src/components/ClientsTables/ClientsDataTable';
+import ClientDataTable from '../../../src/components/ClientsTables/ClientsDataTable';
 
 export default function ClientsScreen() {
     let data = {
