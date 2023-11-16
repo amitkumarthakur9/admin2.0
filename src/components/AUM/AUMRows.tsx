@@ -166,16 +166,16 @@ export const AUMRows = ({ data, schema }) => {
                         <View className='flex flex-row items-center w-1/12  justify-center'>
                             <Text>{client.units * client.mutualfund.nav}</Text>
                         </View>
+
                         <View className='flex flex-row items-center w-1/12 justify-center'>
                             <Link
                                 href={{
                                     pathname: "/aum/[id]",
                                     params: { id: client.id }
-                                }} className='px-4 md:px-10 lg:px-4 py-1 rounded-full border-[0.4px]'>
-                                <Text className='text-black text-start md:text-center text-xs'>View Details</Text>
+                                }} className='rounded-full border-[0.4px] flex flex-row items-center justify-center bg-black w-8/12 h-6'>
+                                <Text className='text-white text-start md:text-center text-xs w-10/12'>View</Text>
                             </Link>
                         </View>
-
                     </View>
                     {
                         index < data.length - 1 && <View

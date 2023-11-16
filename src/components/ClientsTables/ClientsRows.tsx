@@ -94,9 +94,8 @@ export const ClientsRows = ({ data, schema }) => {
                                 </View>
 
                                 <View className='hidden md:hidden lg:flex flex-row items-center w-full lg:w-1/2 justify-start md:justify-center lg:justify-center'>
-                                    <View className='flex flex-col bg-[#D7D7D7] px-2 py-1 rounded-full'>
-                                        <View className='flex flex-row items-center'>
-                                            <Text className='p-1 text-black text-end md:text-center text-xs'>{client.users[0].kycStatus.name}&nbsp;</Text>
+                                    <View className='flex flex-col bg-[#D7D7D7] rounded-full w-8/12 items-center justify-center'>
+                                        <View className='flex flex-row items-center justify-center w-11/12'>
                                             <Popover trigger={triggerProps => {
                                                 return <TouchableOpacity {...triggerProps}>
                                                     <Icon name="info-circle" size={12} color="black" />
@@ -113,17 +112,20 @@ export const ClientsRows = ({ data, schema }) => {
                                                     </Popover.Body>
                                                 </Popover.Content>
                                             </Popover>
+                                            <Text className='p-1 text-black text-end md:text-center text-xs'>{client.users[0].kycStatus.name}&nbsp;</Text>
+
                                         </View>
                                     </View>
                                 </View>
                             </View>
                             <View className='flex flex-row items-center lg:w-2/12 justify-center md:mt-2 lg:mt-0'>
+
                                 <Link
                                     href={{
                                         pathname: "/clients/[id]",
                                         params: { id: client.id }
-                                    }} className='px-4 md:px-10 lg:px-4 py-1 rounded-full border-[0.4px]'>
-                                    <Text className='text-black text-start md:text-center text-xs'>View Details</Text>
+                                    }} className='rounded-full border-[0.4px] flex flex-row items-center justify-center bg-black w-8/12 h-6'>
+                                    <Text className='text-white text-start md:text-center text-xs w-10/12'>View</Text>
                                 </Link>
                             </View>
                         </View>

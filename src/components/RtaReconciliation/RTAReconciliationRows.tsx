@@ -166,11 +166,11 @@ export const RTAReconciliationRows = ({ data, schema }) => {
                                 {'2000'}
                             </Text>
                         </View>
-                        <View className="flex flex-row w-1/12">
-                            <View className='flex flex-col bg-[#D7D7D7] px-2 h-8 items-center justify-center rounded-full'>
-                                {/* <View className='flex flex-row items-center'> */}
-                                <Text className='p-1 text-black text-end md:text-center text-xs'>{'Non Reconciled'}&nbsp;</Text>
-                                {/* </View> */}
+                        <View className="flex flex-row w-1/12  justify-start">
+                            <View className='flex flex-col  h-8 items-center justify-center bg-[#D7D7D7] rounded-full w-11/12'>
+                                <View className='flex flex-row items-center '>
+                                    <Text className='p-1 text-black text-end md:text-center text-xs'>{'Non Reconciled'}&nbsp;</Text>
+                                </View>
 
                             </View>
                         </View>
