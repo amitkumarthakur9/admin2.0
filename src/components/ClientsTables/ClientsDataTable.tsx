@@ -8,6 +8,7 @@ import RemoteApi from '../../services/RemoteApi';
 import { DynamicFilters } from '../Filters/DynamicFilters';
 import { Pagination } from '../Pagination/Pagination';
 import { ClientsRows } from './ClientsRows';
+import { HStack, Heading, Spinner } from 'native-base';
 
 
 const ClientsDataTable = () => {
@@ -82,12 +83,17 @@ const ClientsDataTable = () => {
                 </View>
                 <View className='border-[0.2px]  border-[#e4e4e4]'>
 
-                    <DynamicFilters filtersSchema={filtersSchema} setCurrentPageNumber={setCurrentPageNumber} getList={getDataList} appliedFilers={appliedFilers} setAppliedFilers={setAppliedFilers} />
+                    <DynamicFilters downloadApi={"client/download-report"} filtersSchema={filtersSchema} setCurrentPageNumber={setCurrentPageNumber} getList={getDataList} appliedFilers={appliedFilers} setAppliedFilers={setAppliedFilers} />
 
                     {
                         !isLoading ? <View className='mt-4 z-[-1]'>
                             <ClientsRows data={data} schema={null} />
-                        </View> : <ActivityIndicator size={"large"} animating={true} color={"black"} />
+                        </View> : <HStack space={2} marginTop={20} justifyContent="center">
+                            <Spinner color={"black"} accessibilityLabel="Loading order" />
+                            <Heading color="black" fontSize="md">
+                                Loading
+                            </Heading>
+                        </HStack>
                     }
 
 

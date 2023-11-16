@@ -11,7 +11,7 @@ axiosInstance.interceptors.response.use(
   (response: AxiosResponse) => response,
   (error: AxiosError) => {
     console.error('API Error:', error);
-    if (error.status == 401) {
+    if (error.response.status == 305) {
       localStorage.removeItem('token')
       window.location.reload()
     } else {

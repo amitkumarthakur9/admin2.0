@@ -10,6 +10,7 @@ import { OrdersResponse } from '../../interfaces/OrdersResposeInterface';
 import { DynamicFilters } from '../Filters/DynamicFilters';
 import { AUMRows } from './AUMRows';
 import { Pagination } from '../Pagination/Pagination';
+import { HStack, Heading, Spinner } from 'native-base';
 
 
 const AUMDataTable = () => {
@@ -89,7 +90,12 @@ const AUMDataTable = () => {
                     {
                         !isLoading ? <View className={'mt-4 z-[-1] ' + (Dimensions.get("screen").width < 770 ? "overflow-scroll" : "")}>
                             <AUMRows data={data} schema={null} />
-                        </View> : <ActivityIndicator size={"large"} animating={true} color={"black"} />
+                        </View> : <HStack space={2} marginTop={20} justifyContent="center">
+                            <Spinner color={"black"} accessibilityLabel="Loading order" />
+                            <Heading color="black" fontSize="md">
+                                Loading
+                            </Heading>
+                        </HStack>
                     }
 
 

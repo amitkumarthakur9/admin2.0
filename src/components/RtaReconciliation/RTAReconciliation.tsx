@@ -10,7 +10,7 @@ import { OrdersResponse } from '../../interfaces/OrdersResposeInterface';
 import { DynamicFilters } from '../Filters/DynamicFilters';
 import { RTAReconciliationRows } from './RTAReconciliationRows';
 import { Pagination } from '../Pagination/Pagination';
-import { Box, CheckIcon, Pressable, Select } from 'native-base';
+import { Box, CheckIcon, HStack, Heading, Pressable, Select, Spinner } from 'native-base';
 import DatePickerComponent from '../CustomDatePicker/DatePicker';
 
 
@@ -121,7 +121,12 @@ const RTAReconciliation = () => {
                     {
                         !isLoading ? <View className={'mt-4 z-[-1] ' + (Dimensions.get("screen").width < 770 ? "overflow-scroll" : "")}>
                             <RTAReconciliationRows data={data} schema={null} />
-                        </View> : <ActivityIndicator size={"large"} animating={true} color={"black"} />
+                        </View> : <HStack space={2} marginTop={20} justifyContent="center">
+                            <Spinner color={"black"} accessibilityLabel="Loading order" />
+                            <Heading color="black" fontSize="md">
+                                Loading
+                            </Heading>
+                        </HStack>
                     }
 
 

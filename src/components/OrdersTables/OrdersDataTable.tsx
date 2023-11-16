@@ -10,6 +10,7 @@ import RemoteApi from '../../services/RemoteApi';
 import { OrdersResponse } from '../../interfaces/OrdersResposeInterface';
 import { DynamicFilters } from '../Filters/DynamicFilters';
 import { Pagination } from '../Pagination/Pagination';
+import { HStack, Heading, Spinner } from 'native-base';
 
 
 const OrderDataTable = () => {
@@ -84,12 +85,17 @@ const OrderDataTable = () => {
                 </View>
                 <View className='border-[0.2px]  border-[#e4e4e4]'>
 
-                    <DynamicFilters filtersSchema={filtersSchema} setCurrentPageNumber={setCurrentPageNumber} getList={getDataList} appliedFilers={appliedFilers} setAppliedFilers={setAppliedFilers} />
+                    <DynamicFilters downloadApi={"order/download-report"} filtersSchema={filtersSchema} setCurrentPageNumber={setCurrentPageNumber} getList={getDataList} appliedFilers={appliedFilers} setAppliedFilers={setAppliedFilers} />
 
                     {
                         !isLoading ? <View className='mt-4 z-[-1]'>
                             <OrdersRows data={data} schema={null} />
-                        </View> : <ActivityIndicator size={"large"} animating={true} color={"black"} />
+                        </View> : <HStack space={2} marginTop={20} justifyContent="center">
+                            <Spinner color={"black"} accessibilityLabel="Loading order" />
+                            <Heading color="black" fontSize="md">
+                                Loading
+                            </Heading>
+                        </HStack>
                     }
 
 

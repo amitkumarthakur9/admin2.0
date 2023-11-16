@@ -2,16 +2,18 @@ import { useEffect, useRef, useState } from "react";
 import { Text, TextInput, View } from "react-native"
 import { Button, TouchableRipple } from "react-native-paper";
 import FilterForm from "../../helper/AllFilters";
-import { Badge, Box, Divider, Pressable, VStack, useToast } from "native-base";
+import { Badge, Box, Divider, Pressable, Spinner, VStack, useToast } from "native-base";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { ToastAlert } from "../../helper/CustomToaster";
+import RemoteApi from "../../services/RemoteApi";
 
-export const DynamicFilters = ({ filtersSchema, setCurrentPageNumber, getList, appliedFilers, setAppliedFilers }) => {
+export const DynamicFilters = ({ filtersSchema, setCurrentPageNumber, getList, appliedFilers, setAppliedFilers, downloadApi = "" }) => {
     const searchBoxRef = useRef(null);
     const [modalVisible, setModalVisible] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
     const filterModalRef = useRef(null);
     const [filterValues, setFilterValues] = useState([]);
+    const [isDownloadProcessing, setIsDownloadProcessing] = useState(false);
     const toast = useToast();
     const handleSearchInputFocus = () => {
         setModalVisible(true)
@@ -98,6 +100,13 @@ export const DynamicFilters = ({ filtersSchema, setCurrentPageNumber, getList, a
 
     })
 
+    const downloadReport = async () => {
+        setIsDownloadProcessing(true)
+        const response: any = await RemoteApi.get(downloadApi);
+        console.log(response);
+        setIsDownloadProcessing(false)
+    }
+
     return <View className="flex flex-row justify-between items-center mt-5">
         <View className='static w-10/12 justify-center' style={{}}>
             <View ref={searchBoxRef} className={'flex flex-row justify-between items-center mx-2 w-12/12 lg:w-6/12  flex static ' + (modalVisible ? 'border-x-[1px] border-t-[1px] rounded-t-lg ' : 'border-[#e4e4e4] border-[0.3px] rounded')}>
@@ -162,8 +171,10 @@ export const DynamicFilters = ({ filtersSchema, setCurrentPageNumber, getList, a
             }
         </View>
         <View className="flex flex-row w-2/12 justify-end items-center">
-            <Pressable marginRight={4} onPress={() => console.log("hello world")} paddingX={9} paddingY={2} bg={"#000000"} rounded={4} borderColor={"#bfbfbf"} borderWidth={0.3}>
-                <Icon name="download" style={{ fontWeight: "100" }} size={14} color="white" />
+            <Pressable marginRight={4} onPress={downloadReport} paddingX={9} paddingY={2} bg={"#000000"} rounded={4} borderColor={"#bfbfbf"} borderWidth={0.3}>
+                {
+                    isDownloadProcessing ? <Spinner color={"white"} size={14} accessibilityLabel="Loading" /> : <Icon name="download" style={{ fontWeight: "100" }} size={14} color="white" />
+                }
             </Pressable>
         </View>
     </View>

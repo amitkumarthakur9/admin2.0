@@ -1,46 +1,87 @@
-export interface SIPDetailResponseInterface {
-    message: string;
-    error: any[];
-    data: SIPReportDetail
+interface BankAccount {
+    id: string;
+    userId: string;
+    branchId: string;
+    micrCode: string | null;
+    bankAccountTypeId: number;
+    accountNumber: string;
+    isActive: boolean;
+    createdAt: string;
+    isPrimary: boolean | null;
+}
+
+interface Mandate {
+    id: string;
+    mandateId: string;
+    mandateStatus: {
+        id: number;
+        name: string;
+    };
+    bankAccount: BankAccount;
+}
+
+interface OrderStatus {
+    id: number;
+    name: string;
+}
+
+interface Folio {
+    folioNumber: string;
+}
+
+interface Transaction {
+    folio: Folio;
+}
+
+interface MutualFundSubcategory {
+    id: number;
+    name: string;
+    mutualfundCategory: {
+        id: number;
+        name: string;
+    };
+}
+
+interface MutualFund {
+    id: string;
+    name: string;
+    mutualfundSubcategory: MutualFundSubcategory;
+}
+
+interface Account {
+    id: string;
+    clientId: string;
+    name: string;
+    users: {
+        id: string;
+        name: string;
+    }[];
 }
 
 export interface SIPReportDetail {
     id: string;
-    account: {
-        id: string;
-        clientId: string;
-        name: string;
-        users: {
-            id: string;
-            name: string;
-        }[];
-    };
+    account: Account;
     distributor: {
         distributorCompanyId: string;
     };
-    units: number | null;
+    units: number;
     amount: number;
-    startDate: string | null;
-    endDate: string | null;
-    sipReferenceNumber: string | null;
-    orderStatus: {
-        id: number;
-        name: string;
-    };
-    mandate: any | null; // Adjust this type based on the actual data
-    noOfInstallmentsExecuted: number | null;
+    startDate: string;
+    endDate: string;
+    sipReferenceNumber: string;
+    orderStatus: OrderStatus;
+    mandate?: Mandate;
+    noOfInstallmentsExecuted: number;
     totalNoOfInstallments: number;
-    transactions: any[]; // Adjust this type based on the actual data
-    mutualfund: {
-        id: string;
-        name: string;
-        mutualfundSubcategory: {
-            id: number;
-            name: string;
-            mutualfundCategory: {
-                id: number;
-                name: string;
-            };
-        };
-    };
-};
+    transactions: Transaction[];
+    mutualfund: MutualFund;
+    toMutualfund: MutualFund;
+}
+
+export interface SIPDetailResponseInterface {
+    message: string;
+    error: any[];
+    data: SIPReportDetail;
+}
+
+

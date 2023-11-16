@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { useEffect, useState } from 'react';
 import RemoteApi from '../../../src/services/RemoteApi';
 import { SIPReportDetail, SIPDetailResponseInterface } from '../../../src/interfaces/SIPDetailInterface';
+import moment from 'moment';
 
 export default function SIPReportsDetail() {
     const { id } = useLocalSearchParams();
@@ -104,7 +105,11 @@ export default function SIPReportsDetail() {
                                         </View>
                                         <View className='w-3/12 mb-2'>
                                             <Text className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Mandate</Text>
-                                            <Text className='font-bold text-base'>{data.mandate}</Text>
+                                            <Text className='font-bold text-base'>{data.mandate?.mandateId}</Text>
+                                        </View>
+                                        <View className='w-3/12 mb-2'>
+                                            <Text className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Mandate Status</Text>
+                                            <Text className='font-bold text-base'>{data.mandate?.mandateStatus.name}</Text>
                                         </View>
                                         <View className='w-3/12 mb-8 pr-2'>
                                             <Text className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Order Status</Text>
@@ -169,11 +174,11 @@ export default function SIPReportsDetail() {
 
                                         <View className='w-3/12 mb-8 pr-2'>
                                             <Text className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Start Date</Text>
-                                            <Text className='font-bold text-base'>{data.startDate}</Text>
+                                            <Text className='font-bold text-base'>{data.startDate ? moment(new Date(data.startDate)).format('DD-MM-YYYY') : ""}</Text>
                                         </View>
                                         <View className='w-3/12 mb-8 pr-2'>
                                             <Text className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>End Date</Text>
-                                            <Text className='font-bold text-base'>{data.endDate}</Text>
+                                            <Text className='font-bold text-base'>{data.endDate ? moment(new Date(data.endDate)).format('DD-MM-YYYY') : ""}</Text>
                                         </View>
                                     </View>
 

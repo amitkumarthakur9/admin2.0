@@ -25,31 +25,46 @@ export const AUMRows = ({ data, schema }) => {
 
     return <>
         <View className={`flex flex-row py-4 px-2 justify-between ` + (Dimensions.get("screen").width < 770 ? 'w-[1728px]' : '')}>
-            <View className='flex flex-row w-4/12'>
+            <View className='flex flex-row w-3/12'>
                 <View className='flex flex-row items-center w-full justify-start'>
                     <Text className='font-semibold'>Client Name</Text>
                 </View>
             </View>
 
             <View className='flex flex-row w-1/12'>
-                <View className='flex flex-row items-center w-full justify-start'>
+                <View className='flex flex-row items-center w-full justify-center'>
                     <Text className='font-semibold'>PAN</Text>
                 </View>
             </View>
 
-            <View className='hidden md:flex lg:flex flex-row w-7/12 justify-between'>
-                <View className='flex flex-row items-center w-6/12 justify-center'>
-                    <Text className='font-semibold'>Scheme Name</Text>
-                </View>
-                <View className='flex flex-row w-4/12  items-center'>
-                    <View className='flex flex-row items-center w-1/2 justify-center'>
-                        <Text className='font-semibold'>Folio Number</Text>
-                    </View>
-                </View>
-                <View className='flex flex-row items-center w-2/12 justify-center'>
-                    <Text className='font-semibold'>Action</Text>
+
+            <View className='flex flex-row items-center w-3/12 justify-center'>
+                <Text className='font-semibold'>Scheme Name</Text>
+            </View>
+            <View className='flex flex-row w-1/12 items-center justify-center'>
+                <View className='flex flex-row items-center w-1/2'>
+                    <Text className='font-semibold'>Folio Number</Text>
                 </View>
             </View>
+            <View className='flex flex-row w-1/12 items-center justify-center'>
+                <View className='flex flex-row items-center'>
+                    <Text className='font-semibold'>Units</Text>
+                </View>
+            </View>
+            <View className='flex flex-row w-1/12 items-center justify-center'>
+                <View className='flex flex-row items-center'>
+                    <Text className='font-semibold'>Price</Text>
+                </View>
+            </View>
+            <View className='flex flex-row w-1/12 items-center justify-center'>
+                <View className='flex flex-row items-center'>
+                    <Text className='font-semibold'>Current Value</Text>
+                </View>
+            </View>
+            <View className='flex flex-row items-center w-1/12 justify-center'>
+                <Text className='font-semibold'>Action</Text>
+            </View>
+
         </View>
         <View
             className='mb-2'
@@ -63,7 +78,7 @@ export const AUMRows = ({ data, schema }) => {
 
                 return <View key={index}>
                     <View className={`flex flex-row p-2 justify-between ` + (Dimensions.get("screen").width < 770 ? 'w-[1728px]' : '')} >
-                        <View className='flex flex-row w-full w-4/12'>
+                        <View className='flex flex-row w-full w-3/12'>
                             <View className='flex flex-row items-center w-full justify-between'>
                                 <View className='flex flex-row items-center justify-start w-full'>
                                     <View className='flex flex-row rounded-full bg-[#e60202] mr-2 h-10 w-10 items-center justify-center'>
@@ -99,60 +114,68 @@ export const AUMRows = ({ data, schema }) => {
                             </View>
                         </View>
 
-                        <View className="flex flex-row w-1/12">
+                        <View className="flex flex-row w-1/12 items-center justify-center">
                             <Text>
                                 {'LAJPS2390'}
                             </Text>
                         </View>
 
-                        <View className='flex flex-row w-7/12 justify-between'>
-                            <View className='flex flex-row items-center w-6/12 justify-center'>
-                                <View className='flex flex-col'>
-                                    <Text className='text-[#000000] font-bold'>{client.mutualfund.name}</Text>
-                                    <Text className='text-[#686868] font-semibold'>{client.mutualfund.mutualfundSubcategory.name}</Text>
-                                    <Text className='text-[#686868] font-semibold'>{client.mutualfund.bseDematSchemeCode}</Text>
-                                    <Text className='text-[#686868] font-semibold'>{client.mutualfund.fundhouse.name}</Text>
-                                </View>
+                        <View className='flex flex-row items-center w-3/12 justify-center'>
+                            <View className='flex flex-col'>
+                                <Text className='text-[#000000] font-bold'>{client.mutualfund.name}</Text>
+                                <Text className='text-[#686868] font-semibold'>{client.mutualfund.mutualfundSubcategory.name}</Text>
+                                <Text className='text-[#686868] font-semibold'>{client.mutualfund.bseDematSchemeCode}</Text>
+                                <Text className='text-[#686868] font-semibold'>{client.mutualfund.fundhouse.name}</Text>
                             </View>
-                            <View className='flex flex-row w-4/12 items-center'>
-                                <View className='flex flex-row items-center w-1/2 justify-center'>
-                                    <View className='flex flex-col bg-[#D7D7D7] px-2 py-1 rounded-full'>
-                                        <View className='flex flex-row items-center'>
-                                            <Text className='p-1 text-black text-end md:text-center text-xs'>{client.folioNumber}&nbsp;</Text>
-                                            <Popover trigger={triggerProps => {
-                                                return <TouchableOpacity {...triggerProps}>
-                                                    <Icon name="info-circle" size={12} color="black" />
-                                                </TouchableOpacity>;
-                                            }}>
-                                                <Popover.Content accessibilityLabel="Order Details" w="56">
-                                                    <Popover.Arrow />
-                                                    <Popover.CloseButton />
-                                                    <Popover.Header>Folio Details</Popover.Header>
-                                                    <Popover.Body>
-                                                        <View>
-                                                            <Text>Current Nav: </Text>
-                                                            <Text>Current Value: </Text>
-                                                            <Text>Balance Units:</Text>
-                                                            <Text>NavDate: </Text>
-                                                            <Text>NAV: </Text>
-                                                        </View>
-                                                    </Popover.Body>
-                                                </Popover.Content>
-                                            </Popover>
-                                        </View>
+                        </View>
+                        <View className='flex flex-row w-1/12 items-center justify-center'>
+                            <View className='flex flex-row items-center w-1/2 justify-center'>
+                                <View className='flex flex-col bg-[#D7D7D7] px-2 py-1 rounded-full'>
+                                    <View className='flex flex-row items-center'>
+                                        <Text className='p-1 text-black text-end md:text-center text-xs'>{client.folioNumber}&nbsp;</Text>
+                                        <Popover trigger={triggerProps => {
+                                            return <TouchableOpacity {...triggerProps}>
+                                                <Icon name="info-circle" size={12} color="black" />
+                                            </TouchableOpacity>;
+                                        }}>
+                                            <Popover.Content accessibilityLabel="Order Details" w="56">
+                                                <Popover.Arrow />
+                                                <Popover.CloseButton />
+                                                <Popover.Header>Folio Details</Popover.Header>
+                                                <Popover.Body>
+                                                    <View>
+                                                        <Text>Current Nav: </Text>
+                                                        <Text>Current Value: </Text>
+                                                        <Text>Balance Units:</Text>
+                                                        <Text>NavDate: </Text>
+                                                        <Text>NAV: </Text>
+                                                    </View>
+                                                </Popover.Body>
+                                            </Popover.Content>
+                                        </Popover>
                                     </View>
                                 </View>
                             </View>
-                            <View className='flex flex-row items-center w-2/12 justify-center mt-0'>
-                                <Link
-                                    href={{
-                                        pathname: "/aum/[id]",
-                                        params: { id: client.id }
-                                    }} className='px-4 md:px-10 lg:px-4 py-1 rounded-full border-[0.4px]'>
-                                    <Text className='text-black text-start md:text-center text-xs'>View Details</Text>
-                                </Link>
-                            </View>
                         </View>
+                        <View className='flex flex-row items-center w-1/12 justify-center'>
+                            <Text>{client.units}</Text>
+                        </View>
+                        <View className='flex flex-row items-center w-1/12 justify-center'>
+                            <Text>{client.units * (client.currentValue / client.mutualfund.nav)}</Text>
+                        </View>
+                        <View className='flex flex-row items-center w-1/12  justify-center'>
+                            <Text>{client.units * client.mutualfund.nav}</Text>
+                        </View>
+                        <View className='flex flex-row items-center w-1/12 justify-center'>
+                            <Link
+                                href={{
+                                    pathname: "/aum/[id]",
+                                    params: { id: client.id }
+                                }} className='px-4 md:px-10 lg:px-4 py-1 rounded-full border-[0.4px]'>
+                                <Text className='text-black text-start md:text-center text-xs'>View Details</Text>
+                            </Link>
+                        </View>
+
                     </View>
                     {
                         index < data.length - 1 && <View
