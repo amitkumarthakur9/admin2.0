@@ -45,7 +45,7 @@ export const NewTable = () => {
 
                 <View className="m-4 w:full flex lg:flex-row flex justify-between text-white text-sm font-bold rounded-lg">
                     <View className="flex lg:items-center h-100 bg-pink justify-center mb-2">
-                        <Text className='text-xl'>Datatable</Text>
+                        <Text selectable className='text-xl'>Datatable</Text>
                     </View>
                     <View className="flex lg:flex-row lg:items-center justify-center">
                         <View style={{ marginBottom: screenDimensions.width <= 600 ? 8 : 0 }}>
@@ -86,13 +86,13 @@ export const NewTable = () => {
                                                 <Checkbox status="unchecked" />
                                                 {/* <Text>Mark All</Text> */}
                                             </View>
-                                            <Text style={{ width: screenDimensions.width / (Platform.OS == "web" ? (screenDimensions.width <= 600 ? 4 : 6) : 4) }}>Name</Text>
-                                            <Text style={{ width: screenDimensions.width / (Platform.OS == "web" ? (screenDimensions.width <= 600 ? 3.4 : 8) : 3.4) }}>Mobile</Text>
-                                            <Text style={{ width: screenDimensions.width / (Platform.OS == "web" ? (screenDimensions.width <= 600 ? 3 : 8) : 3) }}>Email</Text>
-                                            <Text style={{ width: screenDimensions.width / (Platform.OS == "web" ? (screenDimensions.width <= 600 ? 4 : 8) : 4) }}>Pan</Text>
-                                            <Text style={{ width: screenDimensions.width / (Platform.OS == "web" ? (screenDimensions.width <= 600 ? 4 : 8) : 4) }}>Tax Status</Text>
-                                            {/* <Text style={{ width: screenDimensions.width / (Platform.OS == "web" ? (screenDimensions.width <= 600 ? 4 : 8) : 4) }}>Role</Text> */}
-                                            <Text style={{ width: screenDimensions.width / (Platform.OS == "web" ? (screenDimensions.width <= 600 ? 4 : 8) : 4) }}>Action</Text>
+                                            <Text selectable style={{ width: screenDimensions.width / (Platform.OS == "web" ? (screenDimensions.width <= 600 ? 4 : 6) : 4) }}>Name</Text>
+                                            <Text selectable style={{ width: screenDimensions.width / (Platform.OS == "web" ? (screenDimensions.width <= 600 ? 3.4 : 8) : 3.4) }}>Mobile</Text>
+                                            <Text selectable style={{ width: screenDimensions.width / (Platform.OS == "web" ? (screenDimensions.width <= 600 ? 3 : 8) : 3) }}>Email</Text>
+                                            <Text selectable style={{ width: screenDimensions.width / (Platform.OS == "web" ? (screenDimensions.width <= 600 ? 4 : 8) : 4) }}>Pan</Text>
+                                            <Text selectable style={{ width: screenDimensions.width / (Platform.OS == "web" ? (screenDimensions.width <= 600 ? 4 : 8) : 4) }}>Tax Status</Text>
+                                            {/* <Text selectable style={{ width: screenDimensions.width / (Platform.OS == "web" ? (screenDimensions.width <= 600 ? 4 : 8) : 4) }}>Role</Text> */}
+                                            <Text selectable style={{ width: screenDimensions.width / (Platform.OS == "web" ? (screenDimensions.width <= 600 ? 4 : 8) : 4) }}>Action</Text>
                                         </View>
                                     </View>
                                 </View>
@@ -109,25 +109,25 @@ export const NewTable = () => {
                                                     <View className="w-24">
                                                         <Checkbox status="unchecked" />
                                                     </View>
-                                                    {/* <Text className="w-10">{value + 1}</Text> */}
+                                                    {/* <Text selectable className="w-10">{value + 1}</Text> */}
 
                                                     <View className="flex-row items-center" style={{ width: screenDimensions.width / (Platform.OS == "web" ? (screenDimensions.width <= 600 ? 4 : 6) : 4) }}>
 
                                                         <Avatar.Image size={24} source={require('../../../assets/images/avatar.png')} /><Text> John Doe</Text>
                                                     </View>
                                                     <View className="flex-row items-center" >
-                                                        <Text style={{ width: screenDimensions.width / (Platform.OS == "web" ? (screenDimensions.width <= 600 ? 3.4 : 8) : 3.4) }}>+91 911111111</Text>
+                                                        <Text selectable style={{ width: screenDimensions.width / (Platform.OS == "web" ? (screenDimensions.width <= 600 ? 3.4 : 8) : 3.4) }}>+91 911111111</Text>
                                                     </View>
 
                                                     <View className="flex-row items-center" >
-                                                        <Text style={{ width: screenDimensions.width / (Platform.OS == "web" ? (screenDimensions.width <= 600 ? 3 : 8) : 3) }}>john@example.com</Text>
+                                                        <Text selectable style={{ width: screenDimensions.width / (Platform.OS == "web" ? (screenDimensions.width <= 600 ? 3 : 8) : 3) }}>john@example.com</Text>
                                                     </View>
 
                                                     <View className="flex-row items-center" >
-                                                        <Text style={{ width: screenDimensions.width / (Platform.OS == "web" ? (screenDimensions.width <= 600 ? 4 : 8) : 4) }}>Admin</Text>
+                                                        <Text selectable style={{ width: screenDimensions.width / (Platform.OS == "web" ? (screenDimensions.width <= 600 ? 4 : 8) : 4) }}>Admin</Text>
                                                     </View>
                                                     <View className="flex-row items-center" >
-                                                        <Text style={{ width: screenDimensions.width / (Platform.OS == "web" ? (screenDimensions.width <= 600 ? 4 : 8) : 4) }}>Admin</Text>
+                                                        <Text selectable style={{ width: screenDimensions.width / (Platform.OS == "web" ? (screenDimensions.width <= 600 ? 4 : 8) : 4) }}>Admin</Text>
                                                     </View>
                                                     <View style={{ width: screenDimensions.width / (Platform.OS == "web" ? (screenDimensions.width <= 600 ? 4 : 8) : 4) }}>
                                                         <Button style={{ width: 100 }} icon="pencil" mode="contained" onPress={() => console.log('Pressed')}>
@@ -148,7 +148,7 @@ export const NewTable = () => {
                 </View>
                 <View className="m-4 w:full flex lg:flex-row flex justify-between text-white text-sm font-bold rounded-lg">
                     <View className="flex lg:items-center h-100 bg-pink justify-center mb-2">
-                        <Text className='text-xl'>Page 1 of 5</Text>
+                        <Text selectable className='text-xl'>Page 1 of 5</Text>
                     </View>
 
                     <View className="rounded-md" style={{ flexDirection: 'row', alignItems: 'center', borderWidth: 0.2 }}>

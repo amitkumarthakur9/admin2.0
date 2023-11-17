@@ -172,7 +172,7 @@ const FilterComponent = ({ filter, onFilterChange, filterValues }) => {
   return (
     <View className='flex flex-row items-center mb-2 justify-between'>
       <View className='w-3/12'>
-        <Text className=''>{title}</Text>
+        <Text selectable className=''>{title}</Text>
       </View>
       {fieldType != "date" && <View className='w-4/12'>
         {renderOperatorSelect()}

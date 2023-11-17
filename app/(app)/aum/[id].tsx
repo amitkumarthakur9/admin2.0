@@ -50,7 +50,7 @@ export default function AUMDetail() {
                         <View className=''>
                             <View className='flex flex-row justify-between items-center mb-[30px] mt-3 bg-[#eaf3fe] h-28 px-2 '>
                                 <View className='flex flex-col w-6/12'>
-                                    <Text className='text-2xl font-extrabold mb-3'>AUM Report Details</Text>
+                                    <Text selectable className='text-2xl font-extrabold mb-3'>AUM Report Details</Text>
                                     <View className='flex flex-row items-center'>
                                         <Link href={"/"} className='mr-4'>
                                             {/* <Icon name="home" size={18} color="black" /> */}
@@ -89,7 +89,7 @@ export default function AUMDetail() {
 
                                 </View>
                                 <View>
-                                    <Pressable marginRight={4} onPress={() => console.log("hello world")} paddingX={9} paddingY={2} bg={"#000000"} rounded={4} borderColor={"#bfbfbf"} borderWidth={0.3}>
+                                    <Pressable marginRight={0} onPress={() => console.log("hello world")} paddingX={9} paddingY={2} bg={"#000000"} rounded={4} borderColor={"#bfbfbf"} borderWidth={0.3}>
                                         <Icon name="download" style={{ fontWeight: "100" }} size={14} color="white" />
                                     </Pressable>
 
@@ -99,26 +99,26 @@ export default function AUMDetail() {
                                 <View className="w-12/12 lg:w-8/12  p-2">
                                     <View className='flex flex-row flex-wrap  border-[0.2px] rounded m-1 p-2 w-12/12'>
                                         <View className='w-3/12 mb-2'>
-                                            <Text className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Folio Number</Text>
-                                            <Text className='font-bold text-base'>{data.folioNumber}</Text>
+                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Folio Number</Text>
+                                            <Text selectable className='font-bold text-base'>{data.folioNumber}</Text>
                                         </View>
                                         <View className='w-3/12 mb-2'>
-                                            <Text className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Distributor CompanyId</Text>
-                                            <Text className='font-bold text-base'>{data.distributor.distributorCompanyId}</Text>
+                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Distributor CompanyId</Text>
+                                            <Text selectable className='font-bold text-base'>{data.distributor.distributorCompanyId}</Text>
                                         </View>
 
                                         <View className='w-3/12 mb-8 pr-2'>
-                                            <Text className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Current Value</Text>
-                                            <Text className='font-bold text-base'>{data.currentValue}</Text>
+                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Current Value</Text>
+                                            <Text selectable className='font-bold text-base'>{data.currentValue}</Text>
                                         </View>
                                         <View className='w-3/12 mb-8 pr-2'>
-                                            <Text className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Fund Category</Text>
-                                            <Text className='font-bold text-base'>{data.mutualfund.mutualfundSubcategory.mutualfundCategory.name}</Text>
+                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Fund Category</Text>
+                                            <Text selectable className='font-bold text-base'>{data.mutualfund.mutualfundSubcategory.mutualfundCategory.name}</Text>
                                         </View>
 
                                         <View className='w-3/12 mb-8 pr-2'>
-                                            <Text className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Fund Subcategory</Text>
-                                            <Text className='font-bold text-base'>{data.mutualfund.mutualfundSubcategory.name}</Text>
+                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Fund Subcategory</Text>
+                                            <Text selectable className='font-bold text-base'>{data.mutualfund.mutualfundSubcategory.name}</Text>
                                         </View>
                                     </View>
 
@@ -127,17 +127,17 @@ export default function AUMDetail() {
                                     <View className='flex flex-col flex-wrap  border-[0.2px] rounded m-1 p-2 w-12/12'>
                                         {/* <View className='items-center flex flex-col'>
                                             <View className='flex flex-row rounded-full bg-[#e60202] mr-2 h-10 w-10 items-center justify-center'>
-                                                <Text className='text-white'>{getInitials(data.account.name)}</Text>
+                                                <Text selectable className='text-white'>{getInitials(data.account.name)}</Text>
                                             </View>
                                         </View> */}
                                         <View className='flex flex-col mb-8 pr-2'>
-                                            <Text className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Customer Name</Text>
+                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Customer Name</Text>
 
-                                            <Text className='font-bold text-base'>{data.account.name}</Text>
+                                            <Text selectable className='font-bold text-base'>{data.account.name}</Text>
                                         </View>
                                         <View className='mb-8 pr-2'>
-                                            <Text className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Client Code</Text>
-                                            <Text className='font-bold text-base'>{data.account.id}</Text>
+                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Client Code</Text>
+                                            <Text selectable className='font-bold text-base'>{data.account.id}</Text>
                                         </View>
                                     </View>
                                 </View>
@@ -147,24 +147,24 @@ export default function AUMDetail() {
                                 <View className="w-12/12 lg:w-8/12  p-2">
                                     <View className='flex flex-row flex-wrap  border-[0.2px] rounded m-1 p-2 w-12/12'>
                                         <View className='w-3/12 mb-2'>
-                                            <Text className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Amount</Text>
-                                            <Text className='font-bold text-base'>{data.currentValue}</Text>
+                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Amount</Text>
+                                            <Text selectable className='font-bold text-base'>{data.currentValue}</Text>
                                         </View>
                                         <View className='w-3/12 mb-2'>
-                                            <Text className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Units</Text>
-                                            <Text className='font-bold text-base'>{data.units}</Text>
+                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Units</Text>
+                                            <Text selectable className='font-bold text-base'>{data.units}</Text>
                                         </View>
                                         <View className='w-3/12 mb-8 pr-2'>
-                                            <Text className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Bse Demat Scheme Code</Text>
-                                            <Text className='font-bold text-base'>{data.mutualfund.bseDematSchemeCode}</Text>
+                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Bse Demat Scheme Code</Text>
+                                            <Text selectable className='font-bold text-base'>{data.mutualfund.bseDematSchemeCode}</Text>
                                         </View>
                                         <View className='w-3/12 mb-8 pr-2'>
-                                            <Text className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>RTA Code</Text>
-                                            <Text className='font-bold text-base'>{data.mutualfund.rtaCode}</Text>
+                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>RTA Code</Text>
+                                            <Text selectable className='font-bold text-base'>{data.mutualfund.rtaCode}</Text>
                                         </View>
                                         <View className='w-3/12 mb-8 pr-2'>
-                                            <Text className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>NAV</Text>
-                                            <Text className='font-bold text-base'>{data.mutualfund.nav}</Text>
+                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>NAV</Text>
+                                            <Text selectable className='font-bold text-base'>{data.mutualfund.nav}</Text>
                                         </View>
 
 
@@ -175,28 +175,28 @@ export default function AUMDetail() {
                                 <View className="w-12/12 lg:w-4/12 p-2">
                                     {/* <View className='flex flex-row flex-wrap  border-[0.2px] rounded m-1 p-2 w-12/12'>
                                         <View className='w-4/12 mb-8 pr-2'>
-                                            <Text className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Order No</Text>
-                                            <Text className='font-bold text-base'>1202</Text>
+                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Order No</Text>
+                                            <Text selectable className='font-bold text-base'>1202</Text>
                                         </View>
                                         <View className='w-4/12 mb-8 pr-2'>
-                                            <Text className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Order No</Text>
-                                            <Text className='font-bold text-base'>1202</Text>
+                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Order No</Text>
+                                            <Text selectable className='font-bold text-base'>1202</Text>
                                         </View>
                                         <View className='w-4/12 mb-8 pr-2'>
-                                            <Text className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Order No</Text>
-                                            <Text className='font-bold text-base'>1202</Text>
+                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Order No</Text>
+                                            <Text selectable className='font-bold text-base'>1202</Text>
                                         </View>
                                         <View className='w-4/12 mb-8 pr-2'>
-                                            <Text className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Order No</Text>
-                                            <Text className='font-bold text-base'>1202</Text>
+                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Order No</Text>
+                                            <Text selectable className='font-bold text-base'>1202</Text>
                                         </View>
                                         <View className='w-4/12 mb-8 pr-2'>
-                                            <Text className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Order No</Text>
-                                            <Text className='font-bold text-base'>1202</Text>
+                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Order No</Text>
+                                            <Text selectable className='font-bold text-base'>1202</Text>
                                         </View>
                                         <View className='w-4/12 mb-8 pr-2'>
-                                            <Text className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Order No</Text>
-                                            <Text className='font-bold text-base'>1202</Text>
+                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Order No</Text>
+                                            <Text selectable className='font-bold text-base'>1202</Text>
                                         </View>
                                     </View> */}
                                 </View>

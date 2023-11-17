@@ -54,54 +54,52 @@ const ClientsDataTable = () => {
     }, [])
 
     return (
-        <ScrollView className={`bg-white`} style={{ height: Dimensions.get("window").height - 100 }} showsVerticalScrollIndicator={true}>
-            <View className='bg-white'>
-                <View className=''>
-                    <View className='flex flex-row justify-between items-center mb-[30px] mt-3 bg-[#eaf3fe] h-28 px-2 '>
-                        <View className='flex flex-col w-6/12'>
-                            <Text className='text-2xl font-extrabold mb-3'>Clients</Text>
-                            <View className='flex flex-row items-center'>
-                                <Link href={""} className='mr-4'>
-                                    {/* <Icon name="home" size={18} color="black" /> */}
-                                    <Text>Dashboard</Text>
-                                </Link>
-                                <View className='mr-4'>
-                                    <Icon name="circle" style={{ fontWeight: "100" }} size={8} color="grey" />
-                                </View>
+        <View className='bg-white'>
+            <View className=''>
+                <View className='flex flex-row justify-between items-center mb-[30px] mt-3 bg-[#eaf3fe] h-28 px-2 '>
+                    <View className='flex flex-col w-6/12'>
+                        <Text selectable className='text-2xl font-extrabold mb-3'>Clients</Text>
+                        <View className='flex flex-row items-center'>
+                            <Link href={""} className='mr-4'>
+                                {/* <Icon name="home" size={18} color="black" /> */}
+                                <Text>Dashboard</Text>
+                            </Link>
+                            <View className='mr-4'>
+                                <Icon name="circle" style={{ fontWeight: "100" }} size={8} color="grey" />
                             </View>
                         </View>
-                        <View className='w-6/12 overflow-hidden h-full flex flex-row justify-center'>
-                            <ImageBackground className='' source={require('../../../assets/images/ChatBc.png')} resizeMode="center" style={{
-                                // flex: 1,
-                                // justifyContent: 'center',
-                            }}>
-
-                            </ImageBackground>
-                        </View>
                     </View>
+                    <View className='w-6/12 overflow-hidden h-full flex flex-row justify-center'>
+                        <ImageBackground className='' source={require('../../../assets/images/ChatBc.png')} resizeMode="center" style={{
+                            // flex: 1,
+                            // justifyContent: 'center',
+                        }}>
 
-                </View>
-                <View className='border-[0.2px]  border-[#e4e4e4]'>
-
-                    <DynamicFilters downloadApi={"client/download-report"} filtersSchema={filtersSchema} setCurrentPageNumber={setCurrentPageNumber} getList={getDataList} appliedFilers={appliedFilers} setAppliedFilers={setAppliedFilers} />
-
-                    {
-                        !isLoading ? <View className='mt-4 z-[-1]'>
-                            <ClientsRows data={data} schema={null} />
-                        </View> : <HStack space={2} marginTop={20} justifyContent="center">
-                            <Spinner color={"black"} accessibilityLabel="Loading order" />
-                            <Heading color="black" fontSize="md">
-                                Loading
-                            </Heading>
-                        </HStack>
-                    }
-
-
+                        </ImageBackground>
+                    </View>
                 </View>
 
-                <Pagination getDataList={getDataList} currentPageNumber={currentPageNumber} totalPages={totalPages} setCurrentPageNumber={setCurrentPageNumber} />
-            </View >
-        </ScrollView >
+            </View>
+            <View className='border-[0.2px]  border-[#e4e4e4]'>
+
+                <DynamicFilters downloadApi={"client/download-report"} filtersSchema={filtersSchema} setCurrentPageNumber={setCurrentPageNumber} getList={getDataList} appliedFilers={appliedFilers} setAppliedFilers={setAppliedFilers} />
+
+                {
+                    !isLoading ? <View className='mt-4 z-[-1]'>
+                        <ClientsRows data={data} schema={null} />
+                    </View> : <HStack space={2} marginTop={20} justifyContent="center">
+                        <Spinner color={"black"} accessibilityLabel="Loading order" />
+                        <Heading color="black" fontSize="md">
+                            Loading
+                        </Heading>
+                    </HStack>
+                }
+
+
+            </View>
+
+            <Pagination getDataList={getDataList} currentPageNumber={currentPageNumber} totalPages={totalPages} setCurrentPageNumber={setCurrentPageNumber} />
+        </View >
     );
 };
 

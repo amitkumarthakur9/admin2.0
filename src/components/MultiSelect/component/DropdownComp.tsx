@@ -68,7 +68,7 @@ export default function DropdownComp({
       case 'object':
         return ListItemSelectedIconComp;
       default:
-        return <Text style={[{ ...styles.ITCMark, ...markedIconStyle }]}>✓</Text>;
+        return <Text selectable style={[{ ...styles.ITCMark, ...markedIconStyle }]}>✓</Text>;
     }
   }
   function checkifInArray(label: string) {
@@ -102,7 +102,7 @@ export default function DropdownComp({
             onPress={() => handleListItemClick(value)}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               {sublistItemLeftIconComp ? sublistItemLeftIconComp : null}
-              <Text style={[{ ...styles.ITCLabel, ...ListLabelStyle }]}>
+              <Text selectable style={[{ ...styles.ITCLabel, ...ListLabelStyle }]}>
                 {label}
               </Text>
             </View>
@@ -118,7 +118,7 @@ export default function DropdownComp({
             onPress={() => handleListItemClick(value)}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               {listItemLeftIconComp ? listItemLeftIconComp : null}
-              <Text style={[{ ...styles.ITCLabel, ...ListLabelStyle }]}>
+              <Text selectable style={[{ ...styles.ITCLabel, ...ListLabelStyle }]}>
                 {label}
               </Text>
             </View>
@@ -175,7 +175,7 @@ export default function DropdownComp({
                     //     ],
                     // },
                   ]}>
-                  {/* <Text style={styles.RSIBDot}>{'\u2B24'}</Text> */}
+                  {/* <Text selectable style={styles.RSIBDot}>{'\u2B24'}</Text> */}
                   <Text
                     style={[
                       { ...styles.RSIBLabel, ...selectedItemBadgeLabelStyle },
@@ -234,7 +234,7 @@ export default function DropdownComp({
                         ],
                     },
                   ]}>
-                  <Text style={styles.RSIBDot}>{'\u2B24'}</Text>
+                  <Text selectable style={styles.RSIBDot}>{'\u2B24'}</Text>
                   <Text
                     style={[
                       { ...styles.RSIBLabel, ...selectedItemBadgeLabelStyle },
@@ -263,7 +263,7 @@ export default function DropdownComp({
                 paddingVertical: 3,
               }}
               onPress={hideSelection}>
-              <Text style={HideSelectionTextStyle ? HideSelectionTextStyle : styles.HSTextStyle}>Hide selection</Text>
+              <Text selectable style={HideSelectionTextStyle ? HideSelectionTextStyle : styles.HSTextStyle}>Hide selection</Text>
             </TouchableOpacity>
           ) : null}
         </ScrollView>
@@ -283,7 +283,7 @@ export default function DropdownComp({
             {sData.length > 0 ? (
               <RenderSeletedItem />
             ) : (
-              <Text style={styles.PLACEHOLDER}>
+              <Text selectable style={styles.PLACEHOLDER}>
                 {placeholder ? placeholder : value}
               </Text>
             )}
@@ -296,7 +296,7 @@ export default function DropdownComp({
                 {dropdownIndicator == 'arrow' ? (
                   <Icon style={{ marginRight: 4 }} name={"angle-down"} size={18} />
                 ) : (
-                  <Text style={styles.DDDPlus}>{PLUS}</Text>
+                  <Text selectable style={styles.DDDPlus}>{PLUS}</Text>
                 )}
               </Pressable>;
             }}>
@@ -315,7 +315,7 @@ export default function DropdownComp({
             {dropdownIndicator == 'arrow' ? (
               <Icon style={{ marginRight: 4 }} name={open ? "angle-up" : "angle-down"} size={18} />
             ) : (
-              <Text style={styles.DDDPlus}>{PLUS}</Text>
+              <Text selectable style={styles.DDDPlus}>{PLUS}</Text>
             )}
           </Pressable> */}
           </View>
@@ -327,14 +327,14 @@ export default function DropdownComp({
             {itemsRef.current.length > 0 ? (
               <RenderSeletedItem />
             ) : (
-              <Text style={styles.PLACEHOLDER}>
+              <Text selectable style={styles.PLACEHOLDER}>
                 {placeholder ? placeholder : value}
               </Text>)}
             <View style={styles.DDPressable}>
               {dropdownIndicator == 'arrow' ? (
-                <Text style={styles.DDDArrow}>{DOWN_ARROW}</Text>
+                <Text selectable style={styles.DDDArrow}>{DOWN_ARROW}</Text>
               ) : (
-                <Text style={styles.DDDPlus}>{PLUS}</Text>
+                <Text selectable style={styles.DDDPlus}>{PLUS}</Text>
               )}
             </View>
           </TouchableOpacity>
@@ -356,7 +356,7 @@ export default function DropdownComp({
                 style={styles.fullModalXBtnView}
                 android_ripple={{ radius: 20, borderless: true, color: 'gray' }}
                 onPress={toggleModal}>
-                <Text style={styles.fullModalXBtnText}>X</Text>
+                <Text selectable style={styles.fullModalXBtnText}>X</Text>
               </Pressable>
             ) : undefined
           }

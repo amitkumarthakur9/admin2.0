@@ -35,68 +35,68 @@ const ModalTabs = ({ label }) => {
                                 <View className='flex flex-column'>
                                     <View className='flex flex-row m-2 space-around'>
                                         <View>
-                                            <Text className='mr-2'>User ID</Text>
+                                            <Text selectable className='mr-2'>User ID</Text>
                                         </View>
                                         <View>
-                                            <Text className='text-sm'>12121212</Text>
-                                        </View>
-                                    </View>
-                                    <View className='flex flex-row m-2 space-around'>
-                                        <View>
-                                            <Text className='mr-2'>User ID</Text>
-                                        </View>
-                                        <View>
-                                            <Text className='text-sm'>12121212</Text>
+                                            <Text selectable className='text-sm'>12121212</Text>
                                         </View>
                                     </View>
                                     <View className='flex flex-row m-2 space-around'>
                                         <View>
-                                            <Text className='mr-2'>User ID</Text>
+                                            <Text selectable className='mr-2'>User ID</Text>
                                         </View>
                                         <View>
-                                            <Text className='text-sm'>12121212</Text>
+                                            <Text selectable className='text-sm'>12121212</Text>
                                         </View>
                                     </View>
                                     <View className='flex flex-row m-2 space-around'>
                                         <View>
-                                            <Text className='mr-2'>User ID</Text>
+                                            <Text selectable className='mr-2'>User ID</Text>
                                         </View>
                                         <View>
-                                            <Text className='text-sm'>12121212</Text>
+                                            <Text selectable className='text-sm'>12121212</Text>
+                                        </View>
+                                    </View>
+                                    <View className='flex flex-row m-2 space-around'>
+                                        <View>
+                                            <Text selectable className='mr-2'>User ID</Text>
+                                        </View>
+                                        <View>
+                                            <Text selectable className='text-sm'>12121212</Text>
                                         </View>
                                     </View>
                                 </View>
                                 <View className='flex flex-column'>
                                     <View className='flex flex-row m-2 space-around'>
                                         <View>
-                                            <Text className='mr-2'>User ID</Text>
+                                            <Text selectable className='mr-2'>User ID</Text>
                                         </View>
                                         <View>
-                                            <Text className='text-sm'>12121212</Text>
-                                        </View>
-                                    </View>
-                                    <View className='flex flex-row m-2 space-around'>
-                                        <View>
-                                            <Text className='mr-2'>User ID</Text>
-                                        </View>
-                                        <View>
-                                            <Text className='text-sm'>12121212</Text>
+                                            <Text selectable className='text-sm'>12121212</Text>
                                         </View>
                                     </View>
                                     <View className='flex flex-row m-2 space-around'>
                                         <View>
-                                            <Text className='mr-2'>User ID</Text>
+                                            <Text selectable className='mr-2'>User ID</Text>
                                         </View>
                                         <View>
-                                            <Text className='text-sm'>12121212</Text>
+                                            <Text selectable className='text-sm'>12121212</Text>
                                         </View>
                                     </View>
                                     <View className='flex flex-row m-2 space-around'>
                                         <View>
-                                            <Text className='mr-2'>User ID</Text>
+                                            <Text selectable className='mr-2'>User ID</Text>
                                         </View>
                                         <View>
-                                            <Text className='text-sm'>12121212</Text>
+                                            <Text selectable className='text-sm'>12121212</Text>
+                                        </View>
+                                    </View>
+                                    <View className='flex flex-row m-2 space-around'>
+                                        <View>
+                                            <Text selectable className='mr-2'>User ID</Text>
+                                        </View>
+                                        <View>
+                                            <Text selectable className='text-sm'>12121212</Text>
                                         </View>
                                     </View>
                                 </View>
@@ -109,31 +109,31 @@ const ModalTabs = ({ label }) => {
                                     <View className='flex flex-row items-center'>
                                         <Checkbox status='checked' />
                                         <View className='mr-4'>
-                                            <Text className='text-sm'>FATCA Done</Text>
+                                            <Text selectable className='text-sm'>FATCA Done</Text>
                                         </View>
                                     </View>
                                     <View className='flex flex-row items-center'>
                                         <Checkbox status='unchecked' />
                                         <View className='mr-4'>
-                                            <Text className='text-sm'>FATCA Done</Text>
+                                            <Text selectable className='text-sm'>FATCA Done</Text>
                                         </View>
                                     </View>
                                     <View className='flex flex-row items-center'>
                                         <Checkbox status='unchecked' />
                                         <View className='mr-4'>
-                                            <Text className='text-sm'>FATCA Done</Text>
+                                            <Text selectable className='text-sm'>FATCA Done</Text>
                                         </View>
                                     </View>
                                     <View className='flex flex-row items-center'>
                                         <Checkbox status='unchecked' />
                                         <View className='mr-4'>
-                                            <Text className='text-sm'>FATCA Done</Text>
+                                            <Text selectable className='text-sm'>FATCA Done</Text>
                                         </View>
                                     </View>
                                     <View className='flex flex-row items-center'>
                                         <Checkbox status='unchecked' />
                                         <View className='mr-4'>
-                                            <Text className='text-sm'>FATCA Done</Text>
+                                            <Text selectable className='text-sm'>FATCA Done</Text>
                                         </View>
                                     </View>
                                 </View>
@@ -145,7 +145,7 @@ const ModalTabs = ({ label }) => {
                                 <View className='flex flex-column'>
                                     <View className='flex flex-row m-2 space-around'>
                                         <View>
-                                            <Text className='mr-2'>Report 1</Text>
+                                            <Text selectable className='mr-2'>Report 1</Text>
                                         </View>
                                         <View className='ml-4'>
                                             <Icon name="download" size={18} color="#484848" />
@@ -153,7 +153,7 @@ const ModalTabs = ({ label }) => {
                                     </View>
                                     <View className='flex flex-row m-2 space-around'>
                                         <View>
-                                            <Text className='mr-2'>Report 2</Text>
+                                            <Text selectable className='mr-2'>Report 2</Text>
                                         </View>
                                         <View className='ml-4'>
                                             <Icon name="download" size={18} color="#484848" />
@@ -161,7 +161,7 @@ const ModalTabs = ({ label }) => {
                                     </View>
                                     <View className='flex flex-row m-2 space-around'>
                                         <View>
-                                            <Text className='mr-2'>Report 3</Text>
+                                            <Text selectable className='mr-2'>Report 3</Text>
                                         </View>
                                         <View className='ml-4'>
                                             <Icon name="download" size={18} color="#484848" />
@@ -169,7 +169,7 @@ const ModalTabs = ({ label }) => {
                                     </View>
                                     <View className='flex flex-row m-2 space-around'>
                                         <View>
-                                            <Text className='mr-2'>Report 4</Text>
+                                            <Text selectable className='mr-2'>Report 4</Text>
                                         </View>
                                         <View className='ml-4'>
                                             <Icon name="download" size={18} color="#484848" />
@@ -177,7 +177,7 @@ const ModalTabs = ({ label }) => {
                                     </View>
                                     <View className='flex flex-row m-2 space-around'>
                                         <View>
-                                            <Text className='mr-2'>Report 5</Text>
+                                            <Text selectable className='mr-2'>Report 5</Text>
                                         </View>
                                         <View className='ml-4'>
                                             <Icon name="download" size={18} color="#484848" />

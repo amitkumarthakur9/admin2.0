@@ -40,7 +40,7 @@ export const ToastAlert = ({
             <HStack flexShrink={1} alignItems="center" justifyContent="space-between">
                 <HStack space={2} flexShrink={1} alignItems="center">
                     <Alert.Icon />
-                    <Text fontSize="md" fontWeight="medium" flexShrink={1} color={variant === "solid" ? "lightText" : variant !== "outline" ? "darkText" : null}>
+                    <Text selectable fontSize="md" fontWeight="medium" flexShrink={1} color={variant === "solid" ? "lightText" : variant !== "outline" ? "darkText" : null}>
                         {title}
                     </Text>
                 </HStack>
@@ -48,7 +48,7 @@ export const ToastAlert = ({
                     color: variant === "solid" ? "lightText" : "darkText"
                 }} onPress={() => toast.close(id)} /> : null}
             </HStack>
-            <Text px="6" color={variant === "solid" ? "lightText" : variant !== "outline" ? "darkText" : null}>
+            <Text selectable px="6" color={variant === "solid" ? "lightText" : variant !== "outline" ? "darkText" : null}>
                 {description}
             </Text>
         </VStack>

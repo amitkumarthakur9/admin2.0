@@ -69,7 +69,7 @@ export const Pagination = ({ currentPageNumber, totalPages, setCurrentPageNumber
                         className={"rounded-md px-3 py-2" + (currentPageNumber === page ? " bg-black" : " bg-slate-200")}
 
                     >
-                        <Text className={currentPageNumber === page ? "text-white" : "text-black"}>{page}</Text>
+                        <Text selectable className={currentPageNumber === page ? "text-white" : "text-black"}>{page}</Text>
                     </Pressable>
                 </View>
             ))}

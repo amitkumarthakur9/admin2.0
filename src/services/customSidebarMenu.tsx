@@ -34,7 +34,7 @@ const CustomSidebarMenu = (props) => {
                 style={styles.sideMenuProfileIcon}
             />
             {/* <View className='flex flex-row justify-start pl-3'>
-                <Text className='text-xl font-bold text-slate-400'>Dashboard</Text>
+                <Text selectable className='text-xl font-bold text-slate-400'>Dashboard</Text>
             </View> */}
             <DrawerContentScrollView {...props}>
 
@@ -50,7 +50,7 @@ const CustomSidebarMenu = (props) => {
             >
                 <View className='flex flex-row'>
                     <Icon name="sign-out" size={18} color="red" />
-                    <Text className='text-sm font-bold text-rose-500'>Sign out</Text>
+                    <Text selectable className='text-sm font-bold text-rose-500'>Sign out</Text>
                 </View>
 
             </TouchableRipple>

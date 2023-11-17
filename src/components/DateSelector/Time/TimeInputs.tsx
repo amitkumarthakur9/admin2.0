@@ -112,7 +112,7 @@ function TimeInputs({
           }}
         />
         {inputType === 'keyboard' ? (
-          <Text maxFontSizeMultiplier={1.5} variant="bodySmall">
+          <Text selectable maxFontSizeMultiplier={1.5} variant="bodySmall">
             Hour
           </Text>
         ) : null}
@@ -177,7 +177,7 @@ function TimeInputs({
           }}
         />
         {inputType === 'keyboard' ? (
-          <Text maxFontSizeMultiplier={1.5} variant="bodySmall">
+          <Text selectable maxFontSizeMultiplier={1.5} variant="bodySmall">
             Minute
           </Text>
         ) : null}

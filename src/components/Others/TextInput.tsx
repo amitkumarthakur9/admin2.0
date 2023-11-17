@@ -16,9 +16,9 @@ export default function TextInput({ errorText, description, ...props }) {
 
             />
             {description && !errorText ? (
-                <Text style={styles.description}>{description}</Text>
+                <Text selectable style={styles.description}>{description}</Text>
             ) : null}
-            {errorText ? <Text style={styles.error}>{errorText}</Text> : null}
+            {errorText ? <Text selectable style={styles.error}>{errorText}</Text> : null}
         </View>
     )
 }

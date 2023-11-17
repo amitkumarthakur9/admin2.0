@@ -1,4 +1,4 @@
-import { Animated, ButtonProps, Platform, StyleProp, Text, TextStyle, View, ViewStyle } from 'react-native';
+import { Animated, ButtonProps, Dimensions, Platform, StyleProp, Text, TextStyle, View, ViewStyle } from 'react-native';
 import OrderDataTable from '../../../src/components/OrdersTables/OrdersDataTable';
 
 export default function OrdersScreen() {
@@ -15,7 +15,7 @@ export default function OrdersScreen() {
         processing_datetime: "24/08/2022  2:30:10 PM"
     }
 
-    return <View className='' style={{ backgroundColor: "white" }}>
+    return <View className='' style={{ backgroundColor: "white", height: '100%', overflow: "scroll" }}>
 
         <OrderDataTable />
     </View>;

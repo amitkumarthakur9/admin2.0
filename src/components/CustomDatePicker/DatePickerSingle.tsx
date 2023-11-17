@@ -27,14 +27,14 @@ export default function DatePickerSingle() {
             <View className="flex flex-col border-[0.2px] border-black px-4 py-2 mt-5">
                 <View className="flex flex-row items-center mb-2">
                     <Icon name="calendar" size={12} color="black" />
-                    <Text className="ml-2">Request Date</Text>
+                    <Text selectable className="ml-2">Request Date</Text>
                 </View>
 
                 <TouchableOpacity className="flex flex-row  w-full" onPress={() => setOpen(true)}>
 
 
                     <View className="flex flex-col ">
-                        <Text className="text-xs">
+                        <Text selectable className="text-xs">
                             {
                                 date ? date.toDateString() : "Select"
                             }

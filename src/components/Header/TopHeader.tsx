@@ -36,7 +36,7 @@ export default function TopHeader({ navigation }) {
                 >
                     {/* <View className='flex flex-row'> */}
                     <Icon name="sign-out" size={22} color="red" />
-                    {/* <Text className='text-sm font-bold text-rose-500'>Sign out</Text> */}
+                    {/* <Text selectable className='text-sm font-bold text-rose-500'>Sign out</Text> */}
                     {/* </View> */}
 
                 </TouchableRipple>

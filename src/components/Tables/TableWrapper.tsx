@@ -54,7 +54,7 @@ const TableWrapper = ({ itemsPerPage = 10, totalItems, data, schema, apiUrl, req
                         Array.from({ length: totalPages }, (_, index) => (
                             <View key={index} className='rounded-md'>
                                 <TouchableRipple onPress={() => setCurrentPageNumber(index + 1)} className={"rounded-md px-3 py-2" + (currentPageNumber == (index + 1) ? " bg-black" : " bg-slate-200")} rippleColor="rgba(0, 0, 0, .32)">
-                                    <Text className={currentPageNumber == (index + 1) ? "text-white" : "text-black"}>{index + 1}</Text>
+                                    <Text selectable className={currentPageNumber == (index + 1) ? "text-white" : "text-black"}>{index + 1}</Text>
                                 </TouchableRipple>
                             </View>
                         ))

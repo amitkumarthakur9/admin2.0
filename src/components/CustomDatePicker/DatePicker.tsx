@@ -29,7 +29,7 @@ export default function DatePickerComponent({ handleFilterChange, value, fromNam
                         </View>
                     }
                     <View className="flex flex-col">
-                        <Text className={"text-xs " + (value?.length > 0 ? "text-black" : "text-slate-400")}>
+                        <Text selectable className={"text-xs " + (value?.length > 0 ? "text-black" : "text-slate-400")}>
                             {
                                 value?.length > 0 ? value[0] : fromName
                             }
@@ -39,7 +39,7 @@ export default function DatePickerComponent({ handleFilterChange, value, fromNam
                         <Text>-</Text>
                     </View>
                     <View className="flex flex-col">
-                        <Text className={"text-xs " + (value?.length > 1 ? "text-black" : "text-slate-400")}>
+                        <Text selectable className={"text-xs " + (value?.length > 1 ? "text-black" : "text-slate-400")}>
                             {
                                 value?.length > 1 ? value[1] : toName
                             }

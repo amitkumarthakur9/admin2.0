@@ -26,48 +26,48 @@ export const RTAReconciliationRows = ({ data, schema }) => {
         <View className={`flex flex-row py-4 px-2 justify-between ` + (Dimensions.get("screen").width < 770 ? 'w-[1728px]' : '')}>
             <View className='flex flex-row w-3/12'>
                 <View className='flex flex-row items-center w-full justify-start'>
-                    <Text className='font-semibold'>Client Name</Text>
+                    <Text selectable className='font-semibold'>Client Name</Text>
                 </View>
             </View>
 
             <View className='flex flex-row w-2/12'>
                 <View className='flex flex-row items-center w-full justify-start'>
-                    <Text className='font-semibold'>Scheme</Text>
+                    <Text selectable className='font-semibold'>Scheme</Text>
                 </View>
             </View>
             <View className='flex flex-row w-1/12'>
                 <View className='flex flex-row items-center w-full justify-start'>
-                    <Text className='font-semibold'>AMC</Text>
+                    <Text selectable className='font-semibold'>AMC</Text>
                 </View>
             </View>
             <View className='flex flex-row w-1/12'>
                 <View className='flex flex-row items-center w-full justify-start w-4/5'>
-                    <Text className='font-semibold'>RTA Agent Code</Text>
+                    <Text selectable className='font-semibold'>RTA Agent Code</Text>
                 </View>
             </View>
             <View className='flex flex-row w-1/12'>
                 <View className='flex flex-row items-center w-full justify-start'>
-                    <Text className='font-semibold'>BSE Order No</Text>
+                    <Text selectable className='font-semibold'>BSE Order No</Text>
                 </View>
             </View>
             <View className='flex flex-row w-1/12'>
                 <View className='flex flex-row items-center w-full justify-start w-4/5'>
-                    <Text className='font-semibold'>Transaction Date</Text>
+                    <Text selectable className='font-semibold'>Transaction Date</Text>
                 </View>
             </View>
             <View className='flex flex-row w-1/12'>
                 <View className='flex flex-row items-center w-full justify-start'>
-                    <Text className='font-semibold'>Folio No</Text>
+                    <Text selectable className='font-semibold'>Folio No</Text>
                 </View>
             </View>
             <View className='flex flex-row w-1/12'>
                 <View className='flex flex-row items-center w-full justify-start'>
-                    <Text className='font-semibold'>Amount</Text>
+                    <Text selectable className='font-semibold'>Amount</Text>
                 </View>
             </View>
             <View className='flex flex-row w-1/12'>
                 <View className='flex flex-row items-center w-full justify-start w-4/5'>
-                    <Text className='font-semibold'>Reconciled Type</Text>
+                    <Text selectable className='font-semibold'>Reconciled Type</Text>
                 </View>
             </View>
         </View>
@@ -86,11 +86,11 @@ export const RTAReconciliationRows = ({ data, schema }) => {
                         <View className='flex flex-row w-3/12'>
                             <View className='flex flex-row items-center justify-start w-full'>
                                 <View className='flex flex-row rounded-full bg-[#e60202] mr-2 h-10 w-10 items-center justify-center'>
-                                    <Text className='text-white'>{getInitials(client.account.name)}</Text>
+                                    <Text selectable className='text-white'>{getInitials(client.account.name)}</Text>
                                 </View>
                                 <View className='flex flex-col'>
                                     <View className='flex flex-row items-center text-black font-semibold max-w-[240px] lg:max-w-[300px] break-all'>
-                                        <Text className='text-black font-semibold max-w-[240px] lg:max-w-[300px] break-all'>{client.account.name}&nbsp;</Text>
+                                        <Text selectable className='text-black font-semibold max-w-[240px] lg:max-w-[300px] break-all'>{client.account.name}&nbsp;</Text>
                                         <Popover trigger={triggerProps => {
                                             return <TouchableOpacity {...triggerProps}>
                                                 <Icon name="info-circle" size={12} color="black" />
@@ -111,12 +111,12 @@ export const RTAReconciliationRows = ({ data, schema }) => {
                                         </Popover>
                                     </View>
                                     <View className='flex flex-row items-center mt-0'>
-                                        <Text className='text-[#6C6A6A] text-sm'>{"T97C5"}</Text>
+                                        <Text selectable className='text-[#6C6A6A] text-sm'>{"T97C5"}</Text>
                                         {/* <View className='rounded-full bg-[#6C6A6A] h-2 w-2 mx-1'></View> */}
 
                                     </View>
                                     <View className='flex flex-row items-center mt-0'>
-                                        <Text className='text-[#6C6A6A] text-sm'>{"LAJPS2412N"}</Text>
+                                        <Text selectable className='text-[#6C6A6A] text-sm'>{"LAJPS2412N"}</Text>
                                         {/* <View className='rounded-full bg-[#6C6A6A] h-2 w-2 mx-1'></View> */}
 
                                     </View>
@@ -125,10 +125,10 @@ export const RTAReconciliationRows = ({ data, schema }) => {
                         </View>
                         <View className='flex flex-row  w-2/12 '>
                             <View className='flex flex-col '>
-                                <Text className='text-[#000000] font-bold whitespace-normal max-w-[200px] '>{"Dsp Flexi Cap Fund - Regular Plan - Idcw Reinvestment"}</Text>
-                                <Text className='text-[#686868] font-semibold'>{"DS10-DR"}</Text>
-                                {/* <Text className='text-[#686868] font-semibold'>{client.mutualfund.bseDematSchemeCode}</Text>
-                                    <Text className='text-[#686868] font-semibold'>{client.mutualfund.fundhouse.name}</Text> */}
+                                <Text selectable className='text-[#000000] font-bold whitespace-normal max-w-[200px] '>{"Dsp Flexi Cap Fund - Regular Plan - Idcw Reinvestment"}</Text>
+                                <Text selectable className='text-[#686868] font-semibold'>{"DS10-DR"}</Text>
+                                {/* <Text selectable className='text-[#686868] font-semibold'>{client.mutualfund.bseDematSchemeCode}</Text>
+                                    <Text selectable className='text-[#686868] font-semibold'>{client.mutualfund.fundhouse.name}</Text> */}
                             </View>
                         </View>
                         <View className="flex flex-row w-1/12">
@@ -169,7 +169,7 @@ export const RTAReconciliationRows = ({ data, schema }) => {
                         <View className="flex flex-row w-1/12  justify-start">
                             <View className='flex flex-col  h-8 items-center justify-center bg-[#D7D7D7] rounded-full w-11/12'>
                                 <View className='flex flex-row items-center '>
-                                    <Text className='p-1 text-black text-end md:text-center text-xs'>{'Non Reconciled'}&nbsp;</Text>
+                                    <Text selectable className='p-1 text-black text-end md:text-center text-xs'>{'Non Reconciled'}&nbsp;</Text>
                                 </View>
 
                             </View>

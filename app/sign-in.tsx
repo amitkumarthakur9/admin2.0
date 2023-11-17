@@ -80,7 +80,7 @@ export default function SignIn() {
                 <TouchableOpacity
                     onPress={() => router.replace("/forgot-password")}
                 >
-                    <Text style={styles.forgot}>Forgot your password?</Text>
+                    <Text selectable style={styles.forgot}>Forgot your password?</Text>
                 </TouchableOpacity>
             </View> */}
             <Button style={{ backgroundColor: "#013974" }} mode="contained" onPress={onLoginPressed}>
@@ -89,7 +89,7 @@ export default function SignIn() {
             {/* <View style={styles.row}>
                 <Text>Don’t have an account? </Text>
                 <TouchableOpacity onPress={() => router.replace("/register")}>
-                    <Text style={styles.link}>Sign up</Text>
+                    <Text selectable style={styles.link}>Sign up</Text>
                 </TouchableOpacity>
             </View> */}
         </Background>

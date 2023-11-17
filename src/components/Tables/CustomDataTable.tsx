@@ -115,7 +115,7 @@ const CustomDataTable: React.FC<DataTableProps> = ({ data = [] }) => {
                         </DataTable.Cell>
                         <DataTable.Cell style={{ width: 120, flexBasis: "auto" }}>{item.mobile}</DataTable.Cell>
                         <DataTable.Cell style={{ width: 150, flexBasis: "auto" }}>{item.email}</DataTable.Cell>
-                        <DataTable.Cell style={{ width: 125, flexBasis: "auto" }}>{item.pan} <Text className='text-green-500'>KYC</Text></DataTable.Cell>
+                        <DataTable.Cell style={{ width: 125, flexBasis: "auto" }}>{item.pan} <Text selectable className='text-green-500'>KYC</Text></DataTable.Cell>
                         <DataTable.Cell style={{ width: 120, flexBasis: "auto" }}>{item.tax_status}</DataTable.Cell>
                         <DataTable.Cell style={{ width: 20, flexBasis: "auto" }}>
                             <Button style={{ width: 30, }} icon="dots-vertical" mode="text" onPress={() => console.log('Pressed')}>

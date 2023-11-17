@@ -17,7 +17,7 @@ const DropdownComponent = ({ label = "", data = [] }: { label: string; data: Dro
         if (value || isFocus) {
             return (
                 <></>
-                // <Text style={[styles.label, isFocus && { color: 'blue' }]}>
+                // <Text selectable style={[styles.label, isFocus && { color: 'blue' }]}>
                 //     Dropdown label
                 // </Text>
             );

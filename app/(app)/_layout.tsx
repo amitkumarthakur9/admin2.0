@@ -48,7 +48,7 @@ export default function AppLayout() {
 
     // This layout can be deferred because it's not the root layout.
     // return <PaperProvider theme={PaperTheme}>
-    return <SafeAreaProvider>
+    return <SafeAreaProvider style={{ backgroundColor: "white" }}>
         <PaperProvider theme={PaperTheme}>
             <NativeBaseProvider>
                 {/* <Drawer screenOptions={({ navigation }) => ({
@@ -75,6 +75,7 @@ export default function AppLayout() {
                         //     drawerLabel: "Dashboard",
                         //     title: "Dashboard",
                         // }}
+
                         name='Home'
                         component={Dashboard}
                     />
@@ -85,6 +86,9 @@ export default function AppLayout() {
                         options={{
                             drawerLabel: "Orders",
                             title: "",
+                            drawerContentContainerStyle: {
+                                backgroundColor: "white"
+                            }
                         }}
                         // initialParams={{}}
                         component={OrdersScreen}

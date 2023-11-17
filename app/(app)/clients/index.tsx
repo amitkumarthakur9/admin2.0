@@ -11,7 +11,7 @@ export default function ClientsScreen() {
         client_doi: "10/02/2017 12:00:10 AM",
     }
 
-    return <View className='' style={{}}>
+    return <View className='' style={{ backgroundColor: "white", height: '100%', overflow: "scroll" }}>
         <ClientDataTable />
     </View>;
 }

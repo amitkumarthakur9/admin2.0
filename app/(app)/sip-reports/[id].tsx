@@ -51,7 +51,7 @@ export default function SIPReportsDetail() {
                         <View className=''>
                             <View className='flex flex-row justify-between items-center mb-[30px] mt-3 bg-[#eaf3fe] h-28 px-2 '>
                                 <View className='flex flex-col w-6/12'>
-                                    <Text className='text-2xl font-extrabold mb-3'>SIP Report Details</Text>
+                                    <Text selectable className='text-2xl font-extrabold mb-3'>SIP Report Details</Text>
                                     <View className='flex flex-row items-center'>
                                         <Link href={"/"} className='mr-4'>
                                             {/* <Icon name="home" size={18} color="black" /> */}
@@ -90,7 +90,7 @@ export default function SIPReportsDetail() {
 
                                 </View>
                                 <View>
-                                    <Pressable marginRight={4} onPress={() => console.log("hello world")} paddingX={9} paddingY={2} bg={"#000000"} rounded={4} borderColor={"#bfbfbf"} borderWidth={0.3}>
+                                    <Pressable marginRight={0} onPress={() => console.log("hello world")} paddingX={9} paddingY={2} bg={"#000000"} rounded={4} borderColor={"#bfbfbf"} borderWidth={0.3}>
                                         <Icon name="download" style={{ fontWeight: "100" }} size={14} color="white" />
                                     </Pressable>
 
@@ -100,29 +100,29 @@ export default function SIPReportsDetail() {
                                 <View className="w-12/12 lg:w-8/12  p-2">
                                     <View className='flex flex-row flex-wrap  border-[0.2px] rounded m-1 p-2 w-12/12'>
                                         <View className='w-3/12 mb-2'>
-                                            <Text className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Distributor CompanyId</Text>
-                                            <Text className='font-bold text-base'>{data.distributor.distributorCompanyId}</Text>
+                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Distributor CompanyId</Text>
+                                            <Text selectable className='font-bold text-base'>{data.distributor.distributorCompanyId}</Text>
                                         </View>
                                         <View className='w-3/12 mb-2'>
-                                            <Text className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Mandate</Text>
-                                            <Text className='font-bold text-base'>{data.mandate?.mandateId}</Text>
+                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Mandate</Text>
+                                            <Text selectable className='font-bold text-base'>{data.mandate?.mandateId}</Text>
                                         </View>
                                         <View className='w-3/12 mb-2'>
-                                            <Text className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Mandate Status</Text>
-                                            <Text className='font-bold text-base'>{data.mandate?.mandateStatus.name}</Text>
+                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Mandate Status</Text>
+                                            <Text selectable className='font-bold text-base'>{data.mandate?.mandateStatus.name}</Text>
                                         </View>
                                         <View className='w-3/12 mb-8 pr-2'>
-                                            <Text className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Order Status</Text>
-                                            <Text className='font-bold text-base'>{data.orderStatus.name}</Text>
+                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Order Status</Text>
+                                            <Text selectable className='font-bold text-base'>{data.orderStatus.name}</Text>
                                         </View>
                                         <View className='w-3/12 mb-8 pr-2'>
-                                            <Text className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Fund Category</Text>
-                                            <Text className='font-bold text-base'>{data.mutualfund.mutualfundSubcategory.mutualfundCategory.name}</Text>
+                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Fund Category</Text>
+                                            <Text selectable className='font-bold text-base'>{data.mutualfund.mutualfundSubcategory.mutualfundCategory.name}</Text>
                                         </View>
 
                                         <View className='w-3/12 mb-8 pr-2'>
-                                            <Text className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Fund Subcategory</Text>
-                                            <Text className='font-bold text-base'>{data.mutualfund.mutualfundSubcategory.name}</Text>
+                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Fund Subcategory</Text>
+                                            <Text selectable className='font-bold text-base'>{data.mutualfund.mutualfundSubcategory.name}</Text>
                                         </View>
                                     </View>
 
@@ -131,17 +131,17 @@ export default function SIPReportsDetail() {
                                     <View className='flex flex-col flex-wrap  border-[0.2px] rounded m-1 p-2 w-12/12'>
                                         {/* <View className='items-center flex flex-col'>
                                             <View className='flex flex-row rounded-full bg-[#e60202] mr-2 h-10 w-10 items-center justify-center'>
-                                                <Text className='text-white'>{getInitials(data.account.name)}</Text>
+                                                <Text selectable className='text-white'>{getInitials(data.account.name)}</Text>
                                             </View>
                                         </View> */}
                                         <View className='flex flex-col mb-8 pr-2'>
-                                            <Text className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Customer Name</Text>
+                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Customer Name</Text>
 
-                                            <Text className='font-bold text-base'>{data.account.name}</Text>
+                                            <Text selectable className='font-bold text-base'>{data.account.name}</Text>
                                         </View>
                                         <View className='mb-8 pr-2'>
-                                            <Text className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Client Code</Text>
-                                            <Text className='font-bold text-base'>{data.account.clientId}</Text>
+                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Client Code</Text>
+                                            <Text selectable className='font-bold text-base'>{data.account.clientId}</Text>
                                         </View>
                                     </View>
                                 </View>
@@ -151,34 +151,34 @@ export default function SIPReportsDetail() {
                                 <View className="w-12/12 lg:w-8/12  p-2">
                                     <View className='flex flex-row flex-wrap  border-[0.2px] rounded m-1 p-2 w-12/12'>
                                         <View className='w-3/12 mb-2'>
-                                            <Text className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Amount</Text>
-                                            <Text className='font-bold text-base'>{data.amount}</Text>
+                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Amount</Text>
+                                            <Text selectable className='font-bold text-base'>{data.amount}</Text>
                                         </View>
                                         <View className='w-3/12 mb-2'>
-                                            <Text className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Units</Text>
-                                            <Text className='font-bold text-base'>{data.units}</Text>
+                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Units</Text>
+                                            <Text selectable className='font-bold text-base'>{data.units}</Text>
                                         </View>
                                         <View className='w-3/12 mb-8 pr-2'>
-                                            <Text className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>No Of Installments Executed</Text>
-                                            <Text className='font-bold text-base'>{data.noOfInstallmentsExecuted}</Text>
+                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>No Of Installments Executed</Text>
+                                            <Text selectable className='font-bold text-base'>{data.noOfInstallmentsExecuted}</Text>
                                         </View>
                                         <View className='w-3/12 mb-8 pr-2'>
-                                            <Text className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Total No Of Installments</Text>
-                                            <Text className='font-bold text-base'>{data.totalNoOfInstallments}</Text>
+                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Total No Of Installments</Text>
+                                            <Text selectable className='font-bold text-base'>{data.totalNoOfInstallments}</Text>
                                         </View>
                                         <View className='w-3/12 mb-8 pr-2'>
-                                            <Text className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Sip Reference Number</Text>
-                                            <Text className='font-bold text-base'>{data.sipReferenceNumber}</Text>
+                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Sip Reference Number</Text>
+                                            <Text selectable className='font-bold text-base'>{data.sipReferenceNumber}</Text>
                                         </View>
 
 
                                         <View className='w-3/12 mb-8 pr-2'>
-                                            <Text className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Start Date</Text>
-                                            <Text className='font-bold text-base'>{data.startDate ? moment(new Date(data.startDate)).format('DD-MM-YYYY') : ""}</Text>
+                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Start Date</Text>
+                                            <Text selectable className='font-bold text-base'>{data.startDate ? moment(new Date(data.startDate)).format('DD-MM-YYYY') : ""}</Text>
                                         </View>
                                         <View className='w-3/12 mb-8 pr-2'>
-                                            <Text className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>End Date</Text>
-                                            <Text className='font-bold text-base'>{data.endDate ? moment(new Date(data.endDate)).format('DD-MM-YYYY') : ""}</Text>
+                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>End Date</Text>
+                                            <Text selectable className='font-bold text-base'>{data.endDate ? moment(new Date(data.endDate)).format('DD-MM-YYYY') : ""}</Text>
                                         </View>
                                     </View>
 
@@ -186,28 +186,28 @@ export default function SIPReportsDetail() {
                                 <View className="w-12/12 lg:w-4/12 p-2">
                                     {/* <View className='flex flex-row flex-wrap  border-[0.2px] rounded m-1 p-2 w-12/12'>
                                         <View className='w-4/12 mb-8 pr-2'>
-                                            <Text className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Order No</Text>
-                                            <Text className='font-bold text-base'>1202</Text>
+                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Order No</Text>
+                                            <Text selectable className='font-bold text-base'>1202</Text>
                                         </View>
                                         <View className='w-4/12 mb-8 pr-2'>
-                                            <Text className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Order No</Text>
-                                            <Text className='font-bold text-base'>1202</Text>
+                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Order No</Text>
+                                            <Text selectable className='font-bold text-base'>1202</Text>
                                         </View>
                                         <View className='w-4/12 mb-8 pr-2'>
-                                            <Text className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Order No</Text>
-                                            <Text className='font-bold text-base'>1202</Text>
+                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Order No</Text>
+                                            <Text selectable className='font-bold text-base'>1202</Text>
                                         </View>
                                         <View className='w-4/12 mb-8 pr-2'>
-                                            <Text className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Order No</Text>
-                                            <Text className='font-bold text-base'>1202</Text>
+                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Order No</Text>
+                                            <Text selectable className='font-bold text-base'>1202</Text>
                                         </View>
                                         <View className='w-4/12 mb-8 pr-2'>
-                                            <Text className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Order No</Text>
-                                            <Text className='font-bold text-base'>1202</Text>
+                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Order No</Text>
+                                            <Text selectable className='font-bold text-base'>1202</Text>
                                         </View>
                                         <View className='w-4/12 mb-8 pr-2'>
-                                            <Text className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Order No</Text>
-                                            <Text className='font-bold text-base'>1202</Text>
+                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Order No</Text>
+                                            <Text selectable className='font-bold text-base'>1202</Text>
                                         </View>
                                     </View> */}
                                 </View>

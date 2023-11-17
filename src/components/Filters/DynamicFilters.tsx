@@ -107,9 +107,9 @@ export const DynamicFilters = ({ filtersSchema, setCurrentPageNumber, getList, a
         setIsDownloadProcessing(false)
     }
 
-    return <View className="flex flex-row justify-between items-center mt-5">
+    return <View className="flex flex-row justify-between items-center mt-5 w-100">
         <View className='static w-10/12 justify-center' style={{}}>
-            <View ref={searchBoxRef} className={'flex flex-row justify-between items-center mx-2 w-12/12 lg:w-6/12  flex static ' + (modalVisible ? 'border-x-[1px] border-t-[1px] rounded-t-lg ' : 'border-[#e4e4e4] border-[0.3px] rounded')}>
+            <View ref={searchBoxRef} className={'flex flex-row justify-between items-center mx-2 w-12/12 lg:w-6/12 static ' + (modalVisible ? 'border-x-[1px] border-t-[1px] rounded-t-lg ' : 'border-[#e4e4e4] border-[0.3px] rounded')}>
                 <TextInput
                     className='w-11/12 outline-transparent'
                     placeholder={'Type Name/Email/Mobile/ClientID/FE User ID/PAN No'}
@@ -152,9 +152,9 @@ export const DynamicFilters = ({ filtersSchema, setCurrentPageNumber, getList, a
                     }} />
                     <View className='p-2'>
                         <View className='mb-4 flex flex-row justify-between'>
-                            <Text className='font-semibold'>Advance Filters</Text>
+                            <Text selectable className='font-semibold'>Advance Filters</Text>
                             <TouchableRipple rippleColor={"#e4e4e4"} onPress={clearFilters}>
-                                <Text className='text-xs underline underline-offset-4'>clear</Text>
+                                <Text selectable className='text-xs underline underline-offset-4'>clear</Text>
                             </TouchableRipple>
                         </View>
                         <FilterForm filtersSchema={filtersSchema} onFilterChange={handleFilterChange} filterValues={filterValues} />
@@ -162,7 +162,7 @@ export const DynamicFilters = ({ filtersSchema, setCurrentPageNumber, getList, a
                     <View className='bg-[#000000] rounded-b-lg'>
                         <TouchableRipple className='py-3' onPress={applyFilters}>
                             <View className='flex flex-row justify-center items-center'>
-                                <Text className='text-center text-sm mr-2 text-white'>Apply Filters</Text>
+                                <Text selectable className='text-center text-sm mr-2 text-white'>Apply Filters</Text>
                                 <Icon name="filter" size={15} color="#ffffff" />
                             </View>
                         </TouchableRipple>
