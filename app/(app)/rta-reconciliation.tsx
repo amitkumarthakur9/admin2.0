@@ -16,7 +16,7 @@ export default function RTAReconciliationScreen() {
         processing_datetime: "24/08/2022  2:30:10 PM"
     }
 
-    return <View className='' style={{ backgroundColor: "white" }}>
+    return <View className='' style={{ backgroundColor: "white", height: '100%', overflow: "scroll" }}>
 
         <RTAReconciliation />
     </View>;

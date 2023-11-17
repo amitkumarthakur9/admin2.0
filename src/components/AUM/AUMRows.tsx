@@ -78,15 +78,15 @@ export const AUMRows = ({ data, schema }) => {
 
                 return <View key={index}>
                     <View className={`flex flex-row p-2 justify-between ` + (Dimensions.get("screen").width < 770 ? 'w-[1728px]' : '')} >
-                        <View className='flex flex-row w-full w-3/12'>
-                            <View className='flex flex-row items-center w-full justify-between'>
-                                <View className='flex flex-row items-center justify-start w-full'>
-                                    <View className='flex flex-row rounded-full bg-[#e60202] mr-2 h-10 w-10 items-center justify-center'>
+                        <View className='flex flex-row w-full w-3/12 flex-wrap'>
+                            <View className='flex flex-row items-center w-full justify-between flex-wrap'>
+                                <View className='flex flex-row items-center justify-start w-full flex-wrap'>
+                                    <View className='flex flex-row rounded-full bg-[#e60202] mr-2 h-10 w-10 items-center justify-center flex-wrap'>
                                         <Text selectable className='text-white'>{getInitials(client.account.name)}</Text>
                                     </View>
-                                    <View className='flex flex-col'>
-                                        <View className='flex flex-row items-center text-black font-semibold max-w-[240px] lg:max-w-[300px] break-all'>
-                                            <Text selectable className='text-black font-semibold max-w-[240px] lg:max-w-[300px] break-all'>{client.account.name}&nbsp;</Text>
+                                    <View className='flex flex-col flex-wrap w-9/12'>
+                                        <View className='flex flex-row items-center text-black font-semibold flex-wrap w-11/12'>
+                                            <Text selectable className='text-black font-semibold break-all'>{client.account.name}&nbsp;</Text>
                                             <Popover trigger={triggerProps => {
                                                 return <TouchableOpacity {...triggerProps}>
                                                     <Icon name="info-circle" size={12} color="black" />
@@ -114,14 +114,14 @@ export const AUMRows = ({ data, schema }) => {
                             </View>
                         </View>
 
-                        <View className="flex flex-row w-1/12 items-center justify-center">
-                            <Text>
+                        <View className="flex flex-row w-1/12 items-center justify-center flex-wrap">
+                            <Text className="w-10/12">
                                 {'LAJPS2390'}
                             </Text>
                         </View>
 
-                        <View className='flex flex-row items-center w-3/12 justify-center'>
-                            <View className='flex flex-col'>
+                        <View className='flex flex-row items-center w-3/12 justify-center flex-wrap'>
+                            <View className='flex flex-col flex-wrap w-10/12'>
                                 <Text selectable className='text-[#000000] font-bold'>{client.mutualfund.name}</Text>
                                 <Text selectable className='text-[#686868] font-semibold'>{client.mutualfund.mutualfundSubcategory.name}</Text>
                                 <Text selectable className='text-[#686868] font-semibold'>{client.mutualfund.bseDematSchemeCode}</Text>
