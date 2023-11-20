@@ -7,7 +7,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { ToastAlert } from "../../helper/CustomToaster";
 import RemoteApi from "../../services/RemoteApi";
 
-export const DynamicFilters = ({ filtersSchema, setCurrentPageNumber, getList, appliedFilers, setAppliedFilers, downloadApi = "" }) => {
+export const DynamicFilters = ({ filtersSchema, setCurrentPageNumber, getList, appliedFilers, setAppliedFilers, downloadApi = "", fileName = "" }) => {
     const searchBoxRef = useRef(null);
     const [modalVisible, setModalVisible] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
@@ -102,7 +102,7 @@ export const DynamicFilters = ({ filtersSchema, setCurrentPageNumber, getList, a
 
     const downloadReport = async () => {
         setIsDownloadProcessing(true)
-        const response: any = await RemoteApi.get(downloadApi);
+        const response: any = await RemoteApi.downloadFile(downloadApi, fileName);
         console.log(response);
         setIsDownloadProcessing(false)
     }

@@ -84,7 +84,7 @@ const OrderDataTable = () => {
             </View>
             <View className='border-[0.2px]  border-[#e4e4e4]'>
 
-                <DynamicFilters downloadApi={"order/download-report"} filtersSchema={filtersSchema} setCurrentPageNumber={setCurrentPageNumber} getList={getDataList} appliedFilers={appliedFilers} setAppliedFilers={setAppliedFilers} />
+                <DynamicFilters fileName="Orders" downloadApi={"order/download-report"} filtersSchema={filtersSchema} setCurrentPageNumber={setCurrentPageNumber} getList={getDataList} appliedFilers={appliedFilers} setAppliedFilers={setAppliedFilers} />
 
                 {
                     !isLoading ? <View className='mt-4 z-[-1]'>
