@@ -60,7 +60,7 @@ export const DynamicFilters = ({ filtersSchema, setCurrentPageNumber, getList, a
     const applyFilters = () => {
 
         const updatedFilterValues = filterValues.filter((filter) => {
-            return (filter.value && filter.value !== '' && filter.operator) ||
+            return (filter.value != null && filter.value !== '' && filter.operator) ||
                 (Array.isArray(filter.value) && filter.value.length > 0 && filter.operator);
         });
 

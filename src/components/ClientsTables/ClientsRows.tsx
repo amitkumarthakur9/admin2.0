@@ -75,7 +75,7 @@ export const ClientsRows = ({ data, schema }) => {
                         </View>
 
                         <View className="flex flex-row w-1/12">
-                            <Text>
+                            <Text selectable>
                                 {client.users[0].panNumber}
                             </Text>
                         </View>

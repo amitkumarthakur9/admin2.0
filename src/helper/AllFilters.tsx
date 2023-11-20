@@ -24,7 +24,7 @@ const FilterComponent = ({ filter, onFilterChange, filterValues }) => {
   };
 
   const handleFilterChange = (newValue) => {
-    // console.log('value', newValue);
+    console.log('value', newValue);
 
     onFilterChange(key, valueType(newValue), valueConfig.valueType == "date" ? "between" : initialFilterValue?.operator);
     initialFilterValue = filterValues.find((f) => f.key === key);
@@ -105,7 +105,7 @@ const FilterComponent = ({ filter, onFilterChange, filterValues }) => {
         );
       case 'multiSelect':
         data = filter.apiConfig.defaultData.map((item) => {
-          return { value: item.id, label: item.name }
+          return { value: item[filter.apiConfig.valueField], label: item[filter.apiConfig.displayFields[0]] }
         })
         return (
           <View style={{}} className='ml-3'>

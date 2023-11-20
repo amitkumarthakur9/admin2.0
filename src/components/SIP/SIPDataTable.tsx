@@ -49,7 +49,7 @@ const SIPDataTable = () => {
 
     React.useEffect(() => {
         async function getSchema() {
-            const response: any = await RemoteApi.get("order/schema")
+            const response: any = await RemoteApi.get("sip/schema")
             setFiltersSchema(response.filters)
         }
         getSchema()
