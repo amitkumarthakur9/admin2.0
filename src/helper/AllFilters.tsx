@@ -66,9 +66,7 @@ const FilterComponent = ({ filter, onFilterChange, filterValues }) => {
       // data = filter.apiConfig.defaultData.map((item) => {
       //   return { id: item.id, label: item.name }
       // })
-      data = filter.apiConfig.defaultData.map((item) => {
-        return { value: item.id, label: item.name }
-      })
+      data = filter.apiConfig.defaultData
     }
     switch (fieldType) {
 
@@ -88,6 +86,7 @@ const FilterComponent = ({ filter, onFilterChange, filterValues }) => {
             placeholder='Select'
             selectedValue={initialFilterValue?.value}
             onValueChange={(newValue) => handleFilterChange(newValue)}
+            dropdownIcon={<Icon name="chevron-down" style={{ fontWeight: "100", marginRight: 4 }} color="black" />}
           >
             {data.map((op) => (
               <Select.Item key={op[filter.apiConfig.valueField]} label={op[filter.apiConfig.displayFields[0]]} value={op[filter.apiConfig.valueField]} />
@@ -105,7 +104,9 @@ const FilterComponent = ({ filter, onFilterChange, filterValues }) => {
           </View>
         );
       case 'multiSelect':
-
+        data = filter.apiConfig.defaultData.map((item) => {
+          return { value: item.id, label: item.name }
+        })
         return (
           <View style={{}} className='ml-3'>
             <DropdownComp

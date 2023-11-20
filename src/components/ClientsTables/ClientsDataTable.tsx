@@ -47,7 +47,7 @@ const ClientsDataTable = () => {
 
     React.useEffect(() => {
         async function getSchema() {
-            const response: any = await RemoteApi.get("order/schema")
+            const response: any = await RemoteApi.get("client/schema")
             setFiltersSchema(response.filters)
         }
         getSchema()
