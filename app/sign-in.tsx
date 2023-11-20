@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { TouchableOpacity, StyleSheet, View } from 'react-native'
-import { Button, Text } from 'react-native-paper'
 import Background from '../src/components/Others/Background'
 import Logo from '../src/components/Others/Logo'
 import Header from '../src/components/Others/Header'
@@ -13,14 +12,19 @@ import { router } from 'expo-router'
 import RemoteApi from '../src/services/RemoteApi'
 import { AuthInterface } from '../src/interfaces/AuthInterface'
 import ApiRequest from '../src/services/NewRemoteApi'
+import { Button, useToast } from 'native-base'
+import { ToastAlert } from '../src/helper/CustomToaster'
 
 
 export default function SignIn() {
     const [email, setEmail] = useState({ value: '', error: '' })
     const [password, setPassword] = useState({ value: '', error: '' })
     const { signIn } = useSession();
+    const [isLoading, setIsLoading] = useState(false)
+    const toast = useToast();
 
     const onLoginPressed = async () => {
+        setIsLoading(true)
         const emailError = emailValidator(email.value)
         const passwordError = passwordValidator(password.value)
         if (emailError || passwordError) {
@@ -35,22 +39,46 @@ export default function SignIn() {
         // console.log(process.env.API_ENDPOINT);
 
         try {
-            const response: AuthInterface = await RemoteApi.post("/user/login", {
+            const response: any = await RemoteApi.post("/user/login", {
                 email: email.value, password: password.value
             });
 
             if (response.message == "Success") {
                 signIn(response.token)
+                router.replace('/');
+            } else {
+                if (response.errors && response.errors.length > 0) {
+                    response.errors.forEach((error, index) => {
+                        toast.show({
+                            render: ({
+                                index
+                            }) => {
+                                return <ToastAlert
+                                    id={index}
+                                    variant={"solid"}
+                                    title={error.message}
+                                    description={""}
+                                    isClosable={true}
+                                    toast={toast}
+                                    status={"error"}
+                                />;
+                            },
+                            placement: "top"
+
+                        })
+                    });
+                }
             }
         } catch (err) {
             console.log(err);
         }
-        router.replace('/');
+        setIsLoading(false)
+
+
     }
 
     return (
         <Background>
-            {/* <BackButton goBack={navigation.goBack} /> */}
             <Logo />
             <Header className="text-black">Welcome back.</Header>
             <TextInput
@@ -71,47 +99,14 @@ export default function SignIn() {
                 label="Password"
                 returnKeyType="done"
                 value={password.value}
-                onChangeText={(text) => setPassword({ value: text, error: '' })}
+                onChangeText={(text: string) => setPassword({ value: text, error: '' })}
                 error={!!password.error}
                 errorText={password.error}
                 secureTextEntry
             />
-            {/* <View style={styles.forgotPassword}>
-                <TouchableOpacity
-                    onPress={() => router.replace("/forgot-password")}
-                >
-                    <Text selectable style={styles.forgot}>Forgot your password?</Text>
-                </TouchableOpacity>
-            </View> */}
-            <Button style={{ backgroundColor: "#013974" }} mode="contained" onPress={onLoginPressed}>
+            <Button isLoading={isLoading} isLoadingText="Logging In" marginTop={6} width={40} bgColor={"#013974"} onPress={onLoginPressed}>
                 Login
             </Button>
-            {/* <View style={styles.row}>
-                <Text>Don’t have an account? </Text>
-                <TouchableOpacity onPress={() => router.replace("/register")}>
-                    <Text selectable style={styles.link}>Sign up</Text>
-                </TouchableOpacity>
-            </View> */}
         </Background>
     )
 }
-
-const styles = StyleSheet.create({
-    forgotPassword: {
-        width: '100%',
-        alignItems: 'flex-end',
-        marginBottom: 24,
-    },
-    row: {
-        flexDirection: 'row',
-        marginTop: 4,
-    },
-    forgot: {
-        fontSize: 13,
-        color: "black",
-    },
-    link: {
-        fontWeight: 'bold',
-        color: "black",
-    },
-})

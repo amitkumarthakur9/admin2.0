@@ -10,7 +10,7 @@ import { OrdersResponse } from '../../interfaces/OrdersResposeInterface';
 import { DynamicFilters } from '../Filters/DynamicFilters';
 import { RTAReconciliationRows } from './RTAReconciliationRows';
 import { Pagination } from '../Pagination/Pagination';
-import { Box, CheckIcon, HStack, Heading, Pressable, Select, Spinner } from 'native-base';
+import { Box, Button, CheckIcon, HStack, Heading, Pressable, Select, Spinner } from 'native-base';
 import DatePickerComponent from '../CustomDatePicker/DatePicker';
 
 
@@ -93,7 +93,7 @@ const RTAReconciliation = () => {
                             <DatePickerComponent showCalendar={true} fromName='From' toName='To' value={date} handleFilterChange={setDate} />
                         </View>
                         {/* <Box maxW="300" style={{ height: "100%" }} className='ml-2'> */}
-                        <Select className='' height={"33.2px"} borderWidth={0.9} style={{ height: "100%", marginRight: 2 }} dropdownIcon={<Icon name="chevron-down" style={{ fontWeight: "100", marginRight: 4 }} color="black" />} selectedValue={service} minWidth="200" accessibilityLabel="Choose" placeholder="Choose" _selectedItem={{
+                        <Select className='' height={"33.2px"} borderWidth={0.9} style={{ height: "100%", marginRight: 2 }} dropdownIcon={<Icon name="chevron-down" style={{ fontWeight: "100", marginRight: 4 }} color="black" />} selectedValue={service} minWidth="200" accessibilityLabel="Choose Status" placeholder="Choose Status" _selectedItem={{
                             bg: "teal.600",
                             endIcon: <CheckIcon size="5" />
                         }} onValueChange={itemValue => setService(itemValue)}>
@@ -104,9 +104,13 @@ const RTAReconciliation = () => {
                         {/* </Box> */}
                         <View className="ml-2 ">
 
-                            <Pressable marginRight={2} onPress={() => console.log("hello world")} paddingX={9} paddingY={2} bg={"#000000"} rounded={4} borderColor={"#bfbfbf"} borderWidth={0.3}>
+                            {/* <Pressable marginRight={2} onPress={() => console.log("hello world")} paddingX={9} paddingY={2} bg={"#000000"} rounded={4} borderColor={"#bfbfbf"} borderWidth={0.3}>
                                 <Text selectable className='text-white'>Apply</Text>
-                            </Pressable>
+                            </Pressable> */}
+
+                            <Button width={20} size={"xs"} bgColor={"#000000"}>
+                                Apply
+                            </Button>
 
                         </View>
                     </View>

@@ -11,12 +11,17 @@ axiosInstance.interceptors.response.use(
   (response: AxiosResponse) => response,
   (error: AxiosError) => {
     console.error('API Error:', error);
+
     if (error.response.status === 401) {
       localStorage.removeItem('token');
-      window.location.reload();
-    } else {
-      return Promise.reject(error);
+      if (window.location.pathname.includes("sign-in")) {
+        console.log(error.response.data['errors']);
+      } else {
+        window.location.reload();
+      }
     }
+
+    return error.response;
   }
 );
 
@@ -49,6 +54,9 @@ class ApiRequest {
     };
 
     const response = await axiosInstance(config);
+
+    console.log('response', response);
+
     return response.data;
   }
 
