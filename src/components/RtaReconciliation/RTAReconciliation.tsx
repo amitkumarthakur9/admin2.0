@@ -1,17 +1,15 @@
 import * as React from 'react';
-import { View, Text, ScrollView, Dimensions, ImageBackground } from 'react-native';
-import { ActivityIndicator, TouchableRipple } from 'react-native-paper';
+import { View, Text, Dimensions, ImageBackground } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Link } from 'expo-router';
 import { useState } from 'react';
-import { OrderInterface } from '../../interfaces/OrderInterface';
 import RemoteApi from '../../services/RemoteApi';
-import { OrdersResponse } from '../../interfaces/OrdersResposeInterface';
-import { DynamicFilters } from '../Filters/DynamicFilters';
 import { RTAReconciliationRows } from './RTAReconciliationRows';
 import { Pagination } from '../Pagination/Pagination';
 import { Box, Button, CheckIcon, HStack, Heading, Pressable, Select, Spinner } from 'native-base';
 import DatePickerComponent from '../CustomDatePicker/DatePicker';
+import { RTAReconcilation, RTAResponseResponseInterface } from '../../interfaces/RTAResponseInterface';
+import DatePickerNew from '../CustomDatePicker/DatePickerNew';
 
 
 const RTAReconciliation = () => {
@@ -20,16 +18,25 @@ const RTAReconciliation = () => {
     const [currentPageNumber, setCurrentPageNumber] = useState(1);
     const [totalItems, setTotalItems] = useState(0);
     const [itemsPerPage, setItemsPerPage] = useState(10);
-    const [data, setData] = useState<AUMDataItem[]>([]);
+    const [data, setData] = useState<RTAReconcilation[]>([]);
     const [totalPages, setTotalPages] = useState(1);
     const [appliedFilers, setAppliedFilers] = useState([]);
     const [filtersSchema, setFiltersSchema] = useState([]);
     const [service, setService] = React.useState("");
     const [date, setDate] = React.useState<any>(undefined);
+    const [isDownloadProcessing, setIsDownloadProcessing] = useState(false);
+
+    const downloadReport = async () => {
+        setIsDownloadProcessing(true)
+        const response: any = await RemoteApi.downloadFile("", "Rta");
+        console.log(response);
+        setIsDownloadProcessing(false)
+    }
+
 
     async function getDataList(updatedFilterValues = [], applyDirectly = false) {
         setIsLoading(true)
-        const response: AUMResponseInterface = await RemoteApi.post("folio/list", {
+        const response: RTAResponseResponseInterface = await RemoteApi.post("transaction/list", {
             "page": currentPageNumber,
             "limit": itemsPerPage,
             "orderBy": {
@@ -38,14 +45,12 @@ const RTAReconciliation = () => {
             },
             "filters": applyDirectly ? updatedFilterValues : appliedFilers
         });
-
         if (response.code == 200) {
             setData(response.data)
             // setItemsPerPage(response.count)
             setTotalItems(response.filterCount)
             setIsLoading(false)
             setTotalPages(Math.ceil((response.filterCount || response.data.length) / itemsPerPage));
-
         }
 
     }
@@ -90,10 +95,10 @@ const RTAReconciliation = () => {
                 <View className='flex flex-row justify-between items-center mt-5'>
                     <View className='flex flex-row w-10/12 items-center pl-2'>
                         <View className='mr-2'>
-                            <DatePickerComponent showCalendar={true} fromName='From' toName='To' value={date} handleFilterChange={setDate} />
+                            <DatePickerNew showCalendar={true} fromName='From' toName='To' value={date} handleFilterChange={setDate} />
                         </View>
                         {/* <Box maxW="300" style={{ height: "100%" }} className='ml-2'> */}
-                        <Select className='' height={"33.2px"} borderWidth={0.9} style={{ height: "100%", marginRight: 2 }} dropdownIcon={<Icon name="chevron-down" style={{ fontWeight: "100", marginRight: 4 }} color="black" />} selectedValue={service} minWidth="200" accessibilityLabel="Choose Status" placeholder="Choose Status" _selectedItem={{
+                        <Select className='' height={"40px"} borderWidth={0.9} style={{ height: "100%", marginRight: 2 }} dropdownIcon={<Icon name="chevron-down" style={{ fontWeight: "100", marginRight: 4 }} color="black" />} selectedValue={service} minWidth="200" accessibilityLabel="Choose Status" placeholder="Choose Status" _selectedItem={{
                             bg: "teal.600",
                             endIcon: <CheckIcon size="5" />
                         }} onValueChange={itemValue => setService(itemValue)}>
@@ -108,15 +113,21 @@ const RTAReconciliation = () => {
                                 <Text selectable className='text-white'>Apply</Text>
                             </Pressable> */}
 
-                            <Button width={20} size={"xs"} bgColor={"#000000"}>
+                            <Button width={20} size={"md"} bgColor={"#000000"}>
                                 Apply
                             </Button>
 
                         </View>
                     </View>
                     <View className="flex flex-row w-2/12 justify-end items-center">
-                        <Pressable marginRight={4} onPress={() => console.log("hello world")} paddingX={9} paddingY={2} bg={"#000000"} rounded={4} borderColor={"#bfbfbf"} borderWidth={0.3}>
+                        {/* <Pressable marginRight={4} onPress={() => console.log("hello world")} paddingX={9} paddingY={2} bg={"#000000"} rounded={4} borderColor={"#bfbfbf"} borderWidth={0.3}>
                             <Icon name="download" style={{ fontWeight: "100" }} size={14} color="white" />
+                        </Pressable> */}
+                        <Pressable onPress={downloadReport} className="flex flex-row justify-center items-center bg-black border-[1px] rounded px-[40px] py-3 border-slate-200 mr-2">
+                            {
+                                isDownloadProcessing ? <Spinner color={"white"} size={14} accessibilityLabel="Loading" /> : <Icon name="download" style={{ fontWeight: "100" }} size={14} color="white" />
+                            }
+                            {/* <Text>Sorting</Text> */}
                         </Pressable>
                     </View>
                 </View>

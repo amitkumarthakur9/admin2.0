@@ -105,11 +105,11 @@ export default function SIPReportsDetail() {
                                         </View>
                                         <View className='w-3/12 mb-2'>
                                             <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Mandate</Text>
-                                            <Text selectable className='font-bold text-base'>{data.mandate?.mandateId}</Text>
+                                            <Text selectable className='font-bold text-base'>{data.mandate?.mandateId || "-"}</Text>
                                         </View>
                                         <View className='w-3/12 mb-2'>
                                             <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Mandate Status</Text>
-                                            <Text selectable className='font-bold text-base'>{data.mandate?.mandateStatus.name}</Text>
+                                            <Text selectable className='font-bold text-base'>{data.mandate?.mandateStatus.name || "-"}</Text>
                                         </View>
                                         <View className='w-3/12 mb-8 pr-2'>
                                             <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Order Status</Text>
@@ -156,7 +156,7 @@ export default function SIPReportsDetail() {
                                         </View>
                                         <View className='w-3/12 mb-2'>
                                             <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Units</Text>
-                                            <Text selectable className='font-bold text-base'>{data.units}</Text>
+                                            <Text selectable className='font-bold text-base'>{data.units || "-"}</Text>
                                         </View>
                                         <View className='w-3/12 mb-8 pr-2'>
                                             <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>No Of Installments Executed</Text>
@@ -174,11 +174,11 @@ export default function SIPReportsDetail() {
 
                                         <View className='w-3/12 mb-8 pr-2'>
                                             <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Start Date</Text>
-                                            <Text selectable className='font-bold text-base'>{data.startDate ? moment(new Date(data.startDate)).format('DD-MM-YYYY') : ""}</Text>
+                                            <Text selectable className='font-bold text-base'>{data.startDate ? moment(new Date(data.startDate)).format('DD-MM-YYYY') : "-"}</Text>
                                         </View>
                                         <View className='w-3/12 mb-8 pr-2'>
                                             <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>End Date</Text>
-                                            <Text selectable className='font-bold text-base'>{data.endDate ? moment(new Date(data.endDate)).format('DD-MM-YYYY') : ""}</Text>
+                                            <Text selectable className='font-bold text-base'>{data.endDate ? moment(new Date(data.endDate)).format('DD-MM-YYYY') : "-"}</Text>
                                         </View>
                                     </View>
 

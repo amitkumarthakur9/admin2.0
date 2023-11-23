@@ -25,7 +25,7 @@ export const AUMRows = ({ data, schema }) => {
 
     return <>
         <View className={`flex flex-row py-4 px-2 justify-between ` + (Dimensions.get("screen").width < 770 ? 'w-[1728px]' : '')}>
-            <View className='flex flex-row w-3/12'>
+            <View className='flex flex-row w-2/12'>
                 <View className='flex flex-row items-center w-full justify-start'>
                     <Text selectable className='font-semibold'>Client Name</Text>
                 </View>
@@ -48,7 +48,12 @@ export const AUMRows = ({ data, schema }) => {
             </View>
             <View className='flex flex-row w-1/12 items-center justify-center'>
                 <View className='flex flex-row items-center'>
-                    <Text selectable className='font-semibold'>Units</Text>
+                    <Text selectable className='font-semibold'>Nav</Text>
+                </View>
+            </View>
+            <View className='flex flex-row w-1/12 items-center justify-center'>
+                <View className='flex flex-row items-center'>
+                    <Text selectable className='font-semibold'>Balance Units</Text>
                 </View>
             </View>
             <View className='flex flex-row w-1/12 items-center justify-center'>
@@ -78,7 +83,7 @@ export const AUMRows = ({ data, schema }) => {
 
                 return <View key={index}>
                     <View className={`flex flex-row p-2 justify-between ` + (Dimensions.get("screen").width < 770 ? 'w-[1728px]' : '')} >
-                        <View className='flex flex-row w-full w-3/12 flex-wrap'>
+                        <View className='flex flex-row w-full w-2/12 flex-wrap'>
                             <View className='flex flex-row items-center w-full justify-between flex-wrap'>
                                 <View className='flex flex-row items-center justify-start w-full flex-wrap'>
                                     <View className='flex flex-row rounded-full bg-[#e60202] mr-2 h-10 w-10 items-center justify-center flex-wrap'>
@@ -98,9 +103,8 @@ export const AUMRows = ({ data, schema }) => {
                                                     <Popover.Header>Customer Detail</Popover.Header>
                                                     <Popover.Body>
                                                         <View>
-                                                            <Text>Name: {client.account.name}</Text>
-                                                            <Text>PAN Number: {"LAJPS2908"}</Text>
-                                                            <Text>Distributor CompanyId: {client.distributor.distributorCompanyId}</Text>
+                                                            <Text selectable>Name: {client.account.name}</Text>
+                                                            <Text selectable>PAN Number: {client.account.user.panNumber}</Text>
                                                         </View>
                                                     </Popover.Body>
                                                 </Popover.Content>
@@ -115,47 +119,26 @@ export const AUMRows = ({ data, schema }) => {
                         </View>
 
                         <View className="flex flex-row w-1/12 items-center justify-center flex-wrap">
-                            <Text className="w-10/12">
-                                {'LAJPS2390'}
+                            <Text className="w-10/12" selectable>
+                                {client.account.user.panNumber}
                             </Text>
                         </View>
 
                         <View className='flex flex-row items-center w-3/12 justify-center flex-wrap'>
-                            <View className='flex flex-col flex-wrap w-10/12'>
+                            <View className='flex flex-col flex-wrap w-10/12 items-center'>
                                 <Text selectable className='text-[#000000] font-bold'>{client.mutualfund.name}</Text>
-                                <Text selectable className='text-[#686868] font-semibold'>{client.mutualfund.mutualfundSubcategory.name}</Text>
-                                <Text selectable className='text-[#686868] font-semibold'>{client.mutualfund.bseDematSchemeCode}</Text>
-                                <Text selectable className='text-[#686868] font-semibold'>{client.mutualfund.fundhouse.name}</Text>
+                                <Text selectable className='text-[#686868] font-semibold'>Category: {client.mutualfund.mutualfundSubcategory.name}</Text>
+                                <Text selectable className='text-[#686868] font-semibold'>BSE: {client.mutualfund.bseDematSchemeCode}</Text>
+                                <Text selectable className='text-[#686868] font-semibold'>Fund House: {client.mutualfund.fundhouse.name}</Text>
                             </View>
                         </View>
                         <View className='flex flex-row w-1/12 items-center justify-center'>
-                            <View className='flex flex-row items-center w-1/2 justify-center'>
-                                <View className='flex flex-col bg-[#D7D7D7] px-2 py-1 rounded-full'>
-                                    <View className='flex flex-row items-center'>
-                                        <Text selectable className='p-1 text-black text-end md:text-center text-xs'>{client.folioNumber}&nbsp;</Text>
-                                        <Popover trigger={triggerProps => {
-                                            return <TouchableOpacity {...triggerProps}>
-                                                <Icon name="info-circle" size={12} color="black" />
-                                            </TouchableOpacity>;
-                                        }}>
-                                            <Popover.Content accessibilityLabel="Order Details" w="56">
-                                                <Popover.Arrow />
-                                                <Popover.CloseButton />
-                                                <Popover.Header>Folio Details</Popover.Header>
-                                                <Popover.Body>
-                                                    <View>
-                                                        <Text>Current Nav: </Text>
-                                                        <Text>Current Value: </Text>
-                                                        <Text>Balance Units:</Text>
-                                                        <Text>NavDate: </Text>
-                                                        <Text>NAV: </Text>
-                                                    </View>
-                                                </Popover.Body>
-                                            </Popover.Content>
-                                        </Popover>
-                                    </View>
-                                </View>
-                            </View>
+                            <Text selectable className='p-1 text-black text-end md:text-center text-xs'>{client.folioNumber}&nbsp;</Text>
+
+
+                        </View>
+                        <View className='flex flex-row items-center w-1/12 justify-center'>
+                            <Text>{client.mutualfund.nav}</Text>
                         </View>
                         <View className='flex flex-row items-center w-1/12 justify-center'>
                             <Text>{client.units}</Text>
@@ -164,7 +147,7 @@ export const AUMRows = ({ data, schema }) => {
                             <Text>{client.units * (client.currentValue / client.mutualfund.nav)}</Text>
                         </View>
                         <View className='flex flex-row items-center w-1/12  justify-center'>
-                            <Text>{client.units * client.mutualfund.nav}</Text>
+                            <Text>{client.currentValue}</Text>
                         </View>
 
                         <View className='flex flex-row items-center w-1/12 justify-center'>

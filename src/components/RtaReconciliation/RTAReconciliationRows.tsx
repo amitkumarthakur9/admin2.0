@@ -5,6 +5,8 @@ import { TouchableRipple } from "react-native-paper"
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { ClientInterface } from "../../interfaces/ClientInterface";
 import { Badge, Popover } from "native-base";
+import { RTAReconcilation } from "../../interfaces/RTAResponseInterface";
+import { DateTime } from "luxon";
 
 export const RTAReconciliationRows = ({ data, schema }) => {
 
@@ -51,12 +53,12 @@ export const RTAReconciliationRows = ({ data, schema }) => {
                 </View>
             </View>
             <View className='flex flex-row w-1/12'>
-                <View className='flex flex-row items-center w-full justify-start w-4/5 flex-wrap'>
+                <View className='flex flex-row items-center w-full justify-start w-4/5'>
                     <Text selectable className='font-semibold'>Transaction Date</Text>
                 </View>
             </View>
             <View className='flex flex-row w-1/12'>
-                <View className='flex flex-row items-center w-full justify-start'>
+                <View className='flex flex-row items-center w-full justify-start flex-wrap'>
                     <Text selectable className='font-semibold'>Folio No</Text>
                 </View>
             </View>
@@ -67,7 +69,7 @@ export const RTAReconciliationRows = ({ data, schema }) => {
             </View>
             <View className='flex flex-row w-1/12'>
                 <View className='flex flex-row items-center w-full justify-start w-4/5'>
-                    <Text selectable className='font-semibold'>Reconciled Type</Text>
+                    <Text selectable className='font-semibold'>Transaction Status</Text>
                 </View>
             </View>
         </View>
@@ -79,7 +81,7 @@ export const RTAReconciliationRows = ({ data, schema }) => {
             }}
         />
         {
-            data.map((client: AUMDataItem, index: number) => {
+            data.map((client: RTAReconcilation, index: number) => {
 
                 return <View key={index}>
                     <View className={`flex flex-row p-2 justify-between ` + (Dimensions.get("screen").width < 770 ? 'w-[1728px]' : '')} >
@@ -103,20 +105,19 @@ export const RTAReconciliationRows = ({ data, schema }) => {
                                                 <Popover.Body>
                                                     <View>
                                                         <Text>Name: {client.account.name}</Text>
-                                                        <Text>PAN Number: {"LAJPS2908"}</Text>
-                                                        <Text>Distributor CompanyId: {client.distributor.distributorCompanyId}</Text>
+                                                        <Text>PAN Number: {client.account.user[0].panNumber}</Text>
                                                     </View>
                                                 </Popover.Body>
                                             </Popover.Content>
                                         </Popover>
                                     </View>
                                     <View className='flex flex-row items-center mt-0'>
-                                        <Text selectable className='text-[#6C6A6A] text-sm'>{"T97C5"}</Text>
+                                        <Text selectable className='text-[#6C6A6A] text-sm'>{client.account.clientId}</Text>
                                         {/* <View className='rounded-full bg-[#6C6A6A] h-2 w-2 mx-1'></View> */}
 
                                     </View>
                                     <View className='flex flex-row items-center mt-0'>
-                                        <Text selectable className='text-[#6C6A6A] text-sm'>{"LAJPS2412N"}</Text>
+                                        <Text selectable className='text-[#6C6A6A] text-sm'>{client.account.user[0].panNumber}</Text>
                                         {/* <View className='rounded-full bg-[#6C6A6A] h-2 w-2 mx-1'></View> */}
 
                                     </View>
@@ -125,51 +126,48 @@ export const RTAReconciliationRows = ({ data, schema }) => {
                         </View>
                         <View className='flex flex-row  w-2/12 '>
                             <View className='flex flex-col w-9/12'>
-                                <Text selectable className='text-[#000000] font-bold whitespace-normal '>{"Dsp Flexi Cap Fund - Regular Plan - Idcw Reinvestment"}</Text>
-                                <Text selectable className='text-[#686868] font-semibold'>{"DS10-DR"}</Text>
+                                <Text selectable className='text-[#000000] font-bold whitespace-normal '>{client.mutualfund.name}</Text>
+                                <Text selectable className='text-[#686868] font-semibold'>{client.mutualfund.bseDematSchemeCode}</Text>
                                 {/* <Text selectable className='text-[#686868] font-semibold'>{client.mutualfund.bseDematSchemeCode}</Text>
                                     <Text selectable className='text-[#686868] font-semibold'>{client.mutualfund.fundhouse.name}</Text> */}
                             </View>
                         </View>
                         <View className="flex flex-row w-1/12">
-                            <Text>
-                                {'CAMS'}
+                            <Text selectable>
+                                {client.mutualfund.fundhouse.name}
                             </Text>
                         </View>
                         <View className="flex flex-row w-1/12">
-                            <View>
-                                <Text>
-                                    {'DSP10'}
-                                </Text>
-                                <Text>
-                                    {'DSP_MF'}
-                                </Text>
-                            </View>
+                            {/* <View> */}
+                            <Text selectable>
+                                {client.mutualfund.fundhouse.rta}
+                            </Text>
+                            {/* </View> */}
                         </View>
                         <View className="flex flex-row w-1/12">
-                            <Text className="w-10/12">
-                                {'898295595'}
+                            <Text className="w-10/12" selectable>
+                                {client.orderReferenceNumber}
                             </Text>
                         </View>
                         <View className="flex flex-row w-1/12">
-                            <Text className="w-10/12">
-                                {'10/11/2023'}
+                            <Text className="w-10/12" selectable>
+                                {DateTime.fromISO(client.paymentDate, { zone: 'utc' }).toFormat('yyyy-MM-dd HH:mm:ss')}
                             </Text>
                         </View>
                         <View className="flex flex-row w-1/12">
-                            <Text className="w-10/12">
-                                {'78814912676'}
+                            <Text className="w-10/12" selectable>
+                                {client.folioNumber}
                             </Text>
                         </View>
                         <View className="flex flex-row w-1/12">
-                            <Text>
-                                {'2000'}
+                            <Text selectable>
+                                {client.amount}
                             </Text>
                         </View>
-                        <View className="flex flex-row w-1/12  justify-start">
+                        <View className="flex flex-row w-1/12 justify-start">
                             <View className='flex flex-col  h-8 items-center justify-center bg-[#D7D7D7] rounded-full w-11/12'>
                                 <View className='flex flex-row items-center '>
-                                    <Text selectable className='p-1 text-black text-end md:text-center text-xs'>{'Non Reconciled'}&nbsp;</Text>
+                                    <Text selectable className='p-1 text-black text-end md:text-center text-xs'>{client.transactionStatus}&nbsp;</Text>
                                 </View>
 
                             </View>

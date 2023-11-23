@@ -1,37 +1,41 @@
-interface Account {
+interface User {
+    id: string;
+    panNumber: string;
+}
+
+interface FundCategory {
+    id: number;
+    name: string;
+}
+
+interface MutualFundSubcategory {
+    id: number;
+    name: string;
+    mutualfundCategory: FundCategory;
+}
+
+interface FundHouse {
+    id: number;
+    name: string;
+    rta: any; // You can replace 'any' with the specific type if available
+    logoUrl: string;
+}
+
+interface MutualFund {
     id: string;
     name: string;
-}
-
-interface Distributor {
-    distributorCompanyId: string;
-}
-
-interface MutualfundCategory {
-    id: number;
-    name: string;
-}
-
-interface MutualfundSubcategory {
-    id: number;
-    name: string;
-    mutualfundCategory: MutualfundCategory;
-}
-
-interface Fundhouse {
-    id: number;
-    name: string;
-    rta: any; // You might want to replace 'any' with the actual type for rta
-}
-
-interface Mutualfund {
-    id: string;
-    name: string;
-    fundhouse: Fundhouse;
-    mutualfundSubcategory: MutualfundSubcategory;
+    fundhouse: FundHouse;
+    mutualfundSubcategory: MutualFundSubcategory;
     bseDematSchemeCode: string;
     rtaCode: string;
     nav: number;
+}
+
+interface Account {
+    id: string;
+    clientId: string;
+    name: string;
+    user: User;
 }
 
 interface AUMDataItem {
@@ -40,8 +44,7 @@ interface AUMDataItem {
     currentValue: number;
     units: number;
     account: Account;
-    distributor: Distributor;
-    mutualfund: Mutualfund;
+    mutualfund: MutualFund;
 }
 
 interface AUMResponseInterface {

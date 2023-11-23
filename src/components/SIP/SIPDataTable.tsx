@@ -23,18 +23,24 @@ const SIPDataTable = () => {
     const [totalPages, setTotalPages] = useState(1);
     const [appliedFilers, setAppliedFilers] = useState([]);
     const [filtersSchema, setFiltersSchema] = useState([]);
+    const [sorting, setSorting] = useState([]);
+    const [appliedSorting, setAppliedSorting] = useState({ key: "", direction: "" });
 
     async function getDataList(updatedFilterValues = [], applyDirectly = false) {
         setIsLoading(true)
-        const response: SIPResponseInterface = await RemoteApi.post("sip/list", {
+
+        let data: any = {
             "page": currentPageNumber,
             "limit": itemsPerPage,
-            "orderBy": {
-                "key": "createdAt",
-                "direction": "desc"
-            },
             "filters": applyDirectly ? updatedFilterValues : appliedFilers
-        });
+        }
+
+        if (appliedSorting.key != "") {
+            data.orderBy = appliedSorting
+        }
+
+
+        const response: SIPResponseInterface = await RemoteApi.post("sip/list", data);
 
         if (response.code == 200) {
             setData(response.data)
@@ -51,10 +57,16 @@ const SIPDataTable = () => {
         async function getSchema() {
             const response: any = await RemoteApi.get("sip/schema")
             setFiltersSchema(response.filters)
+            setSorting(response.sort)
         }
         getSchema()
     }, [])
 
+    React.useEffect(() => {
+        if ((appliedSorting.direction != "" && appliedSorting.key != "") || (appliedSorting.direction == "" && appliedSorting.key == "")) {
+            getDataList()
+        }
+    }, [appliedSorting])
 
     return (
         <View className='bg-white'>
@@ -85,7 +97,7 @@ const SIPDataTable = () => {
             </View>
             <View className='border-[0.2px]  border-[#e4e4e4]'>
 
-                <DynamicFilters fileName="Sip" downloadApi={"sip/download-report"} filtersSchema={filtersSchema} setCurrentPageNumber={setCurrentPageNumber} getList={getDataList} appliedFilers={appliedFilers} setAppliedFilers={setAppliedFilers} />
+                <DynamicFilters appliedSorting={appliedSorting} setAppliedSorting={setAppliedSorting} sorting={sorting} fileName="Sip" downloadApi={"sip/download-report"} filtersSchema={filtersSchema} setCurrentPageNumber={setCurrentPageNumber} getList={getDataList} appliedFilers={appliedFilers} setAppliedFilers={setAppliedFilers} />
 
                 {
                     !isLoading ? <View className='mt-4 z-[-1]'>

@@ -9,6 +9,7 @@ import { Pressable } from 'react-native';
 // import Icon from 'react-native-vector-icons/MaterialIcons'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import DropdownComp from '../components/MultiSelect/component/DropdownComp';
+import CalendarPicker from '../components/CustomDatePicker/CalendarPicker';
 
 
 const FilterComponent = ({ filter, onFilterChange, filterValues }) => {
@@ -143,6 +144,7 @@ const FilterComponent = ({ filter, onFilterChange, filterValues }) => {
         return (
           <View className='ml-3' key={key}>
             <DatePickerComponent value={initialFilterValue?.value} handleFilterChange={handleFilterChange} />
+            {/* <CalendarPicker /> */}
           </View>
         );
       // Add cases for other field types as needed

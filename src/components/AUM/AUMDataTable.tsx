@@ -23,18 +23,22 @@ const AUMDataTable = () => {
     const [totalPages, setTotalPages] = useState(1);
     const [appliedFilers, setAppliedFilers] = useState([]);
     const [filtersSchema, setFiltersSchema] = useState([]);
+    const [sorting, setSorting] = useState([]);
+    const [appliedSorting, setAppliedSorting] = useState({ key: "", direction: "" });
 
     async function getDataList(updatedFilterValues = [], applyDirectly = false) {
         setIsLoading(true)
-        const response: AUMResponseInterface = await RemoteApi.post("folio/list", {
+        let data: any = {
             "page": currentPageNumber,
             "limit": itemsPerPage,
-            "orderBy": {
-                "key": "createdAt",
-                "direction": "desc"
-            },
             "filters": applyDirectly ? updatedFilterValues : appliedFilers
-        });
+        }
+
+        if (appliedSorting.key != "") {
+            data.orderBy = appliedSorting
+        }
+
+        const response: AUMResponseInterface = await RemoteApi.post("folio/list", data);
 
         if (response.code == 200) {
             setData(response.data)
@@ -49,11 +53,19 @@ const AUMDataTable = () => {
 
     React.useEffect(() => {
         async function getSchema() {
-            const response: any = await RemoteApi.get("order/schema")
+            const response: any = await RemoteApi.get("folio/schema")
             setFiltersSchema(response.filters)
+            setFiltersSchema(response.filters)
+            setSorting(response.sort)
         }
         getSchema()
     }, [])
+
+    React.useEffect(() => {
+        if ((appliedSorting.direction != "" && appliedSorting.key != "") || (appliedSorting.direction == "" && appliedSorting.key == "")) {
+            getDataList()
+        }
+    }, [appliedSorting])
 
     return (
         <View className='bg-white'>
@@ -82,9 +94,9 @@ const AUMDataTable = () => {
                 </View>
 
             </View>
-            <View className='border-[0.2px]  border-[#e4e4e4]'>
+            <View className='border-[0.2px] border-[#e4e4e4]'>
 
-                <DynamicFilters fileName="Aum" downloadApi='' filtersSchema={filtersSchema} setCurrentPageNumber={setCurrentPageNumber} getList={getDataList} appliedFilers={appliedFilers} setAppliedFilers={setAppliedFilers} />
+                <DynamicFilters appliedSorting={appliedSorting} setAppliedSorting={setAppliedSorting} sorting={sorting} fileName="Aum" downloadApi={"aum/download-report"} filtersSchema={filtersSchema} setCurrentPageNumber={setCurrentPageNumber} getList={getDataList} appliedFilers={appliedFilers} setAppliedFilers={setAppliedFilers} />
 
                 {
                     !isLoading ? <View className={'mt-4 z-[-1] ' + (Dimensions.get("screen").width < 770 ? "overflow-scroll" : "")}>

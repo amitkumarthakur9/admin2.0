@@ -54,7 +54,7 @@ export const Pagination = ({ currentPageNumber, totalPages, setCurrentPageNumber
         getDataList()
     }, [currentPageNumber])
 
-    return <View className='flex flex-row items-center justify-center my-2 z-[-1]'>
+    return <View className='flex flex-row items-center justify-center mt-[20px] mb-[80px]'>
         <View className='w-12/12 lg:w-4/12 items-center flex flex-row justify-between'>
             <View>
                 <Pressable className='px-3 py-2' onPress={handlePrevPage}>

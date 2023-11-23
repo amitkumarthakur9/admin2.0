@@ -23,18 +23,21 @@ const OrderDataTable = () => {
     const [totalPages, setTotalPages] = useState(1);
     const [appliedFilers, setAppliedFilers] = useState([]);
     const [filtersSchema, setFiltersSchema] = useState([]);
+    const [sorting, setSorting] = useState([]);
+    const [appliedSorting, setAppliedSorting] = useState({ key: "", direction: "" });
 
-    async function getDataList(updatedFilterValues = [], applyDirectly = false) {
+    async function getDataList(updatedFilterValues = [], applyDirectly = false, orderBy = null) {
         setIsLoading(true)
-        const response: OrdersResponse = await RemoteApi.post("order/list", {
+        let data: any = {
             "page": currentPageNumber,
             "limit": itemsPerPage,
-            "orderBy": {
-                "key": "createdAt",
-                "direction": "desc"
-            },
             "filters": applyDirectly ? updatedFilterValues : appliedFilers
-        });
+        }
+
+        if (appliedSorting.key != "") {
+            data.orderBy = appliedSorting
+        }
+        const response: OrdersResponse = await RemoteApi.post("order/list", data);
 
         if (response.code == 200) {
             setData(response.data)
@@ -42,7 +45,6 @@ const OrderDataTable = () => {
             setTotalItems(response.filterCount)
             setIsLoading(false)
             setTotalPages(Math.ceil((response.filterCount || response.data.length) / itemsPerPage));
-
         }
 
     }
@@ -51,9 +53,16 @@ const OrderDataTable = () => {
         async function getSchema() {
             const response: any = await RemoteApi.get("order/schema")
             setFiltersSchema(response.filters)
+            setSorting(response.sort)
         }
         getSchema()
     }, [])
+
+    React.useEffect(() => {
+        if ((appliedSorting.direction != "" && appliedSorting.key != "") || (appliedSorting.direction == "" && appliedSorting.key == "")) {
+            getDataList()
+        }
+    }, [appliedSorting])
 
     return (
         <View className='bg-white'>
@@ -84,10 +93,10 @@ const OrderDataTable = () => {
             </View>
             <View className='border-[0.2px]  border-[#e4e4e4]'>
 
-                <DynamicFilters fileName="Orders" downloadApi={"order/download-report"} filtersSchema={filtersSchema} setCurrentPageNumber={setCurrentPageNumber} getList={getDataList} appliedFilers={appliedFilers} setAppliedFilers={setAppliedFilers} />
+                <DynamicFilters appliedSorting={appliedSorting} setAppliedSorting={setAppliedSorting} sorting={sorting} fileName="Orders" downloadApi={"order/download-report"} filtersSchema={filtersSchema} setCurrentPageNumber={setCurrentPageNumber} getList={getDataList} appliedFilers={appliedFilers} setAppliedFilers={setAppliedFilers} />
 
                 {
-                    !isLoading ? <View className='mt-4 z-[-1]'>
+                    !isLoading ? <View className={'mt-4 z-[-1] ' + (Dimensions.get("screen").width < 770 ? "overflow-scroll" : "")}>
                         <OrdersRows data={data} schema={null} />
                     </View> : <HStack space={2} marginTop={20} justifyContent="center">
                         <Spinner color={"black"} accessibilityLabel="Loading order" />

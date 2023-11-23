@@ -1,38 +1,27 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Text, TextInput, View } from "react-native"
-import { Button, TouchableRipple } from "react-native-paper";
+import { TouchableRipple } from "react-native-paper";
 import FilterForm from "../../helper/AllFilters";
-import { Badge, Box, Divider, Pressable, Spinner, VStack, useToast } from "native-base";
+import { Button, CheckIcon, Divider, Menu, Modal, Pressable, Select, Spinner, VStack, useToast } from "native-base";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { ToastAlert } from "../../helper/CustomToaster";
 import RemoteApi from "../../services/RemoteApi";
 
-export const DynamicFilters = ({ filtersSchema, setCurrentPageNumber, getList, appliedFilers, setAppliedFilers, downloadApi = "", fileName = "" }) => {
-    const searchBoxRef = useRef(null);
+export const DynamicFilters = ({ filtersSchema, setAppliedSorting, appliedSorting, sorting = [], setCurrentPageNumber, getList, appliedFilers, setAppliedFilers, downloadApi = "", fileName = "" }) => {
     const [modalVisible, setModalVisible] = useState(false);
-    const [isFocused, setIsFocused] = useState(false);
-    const filterModalRef = useRef(null);
+    const searchBoxRef = useRef(null);
+    const [filterOpen, setFilterOpen] = useState(false);
+    const [sortingOpen, setSortingOpen] = useState(false);
     const [filterValues, setFilterValues] = useState([]);
     const [isDownloadProcessing, setIsDownloadProcessing] = useState(false);
     const toast = useToast();
-    const handleSearchInputFocus = () => {
-        setModalVisible(true)
-        setIsFocused(true)
-    }
 
-    useEffect(() => {
-        const handleClickOutside = (event) => {
-            if (filterModalRef.current && !filterModalRef.current.contains(event.target) && !searchBoxRef.current.contains(event.target)) {
-                setModalVisible(false);
-            }
-        };
-
-        document.addEventListener('click', handleClickOutside);
-
-        return () => {
-            document.removeEventListener('click', handleClickOutside);
-        };
-    }, []);
+    const handleSearchBoxClick = () => {
+        // Use the current property of the ref to access the input element
+        if (searchBoxRef.current) {
+            searchBoxRef.current.focus();
+        }
+    };
 
     const clearFilters = () => {
         const updatedFilterValues = filterValues.map((filter) => ({
@@ -89,16 +78,8 @@ export const DynamicFilters = ({ filtersSchema, setCurrentPageNumber, getList, a
     }
 
     const handleSearchInput = (e) => {
-        // console.log(e);
-
         handleFilterChange("all", e?.target?.value, "contains")
     }
-
-    useEffect(() => {
-        // console.log('appliedFilers', appliedFilers);
-        // console.log('filterValues', filterValues);
-
-    })
 
     const downloadReport = async () => {
         setIsDownloadProcessing(true)
@@ -107,77 +88,181 @@ export const DynamicFilters = ({ filtersSchema, setCurrentPageNumber, getList, a
         setIsDownloadProcessing(false)
     }
 
+    const handleSortingChange = (e, name) => {
+        console.log(e);
+        setAppliedSorting((prevSelectSorting) => ({
+            ...prevSelectSorting,
+            [name]: e,
+        }));
+    }
+
+
+
     return <View className="flex flex-row justify-between items-center mt-5 w-100">
-        <View className='static w-10/12 justify-center' style={{}}>
-            <View ref={searchBoxRef} className={'flex flex-row justify-between items-center mx-2 w-12/12 lg:w-6/12 static ' + (modalVisible ? 'border-x-[1px] border-t-[1px] rounded-t-lg ' : 'border-[#e4e4e4] border-[0.3px] rounded')}>
-                <TextInput
-                    className='w-11/12 outline-transparent'
-                    placeholder={'Type Name/Email/Mobile/ClientID/FE User ID/PAN No'}
-                    underlineColorAndroid="transparent"
-                    selectionColor="transparent"
-                    placeholderTextColor={"#484848"}
-                    cursorColor={"transparent"}
-                    onFocus={handleSearchInputFocus}
-                    style={searchInputStyle}
-                    onChange={handleSearchInput}
-                    value={filterValues.find((filter) => filter.key === "all")?.value || ""}
-                />
-                <View className='w-1/12 flex flex-row justify-end mr-2'>
-
-                    <VStack>
-                        {
-                            appliedFilers.length > 0 && <Badge
-                                height={5}
-                                width={5}
-                                colorScheme="danger" rounded="full" mb={-4} mr={-4} zIndex={1} variant="solid" alignSelf="flex-end" _text={{
-                                    fontSize: 12,
-                                }}>
-                                {appliedFilers.length}
-                            </Badge>
-                        }
-                        <Icon name="filter" size={25} color="#000000" />
-
-                    </VStack>
-                </View>
-
-            </View>
-
-            {
-                modalVisible &&
-                <View className={" bg-white absolute z-[9999] top-10 w-fit lg:w-6/12 mx-2 rounded-b-lg " + (modalVisible ? 'border-x-[1px] border-b-[1px]' : 'border-[#e4e4e4] border-[0.3px]')} ref={filterModalRef}>
-                    <Divider my="2" _light={{
-                        bg: "muted.200"
-                    }} _dark={{
-                        bg: "muted.50"
-                    }} />
-                    <View className='p-2'>
-                        <View className='mb-4 flex flex-row justify-between'>
-                            <Text selectable className='font-semibold'>Advance Filters</Text>
-                            <TouchableRipple rippleColor={"#e4e4e4"} onPress={clearFilters}>
-                                <Text selectable className='text-xs underline underline-offset-4'>clear</Text>
-                            </TouchableRipple>
-                        </View>
-                        <FilterForm filtersSchema={filtersSchema} onFilterChange={handleFilterChange} filterValues={filterValues} />
+        <View className='flex flex-row w-10/12 justify-start items-center' style={{}}>
+            <Pressable onPress={handleSearchBoxClick} className="flex flex-row justify-between items-center mx-2 w-6/12 border-[1px] rounded border-slate-200">
+                <View className="flex flex-row items-center">
+                    <View className="">
+                        <Icon name="search" style={{ marginLeft: 10 }} size={14} color="#484848" />
                     </View>
-                    <View className='bg-[#000000] rounded-b-lg'>
-                        <TouchableRipple className='py-3' onPress={applyFilters}>
-                            <View className='flex flex-row justify-center items-center'>
-                                <Text selectable className='text-center text-sm mr-2 text-white'>Apply Filters</Text>
-                                <Icon name="filter" size={15} color="#ffffff" />
+                    <TextInput
+                        ref={searchBoxRef}
+                        className='outline-transparent'
+                        placeholder={'Search'}
+                        underlineColorAndroid="transparent"
+                        selectionColor="transparent"
+                        placeholderTextColor={"#484848"}
+                        cursorColor={"transparent"}
+                        style={searchInputStyle}
+                        onChange={handleSearchInput}
+                        value={filterValues.find((filter) => filter.key === "all")?.value || ""}
+                    />
+                </View>
+                {
+                    filterValues.find((filter) => filter.key === "all")?.value && <Button className="" width={20} mr={"5px"} size={"xs"} bgColor={"#000000"}>
+                        Search
+                    </Button>
+                }
+
+            </Pressable>
+            <View className="mr-2">
+                <Menu w="xl" onClose={() => setFilterOpen(false)} onOpen={() => setFilterOpen(true)} isOpen={filterOpen} bgColor={"white"} placement="bottom" closeOnSelect={false} trigger={triggerProps => {
+                    return <Pressable className="flex flex-row justify-center items-center border-[1px] rounded px-4 py-3 border-slate-200" accessibilityLabel="More options menu" {...triggerProps}>
+                        <Icon name="filter" style={{ marginLeft: 10, marginRight: 5 }} size={14} color="#484848" />
+                        <Text>Filter</Text>
+                    </Pressable>
+                }}>
+                    <Menu.Item bgColor={"white"} cancelable={false}>
+                        <View className="">
+                            <View className='p-2'>
+                                <View className='mb-4 flex flex-row justify-between'>
+                                    <Text selectable className='font-semibold'>Advance Filters</Text>
+                                    <TouchableRipple rippleColor={"#e4e4e4"} onPress={clearFilters}>
+                                        <Text selectable className='text-xs underline underline-offset-4'>clear</Text>
+                                    </TouchableRipple>
+                                </View>
+                                <FilterForm filtersSchema={filtersSchema} onFilterChange={handleFilterChange} filterValues={filterValues} />
                             </View>
-                        </TouchableRipple>
-                    </View>
-                </View>
-            }
+                            <View className='bg-[#000000] rounded-lg'>
+                                <TouchableRipple className='py-3' onPress={applyFilters}>
+                                    <View className='flex flex-row justify-center items-center'>
+                                        <Text selectable className='text-center text-sm mr-2 text-white'>Apply Filters</Text>
+                                        <Icon name="filter" size={15} color="#ffffff" />
+                                    </View>
+                                </TouchableRipple>
+                            </View>
+                        </View>
+
+                    </Menu.Item>
+                </Menu>
+            </View>
+            <View>
+                <Menu w="md" onClose={() => setSortingOpen(false)} onOpen={() => setSortingOpen(true)} isOpen={sortingOpen} bgColor={"white"} placement="bottom" closeOnSelect={false} trigger={triggerProps => {
+                    return <Pressable className="flex flex-row justify-center items-center border-[1px] rounded px-4 py-3 border-slate-200" accessibilityLabel="More options menu" {...triggerProps}>
+                        <Icon name="sort" style={{ marginLeft: 10, marginRight: 5 }} size={14} color="#484848" />
+                        <Text>Sorting</Text>
+                    </Pressable>;
+                }}>
+                    <Menu.Item bgColor={"white"} cancelable={false}>
+                        <View className="flex flex-col">
+                            {appliedSorting.key && <View className="flex flex-row-reverse mb-2">
+                                <TouchableRipple rippleColor={"#e4e4e4"} onPress={() => setAppliedSorting({ key: "", direction: "" })}>
+                                    <Text selectable className='text-xs underline underline-offset-4'>clear</Text>
+                                </TouchableRipple>
+                            </View>}
+                            <View className="flex flex-row">
+                                <View className="mr-2">
+                                    <Select
+                                        dropdownIcon={<Icon style={{ marginRight: 4 }} name="angle-down" size={18} />}
+                                        selectedValue={appliedSorting.key}
+                                        minWidth="200"
+                                        accessibilityLabel="By"
+                                        placeholder="By"
+                                        _selectedItem={{
+                                            bg: "teal.600",
+                                            endIcon: <CheckIcon size="5" />
+                                        }} mt={1}
+                                        onValueChange={itemValue => handleSortingChange(itemValue, 'key')}>
+                                        {
+                                            sorting.map((sort, index) => <Select.Item label={sort.title} value={sort.key} />)
+                                        }
+                                    </Select>
+                                </View>
+                                <View>
+                                    {
+                                        appliedSorting.key != "" && <Select
+                                            dropdownIcon={<Icon style={{ marginRight: 4 }} name="angle-down" size={18} />}
+                                            selectedValue={appliedSorting.direction}
+                                            minWidth="200"
+                                            accessibilityLabel="Direction"
+                                            placeholder="Direction"
+                                            _selectedItem={{
+                                                bg: "teal.600",
+                                                endIcon: <CheckIcon size="5" />
+                                            }} mt={1} onValueChange={itemValue => handleSortingChange(itemValue, 'direction')}>
+                                            {
+                                                sorting.find((sort, index) => sort.key == appliedSorting.key)?.direction?.map((direc, index) => <Select.Item label={direc} value={direc} />)
+                                            }
+
+                                        </Select>
+                                    }
+                                </View>
+                            </View>
+
+                        </View>
+
+                    </Menu.Item>
+                </Menu>
+            </View>
+            {/* <View>
+                <Pressable className="flex flex-row items-center" onPress={() => setShowFilterModal(true)}>
+                    <Icon name="filter" style={{ marginLeft: 10, marginRight: 5 }} size={14} color="#484848" />
+                    <Text>Filter</Text>
+                </Pressable>
+                <Modal isOpen={showFilterModal} onClose={() => setShowFilterModal(false)} _backdrop={{
+                    _dark: {
+                        bg: "coolGray.800"
+                    },
+                    bg: "transaparent"
+                }}>
+                    <Modal.Content maxWidth="600" maxH="612" bgColor={"white"}>
+                        <View className="">
+                            <View className='p-2'>
+                                <View className='mb-4 flex flex-row justify-between'>
+                                    <Text selectable className='font-semibold'>Advance Filters</Text>
+                                    <TouchableRipple rippleColor={"#e4e4e4"} onPress={clearFilters}>
+                                        <Text selectable className='text-xs underline underline-offset-4'>clear</Text>
+                                    </TouchableRipple>
+                                </View>
+                                <FilterForm filtersSchema={filtersSchema} onFilterChange={handleFilterChange} filterValues={filterValues} />
+                            </View>
+                            <View className='bg-[#000000] rounded-lg'>
+                                <TouchableRipple className='py-3' onPress={applyFilters}>
+                                    <View className='flex flex-row justify-center items-center'>
+                                        <Text selectable className='text-center text-sm mr-2 text-white'>Apply Filters</Text>
+                                        <Icon name="filter" size={15} color="#ffffff" />
+                                    </View>
+                                </TouchableRipple>
+                            </View>
+                        </View>
+                    </Modal.Content>
+                </Modal>
+            </View> */}
         </View>
         <View className="flex flex-row w-2/12 justify-end items-center">
-            <Pressable marginRight={4} onPress={downloadReport} paddingX={9} paddingY={2} bg={"#000000"} rounded={4} borderColor={"#bfbfbf"} borderWidth={0.3}>
+            {/* <Pressable marginRight={4} onPress={downloadReport} paddingX={9} paddingY={2} bg={"#000000"} rounded={4} borderColor={"#bfbfbf"} borderWidth={0.3}>
                 {
                     isDownloadProcessing ? <Spinner color={"white"} size={14} accessibilityLabel="Loading" /> : <Icon name="download" style={{ fontWeight: "100" }} size={14} color="white" />
                 }
+            </Pressable> */}
+            <Pressable onPress={downloadReport} className="flex flex-row justify-center items-center bg-black border-[1px] rounded px-[40px] py-3 border-slate-200 mr-2">
+                {
+                    isDownloadProcessing ? <Spinner color={"white"} size={14} accessibilityLabel="Loading" /> : <Icon name="download" style={{ fontWeight: "100" }} size={14} color="white" />
+                }
+                {/* <Text>Sorting</Text> */}
             </Pressable>
         </View>
     </View>
 }
 
-const searchInputStyle = { padding: 10, fontSize: 13, borderColor: "transparent", color: "#484848", height: 40, borderWidth: 0, "outlineStyle": 'none' };
+const searchInputStyle = { padding: 7, fontSize: 13, borderColor: "transparent", color: "#484848", height: 40, borderWidth: 0, "outlineStyle": 'none' };
