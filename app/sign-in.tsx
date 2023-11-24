@@ -70,7 +70,7 @@ export default function SignIn() {
                 }
             }
         } catch (err) {
-            console.log(err);
+            // console.log(err);
         }
         setIsLoading(false)
 

@@ -188,8 +188,18 @@ export const DynamicFilters = ({ filtersSchema, setAppliedSorting, appliedSortin
                 <Menu w="md" onClose={() => setSortingOpen(false)} onOpen={() => setSortingOpen(true)} isOpen={sortingOpen} bgColor={"white"} placement="bottom" closeOnSelect={false} trigger={triggerProps => {
                     return <Pressable className="flex flex-row justify-center items-center border-[1px] rounded px-4 py-3 border-slate-200" accessibilityLabel="More options menu" {...triggerProps}>
                         <Icon name="sort" style={{ marginLeft: 10, marginRight: 5 }} size={14} color="#484848" />
-                        <Text>Sorting</Text>
-                    </Pressable>;
+                        <Text className="mr-1">Sorting</Text>
+                        {
+                            appliedSorting.key && appliedSorting.direction && <Badge
+                                height={5}
+                                width={5}
+                                colorScheme="danger" rounded="full" variant="solid" alignSelf="flex-end" _text={{
+                                    fontSize: 12,
+                                }}>
+                                {1}
+                            </Badge>
+                        }
+                    </Pressable>
                 }}>
                     <Menu.Item bgColor={"white"} cancelable={false}>
                         <View className="flex flex-col">
