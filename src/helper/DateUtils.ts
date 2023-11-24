@@ -6,13 +6,15 @@ export const getDaysInMonth = (year, month) => {
     return lastDayOfMonth.getDate();
 };
 
-export const getMonthName = (month) => {
-    const monthNames = [
+export const monthNames = () => {
+    return [
         'January', 'February', 'March', 'April', 'May', 'June',
         'July', 'August', 'September', 'October', 'November', 'December'
-    ];
+    ]
+}
 
-    return monthNames[month - 1];
+export const getMonthName = (month) => {
+    return monthNames()[month - 1];
 };
 
 export const getAllDatesInMonth = (year, month) => {

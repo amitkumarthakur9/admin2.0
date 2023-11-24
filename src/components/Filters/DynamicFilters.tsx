@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import { Text, TextInput, View } from "react-native"
 import { TouchableRipple } from "react-native-paper";
 import FilterForm from "../../helper/AllFilters";
-import { Button, CheckIcon, Divider, Menu, Modal, Pressable, Select, Spinner, VStack, useToast } from "native-base";
+import { Badge, Button, CheckIcon, Divider, Menu, Modal, Pressable, Select, Spinner, VStack, useToast } from "native-base";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { ToastAlert } from "../../helper/CustomToaster";
 import RemoteApi from "../../services/RemoteApi";
@@ -83,7 +83,7 @@ export const DynamicFilters = ({ filtersSchema, setAppliedSorting, appliedSortin
 
     const downloadReport = async () => {
         setIsDownloadProcessing(true)
-        const response: any = await RemoteApi.downloadFile(downloadApi, fileName);
+        const response: any = await RemoteApi.downloadFile({ endpoint: downloadApi, fileName: fileName, data: appliedFilers });
         console.log(response);
         setIsDownloadProcessing(false)
     }
@@ -119,7 +119,7 @@ export const DynamicFilters = ({ filtersSchema, setAppliedSorting, appliedSortin
                     />
                 </View>
                 {
-                    filterValues.find((filter) => filter.key === "all")?.value && <Button className="" width={20} mr={"5px"} size={"xs"} bgColor={"#000000"}>
+                    filterValues.find((filter) => filter.key === "all")?.value && <Button onPress={applyFilters} className="" width={20} mr={"5px"} size={"xs"} bgColor={"#000000"}>
                         Search
                     </Button>
                 }
@@ -129,7 +129,19 @@ export const DynamicFilters = ({ filtersSchema, setAppliedSorting, appliedSortin
                 <Menu w="xl" onClose={() => setFilterOpen(false)} onOpen={() => setFilterOpen(true)} isOpen={filterOpen} bgColor={"white"} placement="bottom" closeOnSelect={false} trigger={triggerProps => {
                     return <Pressable className="flex flex-row justify-center items-center border-[1px] rounded px-4 py-3 border-slate-200" accessibilityLabel="More options menu" {...triggerProps}>
                         <Icon name="filter" style={{ marginLeft: 10, marginRight: 5 }} size={14} color="#484848" />
-                        <Text>Filter</Text>
+
+
+                        <Text className="mr-1">Filters</Text>
+                        {
+                            appliedFilers.length > 0 && <Badge
+                                height={5}
+                                width={5}
+                                colorScheme="danger" rounded="full" variant="solid" alignSelf="flex-end" _text={{
+                                    fontSize: 12,
+                                }}>
+                                {appliedFilers.length}
+                            </Badge>
+                        }
                     </Pressable>
                 }}>
                     <Menu.Item bgColor={"white"} cancelable={false}>

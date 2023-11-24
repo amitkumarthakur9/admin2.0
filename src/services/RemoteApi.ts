@@ -76,11 +76,12 @@ class ApiRequest {
     return response.data;
   }
 
-  static async downloadFile(endpoint: string, fileName = "file"): Promise<void> {
+  static async downloadFile({ endpoint, fileName = "file", data }): Promise<void> {
     try {
       const config: AxiosRequestConfig = {
-        method: 'GET',
+        method: 'POST',
         url: endpoint,
+        data: data,
         responseType: 'blob', // Set the response type to 'blob' for file download
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,

@@ -1,17 +1,21 @@
 // CalendarPicker.js
 
 import React, { useState } from 'react';
-import { getAllDatesInMonth, getDaysInMonth, getMonthName } from '../../helper/DateUtils';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { Box, Popover, Button } from 'native-base';
+import { getAllDatesInMonth, getDaysInMonth, getMonthName, monthNames } from '../../helper/DateUtils';
+import { Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { Box, Popover, Button, ChevronLeftIcon, ChevronRightIcon, Pressable, View, Select, CheckIcon } from 'native-base';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import moment from 'moment';
 
-const CalendarPicker = () => {
-    const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
-    const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
+const CalendarPicker = ({ handleFilterChange, value, fromName = "From", toName = "To", showCalendar = false, py = "py-2" }) => {
+    const [selectedYear, setSelectedYear] = useState(value?.length > 0 ? new Date(value[0]).getFullYear() : new Date().getFullYear());
+    const [selectedMonth, setSelectedMonth] = useState(value?.length > 0 ? (new Date(value[0]).getMonth() + 1) : (new Date().getMonth() + 1));
     const firstDayOfMonth = new Date(selectedYear, selectedMonth - 1, 1).getDay();
     const daysInMonth = getDaysInMonth(selectedYear, selectedMonth);
     const allDatesInMonth = getAllDatesInMonth(selectedYear, selectedMonth);
     const [selectedDate, setSelectedDate] = useState(null);
+    const [selectedSecondDate, setSelectedSecondDate] = useState(null);
+    const [monthChangeOpened, setMonthChangeOpened] = useState(false);
 
     const handleYearChange = (year) => {
         setSelectedYear(year);
@@ -22,8 +26,38 @@ const CalendarPicker = () => {
     };
 
     const handleDateSelect = (date) => {
-        setSelectedDate(date);
+        console.log(date);
+
+        if (selectedDate && !selectedSecondDate) {
+            if (new Date(date) > new Date(selectedDate)) {
+                setSelectedSecondDate(date);
+                handleFilterChange([moment(selectedDate).format('YYYY-MM-DD'), moment(date).format('YYYY-MM-DD')])
+            }
+        } else if (selectedDate && selectedSecondDate) {
+            setSelectedDate(date);
+            setSelectedSecondDate(null)
+        } else {
+            setSelectedDate(date);
+        }
     };
+
+    const getSelectedColor = (date) => {
+        let color = ""
+
+        if (selectedDate && selectedDate == date) {
+            color = "bg-gray-300"
+        } else if (selectedSecondDate && selectedSecondDate == date) {
+            color = "bg-gray-300"
+        }
+
+        if (selectedDate && selectedSecondDate && new Date(selectedDate) < new Date(date) && new Date(selectedSecondDate) > new Date(date)) {
+            console.log("here", date, selectedDate, selectedSecondDate);
+
+            color = "bg-gray-300"
+        }
+
+        return color
+    }
 
     const renderCalendarGrid = () => {
         const calendarGrid = [];
@@ -34,12 +68,11 @@ const CalendarPicker = () => {
             const prevMonthDate = getDaysInMonth(selectedYear, selectedMonth - 1) - firstDayOfMonth + i + 1;
             currentRow.push(
                 <TouchableOpacity
-                    className='w-20'
+                    className={'w-20 ' + getSelectedColor(`${selectedYear}-${selectedMonth - 1}-${prevMonthDate}`)}
                     key={`prev-${i}`}
-                    disabled={true}
-                    onPress={() => handleDateSelect(prevMonthDate)}
+                    onPress={() => handleDateSelect(`${selectedYear}-${selectedMonth - 1}-${prevMonthDate}`)}
                 >
-                    <Text className='text-slate-600 p-2'>{prevMonthDate}</Text>
+                    <Text className='text-slate-600 p-2 text-center'>{prevMonthDate}</Text>
                 </TouchableOpacity>
             );
         }
@@ -48,10 +81,10 @@ const CalendarPicker = () => {
             currentRow.push(
                 <TouchableOpacity
                     key={date}
-                    onPress={() => handleDateSelect(date)}
-                    className='w-20'
+                    onPress={() => handleDateSelect(`${selectedYear}-${selectedMonth}-${date}`)}
+                    className={'w-20 ' + getSelectedColor(`${selectedYear}-${selectedMonth}-${date}`)}
                 >
-                    <Text className='p-2'>
+                    <Text className='p-2 text-center'>
                         {date}
                     </Text>
                 </TouchableOpacity>
@@ -75,11 +108,10 @@ const CalendarPicker = () => {
                 currentRow.push(
                     <TouchableOpacity
                         key={`next-${i}`}
-                        className='w-20'
-                        disabled={true}
-                        onPress={() => handleDateSelect(nextMonthDate)}
+                        className={'w-20 ' + getSelectedColor(`${selectedYear}-${selectedMonth + 1}-${nextMonthDate}`)}
+                        onPress={() => handleDateSelect(`${selectedYear}-${selectedMonth + 1}-${nextMonthDate}`)}
                     >
-                        <Text className='text-slate-600 p-2'>{nextMonthDate}</Text>
+                        <Text className='text-slate-600 p-2 text-center'>{nextMonthDate}</Text>
                     </TouchableOpacity>
                 );
             }
@@ -94,41 +126,127 @@ const CalendarPicker = () => {
     };
 
 
+    const handleBack = () => {
+        if (selectedMonth == 1) {
+            setSelectedMonth(12);
+            setSelectedYear(selectedYear - 1);
+        } else {
+            setSelectedMonth(selectedMonth - 1);
+        }
+    }
 
-    return <View>
-        <Box w="100%" alignItems="center">
-            <Popover trigger={triggerProps => {
-                return <Button {...triggerProps} colorScheme="danger">
-                    Delete Customer
-                </Button>;
-            }}>
-                <Popover.Content accessibilityLabel="Delete Customerd" w="600">
-                    <Popover.Arrow />
-                    <Popover.CloseButton />
-                    <Popover.Header>Delete Customer</Popover.Header>
-                    <Popover.Body>
-                        <View>
-                            <View className='flex flex-row p-2'>
-                                <Text>
+    const handleForward = () => {
+        if (selectedMonth == 12) {
+            setSelectedMonth(1);
+            setSelectedYear(selectedYear + 1);
+        } else {
+            setSelectedMonth(selectedMonth + 1);
+        }
+    }
+
+
+    return <View className='w-full'>
+
+        <Popover trigger={triggerProps => {
+            return <TouchableOpacity {...triggerProps} className={"flex w-full items-center justify-center flex-col rounded border-[0.2px] border-[#c7c7c7] px-4 " + py}>
+                <View className="flex flex-row justify-start w-full">
+                    {
+                        showCalendar && <View className="mr-2">
+                            <Icon name="calendar" style={{ fontWeight: "100" }} size={14} color="black" />
+                        </View>
+                    }
+                    <View className="flex flex-col">
+                        <Text selectable className={"text-xs " + (value?.length > 0 ? "text-black" : "text-slate-400")}>
+                            {
+                                value?.length > 0 ? value[0] : fromName
+                            }
+                        </Text>
+                    </View>
+                    <View className="flex flex-col mx-2">
+                        <Text>-</Text>
+                    </View>
+                    <View className="flex flex-col">
+                        <Text selectable className={"text-xs " + (value?.length > 1 ? "text-black" : "text-slate-400")}>
+                            {
+                                value?.length > 1 ? value[1] : toName
+                            }
+                        </Text>
+                    </View>
+                </View>
+            </TouchableOpacity>
+        }}>
+            <Popover.Content accessibilityLabel="Delete Customerd" w="600" h={"xs"}>
+                <Popover.Arrow />
+                {/* <Popover.CloseButton /> */}
+                {/* <Popover.Header>Delete Customer</Popover.Header> */}
+                <Popover.Body>
+                    <View h={"xs"}>
+                        <View className='flex flex-row p-2 justify-between mb-4'>
+                            <View>
+                                <Pressable onPress={handleBack}><ChevronLeftIcon /></Pressable>
+                            </View>
+                            <Pressable onPress={() => setMonthChangeOpened(true)}>
+                                <Text className='font-bold'>
                                     {getMonthName(selectedMonth)} {selectedYear}
                                 </Text>
-                            </View>
-
+                            </Pressable>
                             <View>
-                                <View className='flex flex-row items-center justify-center'>
-                                    {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
-                                        <Text key={day} className='w-20'>
-                                            {day}
-                                        </Text>
-                                    ))}
-                                </View>
-                                {renderCalendarGrid()}
+                                <Pressable onPress={handleForward}><ChevronRightIcon /></Pressable>
                             </View>
                         </View>
-                    </Popover.Body>
-                </Popover.Content>
-            </Popover>
-        </Box>
+                        {
+                            monthChangeOpened ? <View className='flex flex-col items-center'>
+                                <View className='flex flex-row justify-center mb-10'>
+                                    <View className='mr-2'>
+                                        <Select selectedValue={'' + selectedMonth} minWidth="100" accessibilityLabel="Month" placeholder="Month" _selectedItem={{
+                                            bg: "teal.600",
+                                            endIcon: <CheckIcon size="5"
+
+                                            />
+                                        }} mt={1} onValueChange={itemValue => setSelectedMonth(Number(itemValue))} >
+                                            {
+                                                monthNames().map((month, index) => <Select.Item label={month} value={'' + (index + 1)} key={index} />)
+                                            }
+                                        </Select>
+                                    </View>
+                                    <View>
+                                        <Select minWidth="100" accessibilityLabel="Year" placeholder="Year" _selectedItem={{
+                                            bg: "teal.600",
+                                            endIcon: <CheckIcon size="5" />
+                                        }} mt={1}
+                                            selectedValue={'' + selectedYear}
+                                            onValueChange={itemValue => setSelectedYear(Number(itemValue))}
+                                        >
+                                            {
+                                                Array.from({ length: 2051 - 1970 }, (_, index) => 1970 + index).map((year, index) => <Select.Item key={index} label={"" + year} value={"" + year} />)
+                                            }
+                                        </Select>
+                                    </View>
+                                </View>
+                                <View className='flex flex-col'>
+                                    <Button width={"xs"} size={"md"} bgColor={"#000000"} onPress={() => setMonthChangeOpened(false)}>
+                                        Select Date
+                                    </Button>
+                                </View>
+                            </View>
+
+                                : <View>
+                                    <View className='flex flex-row items-center justify-center mb-2'>
+                                        {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
+                                            <Text key={day} className='w-20 text-center font-bold'>
+                                                {day}
+                                            </Text>
+                                        ))}
+                                    </View>
+                                    {renderCalendarGrid()}
+                                </View>
+                        }
+
+                    </View>
+                </Popover.Body>
+            </Popover.Content>
+        </Popover>
+
     </View>
 
 };

@@ -142,8 +142,8 @@ const FilterComponent = ({ filter, onFilterChange, filterValues }) => {
         );
       case 'date':
         return (
-          <View className='ml-3' key={key}>
-            <DatePickerComponent value={initialFilterValue?.value} handleFilterChange={handleFilterChange} />
+          <View className='pl-3 flex flex-row w-full' key={key}>
+            <CalendarPicker value={initialFilterValue?.value} handleFilterChange={handleFilterChange} />
             {/* <CalendarPicker /> */}
           </View>
         );

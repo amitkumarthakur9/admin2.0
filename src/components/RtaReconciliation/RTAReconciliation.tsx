@@ -10,6 +10,7 @@ import { Box, Button, CheckIcon, HStack, Heading, Pressable, Select, Spinner } f
 import DatePickerComponent from '../CustomDatePicker/DatePicker';
 import { RTAReconcilation, RTAResponseResponseInterface } from '../../interfaces/RTAResponseInterface';
 import DatePickerNew from '../CustomDatePicker/DatePickerNew';
+import CalendarPicker from '../CustomDatePicker/CalendarPicker';
 
 
 const RTAReconciliation = () => {
@@ -28,7 +29,7 @@ const RTAReconciliation = () => {
 
     const downloadReport = async () => {
         setIsDownloadProcessing(true)
-        const response: any = await RemoteApi.downloadFile("", "Rta");
+        const response: any = await RemoteApi.downloadFile({ endpoint: "", fileName: "Rta", data: [] });
         console.log(response);
         setIsDownloadProcessing(false)
     }
@@ -95,7 +96,7 @@ const RTAReconciliation = () => {
                 <View className='flex flex-row justify-between items-center mt-5'>
                     <View className='flex flex-row w-10/12 items-center pl-2'>
                         <View className='mr-2'>
-                            <DatePickerNew showCalendar={true} fromName='From' toName='To' value={date} handleFilterChange={setDate} />
+                            <CalendarPicker showCalendar={true} fromName='From' toName='To' value={date} handleFilterChange={setDate} py='py-3' />
                         </View>
                         {/* <Box maxW="300" style={{ height: "100%" }} className='ml-2'> */}
                         <Select className='' height={"40px"} borderWidth={0.9} style={{ height: "100%", marginRight: 2 }} dropdownIcon={<Icon name="chevron-down" style={{ fontWeight: "100", marginRight: 4 }} color="black" />} selectedValue={service} minWidth="200" accessibilityLabel="Choose Status" placeholder="Choose Status" _selectedItem={{

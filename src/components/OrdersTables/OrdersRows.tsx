@@ -187,7 +187,7 @@ export const OrdersRows = ({ data, schema }: { data: OrderInterface[], schema: a
                             </View>
                         </View>
                         <View className='flex flex-row items-center w-1/12 justify-center'>
-                            <View className='flex flex-col bg-[#D7D7D7] rounded-full w-8/12 items-center justify-center '>
+                            <View className='flex flex-col  w-8/12 items-center justify-center '>
                                 <View className='flex flex-row items-center justify-center w-11/12'>
                                     {/* <Popover trigger={triggerProps => {
                                         return <TouchableOpacity {...triggerProps}>
