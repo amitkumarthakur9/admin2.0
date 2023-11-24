@@ -98,7 +98,7 @@ function Month(props: MonthSingleProps | MonthRangeProps | MonthMultiProps) {
     const formatter = new Intl.DateTimeFormat(locale, {
       month: 'long',
     })
-    console.log('md', md);
+    // console.log('md', md);
 
     return { monthName: formatter.format(md), month: m, year: y }
   }, [realIndex, locale])

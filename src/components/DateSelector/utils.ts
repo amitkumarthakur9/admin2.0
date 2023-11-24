@@ -363,7 +363,7 @@ export function getGridCount(index: number) {
   const monthDate = addMonths(new Date(), getRealIndex(index))
   const h = getGridCountForDate(monthDate)
   gridCounts[index] = h
-  console.log(gridCounts);
+  // console.log(gridCounts);
 
   return h
 }

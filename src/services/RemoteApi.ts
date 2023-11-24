@@ -15,7 +15,7 @@ axiosInstance.interceptors.response.use(
     if (error.response.status === 401) {
       localStorage.removeItem('token');
       if (window.location.pathname.includes("sign-in")) {
-        console.log(error.response.data['errors']);
+        // console.log(error.response.data['errors']);
       } else {
         window.location.reload();
       }
@@ -55,7 +55,7 @@ class ApiRequest {
 
     const response = await axiosInstance(config);
 
-    console.log('response', response);
+    // console.log('response', response);
 
     return response.data;
   }

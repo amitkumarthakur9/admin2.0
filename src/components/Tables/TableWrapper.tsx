@@ -33,7 +33,7 @@ const TableWrapper = ({ itemsPerPage = 10, totalItems, data, schema, apiUrl, req
     React.useEffect(() => {
         //page changed
         //API CALL
-        console.log(`page changed to: ${currentPageNumber}`);
+        // console.log(`page changed to: ${currentPageNumber}`);
 
     }, [currentPageNumber])
 

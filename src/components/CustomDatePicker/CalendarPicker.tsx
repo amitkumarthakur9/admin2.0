@@ -26,7 +26,7 @@ const CalendarPicker = ({ handleFilterChange, value, fromName = "From", toName =
     };
 
     const handleDateSelect = (date) => {
-        console.log(date);
+        // console.log(date);
 
         if (selectedDate && !selectedSecondDate) {
             if (new Date(date) > new Date(selectedDate)) {
@@ -51,7 +51,7 @@ const CalendarPicker = ({ handleFilterChange, value, fromName = "From", toName =
         }
 
         if (selectedDate && selectedSecondDate && new Date(selectedDate) < new Date(date) && new Date(selectedSecondDate) > new Date(date)) {
-            console.log("here", date, selectedDate, selectedSecondDate);
+            // console.log("here", date, selectedDate, selectedSecondDate);
 
             color = "bg-gray-300"
         }

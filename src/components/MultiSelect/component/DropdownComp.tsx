@@ -72,7 +72,7 @@ export default function DropdownComp({
     }
   }
   function checkifInArray(label: string) {
-    console.log('for cancel', label);
+    // console.log('for cancel', label);
 
     if (selectedItems?.includes(label)) {
       let index = selectedItems.indexOf(label);
@@ -86,7 +86,7 @@ export default function DropdownComp({
     }
   }
   function handleListItemClick(label: any) {
-    console.log('djbcsdcsd', label);
+    // console.log('djbcsdcsd', label);
 
     checkifInArray(label);
     setOpenSelction(!showMultipleAsBadge ? true : false);

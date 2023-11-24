@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Text, TextInput, View } from "react-native"
 import { TouchableRipple } from "react-native-paper";
 import FilterForm from "../../helper/AllFilters";
@@ -33,6 +33,22 @@ export const DynamicFilters = ({ filtersSchema, setAppliedSorting, appliedSortin
         setAppliedFilers([])
         getList([], true)
     }
+
+    useEffect(() => {
+        if (filterValues.find((filter) => filter.key === "all")?.value?.length == 0) {
+            let removedAllFilters = filterValues.filter(obj => obj.key !== 'all');
+            removedAllFilters = removedAllFilters.filter((filter) => {
+                return (filter.value != null && filter.value !== '' && filter.operator) ||
+                    (Array.isArray(filter.value) && filter.value.length > 0 && filter.operator);
+            });
+
+            setAppliedFilers(removedAllFilters)
+            setFilterValues(removedAllFilters)
+            setModalVisible(!modalVisible)
+            setCurrentPageNumber(1)
+            getList(removedAllFilters, true)
+        }
+    }, [filterValues.find((filter) => filter.key === "all")?.value])
 
     const handleFilterChange = (key, value, operator) => {
         const newFilter = { key, value, operator };
@@ -84,12 +100,12 @@ export const DynamicFilters = ({ filtersSchema, setAppliedSorting, appliedSortin
     const downloadReport = async () => {
         setIsDownloadProcessing(true)
         const response: any = await RemoteApi.downloadFile({ endpoint: downloadApi, fileName: fileName, data: appliedFilers });
-        console.log(response);
+        // console.log(response);
         setIsDownloadProcessing(false)
     }
 
     const handleSortingChange = (e, name) => {
-        console.log(e);
+        // console.log(e);
         setAppliedSorting((prevSelectSorting) => ({
             ...prevSelectSorting,
             [name]: e,
