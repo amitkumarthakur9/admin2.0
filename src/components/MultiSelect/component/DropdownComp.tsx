@@ -8,11 +8,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {
-  DPMProps,
-  ItemProps,
-  ListItemProps,
-} from 'react-native-dropdown-listpicker';
 import { DOWN_ARROW, PLACEHOLDER, PLUS } from '../constants';
 import { MainList, styles, SubList1 } from '../styles';
 import { SearchBar } from './SearchBar';
@@ -46,8 +41,8 @@ export default function DropdownComp({
   sublistItemLeftIconComp,
   dropdownIndicator,
   searchable,
-}: DPMProps) {
-  const [filteredData, setfilteredData] = useState<ItemProps[]>();
+}: any) {
+  const [filteredData, setfilteredData] = useState<any[]>();
   const itemsRef = useRef<string[]>([]);
   const [open, setOpen] = useState<boolean>(false);
   const [openSelction, setOpenSelction] = useState<boolean>(false);
@@ -92,7 +87,7 @@ export default function DropdownComp({
     setOpenSelction(!showMultipleAsBadge ? true : false);
   }
 
-  function ItemComponentContent({ label, style, level, value }: ListItemProps) {
+  function ItemComponentContent({ label, style, level, value }: any) {
     switch (level) {
       case 'sub':
         return (
@@ -127,7 +122,7 @@ export default function DropdownComp({
         );
     }
   }
-  function ItemComponent({ label, value, root }: ListItemProps) {
+  function ItemComponent({ label, value, root }: any) {
     return (
       <View>
         <ItemComponentContent label={label} value={value} style={MainList} />

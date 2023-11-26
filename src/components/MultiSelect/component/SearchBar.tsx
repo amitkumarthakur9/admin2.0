@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import { TextInput, View } from 'react-native';
-import { ItemProps, SBprops } from 'react-native-dropdown-listpicker';
 import { SB_HEIGHT } from '../constants';
 
-export function SearchBar({ data, setfilteredData, selectedItems }: SBprops) {
+export function SearchBar({ data, setfilteredData, selectedItems }: any) {
   const [searchValue, setsearchValue] = useState<string>('');
 
   function searchList(text: string) {
     setsearchValue(text);
-    const filterd: ItemProps[] = [];
+    const filterd: any[] = [];
     data.filter(item => {
       if (typeof item.value == 'object') {
         item.value.map(cont => {

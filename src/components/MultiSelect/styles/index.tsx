@@ -39,7 +39,7 @@ export const styles = StyleSheet.create({
   RSIBDot: { fontSize: 10, color: 'green', paddingEnd: 4 },
   RSIBLabel: { fontSize: 20, color: 'black', paddingHorizontal: 4 },
   RSIBDelete: { fontSize: 15, color: 'red' },
-  RSIBScrollView: { flex: 1, },
+  RSIBScrollView: { flex: 1, width: 100 },
   RSIBOnlyTextExt: { fontSize: 18, color: 'white' },
   DDPContainer: {
     backgroundColor: 'black',
