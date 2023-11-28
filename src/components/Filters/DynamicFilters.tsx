@@ -142,8 +142,8 @@ export const DynamicFilters = ({ filtersSchema, setAppliedSorting, appliedSortin
 
             </Pressable>
             <View className="mr-2">
-                <Menu w="xl" onClose={() => setFilterOpen(false)} onOpen={() => setFilterOpen(true)} isOpen={filterOpen} bgColor={"white"} placement="bottom" closeOnSelect={false} trigger={triggerProps => {
-                    return <Pressable className="flex flex-row justify-center items-center border-[1px] rounded px-4 py-3 border-slate-200" accessibilityLabel="More options menu" {...triggerProps}>
+                <Menu w="xl" style={{ justifyContent: "center" }} onClose={() => setFilterOpen(false)} onOpen={() => setFilterOpen(true)} isOpen={filterOpen} bgColor={"white"} placement="bottom" closeOnSelect={false} trigger={triggerProps => {
+                    return <Pressable className={"flex flex-row justify-center items-center border-[1px] rounded px-4 py-3 border-slate-200 " + (filterOpen ? "bg-zinc-100" : "")} accessibilityLabel="More options menu" {...triggerProps}>
                         <Icon name="filter" style={{ marginLeft: 10, marginRight: 5 }} size={14} color="#484848" />
 
 
@@ -160,7 +160,7 @@ export const DynamicFilters = ({ filtersSchema, setAppliedSorting, appliedSortin
                         }
                     </Pressable>
                 }}>
-                    <Menu.Item bgColor={"white"} cancelable={false}>
+                    <Menu.Item bgColor={"white"} cancelable={false} className="">
                         <View className="">
                             <View className='p-2'>
                                 <View className='mb-4 flex flex-row justify-between'>
@@ -186,7 +186,7 @@ export const DynamicFilters = ({ filtersSchema, setAppliedSorting, appliedSortin
             </View>
             <View>
                 <Menu w="md" onClose={() => setSortingOpen(false)} onOpen={() => setSortingOpen(true)} isOpen={sortingOpen} bgColor={"white"} placement="bottom" closeOnSelect={false} trigger={triggerProps => {
-                    return <Pressable className="flex flex-row justify-center items-center border-[1px] rounded px-4 py-3 border-slate-200" accessibilityLabel="More options menu" {...triggerProps}>
+                    return <Pressable className={"flex flex-row justify-center items-center border-[1px] rounded px-4 py-3 border-slate-200 " + (sortingOpen ? "bg-zinc-100" : "")} accessibilityLabel="More options menu" {...triggerProps}>
                         <Icon name="sort" style={{ marginLeft: 10, marginRight: 5 }} size={14} color="#484848" />
                         <Text className="mr-1">Sorting</Text>
                         {

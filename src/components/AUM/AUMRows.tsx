@@ -125,11 +125,14 @@ export const AUMRows = ({ data, schema }) => {
                         </View>
 
                         <View className='flex flex-row items-center w-3/12 justify-center flex-wrap'>
-                            <View className='flex flex-col flex-wrap w-10/12 items-center'>
-                                <Text selectable className='text-[#000000] font-bold'>{client.mutualfund.name}</Text>
-                                <Text selectable className='text-[#686868] font-semibold'>Category: {client.mutualfund.mutualfundSubcategory.name}</Text>
-                                <Text selectable className='text-[#686868] font-semibold'>BSE: {client.mutualfund.bseDematSchemeCode}</Text>
-                                <Text selectable className='text-[#686868] font-semibold'>Fund House: {client.mutualfund.fundhouse.name}</Text>
+                            <View className='flex flex-row flex-wrap w-10/12 items-center justify-center'>
+                                <View className='flex flex-col flex-wrap items-start w-11/12'>
+                                    <Text selectable className='text-[#000000] font-bold'>{client?.mutualfund?.name}</Text>
+                                    <Text selectable className='text-[#686868] font-semibold'>Category: {client?.mutualfund?.mutualfundSubcategory?.name}</Text>
+                                    <Text selectable className='text-[#686868] font-semibold'>BSE: {client?.mutualfund?.bseDematSchemeCode}</Text>
+                                    <Text selectable className='text-[#686868] font-semibold'>Fund House: {client?.mutualfund?.fundhouse?.name}</Text>
+                                </View>
+
                             </View>
                         </View>
                         <View className='flex flex-row w-1/12 items-center justify-center'>

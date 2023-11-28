@@ -11,6 +11,7 @@ import DatePickerComponent from '../CustomDatePicker/DatePicker';
 import { RTAReconcilation, RTAResponseResponseInterface } from '../../interfaces/RTAResponseInterface';
 import DatePickerNew from '../CustomDatePicker/DatePickerNew';
 import CalendarPicker from '../CustomDatePicker/CalendarPicker';
+import { DynamicFilters } from '../Filters/DynamicFilters';
 
 
 const RTAReconciliation = () => {
@@ -26,6 +27,8 @@ const RTAReconciliation = () => {
     const [service, setService] = React.useState("");
     const [date, setDate] = React.useState<any>(undefined);
     const [isDownloadProcessing, setIsDownloadProcessing] = useState(false);
+    const [sorting, setSorting] = useState([]);
+    const [appliedSorting, setAppliedSorting] = useState({ key: "", direction: "" });
 
     const downloadReport = async () => {
         setIsDownloadProcessing(true)
@@ -37,15 +40,19 @@ const RTAReconciliation = () => {
 
     async function getDataList(updatedFilterValues = [], applyDirectly = false) {
         setIsLoading(true)
-        const response: RTAResponseResponseInterface = await RemoteApi.post("transaction/list", {
+
+        let data: any = {
             "page": currentPageNumber,
             "limit": itemsPerPage,
-            "orderBy": {
-                "key": "createdAt",
-                "direction": "desc"
-            },
             "filters": applyDirectly ? updatedFilterValues : appliedFilers
-        });
+        }
+
+        if (appliedSorting.key != "") {
+            data.orderBy = appliedSorting
+        }
+
+
+        const response: RTAResponseResponseInterface = await RemoteApi.post("transaction/list", data);
         if (response.code == 200) {
             setData(response.data)
             // setItemsPerPage(response.count)
@@ -58,11 +65,20 @@ const RTAReconciliation = () => {
 
     React.useEffect(() => {
         async function getSchema() {
-            const response: any = await RemoteApi.get("order/schema")
+            const response: any = await RemoteApi.get("transaction/schema")
             setFiltersSchema(response.filters)
+            setFiltersSchema(response.filters)
+            setSorting(response.sort)
         }
         getSchema()
     }, [])
+
+
+    React.useEffect(() => {
+        if ((appliedSorting.direction != "" && appliedSorting.key != "") || (appliedSorting.direction == "" && appliedSorting.key == "")) {
+            getDataList()
+        }
+    }, [appliedSorting])
 
     return (
         <View className='bg-white'>
@@ -93,45 +109,8 @@ const RTAReconciliation = () => {
             </View>
             <View className='border-[0.2px]  border-[#e4e4e4]'>
 
-                <View className='flex flex-row justify-between items-center mt-5'>
-                    <View className='flex flex-row w-10/12 items-center pl-2'>
-                        <View className='mr-2'>
-                            <CalendarPicker showCalendar={true} fromName='From' toName='To' value={date} handleFilterChange={setDate} py='py-3' />
-                        </View>
-                        {/* <Box maxW="300" style={{ height: "100%" }} className='ml-2'> */}
-                        <Select className='' height={"40px"} borderWidth={0.9} style={{ height: "100%", marginRight: 2 }} dropdownIcon={<Icon name="chevron-down" style={{ fontWeight: "100", marginRight: 4 }} color="black" />} selectedValue={service} minWidth="200" accessibilityLabel="Choose Status" placeholder="Choose Status" _selectedItem={{
-                            bg: "teal.600",
-                            endIcon: <CheckIcon size="5" />
-                        }} onValueChange={itemValue => setService(itemValue)}>
-                            <Select.Item label="All" value="all" />
-                            <Select.Item label="Reconciled" value="reconciled" />
-                            <Select.Item label="Non Reconciled" value="non-reconciled" />
-                        </Select>
-                        {/* </Box> */}
-                        <View className="ml-2 ">
+                <DynamicFilters appliedSorting={appliedSorting} setAppliedSorting={setAppliedSorting} sorting={sorting} fileName="Aum" downloadApi={"aum/download-report"} filtersSchema={filtersSchema} setCurrentPageNumber={setCurrentPageNumber} getList={getDataList} appliedFilers={appliedFilers} setAppliedFilers={setAppliedFilers} />
 
-                            {/* <Pressable marginRight={2} onPress={() => console.log("hello world")} paddingX={9} paddingY={2} bg={"#000000"} rounded={4} borderColor={"#bfbfbf"} borderWidth={0.3}>
-                                <Text selectable className='text-white'>Apply</Text>
-                            </Pressable> */}
-
-                            <Button width={20} size={"md"} bgColor={"#000000"}>
-                                Apply
-                            </Button>
-
-                        </View>
-                    </View>
-                    <View className="flex flex-row w-2/12 justify-end items-center">
-                        {/* <Pressable marginRight={4} onPress={() => console.log("hello world")} paddingX={9} paddingY={2} bg={"#000000"} rounded={4} borderColor={"#bfbfbf"} borderWidth={0.3}>
-                            <Icon name="download" style={{ fontWeight: "100" }} size={14} color="white" />
-                        </Pressable> */}
-                        <Pressable onPress={downloadReport} className="flex flex-row justify-center items-center bg-black border-[1px] rounded px-[40px] py-3 border-slate-200 mr-2">
-                            {
-                                isDownloadProcessing ? <Spinner color={"white"} size={14} accessibilityLabel="Loading" /> : <Icon name="download" style={{ fontWeight: "100" }} size={14} color="white" />
-                            }
-                            {/* <Text>Sorting</Text> */}
-                        </Pressable>
-                    </View>
-                </View>
 
                 {
                     !isLoading ? <View className={'mt-4 z-[-1] ' + (Dimensions.get("screen").width < 770 ? "overflow-scroll" : "")}>
