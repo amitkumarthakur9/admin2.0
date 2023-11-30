@@ -15,6 +15,7 @@ export default function OrderDetail() {
         async function getOrderDetails() {
             const response: OrderDataInterface = await RemoteApi.get(`order/${id}`)
             setData(response.data)
+            console.log(response.data);
             setIsLoading(false)
         }
 
@@ -158,6 +159,10 @@ export default function OrderDetail() {
                                         <View className='mb-8 pr-2'>
                                             <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Client Code</Text>
                                             <Text selectable className='font-bold text-base'>{data.clientCode}</Text>
+                                        </View>
+                                        <View className='mb-8 pr-2'>
+                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Pan Number</Text>
+                                            <Text selectable className='font-bold text-base'>{data.account.user[0]?.panNumber}</Text>
                                         </View>
                                     </View>
                                 </View>

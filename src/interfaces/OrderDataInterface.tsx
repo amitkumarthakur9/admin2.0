@@ -39,10 +39,9 @@ export interface Order {
             id: number;
             name: string;
         };
-        userAccountLinks: {
-            user: {
-                name: string;
-            };
+        user: {
+            name: string;
+            panNumber: string
         }[];
         dematAccount: {
             id: string;
