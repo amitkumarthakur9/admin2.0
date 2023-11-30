@@ -112,7 +112,7 @@ export const DynamicFilters = ({ filtersSchema, setAppliedSorting, appliedSortin
         }));
     }
 
-    const determineDisplayValue = (appliedFilters) => {
+    const determineDisplayValue = () => {
         let displayValue = appliedFilers.length;
         if (appliedFilers.find(obj => obj.key === 'all')) {
             displayValue -= 1
@@ -131,11 +131,23 @@ export const DynamicFilters = ({ filtersSchema, setAppliedSorting, appliedSortin
     };
 
     const handleKeyPress = (event) => {
-        // Check if the pressed key is 'Enter' (key code 13)
+
         if (event.key === 'Enter') {
             applyFilters();
         }
+
     };
+
+    const searchPlaceholder = () => {
+
+        const keysToInclude = filtersSchema
+            .filter(obj => obj.title !== 'All' && obj.operator[0].subKey === 'contains')
+            .map((obj) => obj.title);
+
+        const resultString = keysToInclude.join('/');
+
+        return resultString;
+    }
 
 
 
@@ -149,7 +161,7 @@ export const DynamicFilters = ({ filtersSchema, setAppliedSorting, appliedSortin
                     <TextInput
                         ref={searchBoxRef}
                         className='outline-transparent'
-                        placeholder={'Search'}
+                        placeholder={searchPlaceholder()}
                         underlineColorAndroid="transparent"
                         selectionColor="transparent"
                         placeholderTextColor={"#484848"}
@@ -174,7 +186,7 @@ export const DynamicFilters = ({ filtersSchema, setAppliedSorting, appliedSortin
 
                         <Text className="mr-1">Filters</Text>
                         {
-                            determineDisplayValue(appliedFilers)
+                            determineDisplayValue()
                         }
                     </Pressable>
                 }}>
