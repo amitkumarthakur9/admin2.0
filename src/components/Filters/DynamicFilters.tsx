@@ -112,6 +112,24 @@ export const DynamicFilters = ({ filtersSchema, setAppliedSorting, appliedSortin
         }));
     }
 
+    const determineDisplayValue = (appliedFilters) => {
+        let displayValue = appliedFilers.length;
+        if (appliedFilers.find(obj => obj.key === 'all')) {
+            displayValue -= 1
+        }
+        if (displayValue) {
+            return <Badge
+                height={5}
+                width={5}
+                colorScheme="danger" rounded="full" variant="solid" alignSelf="flex-end" _text={{
+                    fontSize: 12,
+                }}>
+                {displayValue}
+            </Badge>
+        }
+        return;
+    };
+
 
 
     return <View className="flex flex-row justify-between items-center mt-5 w-100">
@@ -149,14 +167,7 @@ export const DynamicFilters = ({ filtersSchema, setAppliedSorting, appliedSortin
 
                         <Text className="mr-1">Filters</Text>
                         {
-                            appliedFilers.length > 0 && <Badge
-                                height={5}
-                                width={5}
-                                colorScheme="danger" rounded="full" variant="solid" alignSelf="flex-end" _text={{
-                                    fontSize: 12,
-                                }}>
-                                {appliedFilers.length}
-                            </Badge>
+                            determineDisplayValue(appliedFilers)
                         }
                     </Pressable>
                 }}>
