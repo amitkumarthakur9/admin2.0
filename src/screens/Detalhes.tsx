@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { View, Text } from "react-native";
-import DataTableExample from "../components/DataTableExample";
+// import DataTableExample from "../components/DataTableExample";
 
 const Detalhes = ({ navigation }) => {
     return (

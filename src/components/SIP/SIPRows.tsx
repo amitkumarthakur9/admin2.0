@@ -156,7 +156,7 @@ export const SIPRows = ({ data, schema }: { data: SIPReportItems[], schema: any 
 
                             <View className="pl-12 lg:pl-0 hidden lg:flex flex-row justify-start w-3/12">
                                 <Text>
-                                    {order.transactions.length > 0 && order.transactions[0].folio.folioNumber}
+                                    {order.transactions[0]?.folio?.folioNumber}
                                 </Text>
                             </View>
 
