@@ -41,7 +41,7 @@ const CustomSidebarMenu = (props) => {
                 <DrawerItemList {...props} />
 
             </DrawerContentScrollView>
-            <TouchableRipple
+            {/* <TouchableRipple
                 rippleColor="rgba(0, 0, 0, .32)"
                 className='flex flex-row justify-start pl-3 mb-3'
                 onPress={() => {
@@ -53,7 +53,7 @@ const CustomSidebarMenu = (props) => {
                     <Text selectable className='text-sm font-bold text-rose-500'>Sign out</Text>
                 </View>
 
-            </TouchableRipple>
+            </TouchableRipple> */}
         </SafeAreaView>
     );
 };
