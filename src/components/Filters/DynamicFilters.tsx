@@ -130,6 +130,13 @@ export const DynamicFilters = ({ filtersSchema, setAppliedSorting, appliedSortin
         return;
     };
 
+    const handleKeyPress = (event) => {
+        // Check if the pressed key is 'Enter' (key code 13)
+        if (event.key === 'Enter') {
+            applyFilters();
+        }
+    };
+
 
 
     return <View className="flex flex-row justify-between items-center mt-5 w-100">
@@ -150,6 +157,7 @@ export const DynamicFilters = ({ filtersSchema, setAppliedSorting, appliedSortin
                         style={searchInputStyle}
                         onChange={handleSearchInput}
                         value={filterValues.find((filter) => filter.key === "all")?.value || ""}
+                        onKeyPress={handleKeyPress}
                     />
                 </View>
                 {
@@ -163,7 +171,6 @@ export const DynamicFilters = ({ filtersSchema, setAppliedSorting, appliedSortin
                 <Menu w="xl" style={{ justifyContent: "center" }} onClose={() => setFilterOpen(false)} onOpen={() => setFilterOpen(true)} isOpen={filterOpen} bgColor={"white"} placement="bottom" closeOnSelect={false} trigger={triggerProps => {
                     return <Pressable className={"flex flex-row justify-center items-center border-[1px] rounded px-4 py-3 border-slate-200 " + (filterOpen ? "bg-zinc-100" : "")} accessibilityLabel="More options menu" {...triggerProps}>
                         <Icon name="filter" style={{ marginLeft: 10, marginRight: 5 }} size={14} color="#484848" />
-
 
                         <Text className="mr-1">Filters</Text>
                         {
