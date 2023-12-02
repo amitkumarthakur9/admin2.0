@@ -99,8 +99,7 @@ export const DynamicFilters = ({ filtersSchema, setAppliedSorting, appliedSortin
 
     const downloadReport = async () => {
         setIsDownloadProcessing(true)
-        const response: any = await RemoteApi.downloadFile({ endpoint: downloadApi, fileName: fileName, data: appliedFilers });
-        // console.log(response);
+        const response: any = await RemoteApi.downloadFile({ endpoint: downloadApi, fileName: fileName, data: { filters: appliedFilers } });
         setIsDownloadProcessing(false)
     }
 
@@ -112,7 +111,7 @@ export const DynamicFilters = ({ filtersSchema, setAppliedSorting, appliedSortin
         }));
     }
 
-    const determineDisplayValue = (appliedFilters) => {
+    const determineDisplayValue = () => {
         let displayValue = appliedFilers.length;
         if (appliedFilers.find(obj => obj.key === 'all')) {
             displayValue -= 1
@@ -131,11 +130,23 @@ export const DynamicFilters = ({ filtersSchema, setAppliedSorting, appliedSortin
     };
 
     const handleKeyPress = (event) => {
-        // Check if the pressed key is 'Enter' (key code 13)
+
         if (event.key === 'Enter') {
             applyFilters();
         }
+
     };
+
+    const searchPlaceholder = () => {
+
+        const keysToInclude = filtersSchema
+            .filter(obj => obj.title !== 'All' && obj.operator[0].subKey === 'contains')
+            .map((obj) => obj.title);
+
+        const resultString = keysToInclude.join('/');
+
+        return resultString;
+    }
 
 
 
@@ -149,7 +160,7 @@ export const DynamicFilters = ({ filtersSchema, setAppliedSorting, appliedSortin
                     <TextInput
                         ref={searchBoxRef}
                         className='outline-transparent'
-                        placeholder={'Search'}
+                        placeholder={searchPlaceholder()}
                         underlineColorAndroid="transparent"
                         selectionColor="transparent"
                         placeholderTextColor={"#484848"}
@@ -161,7 +172,7 @@ export const DynamicFilters = ({ filtersSchema, setAppliedSorting, appliedSortin
                     />
                 </View>
                 {
-                    filterValues.find((filter) => filter.key === "all")?.value && <Button onPress={applyFilters} className="" width={20} mr={"5px"} size={"xs"} bgColor={"#000000"}>
+                    filterValues.find((filter) => filter.key === "all")?.value && <Button onPress={applyFilters} className="" width={20} ml={"-75px"} mr={"5px"} size={"xs"} bgColor={"#000000"}>
                         Search
                     </Button>
                 }
@@ -174,7 +185,7 @@ export const DynamicFilters = ({ filtersSchema, setAppliedSorting, appliedSortin
 
                         <Text className="mr-1">Filters</Text>
                         {
-                            determineDisplayValue(appliedFilers)
+                            determineDisplayValue()
                         }
                     </Pressable>
                 }}>
@@ -321,4 +332,4 @@ export const DynamicFilters = ({ filtersSchema, setAppliedSorting, appliedSortin
     </View>
 }
 
-const searchInputStyle = { padding: 7, fontSize: 13, borderColor: "transparent", color: "#484848", height: 40, borderWidth: 0, "outlineStyle": 'none' };
+const searchInputStyle = { padding: 7, width: 500, fontSize: 13, borderColor: "transparent", color: "#484848", height: 40, borderWidth: 0, "outlineStyle": 'none' };

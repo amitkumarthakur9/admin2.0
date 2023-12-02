@@ -87,7 +87,7 @@ const RTAReconciliation = () => {
                     <View className='flex flex-col w-6/12'>
                         <Text selectable className='text-2xl font-extrabold mb-3'>RTA Reconciliation</Text>
                         <View className='flex flex-row items-center'>
-                            <Link href={""} className='mr-4'>
+                            <Link href={"../"} className='mr-4'>
                                 {/* <Icon name="home" size={18} color="black" /> */}
                                 <Text>Dashboard</Text>
                             </Link>

@@ -16,7 +16,7 @@ export default function TopHeader({ navigation }) {
                         <Icon size={18} name={"bars"} onPress={navigation.toggleDrawer} />
                     </TouchableOpacity>
                 }
-                <Icon name="search" size={18} color="black" />
+                {/* <Icon name="search" size={18} color="black" /> */}
                 {/* <TextInput
                     className="bg-white"
                     label="Type"

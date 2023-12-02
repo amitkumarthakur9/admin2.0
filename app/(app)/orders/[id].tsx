@@ -52,7 +52,7 @@ export default function OrderDetail() {
                                 <View className='flex flex-col w-6/12'>
                                     <Text selectable className='text-2xl font-extrabold mb-3'>Order Details</Text>
                                     <View className='flex flex-row items-center'>
-                                        <Link href={"/"} className='mr-4'>
+                                        <Link href={"../"} className='mr-4'>
                                             {/* <Icon name="home" size={18} color="black" /> */}
                                             <Text>Dashboard</Text>
                                         </Link>
@@ -88,12 +88,12 @@ export default function OrderDetail() {
                                 <View>
 
                                 </View>
-                                <View>
+                                {/* <View>
                                     <Pressable marginRight={0} onPress={() => console.log("hello world")} paddingX={9} paddingY={2} bg={"#000000"} rounded={4} borderColor={"#bfbfbf"} borderWidth={0.3}>
                                         <Icon name="download" style={{ fontWeight: "100" }} size={14} color="white" />
                                     </Pressable>
 
-                                </View>
+                                </View> */}
                             </View>
                             <View className='flex flex-row m-2'>
                                 <View className="w-12/12 lg:w-8/12  p-2">
@@ -158,6 +158,10 @@ export default function OrderDetail() {
                                         <View className='mb-8 pr-2'>
                                             <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Client Code</Text>
                                             <Text selectable className='font-bold text-base'>{data.clientCode}</Text>
+                                        </View>
+                                        <View className='mb-8 pr-2'>
+                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Pan Number</Text>
+                                            <Text selectable className='font-bold text-base'>{data.account.user[0]?.panNumber}</Text>
                                         </View>
                                     </View>
                                 </View>
