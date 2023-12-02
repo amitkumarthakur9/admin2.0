@@ -15,7 +15,6 @@ export default function OrderDetail() {
         async function getOrderDetails() {
             const response: OrderDataInterface = await RemoteApi.get(`order/${id}`)
             setData(response.data)
-            console.log(response.data);
             setIsLoading(false)
         }
 
