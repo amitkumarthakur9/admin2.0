@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Dimensions, Text, TextInput, View } from "react-native"
 import { TouchableRipple } from "react-native-paper";
 import FilterForm from "../../helper/AllFilters";
-import { Badge, Box, Button, CheckIcon, Divider, Menu, Modal, Popover, Pressable, Select, Spinner, VStack, ZStack, useToast, } from "native-base";
+import { Badge, Box, Button, CheckIcon, Divider, Menu, Modal, Popover, Pressable, Select, Spinner, Tooltip, VStack, ZStack, useToast, } from "native-base";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { ToastAlert } from "../../helper/CustomToaster";
 import RemoteApi from "../../services/RemoteApi";
@@ -64,7 +64,6 @@ export const DynamicFilters = ({ filtersSchema, setAppliedSorting, appliedSortin
         console.log('newArray', newArray);
 
         setFilterValues([...newArray])
-        setAppliedFilers([...newArray])
     }
 
     const handleFilterChange = (key, value, operator) => {
@@ -155,15 +154,14 @@ export const DynamicFilters = ({ filtersSchema, setAppliedSorting, appliedSortin
 
     };
 
-    const searchPlaceholder = () => {
-        const maxPlaceholderLength = 40;
+    const searchPlaceholder = (maxPlaceholderLength = 0) => {
         const keysToInclude = filtersSchema
             .filter(obj => obj.title !== 'All' && obj.operator[0].subKey === 'contains')
             .map((obj) => obj.title);
 
         const resultString = keysToInclude.join('/');
 
-        return resultString.length > maxPlaceholderLength
+        return resultString.length > maxPlaceholderLength && maxPlaceholderLength > 0
             ? resultString.substring(0, maxPlaceholderLength) + '...'
             : resultString;
     }
@@ -195,12 +193,14 @@ export const DynamicFilters = ({ filtersSchema, setAppliedSorting, appliedSortin
             <Pressable onPress={handleSearchBoxClick} className="flex flex-row justify-between items-center mx-2 w-6/12 border-[1px] rounded border-slate-200">
                 <View className="flex flex-row items-center">
                     <View className="">
+
                         <Icon name="search" style={{ marginLeft: 10 }} size={14} color="#484848" />
+
                     </View>
                     <TextInput
                         ref={searchBoxRef}
                         className='outline-transparent'
-                        placeholder={searchPlaceholder()}
+                        placeholder={searchPlaceholder(50)}
                         underlineColorAndroid="transparent"
                         selectionColor="transparent"
                         placeholderTextColor={"#484848"}
@@ -236,7 +236,7 @@ export const DynamicFilters = ({ filtersSchema, setAppliedSorting, appliedSortin
                     bg: "transparent"
                 }}> */}
                 {filterOpen && <View>
-                    <Box className="" width={500} ref={outsideClickRef} style={position}>
+                    <Box className="" width={550} ref={outsideClickRef} style={position}>
                         <View style={{
                             backgroundColor: "white",
                             elevation: 3, // Android shadow
@@ -263,6 +263,11 @@ export const DynamicFilters = ({ filtersSchema, setAppliedSorting, appliedSortin
                                     <View className='flex flex-row justify-center items-center'>
                                         <Text selectable className='text-center text-sm mr-2 text-white'>Apply Filters</Text>
                                         <Icon name="filter" size={15} color="#ffffff" />
+                                        {
+                                            appliedFilers.length - filterValues.length &&
+                                            <Text selectable className='text-center text-xs ml-2 text-white'>({Math.abs(appliedFilers.length - filterValues.length)} not applied)</Text>
+                                        }
+
                                     </View>
                                 </TouchableRipple>
                             </View>
