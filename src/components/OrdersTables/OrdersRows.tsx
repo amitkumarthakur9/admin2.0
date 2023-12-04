@@ -50,7 +50,10 @@ export const OrdersRows = ({ data, schema }: { data: OrderInterface[], schema: a
             <View className='flex flex-row items-center w-2/12'>
                 <Text selectable className='font-semibold'>Customer Name</Text>
             </View>
-            <View className='flex flex-row items-center w-5/12 justify-center'>
+            <View className='flex flex-row items-center justify-center w-1/12'>
+                <Text selectable className='font-semibold'>Type</Text>
+            </View>
+            <View className='flex flex-row items-center w-4/12 justify-center'>
                 <Text selectable className='font-semibold'>Scheme</Text>
             </View>
             <View className='flex flex-row items-center w-2/12 justify-center'>
@@ -81,34 +84,18 @@ export const OrdersRows = ({ data, schema }: { data: OrderInterface[], schema: a
                 return <View key={index}>
                     <View className={`flex flex-row p-2 justify-between ` + (Dimensions.get("screen").width < 770 ? 'w-[1728px]' : '')} >
                         <View className='flex flex-row items-center w-2/12 justify-center'>
-                            <View className='flex flex-col w-full'>
-                                <View className='flex flex-row items-center text-black font-semibold break-all w-9/12'>
-                                    {/* <Popover trigger={triggerProps => {
-                                                return <TouchableOpacity {...triggerProps}>
-                                                    <Icon name="info-circle" size={12} color="black" />
-                                                </TouchableOpacity>;
-                                            }}>
-                                                <Popover.Content accessibilityLabel="Delete Customerd" w="56">
-                                                    <Popover.Arrow />
-                                                    <Popover.CloseButton />
-                                                    <Popover.Header>Custome Details</Popover.Header>
-                                                    <Popover.Body>
-                                                        <View>
-                                                            <Text>{order.account.name}</Text>
-                                                            <Text>{order.account.clientId}</Text>
-                                                        </View>
-                                                    </Popover.Body>
-                                                </Popover.Content>
-                                            </Popover> */}
+                            <View className='flex flex-col w-11/12 flex-wrap'>
+                                <View className='flex flex-row items-center text-black font-semibold break-all'>
                                     <Text selectable className='text-black font-semibold break-all'>{order.account.name}&nbsp;</Text>
-
                                 </View>
-                                <View className='flex flex-row items-center mt-1 md:mt-0 lg:mt-0 flex-wrap w-9/12'>
+                                <View className='flex flex-row items-center mt-1 md:mt-0 lg:mt-0 flex-wrap w-12/12'>
                                     <Text selectable className='text-[#6C6A6A] text-sm'>{order.account.clientId}</Text>
                                     <View className='rounded-full bg-[#6C6A6A] h-2 w-2 mx-1'></View>
-                                    <View className='flex flex-row items-center'>
-                                        <Text selectable className='text-[#6C6A6A] text-sm'>Order No. {order.orderReferenceNumber}&nbsp;</Text>
-                                        <Popover trigger={triggerProps => {
+                                    <View className='flex flex-col items-start w-11/12 flex-wrap'>
+                                        <Text selectable className='text-[#6C6A6A] text-sm'>Order No. </Text>
+                                        <Text selectable className='text-[#6C6A6A] text-sm'>{order.orderReferenceNumber} </Text>
+
+                                        {/* <Popover trigger={triggerProps => {
                                             return <TouchableOpacity {...triggerProps}>
                                                 <Icon name="info-circle" size={12} color="black" />
                                             </TouchableOpacity>;
@@ -131,12 +118,17 @@ export const OrdersRows = ({ data, schema }: { data: OrderInterface[], schema: a
                                                     </View>
                                                 </Popover.Body>
                                             </Popover.Content>
-                                        </Popover>
+                                        </Popover> */}
                                     </View>
                                 </View>
                             </View>
                         </View>
-                        <View className='flex flex-row items-center w-5/12 justify-center'>
+                        <View className='flex flex-row items-center w-1/12 justify-center'>
+                            <View className='flex flex-col items-center'>
+                                <Text selectable className='text-[#686868] font-semibold w-12/12'>{order.orderType.name}</Text>
+                            </View>
+                        </View>
+                        <View className='flex flex-row items-center w-4/12 justify-center'>
 
                             {
                                 order.mutualfunds.mutualfundType.name == "Switch" &&
