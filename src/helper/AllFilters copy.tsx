@@ -12,21 +12,70 @@ import DropdownComp from '../components/MultiSelect/component/DropdownComp';
 import CalendarPicker from '../components/CustomDatePicker/CalendarPicker';
 
 
-const FilterComponent = ({ filter, onFilterChange, filterValues, removeFilter }) => {
-  let { title, key, fieldType, valueConfig, operator } = filter;
+// Define your filtersSchema and FilterForm components here (similar to the React example)
+
+const FilterForm = ({ filtersSchema, onFilterChange, filterValues, repeaterValue, setRepeaterValue }) => {
+
+
+  const removeRepeaterElement = (key) => {
+    const updatedRepeaterValue = repeaterValue.filter((ele, index) => ele !== key)
+    setRepeaterValue(updatedRepeaterValue)
+  }
+
+  const addRepeaterElement = (key = "") => {
+    if (key == "") {
+
+    } else if (!repeaterValue.includes(key)) {
+      setRepeaterValue([...repeaterValue, key])
+    }
+  }
+
+  return (
+    <View>
+      {repeaterValue.map((filter, key) => (
+        <View key={filter}>
+          {
+            filter !== "all" && <FilterComponent
+              key={filter}
+              filter={filtersSchema.find(ele => ele.key == filter)}
+              onFilterChange={onFilterChange}
+              filterValues={filterValues}
+              removeRepeaterElement={removeRepeaterElement}
+              addRepeaterElement={addRepeaterElement}
+            />
+          }
+        </View>
+      ))}
+
+      <Select
+        accessibilityLabel={"Select Filter"}
+        placeholder='Select'
+        // selectedValue={}
+        onValueChange={(newValue) => addRepeaterElement(newValue)}
+        dropdownIcon={<Icon name="chevron-down" style={{ fontWeight: "100", marginRight: 4 }} color="black" />}
+      >
+        {
+          filtersSchema.map((filter, key) => (
+            filter.key !== "all" && !repeaterValue.includes(filter.key) && <Select.Item key={filter.key} label={filter.title} value={filter.key} />
+          ))
+        }
+      </Select>
+    </View>
+  );
+};
+
+
+
+const FilterComponent = ({ filter, onFilterChange, filterValues, removeRepeaterElement, addRepeaterElement }) => {
+  const { title, key, fieldType, valueConfig, operator } = filter;
+
   let initialFilterValue = filterValues.find((f) => f.key === key);
 
-  const removeSingleFilter = () => {
-    removeFilter(key)
-    initialFilterValue = filterValues.find((f) => f.key === key);
-  }
 
   const handleOperatorChange = (operatorValue) => {
 
     onFilterChange(key, initialFilterValue?.value, operatorValue);
     initialFilterValue = filterValues.find((f) => f.key === key);
-    console.log('initialFilterValue', initialFilterValue);
-
   };
 
   const handleFilterChange = (newValue) => {
@@ -79,7 +128,7 @@ const FilterComponent = ({ filter, onFilterChange, filterValues, removeFilter })
       case 'input':
         return (
 
-          <Input ml="3" value={initialFilterValue?.value || ""} placeholder={title} onChangeText={handleFilterChange} />
+          <Input ml="3" value={initialFilterValue?.value || ""} placeholder={title.length > 10 ? title.slice(0, 10) : title} onChangeText={handleFilterChange} />
         );
       case 'select':
 
@@ -161,7 +210,6 @@ const FilterComponent = ({ filter, onFilterChange, filterValues, removeFilter })
   const renderOperatorSelect = () => {
     return <View className=''>
       <Select
-        key={initialFilterValue?.operator}
         dropdownIcon={<Icon style={{ marginRight: 4 }} name="angle-down" size={18} />}
         ml="3"
         accessibilityLabel="Operator"
@@ -179,47 +227,27 @@ const FilterComponent = ({ filter, onFilterChange, filterValues, removeFilter })
 
 
   return (
-    <View className='flex flex-row items-center mb-2 justify-between'>
-      <View className='w-3/12'>
-        <Text selectable className=''>{title}</Text>
+    <View className='flex flex-row items-center mb-2 justify-between '>
+      <View className='flex flex-row w-3/12 flex-wrap'>
+        <View className='flex w-11/12'>
+          <Text selectable className='break-all' style={{}}>{title}</Text>
+        </View>
       </View>
       {fieldType != "date" && <View className='w-4/12'>
         {renderOperatorSelect()}
-
       </View>
       }
       <View className={fieldType != "date" ? 'w-4/12' : 'w-8/12'}>
         {renderFilterInput()}
       </View>
-      <View className={"w-1/12 flex flex-row ml-2"}>
-        {initialFilterValue?.value ? <Pressable onPress={removeSingleFilter}><Icon name="trash" style={{ fontWeight: "100", }} color="black" /></Pressable> : ""}
-      </View>
-    </View>
-  );
-};
-
-
-
-
-
-// Define your filtersSchema and FilterForm components here (similar to the React example)
-
-const FilterForm = ({ filtersSchema, onFilterChange, filterValues, removeFilter }) => {
-  return (
-    <View>
-      {filtersSchema.map((filter, key) => (
-        <View key={key}>
-          {
-            filter.key !== "all" && <FilterComponent
-              key={filter.key}
-              filter={filter}
-              onFilterChange={onFilterChange}
-              filterValues={filterValues}
-              removeFilter={removeFilter}
-            />
-          }
+      <View className='w-1/12 flex flex-row'>
+        <View>
+          <Pressable onPress={() => removeRepeaterElement(filter.key)}><Icon name="trash" style={{ paddingHorizontal: 5 }} size={14} color="red" /></Pressable>
         </View>
-      ))}
+        <View>
+          <Pressable onPress={addRepeaterElement}><Icon name="plus" size={14} color="red" /></Pressable>
+        </View>
+      </View>
     </View>
   );
 };

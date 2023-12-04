@@ -32,6 +32,8 @@ const CalendarPicker = ({ handleFilterChange, value, fromName = "From", toName =
             if (new Date(date) > new Date(selectedDate)) {
                 setSelectedSecondDate(date);
                 handleFilterChange([moment(selectedDate).format('YYYY-MM-DD'), moment(date).format('YYYY-MM-DD')])
+            } else {
+                setSelectedDate(date);
             }
         } else if (selectedDate && selectedSecondDate) {
             setSelectedDate(date);

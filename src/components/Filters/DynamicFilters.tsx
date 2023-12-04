@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { Text, TextInput, View } from "react-native"
+import { Dimensions, Text, TextInput, View } from "react-native"
 import { TouchableRipple } from "react-native-paper";
 import FilterForm from "../../helper/AllFilters";
-import { Badge, Button, CheckIcon, Divider, Menu, Modal, Pressable, Select, Spinner, VStack, useToast } from "native-base";
+import { Badge, Box, Button, CheckIcon, Divider, Menu, Modal, Popover, Pressable, Select, Spinner, VStack, ZStack, useToast, } from "native-base";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { ToastAlert } from "../../helper/CustomToaster";
 import RemoteApi from "../../services/RemoteApi";
@@ -15,6 +15,14 @@ export const DynamicFilters = ({ filtersSchema, setAppliedSorting, appliedSortin
     const [filterValues, setFilterValues] = useState([]);
     const [isDownloadProcessing, setIsDownloadProcessing] = useState(false);
     const toast = useToast();
+    const [elementPosition, setElementPosition] = useState<any>({});
+    const outsideClickRef = useRef(null);
+
+    const handleLayout = (event) => {
+        console.log(event);
+        console.log({ ...event.nativeEvent.layout });
+        setElementPosition({ ...event.nativeEvent.layout });
+    };
 
     const handleSearchBoxClick = () => {
         // Use the current property of the ref to access the input element
@@ -24,6 +32,7 @@ export const DynamicFilters = ({ filtersSchema, setAppliedSorting, appliedSortin
     };
 
     const clearFilters = () => {
+        setFilterOpen(false)
         const updatedFilterValues = filterValues.map((filter) => ({
             ...filter,
             value: "",
@@ -50,6 +59,14 @@ export const DynamicFilters = ({ filtersSchema, setAppliedSorting, appliedSortin
         }
     }, [filterValues.find((filter) => filter.key === "all")?.value])
 
+    const removeFilter = (key) => {
+        const newArray = filterValues.filter(obj => obj.key !== key);
+        console.log('newArray', newArray);
+
+        setFilterValues([...newArray])
+        setAppliedFilers([...newArray])
+    }
+
     const handleFilterChange = (key, value, operator) => {
         const newFilter = { key, value, operator };
         const existingIndex = filterValues.findIndex((filter) => filter.key === key);
@@ -60,37 +77,38 @@ export const DynamicFilters = ({ filtersSchema, setAppliedSorting, appliedSortin
             filterV.push(newFilter);
         }
         setFilterValues([...filterV]);
+
     };
 
     const applyFilters = () => {
-
+        setFilterOpen(false)
         const updatedFilterValues = filterValues.filter((filter) => {
             return (filter.value != null && filter.value !== '' && filter.operator) ||
                 (Array.isArray(filter.value) && filter.value.length > 0 && filter.operator);
         });
 
-        if (updatedFilterValues.length > 0) {
-            setAppliedFilers(updatedFilterValues)
-            setFilterValues(updatedFilterValues)
-            setModalVisible(!modalVisible)
-            setCurrentPageNumber(1)
-            getList(updatedFilterValues, true)
-        } else {
-            toast.show({
-                render: ({
-                    id
-                }) => {
-                    return <ToastAlert
-                        id={id}
-                        variant={"left-accent"}
-                        title={"Both operator and value should be selected!!"}
-                        description={""}
-                        isClosable={true}
-                        toast={toast}
-                    />;
-                }
-            })
-        }
+        // if (updatedFilterValues.length > 0) {
+        setAppliedFilers(updatedFilterValues)
+        setFilterValues(updatedFilterValues)
+        setModalVisible(!modalVisible)
+        setCurrentPageNumber(1)
+        getList(updatedFilterValues, true)
+        // } else {
+        //     toast.show({
+        //         render: ({
+        //             id
+        //         }) => {
+        //             return <ToastAlert
+        //                 id={id}
+        //                 variant={"left-accent"}
+        //                 title={"Both operator and value should be selected!!"}
+        //                 description={""}
+        //                 isClosable={true}
+        //                 toast={toast}
+        //             />;
+        //         }
+        //     })
+        // }
     }
 
     const handleSearchInput = (e) => {
@@ -138,15 +156,37 @@ export const DynamicFilters = ({ filtersSchema, setAppliedSorting, appliedSortin
     };
 
     const searchPlaceholder = () => {
-
+        const maxPlaceholderLength = 40;
         const keysToInclude = filtersSchema
             .filter(obj => obj.title !== 'All' && obj.operator[0].subKey === 'contains')
             .map((obj) => obj.title);
 
         const resultString = keysToInclude.join('/');
 
-        return resultString;
+        return resultString.length > maxPlaceholderLength
+            ? resultString.substring(0, maxPlaceholderLength) + '...'
+            : resultString;
     }
+
+    useEffect(() => {
+        const handleOutsideClick = (event) => {
+            // Check if the click was outside the component
+            if (outsideClickRef.current && !outsideClickRef.current.contains(event.target)) {
+                console.log('Clicked outside the component!');
+                setFilterOpen(false)
+                // Your logic for handling the click outside
+            }
+        };
+
+        // Add event listener for clicks
+        document.addEventListener('click', handleOutsideClick);
+
+        // Cleanup the event listener on component unmount
+        return () => {
+            document.removeEventListener('click', handleOutsideClick);
+        };
+    }, []);
+
 
 
 
@@ -169,6 +209,7 @@ export const DynamicFilters = ({ filtersSchema, setAppliedSorting, appliedSortin
                         onChange={handleSearchInput}
                         value={filterValues.find((filter) => filter.key === "all")?.value || ""}
                         onKeyPress={handleKeyPress}
+
                     />
                 </View>
                 {
@@ -179,28 +220,45 @@ export const DynamicFilters = ({ filtersSchema, setAppliedSorting, appliedSortin
 
             </Pressable>
             <View className="mr-2">
-                <Menu w="xl" style={{ justifyContent: "center" }} onClose={() => setFilterOpen(false)} onOpen={() => setFilterOpen(true)} isOpen={filterOpen} bgColor={"white"} placement="bottom" closeOnSelect={false} trigger={triggerProps => {
-                    return <Pressable className={"flex flex-row justify-center items-center border-[1px] rounded px-4 py-3 border-slate-200 " + (filterOpen ? "bg-zinc-100" : "")} accessibilityLabel="More options menu" {...triggerProps}>
-                        <Icon name="filter" style={{ marginLeft: 10, marginRight: 5 }} size={14} color="#484848" />
+                <Pressable style={{ position: "relative" }} onPress={() => setFilterOpen(true)} className={"flex flex-row justify-center items-center border-[1px] rounded px-4 py-3 border-slate-200 " + (filterOpen ? "bg-zinc-100" : "")} accessibilityLabel="More options menu">
+                    <Icon name="filter" style={{ marginLeft: 10, marginRight: 5 }} size={14} color="#484848" />
 
-                        <Text className="mr-1">Filters</Text>
-                        {
-                            determineDisplayValue()
-                        }
-                    </Pressable>
-                }}>
-                    <Menu.Item bgColor={"white"} cancelable={false} className="">
-                        <View className="">
-                            <View className='p-2'>
+                    <Text className="mr-1">Filters</Text>
+                    {
+                        determineDisplayValue()
+                    }
+                </Pressable>
+
+                {/* <Modal style={position} flex={1} useRNModal={true} shadow={"rgba(0, 0, 0, 0.29) 0px 3px 4.65px"} isOpen={filterOpen} onClose={() => setFilterOpen(false)} _backdrop={{
+                    _dark: {
+                        bg: "coolGray.800"
+                    },
+                    bg: "transparent"
+                }}> */}
+                {filterOpen && <View>
+                    <Box className="" width={500} ref={outsideClickRef} style={position}>
+                        <View style={{
+                            backgroundColor: "white",
+                            elevation: 3, // Android shadow
+                            shadowColor: 'rgba(0, 0, 0, 0.29)',
+                            shadowOffset: {
+                                width: 0,
+                                height: 3,
+                            },
+                            shadowOpacity: 1,
+                            shadowRadius: 4.65,
+                            borderRadius: 10
+                        }}>
+                            <View className='p-2' style={{ backgroundColor: "white", }}>
                                 <View className='mb-4 flex flex-row justify-between'>
                                     <Text selectable className='font-semibold'>Advance Filters</Text>
                                     <TouchableRipple rippleColor={"#e4e4e4"} onPress={clearFilters}>
                                         <Text selectable className='text-xs underline underline-offset-4'>clear</Text>
                                     </TouchableRipple>
                                 </View>
-                                <FilterForm filtersSchema={filtersSchema} onFilterChange={handleFilterChange} filterValues={filterValues} />
+                                <FilterForm removeFilter={removeFilter} filtersSchema={filtersSchema} onFilterChange={handleFilterChange} filterValues={filterValues} />
                             </View>
-                            <View className='bg-[#000000] rounded-lg'>
+                            <View className='bg-[#000000]' style={{ borderRadius: 5 }}>
                                 <TouchableRipple className='py-3' onPress={applyFilters}>
                                     <View className='flex flex-row justify-center items-center'>
                                         <Text selectable className='text-center text-sm mr-2 text-white'>Apply Filters</Text>
@@ -209,12 +267,14 @@ export const DynamicFilters = ({ filtersSchema, setAppliedSorting, appliedSortin
                                 </TouchableRipple>
                             </View>
                         </View>
+                    </Box>
+                </View>
+                }
 
-                    </Menu.Item>
-                </Menu>
+                {/* </Modal> */}
             </View>
             <View>
-                <Menu w="md" onClose={() => setSortingOpen(false)} onOpen={() => setSortingOpen(true)} isOpen={sortingOpen} bgColor={"white"} placement="bottom" closeOnSelect={false} trigger={triggerProps => {
+                <Menu w="md" onClose={() => setSortingOpen(false)} onOpen={() => { setSortingOpen(true), setFilterOpen(false) }} isOpen={sortingOpen} bgColor={"white"} placement="bottom" closeOnSelect={false} trigger={triggerProps => {
                     return <Pressable className={"flex flex-row justify-center items-center border-[1px] rounded px-4 py-3 border-slate-200 " + (sortingOpen ? "bg-zinc-100" : "")} accessibilityLabel="More options menu" {...triggerProps}>
                         <Icon name="sort" style={{ marginLeft: 10, marginRight: 5 }} size={14} color="#484848" />
                         <Text className="mr-1">Sorting</Text>
@@ -329,7 +389,12 @@ export const DynamicFilters = ({ filtersSchema, setAppliedSorting, appliedSortin
                 {/* <Text>Sorting</Text> */}
             </Pressable>
         </View>
+
     </View>
 }
 
-const searchInputStyle = { padding: 7, width: 500, fontSize: 13, borderColor: "transparent", color: "#484848", height: 40, borderWidth: 0, "outlineStyle": 'none' };
+const searchInputStyle = { padding: 7, width: 500, fontSize: 13, borderColor: "transparent", color: "#484848", height: 40, borderWidth: 0, "outlineStyle": 'none', };
+const position: any = {
+    "position": "absolute",
+    left: -196
+}
