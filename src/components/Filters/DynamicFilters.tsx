@@ -6,8 +6,10 @@ import { Badge, Box, Button, CheckIcon, Divider, Menu, Modal, Popover, Pressable
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { ToastAlert } from "../../helper/CustomToaster";
 import RemoteApi from "../../services/RemoteApi";
+import ExtraFilters from "../../helper/ExtraFilters";
 
-export const DynamicFilters = ({ filtersSchema, setAppliedSorting, appliedSorting, sorting = [], setCurrentPageNumber, getList, appliedFilers, setAppliedFilers, downloadApi = "", fileName = "" }) => {
+export const DynamicFilters = ({ schemaResponse, setAppliedSorting, appliedSorting, sorting = [], setCurrentPageNumber, getList, appliedFilers, setAppliedFilers, downloadApi = "", fileName = "" }) => {
+    const filtersSchema = schemaResponse.filters
     const [modalVisible, setModalVisible] = useState(false);
     const searchBoxRef = useRef(null);
     const [filterOpen, setFilterOpen] = useState(false);
@@ -80,35 +82,36 @@ export const DynamicFilters = ({ filtersSchema, setAppliedSorting, appliedSortin
 
     };
 
+    const handleExtraFilterChange = (key, value, operator) => {
+        const newFilter = { key, value, operator, };
+        const existingIndex = filterValues.findIndex((filter) => filter.key === key);
+        const filterV = [...filterValues]
+        if (existingIndex !== -1) {
+            filterV[existingIndex] = newFilter;
+        } else {
+            filterV.push(newFilter);
+        }
+        const updatedFilterValues = filterV.filter((filter) => {
+            return (filter.value != null && filter.value !== '' && filter.operator) ||
+                (Array.isArray(filter.value) && filter.value.length > 0 && filter.operator);
+        });
+        setAppliedFilers(updatedFilterValues)
+        setFilterValues(updatedFilterValues)
+        setCurrentPageNumber(1)
+        getList(updatedFilterValues, true)
+    };
+
     const applyFilters = () => {
         setFilterOpen(false)
         const updatedFilterValues = filterValues.filter((filter) => {
             return (filter.value != null && filter.value !== '' && filter.operator) ||
                 (Array.isArray(filter.value) && filter.value.length > 0 && filter.operator);
         });
-
-        // if (updatedFilterValues.length > 0) {
         setAppliedFilers(updatedFilterValues)
         setFilterValues(updatedFilterValues)
         setModalVisible(!modalVisible)
         setCurrentPageNumber(1)
         getList(updatedFilterValues, true)
-        // } else {
-        //     toast.show({
-        //         render: ({
-        //             id
-        //         }) => {
-        //             return <ToastAlert
-        //                 id={id}
-        //                 variant={"left-accent"}
-        //                 title={"Both operator and value should be selected!!"}
-        //                 description={""}
-        //                 isClosable={true}
-        //                 toast={toast}
-        //             />;
-        //         }
-        //     })
-        // }
     }
 
     const handleSearchInput = (e) => {
@@ -130,20 +133,27 @@ export const DynamicFilters = ({ filtersSchema, setAppliedSorting, appliedSortin
     }
 
     const determineDisplayValue = () => {
-        let displayValue = appliedFilers.length;
-        if (appliedFilers.find(obj => obj.key === 'all')) {
-            displayValue -= 1
-        }
-        if (displayValue) {
+        let count = 0;
+
+        filtersSchema?.forEach(obj2 => {
+            const existsInArr1 = appliedFilers?.some(obj1 => obj1.key === obj2.key && obj1.key !== "all");
+
+            if (existsInArr1) {
+                count++;
+            }
+        });
+
+        if (count > 0) {
             return <Badge
                 height={5}
                 width={5}
                 colorScheme="danger" rounded="full" variant="solid" alignSelf="flex-end" _text={{
                     fontSize: 12,
                 }}>
-                {displayValue}
+                {count}
             </Badge>
         }
+
         return;
     };
 
@@ -156,14 +166,13 @@ export const DynamicFilters = ({ filtersSchema, setAppliedSorting, appliedSortin
     };
 
     const searchPlaceholder = (maxPlaceholderLength = 0) => {
-        const keysToInclude = filtersSchema
-            .filter(obj => obj.title !== 'All' && obj.operator[0].subKey === 'contains')
+        const keysToInclude = filtersSchema?.filter(obj => obj.title !== 'All' && obj.operator[0].subKey === 'contains')
             .map((obj) => obj.title);
 
-        const resultString = keysToInclude.join('/');
+        const resultString = keysToInclude?.join('/');
 
-        return resultString.length > maxPlaceholderLength && maxPlaceholderLength > 0
-            ? resultString.substring(0, maxPlaceholderLength) + '...'
+        return resultString?.length > maxPlaceholderLength && maxPlaceholderLength > 0
+            ? resultString?.substring(0, maxPlaceholderLength) + '...'
             : resultString;
     }
 
@@ -187,6 +196,19 @@ export const DynamicFilters = ({ filtersSchema, setAppliedSorting, appliedSortin
     }, []);
 
 
+    const getCounts = () => {
+        let count = 0;;
+
+        filtersSchema.forEach(obj2 => {
+            const existsInArr1 = filterValues.some(obj1 => obj1.key === obj2.key && obj1.key !== "all");
+
+            if (existsInArr1) {
+                count++;
+            }
+        });
+
+        return count
+    }
 
 
     return <View className="flex flex-row justify-between items-center mt-5 w-100">
@@ -268,11 +290,6 @@ export const DynamicFilters = ({ filtersSchema, setAppliedSorting, appliedSortin
                                     <View className='flex flex-row justify-center items-center'>
                                         <Text selectable className='text-center text-sm mr-2 text-white'>Apply Filters</Text>
                                         <Icon name="filter" size={15} color="#ffffff" />
-                                        {
-                                            appliedFilers.length - filterValues.length &&
-                                            <Text selectable className='text-center text-xs ml-2 text-white'>({Math.abs(appliedFilers.length - filterValues.length)} not applied)</Text>
-                                        }
-
                                     </View>
                                 </TouchableRipple>
                             </View>
@@ -280,6 +297,10 @@ export const DynamicFilters = ({ filtersSchema, setAppliedSorting, appliedSortin
                     </Box>
                 </View>
                 }
+
+
+
+
 
                 {/* </Modal> */}
             </View>
@@ -338,7 +359,7 @@ export const DynamicFilters = ({ filtersSchema, setAppliedSorting, appliedSortin
                                                 endIcon: <CheckIcon size="5" />
                                             }} mt={1} onValueChange={itemValue => handleSortingChange(itemValue, 'direction')}>
                                             {
-                                                sorting.find((sort, index) => sort.key == appliedSorting.key)?.direction?.map((direc, index) => <Select.Item label={direc} value={direc} />)
+                                                sorting.find((sort, index) => sort.key == appliedSorting.key)?.direction?.map((direc, index) => <Select.Item label={direc.displayString} value={direc.value} />)
                                             }
 
                                         </Select>
@@ -351,6 +372,9 @@ export const DynamicFilters = ({ filtersSchema, setAppliedSorting, appliedSortin
                     </Menu.Item>
                 </Menu>
             </View>
+            {
+                schemaResponse?.fastFilter && <ExtraFilters filtersSchema={schemaResponse?.fastFilter} onFilterChange={handleExtraFilterChange} filterValues={filterValues} removeFilter={removeFilter} />
+            }
             {/* <View>
                 <Pressable className="flex flex-row items-center" onPress={() => setShowFilterModal(true)}>
                     <Icon name="filter" style={{ marginLeft: 10, marginRight: 5 }} size={14} color="#484848" />

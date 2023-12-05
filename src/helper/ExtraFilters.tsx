@@ -13,6 +13,8 @@ import CalendarPicker from '../components/CustomDatePicker/CalendarPicker';
 
 
 const FilterComponent = ({ filter, onFilterChange, filterValues, removeFilter }) => {
+
+
   let { title, key, fieldType, valueConfig, operator } = filter;
   let initialFilterValue = filterValues.find((f) => f.key === key);
 
@@ -32,7 +34,9 @@ const FilterComponent = ({ filter, onFilterChange, filterValues, removeFilter })
   const handleFilterChange = (newValue) => {
     console.log('value', newValue);
 
-    onFilterChange(key, valueType(newValue), valueConfig.valueType == "date" ? "between" : initialFilterValue?.operator);
+    onFilterChange(key, valueType(newValue), operator);
+    console.log(key, valueType(newValue), operator);
+
     initialFilterValue = filterValues.find((f) => f.key === key);
     // console.log(initialFilterValue);
 
@@ -87,9 +91,12 @@ const FilterComponent = ({ filter, onFilterChange, filterValues, removeFilter })
         return (
 
           <Select
+            key={initialFilterValue}
+            width={140}
+            p={3}
             ml="3"
             accessibilityLabel={title}
-            placeholder='Select'
+            placeholder={title}
             selectedValue={initialFilterValue?.value}
             onValueChange={(newValue) => handleFilterChange(newValue)}
             dropdownIcon={<Icon name="chevron-down" style={{ fontWeight: "100", marginRight: 4 }} color="black" />}
@@ -179,21 +186,19 @@ const FilterComponent = ({ filter, onFilterChange, filterValues, removeFilter })
 
 
   return (
-    <View className='flex flex-row items-center mb-2 justify-between'>
-      <View className='w-3/12'>
+    <View className='flex flex-row items-center'>
+      {/* <View className='w-3/12'>
         <Text selectable className=''>{title}</Text>
       </View>
       {fieldType != "date" && <View className='w-4/12'>
         {renderOperatorSelect()}
 
       </View>
-      }
-      <View className={fieldType != "date" ? 'w-4/12' : 'w-8/12'}>
+      } */}
+      <View>
         {renderFilterInput()}
       </View>
-      <View className={"w-1/12 flex flex-row ml-2"}>
-        {initialFilterValue?.value ? <Pressable onPress={removeSingleFilter}><Icon name="trash" style={{ fontWeight: "100", }} color="black" /></Pressable> : ""}
-      </View>
+
     </View>
   );
 };
@@ -204,7 +209,7 @@ const FilterComponent = ({ filter, onFilterChange, filterValues, removeFilter })
 
 // Define your filtersSchema and FilterForm components here (similar to the React example)
 
-const FilterForm = ({ filtersSchema, onFilterChange, filterValues, removeFilter }) => {
+const ExtraFilters = ({ filtersSchema, onFilterChange, filterValues, removeFilter }) => {
   return (
     <View>
       {filtersSchema.map((filter, key) => (
@@ -224,4 +229,4 @@ const FilterForm = ({ filtersSchema, onFilterChange, filterValues, removeFilter 
   );
 };
 
-export default FilterForm;
+export default ExtraFilters;

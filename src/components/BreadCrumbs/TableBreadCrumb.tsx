@@ -3,7 +3,7 @@ import { Link, } from 'expo-router';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 export const TableBreadCrumb = ({ name, }) => {
-    return <View className='flex flex-row justify-between items-center mb-[30px] mt-3 bg-[#eaf3fe] h-28 px-2 '>
+    return <View className='flex flex-row justify-between items-center mt-3 bg-[#eaf3fe] h-28 px-2 '>
         <View className='flex flex-col w-6/12'>
             <Text selectable className='text-2xl font-extrabold mb-3'>{name}</Text>
             {/* <View className='flex flex-row items-center'>

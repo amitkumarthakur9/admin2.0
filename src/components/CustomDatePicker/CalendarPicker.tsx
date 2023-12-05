@@ -1,6 +1,6 @@
 // CalendarPicker.js
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { getAllDatesInMonth, getDaysInMonth, getMonthName, monthNames } from '../../helper/DateUtils';
 import { Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Box, Popover, Button, ChevronLeftIcon, ChevronRightIcon, Pressable, View, Select, CheckIcon } from 'native-base';
@@ -11,11 +11,15 @@ const CalendarPicker = ({ handleFilterChange, value, fromName = "From", toName =
     const [selectedYear, setSelectedYear] = useState(value?.length > 0 ? new Date(value[0]).getFullYear() : new Date().getFullYear());
     const [selectedMonth, setSelectedMonth] = useState(value?.length > 0 ? (new Date(value[0]).getMonth() + 1) : (new Date().getMonth() + 1));
     const firstDayOfMonth = new Date(selectedYear, selectedMonth - 1, 1).getDay();
-    const daysInMonth = getDaysInMonth(selectedYear, selectedMonth);
     const allDatesInMonth = getAllDatesInMonth(selectedYear, selectedMonth);
-    const [selectedDate, setSelectedDate] = useState(null);
-    const [selectedSecondDate, setSelectedSecondDate] = useState(null);
+    const [selectedDate, setSelectedDate] = useState(value?.length > 0 ? moment(value[0]).format('YYYY-MM-D') : null);
+    const [isOpen, setIsOpen] = useState(false);
+    const [selectedSecondDate, setSelectedSecondDate] = useState(value?.length > 0 ? moment(value[1]).format('YYYY-MM-D') : null);
     const [monthChangeOpened, setMonthChangeOpened] = useState(false);
+
+    console.log('value', value);
+    console.log('allDatesInMonth', allDatesInMonth);
+
 
     const handleYearChange = (year) => {
         setSelectedYear(year);
@@ -32,6 +36,7 @@ const CalendarPicker = ({ handleFilterChange, value, fromName = "From", toName =
             if (new Date(date) > new Date(selectedDate)) {
                 setSelectedSecondDate(date);
                 handleFilterChange([moment(selectedDate).format('YYYY-MM-DD'), moment(date).format('YYYY-MM-DD')])
+                setIsOpen(false)
             } else {
                 setSelectedDate(date);
             }
@@ -44,9 +49,12 @@ const CalendarPicker = ({ handleFilterChange, value, fromName = "From", toName =
     };
 
     const getSelectedColor = (date) => {
+
+
         let color = ""
 
         if (selectedDate && selectedDate == date) {
+            console.log(selectedDate);
             color = "bg-gray-300"
         } else if (selectedSecondDate && selectedSecondDate == date) {
             color = "bg-gray-300"
@@ -149,8 +157,8 @@ const CalendarPicker = ({ handleFilterChange, value, fromName = "From", toName =
 
     return <View className='w-full'>
 
-        <Popover trigger={triggerProps => {
-            return <TouchableOpacity {...triggerProps} className={"flex w-full items-center justify-center flex-col rounded border-[0.2px] border-[#c7c7c7] px-4 " + py}>
+        <Popover onOpen={() => setIsOpen(true)} onClose={() => setIsOpen(false)} isOpen={isOpen} trigger={triggerProps => {
+            return <TouchableOpacity  {...triggerProps} className={"flex w-full items-center justify-center flex-col rounded border-[0.2px] border-[#c7c7c7] px-4 " + py}>
                 <View className="flex flex-row justify-start w-full">
                     {
                         showCalendar && <View className="mr-2">
