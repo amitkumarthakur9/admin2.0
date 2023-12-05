@@ -11,6 +11,7 @@ import { DynamicFilters } from '../Filters/DynamicFilters';
 import { AUMRows } from './AUMRows';
 import { Pagination } from '../Pagination/Pagination';
 import { HStack, Heading, Spinner } from 'native-base';
+import { TableBreadCrumb } from '../BreadCrumbs/TableBreadCrumb';
 
 
 const AUMDataTable = () => {
@@ -70,29 +71,7 @@ const AUMDataTable = () => {
     return (
         <View className='bg-white'>
             <View className=''>
-                <View className='flex flex-row justify-between items-center mb-[30px] mt-3 bg-[#eaf3fe] h-28 px-2 '>
-                    <View className='flex flex-col w-6/12'>
-                        <Text selectable className='text-2xl font-extrabold mb-3'>AUM Report</Text>
-                        <View className='flex flex-row items-center'>
-                            <Link href={"../"} className='mr-4'>
-                                {/* <Icon name="home" size={18} color="black" /> */}
-                                <Text>Dashboard</Text>
-                            </Link>
-                            <View className='mr-4'>
-                                <Icon name="circle" style={{ fontWeight: "100" }} size={8} color="grey" />
-                            </View>
-                        </View>
-                    </View>
-                    <View className='w-6/12 overflow-hidden h-full flex flex-row justify-center'>
-                        <ImageBackground className='' source={require('../../../assets/images/ChatBc.png')} resizeMode="center" style={{
-                            // flex: 1,
-                            // justifyContent: 'center',
-                        }}>
-
-                        </ImageBackground>
-                    </View>
-                </View>
-
+                <TableBreadCrumb name={"AUM"} />
             </View>
             <View className='border-[0.2px] border-[#e4e4e4]'>
 
@@ -112,7 +91,7 @@ const AUMDataTable = () => {
 
             </View>
 
-            <Pagination getDataList={getDataList} currentPageNumber={currentPageNumber} totalPages={totalPages} setCurrentPageNumber={setCurrentPageNumber} />
+            <Pagination itemsPerPage={itemsPerPage} setItemsPerPage={setItemsPerPage} getDataList={getDataList} currentPageNumber={currentPageNumber} totalPages={totalPages} setCurrentPageNumber={setCurrentPageNumber} />
 
         </View >
     );

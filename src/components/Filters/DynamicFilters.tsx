@@ -40,6 +40,7 @@ export const DynamicFilters = ({ filtersSchema, setAppliedSorting, appliedSortin
         }));
         setFilterValues(updatedFilterValues);
         setAppliedFilers([])
+        setFilterValues([])
         getList([], true)
     }
 
@@ -190,33 +191,37 @@ export const DynamicFilters = ({ filtersSchema, setAppliedSorting, appliedSortin
 
     return <View className="flex flex-row justify-between items-center mt-5 w-100">
         <View className='flex flex-row w-10/12 justify-start items-center' style={{}}>
-            <Pressable onPress={handleSearchBoxClick} className="flex flex-row justify-between items-center mx-2 w-6/12 border-[1px] rounded border-slate-200">
-                <View className="flex flex-row items-center">
-                    <View className="">
+            <Pressable onPress={handleSearchBoxClick} className="flex flex-row justify-start items-center mx-2 w-6/12 border-[1px] rounded border-slate-200">
+                {/* <View className="flex flex-row items-center w-full "> */}
+                <View className="w-0.6/12 flex flex-row items-center justify-center">
 
-                        <Icon name="search" style={{ marginLeft: 10 }} size={14} color="#484848" />
+                    <Icon name="search" style={{}} size={14} color="#484848" />
 
-                    </View>
-                    <TextInput
-                        ref={searchBoxRef}
-                        className='outline-transparent'
-                        placeholder={searchPlaceholder(50)}
-                        underlineColorAndroid="transparent"
-                        selectionColor="transparent"
-                        placeholderTextColor={"#484848"}
-                        cursorColor={"transparent"}
-                        style={searchInputStyle}
-                        onChange={handleSearchInput}
-                        value={filterValues.find((filter) => filter.key === "all")?.value || ""}
-                        onKeyPress={handleKeyPress}
-
-                    />
                 </View>
-                {
-                    filterValues.find((filter) => filter.key === "all")?.value && <Button onPress={applyFilters} className="" width={20} ml={"-75px"} mr={"5px"} size={"xs"} bgColor={"#000000"}>
-                        Search
-                    </Button>
-                }
+                <TextInput
+                    ref={searchBoxRef}
+                    className='outline-transparent w-9/12'
+                    placeholder={searchPlaceholder(50)}
+                    underlineColorAndroid="transparent"
+                    selectionColor="transparent"
+                    placeholderTextColor={"#484848"}
+                    cursorColor={"transparent"}
+                    style={searchInputStyle}
+                    onChange={handleSearchInput}
+                    value={filterValues.find((filter) => filter.key === "all")?.value || ""}
+                    onKeyPress={handleKeyPress}
+
+                />
+
+                <View className="w-3/12 justify-end items-end pr-2">
+                    {
+                        filterValues.find((filter) => filter.key === "all")?.value && <Button onPress={applyFilters} width={20} size={"xs"} bgColor={"#000000"}>
+                            Search
+                        </Button>
+                    }
+                </View>
+                {/* </View> */}
+
 
             </Pressable>
             <View className="mr-2">
@@ -398,7 +403,7 @@ export const DynamicFilters = ({ filtersSchema, setAppliedSorting, appliedSortin
     </View>
 }
 
-const searchInputStyle = { padding: 7, width: 500, fontSize: 13, borderColor: "transparent", color: "#484848", height: 40, borderWidth: 0, "outlineStyle": 'none', };
+const searchInputStyle = { padding: 7, fontSize: 13, borderColor: "transparent", color: "#484848", height: 40, borderWidth: 0, "outlineStyle": 'none', };
 const position: any = {
     "position": "absolute",
     left: -196

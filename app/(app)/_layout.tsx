@@ -127,8 +127,8 @@ export default function AppLayout() {
                     <Drawer.Screen
                         name="rta-reconciliation" // This is the name of the page and must match the url from root
                         options={{
-                            drawerLabel: "RTA Reconciliation",
-                            title: "RTA Reconciliation",
+                            drawerLabel: "Transactions",
+                            title: "Transactions",
                         }}
                         initialParams={{}}
                         component={RTAReconciliationScreen}
