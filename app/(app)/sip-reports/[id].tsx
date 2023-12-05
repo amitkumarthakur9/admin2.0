@@ -38,7 +38,7 @@ export default function SIPReportsDetail() {
     return (<>
         {
             isLoading ? <Center>
-                <HStack space={2} marginTop={20} justifyContent="center">
+                <HStack space={2} marginTop={20} marginBottom={20} justifyContent="center">
                     <Spinner color={"black"} accessibilityLabel="Loading order" />
                     <Heading color="black" fontSize="md">
                         Loading

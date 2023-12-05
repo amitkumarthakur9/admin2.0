@@ -76,7 +76,7 @@ const ClientsDataTable = () => {
                 {
                     !isLoading ? <View className='mt-4 z-[-1]'>
                         <ClientsRows data={data} schema={null} />
-                    </View> : <HStack space={2} marginTop={20} justifyContent="center">
+                    </View> : <HStack space={2} marginTop={20} marginBottom={20} justifyContent="center">
                         <Spinner color={"black"} accessibilityLabel="Loading order" />
                         <Heading color="black" fontSize="md">
                             Loading
