@@ -3,6 +3,7 @@ import { Dimensions, TouchableOpacity, View } from "react-native";
 import { Avatar, TextInput, TouchableRipple } from "react-native-paper";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useSession } from "../../services/ctx";
+import { Box, Menu, Pressable } from "native-base";
 
 export default function TopHeader({ navigation }) {
     const [text, setText] = useState("");
@@ -26,7 +27,16 @@ export default function TopHeader({ navigation }) {
                 /> */}
             </View>
             <View className="flex flex-row items-center">
-                <Avatar.Image size={30} source={require('../../../assets/images/avatar.png')} />
+
+                {/* <Box w="90%" alignItems="center"> */}
+                <Menu w="190" placement={"bottom left"} trigger={triggerProps => {
+                    return <Pressable accessibilityLabel="More options menu" {...triggerProps}>
+                        <Avatar.Image size={30} source={require('../../../assets/images/avatar.png')} />
+                    </Pressable>;
+                }}>
+                    {/* <Menu.Item>Profile</Menu.Item> */}
+                </Menu>
+                {/* </Box> */}
                 <TouchableRipple
                     rippleColor="rgba(0, 0, 0, .32)"
                     className='flex flex-row justify-start ml-3'
