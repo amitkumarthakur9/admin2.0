@@ -120,7 +120,7 @@ export const DynamicFilters = ({ schemaResponse, setAppliedSorting, appliedSorti
 
     const downloadReport = async () => {
         setIsDownloadProcessing(true)
-        const response: any = await RemoteApi.downloadFile({ endpoint: downloadApi, fileName: fileName, data: { filters: appliedFilers } });
+        const response: any = await RemoteApi.downloadFile({ endpoint: downloadApi, fileName: fileName, data: { filters: appliedFilers, orderBy: appliedSorting } });
         setIsDownloadProcessing(false)
     }
 
