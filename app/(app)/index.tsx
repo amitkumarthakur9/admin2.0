@@ -1,13 +1,11 @@
-import { Animated, ButtonProps, Platform, StyleProp, Text, TextStyle, View, ViewStyle } from 'react-native';
-import { Link } from 'expo-router';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import { Button } from 'react-native-paper';
-import { BaseButtonProperties } from 'react-native-gesture-handler';
-import DataTableExample from '../../src/components/Others/DataTableExample';
+import { Animated, ButtonProps, Dimensions, Platform, StyleProp, Text, TextStyle, View, ViewStyle } from 'react-native';
+import OrderDataTable from '../../src/components/OrdersTables/OrdersDataTable';
 
 export default function Dashboard() {
-    return <View className='py-4 px-4' style={{}}>
-        <Text>Dashboard</Text>
+
+    return <View className='' style={{ backgroundColor: "white", height: '100%', overflow: "scroll" }}>
+
+        <OrderDataTable />
     </View>;
 }
 

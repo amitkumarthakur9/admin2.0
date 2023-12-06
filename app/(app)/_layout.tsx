@@ -69,7 +69,7 @@ export default function AppLayout() {
                         headerLeft: props => <View className='ml-4'><Icon size={18} name={"bars"} onPress={navigation.toggleDrawer} /></View>,
                     })}
                     initialRouteName="Home" drawerContent={(props) => <CustomSidebarMenu {...props} />} >
-                    <Drawer.Screen
+                    {/* <Drawer.Screen
                         // name="index" // This is the name of the page and must match the url from root
                         // options={{
                         //     drawerLabel: "Dashboard",
@@ -78,7 +78,7 @@ export default function AppLayout() {
 
                         name='Home'
                         component={Dashboard}
-                    />
+                    /> */}
 
 
                     <Drawer.Screen
