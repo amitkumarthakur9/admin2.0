@@ -120,7 +120,13 @@ export const DynamicFilters = ({ schemaResponse, setAppliedSorting, appliedSorti
 
     const downloadReport = async () => {
         setIsDownloadProcessing(true)
-        const response: any = await RemoteApi.downloadFile({ endpoint: downloadApi, fileName: fileName, data: { filters: appliedFilers, orderBy: appliedSorting } });
+        let data: any = { filters: appliedFilers }
+
+        if (appliedSorting.key != "") {
+            data['orderBy'] = appliedSorting
+        }
+
+        const response: any = await RemoteApi.downloadFile({ endpoint: downloadApi, fileName: fileName, data: data });
         setIsDownloadProcessing(false)
     }
 
@@ -416,11 +422,16 @@ export const DynamicFilters = ({ schemaResponse, setAppliedSorting, appliedSorti
                     isDownloadProcessing ? <Spinner color={"white"} size={14} accessibilityLabel="Loading" /> : <Icon name="download" style={{ fontWeight: "100" }} size={14} color="white" />
                 }
             </Pressable> */}
-            <Pressable onPress={downloadReport} className="flex flex-row justify-center items-center bg-black border-[1px] rounded px-[40px] py-3 border-slate-200 mr-2">
+            {/* <Pressable onPress={downloadReport} className="flex flex-row justify-center items-center bg-black border-[1px] rounded px-[40px] py-3 border-slate-200 mr-2">
                 {
                     isDownloadProcessing ? <Spinner color={"white"} size={14} accessibilityLabel="Loading" /> : <Icon name="download" style={{ fontWeight: "100" }} size={14} color="white" />
                 }
-                {/* <Text>Sorting</Text> */}
+            </Pressable> */}
+            <Pressable onPress={downloadReport} className={"flex flex-row justify-center items-center border-[1px] rounded px-4 py-3 border-slate-200 mr-2"} accessibilityLabel="Download">
+                {
+                    isDownloadProcessing ? <Spinner color={"black"} style={{ marginLeft: 10, marginRight: 5 }} size={14} accessibilityLabel="Loading" /> : <Icon name="download" style={{ marginLeft: 10, marginRight: 5 }} size={14} color="#484848" />
+                }
+                <Text className="mr-1">Download</Text>
             </Pressable>
         </View>
 
