@@ -16,11 +16,15 @@ export default function ClientDetail() {
         setIsLoading(true)
         async function getDetails() {
             const response: ClientDetailResponse = await RemoteApi.get(`client/${id}`)
-            setData(response.data)
-            setIsLoading(false)
+            if (response) {
+                setData(response.data)
+                setIsLoading(false)
+            }
         }
 
-        getDetails()
+        if (id) {
+            getDetails()
+        }
     }, [id])
 
     const getInitials = (name: string) => {

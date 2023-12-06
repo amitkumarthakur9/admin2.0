@@ -63,7 +63,7 @@ export const ClientsRows = ({ data, schema }) => {
                                     {/* <Text selectable className='text-[#6C6A6A] text-xs'>({client.units} units)</Text> */}
                                 </View>
                                 <View className='flex flex-col'>
-                                    <Text selectable className='text-black text-xs'>{client.isActive ? "Ture" : 'False'}</Text>
+                                    <Text selectable className='text-black text-xs'>{client.isActive ? "True" : 'False'}</Text>
                                 </View>
                             </View>
 
@@ -83,7 +83,7 @@ export const ClientsRows = ({ data, schema }) => {
                         <View className='hidden md:flex lg:flex flex-row md:flex-col lg:flex-row w-full md:w-4/12 lg:w-7/12 justify-between'>
                             <View className='flex flex-row items-center sm:w-full md:w-full lg:w-4/12 md:justify-end lg:justify-center'>
                                 <View className='flex flex-col'>
-                                    <Text selectable className='text-[#686868] font-semibold'>{client.isActive ? "Ture" : 'False'}</Text>
+                                    <Text selectable className='text-[#686868] font-semibold'>{client.isActive ? "True" : 'False'}</Text>
                                 </View>
                             </View>
                             <View className='flex flex-col-reverse md:flex-col-reverse lg:flex-row sm:w-full md:w-full lg:w-6/12  items-center'>

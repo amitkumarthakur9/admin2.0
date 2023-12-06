@@ -68,7 +68,7 @@ export default function AppLayout() {
                         drawerActiveTintColor: '#000000', drawerStyle: { width: "15%", }, drawerType: Dimensions.get('window').width <= 768 ? "back" : "permanent", header: props => <TopHeader navigation={navigation} />,
                         headerLeft: props => <View className='ml-4'><Icon size={18} name={"bars"} onPress={navigation.toggleDrawer} /></View>,
                     })}
-                    initialRouteName="Home" drawerContent={(props) => <CustomSidebarMenu {...props} />} >
+                    initialRouteName="orders/index" drawerContent={(props) => <CustomSidebarMenu {...props} />} >
                     {/* <Drawer.Screen
                         // name="index" // This is the name of the page and must match the url from root
                         // options={{

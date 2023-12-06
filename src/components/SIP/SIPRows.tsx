@@ -1,4 +1,4 @@
-import { ImageBackground, StyleSheet, Text, TouchableOpacity, View } from "react-native"
+import { ImageBackground, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import { OrderInterface } from "../../interfaces/OrderInterface"
 import DynamicComponentRenderer from "../../helper/DynamicComponentRenderer"
 import { TouchableRipple } from "react-native-paper"
@@ -6,7 +6,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { ReportInterface } from "../../interfaces/ReportInterface";
 import moment from "moment";
 import { Popover } from "native-base";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 
 export const SIPRows = ({ data, schema }: { data: SIPReportItems[], schema: any }) => {
 
@@ -258,13 +258,18 @@ export const SIPRows = ({ data, schema }: { data: SIPReportItems[], schema: any 
                                 </View>
                             </View>
                             <View className='flex flex-row items-center lg:w-2/12 justify-center md:mt-2 lg:mt-0'>
-                                <Link
+                                {/* <Link
                                     href={{
                                         pathname: "/sip-reports/[id]",
                                         params: { id: order.id }
                                     }} className='rounded-full border-[0.4px] flex flex-row items-center justify-center bg-black w-8/12 h-6'>
                                     <Text selectable className='text-white text-start md:text-center text-xs w-10/12'>View</Text>
-                                </Link>
+                                </Link> */}
+                                <Pressable
+                                    onPress={() => { history.pushState(null, "", "sip-reports"), router.push(`sip-reports/${order.id}`) }}
+                                    className='rounded-full border-[0.4px] flex flex-row items-center justify-center bg-black w-8/12 h-6'>
+                                    <Text selectable className='text-white text-center text-xs w-10/12'>View</Text>
+                                </Pressable>
                             </View>
                         </View>
                     </View>

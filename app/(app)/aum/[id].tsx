@@ -14,11 +14,15 @@ export default function AUMDetail() {
         setIsLoading(true)
         async function getOrderDetails() {
             const response: AUMDetailResponseInterface = await RemoteApi.get(`folio/${id}`)
-            setData(response.data)
-            setIsLoading(false)
+            if (response) {
+                setData(response.data)
+                setIsLoading(false)
+            }
         }
 
-        getOrderDetails()
+        if (id) {
+            getOrderDetails()
+        }
     }, [id])
 
     const getInitials = (name: string) => {

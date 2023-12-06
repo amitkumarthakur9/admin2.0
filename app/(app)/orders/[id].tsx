@@ -14,11 +14,14 @@ export default function OrderDetail() {
         setIsLoading(true)
         async function getOrderDetails() {
             const response: OrderDataInterface = await RemoteApi.get(`order/${id}`)
-            setData(response.data)
-            setIsLoading(false)
+            if (response) {
+                setData(response.data)
+                setIsLoading(false)
+            }
         }
-
-        getOrderDetails()
+        if (id) {
+            getOrderDetails()
+        }
     }, [id])
 
     const getInitials = (name: string) => {

@@ -1,7 +1,13 @@
 import { Platform, StyleProp, TextStyle, View, ViewStyle } from 'react-native';
 import ClientDataTable from '../../../src/components/ClientsTables/ClientsDataTable';
+import { useNavigation } from 'expo-router';
 
 export default function ClientsScreen() {
+    // In component
+
+
+
+
     let data = {
         customer_name: "KASHINATH NARAYAN MORE",
         client_code: "ZI3G3",

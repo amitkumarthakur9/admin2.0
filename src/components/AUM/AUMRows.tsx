@@ -1,11 +1,11 @@
-import { Dimensions, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from "react-native"
+import { Dimensions, ImageBackground, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import { OrderInterface } from "../../interfaces/OrderInterface"
 import DynamicComponentRenderer from "../../helper/DynamicComponentRenderer"
 import { TouchableRipple } from "react-native-paper"
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { ClientInterface } from "../../interfaces/ClientInterface";
 import { Popover } from "native-base";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 
 export const AUMRows = ({ data, schema }) => {
 
@@ -154,13 +154,18 @@ export const AUMRows = ({ data, schema }) => {
                         </View>
 
                         <View className='flex flex-row items-center w-1/12 justify-center'>
-                            <Link
+                            {/* <Link
                                 href={{
                                     pathname: "/aum/[id]",
                                     params: { id: client.id }
                                 }} className='rounded-full border-[0.4px] flex flex-row items-center justify-center bg-black w-8/12 h-6'>
                                 <Text selectable className='text-white text-start md:text-center text-xs w-10/12'>View</Text>
-                            </Link>
+                            </Link> */}
+                            <Pressable
+                                onPress={() => { history.pushState(null, "", "aum"), router.push(`aum/${client.id}`) }}
+                                className='rounded-full border-[0.4px] flex flex-row items-center justify-center bg-black w-8/12 h-6'>
+                                <Text selectable className='text-white text-center text-xs w-10/12'>View</Text>
+                            </Pressable>
                         </View>
                     </View>
                     {

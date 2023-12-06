@@ -8,7 +8,13 @@ const axiosInstance = axios.create({
 
 // Set up a response interceptor to handle errors
 axiosInstance.interceptors.response.use(
-  (response: AxiosResponse) => response,
+  (response: AxiosResponse) => {
+    if (response.status === 200) {
+      return response
+    } else {
+      return
+    }
+  },
   (error: AxiosError) => {
     console.error('API Error:', error);
 
@@ -38,7 +44,7 @@ class ApiRequest {
     };
 
     const response = await axiosInstance(config);
-    return response.data;
+    return response?.data;
   }
 
   static async post<T>(endpoint: string, data?: any): Promise<T> {
@@ -57,7 +63,7 @@ class ApiRequest {
 
     // console.log('response', response);
 
-    return response.data;
+    return response?.data;
   }
 
   static async put<T>(endpoint: string, data: any): Promise<T> {
@@ -73,7 +79,7 @@ class ApiRequest {
     };
 
     const response = await axiosInstance(config);
-    return response.data;
+    return response?.data;
   }
 
   static async downloadFile({ endpoint, fileName = "file", data }): Promise<void> {

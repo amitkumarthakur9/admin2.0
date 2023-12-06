@@ -1,11 +1,11 @@
-import { Dimensions, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from "react-native"
+import { Dimensions, ImageBackground, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import { OrderInterface } from "../../interfaces/OrderInterface"
 import DynamicComponentRenderer from "../../helper/DynamicComponentRenderer"
 import { TouchableRipple } from "react-native-paper"
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { ClientInterface } from "../../interfaces/ClientInterface";
 import { Popover } from "native-base";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import { getInitials } from "../DateSelector/utils";
 
 export const ClientsRows = ({ data, schema }) => {
@@ -100,7 +100,7 @@ export const ClientsRows = ({ data, schema }) => {
                         </View>
 
                         <View className='flex flex-row items-center w-2/12 '>
-                            <Text selectable className='text-[#686868] font-semibold'>{client.isActive ? "Ture" : 'False'}</Text>
+                            <Text selectable className='text-[#686868] font-semibold'>{client.isActive ? "True" : 'False'}</Text>
                         </View>
 
                         <View className='flex flex-row items-center justify-between w-2/12'>
@@ -111,13 +111,16 @@ export const ClientsRows = ({ data, schema }) => {
                         </View>
 
                         <View className='flex flex-row items-center w-1/12 justify-center'>
-                            <Link
-                                href={{
-                                    pathname: "/clients/[id]",
-                                    params: { id: client.id }
-                                }} className='rounded-full border-[0.4px] flex flex-row items-center justify-center bg-black w-8/12 h-6'>
+                            <Pressable
+                                onPress={() => { history.pushState(null, "", "clients"), router.push(`clients/${client.id}`) }}
+                                // href={{
+                                //     pathname: "/clients/[id]",
+                                //     params: { id: client.id }
+                                // }} 
+                                // href={`clients/${client.id}`}
+                                className='rounded-full border-[0.4px] flex flex-row items-center justify-center bg-black w-8/12 h-6'>
                                 <Text selectable className='text-white text-center text-xs w-10/12'>View</Text>
-                            </Link>
+                            </Pressable>
                             {/* <ViewButton url={"/orders/[id]"} params={{ id: order.id }} /> */}
                         </View>
                     </View>
