@@ -99,7 +99,7 @@ export default function OrderDetail() {
                                 </View> */}
                             </View>
                             <View className="flex flex-row p-2 mx-4 items-center rounded" style={BorderShadow}>
-                                <View className='flex flex-row items-center p-3'>
+                                <View className='flex flex-row items-center p-2'>
                                     <View className='flex flex-col '>
                                         <Avatar bg="green.500" size={8} source={{
                                             uri: "../../../assets/images/avatar.png"
