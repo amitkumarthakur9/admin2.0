@@ -1,4 +1,4 @@
-import { Dimensions, Image, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from "react-native"
+import { Dimensions, Image, ImageBackground, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import { OrderInterface } from "../../interfaces/OrderInterface"
 import DynamicComponentRenderer from "../../helper/DynamicComponentRenderer"
 import { TouchableRipple } from "react-native-paper"
@@ -203,13 +203,18 @@ export const OrdersRows = ({ data, schema }: { data: OrderInterface[], schema: a
                             </View>
                         </View>
                         <View className='flex flex-row items-center w-1/12 justify-center'>
-                            <Link
+                            {/* <Link
                                 href={{
                                     pathname: "/orders/[id]",
                                     params: { id: order.id }
                                 }} className='rounded-full border-[0.4px] flex flex-row items-center justify-center bg-black w-8/12 h-6'>
                                 <Text selectable className='text-white text-center text-xs w-10/12'>View</Text>
-                            </Link>
+                            </Link> */}
+                            <Pressable
+                                onPress={() => { history.pushState(null, "", "orders"), router.push(`orders/${order.id}`) }}
+                                className='rounded-full border-[0.4px] flex flex-row items-center justify-center bg-black w-8/12 h-6'>
+                                <Text selectable className='text-white text-center text-xs w-10/12'>View</Text>
+                            </Pressable>
                             {/* <ViewButton url={"/orders/[id]"} params={{ id: order.id }} /> */}
                         </View>
                     </View>
