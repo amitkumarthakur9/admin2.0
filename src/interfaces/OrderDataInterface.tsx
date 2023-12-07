@@ -4,20 +4,50 @@ export interface OrderDataInterface {
     data: Order;
 }
 
+interface TransactionStatus {
+    id: number;
+    name: string;
+}
+
+interface TransactionType {
+    id: number;
+    name: string;
+}
+
+
+interface Folio {
+    folioNumber: string;
+}
+
+interface Transaction {
+    nav: any; // Replace 'any' with the appropriate type if known
+    amount: number;
+    units: number;
+    paymentDate: any; // Replace 'any' with the appropriate type if known
+    settlementDate: any; // Replace 'any' with the appropriate type if known
+    navAllotmentDate: any; // Replace 'any' with the appropriate type if known
+    transactionStatus: TransactionStatus;
+    transactionType: TransactionType;
+    folio?: Folio;
+}
+
 export interface Order {
     id: string;
-    startDate: string | null;
-    endDate: string | null;
+    startDate: string;
+    endDate: string;
+    createdAt: string;
+    orderType: {
+        id: number;
+        name: string;
+    };
     orderReferenceNumber: string;
-    clientCode: string;
-    customerName: string;
     mutualFund: {
         id: string;
         name: string;
         fundhouse: {
             id: number;
             name: string;
-            rta: any | null; // Adjust this type based on the actual data
+            rta: any; // You may want to replace 'any' with the appropriate type if known
         };
         mutualfundSubcategory: {
             name: string;
@@ -29,19 +59,15 @@ export interface Order {
         };
     };
     isin: string;
-    transactions: any[]; // Adjust this type based on the actual data
-    units: number | null;
+    transactions?: Transaction[];
+    units: any; // You may want to replace 'any' with the appropriate type if known
     amount: number;
     account: {
         clientId: string;
         name: string;
-        accountType: {
-            id: number;
-            name: string;
-        };
         user: {
             name: string;
-            panNumber: string
+            panNumber: string;
         }[];
         dematAccount: {
             id: string;
@@ -50,11 +76,14 @@ export interface Order {
             dpId: string;
             boId: string;
         };
-        orders: {
-            id: string;
-        }[];
     };
-    transactionType: string[]; // Adjust this type based on the actual data
+    transactionType: {
+        transactionType: {
+            id: number;
+            name: string;
+        };
+        folio: any; // You may want to replace 'any' with the appropriate type if known
+    }[];
     orderStatus: {
         id: number;
         name: string;
@@ -64,7 +93,8 @@ export interface Order {
         id: number;
         name: string;
     };
-    sipReferenceNumber: string | null;
+    sipReferenceNumber: string;
     firstOrder: string;
+
 
 }

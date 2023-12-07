@@ -1,10 +1,11 @@
-import { Dimensions, ImageBackground, View } from 'react-native';
+import { Dimensions, ImageBackground, View, StyleSheet } from 'react-native';
 import { Link, router, useLocalSearchParams } from 'expo-router';
-import { Button, Center, HStack, Heading, Pressable, ScrollView, Spinner, Text } from 'native-base';
+import { Avatar, Button, Center, HStack, Heading, Image, Pressable, ScrollView, Spinner, Text } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useEffect, useState } from 'react';
 import RemoteApi from '../../../src/services/RemoteApi';
 import { Order, OrderDataInterface } from '../../../src/interfaces/OrderDataInterface';
+import { BorderShadow } from '../../../src/components/Styles/Shadow';
 
 export default function OrderDetail() {
     const { id } = useLocalSearchParams();
@@ -53,7 +54,7 @@ export default function OrderDetail() {
                         <View className=''>
                             <View className='flex flex-row justify-between items-center mb-[30px] mt-3 bg-[#eaf3fe] h-28 px-2 '>
                                 <View className='flex flex-col w-6/12'>
-                                    <Text selectable className='text-2xl font-extrabold mb-3'>Order Details</Text>
+                                    <Text selectable className='text-2xl font-extrabold mb-3'>Order Details #{id}</Text>
                                     <View className='flex flex-row items-center'>
                                         <Link href={"../"} className='mr-4'>
                                             {/* <Icon name="home" size={18} color="black" /> */}
@@ -66,13 +67,12 @@ export default function OrderDetail() {
                                             {/* <Icon name="home" size={18} color="black" /> */}
                                             <Text>Orders</Text>
                                         </Link>
-                                        <View className='mr-4'>
+                                        {/* <View className='mr-4'>
                                             <Icon name="circle" style={{ fontWeight: "100" }} size={8} color="grey" />
-                                        </View>
-                                        <Link href={""} className='mr-4'>
-                                            {/* <Icon name="home" size={18} color="black" /> */}
+                                        </View> */}
+                                        {/* <Link href={""} className='mr-4'>
                                             <Text>{id}</Text>
-                                        </Link>
+                                        </Link> */}
                                     </View>
                                 </View>
                                 <View className='w-6/12 overflow-hidden h-full flex flex-row justify-center'>
@@ -98,144 +98,169 @@ export default function OrderDetail() {
 
                                 </View> */}
                             </View>
-                            <View className='flex flex-row m-2'>
-                                <View className="w-12/12 lg:w-8/12  p-2">
-                                    <View className='flex flex-row flex-wrap  border-[0.2px] rounded m-1 p-2 w-12/12'>
-                                        <View className='w-3/12 mb-2'>
-                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Request Date Time</Text>
-                                            <Text selectable className='font-bold text-base'>{ }</Text>
-                                        </View>
-                                        <View className='w-3/12 mb-2'>
-                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Process Date time</Text>
-                                            <Text selectable className='font-bold text-base'>{ }</Text>
-                                        </View>
-                                        <View className='w-3/12 mb-8 pr-2'>
-                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>BSE Order No</Text>
-                                            <Text selectable className='font-bold text-base'>{data.orderReferenceNumber}</Text>
-                                        </View>
-                                        <View className='w-3/12 mb-8 pr-2'>
-                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Status</Text>
-                                            <Text selectable className='font-bold text-base'>{data.orderStatus.name}</Text>
-                                        </View>
-                                        <View className='w-3/12 mb-8 pr-2'>
-                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>SIP Regn No</Text>
-                                            <Text selectable className='font-bold text-base'>{data.sipReferenceNumber}</Text>
-                                        </View>
+                            <View className="flex flex-row p-2 mx-4 items-center rounded" style={BorderShadow}>
+                                <View className='flex flex-row items-center p-3'>
+                                    <View className='flex flex-col '>
+                                        <Avatar bg="green.500" size={8} source={{
+                                            uri: "../../../assets/images/avatar.png"
+                                        }}>
+                                        </Avatar>
 
-                                        <View className='w-3/12 mb-8 pr-2'>
-                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>First Order</Text>
-                                            <Text selectable className='font-bold text-base'>{data.firstOrder}</Text>
-                                        </View>
-                                        <View className='w-3/12 mb-8 pr-2'>
-                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Source Of Order</Text>
-                                            <Text selectable className='font-bold text-base'>{data.sourceOfOrder.name}</Text>
-                                        </View>
-                                        <View className='w-3/12 mb-8 pr-2'>
-                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Amount</Text>
-                                            <Text selectable className='font-bold text-base'>{data.amount}</Text>
-                                        </View>
-                                        <View className='w-3/12 mb-8 pr-2'>
-                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Units</Text>
-                                            <Text selectable className='font-bold text-base'>{data.units}</Text>
-                                        </View>
-                                        <View className='w-3/12 mb-8 pr-2'>
-                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Remark</Text>
-                                            <Text selectable className='font-bold text-base'>{data.remark}</Text>
+                                    </View>
+                                    <View className='flex flex-col ml-1'>
+                                        <Text selectable className='font-bold text-base'>{data.account.name}</Text>
+                                        <View className='flex flex-row items-center'>
+                                            <Text selectable className=' text-xs'>{data.account.clientId}</Text>
+                                            <View className='mx-2'>
+                                                <Icon name="circle" style={{ fontWeight: "100" }} size={8} color="grey" />
+                                            </View>
+                                            <Text selectable className=' text-xs'>{data.account.user[0]?.panNumber}</Text>
                                         </View>
 
                                     </View>
 
                                 </View>
-                                <View className="w-12/12 lg:w-4/12 p-2">
-                                    <View className='flex flex-col flex-wrap  border-[0.2px] rounded m-1 p-2 w-12/12'>
-                                        {/* <View className='items-center flex flex-col'>
-                                            <View className='flex flex-row rounded-full bg-[#e60202] mr-2 h-10 w-10 items-center justify-center'>
-                                                <Text selectable className='text-white'>{getInitials(data.account.name)}</Text>
-                                            </View>
-                                        </View> */}
-                                        <View className='flex flex-col mb-8 pr-2'>
-                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Customer Name</Text>
+                            </View>
 
-                                            <Text selectable className='font-bold text-base'>{data.customerName}</Text>
+                            <View className="flex flex-col m-4 items-center justify-between rounded" style={BorderShadow}>
+                                <View className='flex flex-col w-full p-2'>
+                                    <View className='flex flex-row items-center w-full flex-wrap '>
+                                        <View className={"flex flex-row items-center justify-start w-3/12"} >
+                                            <Image
+                                                className="mr-2"
+                                                style={{ width: 40, height: 40 }}
+                                                source={{ uri: "https://www.fundexpert.in/cdn/logos-neo/icici.png" }}
+                                            />
+                                            <View className={'flex flex-col justify-end items-start'} >
+                                                <Text selectable className='text-black font-semibold break-all text-sm flex-wrap' >{data.mutualFund.name}</Text>
+
+                                                <View className='flex flex-row items-center flex-wrap'>
+                                                    <Text selectable className=' text-blacktext-xs'>{data.mutualFund.mutualfundSubcategory.mutualfundCategory.name}</Text>
+                                                    <View className='mx-2'>
+                                                        <Icon name="circle" style={{ fontWeight: "100" }} size={8} color="grey" />
+                                                    </View>
+                                                    <Text selectable className='text-black text-xs'>{data.mutualFund.mutualfundSubcategory.name}</Text>
+                                                </View>
+                                            </View>
                                         </View>
-                                        <View className='mb-8 pr-2'>
-                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Client Code</Text>
-                                            <Text selectable className='font-bold text-base'>{data.clientCode}</Text>
+                                    </View>
+                                    <View className='flex flex-row items-center w-full flex-wrap mt-4 p-3'>
+                                        <View className={"flex flex-row items-center w-3/12 mb-[30px]"} >
+                                            <View className='flex flex-col'>
+                                                <Text selectable className='font-medium'>{data.orderType.name == "SIP" ? `${data.startDate} - ${data.endDate}` : data.createdAt}</Text>
+                                                <Text className='text-[10px] text-slate-500' selectable>{data.orderType.name == "SIP" ? `Start Date - End Date` : "Process Date"}</Text>
+                                            </View>
                                         </View>
-                                        <View className='mb-8 pr-2'>
-                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Pan Number</Text>
-                                            <Text selectable className='font-bold text-base'>{data.account.user[0]?.panNumber}</Text>
+                                        <View className={"flex flex-row items-center w-3/12 mb-[30px]"} >
+                                            <View className='flex flex-col'>
+                                                <Text selectable className='font-medium'>{data.units || "-"}</Text>
+                                                <Text className='text-[10px] text-slate-500' selectable>{"Units"}</Text>
+                                            </View>
                                         </View>
+                                        <View className={"flex flex-row items-center w-3/12 mb-[30px]"} >
+                                            <View className='flex flex-col'>
+                                                <Text selectable className='font-medium'>{"10" || "-"}</Text>
+                                                <Text className='text-[10px] text-slate-500' selectable>{"NAV"}</Text>
+                                            </View>
+                                        </View>
+                                        <View className={"flex flex-row items-center w-3/12 mb-[30px]"} >
+                                            <View className='flex flex-col'>
+                                                <Text selectable className='font-medium'>{data.orderStatus.name || "-"}</Text>
+                                                <Text className='text-[10px] text-slate-500' selectable>{"Status"}</Text>
+                                            </View>
+                                        </View>
+                                        <View className={"flex flex-row items-center w-3/12 mb-[30px]"} >
+                                            <View className='flex flex-col'>
+                                                <Text selectable className='font-medium'>{data.amount || "-"}</Text>
+                                                <Text className='text-[10px] text-slate-500' selectable>{"Amount"}</Text>
+                                            </View>
+                                        </View>
+
+                                        <View className={"flex flex-row items-center w-3/12 mb-[30px]"} >
+                                            <View className='flex flex-col'>
+                                                <Text selectable className='font-medium'>{data.orderType.name || "-"}</Text>
+                                                <Text className='text-[10px] text-slate-500' selectable>{"Type"}</Text>
+                                            </View>
+                                        </View>
+                                        <View className={"flex flex-row items-center w-3/12 mb-[30px]"} >
+                                            <View className='flex flex-col'>
+                                                <Text selectable className='font-medium'>{data?.transactions.length > 0 && data?.transactions[0].folio?.folioNumber || "-"}</Text>
+                                                <Text className='text-[10px] text-slate-500' selectable>{"Folio No"}</Text>
+                                            </View>
+                                        </View>
+                                    </View>
+                                </View>
+                                <View className='flex flex-col bg-[#e3e3e3] w-full rounded-b'>
+                                    <View className='flex flex-row items-center w-full flex-wrap py-3 px-2'>
+                                        <Text selectable className='font-normal text-[10px]'>{data.remark}</Text>
                                     </View>
                                 </View>
                             </View>
 
-                            <View className='flex flex-row m-2'>
-                                <View className="w-12/12 lg:w-8/12  p-2">
-                                    <View className='flex flex-row flex-wrap  border-[0.2px] rounded m-1 p-2 w-12/12'>
-                                        <View className='w-3/12 mb-8 pr-2'>
-                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>RTA Agent Code</Text>
-                                            <Text selectable className='font-bold text-base'>{data.mutualFund.fundhouse.rta}</Text>
+                            <View className="flex flex-col m-4">
+                                <View className='flex flex-row justify-start'>
+                                    <Text className='font-bold text-base'>Transactions</Text>
+                                </View>
+                                <View className='flex flex-col mt-3'>
+                                    <View className='flex flex-row bg-[#e3e3e3] rounded-t'>
+                                        <View className='w-2/12 py-[9px] px-[9px]'>
+                                            <Text selectable className='font-semibold'>Date</Text>
                                         </View>
-                                        <View className='w-3/12 mb-2'>
-                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Fund Category</Text>
-                                            <Text selectable className='font-bold text-base'>{data.mutualFund.mutualfundSubcategory.mutualfundCategory.name}</Text>
+                                        <View className='w-2/12 py-[9px] px-[9px]'>
+                                            <Text selectable className='font-semibold'>Type</Text>
                                         </View>
-                                        <View className='w-3/12 mb-8 pr-2'>
-                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Fund SubCategory</Text>
-                                            <Text selectable className='font-bold text-base'>{data.mutualFund.mutualfundSubcategory.name}</Text>
+                                        <View className='w-2/12 py-[9px] px-[9px]'>
+                                            <Text selectable className='font-semibold'>Units</Text>
                                         </View>
-                                        <View className='w-3/12 mb-8 pr-2'>
-                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Sip Reference Number</Text>
-                                            <Text selectable className='font-bold text-base'>{data.sipReferenceNumber}</Text>
+                                        <View className='w-2/12 py-[9px] px-[9px]'>
+                                            <Text selectable className='font-semibold'>NAV</Text>
                                         </View>
-                                        <View className='w-3/12 mb-8 pr-2'>
-                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Scheme Name</Text>
-                                            <Text selectable className='font-bold text-base'>{data.mutualFund.name}</Text>
+                                        <View className='w-2/12 py-[9px] px-[9px]'>
+                                            <Text selectable className='font-semibold'>Amount</Text>
                                         </View>
-                                        <View className='w-3/12 mb-8 pr-2'>
-                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>ISIN</Text>
-                                            <Text selectable className='font-bold text-base'>{data.isin}</Text>
-                                        </View>
-
-                                        <View className='w-3/12 mb-8 pr-2'>
-                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Start Date</Text>
-                                            <Text selectable className='font-bold text-base'>{data.startDate}</Text>
-                                        </View>
-                                        <View className='w-3/12 mb-8 pr-2'>
-                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>End Date</Text>
-                                            <Text selectable className='font-bold text-base'>{data.endDate}</Text>
+                                        <View className='w-2/12 py-[9px] px-[9px]'>
+                                            <Text selectable className='font-semibold'>Status</Text>
                                         </View>
                                     </View>
-
-                                </View>
-                                <View className="w-12/12 lg:w-4/12 p-2">
-                                    {/* <View className='flex flex-row flex-wrap  border-[0.2px] rounded m-1 p-2 w-12/12'>
-                                        <View className='w-4/12 mb-8 pr-2'>
-                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Order No</Text>
-                                            <Text selectable className='font-bold text-base'>1202</Text>
-                                        </View>
-                                        <View className='w-4/12 mb-8 pr-2'>
-                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Order No</Text>
-                                            <Text selectable className='font-bold text-base'>1202</Text>
-                                        </View>
-                                        <View className='w-4/12 mb-8 pr-2'>
-                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Order No</Text>
-                                            <Text selectable className='font-bold text-base'>1202</Text>
-                                        </View>
-                                        <View className='w-4/12 mb-8 pr-2'>
-                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Order No</Text>
-                                            <Text selectable className='font-bold text-base'>1202</Text>
-                                        </View>
-                                        <View className='w-4/12 mb-8 pr-2'>
-                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Order No</Text>
-                                            <Text selectable className='font-bold text-base'>1202</Text>
-                                        </View>
-                                        <View className='w-4/12 mb-8 pr-2'>
-                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Order No</Text>
-                                            <Text selectable className='font-bold text-base'>1202</Text>
-                                        </View>
-                                    </View> */}
+                                    <View
+                                        className='mb-2'
+                                        style={{
+                                            borderColor: '#e4e4e4',
+                                            borderBottomWidth: StyleSheet.hairlineWidth,
+                                        }}
+                                    />
+                                    {
+                                        data.transactions.map((transaction, index) => {
+                                            return <><View className='flex flex-row w-full'>
+                                                <View className='w-2/12 p-3'>
+                                                    <Text selectable >{transaction.paymentDate || "-"}</Text>
+                                                </View>
+                                                <View className='w-2/12 p-3'>
+                                                    <Text selectable >{transaction.transactionType.name || "-"}</Text>
+                                                </View>
+                                                <View className='w-2/12 p-3'>
+                                                    <Text selectable >{transaction.units || "-"}</Text>
+                                                </View>
+                                                <View className='w-2/12 p-3'>
+                                                    <Text selectable >{transaction.nav || "-"}</Text>
+                                                </View>
+                                                <View className='w-2/12 p-3'>
+                                                    <Text selectable >{transaction.amount || "-"}</Text>
+                                                </View>
+                                                <View className='w-2/12 p-3'>
+                                                    <Text selectable >{transaction.transactionStatus.name || "-"}</Text>
+                                                </View>
+                                            </View>
+                                                <View
+                                                    className='mb-2'
+                                                    style={{
+                                                        borderColor: '#e4e4e4',
+                                                        borderBottomWidth: StyleSheet.hairlineWidth,
+                                                    }}
+                                                />
+                                            </>
+                                        })
+                                    }
                                 </View>
                             </View>
                         </View>
