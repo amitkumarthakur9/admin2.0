@@ -34,6 +34,7 @@ export interface RTAReconcilation {
     transactionStatus: string;
     account: Account;
     mutualfund: MutualFund;
+    createdAt: string;
 }
 
 export interface RTAResponseResponseInterface {

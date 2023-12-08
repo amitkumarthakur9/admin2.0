@@ -1,5 +1,5 @@
 import { Platform, StyleProp, TextStyle, View, ViewStyle } from 'react-native';
-import AUMDataTable from '../../src/components/AUM/AUMDataTable';
+import AUMDataTable from '../../src/components/Folio/FolioDataTable';
 import RTAReconciliation from '../../src/components/RtaReconciliation/RTAReconciliation';
 
 export default function RTAReconciliationScreen() {

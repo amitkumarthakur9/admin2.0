@@ -72,12 +72,12 @@ const SIPDataTable = () => {
     return (
         <View className='bg-white'>
             <View className=''>
-                <TableBreadCrumb name={"SIP"} />
+                <TableBreadCrumb name={"SIP Reports"} />
 
             </View>
             <View className='border-[0.2px]  border-[#e4e4e4]'>
 
-                <DynamicFilters appliedSorting={appliedSorting} setAppliedSorting={setAppliedSorting} sorting={sorting} fileName="Sip" downloadApi={"sip/download-report"} schemaResponse={filtersSchema} setCurrentPageNumber={setCurrentPageNumber} getList={getDataList} appliedFilers={appliedFilers} setAppliedFilers={setAppliedFilers} />
+                <DynamicFilters appliedSorting={appliedSorting} setAppliedSorting={setAppliedSorting} sorting={sorting} fileName="SIP" downloadApi={"sip/download-report"} schemaResponse={filtersSchema} setCurrentPageNumber={setCurrentPageNumber} getList={getDataList} appliedFilers={appliedFilers} setAppliedFilers={setAppliedFilers} />
 
                 {
                     !isLoading ? <View className='mt-4 z-[-1]'>

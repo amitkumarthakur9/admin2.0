@@ -152,8 +152,8 @@ export default function ClientDetail() {
                                         </View> */}
 
                                         <View className='flex flex-row mb-1 items-center'>
-                                            <Icon name={"check"} size={18} style={{ marginRight: 5, width: 20, textAlign: "center" }} color="green" />
-                                            <Text selectable>{"KYC Verified"}</Text>
+                                            <Icon name={data.users[0].kycStatus.name == "Verified" ? "check" : "xmark"} size={18} style={{ marginRight: 5, width: 20, textAlign: "center" }} color="green" />
+                                            <Text selectable>{data.users[0].kycStatus.name == "Verified" ? "KYC Verified" : "KYC Not Verified"}</Text>
                                         </View>
 
 
@@ -339,7 +339,7 @@ export default function ClientDetail() {
                                             <Text selectable className='font-semibold'>Units</Text>
                                         </View>
                                         <View className='w-2/12 py-[9px] px-[9px]'>
-                                            <Text selectable className='font-semibold'>Avg Nav</Text>
+                                            <Text selectable className='font-semibold'>Avg NAV</Text>
                                         </View>
                                         <View className='w-2/12 py-[9px] px-[9px]'>
                                             <Text selectable className='font-semibold'>Current Value</Text>

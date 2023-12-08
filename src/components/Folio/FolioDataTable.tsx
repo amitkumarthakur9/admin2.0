@@ -8,13 +8,13 @@ import { OrderInterface } from '../../interfaces/OrderInterface';
 import RemoteApi from '../../services/RemoteApi';
 import { OrdersResponse } from '../../interfaces/OrdersResposeInterface';
 import { DynamicFilters } from '../Filters/DynamicFilters';
-import { AUMRows } from './AUMRows';
+import { FolioRows } from './FolioRows';
 import { Pagination } from '../Pagination/Pagination';
 import { HStack, Heading, Spinner } from 'native-base';
 import { TableBreadCrumb } from '../BreadCrumbs/TableBreadCrumb';
 
 
-const AUMDataTable = () => {
+const FolioDataTable = () => {
     const [isLoading, setIsLoading] = React.useState(false);
 
     const [currentPageNumber, setCurrentPageNumber] = useState(1);
@@ -70,15 +70,15 @@ const AUMDataTable = () => {
     return (
         <View className='bg-white'>
             <View className=''>
-                <TableBreadCrumb name={"AUM"} />
+                <TableBreadCrumb name={"Folio"} />
             </View>
             <View className='border-[0.2px] border-[#e4e4e4]'>
 
-                <DynamicFilters appliedSorting={appliedSorting} setAppliedSorting={setAppliedSorting} sorting={sorting} fileName="Aum" downloadApi={"folio/download-report"} schemaResponse={filtersSchema} setCurrentPageNumber={setCurrentPageNumber} getList={getDataList} appliedFilers={appliedFilers} setAppliedFilers={setAppliedFilers} />
+                <DynamicFilters appliedSorting={appliedSorting} setAppliedSorting={setAppliedSorting} sorting={sorting} fileName="Folio" downloadApi={"folio/download-report"} schemaResponse={filtersSchema} setCurrentPageNumber={setCurrentPageNumber} getList={getDataList} appliedFilers={appliedFilers} setAppliedFilers={setAppliedFilers} />
 
                 {
                     !isLoading ? <View className={'mt-4 z-[-1] ' + (Dimensions.get("screen").width < 770 ? "overflow-scroll" : "")}>
-                        <AUMRows data={data} schema={null} />
+                        <FolioRows data={data} schema={null} />
                     </View> : <HStack space={2} marginTop={20} marginBottom={20} justifyContent="center">
                         <Spinner color={"black"} accessibilityLabel="Loading order" />
                         <Heading color="black" fontSize="md">
@@ -98,7 +98,7 @@ const AUMDataTable = () => {
 
 
 
-export default AUMDataTable;
+export default FolioDataTable;
 
 
 

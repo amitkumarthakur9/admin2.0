@@ -1,5 +1,5 @@
 import { Platform, StyleProp, TextStyle, View, ViewStyle } from 'react-native';
-import AUMDataTable from '../../../src/components/AUM/AUMDataTable';
+import FolioDataTable from '../../../src/components/Folio/FolioDataTable';
 
 export default function AUMReportsScreen() {
     let data = {
@@ -17,7 +17,7 @@ export default function AUMReportsScreen() {
 
     return <View className='' style={{ backgroundColor: "white", height: '100%', overflow: "scroll" }}>
 
-        <AUMDataTable />
+        <FolioDataTable />
     </View>;
 }
 

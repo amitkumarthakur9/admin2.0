@@ -54,7 +54,7 @@ export default function AUMDetail() {
                         <View className=''>
                             <View className='flex flex-row justify-between items-center mb-[30px] mt-3 bg-[#eaf3fe] h-28 px-2 '>
                                 <View className='flex flex-col w-6/12'>
-                                    <Text selectable className='text-2xl font-extrabold mb-3'>AUM Report Details</Text>
+                                    <Text selectable className='text-2xl font-extrabold mb-3'>Folio Details</Text>
                                     <View className='flex flex-row items-center'>
                                         <Link href={"../"} className='mr-4'>
                                             {/* <Icon name="home" size={18} color="black" /> */}
@@ -63,9 +63,9 @@ export default function AUMDetail() {
                                         <View className='mr-4'>
                                             <Icon name="circle" style={{ fontWeight: "100" }} size={8} color="grey" />
                                         </View>
-                                        <Link href={"/aum"} className='mr-4'>
+                                        <Link href={"/folio"} className='mr-4'>
                                             {/* <Icon name="home" size={18} color="black" /> */}
-                                            <Text>AUM Reports</Text>
+                                            <Text>Folio</Text>
                                         </Link>
                                         <View className='mr-4'>
                                             <Icon name="circle" style={{ fontWeight: "100" }} size={8} color="grey" />

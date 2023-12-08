@@ -7,6 +7,7 @@ import RemoteApi from '../../../src/services/RemoteApi';
 import { Order, OrderDataInterface } from '../../../src/interfaces/OrderDataInterface';
 import { BorderShadow, HeaderShadow } from '../../../src/components/Styles/Shadow';
 import moment from 'moment';
+import { RupeeSymbol } from '../../../src/helper/helper';
 
 export default function OrderDetail() {
     const { id } = useLocalSearchParams();
@@ -191,7 +192,7 @@ export default function OrderDetail() {
                                         </View>
                                         <View className={"flex flex-row items-center w-3/12 mb-[30px]"} >
                                             <View className='flex flex-col'>
-                                                <Text selectable className='font-medium'>{data.amount || "-"}</Text>
+                                                <Text selectable className='font-medium'>{data.amount ? (RupeeSymbol + data.amount.toString()) : "-"}</Text>
                                                 <Text className='text-[10px] text-slate-500' selectable>{"Amount"}</Text>
                                             </View>
                                         </View>
@@ -265,7 +266,7 @@ export default function OrderDetail() {
                                                     <Text selectable >{transaction.nav || "-"}</Text>
                                                 </View>
                                                 <View className='w-2/12 p-3'>
-                                                    <Text selectable >{transaction.amount || "-"}</Text>
+                                                    <Text selectable >{transaction.amount ? (RupeeSymbol + transaction.amount) : "-"}</Text>
                                                 </View>
                                                 <View className='w-2/12 p-3'>
                                                     <Text selectable >{transaction.transactionStatus.name || "-"}</Text>

@@ -17,11 +17,11 @@ import OrdersScreen from './orders';
 import OrderDetail from './orders/[id]';
 import ClientsScreen from './clients';
 import SIPReportsScreen from './sip-reports';
-import AUMReportsScreen from './aum';
+import AUMReportsScreen from './folio';
 import RTAReconciliationScreen from './rta-reconciliation';
 import ClientDetail from './clients/[id]';
 import SIPReportsDetail from './sip-reports/[id]';
-import AUMDetail from './aum/[id]';
+import AUMDetail from './folio/[id]';
 
 
 NativeWindStyleSheet.setOutput({
@@ -115,10 +115,10 @@ export default function AppLayout() {
                     />
 
                     <Drawer.Screen
-                        name="aum/index" // This is the name of the page and must match the url from root
+                        name="folio/index" // This is the name of the page and must match the url from root
                         options={{
-                            drawerLabel: "AUM Reports",
-                            title: "AUM Reports",
+                            drawerLabel: "Folio",
+                            title: "Folio",
                         }}
                         initialParams={{}}
                         component={AUMReportsScreen}
@@ -171,10 +171,10 @@ export default function AppLayout() {
 
                     <Drawer.Screen
 
-                        name="aum/[id]" // This is the name of the page and must match the url from root
+                        name="folio/[id]" // This is the name of the page and must match the url from root
                         options={{
-                            drawerLabel: "SipReportsDetail",
-                            title: "SipReportsDetail",
+                            drawerLabel: "FolioDetail",
+                            title: "FolioDetail",
                             drawerItemStyle: { display: 'none' }
                         }}
                         initialParams={{}}

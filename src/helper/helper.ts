@@ -10,3 +10,5 @@ export const getInitials = (name: string) => {
         return '';
     }
 }
+
+export const RupeeSymbol = "₹";
