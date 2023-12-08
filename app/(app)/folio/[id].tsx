@@ -181,13 +181,13 @@ export default function AUMDetail() {
                                         </View>
                                         <View className={"flex flex-row items-center w-3/12 mb-[30px]"} >
                                             <View className='flex flex-col'>
-                                                <Text selectable className='font-medium'>{data.currentValue || "-"}</Text>
+                                                <Text selectable className='font-medium'>{data.currentValue ? (RupeeSymbol + data.currentValue) : "-"}</Text>
                                                 <Text className='text-[10px] text-slate-500' selectable>{"Current Value"}</Text>
                                             </View>
                                         </View>
                                         <View className={"flex flex-row items-center w-3/12 mb-[30px]"} >
                                             <View className='flex flex-col'>
-                                                <Text selectable className='font-medium'>{data.investedValue || "-"}</Text>
+                                                <Text selectable className='font-medium'>{data.investedValue ? (RupeeSymbol + data.investedValue) : "-"}</Text>
                                                 <Text className='text-[10px] text-slate-500' selectable>{"Invested Value"}</Text>
                                             </View>
                                         </View>
