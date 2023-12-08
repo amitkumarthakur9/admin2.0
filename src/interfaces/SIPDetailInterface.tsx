@@ -68,6 +68,7 @@ interface Transaction {
     transactionType: TransactionType;
     folio?: Folio;
     createdAt: string;
+    settlementType: string;
 }
 
 export interface SIPReportDetail {
