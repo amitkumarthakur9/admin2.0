@@ -79,7 +79,7 @@ export const ClientsRows = ({ data, schema }) => {
                                                 <Popover.Body>
                                                     <View>
                                                         <Text>Name: {client.name}</Text>
-                                                        <Text>PAN Number: {client.users[0].panNumber}</Text>
+                                                        <Text>PAN Number: {client?.users[0]?.panNumber || "-"}</Text>
                                                     </View>
                                                 </Popover.Body>
                                             </Popover.Content>
@@ -95,7 +95,7 @@ export const ClientsRows = ({ data, schema }) => {
                         </View>
                         <View className="flex flex-row w-2/12 items-center">
                             <Text selectable>
-                                {client.users[0].panNumber}
+                                {client?.users[0]?.panNumber || "-"}
                             </Text>
                         </View>
 
@@ -107,7 +107,7 @@ export const ClientsRows = ({ data, schema }) => {
                             <Text selectable className='text-black font-bold text-center'>{client.dematAccount.dpId}</Text>
                         </View>
                         <View className='flex flex-row items-center justify-between w-1/12'>
-                            <Text selectable className='text-black font-bold text-center'>{client.users[0].kycStatus.name}</Text>
+                            <Text selectable className='text-black font-bold text-center'>{client?.users[0]?.kycStatus.name || "-"}</Text>
                         </View>
 
                         <View className='flex flex-row items-center w-1/12 justify-center'>

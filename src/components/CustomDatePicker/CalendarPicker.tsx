@@ -55,15 +55,36 @@ const CalendarPicker = ({ handleFilterChange, value, fromName = "From", toName =
 
         if (selectedDate && selectedDate == date) {
             console.log(selectedDate);
-            color = "bg-gray-300"
+            color = "bg-black rounded-l"
         } else if (selectedSecondDate && selectedSecondDate == date) {
-            color = "bg-gray-300"
+            color = "bg-black rounded-r"
         }
 
         if (selectedDate && selectedSecondDate && new Date(selectedDate) < new Date(date) && new Date(selectedSecondDate) > new Date(date)) {
             // console.log("here", date, selectedDate, selectedSecondDate);
 
             color = "bg-gray-300"
+        }
+
+        return color
+    }
+
+    const getSelectedFontColor = (date) => {
+
+
+        let color = ""
+
+        if (selectedDate && selectedDate == date) {
+            console.log(selectedDate);
+            color = "text-white"
+        } else if (selectedSecondDate && selectedSecondDate == date) {
+            color = "text-white"
+        }
+
+        if (selectedDate && selectedSecondDate && new Date(selectedDate) < new Date(date) && new Date(selectedSecondDate) > new Date(date)) {
+            // console.log("here", date, selectedDate, selectedSecondDate);
+
+            color = "text-black"
         }
 
         return color
@@ -77,13 +98,13 @@ const CalendarPicker = ({ handleFilterChange, value, fromName = "From", toName =
         for (let i = 0; i < firstDayOfMonth; i++) {
             const prevMonthDate = getDaysInMonth(selectedYear, selectedMonth - 1) - firstDayOfMonth + i + 1;
             currentRow.push(
-                <TouchableOpacity
+                <View
                     className={'w-20 ' + getSelectedColor(`${selectedYear}-${selectedMonth - 1}-${prevMonthDate}`)}
                     key={`prev-${i}`}
-                    onPress={() => handleDateSelect(`${selectedYear}-${selectedMonth - 1}-${prevMonthDate}`)}
+                // onPress={() => handleDateSelect(`${selectedYear}-${selectedMonth - 1}-${prevMonthDate}`)}
                 >
-                    <Text className='text-slate-600 p-2 text-center'>{prevMonthDate}</Text>
-                </TouchableOpacity>
+                    <Text className='text-slate-600 p-2 text-center'>{""}</Text>
+                </View>
             );
         }
 
@@ -94,7 +115,7 @@ const CalendarPicker = ({ handleFilterChange, value, fromName = "From", toName =
                     onPress={() => handleDateSelect(`${selectedYear}-${selectedMonth}-${date}`)}
                     className={'w-20 ' + getSelectedColor(`${selectedYear}-${selectedMonth}-${date}`)}
                 >
-                    <Text className='p-2 text-center'>
+                    <Text className={'p-2 text-center ' + getSelectedFontColor(`${selectedYear}-${selectedMonth}-${date}`)}>
                         {date}
                     </Text>
                 </TouchableOpacity>
@@ -116,13 +137,13 @@ const CalendarPicker = ({ handleFilterChange, value, fromName = "From", toName =
             for (let i = currentRow.length, date = 1; i < 7; i++, date++) {
                 const nextMonthDate = date;
                 currentRow.push(
-                    <TouchableOpacity
+                    <View
                         key={`next-${i}`}
                         className={'w-20 ' + getSelectedColor(`${selectedYear}-${selectedMonth + 1}-${nextMonthDate}`)}
-                        onPress={() => handleDateSelect(`${selectedYear}-${selectedMonth + 1}-${nextMonthDate}`)}
+                    // onPress={() => handleDateSelect(`${selectedYear}-${selectedMonth + 1}-${nextMonthDate}`)}
                     >
-                        <Text className='text-slate-600 p-2 text-center'>{nextMonthDate}</Text>
-                    </TouchableOpacity>
+                        <Text className='text-slate-600 p-2 text-center'>{""}</Text>
+                    </View>
                 );
             }
             calendarGrid.push(

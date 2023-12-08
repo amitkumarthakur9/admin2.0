@@ -7,6 +7,8 @@ import RemoteApi from '../../../src/services/RemoteApi';
 import { Order, OrderDataInterface } from '../../../src/interfaces/OrderDataInterface';
 import { ClientDetailItem, ClientDetailResponse } from '../../../src/interfaces/ClientDetailInterface';
 import moment from 'moment';
+import { BorderShadow } from '../../../src/components/Styles/Shadow';
+import { StyleSheet } from 'react-native';
 
 export default function ClientDetail() {
     const { id } = useLocalSearchParams();
@@ -56,26 +58,25 @@ export default function ClientDetail() {
                         <View className=''>
                             <View className='flex flex-row justify-between items-center mb-[30px] mt-3 bg-[#eaf3fe] h-28 px-2 '>
                                 <View className='flex flex-col w-6/12'>
-                                    <Text selectable className='text-2xl font-extrabold mb-3'>Client Details</Text>
+                                    <Text selectable className='text-2xl font-extrabold mb-3'>{data.name}</Text>
                                     <View className='flex flex-row items-center'>
                                         <Link href={"../"} className='mr-4'>
                                             {/* <Icon name="home" size={18} color="black" /> */}
-                                            <Text>Dashboard</Text>
+                                            <Text selectable>Dashboard</Text>
                                         </Link>
                                         <View className='mr-4'>
                                             <Icon name="circle" style={{ fontWeight: "100" }} size={8} color="grey" />
                                         </View>
                                         <Link href={"/clients"} className='mr-4'>
                                             {/* <Icon name="home" size={18} color="black" /> */}
-                                            <Text>Clients</Text>
+                                            <Text selectable>Clients</Text>
                                         </Link>
-                                        <View className='mr-4'>
+                                        {/* <View className='mr-4'>
                                             <Icon name="circle" style={{ fontWeight: "100" }} size={8} color="grey" />
-                                        </View>
-                                        <Link href={""} className='mr-4'>
-                                            {/* <Icon name="home" size={18} color="black" /> */}
-                                            <Text>{id}</Text>
-                                        </Link>
+                                        </View> */}
+                                        {/* <Link href={""} className='mr-4'>
+                                            <Text  selectable>{id}</Text>
+                                        </Link> */}
                                     </View>
                                 </View>
                                 <View className='w-6/12 overflow-hidden h-full flex flex-row justify-center'>
@@ -89,64 +90,302 @@ export default function ClientDetail() {
                             </View>
 
                         </View>
-                        <View>
-                            <View className='flex flex-row justify-between mx-5'>
-                                <View>
+                        <View className='flex flex-col mx-5'>
 
+                            <View className='flex flex-row flex-wrap'>
+                                <View className='flex flex-col w-4/12' >
+                                    <View className='flex flex-col m-2 rounded p-3' style={BorderShadow}>
+                                        <Text selectable className='text-base mb-4 font-bold'>Contact Details</Text>
+
+                                        <View className='flex flex-row mb-1 items-center'>
+                                            <Icon name="envelope" size={18} style={{ marginRight: 5, width: 20, textAlign: "center" }} color="black" />
+                                            <Text selectable>{data.users[0].credentials[0].email}</Text>
+                                        </View>
+
+                                        <View className='flex flex-row mb-1 items-center'>
+                                            <Icon name="phone" size={18} style={{ marginRight: 5, width: 20, textAlign: "center" }} color="black" />
+                                            <Text selectable>{data.users[0].credentials[0].mobileNumber}</Text>
+                                        </View>
+
+                                        <View className='flex flex-row mb-1 items-center'>
+                                            <Icon name="address-book" size={18} style={{ marginRight: 5, width: 20, textAlign: "center" }} color="black" />
+                                            <Text selectable className=''>{"-"}</Text>
+                                        </View>
+                                    </View>
                                 </View>
-                                {/* <View>
-                                    <Pressable marginRight={0} onPress={() => console.log("hello world")} paddingX={9} paddingY={2} bg={"#000000"} rounded={4} borderColor={"#bfbfbf"} borderWidth={0.3}>
-                                        <Icon name="download" style={{ fontWeight: "100" }} size={14} color="white" />
-                                    </Pressable>
+                                <View className='flex flex-col w-4/12' >
+                                    <View className='flex flex-col m-2 rounded p-3' style={BorderShadow}>
+                                        <Text selectable className='text-base mb-4 font-bold'>Banks</Text>
+                                        {
+                                            data.bankAccounts.map((bank, index) => {
+                                                return <View className='flex flex-row items-start'>
+                                                    <View className='flex flex-col items-start justify-start'>
+                                                        <Icon name="bank" size={18} style={{ marginRight: 5, paddingTop: 2, width: 20, textAlign: "center" }} color="black" />
+                                                    </View>
+                                                    <View className='flex flex-col'>
+                                                        <Text selectable>{bank.bankBranch.name || "Unknown"}</Text>
+                                                        <Text selectable>{bank.accountNumber || "-"}</Text>
+                                                        <Text selectable>{bank.bankBranch.ifscCode || "-"}</Text>
+                                                    </View>
 
-                                </View> */}
-                            </View>
-                            <View className='flex flex-row m-2'>
-                                <View className="w-full p-2">
-                                    <View className='flex flex-row flex-wrap border-[0.2px] rounded m-1 p-2 w-full'>
-                                        <View className='w-3/12 mb-8'>
-                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Client Code</Text>
-                                            <Text selectable className='font-bold text-base'>{data.clientId}</Text>
+                                                </View>
+                                            })
+                                        }
+
+                                    </View>
+                                </View>
+                                <View className='flex flex-col w-4/12' >
+                                    <View className='flex flex-col m-2 rounded p-3' style={BorderShadow}>
+                                        <Text selectable className='text-base mb-4 font-bold'>Profile</Text>
+                                        <View className='flex flex-row mb-1 items-center'>
+                                            <Icon name="id-badge" size={18} style={{ marginRight: 5, width: 20, textAlign: "center" }} color="black" />
+                                            <Text selectable>{data.clientId}</Text>
                                         </View>
-                                        <View className='w-3/12 mb-8'>
-                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Customer Name</Text>
-                                            <Text selectable className='font-bold text-base'>{data.name}</Text>
+                                        <View className='flex flex-row mb-1 items-center'>
+                                            <Icon name="credit-card" size={18} style={{ marginRight: 5, width: 20, textAlign: "center" }} color="black" />
+                                            <Text selectable>{data.users[0].panNumber}</Text>
                                         </View>
-                                        <View className='w-3/12 mb-8'>
-                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Customer Name</Text>
-                                            <Text selectable className='font-bold text-base'>{data.name}</Text>
+
+                                        {/* <View className='flex flex-row mb-1 items-center'>
+                                            <Icon name="id-card" size={18} style={{ marginRight: 5, width: 20, textAlign: "center" }} color="black" />
+                                            <Text  selectable>{"830934209342803"}</Text>
+                                        </View> */}
+
+                                        <View className='flex flex-row mb-1 items-center'>
+                                            <Icon name={"check"} size={18} style={{ marginRight: 5, width: 20, textAlign: "center" }} color="green" />
+                                            <Text selectable>{"KYC Verified"}</Text>
                                         </View>
-                                        <View className='w-3/12 mb-8'>
-                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>PAN Number</Text>
-                                            <Text selectable className='font-bold text-base'>{data.users[0].panNumber}</Text>
-                                        </View>
-                                        <View className='w-3/12 mb-8'>
-                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Is PAN Verfified</Text>
-                                            <Text selectable className='font-bold text-base'>{data.users[0].isPanVerified}</Text>
-                                        </View>
-                                        <View className='w-3/12 mb-8 pr-2'>
-                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Is Active</Text>
-                                            <Text selectable className='font-bold text-base'>{data.users[0].isActive}</Text>
-                                        </View>
-                                        <View className='w-3/12 mb-8 pr-2'>
-                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Aadhar Number</Text>
-                                            <Text selectable className='font-bold text-base'>{data.users[0].adhaarNumber}</Text>
-                                        </View>
-                                        <View className='w-3/12 mb-8 pr-2'>
-                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>KYC Status</Text>
-                                            <Text selectable className='font-bold text-base'>{data.users[0].kycStatusId}</Text>
-                                        </View>
-                                        <View className='w-3/12 mb-8 pr-2'>
-                                            <Text selectable className='text-slate-400 text-[#7e7e7e] mb-[1px] font-semibold'>Date Of Birth</Text>
-                                            <Text selectable className='font-bold text-base'>{moment(new Date(data.users[0].dateOfBirth)).format('DD-MM-YYYY')}</Text>
+
+
+                                        <View className='flex flex-row mb-1 items-center'>
+                                            <Icon name="calendar" size={18} style={{ marginRight: 5, width: 20, textAlign: "center" }} color="black" />
+                                            <Text selectable>{moment(new Date(data.users[0].dateOfBirth)).format('DD MMM YYYY')}</Text>
                                         </View>
 
                                     </View>
+                                </View>
 
+                                <View className='flex flex-col w-4/12' >
+                                    <View className='flex flex-col m-2 rounded p-3' style={BorderShadow}>
+                                        <Text selectable className='text-base mb-4 font-bold'>Nominee Details</Text>
+
+                                        <View className='flex flex-row mb-1 items-center'>
+                                            <Icon name="envelope" size={18} style={{ marginRight: 5, width: 20, textAlign: "center" }} color="black" />
+                                            <Text selectable>{"dummy@gmail.com"}</Text>
+                                        </View>
+
+                                        <View className='flex flex-row mb-1 items-center'>
+                                            <Icon name="phone" size={18} style={{ marginRight: 5, width: 20, textAlign: "center" }} color="black" />
+                                            <Text selectable>{"0000000000"}</Text>
+                                        </View>
+
+                                        <View className='flex flex-row mb-1 items-center'>
+                                            <Icon name="address-book" size={18} style={{ marginRight: 5, width: 20, textAlign: "center" }} color="black" />
+                                            <Text selectable className=''>{"0000000000"}</Text>
+                                        </View>
+                                    </View>
+                                </View>
+
+                                <View className='flex flex-col w-4/12' >
+                                    <View className='flex flex-col m-2 rounded p-3' style={BorderShadow}>
+                                        <Text selectable className='text-base mb-4 font-bold'>Demat Details</Text>
+
+                                        <View className='flex flex-row mb-1 items-center'>
+                                            <Text selectable className='pr-1 font-medium'>BOID:</Text>
+                                            <Text selectable>{data.dematAccount.boId}</Text>
+                                        </View>
+
+                                        <View className='flex flex-row mb-1 items-center'>
+                                            <Text selectable className='pr-1 font-medium'>DPID:</Text>
+                                            <Text selectable>{data.dematAccount.dpId}</Text>
+                                        </View>
+                                    </View>
                                 </View>
                             </View>
 
 
+                            <View className="flex flex-col m-4">
+                                <View className='flex flex-row justify-start'>
+                                    <Text className='font-bold text-base'>Orders</Text>
+                                </View>
+                                <View className='flex flex-col mt-3'>
+                                    <View className='flex flex-row bg-[#e3e3e3] rounded-t'>
+                                        <View className='w-2/12 py-[9px] px-[9px]'>
+                                            <Text selectable className='font-semibold'>Type</Text>
+                                        </View>
+                                        <View className='w-2/12 py-[9px] px-[9px]'>
+                                            <Text selectable className='font-semibold'>Process Date</Text>
+                                        </View>
+                                        <View className='w-2/12 py-[9px] px-[9px]'>
+                                            <Text selectable className='font-semibold'>NAV</Text>
+                                        </View>
+                                        <View className='w-2/12 py-[9px] px-[9px]'>
+                                            <Text selectable className='font-semibold'>Amount</Text>
+                                        </View>
+                                        <View className='w-2/12 py-[9px] px-[9px]'>
+                                            <Text selectable className='font-semibold'>Status</Text>
+                                        </View>
+                                    </View>
+                                    <View
+                                        className='mb-2'
+                                        style={{
+                                            borderColor: '#e4e4e4',
+                                            borderBottomWidth: StyleSheet.hairlineWidth,
+                                        }}
+                                    />
+                                    {
+                                        data.orders.map((order, index) => {
+                                            return <><View className='flex flex-row w-full'>
+                                                <View className='w-2/12 p-3'>
+                                                    <Text selectable >{"type" || "-"}</Text>
+                                                </View>
+                                                <View className='w-2/12 p-3'>
+                                                    <Text selectable >{moment(new Date(order.createdAt)).format("DD-MM-YYYY hh:mm:ss A") || "-"}</Text>
+                                                </View>
+                                                <View className='w-2/12 p-3'>
+                                                    <Text selectable >{order.units || "-"}</Text>
+                                                </View>
+                                                <View className='w-2/12 p-3'>
+                                                    <Text selectable >{order.nav || "-"}</Text>
+                                                </View>
+                                                <View className='w-2/12 p-3'>
+                                                    <Text selectable >{order.amount || "-"}</Text>
+                                                </View>
+                                            </View>
+                                                <View
+                                                    className='mb-2'
+                                                    style={{
+                                                        borderColor: '#e4e4e4',
+                                                        borderBottomWidth: StyleSheet.hairlineWidth,
+                                                    }}
+                                                />
+                                            </>
+                                        })
+                                    }
+                                </View>
+                            </View>
+
+                            <View className="flex flex-col m-4">
+                                <View className='flex flex-row justify-start'>
+                                    <Text className='font-bold text-base'>Transactions</Text>
+                                </View>
+                                <View className='flex flex-col mt-3'>
+                                    <View className='flex flex-row bg-[#e3e3e3] rounded-t'>
+                                        <View className='w-2/12 py-[9px] px-[9px]'>
+                                            <Text selectable className='font-semibold'>Type</Text>
+                                        </View>
+                                        <View className='w-2/12 py-[9px] px-[9px]'>
+                                            <Text selectable className='font-semibold'>Process Date</Text>
+                                        </View>
+                                        <View className='w-2/12 py-[9px] px-[9px]'>
+                                            <Text selectable className='font-semibold'>NAV</Text>
+                                        </View>
+                                        <View className='w-2/12 py-[9px] px-[9px]'>
+                                            <Text selectable className='font-semibold'>Amount</Text>
+                                        </View>
+                                        <View className='w-2/12 py-[9px] px-[9px]'>
+                                            <Text selectable className='font-semibold'>Status</Text>
+                                        </View>
+                                    </View>
+                                    <View
+                                        className='mb-2'
+                                        style={{
+                                            borderColor: '#e4e4e4',
+                                            borderBottomWidth: StyleSheet.hairlineWidth,
+                                        }}
+                                    />
+                                    {
+                                        data.orders.map((order, index) => {
+                                            return <><View className='flex flex-row w-full'>
+                                                <View className='w-2/12 p-3'>
+                                                    <Text selectable >{"type" || "-"}</Text>
+                                                </View>
+                                                <View className='w-2/12 p-3'>
+                                                    <Text selectable >{moment(new Date(order.createdAt)).format("DD-MM-YYYY hh:mm:ss A") || "-"}</Text>
+                                                </View>
+                                                <View className='w-2/12 p-3'>
+                                                    <Text selectable >{order.units || "-"}</Text>
+                                                </View>
+                                                <View className='w-2/12 p-3'>
+                                                    <Text selectable >{order.nav || "-"}</Text>
+                                                </View>
+                                                <View className='w-2/12 p-3'>
+                                                    <Text selectable >{order.amount || "-"}</Text>
+                                                </View>
+                                            </View>
+                                                <View
+                                                    className='mb-2'
+                                                    style={{
+                                                        borderColor: '#e4e4e4',
+                                                        borderBottomWidth: StyleSheet.hairlineWidth,
+                                                    }}
+                                                />
+                                            </>
+                                        })
+                                    }
+                                </View>
+                            </View>
+
+                            <View className="flex flex-col m-4">
+                                <View className='flex flex-row justify-start'>
+                                    <Text className='font-bold text-base'>Holdings</Text>
+                                </View>
+                                <View className='flex flex-col mt-3'>
+                                    <View className='flex flex-row bg-[#e3e3e3] rounded-t'>
+                                        <View className='w-2/12 py-[9px] px-[9px]'>
+                                            <Text selectable className='font-semibold'>Mutual Fund</Text>
+                                        </View>
+                                        <View className='w-2/12 py-[9px] px-[9px]'>
+                                            <Text selectable className='font-semibold'>Units</Text>
+                                        </View>
+                                        <View className='w-2/12 py-[9px] px-[9px]'>
+                                            <Text selectable className='font-semibold'>Avg Nav</Text>
+                                        </View>
+                                        <View className='w-2/12 py-[9px] px-[9px]'>
+                                            <Text selectable className='font-semibold'>Current Value</Text>
+                                        </View>
+                                        <View className='w-2/12 py-[9px] px-[9px]'>
+                                            <Text selectable className='font-semibold'>Invested Value</Text>
+                                        </View>
+                                    </View>
+                                    <View
+                                        className='mb-2'
+                                        style={{
+                                            borderColor: '#e4e4e4',
+                                            borderBottomWidth: StyleSheet.hairlineWidth,
+                                        }}
+                                    />
+                                    {
+                                        data.holdings.map((holding, index) => {
+                                            return <><View className='flex flex-row w-full'>
+                                                <View className='w-2/12 p-3'>
+                                                    <Text selectable >{holding.mutualfund.name || "-"}</Text>
+                                                </View>
+                                                <View className='w-2/12 p-3'>
+                                                    <Text selectable >{holding.units || "-"}</Text>
+                                                </View>
+                                                <View className='w-2/12 p-3'>
+                                                    <Text selectable >{holding.avgNav || "-"}</Text>
+                                                </View>
+                                                <View className='w-2/12 p-3'>
+                                                    <Text selectable >{holding.currentValue || "-"}</Text>
+                                                </View>
+                                                <View className='w-2/12 p-3'>
+                                                    <Text selectable >{holding.investedValue || "-"}</Text>
+                                                </View>
+                                            </View>
+                                                <View
+                                                    className='mb-2'
+                                                    style={{
+                                                        borderColor: '#e4e4e4',
+                                                        borderBottomWidth: StyleSheet.hairlineWidth,
+                                                    }}
+                                                />
+                                            </>
+                                        })
+                                    }
+                                </View>
+                            </View>
                         </View>
                     </View>
 

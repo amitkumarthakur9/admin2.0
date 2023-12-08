@@ -141,13 +141,13 @@ export const AUMRows = ({ data, schema }) => {
 
                         </View>
                         <View className='flex flex-row items-center w-1/12 justify-center'>
-                            <Text>{client.mutualfund.nav}</Text>
+                            <Text>{client.mutualfund.nav || "-"}</Text>
                         </View>
                         <View className='flex flex-row items-center w-1/12 justify-center'>
                             <Text>{client.units}</Text>
                         </View>
                         <View className='flex flex-row items-center w-1/12 justify-center'>
-                            <Text>{client.units * (client.currentValue / client.mutualfund.nav)}</Text>
+                            <Text>{client.units && client.currentValue && client.mutualfund.nav ? (client.units * (client.currentValue / client.mutualfund.nav)) : '-'}</Text>
                         </View>
                         <View className='flex flex-row items-center w-1/12  justify-center'>
                             <Text>{client.currentValue}</Text>

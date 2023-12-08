@@ -156,7 +156,7 @@ export const SIPRows = ({ data, schema }: { data: SIPReportItems[], schema: any 
 
                             <View className="pl-12 lg:pl-0 hidden lg:flex flex-row justify-start w-3/12">
                                 <Text>
-                                    {order.transactions[0]?.folio?.folioNumber || "-"}
+                                    {order.transactions[0]?.folio?.folioNumber}
                                 </Text>
                             </View>
 
@@ -177,10 +177,10 @@ export const SIPRows = ({ data, schema }: { data: SIPReportItems[], schema: any 
                                     {/* <View className='flex flex-row items-start'>
                                     </View> */}
                                     <View className='flex flex-col items-center'>
-                                        {/* <Text selectable className='text-black text-xs'>{"Folio no: 9996274/86"}</Text>
+                                        <Text selectable className='text-black text-xs'>{"Folio no: 9996274/86"}</Text>
 
                                         <Text selectable className='text-red-500 text-xs'>{"Cancelled At"}</Text>
-                                        <Text selectable className='text-black text-xs'>{"29/04/2021  12:00:10 AM"}</Text> */}
+                                        <Text selectable className='text-black text-xs'>{"29/04/2021  12:00:10 AM"}</Text>
 
                                     </View>
                                 </View>

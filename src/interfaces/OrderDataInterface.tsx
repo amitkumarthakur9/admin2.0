@@ -47,6 +47,7 @@ export interface Order {
         fundhouse: {
             id: number;
             name: string;
+            logoUrl: string;
             rta: any; // You may want to replace 'any' with the appropriate type if known
         };
         mutualfundSubcategory: {

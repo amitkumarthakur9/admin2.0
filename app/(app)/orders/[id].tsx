@@ -5,7 +5,8 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { useEffect, useState } from 'react';
 import RemoteApi from '../../../src/services/RemoteApi';
 import { Order, OrderDataInterface } from '../../../src/interfaces/OrderDataInterface';
-import { BorderShadow } from '../../../src/components/Styles/Shadow';
+import { BorderShadow, HeaderShadow } from '../../../src/components/Styles/Shadow';
+import moment from 'moment';
 
 export default function OrderDetail() {
     const { id } = useLocalSearchParams();
@@ -36,6 +37,17 @@ export default function OrderDetail() {
         } else {
             return '';
         }
+    }
+
+    const getColorCode = (status: string) => {
+        let color = "#ece09d";
+        if (status == "Cancelled" || status == "Failed") {
+            color = "#ffd5d5";
+        } else if (status == "Success") {
+            color = "#afc9a2";
+        }
+
+        return color
     }
 
     return (<>
@@ -122,14 +134,14 @@ export default function OrderDetail() {
                                 </View>
                             </View>
 
-                            <View className="flex flex-col m-4 items-center justify-between rounded" style={BorderShadow}>
+                            <View className="flex flex-col m-4 items-center justify-between rounded" style={HeaderShadow}>
                                 <View className='flex flex-col w-full p-2'>
                                     <View className='flex flex-row items-center w-full flex-wrap '>
                                         <View className={"flex flex-row items-center justify-start w-3/12"} >
                                             <Image
                                                 className="mr-2"
-                                                style={{ width: 40, height: 40 }}
-                                                source={{ uri: "https://www.fundexpert.in/cdn/logos-neo/icici.png" }}
+                                                style={{ width: 40, height: 40, objectFit: "contain" }}
+                                                source={{ uri: data.mutualFund.fundhouse.logoUrl }}
                                             />
                                             <View className={'flex flex-col justify-end items-start'} >
                                                 <Text selectable className='text-black font-semibold break-all text-sm flex-wrap' >{data.mutualFund.name}</Text>
@@ -147,10 +159,18 @@ export default function OrderDetail() {
                                     <View className='flex flex-row items-center w-full flex-wrap mt-4 p-3'>
                                         <View className={"flex flex-row items-center w-3/12 mb-[30px]"} >
                                             <View className='flex flex-col'>
-                                                <Text selectable className='font-medium'>{data.orderType.name == "SIP" ? `${data.startDate} - ${data.endDate}` : data.createdAt}</Text>
-                                                <Text className='text-[10px] text-slate-500' selectable>{data.orderType.name == "SIP" ? `Start Date - End Date` : "Process Date"}</Text>
+                                                <Text selectable className='font-medium'>{data.orderType.name == "SIP" ? `${data.startDate} to ${data.endDate}` : moment(data.createdAt).format('DD-MM-YYYY hh:mm:ss A')}</Text>
+                                                <Text className='text-[10px] text-slate-500' selectable>{data.orderType.name == "SIP" ? `Start Date - End Date` : "Initiated Date"}</Text>
                                             </View>
                                         </View>
+                                        {
+                                            data.orderType.name != "SIP" && <View className={"flex flex-row items-center w-3/12 mb-[30px]"} >
+                                                <View className='flex flex-col'>
+                                                    <Text selectable className='font-medium'>{data.startDate || "-"}</Text>
+                                                    <Text className='text-[10px] text-slate-500' selectable>{"Processed Date"}</Text>
+                                                </View>
+                                            </View>
+                                        }
                                         <View className={"flex flex-row items-center w-3/12 mb-[30px]"} >
                                             <View className='flex flex-col'>
                                                 <Text selectable className='font-medium'>{data.units || "-"}</Text>
@@ -190,7 +210,7 @@ export default function OrderDetail() {
                                         </View>
                                     </View>
                                 </View>
-                                <View className='flex flex-col bg-[#e3e3e3] w-full rounded-b'>
+                                <View className='flex flex-col w-full rounded-b' style={{ backgroundColor: getColorCode(data.orderStatus.name) }}>
                                     <View className='flex flex-row items-center w-full flex-wrap py-3 px-2'>
                                         <Text selectable className='font-normal text-[10px]'>{data.remark}</Text>
                                     </View>

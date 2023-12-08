@@ -54,6 +54,7 @@ interface SIPReportItems {
     totalNoOfInstallments: number | null;
     transactions: Transaction[];
     mutualfund: MutualFund;
+    clientId: string;
 }
 
 interface SIPResponseInterface {
