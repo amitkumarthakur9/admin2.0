@@ -38,10 +38,17 @@ interface Distributor {
     distributorCompanyId: string;
 }
 
+interface User {
+    id: string;
+    panNumber: string;
+}
+
 interface Account {
+    clientId: string;
     id: string;
     name: string;
     holdings: MutualFundHolding[];
+    user: User;
 }
 
 export interface AUMDetailInterface {
@@ -52,6 +59,7 @@ export interface AUMDetailInterface {
     account: Account;
     distributor: Distributor;
     mutualfund: MutualFund;
+    investedValue: number;
 }
 
 export interface AUMDetailResponseInterface {
