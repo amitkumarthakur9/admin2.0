@@ -67,6 +67,7 @@ interface Transaction {
     transactionStatus: TransactionStatus;
     transactionType: TransactionType;
     folio?: Folio;
+    createdAt: string;
 }
 
 export interface SIPReportDetail {

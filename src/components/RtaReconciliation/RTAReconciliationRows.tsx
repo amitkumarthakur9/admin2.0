@@ -8,6 +8,7 @@ import { Badge, Popover } from "native-base";
 import { RTAReconcilation } from "../../interfaces/RTAResponseInterface";
 import { DateTime } from "luxon";
 import { RupeeSymbol } from "../../helper/helper";
+import moment from "moment";
 
 export const RTAReconciliationRows = ({ data, schema }) => {
 
@@ -55,7 +56,7 @@ export const RTAReconciliationRows = ({ data, schema }) => {
             </View>
             <View className='flex flex-row w-1/12'>
                 <View className='flex flex-row items-center w-full justify-start w-4/5'>
-                    <Text selectable className='font-semibold'>Created Date</Text>
+                    <Text selectable className='font-semibold'>Payment Date</Text>
                 </View>
             </View>
             <View className='flex flex-row w-1/12'>
@@ -152,7 +153,7 @@ export const RTAReconciliationRows = ({ data, schema }) => {
                         </View>
                         <View className="flex flex-row w-1/12">
                             <Text className="w-10/12" selectable>
-                                {rta.createdAt ? DateTime.fromISO(rta.createdAt, { zone: 'utc' }).toFormat('dd-MM-yyyy HH:mm:ss') : "-"}
+                                {rta.paymentDate ? moment(rta.paymentDate).format('DD-MM-YYYY hh:mm:ss A') : "-"}
                             </Text>
                         </View>
                         <View className="flex flex-row w-1/12">

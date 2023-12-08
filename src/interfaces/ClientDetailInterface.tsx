@@ -222,6 +222,29 @@ interface HoldingsResponse {
     holdings: Holding[];
 }
 
+interface Relationship {
+    id: string;
+    name: string;
+}
+
+interface NomineeInfo {
+    panNumber: null; // Adjust the type based on the actual structure of "panNumber"
+    dob: string;
+    name: string;
+    relationship: Relationship;
+}
+
+interface Nominee {
+    nomineeInfo: NomineeInfo;
+    nomineePercentage: number;
+}
+
+interface DematAccountType {
+    id: number;
+    name: string;
+    bseCode: string;
+}
+
 export interface ClientDetailItem {
     id: string;
     name: string;
@@ -238,6 +261,7 @@ export interface ClientDetailItem {
         accountTypeId: number;
         dpId: string;
         boId: string;
+        dematAccountType: DematAccountType;
     };
     distributorCompanyId: string;
     isActive: boolean;
@@ -249,6 +273,7 @@ export interface ClientDetailItem {
     orders: Order[];
     transactions: Transaction[];
     holdings: Holding[];
+    nominee: Nominee[];
 }
 
 export interface ClientDetailResponse {

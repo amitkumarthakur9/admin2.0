@@ -114,10 +114,13 @@ export default function OrderDetail() {
                             <View className="flex flex-row p-2 mx-4 items-center rounded" style={BorderShadow}>
                                 <View className='flex flex-row items-center p-2'>
                                     <View className='flex flex-col '>
-                                        <Avatar bg="green.500" size={8} source={{
+                                        {/* <Avatar bg="green.500" size={8} source={{
                                             uri: "../../../assets/images/avatar.png"
                                         }}>
-                                        </Avatar>
+                                        </Avatar> */}
+                                        <View className='flex flex-row rounded-full bg-[#e60202] mr-2 h-10 w-10 items-center justify-center flex-wrap'>
+                                            <Text selectable className='text-white'>{getInitials(data.account.name)}</Text>
+                                        </View>
 
                                     </View>
                                     <View className='flex flex-col ml-1'>

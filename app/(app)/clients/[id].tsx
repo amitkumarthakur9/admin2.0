@@ -9,6 +9,7 @@ import { ClientDetailItem, ClientDetailResponse } from '../../../src/interfaces/
 import moment from 'moment';
 import { BorderShadow } from '../../../src/components/Styles/Shadow';
 import { StyleSheet } from 'react-native';
+import { RupeeSymbol } from '../../../src/helper/helper';
 
 export default function ClientDetail() {
     const { id } = useLocalSearchParams();
@@ -94,7 +95,7 @@ export default function ClientDetail() {
 
                             <View className='flex flex-row flex-wrap'>
                                 <View className='flex flex-col w-4/12' >
-                                    <View className='flex flex-col m-2 rounded p-3' style={BorderShadow}>
+                                    <View className='flex flex-col m-2 rounded p-3' style={{ ...BorderShadow, height: 200, overflow: "scroll" }}>
                                         <Text selectable className='text-base mb-4 font-bold'>Contact Details</Text>
 
                                         <View className='flex flex-row mb-1 items-center'>
@@ -114,11 +115,11 @@ export default function ClientDetail() {
                                     </View>
                                 </View>
                                 <View className='flex flex-col w-4/12' >
-                                    <View className='flex flex-col m-2 rounded p-3' style={BorderShadow}>
-                                        <Text selectable className='text-base mb-4 font-bold'>Banks</Text>
+                                    <View className='flex flex-col m-2 rounded' style={{ ...BorderShadow, height: 200, overflow: "scroll" }}>
+                                        <Text selectable className='text-base mb-4 font-bold p-3'>Banks</Text>
                                         {
                                             data.bankAccounts.map((bank, index) => {
-                                                return <View className='flex flex-row items-start'>
+                                                return <View className='flex flex-row items-start bg-[#f9f8f8] p-3 mb-1'>
                                                     <View className='flex flex-col items-start justify-start'>
                                                         <Icon name="bank" size={18} style={{ marginRight: 5, paddingTop: 2, width: 20, textAlign: "center" }} color="black" />
                                                     </View>
@@ -129,13 +130,14 @@ export default function ClientDetail() {
                                                     </View>
 
                                                 </View>
+
                                             })
                                         }
 
                                     </View>
                                 </View>
                                 <View className='flex flex-col w-4/12' >
-                                    <View className='flex flex-col m-2 rounded p-3' style={BorderShadow}>
+                                    <View className='flex flex-col m-2 rounded p-3' style={{ ...BorderShadow, height: 200, overflow: "scroll" }}>
                                         <Text selectable className='text-base mb-4 font-bold'>Profile</Text>
                                         <View className='flex flex-row mb-1 items-center'>
                                             <Icon name="id-badge" size={18} style={{ marginRight: 5, width: 20, textAlign: "center" }} color="black" />
@@ -166,38 +168,45 @@ export default function ClientDetail() {
                                 </View>
 
                                 <View className='flex flex-col w-4/12' >
-                                    <View className='flex flex-col m-2 rounded p-3' style={BorderShadow}>
-                                        <Text selectable className='text-base mb-4 font-bold'>Nominee Details</Text>
+                                    <View className='flex flex-col m-2 rounded' style={{ ...BorderShadow, height: 200, overflow: "scroll" }}>
+                                        <Text selectable className='text-base mb-4 font-bold p-3'>Nominee Details</Text>
+                                        {
+                                            data.nominee.map((nominee, index) => {
+                                                return <View className='flex flex-row items-start bg-[#f9f8f8] p-3 mb-1'>
+                                                    <View className='flex flex-col items-start justify-start'>
+                                                        <Icon name="user" size={18} style={{ marginRight: 5, paddingTop: 2, width: 20, textAlign: "center" }} color="black" />
+                                                    </View>
+                                                    <View className='flex flex-col'>
+                                                        <Text selectable>{nominee.nomineeInfo.name || "-"}</Text>
+                                                        <Text selectable>{nominee.nomineeInfo.relationship.name || "-"}</Text>
+                                                        <Text selectable>{nominee.nomineeInfo.dob ? moment(new Date(nominee.nomineeInfo.dob)).format('DD-MM-YYYY') : "-"}</Text>
+                                                        <Text selectable>{nominee.nomineeInfo.panNumber || "-"}</Text>
+                                                    </View>
 
-                                        <View className='flex flex-row mb-1 items-center'>
-                                            <Icon name="envelope" size={18} style={{ marginRight: 5, width: 20, textAlign: "center" }} color="black" />
-                                            <Text selectable>{"dummy@gmail.com"}</Text>
-                                        </View>
+                                                </View>
 
-                                        <View className='flex flex-row mb-1 items-center'>
-                                            <Icon name="phone" size={18} style={{ marginRight: 5, width: 20, textAlign: "center" }} color="black" />
-                                            <Text selectable>{"0000000000"}</Text>
-                                        </View>
+                                            })
+                                        }
 
-                                        <View className='flex flex-row mb-1 items-center'>
-                                            <Icon name="address-book" size={18} style={{ marginRight: 5, width: 20, textAlign: "center" }} color="black" />
-                                            <Text selectable className=''>{"0000000000"}</Text>
-                                        </View>
                                     </View>
                                 </View>
 
                                 <View className='flex flex-col w-4/12' >
-                                    <View className='flex flex-col m-2 rounded p-3' style={BorderShadow}>
+                                    <View className='flex flex-col m-2 rounded p-3' style={{ ...BorderShadow, height: 200, overflow: "scroll" }}>
                                         <Text selectable className='text-base mb-4 font-bold'>Demat Details</Text>
 
                                         <View className='flex flex-row mb-1 items-center'>
-                                            <Text selectable className='pr-1 font-medium'>BOID:</Text>
+                                            <Text selectable className='pr-1 font-semibold'>BOID:</Text>
                                             <Text selectable>{data.dematAccount.boId}</Text>
                                         </View>
 
                                         <View className='flex flex-row mb-1 items-center'>
-                                            <Text selectable className='pr-1 font-medium'>DPID:</Text>
+                                            <Text selectable className='pr-1 font-semibold'>DPID:</Text>
                                             <Text selectable>{data.dematAccount.dpId}</Text>
+                                        </View>
+                                        <View className='flex flex-row mb-1 items-center'>
+                                            <Text selectable className='pr-1 font-semibold'>Depository Name:</Text>
+                                            <Text selectable>{data.dematAccount.dematAccountType.name}</Text>
                                         </View>
                                     </View>
                                 </View>
@@ -220,6 +229,9 @@ export default function ClientDetail() {
                                             <Text selectable className='font-semibold'>NAV</Text>
                                         </View>
                                         <View className='w-2/12 py-[9px] px-[9px]'>
+                                            <Text selectable className='font-semibold'>Units</Text>
+                                        </View>
+                                        <View className='w-2/12 py-[9px] px-[9px]'>
                                             <Text selectable className='font-semibold'>Amount</Text>
                                         </View>
                                         <View className='w-2/12 py-[9px] px-[9px]'>
@@ -237,19 +249,22 @@ export default function ClientDetail() {
                                         data.orders.map((order, index) => {
                                             return <><View className='flex flex-row w-full'>
                                                 <View className='w-2/12 p-3'>
-                                                    <Text selectable >{"type" || "-"}</Text>
+                                                    <Text selectable >{"-"}</Text>
                                                 </View>
                                                 <View className='w-2/12 p-3'>
                                                     <Text selectable >{moment(new Date(order.createdAt)).format("DD-MM-YYYY hh:mm:ss A") || "-"}</Text>
                                                 </View>
                                                 <View className='w-2/12 p-3'>
-                                                    <Text selectable >{order.units || "-"}</Text>
-                                                </View>
-                                                <View className='w-2/12 p-3'>
                                                     <Text selectable >{order.nav || "-"}</Text>
                                                 </View>
                                                 <View className='w-2/12 p-3'>
-                                                    <Text selectable >{order.amount || "-"}</Text>
+                                                    <Text selectable >{order.units || "-"}</Text>
+                                                </View>
+                                                <View className='w-2/12 p-3'>
+                                                    <Text selectable >{order.amount ? (RupeeSymbol + order.amount) : "-"}</Text>
+                                                </View>
+                                                <View className='w-2/12 p-3'>
+                                                    <Text selectable >{"-"}</Text>
                                                 </View>
                                             </View>
                                                 <View
@@ -272,16 +287,16 @@ export default function ClientDetail() {
                                 <View className='flex flex-col mt-3'>
                                     <View className='flex flex-row bg-[#e3e3e3] rounded-t'>
                                         <View className='w-2/12 py-[9px] px-[9px]'>
-                                            <Text selectable className='font-semibold'>Type</Text>
+                                            <Text selectable className='font-semibold'>Order ID</Text>
                                         </View>
                                         <View className='w-2/12 py-[9px] px-[9px]'>
-                                            <Text selectable className='font-semibold'>Process Date</Text>
+                                            <Text selectable className='font-semibold'>Created Date</Text>
                                         </View>
                                         <View className='w-2/12 py-[9px] px-[9px]'>
-                                            <Text selectable className='font-semibold'>NAV</Text>
+                                            <Text selectable className='font-semibold'>Units</Text>
                                         </View>
                                         <View className='w-2/12 py-[9px] px-[9px]'>
-                                            <Text selectable className='font-semibold'>Amount</Text>
+                                            <Text selectable className='font-semibold'>Nav</Text>
                                         </View>
                                         <View className='w-2/12 py-[9px] px-[9px]'>
                                             <Text selectable className='font-semibold'>Status</Text>
@@ -298,7 +313,7 @@ export default function ClientDetail() {
                                         data.orders.map((order, index) => {
                                             return <><View className='flex flex-row w-full'>
                                                 <View className='w-2/12 p-3'>
-                                                    <Text selectable >{"type" || "-"}</Text>
+                                                    <Text selectable >{order.id}</Text>
                                                 </View>
                                                 <View className='w-2/12 p-3'>
                                                     <Text selectable >{moment(new Date(order.createdAt)).format("DD-MM-YYYY hh:mm:ss A") || "-"}</Text>
@@ -310,7 +325,7 @@ export default function ClientDetail() {
                                                     <Text selectable >{order.nav || "-"}</Text>
                                                 </View>
                                                 <View className='w-2/12 p-3'>
-                                                    <Text selectable >{order.amount || "-"}</Text>
+                                                    <Text selectable >{"-"}</Text>
                                                 </View>
                                             </View>
                                                 <View
@@ -368,10 +383,10 @@ export default function ClientDetail() {
                                                     <Text selectable >{holding.avgNav || "-"}</Text>
                                                 </View>
                                                 <View className='w-2/12 p-3'>
-                                                    <Text selectable >{holding.currentValue || "-"}</Text>
+                                                    <Text selectable >{holding.currentValue ? (RupeeSymbol + holding.currentValue) : "-"}</Text>
                                                 </View>
                                                 <View className='w-2/12 p-3'>
-                                                    <Text selectable >{holding.investedValue || "-"}</Text>
+                                                    <Text selectable >{holding.investedValue ? (RupeeSymbol + holding.investedValue) : "-"}</Text>
                                                 </View>
                                             </View>
                                                 <View

@@ -213,21 +213,25 @@ export default function SIPReportsDetail() {
                                 <View className='flex flex-col mt-3'>
                                     <View className='flex flex-row bg-[#e3e3e3] rounded-t'>
                                         <View className='w-2/12 py-[9px] px-[9px]'>
-                                            <Text selectable className='font-semibold'>Date</Text>
-                                        </View>
-                                        <View className='w-2/12 py-[9px] px-[9px]'>
                                             <Text selectable className='font-semibold'>Type</Text>
                                         </View>
+                                        <View className='w-2/12 py-[9px] px-[9px]'>
+                                            <Text selectable className='font-semibold'>Payment Date</Text>
+                                        </View>
+                                        <View className='w-2/12 py-[9px] px-[9px]'>
+                                            <Text selectable className='font-semibold'>Settlement Date</Text>
+                                        </View>
+
                                         <View className='w-2/12 py-[9px] px-[9px]'>
                                             <Text selectable className='font-semibold'>Units</Text>
                                         </View>
                                         <View className='w-2/12 py-[9px] px-[9px]'>
                                             <Text selectable className='font-semibold'>NAV</Text>
                                         </View>
-                                        <View className='w-2/12 py-[9px] px-[9px]'>
+                                        <View className='w-1/12 py-[9px] px-[9px]'>
                                             <Text selectable className='font-semibold'>Amount</Text>
                                         </View>
-                                        <View className='w-2/12 py-[9px] px-[9px]'>
+                                        <View className='w-1/12 py-[9px] px-[9px]'>
                                             <Text selectable className='font-semibold'>Status</Text>
                                         </View>
                                     </View>
@@ -242,21 +246,25 @@ export default function SIPReportsDetail() {
                                         data?.transactions?.map((transaction, index) => {
                                             return <><View className='flex flex-row w-full'>
                                                 <View className='w-2/12 p-3'>
-                                                    <Text selectable >{transaction?.paymentDate || "-"}</Text>
-                                                </View>
-                                                <View className='w-2/12 p-3'>
                                                     <Text selectable >{transaction?.transactionType?.name || "-"}</Text>
                                                 </View>
+                                                <View className='w-2/12 p-3'>
+                                                    <Text selectable >{transaction?.paymentDate ? moment(new Date(transaction?.paymentDate)).format('DD-MM-YYYY hh:mm:ss A') : "-"}</Text>
+                                                </View>
+                                                <View className='w-2/12 p-3'>
+                                                    <Text selectable >{transaction?.settlementDate ? moment(new Date(transaction?.settlementDate)).format('DD-MM-YYYY hh:mm:ss A') : "-"}</Text>
+                                                </View>
+
                                                 <View className='w-2/12 p-3'>
                                                     <Text selectable >{transaction?.units || "-"}</Text>
                                                 </View>
                                                 <View className='w-2/12 p-3'>
                                                     <Text selectable >{transaction?.nav || "-"}</Text>
                                                 </View>
-                                                <View className='w-2/12 p-3'>
+                                                <View className='w-1/12 p-3'>
                                                     <Text selectable >{transaction?.amount ? (RupeeSymbol + transaction?.amount) : "-"}</Text>
                                                 </View>
-                                                <View className='w-2/12 p-3'>
+                                                <View className='w-1/12 p-3'>
                                                     <Text selectable >{transaction?.transactionStatus?.name || "-"}</Text>
                                                 </View>
                                             </View>

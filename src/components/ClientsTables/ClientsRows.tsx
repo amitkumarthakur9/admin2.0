@@ -100,11 +100,11 @@ export const ClientsRows = ({ data, schema }) => {
                         </View>
 
                         <View className='flex flex-row items-center w-2/12 '>
-                            <Text selectable className='text-[#686868] font-semibold'>{client.isActive ? "True" : 'False'}</Text>
+                            <Text selectable className='text-[#686868] font-semibold'>{client.isActive ? "Active" : 'Inactive'}</Text>
                         </View>
 
                         <View className='flex flex-row items-center justify-between w-2/12'>
-                            <Text selectable className='text-black font-bold text-center'>{client.dematAccount.dpId}</Text>
+                            <Text selectable className='text-black font-bold text-center'>{"-"}</Text>
                         </View>
                         <View className='flex flex-row items-center justify-between w-1/12'>
                             <Text selectable className='text-black font-bold text-center'>{client?.users[0]?.kycStatus.name || "-"}</Text>

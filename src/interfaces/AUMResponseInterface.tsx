@@ -31,11 +31,11 @@ interface Fundhouse {
 interface MutualFund {
     id: string;
     name: string;
-    fundhouse: Fundhouse;
-    mutualfundSubcategory: MutualFundSubcategory;
-    bseDematSchemeCode: any; // You can replace 'any' with the actual type if available
-    rtaCode: string;
-    nav: number;
+    fundhouse?: Fundhouse;
+    mutualfundSubcategory?: MutualFundSubcategory;
+    bseDematSchemeCode?: any; // You can replace 'any' with the actual type if available
+    rtaCode?: string;
+    nav?: number;
 }
 
 interface AUMDataItem {
@@ -45,7 +45,7 @@ interface AUMDataItem {
     investedValue: number;
     units: number;
     account: Account;
-    mutualfund: MutualFund;
+    mutualfund?: MutualFund;
 }
 
 interface AUMResponseInterface {

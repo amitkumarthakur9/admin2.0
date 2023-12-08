@@ -115,10 +115,13 @@ export default function AUMDetail() {
                             <View className="flex flex-row p-2 mx-4 items-center rounded" style={BorderShadow}>
                                 <View className='flex flex-row items-center p-2'>
                                     <View className='flex flex-col '>
-                                        <Avatar bg="green.500" size={8} source={{
+                                        {/* <Avatar bg="green.500" size={8} source={{
                                             uri: "../../../assets/images/avatar.png"
                                         }}>
-                                        </Avatar>
+                                        </Avatar> */}
+                                        <View className='flex flex-row rounded-full bg-[#e60202] mr-2 h-10 w-10 items-center justify-center flex-wrap'>
+                                            <Text selectable className='text-white'>{getInitials(data.account.name)}</Text>
+                                        </View>
 
                                     </View>
                                     <View className='flex flex-col ml-1'>
@@ -137,23 +140,23 @@ export default function AUMDetail() {
                             </View>
 
                             <View className="flex flex-col m-4 items-center justify-between rounded" style={HeaderShadow}>
-                                <View className='flex flex-col w-full p-2'>
+                                <View className='flex flex-col w-full p-3'>
                                     <View className='flex flex-row items-center w-full flex-wrap '>
                                         <View className={"flex flex-row items-center justify-start w-3/12"} >
                                             <Image
                                                 className="mr-2"
                                                 style={{ width: 40, height: 40, objectFit: "contain" }}
-                                                source={{ uri: data.mutualfund.fundhouse.logoUrl }}
+                                                source={{ uri: data.mutualfund?.fundhouse?.logoUrl }}
                                             />
                                             <View className={'flex flex-col justify-end items-start'} >
-                                                <Text selectable className='text-black font-semibold break-all text-sm flex-wrap' >{data.mutualfund.name}</Text>
+                                                <Text selectable className='text-black font-semibold break-all text-sm flex-wrap' >{data?.mutualfund?.name || "-"}</Text>
 
                                                 <View className='flex flex-row items-center flex-wrap'>
-                                                    <Text selectable className=' text-blacktext-xs'>{data.mutualfund.mutualfundSubcategory.mutualfundCategory.name}</Text>
+                                                    <Text selectable className=' text-blacktext-xs'>{data?.mutualfund?.mutualfundSubcategory?.mutualfundCategory?.name || "-"}</Text>
                                                     <View className='mx-2'>
                                                         <Icon name="circle" style={{ fontWeight: "100" }} size={8} color="grey" />
                                                     </View>
-                                                    <Text selectable className='text-black text-xs'>{data.mutualfund.mutualfundSubcategory.name}</Text>
+                                                    <Text selectable className='text-black text-xs'>{data?.mutualfund?.mutualfundSubcategory?.name || "-"}</Text>
                                                 </View>
                                             </View>
                                         </View>
