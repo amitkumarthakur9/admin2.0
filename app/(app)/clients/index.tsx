@@ -1,23 +1,10 @@
-import { Platform, StyleProp, TextStyle, View, ViewStyle } from 'react-native';
+import { Platform, ScrollView, StyleProp, TextStyle, View, ViewStyle } from 'react-native';
 import ClientDataTable from '../../../src/components/ClientsTables/ClientsDataTable';
 import { useNavigation } from 'expo-router';
 
 export default function ClientsScreen() {
-    // In component
 
-
-
-
-    let data = {
-        customer_name: "KASHINATH NARAYAN MORE",
-        client_code: "ZI3G3",
-        active_type: "Demat",
-        pan: "AAACK3552A",
-        kra_status: "Verified",
-        client_doi: "10/02/2017 12:00:10 AM",
-    }
-
-    return <View className='' style={{ backgroundColor: "white", height: '100%', overflow: "scroll" }}>
+    return <ScrollView className='' style={{ backgroundColor: "white", height: '100%', overflow: "scroll" }}>
         <ClientDataTable />
-    </View>;
+    </ScrollView>;
 }

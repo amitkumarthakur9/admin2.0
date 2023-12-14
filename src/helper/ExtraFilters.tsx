@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, Switch, } from 'react-native';
 import { Select, Input } from "native-base";
-import DatePickerComponent from '../components/CustomDatePicker/DatePicker';
 // import Icon from 'react-native-vector-icons/MaterialIcons'
 import DropdownComponent from 'react-native-element-dropdown/lib/typescript/components/Dropdown';
 // import DropdownMenu from 'react-native-dropdown-listpicker';
@@ -27,15 +26,15 @@ const FilterComponent = ({ filter, onFilterChange, filterValues, removeFilter })
 
     onFilterChange(key, initialFilterValue?.value, operatorValue);
     initialFilterValue = filterValues.find((f) => f.key === key);
-    console.log('initialFilterValue', initialFilterValue);
+    // console.log('initialFilterValue', initialFilterValue);
 
   };
 
   const handleFilterChange = (newValue) => {
-    console.log('value', newValue);
+    // console.log('value', newValue);
 
     onFilterChange(key, valueType(newValue), operator);
-    console.log(key, valueType(newValue), operator);
+    // console.log(key, valueType(newValue), operator);
 
     initialFilterValue = filterValues.find((f) => f.key === key);
     // console.log(initialFilterValue);
@@ -93,8 +92,9 @@ const FilterComponent = ({ filter, onFilterChange, filterValues, removeFilter })
           <Select
             key={initialFilterValue}
             width={140}
-            p={3}
-            ml="2"
+            // p={3}
+            className='h-[40px]'
+            ml="1"
             accessibilityLabel={title}
             placeholder={title}
             selectedValue={initialFilterValue?.value}

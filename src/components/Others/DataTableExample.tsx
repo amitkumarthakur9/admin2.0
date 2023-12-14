@@ -40,7 +40,7 @@ const DataTableExample: React.FC<DataTableExampleProps> = ({ data = [] }) => {
     const updateScreenDimensions = () => {
       const { width, height } = Dimensions.get('window');
       setScreenDimensions({ width, height });
-      console.log('screenDimensions', { width, height });
+      // console.log('screenDimensions', { width, height });
     };
     // 
 

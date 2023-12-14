@@ -73,9 +73,9 @@ export const SIPRows = ({ data, schema }: { data: SIPReportItems[], schema: any 
                         <View className='flex sm:flex-col md:flex-col lg:flex-row w-full md:w-8/12 lg:w-6/12'>
                             <View className='flex flex-row md:flex-row lg:flex-row items-center w-full lg:w-5/12 justify-between'>
                                 <View className='flex flex-row items-center justify-start w-10/12 lg:w-full'>
-                                    <View className='flex flex-row rounded-full bg-[#e60202] mr-2 h-10 w-10 items-center justify-center'>
+                                    <Pressable onPress={() => router.push(`/clients/${order.account.id}`)} className='flex flex-row rounded-full bg-[#e60202] mr-2 h-10 w-10 items-center justify-center'>
                                         <Text selectable className='text-white'>{getInitials(order.account.name)}</Text>
-                                    </View>
+                                    </Pressable>
                                     <View className='flex flex-col'>
                                         <View className='flex flex-row items-center text-black font-semibold max-w-[240px] lg:max-w-[300px] break-all'>
                                             <Text selectable className='text-black font-semibold max-w-[240px] lg:max-w-[300px] break-all'>{order.account.name}&nbsp;</Text>
@@ -266,7 +266,7 @@ export const SIPRows = ({ data, schema }: { data: SIPReportItems[], schema: any 
                                     <Text selectable className='text-white text-start md:text-center text-xs w-10/12'>View</Text>
                                 </Link> */}
                                 <Pressable
-                                    onPress={() => { history.pushState(null, "", "sip-reports"), router.push(`sip-reports/${order.id}`) }}
+                                    onPress={() => router.push(`sip-reports/${order.id}`)}
                                     className='rounded-full border-[0.4px] flex flex-row items-center justify-center bg-black w-8/12 h-6'>
                                     <Text selectable className='text-white text-center text-xs w-10/12'>View</Text>
                                 </Pressable>

@@ -1,32 +1,36 @@
-import { useState } from "react";
-import { Dimensions, TouchableOpacity, View } from "react-native";
+import { memo, useState } from "react";
+import { Dimensions, Image, TouchableOpacity, View, useWindowDimensions } from "react-native";
 import { Avatar, TextInput, TouchableRipple } from "react-native-paper";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useSession } from "../../services/ctx";
 import { Box, Menu, Pressable } from "native-base";
 
-export default function TopHeader({ navigation }) {
+const TopHeader = ({ navigation }) => {
     const [text, setText] = useState("");
     const { signOut } = useSession();
+    const { height, width } = useWindowDimensions();
 
     return (
-        <View className="bg-white h-14 flex flex-row justify-between items-center px-4">
-            <View className="flex flex-row items-center">
+        <View className="bg-white h-[60px] lg:h-14 flex flex-row justify-between items-center px-4" style={{ elevation: 1 }}>
+            <View className="flex flex-row items-center w-4/12 justify-start ">
                 {
-                    Dimensions.get("window").width < 786 && <TouchableOpacity className="mr-4">
+                    width < 830 && <TouchableOpacity className="mr-4">
                         <Icon size={18} name={"bars"} onPress={navigation.toggleDrawer} />
                     </TouchableOpacity>
                 }
-                {/* <Icon name="search" size={18} color="black" /> */}
-                {/* <TextInput
-                    className="bg-white"
-                    label="Type"
-                    value={text}
-                    // keyboardType={KeyboardType}
-                    onChangeText={text => setText(text)}
-                /> */}
             </View>
-            <View className="flex flex-row items-center">
+            {
+                width < 830 && <View className="flex flex-row w-4/12 items-center justify-center ">
+                    <TouchableOpacity className="">
+                        <Image
+                            source={require("../../../assets/images/kotak.png")}
+                            style={{ width: 100, height: 40 }}
+                        />
+                    </TouchableOpacity>
+
+                </View>
+            }
+            <View className="flex flex-row items-center w-4/12 justify-end ">
 
                 {/* <Box w="90%" alignItems="center"> */}
                 <Menu w="190" placement={"bottom left"} trigger={triggerProps => {
@@ -39,7 +43,7 @@ export default function TopHeader({ navigation }) {
                 {/* </Box> */}
                 <TouchableRipple
                     rippleColor="rgba(0, 0, 0, .32)"
-                    className='flex flex-row justify-start ml-3'
+                    className='flex flex-row justify-start ml-2'
                     onPress={() => {
                         signOut();
                     }}
@@ -54,3 +58,5 @@ export default function TopHeader({ navigation }) {
         </View>
     )
 }
+
+export default memo(TopHeader)

@@ -54,8 +54,8 @@ export const Pagination = ({ currentPageNumber, totalPages, setCurrentPageNumber
         getDataList()
     }, [currentPageNumber, itemsPerPage])
 
-    return <View className='flex flex-row items-center mt-[20px] mb-[80px] z-[-1] mx-2'>
-        <View className="w-2/12">
+    return <View className='flex flex-row items-center mt-[20px] mb-[80px] z-[-1] mx-2 flex-wrap'>
+        <View className="flex flex-row w-full lg:w-2/12 justify-center">
             <Box maxW="100">
                 <Select
                     onValueChange={itemValue => setItemsPerPage(itemValue)}
@@ -78,18 +78,18 @@ export const Pagination = ({ currentPageNumber, totalPages, setCurrentPageNumber
                 </Select>
             </Box>
         </View>
-        <View className='w-8/12 items-center flex flex-row justify-center'>
+        <View className='w-full lg:w-8/12 items-center flex flex-row justify-center mt-4 lg:mt-0 flex-wrap'>
             <View>
-                <Pressable className='px-3 py-2' onPress={handlePrevPage}>
+                <Pressable className='px-3 py-2 mt-1' onPress={handlePrevPage}>
                     <Icon name="angle-left" size={18} color={currentPageNumber == 1 ? "#dfdcdc" : "black"} />
                 </Pressable>
             </View>
 
             {generatePagesToShow(currentPageNumber).map((page, index) => (
-                <View key={index} className='rounded-md mr-2'>
+                <View key={index} className='rounded-md mr-2 mt-1'>
                     <Pressable
                         onPress={() => setCurrentPageNumber(page == "..." ? currentPageNumber : page)}
-                        className={"rounded-md px-3 py-2" + (currentPageNumber === page ? " bg-black" : " bg-slate-200")}
+                        className={"rounded-md px-3 py-2 border-[0.5px] border-[#bdbdbd]" + (currentPageNumber === page ? " bg-black" : " bg-white")}
 
                     >
                         <Text selectable className={currentPageNumber === page ? "text-white" : "text-black"}>{page}</Text>
@@ -98,7 +98,7 @@ export const Pagination = ({ currentPageNumber, totalPages, setCurrentPageNumber
             ))}
 
             <View>
-                <Pressable className='px-3 py-2' onPress={handleNextPage} >
+                <Pressable className='px-3 py-2 mt-1' onPress={handleNextPage} >
                     <Icon name="angle-right" size={18} color={currentPageNumber == totalPages ? "#dfdcdc" : "black"} />
                 </Pressable>
             </View>

@@ -13,7 +13,7 @@ const ModalTabs = ({ label }) => {
     const [tab, setTab] = React.useState<string>("info");
 
     const handleTabClick = (tab: string) => {
-        console.log(tab);
+        // console.log(tab);
 
         setTab(tab)
     }

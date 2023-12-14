@@ -87,9 +87,9 @@ export const FolioRows = ({ data, schema }) => {
                         <View className='flex flex-row w-full w-2/12 flex-wrap'>
                             <View className='flex flex-row items-center w-full justify-between flex-wrap'>
                                 <View className='flex flex-row items-center justify-start w-full flex-wrap'>
-                                    <View className='flex flex-row rounded-full bg-[#e60202] mr-2 h-10 w-10 items-center justify-center flex-wrap'>
+                                    <Pressable onPress={() => router.push(`/clients/${client.id}`)} className='flex flex-row rounded-full bg-[#e60202] mr-2 h-10 w-10 items-center justify-center flex-wrap'>
                                         <Text selectable className='text-white'>{getInitials(client.account.name)}</Text>
-                                    </View>
+                                    </Pressable>
                                     <View className='flex flex-col flex-wrap w-9/12'>
                                         <View className='flex flex-row items-center text-black font-semibold flex-wrap w-11/12'>
                                             <Text selectable className='text-black font-semibold break-all'>{client.account.name}&nbsp;</Text>
@@ -163,7 +163,7 @@ export const FolioRows = ({ data, schema }) => {
                                 <Text selectable className='text-white text-start md:text-center text-xs w-10/12'>View</Text>
                             </Link> */}
                             <Pressable
-                                onPress={() => { history.pushState(null, "", "folio"), router.push(`folio/${client.id}`) }}
+                                onPress={() => router.push(`folio/${client.id}`)}
                                 className='rounded-full border-[0.4px] flex flex-row items-center justify-center bg-black w-8/12 h-6'>
                                 <Text selectable className='text-white text-center text-xs w-10/12'>View</Text>
                             </Pressable>

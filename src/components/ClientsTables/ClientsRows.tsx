@@ -6,7 +6,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { ClientInterface } from "../../interfaces/ClientInterface";
 import { Popover } from "native-base";
 import { Link, router } from "expo-router";
-import { getInitials } from "../DateSelector/utils";
+import { getInitials } from "../../helper/helper";
 
 export const ClientsRows = ({ data, schema }) => {
     return <>
@@ -112,7 +112,7 @@ export const ClientsRows = ({ data, schema }) => {
 
                         <View className='flex flex-row items-center w-1/12 justify-center'>
                             <Pressable
-                                onPress={() => { history.pushState(null, "", "clients"), router.push(`clients/${client.id}`) }}
+                                onPress={() => router.push(`clients/${client.id}`)}
                                 // href={{
                                 //     pathname: "/clients/[id]",
                                 //     params: { id: client.id }

@@ -5,9 +5,10 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { useEffect, useState } from 'react';
 import RemoteApi from '../../../src/services/RemoteApi';
 import { Order, OrderDataInterface } from '../../../src/interfaces/OrderDataInterface';
-import { BorderShadow, HeaderShadow } from '../../../src/components/Styles/Shadow';
+import { BorderShadow, BorderShadowPhone, HeaderShadow } from '../../../src/components/Styles/Shadow';
 import moment from 'moment';
 import { RupeeSymbol } from '../../../src/helper/helper';
+import { Platform } from 'react-native';
 import { SIPDetailResponseInterface, SIPReportDetail } from '../../../src/interfaces/SIPDetailInterface';
 
 export default function SIPReportsDetail() {
@@ -112,13 +113,16 @@ export default function SIPReportsDetail() {
 
                                 </View> */}
                             </View>
-                            <View className="flex flex-row p-2 mx-4 items-center rounded" style={BorderShadow}>
+                            <View className="flex flex-row p-2 mx-4 items-center rounded" style={Platform.OS == "web" ? BorderShadow : BorderShadowPhone}>
                                 <View className='flex flex-row items-center p-2'>
                                     <View className='flex flex-col '>
-                                        <Avatar bg="green.500" size={8} source={{
-                                            uri: "/../../../assets/images/avatar.png"
+                                        {/* <Avatar bg="green.500" size={8} source={{
+                                            uri: "../../../assets/images/avatar.png"
                                         }}>
-                                        </Avatar>
+                                        </Avatar> */}
+                                        <View className='flex flex-row rounded-full bg-[#e60202] mr-2 h-10 w-10 items-center justify-center'>
+                                            <Text selectable className='text-white text-center'>{getInitials(data.account.name)}</Text>
+                                        </View>
 
                                     </View>
                                     <View className='flex flex-col ml-1'>
@@ -127,8 +131,8 @@ export default function SIPReportsDetail() {
                                             <Text selectable className=' text-xs'>{data.account.clientId}</Text>
                                             {/* <View className='mx-2'>
                                                 <Icon name="circle" style={{ fontWeight: "100" }} size={8} color="grey" />
-                                            </View> */}
-                                            {/* <Text selectable className=' text-xs'>{data.account.users[0]?.panNumber}</Text> */}
+                                            </View>
+                                            <Text selectable className=' text-xs'>{data.account.user[0]?.panNumber}</Text> */}
                                         </View>
 
                                     </View>
@@ -136,11 +140,12 @@ export default function SIPReportsDetail() {
                                 </View>
                             </View>
 
-                            <View className="flex flex-col m-4 items-center justify-between rounded" style={HeaderShadow}>
+                            <View className="flex flex-col m-4 items-center justify-between rounded" style={Platform.OS == "web" ? BorderShadow : BorderShadowPhone}>
                                 <View className='flex flex-col w-full p-2'>
                                     <View className='flex flex-row items-center w-full flex-wrap '>
-                                        <View className={"flex flex-row items-center justify-start w-3/12"} >
+                                        <View className={"flex flex-row items-center justify-start w-8/12"} >
                                             <Image
+                                                alt='fundHouse'
                                                 className="mr-2"
                                                 style={{ width: 40, height: 40, objectFit: "contain" }}
                                                 source={{ uri: data.mutualfund.fundhouse.logoUrl }}
@@ -160,38 +165,53 @@ export default function SIPReportsDetail() {
                                     </View>
                                     <View className='flex flex-row items-center w-full flex-wrap mt-4 p-3'>
 
-                                        <View className={"flex flex-row items-center w-3/12 mb-[30px]"} >
+                                        <View className={"flex flex-row items-center w-4/12 lg:w-3/12 justify-center lg:justify-start mb-[30px]"} >
                                             <View className='flex flex-col'>
-                                                <Text selectable className='font-medium'>{`${moment(new Date(data.startDate)).format('MM-DD-YYYY')} to ${moment(new Date(data.endDate)).format('MM-DD-YYYY')}`}</Text>
-                                                <Text className='text-[10px] text-slate-500' selectable>Start Date - End Date</Text>
+                                                <Text selectable className='font-medium'>{`${moment(new Date(data.startDate)).format('MM-DD-YYYY')}`}</Text>
+                                                <Text className='text-[10px] text-slate-500' selectable>{`Start Date`}</Text>
                                             </View>
                                         </View>
-                                        <View className={"flex flex-row items-center w-3/12 mb-[30px]"} >
+                                        <View className={"flex flex-row items-center w-4/12 lg:w-3/12 justify-center lg:justify-start mb-[30px]"} >
+                                            <View className='flex flex-col'>
+                                                <Text selectable className='font-medium'>{`${moment(new Date(data.endDate)).format('MM-DD-YYYY')}`}</Text>
+                                                <Text className='text-[10px] text-slate-500' selectable>{`End Date`}</Text>
+                                            </View>
+                                        </View>
+
+
+
+                                        <View className={"flex flex-row items-center w-4/12 lg:w-3/12 justify-center lg:justify-start mb-[30px]"} >
                                             <View className='flex flex-col'>
                                                 <Text selectable className='font-medium'>{data.units || "-"}</Text>
                                                 <Text className='text-[10px] text-slate-500' selectable>{"Units"}</Text>
                                             </View>
                                         </View>
-                                        <View className={"flex flex-row items-center w-3/12 mb-[30px]"} >
+                                        <View className={"flex flex-row items-center w-4/12 lg:w-3/12 justify-center lg:justify-start mb-[30px]"} >
                                             <View className='flex flex-col'>
                                                 <Text selectable className='font-medium'>{"10" || "-"}</Text>
                                                 <Text className='text-[10px] text-slate-500' selectable>{"NAV"}</Text>
                                             </View>
                                         </View>
-                                        <View className={"flex flex-row items-center w-3/12 mb-[30px]"} >
+                                        <View className={"flex flex-row items-center w-4/12 lg:w-3/12 justify-center lg:justify-start mb-[30px]"} >
                                             <View className='flex flex-col'>
                                                 <Text selectable className='font-medium'>{data.orderStatus.name || "-"}</Text>
                                                 <Text className='text-[10px] text-slate-500' selectable>{"Status"}</Text>
                                             </View>
                                         </View>
-                                        <View className={"flex flex-row items-center w-3/12 mb-[30px]"} >
+                                        <View className={"flex flex-row items-center w-4/12 lg:w-3/12 justify-center lg:justify-start mb-[30px]"} >
                                             <View className='flex flex-col'>
                                                 <Text selectable className='font-medium'>{data.amount ? (RupeeSymbol + data.amount.toString()) : "-"}</Text>
                                                 <Text className='text-[10px] text-slate-500' selectable>{"Amount"}</Text>
                                             </View>
                                         </View>
 
-                                        <View className={"flex flex-row items-center w-3/12 mb-[30px]"} >
+                                        {/* <View className={"flex flex-row items-center w-4/12 lg:w-3/12 justify-center lg:justify-start mb-[30px]"} >
+                                            <View className='flex flex-col'>
+                                                <Text selectable className='font-medium'>{data.orderType.name || "-"}</Text>
+                                                <Text className='text-[10px] text-slate-500' selectable>{"Type"}</Text>
+                                            </View>
+                                        </View> */}
+                                        <View className={"flex flex-row items-center w-4/12 lg:w-3/12 justify-center lg:justify-start mb-[30px]"} >
                                             <View className='flex flex-col'>
                                                 <Text selectable className='font-medium'>{data?.transactions.length > 0 && data?.transactions[0].folio?.folioNumber || "-"}</Text>
                                                 <Text className='text-[10px] text-slate-500' selectable>{"Folio No"}</Text>

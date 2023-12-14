@@ -1,19 +1,24 @@
-import { Dimensions, ImageBackground, View, StyleSheet } from 'react-native';
+import { Dimensions, ImageBackground, View, StyleSheet, Platform } from 'react-native';
 import { Link, router, useLocalSearchParams } from 'expo-router';
 import { Avatar, Button, Center, HStack, Heading, Image, Pressable, ScrollView, Spinner, Text } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useEffect, useState } from 'react';
 import RemoteApi from '../../../src/services/RemoteApi';
 import { Order, OrderDataInterface } from '../../../src/interfaces/OrderDataInterface';
-import { BorderShadow, HeaderShadow } from '../../../src/components/Styles/Shadow';
+import { BorderShadow, BorderShadowPhone, HeaderShadow } from '../../../src/components/Styles/Shadow';
 import moment from 'moment';
 import { RupeeSymbol } from '../../../src/helper/helper';
 import { AUMDetailInterface, AUMDetailResponseInterface } from '../../../src/interfaces/AUMDetailResponseInterface';
+import { useWindowDimensions } from 'react-native';
+
 
 export default function AUMDetail() {
     const { id } = useLocalSearchParams();
     const [data, setData] = useState<AUMDetailInterface>()
     const [isLoading, setIsLoading] = useState(true)
+    const { height, width } = useWindowDimensions();
+
+
     useEffect(() => {
         setIsLoading(true)
         async function getOrderDetails() {
@@ -90,12 +95,10 @@ export default function AUMDetail() {
                                     </View>
                                 </View>
                                 <View className='w-6/12 overflow-hidden h-full flex flex-row justify-center'>
-                                    <ImageBackground className='' source={require('../../../assets/images/ChatBc.png')} resizeMode="center" style={{
+                                    <Image className='' source={require('../../../assets/images/ChatBc.png')} style={{
                                         // flex: 1,
-                                        // justifyContent: 'center',
-                                    }}>
-
-                                    </ImageBackground>
+                                        // justifyContent: 'end',
+                                    }} />
                                 </View>
                             </View>
 
@@ -112,17 +115,12 @@ export default function AUMDetail() {
 
                                 </View> */}
                             </View>
-                            <View className="flex flex-row p-2 mx-4 items-center rounded" style={BorderShadow}>
+                            <View className="flex flex-row p-2 mx-2 items-center rounded" style={Platform.OS == "web" ? BorderShadow : BorderShadowPhone}>
                                 <View className='flex flex-row items-center p-2'>
                                     <View className='flex flex-col '>
-                                        {/* <Avatar bg="green.500" size={8} source={{
-                                            uri: "../../../assets/images/avatar.png"
-                                        }}>
-                                        </Avatar> */}
-                                        <View className='flex flex-row rounded-full bg-[#e60202] mr-2 h-10 w-10 items-center justify-center flex-wrap'>
-                                            <Text selectable className='text-white'>{getInitials(data.account.name)}</Text>
+                                        <View className='flex flex-row rounded-full bg-[#e60202] mr-2 h-10 w-10 items-center justify-center'>
+                                            <Text selectable className='text-white text-center'>{getInitials(data.account.name)}</Text>
                                         </View>
-
                                     </View>
                                     <View className='flex flex-col ml-1'>
                                         <Text selectable className='font-bold text-base'>{data.account.name}</Text>
@@ -139,11 +137,12 @@ export default function AUMDetail() {
                                 </View>
                             </View>
 
-                            <View className="flex flex-col m-4 items-center justify-between rounded" style={HeaderShadow}>
-                                <View className='flex flex-col w-full p-3'>
+                            <View className="flex flex-col mx-2 my-4 items-center justify-between rounded" style={Platform.OS == "web" ? BorderShadow : BorderShadowPhone}>
+                                <View className='flex flex-col w-full p-2'>
                                     <View className='flex flex-row items-center w-full flex-wrap '>
-                                        <View className={"flex flex-row items-center justify-start w-3/12"} >
+                                        <View className={"flex flex-row items-center justify-start w-8/12"} >
                                             <Image
+                                                alt='fundHouse'
                                                 className="mr-2"
                                                 style={{ width: 40, height: 40, objectFit: "contain" }}
                                                 source={{ uri: data.mutualfund?.fundhouse?.logoUrl }}
@@ -161,34 +160,20 @@ export default function AUMDetail() {
                                             </View>
                                         </View>
                                     </View>
-                                    <View className='flex flex-row items-center w-full flex-wrap mt-4 p-3'>
-                                        {/* <View className={"flex flex-row items-center w-3/12 mb-[30px]"} >
-                                            <View className='flex flex-col'>
-                                                <Text selectable className='font-medium'>{data.orderType.name == "SIP" ? `${data.startDate} to ${data.endDate}` : moment(data.createdAt).format('DD-MM-YYYY hh:mm:ss A')}</Text>
-                                                <Text className='text-[10px] text-slate-500' selectable>{data.orderType.name == "SIP" ? `Start Date - End Date` : "Initiated Date"}</Text>
-                                            </View>
-                                        </View>
-                                        {
-                                            data.orderType.name != "SIP" && <View className={"flex flex-row items-center w-3/12 mb-[30px]"} >
-                                                <View className='flex flex-col'>
-                                                    <Text selectable className='font-medium'>{data.startDate || "-"}</Text>
-                                                    <Text className='text-[10px] text-slate-500' selectable>{"Processed Date"}</Text>
-                                                </View>
-                                            </View>
-                                        } */}
-                                        <View className={"flex flex-row items-center w-3/12 mb-[30px]"} >
+                                    <View className='flex flex-row items-center justify-start w-full flex-wrap mt-4 p-3'>
+                                        <View className={"flex flex-row items-center justify-center w-4/12 mb-[30px]"} >
                                             <View className='flex flex-col'>
                                                 <Text selectable className='font-medium'>{data.units || "-"}</Text>
                                                 <Text className='text-[10px] text-slate-500' selectable>{"Units"}</Text>
                                             </View>
                                         </View>
-                                        <View className={"flex flex-row items-center w-3/12 mb-[30px]"} >
+                                        <View className={"flex flex-row items-center justify-center w-4/12 mb-[30px]"} >
                                             <View className='flex flex-col'>
                                                 <Text selectable className='font-medium'>{data.currentValue ? (RupeeSymbol + data.currentValue) : "-"}</Text>
                                                 <Text className='text-[10px] text-slate-500' selectable>{"Current Value"}</Text>
                                             </View>
                                         </View>
-                                        <View className={"flex flex-row items-center w-3/12 mb-[30px]"} >
+                                        <View className={"flex flex-row items-center justify-center w-4/12 mb-[30px]"} >
                                             <View className='flex flex-col'>
                                                 <Text selectable className='font-medium'>{data.investedValue ? (RupeeSymbol + data.investedValue) : "-"}</Text>
                                                 <Text className='text-[10px] text-slate-500' selectable>{"Invested Value"}</Text>
@@ -228,28 +213,37 @@ export default function AUMDetail() {
                                 </View> */}
                             </View>
 
-                            {/* <View className="flex flex-col m-4">
+                            <View className="flex flex-col m-4">
                                 <View className='flex flex-row justify-start'>
                                     <Text className='font-bold text-base'>Transactions</Text>
                                 </View>
                                 <View className='flex flex-col mt-3'>
                                     <View className='flex flex-row bg-[#e3e3e3] rounded-t'>
-                                        <View className='w-2/12 py-[9px] px-[9px]'>
-                                            <Text selectable className='font-semibold'>Date</Text>
+                                        <View className='w-[11.11%] py-[9px] px-[9px]'>
+                                            <Text selectable className='font-semibold'>Payment Date</Text>
                                         </View>
-                                        <View className='w-2/12 py-[9px] px-[9px]'>
-                                            <Text selectable className='font-semibold'>Type</Text>
+                                        <View className='w-[11.11%] py-[9px] px-[9px]'>
+                                            <Text selectable className='font-semibold'>Nav Allotment Date</Text>
                                         </View>
-                                        <View className='w-2/12 py-[9px] px-[9px]'>
+                                        <View className='w-[11.11%] py-[9px] px-[9px]'>
+                                            <Text selectable className='font-semibold'>Settlement Date</Text>
+                                        </View>
+                                        <View className='w-[11.11%] py-[9px] px-[9px]'>
+                                            <Text selectable className='font-semibold'>Transaction Type</Text>
+                                        </View>
+                                        <View className='w-[11.11%] py-[9px] px-[9px]'>
+                                            <Text selectable className='font-semibold'>Settlement Type</Text>
+                                        </View>
+                                        <View className='w-[11.11%] py-[9px] px-[9px]'>
                                             <Text selectable className='font-semibold'>Units</Text>
                                         </View>
-                                        <View className='w-2/12 py-[9px] px-[9px]'>
+                                        <View className='w-[11.11%] py-[9px] px-[9px]'>
                                             <Text selectable className='font-semibold'>NAV</Text>
                                         </View>
-                                        <View className='w-2/12 py-[9px] px-[9px]'>
+                                        <View className='w-[11.11%] py-[9px] px-[9px]'>
                                             <Text selectable className='font-semibold'>Amount</Text>
                                         </View>
-                                        <View className='w-2/12 py-[9px] px-[9px]'>
+                                        <View className='w-[11.11%] py-[9px] px-[9px]'>
                                             <Text selectable className='font-semibold'>Status</Text>
                                         </View>
                                     </View>
@@ -263,22 +257,31 @@ export default function AUMDetail() {
                                     {
                                         data.transactions.map((transaction, index) => {
                                             return <><View className='flex flex-row w-full'>
-                                                <View className='w-2/12 p-3'>
+                                                <View className='w-[11.11%] p-3'>
                                                     <Text selectable >{transaction.paymentDate || "-"}</Text>
                                                 </View>
-                                                <View className='w-2/12 p-3'>
+                                                <View className='w-[11.11%] p-3'>
+                                                    <Text selectable >{transaction.navAllotmentDate || "-"}</Text>
+                                                </View>
+                                                <View className='w-[11.11%] p-3'>
+                                                    <Text selectable >{transaction.settlementDate || "-"}</Text>
+                                                </View>
+                                                <View className='w-[11.11%] p-3'>
                                                     <Text selectable >{transaction.transactionType.name || "-"}</Text>
                                                 </View>
-                                                <View className='w-2/12 p-3'>
+                                                <View className='w-[11.11%] p-3'>
+                                                    <Text selectable >{transaction.settlementType || "-"}</Text>
+                                                </View>
+                                                <View className='w-[11.11%] p-3'>
                                                     <Text selectable >{transaction.units || "-"}</Text>
                                                 </View>
-                                                <View className='w-2/12 p-3'>
+                                                <View className='w-[11.11%] p-3'>
                                                     <Text selectable >{transaction.nav || "-"}</Text>
                                                 </View>
-                                                <View className='w-2/12 p-3'>
+                                                <View className='w-[11.11%] p-3'>
                                                     <Text selectable >{transaction.amount ? (RupeeSymbol + transaction.amount) : "-"}</Text>
                                                 </View>
-                                                <View className='w-2/12 p-3'>
+                                                <View className='w-[11.11%] p-3'>
                                                     <Text selectable >{transaction.transactionStatus.name || "-"}</Text>
                                                 </View>
                                             </View>
@@ -293,7 +296,7 @@ export default function AUMDetail() {
                                         })
                                     }
                                 </View>
-                            </View> */}
+                            </View>
                         </View>
                     </View>
 

@@ -22,10 +22,6 @@ import { useSession } from './ctx';
 
 
 const CustomSidebarMenu = (props) => {
-    const BASE_PATH =
-        'https://raw.githubusercontent.com/AboutReact/sampleresource/master/';
-    const proileImage = 'react_logo.png';
-    const { signOut } = useSession();
     return (
         <SafeAreaView style={{ flex: 1, }}>
             {/*Top Large Image */}

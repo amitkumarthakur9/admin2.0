@@ -1,6 +1,6 @@
 // CalendarPicker.js
 
-import React, { useEffect, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import { getAllDatesInMonth, getDaysInMonth, getMonthName, monthNames } from '../../helper/DateUtils';
 import { Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Box, Popover, Button, ChevronLeftIcon, ChevronRightIcon, Pressable, View, Select, CheckIcon } from 'native-base';
@@ -17,8 +17,8 @@ const CalendarPicker = ({ handleFilterChange, value, fromName = "From", toName =
     const [selectedSecondDate, setSelectedSecondDate] = useState(value?.length > 0 ? moment(value[1]).format('YYYY-MM-D') : null);
     const [monthChangeOpened, setMonthChangeOpened] = useState(false);
 
-    console.log('value', value);
-    console.log('allDatesInMonth', allDatesInMonth);
+    // console.log('value', value);
+    // console.log('allDatesInMonth', allDatesInMonth);
 
 
     const handleYearChange = (year) => {
@@ -54,7 +54,7 @@ const CalendarPicker = ({ handleFilterChange, value, fromName = "From", toName =
         let color = ""
 
         if (selectedDate && selectedDate == date) {
-            console.log(selectedDate);
+            // console.log(selectedDate);
             color = "bg-black rounded-l"
         } else if (selectedSecondDate && selectedSecondDate == date) {
             color = "bg-black rounded-r"
@@ -75,7 +75,7 @@ const CalendarPicker = ({ handleFilterChange, value, fromName = "From", toName =
         let color = ""
 
         if (selectedDate && selectedDate == date) {
-            console.log(selectedDate);
+            // console.log(selectedDate);
             color = "text-white"
         } else if (selectedSecondDate && selectedSecondDate == date) {
             color = "text-white"
@@ -99,7 +99,7 @@ const CalendarPicker = ({ handleFilterChange, value, fromName = "From", toName =
             const prevMonthDate = getDaysInMonth(selectedYear, selectedMonth - 1) - firstDayOfMonth + i + 1;
             currentRow.push(
                 <View
-                    className={'w-20 ' + getSelectedColor(`${selectedYear}-${selectedMonth - 1}-${prevMonthDate}`)}
+                    className={'w-[15%] ' + getSelectedColor(`${selectedYear}-${selectedMonth - 1}-${prevMonthDate}`)}
                     key={`prev-${i}`}
                 // onPress={() => handleDateSelect(`${selectedYear}-${selectedMonth - 1}-${prevMonthDate}`)}
                 >
@@ -113,7 +113,7 @@ const CalendarPicker = ({ handleFilterChange, value, fromName = "From", toName =
                 <TouchableOpacity
                     key={date}
                     onPress={() => handleDateSelect(`${selectedYear}-${selectedMonth}-${date}`)}
-                    className={'w-20 ' + getSelectedColor(`${selectedYear}-${selectedMonth}-${date}`)}
+                    className={'w-[15%] ' + getSelectedColor(`${selectedYear}-${selectedMonth}-${date}`)}
                 >
                     <Text className={'p-2 text-center ' + getSelectedFontColor(`${selectedYear}-${selectedMonth}-${date}`)}>
                         {date}
@@ -139,7 +139,7 @@ const CalendarPicker = ({ handleFilterChange, value, fromName = "From", toName =
                 currentRow.push(
                     <View
                         key={`next-${i}`}
-                        className={'w-20 ' + getSelectedColor(`${selectedYear}-${selectedMonth + 1}-${nextMonthDate}`)}
+                        className={'w-[15%] ' + getSelectedColor(`${selectedYear}-${selectedMonth + 1}-${nextMonthDate}`)}
                     // onPress={() => handleDateSelect(`${selectedYear}-${selectedMonth + 1}-${nextMonthDate}`)}
                     >
                         <Text className='text-slate-600 p-2 text-center'>{""}</Text>
@@ -206,8 +206,8 @@ const CalendarPicker = ({ handleFilterChange, value, fromName = "From", toName =
                 </View>
             </TouchableOpacity>
         }}>
-            <Popover.Content accessibilityLabel="Delete Customerd" w="600" h={"xs"}>
-                <Popover.Arrow />
+            <Popover.Content accessibilityLabel="" w="100%" h={"xs"}>
+                {/* <Popover.Arrow /> */}
                 {/* <Popover.CloseButton /> */}
                 {/* <Popover.Header>Delete Customer</Popover.Header> */}
                 <Popover.Body>
@@ -264,7 +264,7 @@ const CalendarPicker = ({ handleFilterChange, value, fromName = "From", toName =
                                 : <View>
                                     <View className='flex flex-row items-center justify-center mb-2'>
                                         {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
-                                            <Text key={day} className='w-20 text-center font-bold'>
+                                            <Text key={day} className='w-[15%] text-center font-bold'>
                                                 {day}
                                             </Text>
                                         ))}
@@ -283,5 +283,4 @@ const CalendarPicker = ({ handleFilterChange, value, fromName = "From", toName =
 };
 
 
-
-export default CalendarPicker 
+export default memo(CalendarPicker)

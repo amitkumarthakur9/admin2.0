@@ -209,6 +209,7 @@ interface Folio {
 }
 
 interface Holding {
+    id: string;
     xirr: number;
     avgNav: number;
     units: number;

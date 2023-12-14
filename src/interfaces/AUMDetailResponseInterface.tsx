@@ -1,69 +1,85 @@
-interface MutualFundHolding {
-    id: string;
-    userId: string;
-    accountId: string;
-    mutualfundDividendTypeId: string;
-    xirr: number;
-    avgNav: number;
-    units: number;
-    currentValue: number;
-    investedValue: number;
-    load: any | null; // Adjust this type based on the actual data
-    loadNote: string | null;
-}
-
-interface MutualFund {
-    id: string;
-    name: string;
-    fundhouse: {
-        id: number;
-        name: string;
-        rta: any | null; // Adjust this type based on the actual data
-        logoUrl: string;
-    };
-    mutualfundSubcategory: {
-        id: number;
-        name: string;
-        mutualfundCategory: {
-            id: number;
-            name: string;
-        };
-    };
-    bseDematSchemeCode: string;
-    rtaCode: string;
-    nav: number;
-}
-
-interface Distributor {
-    distributorCompanyId: string;
-}
-
 interface User {
     id: string;
     panNumber: string;
 }
 
 interface Account {
+    id: string;
     clientId: string;
+    name: string;
+    user: User;
+}
+
+interface Distributor {
+    distributorCompanyId: string;
+}
+
+interface MutualFundCategory {
+    id: number;
+    name: string;
+}
+
+interface MutualFundSubcategory {
+    id: number;
+    name: string;
+    mutualfundCategory: MutualFundCategory;
+}
+
+interface MutualFundHouse {
+    id: number;
+    name: string;
+    rta: any; // You may replace 'any' with the actual type if available
+    logoUrl: string;
+}
+
+interface MutualFund {
     id: string;
     name: string;
-    holdings: MutualFundHolding[];
-    user: User;
+    fundhouse?: MutualFundHouse;
+    mutualfundSubcategory?: MutualFundSubcategory;
+    bseDematSchemeCode?: any; // You may replace 'any' with the actual type if available
+    rtaCode?: string;
+    nav?: number;
+    navAsOnDate: any; // You may replace 'any' with the actual type if available
+}
+
+interface TransactionType {
+    id: number;
+    name: string;
+}
+
+interface TransactionStatus {
+    id: number;
+    name: string;
+}
+
+interface Transaction {
+    amount: number;
+    units: number;
+    transactionType: TransactionType;
+    transactionStatus: TransactionStatus;
+    nav: any; // You may replace 'any' with the actual type if available
+    navAllotmentDate: any; // You may replace 'any' with the actual type if available
+    settlementDate: any; // You may replace 'any' with the actual type if available
+    settlementType: any; // You may replace 'any' with the actual type if available
+    paymentDate: any; // You may replace 'any' with the actual type if available
 }
 
 export interface AUMDetailInterface {
     id: string;
     folioNumber: string;
     currentValue: number;
+    investedValue: number;
     units: number;
     account: Account;
     distributor: Distributor;
     mutualfund: MutualFund;
-    investedValue: number;
+    transactions: Transaction[];
 }
 
 export interface AUMDetailResponseInterface {
     message: string;
-    error: any[];
+    error: any[]; // You may replace 'any' with the actual type if available
     data: AUMDetailInterface;
 }
+

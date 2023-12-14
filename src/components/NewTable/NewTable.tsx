@@ -12,7 +12,7 @@ export const NewTable = () => {
     const [isFocused, setIsFocused] = React.useState(false);
 
     const onChangeSearch = (query) => {
-        console.log(query);
+        // console.log(query);
 
         setSearchQuery(query)
     };

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text, ScrollView, Dimensions, ImageBackground } from 'react-native';
+import { View, useWindowDimensions } from 'react-native';
 import { ActivityIndicator, TouchableRipple } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Link } from 'expo-router';
@@ -12,6 +12,7 @@ import { DynamicFilters } from '../Filters/DynamicFilters';
 import { Pagination } from '../Pagination/Pagination';
 import { HStack, Heading, Spinner } from 'native-base';
 import { TableBreadCrumb } from '../BreadCrumbs/TableBreadCrumb';
+import { Cards } from './Cards';
 
 
 const OrderDataTable = () => {
@@ -26,6 +27,7 @@ const OrderDataTable = () => {
     const [filtersSchema, setFiltersSchema] = useState([]);
     const [sorting, setSorting] = useState([]);
     const [appliedSorting, setAppliedSorting] = useState({ key: "", direction: "" });
+    const { height, width } = useWindowDimensions();
 
     async function getDataList(updatedFilterValues = [], applyDirectly = false, orderBy = null) {
         setIsLoading(true)
@@ -76,9 +78,9 @@ const OrderDataTable = () => {
                 <DynamicFilters appliedSorting={appliedSorting} setAppliedSorting={setAppliedSorting} sorting={sorting} fileName="Orders" downloadApi={"order/download-report"} schemaResponse={filtersSchema} setCurrentPageNumber={setCurrentPageNumber} getList={getDataList} appliedFilers={appliedFilers} setAppliedFilers={setAppliedFilers} />
 
                 {
-                    !isLoading ? <View className={'mt-4 z-[-1] ' + (Dimensions.get("screen").width < 770 ? "overflow-scroll" : "")}>
-                        <OrdersRows data={data} schema={null} />
-                    </View> : <HStack space={2} marginTop={20} marginBottom={20} justifyContent="center">
+                    !isLoading ? <View className={'mt-4 z-[-1] '}>
+                        {width < 830 ? <Cards data={data} schema={null} /> : <OrdersRows data={data} schema={null} />}
+                    </View> : <HStack space={"2"} mt={"20"} marginBottom={"20"} justifyContent="center">
                         <Spinner color={"black"} accessibilityLabel="Loading order" />
                         <Heading color="black" fontSize="md">
                             Loading

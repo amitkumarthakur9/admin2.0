@@ -8,7 +8,7 @@ import { emailValidator } from '../src/helper/emailValidator'
 import { passwordValidator } from '../src/helper/passwordValidator'
 import BackButton from '../src/components/Others/BackButton'
 import { useSession } from '../src/services/ctx'
-import { router } from 'expo-router'
+import { Redirect, router } from 'expo-router'
 import RemoteApi from '../src/services/RemoteApi'
 import { AuthInterface } from '../src/interfaces/AuthInterface'
 import ApiRequest from '../src/services/NewRemoteApi'
@@ -18,34 +18,40 @@ import { ToastAlert } from '../src/helper/CustomToaster'
 
 export default function SignIn() {
     const [email, setEmail] = useState({ value: '', error: '' })
+    const [isLoggedIn, setIsLoggedIn] = useState(false)
     const [password, setPassword] = useState({ value: '', error: '' })
     const { signIn } = useSession();
     const [isLoading, setIsLoading] = useState(false)
     const toast = useToast();
-
+    // console.log('in login------');
     const onLoginPressed = async () => {
+        // console.log('clicked');
+
         setIsLoading(true)
         const emailError = emailValidator(email.value)
         const passwordError = passwordValidator(password.value)
         if (emailError || passwordError) {
             setEmail({ ...email, error: emailError })
             setPassword({ ...password, error: passwordError })
+            setIsLoading(false)
             return
         }
-        // navigation.reset({
-        //     index: 0,
-        //     routes: [{ name: 'Dashboard' }],
-        // })
+
         // console.log(process.env.API_ENDPOINT);
 
         try {
             const response: any = await RemoteApi.post("/user/login", {
-                email: email.value, password: password.value
+                // email: email.value, password: password.value
+                email: "bhupendrajogi@gmail.com", password: "US me bohot jagha gaye hai"
             });
+
+            console.log("response", response);
+
 
             if (response.message == "Success") {
                 signIn(response.token)
-                router.replace('/');
+                router.replace('/orders');
+                setIsLoggedIn(true)
             } else {
                 if (response.errors && response.errors.length > 0) {
                     response.errors.forEach((error, index) => {
@@ -70,15 +76,15 @@ export default function SignIn() {
                 }
             }
         } catch (err) {
-            // console.log(err);
+            console.log(err);
         }
         setIsLoading(false)
 
 
     }
 
-    return (
-        <Background>
+    return <>
+        {!isLoggedIn ? <Background>
             <Logo />
             <Header className="text-black">Welcome back.</Header>
             <TextInput
@@ -108,5 +114,7 @@ export default function SignIn() {
                 Login
             </Button>
         </Background>
-    )
+            : <Redirect href="/" />
+        }
+    </>
 }

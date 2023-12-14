@@ -19,6 +19,7 @@ interface MutualFund {
 }
 
 interface Account {
+    id: string;
     clientId: string;
     name: string;
     user: User[];

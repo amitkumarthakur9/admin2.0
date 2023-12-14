@@ -1,18 +1,18 @@
 import * as React from 'react';
-import { View, Text, Dimensions, ImageBackground } from 'react-native';
+import { View, useWindowDimensions } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { Link } from 'expo-router';
+import { Link, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import RemoteApi from '../../services/RemoteApi';
 import { RTAReconciliationRows } from './RTAReconciliationRows';
 import { Pagination } from '../Pagination/Pagination';
 import { Box, Button, CheckIcon, HStack, Heading, Pressable, Select, Spinner } from 'native-base';
-import DatePickerComponent from '../CustomDatePicker/DatePicker';
 import { RTAReconcilation, RTAResponseResponseInterface } from '../../interfaces/RTAResponseInterface';
 import DatePickerNew from '../CustomDatePicker/DatePickerNew';
 import CalendarPicker from '../CustomDatePicker/CalendarPicker';
 import { DynamicFilters } from '../Filters/DynamicFilters';
 import { TableBreadCrumb } from '../BreadCrumbs/TableBreadCrumb';
+import { Cards } from './Cards';
 
 
 const RTAReconciliation = () => {
@@ -27,16 +27,13 @@ const RTAReconciliation = () => {
     const [filtersSchema, setFiltersSchema] = useState([]);
     const [service, setService] = React.useState("");
     const [date, setDate] = React.useState<any>(undefined);
-    const [isDownloadProcessing, setIsDownloadProcessing] = useState(false);
     const [sorting, setSorting] = useState([]);
     const [appliedSorting, setAppliedSorting] = useState({ key: "", direction: "" });
+    const { height, width } = useWindowDimensions();
 
-    const downloadReport = async () => {
-        setIsDownloadProcessing(true)
-        const response: any = await RemoteApi.downloadFile({ endpoint: "", fileName: "Rta", data: [] });
-        console.log(response);
-        setIsDownloadProcessing(false)
-    }
+    const [params, setParams] = useState(useLocalSearchParams<{ holdingId?: string }>());
+    // console.log('params', params);
+
 
 
     async function getDataList(updatedFilterValues = [], applyDirectly = false) {
@@ -46,6 +43,15 @@ const RTAReconciliation = () => {
             "page": currentPageNumber,
             "limit": itemsPerPage,
             "filters": applyDirectly ? updatedFilterValues : appliedFilers
+        }
+
+        if (params?.holdingId) {
+            const checkIfHoldingIdExist = data.filters.find((filter) => filter.key == "holdingId")
+            if (!checkIfHoldingIdExist) {
+                // console.log('inside---');
+
+                data.filters.push({ "key": "holdingId", "operator": "eq", "value": Number(params.holdingId) })
+            }
         }
 
         if (appliedSorting.key != "") {
@@ -92,8 +98,9 @@ const RTAReconciliation = () => {
 
 
                 {
-                    !isLoading ? <View className={'mt-4 z-[-1] ' + (Dimensions.get("screen").width < 770 ? "overflow-scroll" : "")}>
-                        <RTAReconciliationRows data={data} schema={null} />
+                    !isLoading ? <View className={'mt-4 z-[-1] '}>
+                        {width < 830 ? <Cards data={data} schema={null} /> : <RTAReconciliationRows data={data} schema={null} />}
+
                     </View> : <HStack space={2} marginTop={20} marginBottom={20} justifyContent="center">
                         <Spinner color={"black"} accessibilityLabel="Loading order" />
                         <Heading color="black" fontSize="md">

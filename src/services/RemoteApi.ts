@@ -1,5 +1,9 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import moment from 'moment';
+import { Platform } from 'react-native';
+import * as SecureStore from 'expo-secure-store';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { router } from 'expo-router';
 
 // Create a new Axios instance with defaults
 const axiosInstance = axios.create({
@@ -16,15 +20,23 @@ axiosInstance.interceptors.response.use(
     }
   },
   (error: AxiosError) => {
-    console.error('API Error:', error);
+    console.error('API Error:', error.toJSON());
 
     if (error.response.status === 401) {
-      localStorage.removeItem('token');
-      if (window.location.pathname.includes("sign-in")) {
+      if (Platform.OS == "web") {
+        localStorage.removeItem('token');
+      } else {
+        AsyncStorage.removeItem("token");
+      }
+
+      // if (Platform.OS == "web") {
+      // router
+      if (error.request['_url'].includes("/login")) {
         // console.log(error.response.data['errors']);
       } else {
         window.location.reload();
       }
+      // }
     }
 
     return error.response;
@@ -38,7 +50,7 @@ class ApiRequest {
       url: endpoint,
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        Authorization: `Bearer ${await AsyncStorage.getItem("token")}`,
         // You can add any custom headers here, like authorization headers
       },
     };
@@ -54,10 +66,13 @@ class ApiRequest {
       data: JSON.stringify(data),
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        Authorization: `Bearer ${await AsyncStorage.getItem("token")}`,
         // You can add any custom headers here, like authorization headers
       },
     };
+
+    // console.log('post token', await AsyncStorage.getItem("token"));
+
 
     const response = await axiosInstance(config);
 
@@ -73,7 +88,7 @@ class ApiRequest {
       data: JSON.stringify(data),
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        Authorization: `Bearer ${await AsyncStorage.getItem("token")}`,
         // You can add any custom headers here, like authorization headers
       },
     };
@@ -90,7 +105,7 @@ class ApiRequest {
         data: data,
         responseType: 'blob', // Set the response type to 'blob' for file download
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          Authorization: `Bearer ${await AsyncStorage.getItem("token")}`,
         },
       };
 

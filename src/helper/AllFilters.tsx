@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, Switch, } from 'react-native';
 import { Select, Input } from "native-base";
-import DatePickerComponent from '../components/CustomDatePicker/DatePicker';
 // import Icon from 'react-native-vector-icons/MaterialIcons'
 import DropdownComponent from 'react-native-element-dropdown/lib/typescript/components/Dropdown';
 // import DropdownMenu from 'react-native-dropdown-listpicker';
@@ -25,12 +24,12 @@ const FilterComponent = ({ filter, onFilterChange, filterValues, removeFilter })
 
     onFilterChange(key, initialFilterValue?.value, operatorValue);
     initialFilterValue = filterValues.find((f) => f.key === key);
-    console.log('initialFilterValue', initialFilterValue);
+    // console.log('initialFilterValue', initialFilterValue);
 
   };
 
   const handleFilterChange = (newValue) => {
-    console.log('value', newValue);
+    // console.log('value', newValue);
 
     onFilterChange(key, valueType(newValue), valueConfig.valueType == "date" ? "between" : initialFilterValue?.operator);
     initialFilterValue = filterValues.find((f) => f.key === key);
@@ -46,7 +45,7 @@ const FilterComponent = ({ filter, onFilterChange, filterValues, removeFilter })
       case 'string':
         return (newValue + "");
       case 'number':
-        return typeof newValue === 'string' ? Number(newValue) : newValue;
+        return typeof newValue === 'string' ? (newValue.length == 0 ? newValue : Number(newValue)) : newValue;
       case 'number[]':
         if (!Array.isArray(newValue)) {
           newValue = [newValue]
@@ -77,9 +76,11 @@ const FilterComponent = ({ filter, onFilterChange, filterValues, removeFilter })
     switch (fieldType) {
 
       case 'input':
+        // console.log("initialFilterValue?.value", (typeof initialFilterValue?.value == "undefined" ? "" : initialFilterValue?.value) || "");
+
         return (
 
-          <Input ml="3" value={initialFilterValue?.value || ""} placeholder={title} onChangeText={handleFilterChange} />
+          <Input ml="3" value={(initialFilterValue?.value?.toString()) || ""} keyboardType={valueConfig.valueType == "number" ? "numeric" : "default"} placeholder={title} onChangeText={handleFilterChange} />
         );
       case 'select':
 
@@ -142,7 +143,7 @@ const FilterComponent = ({ filter, onFilterChange, filterValues, removeFilter })
         );
       case 'number':
         return (
-          <Input ml="3" value={initialFilterValue?.value || ""} placeholder={title} onChangeText={handleFilterChange} />
+          <Input ml="3" value={(initialFilterValue?.value?.toString()) || ""} keyboardType="numeric" placeholder={title} onChangeText={handleFilterChange} />
 
         );
       case 'date':
@@ -207,7 +208,7 @@ const FilterComponent = ({ filter, onFilterChange, filterValues, removeFilter })
 const FilterForm = ({ filtersSchema, onFilterChange, filterValues, removeFilter }) => {
   return (
     <View>
-      {filtersSchema.map((filter, key) => (
+      {filtersSchema?.map((filter, key) => (
         <View key={key}>
           {
             filter.key !== "all" && <FilterComponent

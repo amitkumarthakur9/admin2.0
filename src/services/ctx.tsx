@@ -1,6 +1,7 @@
 import React from 'react';
 import { useStorageState } from './useStorageState';
 import RemoteApi from './RemoteApi';
+import { router } from 'expo-router';
 
 const AuthContext = React.createContext<{ signIn: (token: string) => void; signOut: () => void; token?: string | null, isLoading: boolean } | null>(null);
 
@@ -19,6 +20,7 @@ export function useSession() {
 
 export function SessionProvider(props) {
     const [[isLoading, token], setToken] = useStorageState('token');
+    // console.log('session provider', token);
 
     return (
         <AuthContext.Provider
@@ -29,6 +31,7 @@ export function SessionProvider(props) {
                 },
                 signOut: () => {
                     setToken(null);
+                    router.push('/sign-in');
                 },
                 token,
                 isLoading,

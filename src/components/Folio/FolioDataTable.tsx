@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { View, Text, ScrollView, Dimensions, ImageBackground } from 'react-native';
+import { View, useWindowDimensions } from 'react-native';
 import { ActivityIndicator, TouchableRipple } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { Link } from 'expo-router';
+import { Link, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { OrderInterface } from '../../interfaces/OrderInterface';
 import RemoteApi from '../../services/RemoteApi';
@@ -12,6 +12,7 @@ import { FolioRows } from './FolioRows';
 import { Pagination } from '../Pagination/Pagination';
 import { HStack, Heading, Spinner } from 'native-base';
 import { TableBreadCrumb } from '../BreadCrumbs/TableBreadCrumb';
+import { Card } from './Card';
 
 
 const FolioDataTable = () => {
@@ -26,6 +27,10 @@ const FolioDataTable = () => {
     const [filtersSchema, setFiltersSchema] = useState([]);
     const [sorting, setSorting] = useState([]);
     const [appliedSorting, setAppliedSorting] = useState({ key: "", direction: "" });
+    const { height, width } = useWindowDimensions();
+
+    // let params = useLocalSearchParams<{ holdingId?: string }>();
+
 
     async function getDataList(updatedFilterValues = [], applyDirectly = false) {
         setIsLoading(true)
@@ -34,6 +39,21 @@ const FolioDataTable = () => {
             "limit": itemsPerPage,
             "filters": applyDirectly ? updatedFilterValues : appliedFilers
         }
+
+        // console.log('applyDirectly', applyDirectly);
+        // console.log('updatedFilterValues', updatedFilterValues);
+
+
+        // if (params?.holdingId) {
+        //     console.log('params', params);
+
+        //     const checkIfHoldingIdExist = data.filters.find((filter) => filter.key == "holdingId")
+        //     if (!checkIfHoldingIdExist) {
+        //         console.log('inside---');
+
+        //         data.filters.push({ "key": "holdingId", "operator": "eq", "value": Number(params.holdingId) })
+        //     }
+        // }
 
         if (appliedSorting.key != "") {
             data.orderBy = appliedSorting
@@ -70,15 +90,15 @@ const FolioDataTable = () => {
     return (
         <View className='bg-white'>
             <View className=''>
-                <TableBreadCrumb name={"Folio"} />
+                <TableBreadCrumb name={"Folio"} url={"/folio"} getDataList={getDataList} />
             </View>
             <View className='border-[0.2px] border-[#e4e4e4]'>
 
                 <DynamicFilters appliedSorting={appliedSorting} setAppliedSorting={setAppliedSorting} sorting={sorting} fileName="Folio" downloadApi={"folio/download-report"} schemaResponse={filtersSchema} setCurrentPageNumber={setCurrentPageNumber} getList={getDataList} appliedFilers={appliedFilers} setAppliedFilers={setAppliedFilers} />
 
                 {
-                    !isLoading ? <View className={'mt-4 z-[-1] ' + (Dimensions.get("screen").width < 770 ? "overflow-scroll" : "")}>
-                        <FolioRows data={data} schema={null} />
+                    !isLoading ? <View className={'mt-4 z-[-1] '}>
+                        {width < 830 ? <Card data={data} schema={null} /> : <FolioRows data={data} schema={null} />}
                     </View> : <HStack space={2} marginTop={20} marginBottom={20} justifyContent="center">
                         <Spinner color={"black"} accessibilityLabel="Loading order" />
                         <Heading color="black" fontSize="md">

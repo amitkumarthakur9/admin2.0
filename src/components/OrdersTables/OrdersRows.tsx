@@ -1,4 +1,4 @@
-import { Dimensions, Image, ImageBackground, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native"
+import { Dimensions, Image, ImageBackground, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import { OrderInterface } from "../../interfaces/OrderInterface"
 import DynamicComponentRenderer from "../../helper/DynamicComponentRenderer"
 import { TouchableRipple } from "react-native-paper"
@@ -45,8 +45,8 @@ export const OrdersRows = ({ data, schema }: { data: OrderInterface[], schema: a
         //   // Dimensions.removeAllListeners('change', updateScreenDimensions);
         // };
     }, []);
-    return <>
-        <View className={`flex flex-row py-4 px-2 justify-between ` + (Dimensions.get("screen").width < 770 ? 'w-[1728px]' : '')}>
+    return <View className={"flex flex-col"}>
+        <View className={`flex flex-row py-4 px-2 justify-between `}>
             <View className='flex flex-row items-center w-2/12'>
                 <Text selectable className='font-semibold'>Customer Name</Text>
             </View>
@@ -60,9 +60,7 @@ export const OrdersRows = ({ data, schema }: { data: OrderInterface[], schema: a
                 <Text selectable className='font-semibold w-8/12'>Process Date Time</Text>
             </View>
             <View className='flex flex-row items-center w-1/12 justify-center'>
-                <View className='flex flex-row items-center w-9/2 justify-center'>
-                    <Text selectable className='font-semibold'>Amount/Units</Text>
-                </View>
+                <Text selectable className='font-semibold w-8/12'>Amount/Units</Text>
             </View>
             <View className='flex flex-row items-center w-1/12 justify-center'>
                 <Text selectable className='font-semibold'>Status</Text>
@@ -82,12 +80,12 @@ export const OrdersRows = ({ data, schema }: { data: OrderInterface[], schema: a
             data.map((order: OrderInterface, index: number) => {
 
                 return <View key={index}>
-                    <View className={`flex flex-row p-2 justify-between ` + (Dimensions.get("screen").width < 770 ? 'w-[1728px]' : '')} >
+                    <View className={`flex flex-row p-2 justify-between `} >
                         <View className='flex flex-row items-center w-2/12 justify-center'>
                             <View className='flex flex-col w-11/12 flex-wrap'>
-                                <View className='flex flex-row items-center text-black font-semibold break-all'>
+                                <Pressable onPress={() => router.push(`/clients/${order.account.id}`)} className='flex flex-row items-center text-black font-semibold break-all'>
                                     <Text selectable className='text-black font-semibold break-all'>{order.account.name}&nbsp;</Text>
-                                </View>
+                                </Pressable>
                                 <View className='flex flex-row items-center mt-1 md:mt-0 lg:mt-0 flex-wrap w-12/12'>
                                     <Text selectable className='text-[#6C6A6A] text-sm'>{order.account.clientId}</Text>
                                     <View className='rounded-full bg-[#6C6A6A] h-2 w-2 mx-1'></View>
@@ -211,7 +209,7 @@ export const OrdersRows = ({ data, schema }: { data: OrderInterface[], schema: a
                                 <Text selectable className='text-white text-center text-xs w-10/12'>View</Text>
                             </Link> */}
                             <Pressable
-                                onPress={() => { history.pushState(null, "", "orders"), router.push(`orders/${order.id}`) }}
+                                onPress={() => router.push(`orders/${order.id}`)}
                                 className='rounded-full border-[0.4px] flex flex-row items-center justify-center bg-black w-8/12 h-6'>
                                 <Text selectable className='text-white text-center text-xs w-10/12'>View</Text>
                             </Pressable>
@@ -230,5 +228,5 @@ export const OrdersRows = ({ data, schema }: { data: OrderInterface[], schema: a
                 </View>
             })
         }
-    </>
+    </View>
 }

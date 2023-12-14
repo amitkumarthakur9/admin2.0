@@ -43,6 +43,7 @@
     "react-art": "^18.2.0",
     "react-dom": "18.2.0",
     "react-native": "0.72.4",
+    "react-native-app-auth": "^7.1.0",
     "react-native-dotenv": "^3.4.9",
     "react-native-element-dropdown": "^2.10.0",
     "react-native-gesture-handler": "~2.12.0",
