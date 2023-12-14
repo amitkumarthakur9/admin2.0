@@ -22,7 +22,7 @@ axiosInstance.interceptors.response.use(
   (error: AxiosError) => {
     console.error('API Error:', error.toJSON());
 
-    if (error.response.status === 401) {
+    if (error?.response?.status === 401) {
       if (Platform.OS == "web") {
         localStorage.removeItem('token');
       } else {

@@ -293,7 +293,7 @@ export const DynamicFilters = ({ schemaResponse, setAppliedSorting, appliedSorti
                                                 accessibilityLabel="By"
                                                 placeholder="By"
                                                 _selectedItem={{
-                                                    bg: "teal.600",
+                                                    bg: "gray.50",
                                                     endIcon: <CheckIcon size="5" />
                                                 }} mt={1}
                                                 onValueChange={itemValue => handleSortingChange(itemValue, 'key')}>
@@ -311,7 +311,7 @@ export const DynamicFilters = ({ schemaResponse, setAppliedSorting, appliedSorti
                                                     accessibilityLabel="Direction"
                                                     placeholder="Direction"
                                                     _selectedItem={{
-                                                        bg: "teal.600",
+                                                        bg: "gray.50",
                                                         endIcon: <CheckIcon size="5" />
                                                     }} mt={1} onValueChange={itemValue => handleSortingChange(itemValue, 'direction')}>
                                                     {

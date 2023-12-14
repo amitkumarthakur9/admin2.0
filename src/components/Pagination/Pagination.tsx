@@ -64,7 +64,7 @@ export const Pagination = ({ currentPageNumber, totalPages, setCurrentPageNumber
                     accessibilityLabel="Page"
                     placeholder="Page"
                     _selectedItem={{
-                        bg: "teal.600",
+                        bg: "gray.50",
                         endIcon: <CheckIcon size="5" />
 
                     }}

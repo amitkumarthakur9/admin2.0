@@ -230,7 +230,7 @@ const CalendarPicker = ({ handleFilterChange, value, fromName = "From", toName =
                                 <View className='flex flex-row justify-center mb-10'>
                                     <View className='mr-2'>
                                         <Select selectedValue={'' + selectedMonth} minWidth="100" accessibilityLabel="Month" placeholder="Month" _selectedItem={{
-                                            bg: "teal.600",
+                                            bg: "gray.50",
                                             endIcon: <CheckIcon size="5"
 
                                             />
@@ -242,7 +242,7 @@ const CalendarPicker = ({ handleFilterChange, value, fromName = "From", toName =
                                     </View>
                                     <View>
                                         <Select minWidth="100" accessibilityLabel="Year" placeholder="Year" _selectedItem={{
-                                            bg: "teal.600",
+                                            bg: "gray.50",
                                             endIcon: <CheckIcon size="5" />
                                         }} mt={1}
                                             selectedValue={'' + selectedYear}

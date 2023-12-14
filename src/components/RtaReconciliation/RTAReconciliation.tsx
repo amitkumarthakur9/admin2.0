@@ -99,7 +99,7 @@ const RTAReconciliation = () => {
 
                 {
                     !isLoading ? <View className={'mt-4 z-[-1] '}>
-                        {width < 830 ? <Cards data={data} schema={null} /> : <RTAReconciliationRows data={data} schema={null} />}
+                        {width < 830 ? <Cards data={data} schema={null} /> : <RTAReconciliationRows data={data} schema={filtersSchema} />}
 
                     </View> : <HStack space={2} marginTop={20} marginBottom={20} justifyContent="center">
                         <Spinner color={"black"} accessibilityLabel="Loading order" />

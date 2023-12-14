@@ -4,14 +4,37 @@ import DynamicComponentRenderer from "../../helper/DynamicComponentRenderer"
 import { TouchableRipple } from "react-native-paper"
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { ClientInterface } from "../../interfaces/ClientInterface";
-import { Badge, Popover } from "native-base";
+import { Badge, Box, Center, CheckIcon, Modal, Popover, Select } from "native-base";
 import { RTAReconcilation } from "../../interfaces/RTAResponseInterface";
 import { DateTime } from "luxon";
 import { RupeeSymbol } from "../../helper/helper";
 import moment from "moment";
 import { router } from "expo-router";
+import { useState } from "react";
 
 export const RTAReconciliationRows = ({ data, schema }) => {
+    const [modalVisible, setModalVisible] = useState(false)
+    const [id, setId] = useState("");
+    const [transactionStatus, setTransactionStatus] = useState("");
+
+    schema = [
+        {
+            "displayString": "Registered",
+            "value": "Registered"
+        },
+        {
+            "displayString": "Failed",
+            "value": "Failed"
+        },
+        {
+            "displayString": "Reconciled - Failed",
+            "value": "Reconciled - Failed"
+        },
+        {
+            "displayString": "Non Reconciled",
+            "value": "Non Reconciled"
+        }
+    ];
 
     const getInitials = (name: string) => {
         const words = name.split(' ');
@@ -26,9 +49,42 @@ export const RTAReconciliationRows = ({ data, schema }) => {
         }
     }
 
+    const handleChangeStatus = (e) => {
+        console.log("status", { e });
+        // setTransactionStatus(transactionStatus)
+        // setId(id)
+
+    }
+
+    const TransactionStatusModal = () => {
+        return <Modal isOpen={modalVisible} onClose={() => { setModalVisible(false), setId(""), setTransactionStatus("") }} avoidKeyboard safeAreaTop={true} size="lg">
+            <Modal.Content>
+                <Modal.CloseButton />
+                <Modal.Header>Transaction Status Update</Modal.Header>
+                <Modal.Body>
+                    <Center>
+                        <Box maxW="300">
+                            <Select selectedValue={transactionStatus} minWidth="200" accessibilityLabel="Choose Status" placeholder="Choose Status" _selectedItem={{
+                                bg: "gray.50",
+                                endIcon: <CheckIcon size="5" />
+                            }} mt={1} onValueChange={itemValue => handleChangeStatus(itemValue)}>
+                                {
+                                    // schema.fastFilter.find((filter, index) => filter.key == "transactionStatusId")?.filter?.apiConfig?.defaultData?.map((filter, index) => {
+                                    schema?.map((filter, index) => {
+                                        return <Select.Item key={index} label={filter.displayString} value={filter.value} />
+                                    })
+                                }
+                            </Select>
+                        </Box>
+                    </Center>
+                </Modal.Body>
+            </Modal.Content>
+        </Modal>
+    }
+
 
     return <>
-        <View className={`flex flex-row py-4 px-2 justify-between ` + (Dimensions.get("screen").width < 770 ? 'w-[1728px]' : '')}>
+        <View className={`flex flex-row py-4 px-2 justify-between `}>
             <View className='flex flex-row w-3/12'>
                 <View className='flex flex-row items-center w-full justify-start'>
                     <Text selectable className='font-semibold'>Client Name</Text>
@@ -87,7 +143,7 @@ export const RTAReconciliationRows = ({ data, schema }) => {
             data.map((rta: RTAReconcilation, index: number) => {
 
                 return <View key={index}>
-                    <View className={`flex flex-row p-2 justify-between ` + (Dimensions.get("screen").width < 770 ? 'w-[1728px]' : '')} >
+                    <View className={`flex flex-row p-2 justify-between `} style={{ backgroundColor: id == rta.id ? "#e1e1e1" : "" }}>
                         <View className='flex flex-row w-3/12 flex-wrap'>
                             <View className='flex flex-row items-center justify-start flex-wrap w-full'>
                                 <Pressable onPress={() => router.push(`/clients/${rta.account.id}`)} className='flex flex-row rounded-full bg-[#e60202] mr-2 h-10 w-10 items-center justify-center flex-wrap'>
@@ -168,9 +224,12 @@ export const RTAReconciliationRows = ({ data, schema }) => {
                             </Text>
                         </View>
                         <View className="flex flex-row w-1/12 justify-start">
-                            <View className='flex flex-col  h-8 items-center justify-center bg-[#D7D7D7] rounded-full w-11/12'>
+                            <View className='flex flex-col h-8 items-center justify-center bg-[#D7D7D7] rounded-full w-11/12'>
                                 <View className='flex flex-row items-center '>
                                     <Text selectable className='p-1 text-black text-end md:text-center text-xs'>{rta.transactionStatus || "-"}&nbsp;</Text>
+                                    <Pressable onPress={() => { setModalVisible(true), setId(rta.id), setTransactionStatus(rta.transactionStatus) }}>
+                                        <Icon name="edit" size={12} color="black" />
+                                    </Pressable>
                                 </View>
 
                             </View>
@@ -188,5 +247,9 @@ export const RTAReconciliationRows = ({ data, schema }) => {
                 </View>
             })
         }
+
+        <TransactionStatusModal />
     </>
 }
+
+
