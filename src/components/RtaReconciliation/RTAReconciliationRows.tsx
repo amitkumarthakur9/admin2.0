@@ -4,37 +4,21 @@ import DynamicComponentRenderer from "../../helper/DynamicComponentRenderer"
 import { TouchableRipple } from "react-native-paper"
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { ClientInterface } from "../../interfaces/ClientInterface";
-import { Badge, Box, Center, CheckIcon, Modal, Popover, Select } from "native-base";
+import { Badge, Box, Button, Center, CheckIcon, Modal, Popover, Select } from "native-base";
 import { RTAReconcilation } from "../../interfaces/RTAResponseInterface";
 import { DateTime } from "luxon";
 import { RupeeSymbol } from "../../helper/helper";
 import moment from "moment";
 import { router } from "expo-router";
 import { useState } from "react";
+import RemoteApi from "../../services/RemoteApi";
+import { TransactionStatusModal } from "./TransactionStatusUpdateModal";
 
-export const RTAReconciliationRows = ({ data, schema }) => {
+export const RTAReconciliationRows = ({ data, schema, getDataList }) => {
     const [modalVisible, setModalVisible] = useState(false)
     const [id, setId] = useState("");
     const [transactionStatus, setTransactionStatus] = useState("");
 
-    schema = [
-        {
-            "displayString": "Registered",
-            "value": "Registered"
-        },
-        {
-            "displayString": "Failed",
-            "value": "Failed"
-        },
-        {
-            "displayString": "Reconciled - Failed",
-            "value": "Reconciled - Failed"
-        },
-        {
-            "displayString": "Non Reconciled",
-            "value": "Non Reconciled"
-        }
-    ];
 
     const getInitials = (name: string) => {
         const words = name.split(' ');
@@ -48,40 +32,6 @@ export const RTAReconciliationRows = ({ data, schema }) => {
             return '';
         }
     }
-
-    const handleChangeStatus = (e) => {
-        console.log("status", { e });
-        // setTransactionStatus(transactionStatus)
-        // setId(id)
-
-    }
-
-    const TransactionStatusModal = () => {
-        return <Modal isOpen={modalVisible} onClose={() => { setModalVisible(false), setId(""), setTransactionStatus("") }} avoidKeyboard safeAreaTop={true} size="lg">
-            <Modal.Content>
-                <Modal.CloseButton />
-                <Modal.Header>Transaction Status Update</Modal.Header>
-                <Modal.Body>
-                    <Center>
-                        <Box maxW="300">
-                            <Select selectedValue={transactionStatus} minWidth="200" accessibilityLabel="Choose Status" placeholder="Choose Status" _selectedItem={{
-                                bg: "gray.50",
-                                endIcon: <CheckIcon size="5" />
-                            }} mt={1} onValueChange={itemValue => handleChangeStatus(itemValue)}>
-                                {
-                                    // schema.fastFilter.find((filter, index) => filter.key == "transactionStatusId")?.filter?.apiConfig?.defaultData?.map((filter, index) => {
-                                    schema?.map((filter, index) => {
-                                        return <Select.Item key={index} label={filter.displayString} value={filter.value} />
-                                    })
-                                }
-                            </Select>
-                        </Box>
-                    </Center>
-                </Modal.Body>
-            </Modal.Content>
-        </Modal>
-    }
-
 
     return <>
         <View className={`flex flex-row py-4 px-2 justify-between `}>
@@ -248,7 +198,7 @@ export const RTAReconciliationRows = ({ data, schema }) => {
             })
         }
 
-        <TransactionStatusModal />
+        <TransactionStatusModal key={id} transactionStatus={transactionStatus} id={id} modalVisible={modalVisible} setModalVisible={setModalVisible} setId={setId} getDataList={getDataList} />
     </>
 }
 

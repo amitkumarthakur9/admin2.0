@@ -9,37 +9,12 @@ import moment from "moment";
 import { Link, router } from 'expo-router'
 import { RupeeSymbol } from "../../helper/helper";
 import { RTAReconcilation } from "../../interfaces/RTAResponseInterface";
+import { TransactionStatusModal } from "./TransactionStatusUpdateModal";
 
-export const Cards = ({ data, schema }: { data: RTAReconcilation[], schema: any }) => {
+export const Cards = ({ data, schema, getDataList }: { data: RTAReconcilation[], schema: any, getDataList: any }) => {
     const [modalVisible, setModalVisible] = useState(false)
     const [id, setId] = useState("");
     const [transactionStatus, setTransactionStatus] = useState("");
-
-    schema = [
-        {
-            "displayString": "Registered",
-            "value": "Registered"
-        },
-        {
-            "displayString": "Failed",
-            "value": "Failed"
-        },
-        {
-            "displayString": "Reconciled - Failed",
-            "value": "Reconciled - Failed"
-        },
-        {
-            "displayString": "Non Reconciled",
-            "value": "Non Reconciled"
-        }
-    ];
-
-    const handleChangeStatus = (e) => {
-        console.log("status", { e });
-        // setTransactionStatus(transactionStatus)
-        // setId(id)
-
-    }
 
     const getInitials = (name: string) => {
         const words = name.split(' ');
@@ -53,38 +28,6 @@ export const Cards = ({ data, schema }: { data: RTAReconcilation[], schema: any 
             return '';
         }
     }
-
-
-
-    const TransactionStatusModal = () => {
-        return <Modal isOpen={modalVisible} onClose={() => { setModalVisible(false), setId(""), setTransactionStatus("") }} avoidKeyboard safeAreaTop={true} size="lg">
-            <Modal.Content>
-                <Modal.CloseButton />
-                <Modal.Header>Transaction Status Update</Modal.Header>
-                <Modal.Body>
-                    <Center>
-                        <Box maxW="300">
-                            <Select
-                                dropdownIcon={<Icon name="chevron-down" style={{ marginRight: 4 }} color="#9c9c9c" />}
-
-                                selectedValue={transactionStatus} minWidth="200" accessibilityLabel="Choose Status" placeholder="Choose Status" _selectedItem={{
-                                    bg: "gray.50",
-                                    endIcon: <CheckIcon size="5" />
-                                }} mt={1} onValueChange={itemValue => handleChangeStatus(itemValue)}>
-                                {
-                                    // schema.fastFilter.find((filter, index) => filter.key == "transactionStatusId")?.filter?.apiConfig?.defaultData?.map((filter, index) => {
-                                    schema?.map((filter, index) => {
-                                        return <Select.Item key={index} label={filter.displayString} value={filter.value} />
-                                    })
-                                }
-                            </Select>
-                        </Box>
-                    </Center>
-                </Modal.Body>
-            </Modal.Content>
-        </Modal >
-    }
-
 
     return <>
         {
@@ -191,6 +134,6 @@ export const Cards = ({ data, schema }: { data: RTAReconcilation[], schema: any 
             })
         }
 
-        <TransactionStatusModal />
+        <TransactionStatusModal key={id} transactionStatus={transactionStatus} id={id} modalVisible={modalVisible} setModalVisible={setModalVisible} setId={setId} getDataList={getDataList} />
     </>
 }

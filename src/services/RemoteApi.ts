@@ -97,6 +97,22 @@ class ApiRequest {
     return response?.data;
   }
 
+  static async patch<T>(endpoint: string, data: any): Promise<T> {
+    const config: AxiosRequestConfig = {
+      method: 'PATCH',
+      url: endpoint,
+      data: JSON.stringify(data),
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${await AsyncStorage.getItem("token")}`,
+        // You can add any custom headers here, like authorization headers
+      },
+    };
+
+    const response = await axiosInstance(config);
+    return response?.data;
+  }
+
   static async downloadFile({ endpoint, fileName = "file", data }): Promise<void> {
     try {
       const config: AxiosRequestConfig = {

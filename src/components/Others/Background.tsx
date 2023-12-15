@@ -1,26 +1,34 @@
 import React from 'react'
-import { ImageBackground, StyleSheet, KeyboardAvoidingView, View, Platform } from 'react-native'
+import { ImageBackground, StyleSheet, KeyboardAvoidingView, View, Platform, Image, useWindowDimensions } from 'react-native'
 // import { theme } from '../core/theme'
 
-export default function Background({ children }) {
+export default function Background() {
+    const { height, width } = useWindowDimensions();
+
     return (
         // <View></View>
-        <ImageBackground
-            source={require('../../../assets/background_dot.png')}
-            resizeMode="repeat"
-            style={styles.background}
-        >
-            {/* <KeyboardAvoidingView className='w-4/6 lg:w-3/6' style={styles.container} behavior={Platform.OS == "web" ? undefined : 'height'}> */}
-            <View className='flex flex-row w-full justify-center overflow-hidden h-full items-center'>
-                <KeyboardAvoidingView className='w-4/6 lg:w-3/6 items-center' behavior='height'>
+        // <ImageBackground
+        //     source={require('../../../assets/background_dot.png')}
+        //     resizeMode="repeat"
+        //     style={styles.background}
+        // >
+        //     {/* <KeyboardAvoidingView className='w-4/6 lg:w-3/6' style={styles.container} behavior={Platform.OS == "web" ? undefined : 'height'}> */}
+        //     <View className='flex flex-row w-full justify-center overflow-hidden h-full items-center'>
+        //         {/* <KeyboardAvoidingView className='w-4/6 lg:w-3/6 items-center' behavior="position"> */}
+        //         <View className='w-4/6 lg:w-3/6 items-center'>
 
-                    {children}
+        //             {children}
 
-                </KeyboardAvoidingView>
-            </View>
+        //         </View>
+        //         {/* </KeyboardAvoidingView> */}
+        //     </View>
 
-            {/* </KeyboardAvoidingView> */}
-        </ImageBackground>
+        //     {/* </KeyboardAvoidingView> */}
+        // </ImageBackground>
+
+        <View>
+            <Image style={{ height: height, width: width, position: 'absolute', }} resizeMode="repeat" source={require('../../../assets/background_dot.png')} />
+        </View>
     )
 }
 
