@@ -71,6 +71,6 @@ export const SortingSheet = ({ setSortingOpen, setFilterOpen, sortingOpen, appli
 
                 </Box>
             </Actionsheet.Content>
-        </Actionsheet>\
+        </Actionsheet>
     </View>
 }

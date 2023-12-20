@@ -31,7 +31,7 @@ axiosInstance.interceptors.response.use(
 
       // if (Platform.OS == "web") {
       // router
-      if (error.request['_url'].includes("/login")) {
+      if (error?.request['_url']?.includes("/login")) {
         // console.log(error.response.data['errors']);
       } else {
         window.location.reload();
