@@ -35,11 +35,20 @@ export default ({ config }) => ({
 
   expo: {
     "scheme": "myapp",
-
     "web": {
       "bundler": "metro"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "7075b93b-272b-4344-8d8d-c095464f6b5d"
+      }
+    },
+    "owner": "ranjan_fundexpert",
+    android: {
+      "package": "com.kotak.vision",
     }
-  }
+  },
+
 
 
 });

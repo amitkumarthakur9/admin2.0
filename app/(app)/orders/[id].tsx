@@ -98,7 +98,6 @@ export default function OrderDetail() {
                                     </ImageBackground>
                                 </View>
                             </View>
-
                         </View>
                         <View>
                             <View className='flex flex-row justify-between mx-5'>

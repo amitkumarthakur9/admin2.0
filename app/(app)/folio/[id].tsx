@@ -118,9 +118,9 @@ export default function AUMDetail() {
                             <View className="flex flex-row p-2 mx-2 items-center rounded" style={Platform.OS == "web" ? BorderShadow : BorderShadowPhone}>
                                 <View className='flex flex-row items-center p-2'>
                                     <View className='flex flex-col '>
-                                        <View className='flex flex-row rounded-full bg-[#e60202] mr-2 h-10 w-10 items-center justify-center'>
+                                        <Link href={`/clients/${data.account.user.id}`} className='flex flex-row rounded-full bg-[#e60202] mr-2 h-10 w-10 items-center justify-center'>
                                             <Text selectable className='text-white text-center'>{getInitials(data.account.name)}</Text>
-                                        </View>
+                                        </Link>
                                     </View>
                                     <View className='flex flex-col ml-1'>
                                         <Text selectable className='font-bold text-base'>{data.account.name}</Text>
@@ -141,6 +141,7 @@ export default function AUMDetail() {
                                 <View className='flex flex-col w-full p-2'>
                                     <View className='flex flex-row items-center w-full flex-wrap '>
                                         <View className={"flex flex-row items-center justify-start w-8/12"} >
+
                                             <Image
                                                 alt='fundHouse'
                                                 className="mr-2"

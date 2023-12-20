@@ -18,11 +18,13 @@ import ClientsScreen from './clients';
 import SIPReportsScreen from './sip-reports';
 import AUMReportsScreen from './folio';
 import RTAReconciliationScreen from './rta-reconciliation';
-import ClientDetail from './clients/[id]';
+// import ClientDetail from './clients/[id]';
 import SIPReportsDetail from './sip-reports/[id]';
 import AUMDetail from './folio/[id]';
 import { Center, HStack, Heading, Spinner } from 'native-base';
 import { useStorageState } from '../../src/services/useStorageState';
+import ClientDetail from './clients/[id]/index';
+import HoldingDetail from './clients/[id]/holdings/[holdingId]';
 
 
 NativeWindStyleSheet.setOutput({
@@ -154,9 +156,25 @@ export default function AppLayout() {
                     initialParams={{}}
                     component={OrderDetail}
                 />
+
                 <Drawer.Screen
 
-                    name="clients/[id]" // This is the name of the page and must match the url from root
+                    name="clients/[id]/holdings/[holdingId]" // This is the name of the page and must match the url from root
+                    options={{
+                        drawerLabel: "HoldingDetail",
+                        title: "HoldingDetail",
+                        drawerItemStyle: { display: 'none' },
+                        unmountOnBlur: true
+
+                    }}
+                    initialParams={{}}
+                    component={HoldingDetail}
+                />
+
+
+                <Drawer.Screen
+
+                    name="clients/[id]/index" // This is the name of the page and must match the url from root
                     options={{
                         drawerLabel: "ClientDetail",
                         title: "ClientDetail",
@@ -195,6 +213,8 @@ export default function AppLayout() {
                     initialParams={{}}
                     component={AUMDetail}
                 />
+
+
 
 
                 {/* </Drawer> */}

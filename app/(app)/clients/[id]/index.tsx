@@ -3,13 +3,13 @@ import { Link, router, useLocalSearchParams } from 'expo-router';
 import { Button, Center, HStack, Heading, Pressable, ScrollView, Spinner, Text } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useEffect, useState } from 'react';
-import RemoteApi from '../../../src/services/RemoteApi';
-import { Order, OrderDataInterface } from '../../../src/interfaces/OrderDataInterface';
-import { ClientDetailItem, ClientDetailResponse } from '../../../src/interfaces/ClientDetailInterface';
+import RemoteApi from '../../../../src/services/RemoteApi';
+import { Order, OrderDataInterface } from '../../../../src/interfaces/OrderDataInterface';
+import { ClientDetailItem, ClientDetailResponse } from '../../../../src/interfaces/ClientDetailInterface';
 import moment from 'moment';
-import { AccountShadowPhone, BorderShadow, BorderShadowPhone, BreadcrumbShadow } from '../../../src/components/Styles/Shadow';
+import { AccountShadowPhone, BorderShadow, BorderShadowPhone, BreadcrumbShadow } from '../../../../src/components/Styles/Shadow';
 import { StyleSheet } from 'react-native';
-import { RupeeSymbol } from '../../../src/helper/helper';
+import { RupeeSymbol } from '../../../../src/helper/helper';
 
 export default function ClientDetail() {
     const { id } = useLocalSearchParams();
@@ -77,7 +77,7 @@ export default function ClientDetail() {
                                     </ImageBackground>
                                 </View> */}
                                 <View className='w-6/12 overflow-hidden h-full flex flex-row justify-center'>
-                                    <Image className='' source={require('../../../assets/images/ChatBc.png')} style={{
+                                    <Image className='' source={require('../../../../assets/images/ChatBc.png')} style={{
                                         // flex: 1,
                                         // justifyContent: 'end',
                                     }} />
@@ -89,7 +89,7 @@ export default function ClientDetail() {
                         <View className='flex flex-col mx-2'>
                             <View className='flex flex-row flex-wrap'>
                                 <View className='flex flex-col w-full lg:w-4/12 mt-1' >
-                                    <View className='flex flex-col rounded p-3' style={Platform.OS == "web" ? BorderShadow : AccountShadowPhone}>
+                                    <View className='flex flex-col rounded p-3 h-full lg:h-[200px] m-0 lg:m-2' style={Platform.OS == "web" ? { ...BorderShadow, overflow: "scroll" } : { ...AccountShadowPhone, overflow: "scroll" }}>
                                         <Text selectable className='text-base mb-4 font-bold'>Contact Details</Text>
 
                                         <View className='flex flex-row mb-1 items-center'>
@@ -109,7 +109,7 @@ export default function ClientDetail() {
                                     </View>
                                 </View>
                                 <View className='flex flex-col w-full lg:w-4/12 mt-1' >
-                                    <View className='flex flex-col rounded p-3' style={Platform.OS == "web" ? BorderShadow : AccountShadowPhone}>
+                                    <View className='flex flex-col rounded p-3 h-full lg:h-[200px] m-0 lg:m-2' style={Platform.OS == "web" ? { ...BorderShadow, overflow: "scroll" } : { ...AccountShadowPhone, overflow: "scroll" }}>
                                         <Text selectable className='text-base mb-4 font-bold'>Profile</Text>
                                         <View className='flex flex-row mb-1 items-center'>
                                             <Icon name="id-badge" size={18} style={{ marginRight: 5, width: 20, textAlign: "center" }} color="black" />
@@ -139,7 +139,7 @@ export default function ClientDetail() {
                                     </View>
                                 </View>
                                 <View className='flex flex-col w-full lg:w-4/12  mt-1' >
-                                    <View className='flex flex-col rounded' style={Platform.OS == "web" ? BorderShadow : AccountShadowPhone}>
+                                    <View className='flex flex-col rounded m-0 h-full lg:h-[200px] lg:m-2' style={Platform.OS == "web" ? { ...BorderShadow, overflow: "scroll" } : { ...AccountShadowPhone, overflow: "scroll" }}>
                                         <Text selectable className='text-base mb-1 font-bold px-3 pt-3'>Banks</Text>
                                         {
                                             data.bankAccounts.map((bank, index) => {
@@ -162,7 +162,7 @@ export default function ClientDetail() {
                                 </View>
 
                                 <View className='flex flex-col w-full lg:w-4/12 mt-1' >
-                                    <View className='flex flex-col rounded' style={Platform.OS == "web" ? BorderShadow : AccountShadowPhone}>
+                                    <View className='flex flex-col rounded m-0 h-full lg:h-[200px] lg:m-2' style={Platform.OS == "web" ? { ...BorderShadow, overflow: "scroll" } : { ...AccountShadowPhone, overflow: "scroll" }}>
                                         <Text selectable className='text-base mb-1 font-bold px-3 pt-3'>Nominee Details</Text>
                                         {
                                             data.nominee.map((nominee, index) => {
@@ -185,7 +185,7 @@ export default function ClientDetail() {
                                     </View>
                                 </View>
                                 <View className='flex flex-col w-full lg:w-4/12 mt-1' >
-                                    <View className='flex flex-col rounded p-3' style={Platform.OS == "web" ? BorderShadow : AccountShadowPhone}>
+                                    <View className='flex flex-col rounded p-3 h-full lg:h-[200px] m-0 lg:m-2' style={Platform.OS == "web" ? { ...BorderShadow, overflow: "scroll" } : { ...AccountShadowPhone, overflow: "scroll" }}>
                                         <Text selectable className='text-base mb-4 font-bold'>Demat Details</Text>
 
                                         <View className='flex flex-row mb-1 items-center'>
@@ -368,30 +368,35 @@ export default function ClientDetail() {
                                     />
                                     {
                                         data.holdings.map((holding, index) => {
-                                            return <><View className='flex flex-row w-full'>
-                                                <View className='w-[18%] p-3'>
-                                                    <Text selectable >{holding.mutualfund.name || "-"}</Text>
+                                            return <View key={index}>
+                                                <View className='flex flex-row w-full'>
+                                                    <View className='w-[18%] p-3'>
+                                                        <Text selectable >{holding.mutualfund.name || "-"}</Text>
+                                                    </View>
+                                                    <View className='w-[18%] p-3'>
+                                                        <Text selectable >{holding.units || "-"}</Text>
+                                                    </View>
+                                                    <View className='w-[18%] p-3'>
+                                                        <Text selectable >{holding.avgNav || "-"}</Text>
+                                                    </View>
+                                                    <View className='w-[18%] p-3'>
+                                                        <Text selectable >{holding.currentValue ? (RupeeSymbol + holding.currentValue) : "-"}</Text>
+                                                    </View>
+                                                    <View className='w-[18%] p-3'>
+                                                        <Text selectable >{holding.investedValue ? (RupeeSymbol + holding.investedValue) : "-"}</Text>
+                                                    </View>
+                                                    <View className='w-[10%] p-3'>
+                                                        <Link
+                                                            // href={`/clients/${id}/holdings/${holding.id}`}
+                                                            href={{
+                                                                pathname: "/clients/[id]/holdings/[holdingId]",
+                                                                params: { id: id, holdingId: holding.id }
+                                                            }}
+                                                            className='rounded-full border-[0.4px] flex flex-row items-center justify-center bg-black w-8/12 h-6'>
+                                                            <Text selectable className='text-white text-center text-xs w-10/12'>View</Text>
+                                                        </Link>
+                                                    </View>
                                                 </View>
-                                                <View className='w-[18%] p-3'>
-                                                    <Text selectable >{holding.units || "-"}</Text>
-                                                </View>
-                                                <View className='w-[18%] p-3'>
-                                                    <Text selectable >{holding.avgNav || "-"}</Text>
-                                                </View>
-                                                <View className='w-[18%] p-3'>
-                                                    <Text selectable >{holding.currentValue ? (RupeeSymbol + holding.currentValue) : "-"}</Text>
-                                                </View>
-                                                <View className='w-[18%] p-3'>
-                                                    <Text selectable >{holding.investedValue ? (RupeeSymbol + holding.investedValue) : "-"}</Text>
-                                                </View>
-                                                <View className='w-[10%] p-3'>
-                                                    <Link
-                                                        href={`/folio?holdingId=${holding.id}`}
-                                                        className='rounded-full border-[0.4px] flex flex-row items-center justify-center bg-black w-8/12 h-6'>
-                                                        <Text selectable className='text-white text-center text-xs w-10/12'>View</Text>
-                                                    </Link>
-                                                </View>
-                                            </View>
                                                 <View
                                                     className='mb-2'
                                                     style={{
@@ -399,7 +404,7 @@ export default function ClientDetail() {
                                                         borderBottomWidth: StyleSheet.hairlineWidth,
                                                     }}
                                                 />
-                                            </>
+                                            </View>
                                         })
                                     }
                                 </View>

@@ -124,10 +124,10 @@ export default function SignIn() {
 
     // </>
 
-    return <View className='' style={{ height }}>
+    return <View className='' style={{ height, backgroundColor: "white" }}>
         <Background />
 
-        <ScrollView automaticallyAdjustKeyboardInsets={true}>
+        <ScrollView automaticallyAdjustKeyboardInsets={true} style={{}}>
 
             <View className='flex flex-col items-center justify-center pb-[100px]' style={{ position: "absolute", left: 0, right: 0, top: 150 }}>
                 <Logo />
