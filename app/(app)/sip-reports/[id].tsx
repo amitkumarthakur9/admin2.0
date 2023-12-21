@@ -115,7 +115,7 @@ export default function SIPReportsDetail() {
 
                                 </View> */}
                             </View>
-                            <View className="flex flex-row p-2 mx-4 items-center rounded" style={Platform.OS == "web" ? BorderShadow : BorderShadowPhone}>
+                            <View className="flex flex-row p-2 mx-2 items-center rounded" style={Platform.OS == "web" ? BorderShadow : BorderShadowPhone}>
                                 <View className='flex flex-row items-center p-2'>
                                     <View className='flex flex-col '>
                                         {/* <Avatar bg="green.500" size={8} source={{
@@ -142,7 +142,7 @@ export default function SIPReportsDetail() {
                                 </View>
                             </View>
 
-                            <View className="flex flex-col m-4 items-center justify-between rounded" style={Platform.OS == "web" ? BorderShadow : BorderShadowPhone}>
+                            <View className="flex flex-col my-4 mx-2 items-center justify-between rounded" style={Platform.OS == "web" ? BorderShadow : BorderShadowPhone}>
                                 <View className='flex flex-col w-full p-2'>
                                     <View className='flex flex-row items-center w-full flex-wrap '>
                                         <View className={"flex flex-row items-center justify-start w-8/12"} >
@@ -228,7 +228,7 @@ export default function SIPReportsDetail() {
                                 </View> */}
                             </View>
 
-                            <View className="flex flex-col m-4">
+                            <View className="flex flex-col m-2">
                                 <View className='flex flex-row justify-start'>
                                     <Text className='font-bold text-base'>Transactions</Text>
                                 </View>
@@ -237,7 +237,7 @@ export default function SIPReportsDetail() {
                                         {
                                             data.transactions.map((transaction, index) => {
                                                 return <View key={index}>
-                                                    <View className={`flex flex-row p-2 justify-between flex-wrap rounded-xl mx-2 mb-3 ` + (index % 2 ? "bg-[#eaf3fe]" : "bg-[#f0f0f0]")} style={{ borderColor: "#367a88", borderWidth: 0.2 }}>
+                                                    <View className={`flex flex-row p-2 justify-between flex-wrap rounded-xl   mb-3 ` + (index % 2 ? "bg-[#eaf3fe]" : "bg-[#f0f0f0]")} style={{ borderColor: "#367a88", borderWidth: 0.2 }}>
                                                         <View className='flex flex-col w-full'>
                                                             <View className='flex flex-row items-start justify-center w-full flex-wrap mt-3'>
                                                                 <View className='flex flex-col items-center w-4/12 justify-center'>

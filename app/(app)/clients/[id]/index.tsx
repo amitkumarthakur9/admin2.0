@@ -219,7 +219,7 @@ export default function ClientDetail() {
                                         {
                                             data.orders.map((order, index) => {
                                                 return <View key={index}>
-                                                    <View className={`flex flex-row p-2 justify-between flex-wrap rounded-xl mx-2 mb-3 ` + (index % 2 ? "bg-[#eaf3fe]" : "bg-[#f0f0f0]")} style={{ borderColor: "#367a88", borderWidth: 0.2 }}>
+                                                    <View className={`flex flex-row p-2 justify-between flex-wrap rounded-xl   mb-3 ` + (index % 2 ? "bg-[#eaf3fe]" : "bg-[#f0f0f0]")} style={{ borderColor: "#367a88", borderWidth: 0.2 }}>
                                                         <View className='flex flex-col w-full'>
                                                             <View className='flex flex-row justify-start items-center'>
                                                                 <Pressable onPress={() => onCopy(order.id)} className='flex flex-row items-center'>
@@ -353,7 +353,7 @@ export default function ClientDetail() {
                                         {
                                             data.transactions.map((transaction, index) => {
                                                 return <View key={index}>
-                                                    <View className={`flex flex-row p-2 justify-between flex-wrap rounded-xl mx-2 mb-3 ` + (index % 2 ? "bg-[#eaf3fe]" : "bg-[#f0f0f0]")} style={{ borderColor: "#367a88", borderWidth: 0.2 }}>
+                                                    <View className={`flex flex-row p-2 justify-between flex-wrap rounded-xl   mb-3 ` + (index % 2 ? "bg-[#eaf3fe]" : "bg-[#f0f0f0]")} style={{ borderColor: "#367a88", borderWidth: 0.2 }}>
                                                         <View className='flex flex-col w-full'>
                                                             <View className='flex flex-row items-start justify-center w-full flex-wrap mt-3'>
                                                                 <View className='flex flex-col items-center w-4/12 justify-center'>
@@ -502,7 +502,7 @@ export default function ClientDetail() {
                                         {
                                             data.holdings.map((holding, index) => {
                                                 return <View key={index}>
-                                                    <View className={`flex flex-row p-2 justify-between flex-wrap rounded-xl mx-2 mb-3 ` + (index % 2 ? "bg-[#eaf3fe]" : "bg-[#f0f0f0]")} style={{ borderColor: "#367a88", borderWidth: 0.2 }}>
+                                                    <View className={`flex flex-row p-2 justify-between flex-wrap rounded-xl   mb-3 ` + (index % 2 ? "bg-[#eaf3fe]" : "bg-[#f0f0f0]")} style={{ borderColor: "#367a88", borderWidth: 0.2 }}>
                                                         <View className='flex flex-col w-full'>
                                                             <View className='flex flex-row items-center w-full flex-wrap '>
                                                                 <View className={"flex flex-row items-center justify-start w-8/12"} >

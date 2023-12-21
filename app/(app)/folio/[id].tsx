@@ -217,7 +217,7 @@ export default function AUMDetail() {
                                 </View> */}
                             </View>
 
-                            <View className="flex flex-col m-4">
+                            <View className="flex flex-col m-2">
                                 <View className='flex flex-row justify-start'>
                                     <Text className='font-bold text-base'>Transactions</Text>
                                 </View>
@@ -226,7 +226,7 @@ export default function AUMDetail() {
                                         {
                                             data.transactions.map((transaction, index) => {
                                                 return <View key={index}>
-                                                    <View className={`flex flex-row p-2 justify-between flex-wrap rounded-xl mx-2 mb-3 ` + (index % 2 ? "bg-[#eaf3fe]" : "bg-[#f0f0f0]")} style={{ borderColor: "#367a88", borderWidth: 0.2 }}>
+                                                    <View className={`flex flex-row p-2 justify-between flex-wrap rounded-xl   mb-3 ` + (index % 2 ? "bg-[#eaf3fe]" : "bg-[#f0f0f0]")} style={{ borderColor: "#367a88", borderWidth: 0.2 }}>
                                                         <View className='flex flex-col w-full'>
                                                             <View className='flex flex-row items-start justify-center w-full flex-wrap mt-3'>
                                                                 <View className='flex flex-col items-center w-4/12 justify-center'>
