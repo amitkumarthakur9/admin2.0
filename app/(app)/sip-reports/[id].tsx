@@ -66,7 +66,7 @@ export default function SIPReportsDetail() {
                 </HStack>
             </Center>
                 :
-                <ScrollView className={`bg-white mb-10`} showsVerticalScrollIndicator={true}>
+                <ScrollView className={`bg-white`} showsVerticalScrollIndicator={true}>
                     <View className='bg-white'>
                         <View className=''>
                             <View className='flex flex-row justify-between items-center mb-[30px] mt-3 bg-[#eaf3fe] h-28 px-2 '>
