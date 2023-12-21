@@ -139,6 +139,17 @@ interface BankAccount {
     isPrimary: boolean;
 }
 
+interface TransactionType {
+    id: number;
+    name: string;
+}
+
+interface TransactionStatus {
+    id: number;
+    name: string;
+}
+
+
 interface Transaction {
     id: string;
     folioId: string;
@@ -166,6 +177,9 @@ interface Transaction {
     nav: number | null;
     units: number;
     exitLoad: number | null;
+    transactionStatus: TransactionStatus;
+    transactionType: TransactionType;
+    settlementType: any;
 }
 
 

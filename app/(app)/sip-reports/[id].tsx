@@ -1,4 +1,4 @@
-import { Dimensions, ImageBackground, View, StyleSheet } from 'react-native';
+import { Dimensions, ImageBackground, View, StyleSheet, useWindowDimensions } from 'react-native';
 import { Link, router, useLocalSearchParams } from 'expo-router';
 import { Avatar, Button, Center, HStack, Heading, Image, Pressable, ScrollView, Spinner, Text } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -15,6 +15,8 @@ export default function SIPReportsDetail() {
     const { id } = useLocalSearchParams();
     const [data, setData] = useState<SIPReportDetail>()
     const [isLoading, setIsLoading] = useState(true)
+    const { height, width } = useWindowDimensions();
+
     useEffect(() => {
         setIsLoading(true)
         async function getOrderDetails() {
@@ -64,7 +66,7 @@ export default function SIPReportsDetail() {
                 </HStack>
             </Center>
                 :
-                <ScrollView className={`bg-white`} showsVerticalScrollIndicator={true}>
+                <ScrollView className={`bg-white mb-10`} showsVerticalScrollIndicator={true}>
                     <View className='bg-white'>
                         <View className=''>
                             <View className='flex flex-row justify-between items-center mb-[30px] mt-3 bg-[#eaf3fe] h-28 px-2 '>
@@ -230,75 +232,149 @@ export default function SIPReportsDetail() {
                                 <View className='flex flex-row justify-start'>
                                     <Text className='font-bold text-base'>Transactions</Text>
                                 </View>
-                                <View className='flex flex-col mt-3'>
-                                    <View className='flex flex-row bg-[#e3e3e3] rounded-t'>
-                                        <View className='w-2/12 py-[9px] px-[9px]'>
-                                            <Text selectable className='font-semibold'>Type</Text>
-                                        </View>
-                                        <View className='w-2/12 py-[9px] px-[9px]'>
-                                            <Text selectable className='font-semibold'>Payment Date</Text>
-                                        </View>
-                                        <View className='w-2/12 py-[9px] px-[9px]'>
-                                            <Text selectable className='font-semibold'>Settlement Date</Text>
-                                        </View>
+                                {width < 830 ?
+                                    <View className='flex flex-col mt-3'>
+                                        {
+                                            data.transactions.map((transaction, index) => {
+                                                return <View key={index}>
+                                                    <View className={`flex flex-row p-2 justify-between flex-wrap rounded-xl mx-2 mb-3 ` + (index % 2 ? "bg-[#eaf3fe]" : "bg-[#f0f0f0]")} style={{ borderColor: "#367a88", borderWidth: 0.2 }}>
+                                                        <View className='flex flex-col w-full'>
+                                                            <View className='flex flex-row items-start justify-center w-full flex-wrap mt-3'>
+                                                                <View className='flex flex-col items-center w-4/12 justify-center'>
+                                                                    <Text selectable className='text-slate-600 font-base text-[10px]'>Amount</Text>
 
-                                        <View className='w-2/12 py-[9px] px-[9px]'>
-                                            <Text selectable className='font-semibold'>Units</Text>
-                                        </View>
-                                        <View className='w-2/12 py-[9px] px-[9px]'>
-                                            <Text selectable className='font-semibold'>NAV</Text>
-                                        </View>
-                                        <View className='w-1/12 py-[9px] px-[9px]'>
-                                            <Text selectable className='font-semibold'>Amount</Text>
-                                        </View>
-                                        <View className='w-1/12 py-[9px] px-[9px]'>
-                                            <Text selectable className='font-semibold'>Status</Text>
-                                        </View>
-                                    </View>
-                                    <View
-                                        className='mb-2'
-                                        style={{
-                                            borderColor: '#e4e4e4',
-                                            borderBottomWidth: StyleSheet.hairlineWidth,
-                                        }}
-                                    />
-                                    {
-                                        data?.transactions?.map((transaction, index) => {
-                                            return <><View className='flex flex-row w-full'>
-                                                <View className='w-2/12 p-3'>
-                                                    <Text selectable >{transaction?.transactionType?.name || "-"}</Text>
-                                                </View>
-                                                <View className='w-2/12 p-3'>
-                                                    <Text selectable >{transaction?.paymentDate ? moment(new Date(transaction?.paymentDate)).format('DD-MM-YYYY hh:mm:ss A') : "-"}</Text>
-                                                </View>
-                                                <View className='w-2/12 p-3'>
-                                                    <Text selectable >{transaction?.settlementDate ? moment(new Date(transaction?.settlementDate)).format('DD-MM-YYYY hh:mm:ss A') : "-"}</Text>
-                                                </View>
+                                                                    <Text selectable className='text-black font-bold text-[13px]'>{transaction.amount || "-"} </Text>
+                                                                </View>
+                                                                <View className='flex flex-col items-center w-4/12 justify-center'>
+                                                                    <Text selectable className='text-slate-600 font-base text-[10px]'>Units </Text>
 
-                                                <View className='w-2/12 p-3'>
-                                                    <Text selectable >{transaction?.units || "-"}</Text>
+                                                                    <Text selectable className='text-black font-bold text-[13px]'>{transaction.units || '-'} </Text>
+                                                                </View>
+                                                                <View className='flex flex-col items-center w-4/12 justify-center'>
+                                                                    <Text selectable className='text-slate-600 font-base text-[10px]'>Nav </Text>
+
+                                                                    <Text selectable className='text-black font-bold text-[13px]'>{transaction.nav || '-'} </Text>
+                                                                </View>
+
+                                                            </View>
+                                                            <View className='flex flex-row items-start justify-center w-full flex-wrap mt-3'>
+                                                                <View className='flex flex-col items-center w-4/12 justify-center'>
+                                                                    <Text selectable className='text-slate-600 font-base text-[10px]'>Nav Allotment Date</Text>
+
+                                                                    <Text selectable className='text-black font-bold text-[13px]'>{transaction.navAllotmentDate && moment(new Date(transaction.navAllotmentDate)).format("DD-MM-YYYY hh:mm:ss A") || "-"} </Text>
+                                                                </View>
+                                                                <View className='flex flex-col items-center w-4/12 justify-center'>
+                                                                    <Text selectable className='text-slate-600 font-base text-[10px]'>Settlement Date </Text>
+
+                                                                    <Text selectable className='text-black font-bold text-[13px]'>{transaction.settlementDate && moment(new Date(transaction.settlementDate)).format("DD-MM-YYYY hh:mm:ss A") || "-"} </Text>
+                                                                </View>
+                                                                <View className='flex flex-col items-center w-4/12 justify-center'>
+                                                                    <Text selectable className='text-slate-600 font-base text-[10px]'>Payment Date</Text>
+
+                                                                    <Text selectable className='text-black font-bold text-[13px]'>{transaction.paymentDate && moment(new Date(transaction.paymentDate)).format("DD-MM-YYYY hh:mm:ss A") || "-"} </Text>
+                                                                </View>
+
+                                                            </View>
+
+
+
+                                                            <View className='flex flex-row items-start justify-center w-full flex-wrap mt-3'>
+                                                                <View className='flex flex-col items-center w-4/12 justify-center'>
+                                                                    <Text selectable className='text-slate-600 font-base text-[10px]'>Settlement Type</Text>
+
+                                                                    <Text selectable className='text-black font-bold text-[13px]'>{transaction.settlementType || "-"} </Text>
+                                                                </View>
+                                                                <View className='flex flex-col items-center w-4/12 justify-center'>
+                                                                    <Text selectable className='text-slate-600 font-base text-[10px]'>Transaction Status </Text>
+
+                                                                    <Text selectable className='text-black font-bold text-[13px]'>{transaction.transactionStatus.name || '-'} </Text>
+                                                                </View>
+                                                                <View className='flex flex-col items-center w-4/12 justify-center'>
+                                                                    <Text selectable className='text-slate-600 font-base text-[10px]'>Type</Text>
+
+                                                                    <Text selectable className='text-black font-bold text-[13px]'>{transaction.transactionType.name || "-"} </Text>
+                                                                </View>
+
+                                                            </View>
+
+                                                        </View>
+                                                    </View>
                                                 </View>
-                                                <View className='w-2/12 p-3'>
-                                                    <Text selectable >{transaction?.nav || "-"}</Text>
-                                                </View>
-                                                <View className='w-1/12 p-3'>
-                                                    <Text selectable >{transaction?.amount ? (RupeeSymbol + transaction?.amount) : "-"}</Text>
-                                                </View>
-                                                <View className='w-1/12 p-3'>
-                                                    <Text selectable >{transaction?.transactionStatus?.name || "-"}</Text>
-                                                </View>
+                                            })
+                                        }
+                                    </View> :
+                                    <View className='flex flex-col mt-3'>
+                                        <View className='flex flex-row bg-[#e3e3e3] rounded-t'>
+                                            <View className='w-2/12 py-[9px] px-[9px]'>
+                                                <Text selectable className='font-semibold'>Type</Text>
                                             </View>
-                                                <View
-                                                    className='mb-2'
-                                                    style={{
-                                                        borderColor: '#e4e4e4',
-                                                        borderBottomWidth: StyleSheet.hairlineWidth,
-                                                    }}
-                                                />
-                                            </>
-                                        })
-                                    }
-                                </View>
+                                            <View className='w-2/12 py-[9px] px-[9px]'>
+                                                <Text selectable className='font-semibold'>Payment Date</Text>
+                                            </View>
+                                            <View className='w-2/12 py-[9px] px-[9px]'>
+                                                <Text selectable className='font-semibold'>Settlement Date</Text>
+                                            </View>
+
+                                            <View className='w-2/12 py-[9px] px-[9px]'>
+                                                <Text selectable className='font-semibold'>Units</Text>
+                                            </View>
+                                            <View className='w-2/12 py-[9px] px-[9px]'>
+                                                <Text selectable className='font-semibold'>NAV</Text>
+                                            </View>
+                                            <View className='w-1/12 py-[9px] px-[9px]'>
+                                                <Text selectable className='font-semibold'>Amount</Text>
+                                            </View>
+                                            <View className='w-1/12 py-[9px] px-[9px]'>
+                                                <Text selectable className='font-semibold'>Status</Text>
+                                            </View>
+                                        </View>
+                                        <View
+                                            className='mb-2'
+                                            style={{
+                                                borderColor: '#e4e4e4',
+                                                borderBottomWidth: StyleSheet.hairlineWidth,
+                                            }}
+                                        />
+                                        {
+                                            data?.transactions?.map((transaction, index) => {
+                                                return <View key={index}>
+                                                    <View className='flex flex-row w-full'>
+                                                        <View className='w-2/12 p-3'>
+                                                            <Text selectable >{transaction?.transactionType?.name || "-"}</Text>
+                                                        </View>
+                                                        <View className='w-2/12 p-3'>
+                                                            <Text selectable >{transaction?.paymentDate ? moment(new Date(transaction?.paymentDate)).format('DD-MM-YYYY hh:mm:ss A') : "-"}</Text>
+                                                        </View>
+                                                        <View className='w-2/12 p-3'>
+                                                            <Text selectable >{transaction?.settlementDate ? moment(new Date(transaction?.settlementDate)).format('DD-MM-YYYY hh:mm:ss A') : "-"}</Text>
+                                                        </View>
+
+                                                        <View className='w-2/12 p-3'>
+                                                            <Text selectable >{transaction?.units || "-"}</Text>
+                                                        </View>
+                                                        <View className='w-2/12 p-3'>
+                                                            <Text selectable >{transaction?.nav || "-"}</Text>
+                                                        </View>
+                                                        <View className='w-1/12 p-3'>
+                                                            <Text selectable >{transaction?.amount ? (RupeeSymbol + transaction?.amount) : "-"}</Text>
+                                                        </View>
+                                                        <View className='w-1/12 p-3'>
+                                                            <Text selectable >{transaction?.transactionStatus?.name || "-"}</Text>
+                                                        </View>
+                                                    </View>
+                                                    <View
+                                                        className='mb-2'
+                                                        style={{
+                                                            borderColor: '#e4e4e4',
+                                                            borderBottomWidth: StyleSheet.hairlineWidth,
+                                                        }}
+                                                    />
+                                                </View>
+                                            })
+                                        }
+
+                                    </View>
+                                }
                             </View>
                         </View>
                     </View>

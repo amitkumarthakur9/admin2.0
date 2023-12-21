@@ -42,7 +42,7 @@ export const SortingPopup = ({ setSortingOpen, setFilterOpen, sortingOpen, appli
                                 }} mt={1}
                                 onValueChange={itemValue => handleSortingChange(itemValue, 'key')}>
                                 {
-                                    sorting.map((sort, index) => <Select.Item label={sort.title} value={sort.key} />)
+                                    sorting.map((sort, index) => <Select.Item key={index} label={sort.title} value={sort.key} />)
                                 }
                             </Select>
                         </View>
@@ -59,7 +59,7 @@ export const SortingPopup = ({ setSortingOpen, setFilterOpen, sortingOpen, appli
                                         endIcon: <CheckIcon size="5" />
                                     }} mt={1} onValueChange={itemValue => handleSortingChange(itemValue, 'direction')}>
                                     {
-                                        sorting.find((sort, index) => sort.key == appliedSorting.key)?.direction?.map((direc, index) => <Select.Item label={direc.displayString} value={direc.value} />)
+                                        sorting.find((sort, index) => sort.key == appliedSorting.key)?.direction?.map((direc, index) => <Select.Item key={index} label={direc.displayString} value={direc.value} />)
                                     }
 
                                 </Select>

@@ -114,9 +114,9 @@ export const Card = ({ data, schema }: { data: AUMDataItem[], schema: any }) => 
                                     <View className='flex flex-row items-center flex-wrap'>
                                         <Text selectable className='text-black text-xs'>{order?.mutualfund?.mutualfundSubcategory?.name}</Text>
                                     </View>
-                                    <View className='flex flex-row items-center flex-wrap'>
+                                    {/* <View className='flex flex-row items-center flex-wrap'>
                                         <Text selectable className='text-black text-xs'>BSE: {order?.mutualfund?.bseDematSchemeCode}</Text>
-                                    </View>
+                                    </View> */}
                                     <View className='flex flex-row items-center flex-wrap'>
                                         <Text selectable className='text-black text-xs'>Fund House: {order?.mutualfund?.fundhouse?.name}</Text>
                                     </View>

@@ -119,7 +119,7 @@ const CustomDataTable: React.FC<DataTableProps> = ({ data = [] }) => {
                         <DataTable.Cell style={{ width: 120, flexBasis: "auto" }}>{item.tax_status}</DataTable.Cell>
                         <DataTable.Cell style={{ width: 20, flexBasis: "auto" }}>
                             <Button style={{ width: 30, }} icon="dots-vertical" mode="text" onPress={() => console.log('Pressed')}>
-
+                                \
                             </Button>
                         </DataTable.Cell>
                         {/* <DataTable.Cell numeric style={{ width: 120, flexBasis: "auto" }}>{item.fat}</DataTable.Cell> */}
