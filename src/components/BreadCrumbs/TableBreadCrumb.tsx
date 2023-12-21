@@ -29,7 +29,7 @@ export const TableBreadCrumb = ({ name, showViewAll = false, url = "", getDataLi
             </View> */}
         </View>
         <View className='w-6/12 overflow-hidden h-full flex flex-row justify-center'>
-            <Image className='' source={require('../../../assets/images/ChatBc.png')} style={{
+            <Image className='' alt="ico" source={require('../../../assets/images/ChatBc.png')} style={{
                 // flex: 1,
                 // justifyContent: 'end',
             }} />
