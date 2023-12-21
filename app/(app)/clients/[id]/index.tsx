@@ -101,12 +101,12 @@ export default function ClientDetail() {
 
                                         <View className='flex flex-row mb-1 items-center'>
                                             <Icon name="envelope" size={18} style={{ marginRight: 5, width: 20, textAlign: "center" }} color="black" />
-                                            <Text selectable>{data.users[0].credentials[0].email}</Text>
+                                            <Text selectable>{data?.users[0]?.credentials[0].email}</Text>
                                         </View>
 
                                         <View className='flex flex-row mb-1 items-center'>
                                             <Icon name="phone" size={18} style={{ marginRight: 5, width: 20, textAlign: "center" }} color="black" />
-                                            <Text selectable>{data.users[0].credentials[0].mobileNumber}</Text>
+                                            <Text selectable>{data?.users[0]?.credentials[0]?.mobileNumber}</Text>
                                         </View>
 
                                         <View className='flex flex-row mb-1 items-center'>
