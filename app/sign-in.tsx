@@ -151,7 +151,7 @@ export default function SignIn() {
                             onChangeText={(text) => setEmail({ value: text, error: '' })}
                         />
                         <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
-                            Try different from previous passwords.
+                            {email.error}
                         </FormControl.ErrorMessage>
                     </FormControl>
                 </Box>
@@ -173,7 +173,7 @@ export default function SignIn() {
                                 <Icon name={show ? "eye" : "eye-slash"} style={{ marginHorizontal: 10 }} size={14} color="#484848" />
                             </Pressable>} placeholder="Password" />
                         <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
-                            Try different from previous passwords.
+                            {password.error}
                         </FormControl.ErrorMessage>
                     </FormControl>
                 </Box>
