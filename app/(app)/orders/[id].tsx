@@ -146,7 +146,7 @@ export default function OrderDetail() {
                                                 source={{ uri: data.mutualFund.fundhouse.logoUrl }}
                                             />
                                             <View className={'flex flex-col justify-end items-start'} >
-                                                <Text selectable className='text-black font-semibold break-all text-sm flex-wrap' >{data.mutualFund.name}</Text>
+                                                <Text selectable className='text-black font-semibold break-all text-sm flex-wrap w-[90%]' >{data.mutualFund.name}</Text>
 
                                                 <View className='flex flex-row items-center flex-wrap'>
                                                     <Text selectable className=' text-blacktext-xs'>{data.mutualFund.mutualfundSubcategory.mutualfundCategory.name}</Text>
