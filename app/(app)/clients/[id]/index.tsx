@@ -532,9 +532,10 @@ export default function ClientDetail() {
 
 
                                                                 <View className='flex flex-col items-center w-3/12 justify-center'>
-                                                                    <Text selectable className='text-slate-600 font-base text-[10px]'>Avg Nav</Text>
+                                                                    {/* <Text selectable className='text-slate-600 font-base text-[10px]'>Avg Nav</Text> */}
+                                                                    <Text selectable className='text-slate-600 font-base text-[10px]'></Text>
 
-                                                                    <Text selectable className='text-black font-bold text-[13px]'>{holding.avgNav || '-'} </Text>
+                                                                    {/* <Text selectable className='text-black font-bold text-[13px]'>{holding.avgNav || '-'} </Text> */}
                                                                 </View>
 
                                                                 <View className='flex flex-col items-center w-3/12 justify-center'>
@@ -600,7 +601,7 @@ export default function ClientDetail() {
                                                             <Text selectable >{holding.units || "-"}</Text>
                                                         </View>
                                                         <View className='w-[18%] p-3'>
-                                                            <Text selectable >{holding.avgNav || "-"}</Text>
+                                                            {/* <Text selectable >{holding.avgNav || "-"}</Text> */}
                                                         </View>
                                                         <View className='w-[18%] p-3'>
                                                             <Text selectable >{holding.currentValue ? (RupeeSymbol + holding.currentValue) : "-"}</Text>

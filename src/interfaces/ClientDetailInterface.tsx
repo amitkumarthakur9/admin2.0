@@ -67,7 +67,7 @@ interface Holding {
     accountId: string;
     mutualfundDividendTypeId: string;
     xirr: number;
-    avgNav: number;
+    avgNav: number | null;
     units: number;
     currentValue: number;
     investedValue: number;
@@ -225,7 +225,7 @@ interface Folio {
 interface Holding {
     id: string;
     xirr: number;
-    avgNav: number;
+    avgNav: number | null;
     units: number;
     currentValue: number;
     investedValue: number;
