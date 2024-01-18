@@ -158,10 +158,10 @@ export const DynamicFilters = ({ schemaResponse, setAppliedSorting, appliedSorti
 
         if (count > 0) {
             return <Badge
-                height={5}
-                width={5}
+                // height={"5%"}
+                // width={"5%"}
                 colorScheme="danger" rounded="full" variant="solid" alignSelf="flex-end" _text={{
-                    fontSize: 12,
+                    fontSize: 8,
                 }}>
                 {count}
             </Badge>

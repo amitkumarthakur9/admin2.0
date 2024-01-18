@@ -10,10 +10,10 @@ export const SortingSheet = ({ setSortingOpen, setFilterOpen, sortingOpen, appli
             <Text className="mr-1">Sorting</Text>
             {
                 appliedSorting.key && appliedSorting.direction && <Badge
-                    height={5}
-                    width={5}
+                    // height={2}
+                    // width={2}
                     colorScheme="danger" rounded="full" variant="solid" alignSelf="flex-end" _text={{
-                        fontSize: 12,
+                        fontSize: 8,
                     }}>
                     {1}
                 </Badge>
@@ -22,13 +22,13 @@ export const SortingSheet = ({ setSortingOpen, setFilterOpen, sortingOpen, appli
         <Actionsheet isOpen={sortingOpen} onClose={() => setSortingOpen(false)} >
             <Actionsheet.Content >
                 <Box w="100%" h={"130px"} justifyContent="start">
-                    <View className="flex flex-col">
+                    <View className="flex flex-col ">
                         {appliedSorting.key && <View className="flex flex-row-reverse mb-2">
                             <TouchableRipple rippleColor={"#e4e4e4"} onPress={() => setAppliedSorting({ key: "", direction: "" })}>
                                 <Text selectable className='text-xs underline underline-offset-4'>clear</Text>
                             </TouchableRipple>
                         </View>}
-                        <View className="flex flex-row">
+                        <View className="flex flex-row justify-center mb-2">
                             <View className="mr-2">
                                 <Select
                                     dropdownIcon={<Icon style={{ marginRight: 4 }} name="angle-down" size={18} />}
@@ -46,6 +46,8 @@ export const SortingSheet = ({ setSortingOpen, setFilterOpen, sortingOpen, appli
                                     }
                                 </Select>
                             </View>
+                        </View>
+                        <View className="flex flex-row justify-center">
                             <View>
                                 {
                                     appliedSorting.key != "" && <Select

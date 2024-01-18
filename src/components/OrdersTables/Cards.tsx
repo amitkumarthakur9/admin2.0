@@ -116,7 +116,7 @@ export const Cards = ({ data, schema }: { data: OrderInterface[], schema: any })
                                         </View>
 
                                         <View className='px-1 w-2/12 h-2 items-center'>
-                                            <ImageBackground className='w-10/12' source={require('../../../assets/arrow.png')} resizeMode="contain" style={{
+                                            <ImageBackground alt="bg" className='w-10/12' source={require('../../../assets/arrow.png')} resizeMode="contain" style={{
                                                 flex: 1,
                                                 justifyContent: 'center',
                                             }}>
@@ -129,6 +129,7 @@ export const Cards = ({ data, schema }: { data: OrderInterface[], schema: any })
                                 }
                                 <View className={"flex flex-row " + (screenDimensions.width <= 800 ? "justify-start items-center " : " justify-center items-center ") + (order.mutualfunds.mutualfundType.name == "Switch" ? "w-5/12" : "w-full")} >
                                     <Image
+                                        alt="fundhouse"
                                         className="mr-2"
                                         style={{ width: 40, height: 40 }}
                                         source={{ uri: order.mutualfunds.fundhouse.logoUrl }}
@@ -144,16 +145,16 @@ export const Cards = ({ data, schema }: { data: OrderInterface[], schema: any })
                             </View>
 
                             <View className='flex flex-row items-start justify-center w-full flex-wrap mt-3'>
-                                <View className='flex flex-col items-center w-[45%] justify-center'>
+                                <View className='flex flex-col items-center w-[40%] justify-center'>
                                     <Text selectable className='text-slate-600 font-base text-[10px] text-center'>Order No</Text>
                                     <Text selectable className='text-black font-bold text-[10px] text-center w-10/12'>{order.orderReferenceNumber || "-"} </Text>
                                 </View>
-                                <View className='flex flex-col items-center w-[10%] justify-center'>
+                                <View className='flex flex-col items-center w-[20%] justify-center'>
                                     <Text selectable className='text-slate-600 font-base text-[10px] text-center'>Type</Text>
 
                                     <Text selectable className='text-black font-bold text-[10px] text-center'>{order.orderType.name} </Text>
                                 </View>
-                                <View className='flex flex-col items-center w-[45%] justify-center'>
+                                <View className='flex flex-col items-center w-[40%] justify-center'>
                                     <Text selectable className='text-slate-600 font-base text-[10px] text-center'>Initated Date</Text>
 
                                     <Text selectable className='text-black font-bold text-[10px] text-center w-8/12'>{moment(new Date(order.createdAt)).format("DD-MM-YYYY hh:mm:ss A")} </Text>
