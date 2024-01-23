@@ -43,8 +43,8 @@ export default function SignIn() {
 
         try {
             const response: any = await RemoteApi.post("/user/login", {
-                // email: email.value, password: password.value
-                email: "bhupendrajogi@gmail.com", password: "US me bohot jagha gaye hai"
+                email: email.value, password: password.value
+                // email: "bhupendrajogi@gmail.com", password: "US me bohot jagha gaye hai"
             });
 
             console.log("response", response);
