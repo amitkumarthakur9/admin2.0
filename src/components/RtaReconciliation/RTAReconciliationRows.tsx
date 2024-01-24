@@ -149,7 +149,7 @@ export const RTAReconciliationRows = ({ data, schema, getDataList }) => {
                         <View className="flex flex-row w-1/12">
                             {/* <View> */}
                             <Text className="w-10/12" selectable>
-                                {rta.mutualfund.fundhouse.rta || "-"}
+                                {rta.mutualfund.fundhouse?.rta?.name || "-"}
                             </Text>
                             {/* </View> */}
                         </View>

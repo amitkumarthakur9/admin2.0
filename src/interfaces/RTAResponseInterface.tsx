@@ -4,10 +4,16 @@ interface User {
     panNumber: string;
 }
 
+interface Rta {
+    id: number;
+    name: string;
+    shortName: string | null;
+}
+
 interface FundHouse {
     id: number;
     name: string;
-    rta: any; // Replace 'any' with the specific type if available
+    rta: Rta | null; // Replace 'any' with the specific type if available
 }
 
 interface MutualFund {
