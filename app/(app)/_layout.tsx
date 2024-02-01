@@ -25,6 +25,8 @@ import { Center, HStack, Heading, Spinner } from 'native-base';
 import { useStorageState } from '../../src/services/useStorageState';
 import ClientDetail from './clients/[id]/index';
 import HoldingDetail from './clients/[id]/holdings/[holdingId]';
+import MandatesScreen from './mandates';
+import MandateDetail from './mandates/[id]';
 
 
 NativeWindStyleSheet.setOutput({
@@ -66,7 +68,7 @@ export default function AppLayout() {
                 })}
                 backBehavior='history'
                 detachInactiveScreens={true}
-                initialRouteName="orders/index" drawerContent={(props) => <CustomSidebarMenu {...props} />} >
+                initialRouteName="clients/index" drawerContent={(props) => <CustomSidebarMenu {...props} />} >
                 {/* <Drawer.Screen
                         // name="index" // This is the name of the page and must match the url from root
                         // options={{
@@ -79,7 +81,7 @@ export default function AppLayout() {
                     /> */}
 
 
-                <Drawer.Screen
+                {/* <Drawer.Screen
                     name="orders/index" // This is the name of the page and must match the url from root
                     options={{
                         drawerLabel: "Orders",
@@ -92,7 +94,7 @@ export default function AppLayout() {
 
                     // initialParams={{}}
                     component={OrdersScreen}
-                />
+                /> */}
 
                 <Drawer.Screen
                     name="clients/index" // This is the name of the page and must match the url from root
@@ -141,6 +143,32 @@ export default function AppLayout() {
                     }}
                     initialParams={{}}
                     component={RTAReconciliationScreen}
+                />
+
+                <Drawer.Screen
+                    name="mandates/index" // This is the name of the page and must match the url from root
+                    options={{
+                        drawerLabel: "Mandates",
+                        title: "Mandates",
+                        unmountOnBlur: true
+
+                    }}
+                    initialParams={{}}
+                    component={MandatesScreen}
+                />
+
+                <Drawer.Screen
+
+                name="mandates/[id]" // This is the name of the page and must match the url from root
+                options={{
+                    drawerLabel: "MandateDetail",
+                    title: "MandateDetail",
+                    drawerItemStyle: { display: 'none' },
+                    unmountOnBlur: true
+
+                }}
+                initialParams={{}}
+                component={MandateDetail}
                 />
 
                 <Drawer.Screen

@@ -35,7 +35,7 @@ export const RTAReconciliationRows = ({ data, schema, getDataList }) => {
 
     return <>
         <View className={`flex flex-row py-4 px-2 justify-between `}>
-            <View className='flex flex-row w-3/12'>
+            <View className='flex flex-row w-2/12'>
                 <View className='flex flex-row items-center w-full justify-start'>
                     <Text selectable className='font-semibold'>Client Name</Text>
                 </View>
@@ -46,11 +46,11 @@ export const RTAReconciliationRows = ({ data, schema, getDataList }) => {
                     <Text selectable className='font-semibold'>Scheme</Text>
                 </View>
             </View>
-            <View className='flex flex-row w-1/12'>
+            {/* <View className='flex flex-row w-1/12'>
                 <View className='flex flex-row items-center w-full justify-start'>
                     <Text selectable className='font-semibold'>AMC</Text>
                 </View>
-            </View>
+            </View> */}
             <View className='flex flex-row w-1/12'>
                 <View className='flex flex-row items-center w-full justify-start w-4/5'>
                     <Text selectable className='font-semibold'>RTA Agent Code</Text>
@@ -77,7 +77,17 @@ export const RTAReconciliationRows = ({ data, schema, getDataList }) => {
                 </View>
             </View>
             <View className='flex flex-row w-1/12'>
-                <View className='flex flex-row items-center w-full justify-start w-4/5'>
+                <View className='flex flex-row items-center w-full justify-start'>
+                    <Text selectable className='font-semibold'>Created At</Text>
+                </View>
+            </View>
+            <View className='flex flex-row w-1/12'>
+                <View className='flex flex-row items-center w-4/5 justify-start'>
+                    <Text selectable className='font-semibold'>Transaction Type</Text>
+                </View>
+            </View>
+            <View className='flex flex-row w-1/12'>
+                <View className='flex flex-row items-center justify-start w-4/5'>
                     <Text selectable className='font-semibold'>Transaction Status</Text>
                 </View>
             </View>
@@ -94,7 +104,7 @@ export const RTAReconciliationRows = ({ data, schema, getDataList }) => {
 
                 return <View key={index}>
                     <View className={`flex flex-row p-2 justify-between `} style={{ backgroundColor: id == rta.id ? "#e1e1e1" : "" }}>
-                        <View className='flex flex-row w-3/12 flex-wrap'>
+                        <View className='flex flex-row w-2/12 flex-wrap'>
                             <View className='flex flex-row items-center justify-start flex-wrap w-full'>
                                 <Pressable onPress={() => router.push(`/clients/${rta.account.id}`)} className='flex flex-row rounded-full bg-[#e60202] mr-2 h-10 w-10 items-center justify-center flex-wrap'>
                                     <Text selectable className='text-white'>{getInitials(rta.account.name)}</Text>
@@ -141,11 +151,11 @@ export const RTAReconciliationRows = ({ data, schema, getDataList }) => {
                                     <Text selectable className='text-[#686868] font-semibold'>{rta.mutualfund.fundhouse.name}</Text> */}
                             </View>
                         </View>
-                        <View className="flex flex-row w-1/12">
+                        {/* <View className="flex flex-row w-1/12">
                             <Text className="w-10/12" selectable>
                                 {rta.mutualfund.fundhouse.name || "-"}
                             </Text>
-                        </View>
+                        </View> */}
                         <View className="flex flex-row w-1/12">
                             {/* <View> */}
                             <Text className="w-10/12" selectable>
@@ -169,8 +179,22 @@ export const RTAReconciliationRows = ({ data, schema, getDataList }) => {
                             </Text>
                         </View>
                         <View className="flex flex-row w-1/12">
-                            <Text selectable>
-                                {rta.amount ? (RupeeSymbol + rta.amount) : "-"}
+                            <View className="flex flex-col">
+                                <Text selectable>
+                                    {rta.amount ? (RupeeSymbol + rta.amount) : "-"}
+                                </Text>
+                            </View>
+                        </View>
+
+                        <View className="flex flex-row w-1/12">
+                            <Text className="w-10/12" selectable>
+                                {rta.createdAt ? moment(new Date(rta.createdAt)).format("DD-MM-YYYY hh:mm:ss A") : "-"}
+                            </Text>
+                        </View>
+                        
+                        <View className="flex flex-row w-1/12">
+                            <Text className="w-10/12" selectable>
+                                {rta.transactionType || "-"}
                             </Text>
                         </View>
                         <View className="flex flex-row w-1/12 justify-start">

@@ -97,30 +97,34 @@ export const Cards = ({ data, schema, getDataList }: { data: RTAReconcilation[],
                                     <View className='flex flex-row items-center flex-wrap'>
                                         <Text selectable className='text-black text-xs'>BSE: {rta.mutualfund.bseDematSchemeCode}</Text>
                                     </View>
-                                    <View className='flex flex-row items-center flex-wrap'>
+                                    {/* <View className='flex flex-row items-center flex-wrap'>
                                         <Text selectable className='text-black text-xs'>AMC: {rta.mutualfund.name}</Text>
-                                    </View>
+                                    </View> */}
                                 </View>
                             </View>
 
                             <View className='flex flex-row items-start justify-center w-full flex-wrap mt-3'>
-                                <View className='flex flex-col items-center w-4/12 justify-center'>
-                                    <Text selectable className='text-black font-bold text-[13px]'>{rta.mutualfund.rtaCode || "-"} </Text>
+                                <View className='flex flex-col items-center w-4/12 justify-cente mb-[10px]'>
                                     <Text selectable className='text-slate-600 font-base text-[10px]'>RTA Code</Text>
+                                    <Text selectable className='text-black font-bold text-[13px]'>{rta.mutualfund.rtaCode || "-"} </Text>
                                 </View>
-                                {/* <View className='flex flex-col items-center w-4/12 justify-center'>
-                                    <Text selectable className='text-black font-bold text-[13px]'>{moment(new Date(rta.createdAt)).format("DD-MM-YYYY hh:mm:ss A")} </Text>
-                                    <Text selectable className='text-slate-600 font-base text-[10px]'>Initated At</Text>
-                                </View> */}
-                                <View className='flex flex-col items-center w-4/12 justify-center'>
-                                    <Text selectable className='text-black font-bold text-[13px]'>{rta.orderReferenceNumber || '-'} </Text>
+                                <View className='flex flex-col items-center w-4/12 justify-center mb-[10px]'>
                                     <Text selectable className='text-slate-600 font-base text-[10px]'>Order No </Text>
+                                    <Text selectable className='text-black font-bold text-[13px]'>{rta.orderReferenceNumber || '-'} </Text>
                                 </View>
-                                <View className='flex flex-col items-center w-4/12 justify-center'>
-                                    <Text selectable className='text-black font-bold text-[13px]'>{rta.transactionType || "-"} </Text>
+                                <View className='flex flex-col items-center w-4/12 justify-center mb-[10px]'>
+                                    <Text selectable className='text-slate-600 font-base text-[10px]'>Created At</Text>
+                                    <Text selectable className='text-black font-bold text-[13px] text-center'>{rta.createdAt ? moment(new Date(rta.createdAt)).format("DD-MM-YYYY hh:mm:ss A") : "-"} </Text>
+                                </View>
+                                <View className='flex flex-col items-center w-4/12 justify-center mb-[10px]'>
                                     <Text selectable className='text-slate-600 font-base text-[10px]'>Type</Text>
+                                    <Text selectable className='text-black font-bold text-[13px]'>{rta.transactionType || "-"} </Text>
                                 </View>
-
+                                <View className='flex flex-col items-center w-4/12 justify-center mb-[10px]'>
+                                    <Text selectable className='text-slate-600 font-base text-[10px]'>Transaction Type</Text>
+                                    <Text selectable className='text-black font-bold text-[13px] text-center'>{rta.transactionType || "-"} </Text>
+                                </View>
+                        
                             </View>
 
                             {/* <View className='flex flex-row items-center w-full mt-3'>
