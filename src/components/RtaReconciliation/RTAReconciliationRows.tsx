@@ -183,6 +183,18 @@ export const RTAReconciliationRows = ({ data, schema, getDataList }) => {
                                 <Text selectable>
                                     {rta.amount ? (RupeeSymbol + rta.amount) : "-"}
                                 </Text>
+                                {
+                                    rta.units ? 
+                                    <Text selectable className="text-[10px]">
+                                        {rta.units} Units
+                                    </Text> : '' 
+                                }
+                                
+                                { rta.nav ? 
+                                    <Text selectable className="text-[10px]">
+                                        {rta.nav } NAV
+                                    </Text> : ''
+                                }
                             </View>
                         </View>
 
