@@ -21,7 +21,7 @@ axiosInstance.interceptors.response.use(
     }
   },
   (error: AxiosError) => {
-    console.error('API Error:', error.toJSON());
+    // console.error('API Error:', error.toJSON());
 
     if (error?.response?.status === 401) {
       if (Platform.OS == "web") {
@@ -32,17 +32,22 @@ axiosInstance.interceptors.response.use(
 
       // if (Platform.OS == "web") {
       // router
-      if (error?.request['_url']?.includes("/login")) {
-        // console.log(error.response.data['errors']);
+      if (error?.response.config?.url?.includes("/login")) {
+        // console.log();
       } else {
         window.location.reload();
+        // console.log(error);
       }
       // }
+    }else{
+      console.log('error',error);
     }
 
     return error.response;
   }
 );
+
+
 
 class ApiRequest {
   static async get<T>(endpoint: string): Promise<T> {
@@ -67,6 +72,28 @@ class ApiRequest {
       data: JSON.stringify(data),
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${await AsyncStorage.getItem("token")}`,
+        // You can add any custom headers here, like authorization headers
+      },
+    };
+
+    // console.log('post token', await AsyncStorage.getItem("token"));
+
+
+    const response = await axiosInstance(config);
+
+    // console.log('response', response);
+
+    return response?.data;
+  }
+
+  static async postWithFormData<T>(endpoint: string, data?: any): Promise<T> {
+    const config: AxiosRequestConfig = {
+      method: 'POST',
+      url: endpoint,
+      data: data,
+      headers: {
+        'Content-Type': 'multipart/form-data',
         Authorization: `Bearer ${await AsyncStorage.getItem("token")}`,
         // You can add any custom headers here, like authorization headers
       },

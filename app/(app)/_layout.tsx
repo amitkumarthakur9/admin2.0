@@ -27,6 +27,7 @@ import ClientDetail from './clients/[id]/index';
 import HoldingDetail from './clients/[id]/holdings/[holdingId]';
 import MandatesScreen from './mandates';
 import MandateDetail from './mandates/[id]';
+import RTASync from './rta-sync';
 
 
 NativeWindStyleSheet.setOutput({
@@ -158,17 +159,29 @@ export default function AppLayout() {
                 />
 
                 <Drawer.Screen
+                    name="rta-sync" // This is the name of the page and must match the url from root
+                    options={{
+                        drawerLabel: "RTA Sync",
+                        title: "RTA Sync",
+                        unmountOnBlur: true
 
-                name="mandates/[id]" // This is the name of the page and must match the url from root
-                options={{
-                    drawerLabel: "MandateDetail",
-                    title: "MandateDetail",
-                    drawerItemStyle: { display: 'none' },
-                    unmountOnBlur: true
+                    }}
+                    initialParams={{}}
+                    component={RTASync}
+                />
 
-                }}
-                initialParams={{}}
-                component={MandateDetail}
+                <Drawer.Screen
+
+                    name="mandates/[id]" // This is the name of the page and must match the url from root
+                    options={{
+                        drawerLabel: "MandateDetail",
+                        title: "MandateDetail",
+                        drawerItemStyle: { display: 'none' },
+                        unmountOnBlur: true
+
+                    }}
+                    initialParams={{}}
+                    component={MandateDetail}
                 />
 
                 <Drawer.Screen
