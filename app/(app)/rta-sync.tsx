@@ -68,6 +68,7 @@ export default function RTASync() {
     };
 
     const handleSync = async () => {
+        setIsSyncing(true)
         const response:any = await RemoteApi.post("/file/sync",);
 
         if(response?.message == "Success"){
@@ -88,6 +89,9 @@ export default function RTASync() {
                 placement: "top"
             })
         }
+
+        setIsSyncing(false)
+
     }
   
 
