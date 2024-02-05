@@ -1,33 +1,37 @@
 import { Platform, ScrollView, StyleProp, TextStyle, ViewStyle, Text, TouchableOpacity } from 'react-native';
 import { TableBreadCrumb } from '../../src/components/BreadCrumbs/TableBreadCrumb';
-import { Box, Popover, Button, ChevronLeftIcon, ChevronRightIcon, Pressable, View, Select, CheckIcon, Stack , Input, FormControl} from 'native-base';
+import { Box, Popover, Button, ChevronLeftIcon, ChevronRightIcon, Pressable, View, Select, CheckIcon, Stack , Input, FormControl, useToast} from 'native-base';
 import { useState, useCallback } from 'react';
 import * as DocumentPicker from "expo-document-picker"
 import Icon from 'react-native-vector-icons/FontAwesome';
-import RemoteApi from '../../src/services/RemoteApi'
+import RemoteApi from '../../src/services/RemoteApi';
+import { ToastAlert } from "../../src/helper/CustomToaster";
 
 export default function RTASync() {
 
     const [rta, setRta] = useState("");
     const [pickedDocument, setPickedDocument] = useState<any>(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [isSyncing, setIsSyncing] = useState(false);
+    const toast = useToast();
 
     const pickDocument = async () => {
         if(pickedDocument == null){
             let result:any = await DocumentPicker.getDocumentAsync({type: [".dbf", ".csv"],  copyToCacheDirectory: true });
-            console.log(result);
+            // console.log('selected file', result);
             if(result.assets.length > 0){
                 let { name, size, uri } = result.assets[0];
+                let newUri = "file:///" + uri.split("data:/").join("");
                 let nameParts = name.split('.');
                 let fileType = nameParts[nameParts.length - 1];
                 var fileToUpload = {
                     name: name,
                     size: size,
-                    uri: uri,
+                    uri: newUri,
                     type: "application/" + fileType
                 };
-                console.log(fileToUpload, '...............file')
-                setPickedDocument(fileToUpload);
+                // console.log(fileToUpload, '...............file')
+                setPickedDocument(result.assets[0].file);
             }
         }else{
             setPickedDocument(null)
@@ -35,32 +39,71 @@ export default function RTASync() {
       };
 
     const uploadDocument = async () => {
-        console.log(pickedDocument);
-        console.log(rta);
-
-        // Implement your file upload logic here using the picked document (pickedDocument)
-        console.log('Implement file upload logic');
+        setIsLoading(true)
         let formData = new FormData();
-        // for (const key in data) {
         formData.append('rta',  rta)
-        formData.append('file',  pickedDocument)
-        // }
-        console.log('formData', formData);
-        const response:any = await RemoteApi.postWithFormData("/file-upload/upload", formData);
+        formData.append('file', pickedDocument);
+        const response:any = await RemoteApi.postWithFormData("/file/upload", formData);
 
-        console.log(response);
+        if(response?.message == "Success"){
+            toast.show({
+                render: ({
+                    index
+                }) => {
+                    return <ToastAlert
+                        id={index}
+                        variant={"solid"}
+                        title={response?.data}
+                        description={""}
+                        isClosable={true}
+                        toast={toast}
+                        status={"success"}
+                    />;
+                },
+                placement: "top"
+            })
+        }
+        setIsLoading(false)
+        // console.log(response);
     };
+
+    const handleSync = async () => {
+        const response:any = await RemoteApi.post("/file/sync",);
+
+        if(response?.message == "Success"){
+            toast.show({
+                render: ({
+                    index
+                }) => {
+                    return <ToastAlert
+                        id={index}
+                        variant={"solid"}
+                        title={response?.data}
+                        description={""}
+                        isClosable={true}
+                        toast={toast}
+                        status={"success"}
+                    />;
+                },
+                placement: "top"
+            })
+        }
+    }
   
 
     return <ScrollView className='' style={{ backgroundColor: "white", height: '100%', overflow: "scroll" }}>
          <View className='bg-white'>
             <View className=''>
                 <TableBreadCrumb name={"RTA Sync"} />
-
             </View>
             <View className='w-full flex items-center'>
+                <View className='flex flex-row justify-end w-[90%]'>
+                    <Button rightIcon={ <Icon name="rotate-right" style={{}} size={14} color="#ffffff" />} w={40} isLoading={isSyncing} isLoadingText="Uploading..." marginTop={6}  bgColor={"#013974"} onPress={handleSync}>
+                        Sync
+                    </Button>
+                </View>
                 <View className={'mt-4 z-[-1] w-[90%] flex items-center border-[#c8c8c8] border-[0.2px] rounded-[5px]'}>
-                    <Text selectable className={'text-xl font-bold mt-[10px]'}>{"Upload File"}</Text>
+                    <Text selectable className={'text-xl font-bold mt-[10px]'}>{"Upload RTA File"}</Text>
                     <View className='mt-[20px] w-[80%]'>
                         <Stack mx="4" w={'100%'}>
                             <FormControl.Label>Select RTA</FormControl.Label>
