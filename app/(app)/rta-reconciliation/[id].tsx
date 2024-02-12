@@ -76,9 +76,9 @@ export default function RTAConciliationDetail() {
       value: data?.orderReferenceNumber,
     },
     {
-      key: "bseOrderNumber",
-      title: "BSE Order No",
-      value: data?.orderReferenceNumber,
+      key: "folio",
+      title: "Folio No.",
+      value: data?.account.id,
     },
     {
       key: "PaymentDate",
@@ -88,9 +88,21 @@ export default function RTAConciliationDetail() {
         : "-",
     },
     {
-      key: "folio",
-      title: "Folio No.",
-      value: data?.account.id,
+      key: "amount",
+      title: "Amount(Stamp Duty + STT + Tax)",
+      value: (
+        <View>
+          <Text>
+            {data?.amount
+              ? `${RupeeSymbol + data?.amount.toString()} (${
+                  data?.stampDuty ? data?.stampDuty : 0
+                } + ${data?.tax ? data?.tax : 0} + ${
+                  data?.stt ? data?.stt : 0
+                })`
+              : "-"}
+          </Text>
+        </View>
+      ),
     },
     {
       key: "units",
@@ -103,9 +115,19 @@ export default function RTAConciliationDetail() {
       value: data?.nav,
     },
     {
-      key: "amount",
-      title: "Amount",
-      value: data?.amount ? RupeeSymbol + data?.amount.toString() : "-",
+      key: "allotedAmount",
+      title: "Alloted Amount",
+      value: data?.allotedAmount ? data?.allotedAmount : "-",
+    },
+    {
+      key: "transactionAStatus",
+      title: "Transaction Status",
+      value: data?.transactionStatus ? data?.transactionStatus?.name : "-",
+    },
+    {
+      key: "transactionType",
+      title: "Transaction Type",
+      value: data?.transactionType ? data?.transactionType?.name : "-",
     },
     {
       key: "settlementDate",
