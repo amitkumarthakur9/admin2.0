@@ -24,25 +24,7 @@ import {
   TransactionDetail,
   TransactionDetailResponseInterface,
 } from "../../../src/interfaces/RTADetailInterface";
-
-const DataGrid = ({ title, value }) => {
-  return (
-    <View
-      className={
-        "flex flex-row items-center w-4/12 lg:w-3/12 justify-center lg:justify-start mb-[30px]"
-      }
-    >
-      <View className="flex flex-col">
-        <Text selectable className="font-medium">
-          {value ? value : "-"}
-        </Text>
-        <Text className="text-[10px] text-slate-500" selectable>
-          {title ? title : "-"}
-        </Text>
-      </View>
-    </View>
-  );
-};
+import DataGrid from "../../../src/components/DataGrid/DataGrid";
 
 export default function RTAConciliationDetail() {
   const { id } = useLocalSearchParams();
@@ -78,7 +60,11 @@ export default function RTAConciliationDetail() {
     }
   };
 
-  const gridItems = [
+  const gridItems: {
+    key: string;
+    title: React.JSX.Element | string | null;
+    value: React.JSX.Element | string | number | null;
+  }[] = [
     {
       key: "rtaAgentCode",
       title: "RTA Agent Code",
