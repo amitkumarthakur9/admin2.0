@@ -65,3 +65,17 @@ build react native web storybook:
 ```sh
 yarn build-storybook
 ```
+
+
+
+Before running the Project/to install dependency:
+
+```sh
+npm install
+```
+
+Run the Project:
+
+```sh
+npm start
+```
