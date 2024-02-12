@@ -1,8 +1,7 @@
-import { ImageBackground, View, useWindowDimensions } from "react-native";
+import { useEffect, useState } from "react";
+import { ImageBackground, View } from "react-native";
 import { Link, useLocalSearchParams } from "expo-router";
 import {
-  Avatar,
-  Button,
   Center,
   HStack,
   Heading,
@@ -11,21 +10,20 @@ import {
   Spinner,
   Text,
 } from "native-base";
+import { Platform } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
-import { useEffect, useState } from "react";
+import moment from "moment";
+
 import RemoteApi from "../../../src/services/RemoteApi";
 import {
   BorderShadow,
   BorderShadowPhone,
-  HeaderShadow,
 } from "../../../src/components/Styles/Shadow";
 import { RupeeSymbol } from "../../../src/helper/helper";
-import { Platform } from "react-native";
 import {
   TransactionDetail,
   TransactionDetailResponseInterface,
 } from "../../../src/interfaces/RTADetailInterface";
-import moment from "moment";
 
 const DataGrid = ({ title, value }) => {
   return (
@@ -50,7 +48,6 @@ export default function RTAConciliationDetail() {
   const { id } = useLocalSearchParams();
   const [data, setData] = useState<TransactionDetail>();
   const [isLoading, setIsLoading] = useState(true);
-  const { height, width } = useWindowDimensions();
 
   useEffect(() => {
     setIsLoading(true);
@@ -81,16 +78,57 @@ export default function RTAConciliationDetail() {
     }
   };
 
-  const getColorCode = (status: string) => {
-    let color = "#ece09d";
-    if (status == "Cancelled" || status == "Failed") {
-      color = "#ffd5d5";
-    } else if (status == "Success") {
-      color = "#afc9a2";
-    }
-
-    return color;
-  };
+  const gridItems = [
+    {
+      key: "rtaAgentCode",
+      title: "RTA Agent Code",
+      value: data?.mutualfund?.fundhouse?.rta.name,
+    },
+    {
+      key: "bseOrderNumber",
+      title: "BSE Order No",
+      value: data?.orderReferenceNumber,
+    },
+    {
+      key: "bseOrderNumber",
+      title: "BSE Order No",
+      value: data?.orderReferenceNumber,
+    },
+    {
+      key: "PaymentDate",
+      title: "Payment Date",
+      value: data?.paymentDate
+        ? moment(data?.paymentDate).format("DD-MM-YYYY hh:mm:ss A")
+        : "-",
+    },
+    {
+      key: "folio",
+      title: "Folio No.",
+      value: data?.account.id,
+    },
+    {
+      key: "units",
+      title: "Units",
+      value: data?.units,
+    },
+    {
+      key: "nav",
+      title: "NAV",
+      value: data?.nav,
+    },
+    {
+      key: "amount",
+      title: "Amount",
+      value: data?.amount ? RupeeSymbol + data?.amount.toString() : "-",
+    },
+    {
+      key: "settlementDate",
+      title: "Settlement Date",
+      value: data?.settlementDate
+        ? moment(data.settlementDate).format("DD-MM-YYYY hh:mm:ss A")
+        : "-",
+    },
+  ];
 
   return (
     <>
@@ -119,7 +157,6 @@ export default function RTAConciliationDetail() {
                   </Text>
                   <View className="flex flex-row items-center">
                     <Link href={"../"} className="mr-4">
-                      {/* <Icon name="home" size={18} color="black" /> */}
                       <Text>Dashboard</Text>
                     </Link>
                     <View className="mr-4">
@@ -131,7 +168,6 @@ export default function RTAConciliationDetail() {
                       />
                     </View>
                     <Link href={"/rta-reconciliation"} className="mr-4">
-                      {/* <Icon name="home" size={18} color="black" /> */}
                       <Text>Transactions</Text>
                     </Link>
                   </View>
@@ -219,52 +255,15 @@ export default function RTAConciliationDetail() {
                     </View>
                   </View>
                   <View className="flex flex-row items-center w-full flex-wrap mt-4 p-3">
-                    <DataGrid
-                      key="rtaAgentCode"
-                      title="RTA Agent Code"
-                      value={data.mutualfund.fundhouse.rta.name}
-                    />
-                    <DataGrid
-                      key="bseOrderNumber"
-                      title="BSE Order No."
-                      value={data.orderReferenceNumber}
-                    />
-                    <DataGrid
-                      key="paymentDate"
-                      title="Payment Date"
-                      value={
-                        data.paymentDate
-                          ? moment(data.paymentDate).format(
-                              "DD-MM-YYYY hh:mm:ss A"
-                            )
-                          : "-"
-                      }
-                    />
-                    <DataGrid
-                      key="folioNumber"
-                      title="Folio No."
-                      value={data.account.id}
-                    />
-                    <DataGrid key="units" title="Units" value={data.units} />
-                    <DataGrid key="nav" title="NAV" value={data.nav} />
-                    <DataGrid
-                      key="amount"
-                      title="Amount"
-                      value={
-                        data.amount ? RupeeSymbol + data.amount.toString() : "-"
-                      }
-                    />
-                    <DataGrid
-                      key="settlementDate"
-                      title="Settlement Date"
-                      value={
-                        data.settlementDate
-                          ? moment(data.settlementDate).format(
-                              "DD-MM-YYYY hh:mm:ss A"
-                            )
-                          : "-"
-                      }
-                    />
+                    {gridItems.map((item) => {
+                      return (
+                        <DataGrid
+                          key={item.key}
+                          title={item.title}
+                          value={item.value}
+                        />
+                      );
+                    })}
                   </View>
                 </View>
               </View>
