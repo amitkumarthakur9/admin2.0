@@ -1,3 +1,7 @@
+# Read this before pushing to this branch
+
+This branch has been separated from main to be used as Vision app. The `main` branch will continue to support Kotak Neo Project till unforeseen future.
+
 ![image](https://user-images.githubusercontent.com/3481514/145904252-92e3dc1e-591f-410f-88a1-b4250f4ba6f2.png)
 
 # getting started
