@@ -55,4 +55,3 @@ export interface RTAResponseResponseInterface {
     filterCount: number;
     totalCount: number;
 }
-

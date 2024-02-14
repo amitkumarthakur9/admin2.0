@@ -1,9 +1,14 @@
-import React from 'react'
-import { Image, StyleSheet, View } from 'react-native'
+import React from "react";
+import { Image, StyleSheet, View } from "react-native";
 
 export default function Logo() {
     // return <View></View>
-    return <Image source={require('../../../assets/images/kotak.png')} style={styles.image} />
+    return (
+        <Image
+            source={require("../../../assets/images/kotak.png")}
+            style={styles.image}
+        />
+    );
 }
 
 const styles = StyleSheet.create({
@@ -11,6 +16,6 @@ const styles = StyleSheet.create({
         width: 300,
         height: 110,
         marginBottom: 8,
-        objectFit: "scale-down"
+        objectFit: "scale-down",
     },
-})
+});

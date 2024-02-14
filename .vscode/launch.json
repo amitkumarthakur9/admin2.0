@@ -10,6 +10,6 @@
             "type": "chrome",
             "url": "http://localhost:8081", // This line should be modified at step 6
             "webRoot": "${workspaceFolder}"
-        },
+        }
     ]
 }

@@ -1,5 +1,5 @@
 export const getInitials = (name: string) => {
-    const words = name.split(' ');
+    const words = name.split(" ");
     if (words.length >= 2) {
         const firstWord = words[0];
         const secondWord = words[1];
@@ -7,8 +7,8 @@ export const getInitials = (name: string) => {
     } else if (words.length === 1) {
         return words[0][0];
     } else {
-        return '';
+        return "";
     }
-}
+};
 
 export const RupeeSymbol = "₹";

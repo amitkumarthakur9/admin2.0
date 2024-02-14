@@ -1,10 +1,9 @@
-import { Text, View } from 'react-native';
-import { useEffect, useState } from 'react';
-import DataTableExample from '../components/Others/DataTableExample';
+import { Text, View } from "react-native";
+import { useEffect, useState } from "react";
+import DataTableExample from "../components/Others/DataTableExample";
 // import api from '../services/api';
 
 const Home = ({ navigation }) => {
-
     const [books, setBooks] = useState([]);
 
     useEffect(() => {
@@ -12,25 +11,23 @@ const Home = ({ navigation }) => {
         //     .then((res) => {
         //         setBooks(res.data.data);
         //     });
-
     }, []);
 
     return (
-
-        <View className='flex h-screen'>
-
-            <DataTableExample data={[{
-                "name": "John Doe",
-                "mobile": "123-456-7890",
-                "email": "john@example.com",
-                "pan": "ABCDE1234F",
-                "tax_status": "Taxable"
-            }]} />
+        <View className="flex h-screen">
+            <DataTableExample
+                data={[
+                    {
+                        name: "John Doe",
+                        mobile: "123-456-7890",
+                        email: "john@example.com",
+                        pan: "ABCDE1234F",
+                        tax_status: "Taxable",
+                    },
+                ]}
+            />
         </View>
-
     );
-
-}
+};
 
 export default Home;
-

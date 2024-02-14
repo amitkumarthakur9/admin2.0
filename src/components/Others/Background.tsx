@@ -1,5 +1,13 @@
-import React from 'react'
-import { ImageBackground, StyleSheet, KeyboardAvoidingView, View, Platform, Image, useWindowDimensions } from 'react-native'
+import React from "react";
+import {
+    ImageBackground,
+    StyleSheet,
+    KeyboardAvoidingView,
+    View,
+    Platform,
+    Image,
+    useWindowDimensions,
+} from "react-native";
 // import { theme } from '../core/theme'
 
 export default function Background() {
@@ -27,15 +35,19 @@ export default function Background() {
         // </ImageBackground>
 
         <View>
-            <Image style={{ height: height, width: width, position: 'absolute', }} resizeMode="repeat" source={require('../../../assets/background_dot.png')} />
+            <Image
+                style={{ height: height, width: width, position: "absolute" }}
+                resizeMode="repeat"
+                source={require("../../../assets/background_dot.png")}
+            />
         </View>
-    )
+    );
 }
 
 const styles = StyleSheet.create({
     background: {
         flex: 1,
-        width: '100%',
+        width: "100%",
         height: "100%",
         backgroundColor: "white",
     },
@@ -44,8 +56,8 @@ const styles = StyleSheet.create({
         // padding: 20,
         // width: '60%',
         // maxWidth: "340",
-        alignSelf: 'center',
-        alignItems: 'center',
-        justifyContent: 'center',
+        alignSelf: "center",
+        alignItems: "center",
+        justifyContent: "center",
     },
-})
+});

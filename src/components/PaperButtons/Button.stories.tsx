@@ -4,7 +4,6 @@ import { PaperTheme } from "../../theme/PaperTheme";
 import Button from "./Button";
 import { ViewStyle } from "react-native";
 
-
 export default {
     title: "components/PaperButton",
     component: Button,
@@ -14,12 +13,16 @@ export default {
 };
 
 interface args {
-    mode?: 'text' | 'outlined' | 'contained' | 'elevated' | 'contained-tonal',
-    style?: ViewStyle
+    mode?: "text" | "outlined" | "contained" | "elevated" | "contained-tonal";
+    style?: ViewStyle;
 }
 
-export const Basic = (args: args) => <PaperProvider theme={PaperTheme}><Button {...args} /></PaperProvider>;
+export const Basic = (args: args) => (
+    <PaperProvider theme={PaperTheme}>
+        <Button {...args} />
+    </PaperProvider>
+);
 
 Basic.args = {
-    label: "Filter"
+    label: "Filter",
 };

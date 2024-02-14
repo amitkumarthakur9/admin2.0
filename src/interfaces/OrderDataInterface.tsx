@@ -14,7 +14,6 @@ interface TransactionType {
     name: string;
 }
 
-
 interface Folio {
     folioNumber: string;
 }
@@ -96,6 +95,4 @@ export interface Order {
     };
     sipReferenceNumber: string;
     firstOrder: string;
-
-
 }

@@ -1,5 +1,4 @@
 export interface OrderInterface {
-
     id: string;
     amount: number;
     units: number | null;
@@ -30,7 +29,6 @@ export interface OrderInterface {
         mutualfundType: {
             id: number;
             name: string;
-        }
+        };
     };
-
 }

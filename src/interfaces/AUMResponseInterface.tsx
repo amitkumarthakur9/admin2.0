@@ -57,4 +57,3 @@ interface AUMResponseInterface {
     filterCount: number;
     totalCount: number;
 }
-

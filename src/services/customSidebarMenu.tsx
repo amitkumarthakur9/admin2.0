@@ -1,7 +1,7 @@
 // Custom Navigation Drawer / Sidebar with Image and Icon in Menu Options
 // https://aboutreact.com/custom-navigation-drawer-sidebar-with-image-and-icon-in-menu-options/
 
-import React from 'react';
+import React from "react";
 import {
     SafeAreaView,
     View,
@@ -9,21 +9,20 @@ import {
     Image,
     Text,
     Linking,
-} from 'react-native';
+} from "react-native";
 
 import {
     DrawerContentScrollView,
     DrawerItemList,
     DrawerItem,
-} from '@react-navigation/drawer';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import { TouchableRipple } from 'react-native-paper';
-import { useSession } from './ctx';
-
+} from "@react-navigation/drawer";
+import Icon from "react-native-vector-icons/FontAwesome";
+import { TouchableRipple } from "react-native-paper";
+import { useSession } from "./ctx";
 
 const CustomSidebarMenu = (props) => {
     return (
-        <SafeAreaView style={{ flex: 1, }}>
+        <SafeAreaView style={{ flex: 1 }}>
             {/*Top Large Image */}
             <Image
                 source={require("../../assets/images/kotak.png")}
@@ -33,9 +32,7 @@ const CustomSidebarMenu = (props) => {
                 <Text selectable className='text-xl font-bold text-slate-400'>Dashboard</Text>
             </View> */}
             <DrawerContentScrollView {...props}>
-
                 <DrawerItemList {...props} />
-
             </DrawerContentScrollView>
             {/* <TouchableRipple
                 rippleColor="rgba(0, 0, 0, .32)"
@@ -56,13 +53,13 @@ const CustomSidebarMenu = (props) => {
 
 const styles = StyleSheet.create({
     sideMenuProfileIcon: {
-        resizeMode: 'center',
+        resizeMode: "center",
         marginTop: 10,
         width: 120,
         height: 100,
         // borderRadius: 100 / 2,
         objectFit: "contain",
-        alignSelf: 'center',
+        alignSelf: "center",
     },
     iconStyle: {
         width: 15,
@@ -71,8 +68,8 @@ const styles = StyleSheet.create({
     },
     customItem: {
         padding: 16,
-        flexDirection: 'row',
-        alignItems: 'center',
+        flexDirection: "row",
+        alignItems: "center",
     },
 });
 

@@ -149,7 +149,6 @@ interface TransactionStatus {
     name: string;
 }
 
-
 interface Transaction {
     id: string;
     folioId: string;
@@ -181,7 +180,6 @@ interface Transaction {
     transactionType: TransactionType;
     settlementType: any;
 }
-
 
 interface Order {
     id: string;

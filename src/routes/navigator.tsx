@@ -9,12 +9,12 @@ import {
     StackRouter,
     StackRouterOptions,
     useNavigationBuilder,
-} from '@react-navigation/native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import { createDrawerNavigator } from '@react-navigation/drawer';
-import Home from '../screens/Home';
-import Detalhes from '../screens/Detalhes';
+} from "@react-navigation/native";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import Home from "../screens/Home";
+import Detalhes from "../screens/Detalhes";
 
 const Stack = createStackNavigator();
 
@@ -28,23 +28,24 @@ export const HomeScreen = ({ navigation }) => {
             />
         </Stack.Navigator>
     );
-}
+};
 
 export const SecondScreen = ({ navigation }) => {
     return (
         <Stack.Navigator
             initialRouteName="SecondScreen"
             screenOptions={{
-                headerShown: false
-            }}>
+                headerShown: false,
+            }}
+        >
             <Stack.Screen
                 name="Second Screen"
                 component={Detalhes}
                 options={{
-                    title: 'Second Screen', //Set Header Title
-                    headerShown: false
+                    title: "Second Screen", //Set Header Title
+                    headerShown: false,
                 }}
             />
         </Stack.Navigator>
     );
-}
+};

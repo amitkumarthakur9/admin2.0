@@ -3,7 +3,6 @@ import { PaperProvider, Provider } from "react-native-paper";
 import { PaperTheme } from "../../theme/PaperTheme";
 import DatePickerComponent from "./DatePicker";
 
-
 export default {
     title: "components/DatePicker",
     component: DatePickerComponent,
@@ -12,7 +11,11 @@ export default {
     },
 };
 
-export const Basic = (args) => <PaperProvider theme={PaperTheme}><DatePickerComponent {...args} /></PaperProvider>;
+export const Basic = (args) => (
+    <PaperProvider theme={PaperTheme}>
+        <DatePickerComponent {...args} />
+    </PaperProvider>
+);
 
 Basic.args = {
     title: "Orders List",
@@ -27,7 +30,7 @@ Basic.args = {
             order_no: "498766401",
             amount: "4300",
             units: "53",
-            processing_datetime: "24/08/2022  2:30:10 PM"
+            processing_datetime: "24/08/2022  2:30:10 PM",
         },
         // Add more data objects as needed
     ],

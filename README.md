@@ -1,6 +1,5 @@
 ![image](https://user-images.githubusercontent.com/3481514/145904252-92e3dc1e-591f-410f-88a1-b4250f4ba6f2.png)
 
-
 # getting started
 
 ```sh
@@ -15,12 +14,11 @@ yarn create expo-app --template expo-template-storybook AwesomeStorybook
 
 # app
 
-
 ```sh
 yarn start
 ```
 
-# Ondevice    
+# Ondevice
 
 In this template you can now run `yarn storybook` to start ondevice storybook or `yarn start` to start your expo app.
 This works via env variables and expo constants.
@@ -65,8 +63,6 @@ build react native web storybook:
 ```sh
 yarn build-storybook
 ```
-
-
 
 Before running the Project/to install dependency:
 

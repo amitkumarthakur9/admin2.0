@@ -1,15 +1,20 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { Dropdown } from 'react-native-element-dropdown';
-import AntDesign from '@expo/vector-icons/AntDesign';
+import React, { useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
+import { Dropdown } from "react-native-element-dropdown";
+import AntDesign from "@expo/vector-icons/AntDesign";
 
 interface DropdownItem {
     label: string;
     value: string;
 }
 
-
-const DropdownComponent = ({ label = "", data = [] }: { label: string; data: DropdownItem[] }) => {
+const DropdownComponent = ({
+    label = "",
+    data = [],
+}: {
+    label: string;
+    data: DropdownItem[];
+}) => {
     const [value, setValue] = useState(null);
     const [isFocus, setIsFocus] = useState(false);
 
@@ -26,10 +31,10 @@ const DropdownComponent = ({ label = "", data = [] }: { label: string; data: Dro
     };
 
     return (
-        <View style={styles.container} className='lg:mr-2'>
+        <View style={styles.container} className="lg:mr-2">
             {renderLabel()}
             <Dropdown
-                style={[styles.dropdown, isFocus && { borderColor: 'blue', }]}
+                style={[styles.dropdown, isFocus && { borderColor: "blue" }]}
                 placeholderStyle={styles.placeholderStyle}
                 selectedTextStyle={styles.selectedTextStyle}
                 inputSearchStyle={styles.inputSearchStyle}
@@ -44,14 +49,14 @@ const DropdownComponent = ({ label = "", data = [] }: { label: string; data: Dro
                 value={value}
                 onFocus={() => setIsFocus(true)}
                 onBlur={() => setIsFocus(false)}
-                onChange={item => {
+                onChange={(item) => {
                     setValue(item.value);
                     setIsFocus(false);
                 }}
                 renderLeftIcon={() => (
                     <AntDesign
                         style={styles.icon}
-                        color={isFocus ? 'blue' : 'black'}
+                        color={isFocus ? "blue" : "black"}
                         name="Safety"
                         size={15}
                     />
@@ -65,22 +70,22 @@ export default DropdownComponent;
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: 'white',
+        backgroundColor: "white",
     },
     dropdown: {
         height: 39,
-        borderColor: 'gray',
+        borderColor: "gray",
         borderWidth: 0.5,
         borderRadius: 3,
         paddingHorizontal: 20,
-        fontSize: 12
+        fontSize: 12,
     },
     icon: {
         marginRight: 5,
     },
     label: {
-        position: 'absolute',
-        backgroundColor: 'white',
+        position: "absolute",
+        backgroundColor: "white",
         left: 22,
         top: 8,
         zIndex: 999,

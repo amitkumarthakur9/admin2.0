@@ -35,7 +35,7 @@ const Detalhes = ({ navigation }) => {
         //         {/* <!-- Add more rows as needed --> */}
         //     </View>
         // </View>
-        <Text selectable >Okay</Text>
+        <Text selectable>Okay</Text>
         // <DataTableExample  />
     );
 };

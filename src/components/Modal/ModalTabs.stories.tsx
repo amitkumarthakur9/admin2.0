@@ -3,7 +3,6 @@ import { PaperProvider, Provider } from "react-native-paper";
 import ModalTabs from "./ModalTabs";
 import { PaperTheme } from "../../theme/PaperTheme";
 
-
 export default {
     title: "components/ModalTabs",
     component: ModalTabs,
@@ -12,8 +11,12 @@ export default {
     },
 };
 
-export const Basic = (args) => <PaperProvider theme={PaperTheme}><ModalTabs {...args} /></PaperProvider>;
+export const Basic = (args) => (
+    <PaperProvider theme={PaperTheme}>
+        <ModalTabs {...args} />
+    </PaperProvider>
+);
 
 Basic.args = {
-    label: "Filter"
+    label: "Filter",
 };

@@ -8,10 +8,20 @@ export const getDaysInMonth = (year, month) => {
 
 export const monthNames = () => {
     return [
-        'January', 'February', 'March', 'April', 'May', 'June',
-        'July', 'August', 'September', 'October', 'November', 'December'
-    ]
-}
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+    ];
+};
 
 export const getMonthName = (month) => {
     return monthNames()[month - 1];
@@ -19,6 +29,9 @@ export const getMonthName = (month) => {
 
 export const getAllDatesInMonth = (year, month) => {
     const daysInMonth = getDaysInMonth(year, month);
-    const datesArray = Array.from({ length: daysInMonth }, (_, index) => index + 1);
+    const datesArray = Array.from(
+        { length: daysInMonth },
+        (_, index) => index + 1
+    );
     return datesArray;
 };

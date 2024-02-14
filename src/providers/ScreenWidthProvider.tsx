@@ -1,6 +1,12 @@
 // ScreenWidthProvider.tsx
-import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { Dimensions } from 'react-native';
+import React, {
+    createContext,
+    useContext,
+    useEffect,
+    useState,
+    ReactNode,
+} from "react";
+import { Dimensions } from "react-native";
 
 interface ScreenWidthContextProps {
     children: ReactNode;
@@ -8,15 +14,22 @@ interface ScreenWidthContextProps {
 
 const ScreenWidthContext = createContext<number | undefined>(undefined);
 
-export const ScreenWidthProvider: React.FC<ScreenWidthContextProps> = ({ children }) => {
-    const [screenWidth, setScreenWidth] = useState(Dimensions.get('window').width);
+export const ScreenWidthProvider: React.FC<ScreenWidthContextProps> = ({
+    children,
+}) => {
+    const [screenWidth, setScreenWidth] = useState(
+        Dimensions.get("window").width
+    );
 
     useEffect(() => {
         const updateScreenWidth = () => {
-            setScreenWidth(Dimensions.get('window').width);
+            setScreenWidth(Dimensions.get("window").width);
         };
 
-        const subscription = Dimensions.addEventListener('change', updateScreenWidth);
+        const subscription = Dimensions.addEventListener(
+            "change",
+            updateScreenWidth
+        );
 
         return () => {
             subscription.remove();
@@ -33,7 +46,9 @@ export const ScreenWidthProvider: React.FC<ScreenWidthContextProps> = ({ childre
 export const useScreenWidth = (): number => {
     const screenWidth = useContext(ScreenWidthContext);
     if (screenWidth === undefined) {
-        throw new Error('useScreenWidth must be used within a ScreenWidthProvider');
+        throw new Error(
+            "useScreenWidth must be used within a ScreenWidthProvider"
+        );
     }
     return screenWidth;
 };

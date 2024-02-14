@@ -82,4 +82,3 @@ export interface AUMDetailResponseInterface {
     error: any[]; // You may replace 'any' with the actual type if available
     data: AUMDetailInterface;
 }
-

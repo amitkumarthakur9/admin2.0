@@ -4,16 +4,16 @@ class ApiRequest {
     static async handleResponse(response: Response) {
         if (!response.ok) {
             const data = await response.json();
-            throw new Error(data.message || 'Something went wrong');
+            throw new Error(data.message || "Something went wrong");
         }
         return response.json();
     }
 
     static async get<T>(endpoint: string): Promise<T> {
         const response = await fetch(this.baseURL + endpoint, {
-            method: 'GET',
+            method: "GET",
             headers: {
-                'Content-Type': 'application/json',
+                "Content-Type": "application/json",
                 // You can add any custom headers here, like authorization headers
             },
         });
@@ -23,9 +23,12 @@ class ApiRequest {
     static async post<T>(endpoint: string, data: any): Promise<T> {
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
-        myHeaders.append("Cookie", "token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiIyIiwiY29tcGFueUlkIjoiMSIsImlhdCI6MTY5ODIyODA0MiwiZXhwIjoxNjk4NDAwODQyfQ.E53OlDO_fy57yPD4y8-f-QddK5Z9aT6DGeUmBUW2dWc");
+        myHeaders.append(
+            "Cookie",
+            "token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiIyIiwiY29tcGFueUlkIjoiMSIsImlhdCI6MTY5ODIyODA0MiwiZXhwIjoxNjk4NDAwODQyfQ.E53OlDO_fy57yPD4y8-f-QddK5Z9aT6DGeUmBUW2dWc"
+        );
         const response = await fetch(this.baseURL + endpoint, {
-            method: 'POST',
+            method: "POST",
             // headers: myHeaders,
             headers: {
                 // Cookie: `token=${localStorage.getItem("token")}`,
@@ -33,7 +36,7 @@ class ApiRequest {
                 // "Set-Cookie": document.cookie
             },
             body: JSON.stringify(data),
-            credentials: "include"
+            credentials: "include",
         });
         console.log(response);
         // console.log({
@@ -52,9 +55,9 @@ class ApiRequest {
 
     static async put<T>(endpoint: string, data: any): Promise<T> {
         const response = await fetch(this.baseURL + endpoint, {
-            method: 'PUT',
+            method: "PUT",
             headers: {
-                'Content-Type': 'application/json',
+                "Content-Type": "application/json",
                 // You can add any custom headers here, like authorization headers
             },
             body: JSON.stringify(data),

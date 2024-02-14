@@ -1,17 +1,17 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { Dropdown } from 'react-native-element-dropdown';
-import AntDesign from '@expo/vector-icons/AntDesign';
+import React, { useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
+import { Dropdown } from "react-native-element-dropdown";
+import AntDesign from "@expo/vector-icons/AntDesign";
 
 const data = [
-    { label: 'Item 1', value: '1' },
-    { label: 'Item 2', value: '2' },
-    { label: 'Item 3', value: '3' },
-    { label: 'Item 4', value: '4' },
-    { label: 'Item 5', value: '5' },
-    { label: 'Item 6', value: '6' },
-    { label: 'Item 7', value: '7' },
-    { label: 'Item 8', value: '8' },
+    { label: "Item 1", value: "1" },
+    { label: "Item 2", value: "2" },
+    { label: "Item 3", value: "3" },
+    { label: "Item 4", value: "4" },
+    { label: "Item 5", value: "5" },
+    { label: "Item 6", value: "6" },
+    { label: "Item 7", value: "7" },
+    { label: "Item 8", value: "8" },
 ];
 
 const DropdownComponent = ({ label = "" }) => {
@@ -31,10 +31,10 @@ const DropdownComponent = ({ label = "" }) => {
     };
 
     return (
-        <View style={styles.container} className='lg:mr-2'>
+        <View style={styles.container} className="lg:mr-2">
             {renderLabel()}
             <Dropdown
-                style={[styles.dropdown, isFocus && { borderColor: 'blue', }]}
+                style={[styles.dropdown, isFocus && { borderColor: "blue" }]}
                 placeholderStyle={styles.placeholderStyle}
                 selectedTextStyle={styles.selectedTextStyle}
                 inputSearchStyle={styles.inputSearchStyle}
@@ -50,14 +50,14 @@ const DropdownComponent = ({ label = "" }) => {
                 value={value}
                 onFocus={() => setIsFocus(true)}
                 onBlur={() => setIsFocus(false)}
-                onChange={item => {
+                onChange={(item) => {
                     setValue(item.value);
                     setIsFocus(false);
                 }}
                 renderLeftIcon={() => (
                     <AntDesign
                         style={styles.icon}
-                        color={isFocus ? 'blue' : 'black'}
+                        color={isFocus ? "blue" : "black"}
                         name="Safety"
                         size={15}
                     />
@@ -71,7 +71,7 @@ export default DropdownComponent;
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: 'white',
+        backgroundColor: "white",
     },
     dropdown: {
         height: 39,
@@ -80,30 +80,29 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         paddingHorizontal: 20,
         fontSize: 12,
-        color: "#484848"
+        color: "#484848",
     },
     icon: {
         marginRight: 5,
-        color: "#484848"
+        color: "#484848",
     },
     label: {
-        position: 'absolute',
-        backgroundColor: 'white',
+        position: "absolute",
+        backgroundColor: "white",
         left: 22,
         top: 8,
         zIndex: 999,
         paddingHorizontal: 8,
         fontSize: 12,
         color: "#484848",
-
     },
     placeholderStyle: {
         fontSize: 12,
-        color: "#484848"
+        color: "#484848",
     },
     selectedTextStyle: {
         fontSize: 12,
-        color: "#484848"
+        color: "#484848",
     },
     iconStyle: {
         width: 20,
@@ -113,6 +112,6 @@ const styles = StyleSheet.create({
     inputSearchStyle: {
         height: 40,
         fontSize: 12,
-        color: "#484848"
+        color: "#484848",
     },
 });

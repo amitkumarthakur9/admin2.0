@@ -3,7 +3,6 @@ import {
     // Import the creation function
     createDrawerNavigator,
     // Import the types
-
 } from "@react-navigation/drawer";
 import { EventMapBase, NavigationState } from "@react-navigation/native";
 
