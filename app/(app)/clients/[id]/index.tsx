@@ -1,52 +1,58 @@
-import {
-    Dimensions,
-    Image,
-    ImageBackground,
-    Platform,
-    View,
-    useWindowDimensions,
-} from "react-native";
-import { Link, router, useLocalSearchParams } from "expo-router";
+import { useEffect, useState } from "react";
+import { View } from "react-native";
+import { useLocalSearchParams } from "expo-router";
 import {
     Button,
     Center,
+    CheckCircleIcon,
     HStack,
     Heading,
     Pressable,
     ScrollView,
     Spinner,
     Text,
-    useClipboard,
+    WarningIcon,
 } from "native-base";
 import Icon from "react-native-vector-icons/FontAwesome";
-import { useEffect, useState } from "react";
+import AntdIcon from "react-native-vector-icons/AntDesign";
+
 import RemoteApi from "../../../../src/services/RemoteApi";
-import {
-    Order,
-    OrderDataInterface,
-} from "../../../../src/interfaces/OrderDataInterface";
 import {
     ClientDetailItem,
     ClientDetailResponse,
 } from "../../../../src/interfaces/ClientDetailInterface";
-import moment from "moment";
-import {
-    AccountShadowPhone,
-    BorderShadow,
-    BorderShadowPhone,
-    BreadcrumbShadow,
-} from "../../../../src/components/Styles/Shadow";
-import { StyleSheet } from "react-native";
+import { BreadcrumbShadow } from "../../../../src/components/Styles/Shadow";
 import { RupeeSymbol } from "../../../../src/helper/helper";
-import { TouchableRipple } from "react-native-paper";
+import CardWithTabs from "../../../../src/components/Card/CardWithTabs";
+import DataGrid from "../../../../src/components/DataGrid/DataGrid";
+import HorizontalStackedBarChart from "../../../../src/components/Chart/HorizontalBarChart";
+import Accordion from "../../../../src/components/Accordion/Accordion";
+import DataTable from "../../../../src/components/DataTable/DataTable";
+
+const DataValue = ({ title, value }) => {
+    return (
+        <View className="w-full flex flex-row justify-between items-center p-2">
+            <View className="w-1/2 flex ">
+                <Text className="text-bold font-medium text-black" selectable>
+                    {title ? title : "-"}
+                </Text>
+            </View>
+            <View className="w-1/2 flex">
+                <Text
+                    selectable
+                    className="font-medium text-start text-gray-500"
+                >
+                    {value ? value : "-"}
+                </Text>
+            </View>
+        </View>
+    );
+};
 
 export default function ClientDetail() {
     const { id } = useLocalSearchParams();
     const [data, setData] = useState<ClientDetailItem>();
     const [isLoading, setIsLoading] = useState(true);
-    const { height, width } = useWindowDimensions();
-
-    const { value, onCopy } = useClipboard();
 
     useEffect(() => {
         setIsLoading(true);
@@ -90,1430 +96,165 @@ export default function ClientDetail() {
                     showsVerticalScrollIndicator={true}
                 >
                     <View className="bg-white">
-                        <View className="">
+                        <View className="flex flex-col p-4 gap-4">
+                            <View className="flex flex-row items-center">
+                                <Pressable
+                                    className="mr-3"
+                                    onPress={() =>
+                                        console.log("This will go back ")
+                                    }
+                                >
+                                    <Icon
+                                        name="angle-left"
+                                        size={18}
+                                        color={"black"}
+                                    />
+                                </Pressable>
+                                <Text
+                                    selectable
+                                    className="text-base flex flex-row text-center font-bold"
+                                >
+                                    Clients Details
+                                </Text>
+                            </View>
                             <View
-                                className="flex flex-row justify-between items-center mb-[10px] mt-3 bg-[#eaf3fe] h-28 px-2 "
+                                className="flex flex-row justify-between rounded bg-[#eaf3fe] h-auto p-4"
                                 style={{ ...BreadcrumbShadow }}
                             >
-                                <View className="flex flex-col w-6/12">
-                                    <Text
-                                        selectable
-                                        className="text-2xl font-extrabold mb-3"
-                                    >
-                                        {data.name}
-                                    </Text>
-                                    <View className="flex flex-row items-center">
-                                        <Link href={"../"} className="mr-4">
-                                            {/* <Icon name="home" size={18} color="black" /> */}
-                                            <Text selectable>Dashboard</Text>
-                                        </Link>
-                                        <View className="mr-4">
-                                            <Icon
-                                                name="circle"
-                                                style={{ fontWeight: "100" }}
-                                                size={8}
-                                                color="grey"
-                                            />
-                                        </View>
-                                        <Link
-                                            href={"/clients"}
-                                            className="mr-4"
-                                        >
-                                            {/* <Icon name="home" size={18} color="black" /> */}
-                                            <Text selectable>Clients</Text>
-                                        </Link>
-                                        {/* <View className='mr-4'>
-                                            <Icon name="circle" style={{ fontWeight: "100" }} size={8} color="grey" />
-                                        </View> */}
-                                        {/* <Link href={""} className='mr-4'>
-                                            <Text  selectable>{id}</Text>
-                                        </Link> */}
-                                    </View>
-                                </View>
-                                {/* <View className='w-6/12 overflow-hidden h-full flex flex-row justify-center'>
-                                    <ImageBackground className='' source={require('../../../assets/images/ChatBc.png')} resizeMode="center" style={{
-                                        // flex: 1,
-                                        // justifyContent: 'center',
-                                    }}>
-
-                                    </ImageBackground>
-                                </View> */}
-                                <View className="w-6/12 overflow-hidden h-full flex flex-row justify-center">
-                                    <Image
-                                        className=""
-                                        source={require("../../../../assets/images/ChatBc.png")}
-                                        style={
-                                            {
-                                                // flex: 1,
-                                                // justifyContent: 'end',
-                                            }
-                                        }
-                                    />
-                                </View>
-                            </View>
-                        </View>
-                        <View className="flex flex-col mx-2">
-                            <View className="flex flex-row flex-wrap">
-                                <View className="flex flex-col w-full lg:w-4/12 mt-1">
-                                    <View
-                                        className="flex flex-col rounded p-3 lg:h-[200px] m-0 lg:m-2"
-                                        style={
-                                            Platform.OS == "web"
-                                                ? {
-                                                      ...BorderShadow,
-                                                      overflow: "scroll",
-                                                  }
-                                                : {
-                                                      ...AccountShadowPhone,
-                                                      overflow: "scroll",
-                                                  }
-                                        }
-                                    >
-                                        <Text
-                                            selectable
-                                            className="text-base mb-4 font-bold"
-                                        >
-                                            Contact Details
-                                        </Text>
-
-                                        <View className="flex flex-row mb-1 items-center">
-                                            <Icon
-                                                name="envelope"
-                                                size={18}
-                                                style={{
-                                                    marginRight: 5,
-                                                    width: 20,
-                                                    textAlign: "center",
-                                                }}
-                                                color="black"
-                                            />
-                                            <Text selectable>
-                                                {
-                                                    data?.users[0]
-                                                        ?.credentials[0].email
-                                                }
-                                            </Text>
-                                        </View>
-
-                                        <View className="flex flex-row mb-1 items-center">
-                                            <Icon
-                                                name="phone"
-                                                size={18}
-                                                style={{
-                                                    marginRight: 5,
-                                                    width: 20,
-                                                    textAlign: "center",
-                                                }}
-                                                color="black"
-                                            />
-                                            <Text selectable>
-                                                {
-                                                    data?.users[0]
-                                                        ?.credentials[0]
-                                                        ?.mobileNumber
-                                                }
-                                            </Text>
-                                        </View>
-
-                                        <View className="flex flex-row mb-1 items-center">
-                                            <Icon
-                                                name="address-book"
-                                                size={18}
-                                                style={{
-                                                    marginRight: 5,
-                                                    width: 20,
-                                                    textAlign: "center",
-                                                }}
-                                                color="black"
-                                            />
-                                            <Text selectable className="">
-                                                {"-"}
-                                            </Text>
-                                        </View>
-                                    </View>
-                                </View>
-                                <View className="flex flex-col w-full lg:w-4/12 mt-1">
-                                    <View
-                                        className="flex flex-col rounded p-3 lg:h-[200px] m-0 lg:m-2"
-                                        style={
-                                            Platform.OS == "web"
-                                                ? {
-                                                      ...BorderShadow,
-                                                      overflow: "scroll",
-                                                  }
-                                                : {
-                                                      ...AccountShadowPhone,
-                                                      overflow: "scroll",
-                                                  }
-                                        }
-                                    >
-                                        <Text
-                                            selectable
-                                            className="text-base mb-4 font-bold"
-                                        >
-                                            Profile
-                                        </Text>
-                                        <View className="flex flex-row mb-1 items-center">
-                                            <Icon
-                                                name="id-badge"
-                                                size={18}
-                                                style={{
-                                                    marginRight: 5,
-                                                    width: 20,
-                                                    textAlign: "center",
-                                                }}
-                                                color="black"
-                                            />
-                                            <Text selectable>
-                                                {data.clientId}
-                                            </Text>
-                                        </View>
-                                        <View className="flex flex-row mb-1 items-center">
-                                            <Icon
-                                                name="credit-card"
-                                                size={18}
-                                                style={{
-                                                    marginRight: 5,
-                                                    width: 20,
-                                                    textAlign: "center",
-                                                }}
-                                                color="black"
-                                            />
-                                            <Text selectable>
-                                                {data.users[0].panNumber}
-                                            </Text>
-                                        </View>
-
-                                        <View className="flex flex-row mb-1 items-center">
-                                            <Icon
-                                                name={
-                                                    data.users[0].kycStatus
-                                                        .name == "Verified"
-                                                        ? "check"
-                                                        : "xmark"
-                                                }
-                                                size={18}
-                                                style={{
-                                                    marginRight: 5,
-                                                    width: 20,
-                                                    textAlign: "center",
-                                                }}
-                                                color="green"
-                                            />
-                                            <Text selectable>
-                                                {data.users[0].kycStatus.name ==
-                                                "Verified"
-                                                    ? "KYC Verified"
-                                                    : "KYC Not Verified"}
-                                            </Text>
-                                        </View>
-
-                                        <View className="flex flex-row mb-1 items-center">
-                                            <Icon
-                                                name="calendar"
-                                                size={18}
-                                                style={{
-                                                    marginRight: 5,
-                                                    width: 20,
-                                                    textAlign: "center",
-                                                }}
-                                                color="black"
-                                            />
-                                            <Text selectable>
-                                                {moment(
-                                                    new Date(
-                                                        data.users[0].dateOfBirth
-                                                    )
-                                                ).format("DD MMM YYYY")}
-                                            </Text>
-                                        </View>
-                                    </View>
-                                </View>
-                                <View className="flex flex-col w-full lg:w-4/12  mt-1">
-                                    <View
-                                        className="flex flex-col rounded m-0 lg:h-[200px] lg:m-2"
-                                        style={
-                                            Platform.OS == "web"
-                                                ? {
-                                                      ...BorderShadow,
-                                                      overflow: "scroll",
-                                                  }
-                                                : {
-                                                      ...AccountShadowPhone,
-                                                      overflow: "scroll",
-                                                  }
-                                        }
-                                    >
-                                        <Text
-                                            selectable
-                                            className="text-base mb-1 font-bold px-3 pt-3"
-                                        >
-                                            Banks
-                                        </Text>
-                                        {data.bankAccounts.map(
-                                            (bank, index) => {
-                                                return (
-                                                    <View
-                                                        className="flex flex-row items-start bg-[#f9f8f8] p-3 mb-1"
-                                                        key={index}
-                                                    >
-                                                        <View className="flex flex-col items-start justify-start">
-                                                            <Icon
-                                                                name="bank"
-                                                                size={18}
-                                                                style={{
-                                                                    marginRight: 5,
-                                                                    paddingTop: 2,
-                                                                    width: 20,
-                                                                    textAlign:
-                                                                        "center",
-                                                                }}
-                                                                color="black"
-                                                            />
-                                                        </View>
-                                                        <View className="flex flex-col">
-                                                            <Text selectable>
-                                                                {bank.bankBranch
-                                                                    .name ||
-                                                                    "Unknown"}
-                                                            </Text>
-                                                            <Text selectable>
-                                                                {bank.accountNumber ||
-                                                                    "-"}
-                                                            </Text>
-                                                            <Text selectable>
-                                                                {bank.bankBranch
-                                                                    .ifscCode ||
-                                                                    "-"}
-                                                            </Text>
-                                                        </View>
-                                                    </View>
-                                                );
-                                            }
-                                        )}
-                                    </View>
-                                </View>
-
-                                <View className="flex flex-col w-full lg:w-4/12 mt-1">
-                                    <View
-                                        className="flex flex-col rounded m-0 lg:h-[200px] lg:m-2"
-                                        style={
-                                            Platform.OS == "web"
-                                                ? {
-                                                      ...BorderShadow,
-                                                      overflow: "scroll",
-                                                  }
-                                                : {
-                                                      ...AccountShadowPhone,
-                                                      overflow: "scroll",
-                                                  }
-                                        }
-                                    >
-                                        <Text
-                                            selectable
-                                            className="text-base mb-1 font-bold px-3 pt-3"
-                                        >
-                                            Nominee Details
-                                        </Text>
-                                        {data.nominee.map((nominee, index) => {
-                                            return (
-                                                <View
-                                                    className="flex flex-row items-start bg-[#f9f8f8] p-3 mb-1"
-                                                    key={index}
-                                                >
-                                                    <View className="flex flex-col items-start justify-start">
-                                                        <Icon
-                                                            name="user"
-                                                            size={18}
-                                                            style={{
-                                                                marginRight: 5,
-                                                                paddingTop: 2,
-                                                                width: 20,
-                                                                textAlign:
-                                                                    "center",
-                                                            }}
-                                                            color="black"
-                                                        />
-                                                    </View>
-                                                    <View className="flex flex-col">
-                                                        <Text selectable>
-                                                            {nominee.nomineeInfo
-                                                                .name || "-"}
-                                                        </Text>
-                                                        <Text selectable>
-                                                            {nominee.nomineeInfo
-                                                                .relationship
-                                                                .name || "-"}
-                                                        </Text>
-                                                        <Text selectable>
-                                                            {nominee.nomineeInfo
-                                                                .dob
-                                                                ? moment(
-                                                                      new Date(
-                                                                          nominee.nomineeInfo.dob
-                                                                      )
-                                                                  ).format(
-                                                                      "DD-MM-YYYY"
-                                                                  )
-                                                                : "-"}
-                                                        </Text>
-                                                        <Text selectable>
-                                                            {nominee.nomineeInfo
-                                                                .panNumber ||
-                                                                "-"}
-                                                        </Text>
-                                                    </View>
-                                                </View>
-                                            );
-                                        })}
-                                    </View>
-                                </View>
-                                <View className="flex flex-col w-full lg:w-4/12 mt-1">
-                                    <View
-                                        className="flex flex-col rounded p-3 lg:h-[200px] m-0 lg:m-2"
-                                        style={
-                                            Platform.OS == "web"
-                                                ? {
-                                                      ...BorderShadow,
-                                                      overflow: "scroll",
-                                                  }
-                                                : {
-                                                      ...AccountShadowPhone,
-                                                      overflow: "scroll",
-                                                  }
-                                        }
-                                    >
-                                        <Text
-                                            selectable
-                                            className="text-base mb-4 font-bold"
-                                        >
-                                            Demat Details
-                                        </Text>
-
-                                        <View className="flex flex-row mb-1 items-center">
+                                <View className="flex flex-col gap-6 w-full">
+                                    <View className="flex flex-row w-full justify-between items-center">
+                                        <View className="flex flex-row gap-2 items-center">
                                             <Text
                                                 selectable
-                                                className="pr-1 font-semibold"
+                                                className="text-lg flex flex-row text-center font-semibold"
                                             >
-                                                BOID:
+                                                {data?.name}
                                             </Text>
-                                            <Text selectable>
-                                                {data.dematAccount.boId}
-                                            </Text>
+                                            {data?.isActive ? (
+                                                <CheckCircleIcon
+                                                    color="emerald.500"
+                                                    size="md"
+                                                />
+                                            ) : (
+                                                <WarningIcon
+                                                    size="md"
+                                                    color="orange.500"
+                                                />
+                                            )}
                                         </View>
-
-                                        <View className="flex flex-row mb-1 items-center">
-                                            <Text
-                                                selectable
-                                                className="pr-1 font-semibold"
-                                            >
-                                                DPID:
-                                            </Text>
-                                            <Text selectable>
-                                                {data.dematAccount.dpId}
-                                            </Text>
-                                        </View>
-                                        <View className="flex flex-row mb-1 items-center">
-                                            <Text
-                                                selectable
-                                                className="pr-1 font-semibold"
-                                            >
-                                                Depository Name:
-                                            </Text>
-                                            <Text selectable>
-                                                {
-                                                    data.dematAccount
-                                                        .dematAccountType.name
+                                        <View>
+                                            <Button
+                                                width="48"
+                                                bgColor={"#013974"}
+                                                onPress={() =>
+                                                    console.log("Press Invest")
                                                 }
-                                            </Text>
+                                            >
+                                                Invest
+                                            </Button>
+                                        </View>
+                                    </View>
+                                    <View className="flex flex-row justify-between items-start w-full">
+                                        <View className="w-4/12 flex-flex-col gap-4 px-2">
+                                            <DataValue
+                                                key="pan"
+                                                title="Pan No."
+                                                value={
+                                                    data?.users[0]?.panNumber
+                                                }
+                                            />
+                                            <DataValue
+                                                key="clientCode"
+                                                title="Client Code"
+                                                value={data?.clientId}
+                                            />
+                                            <DataValue
+                                                key="dob"
+                                                title="DOB"
+                                                value={"Jul 26, 2023"}
+                                            />
+                                            <DataValue
+                                                key="doi"
+                                                title="DOI"
+                                                value={"Jul 26, 2023"}
+                                            />
+                                        </View>
+                                        <View className="w-4/12 flex-flex-col gap-4 px-2">
+                                            <DataValue
+                                                key="totalInvestment"
+                                                title="Total Investment"
+                                                value={"57,000"}
+                                            />
+                                            <DataValue
+                                                key="runningSip"
+                                                title="Running SIPs"
+                                                value={"2"}
+                                            />
+                                            <DataValue
+                                                key="lastInvestment"
+                                                title="Last Investment"
+                                                value="Lumpsum: 6,700"
+                                            />
+                                            <DataValue
+                                                key="lastInvestmentDate"
+                                                title="Last Investment Date"
+                                                value="Jul 26, 2023, 1:38 PM"
+                                            />
+                                        </View>
+                                        <View className="w-4/12 flex-flex-col gap-4 px-2">
+                                            <DataValue
+                                                key="autopay"
+                                                title="Autopay"
+                                                value={
+                                                    data?.isActive
+                                                        ? "Active"
+                                                        : "Not Active"
+                                                }
+                                            />
+                                            <DataValue
+                                                key="kycStatus"
+                                                title="KYC Status"
+                                                value={
+                                                    data?.users[0]?.kycStatus
+                                                        ?.name
+                                                }
+                                            />
+                                            <DataValue
+                                                key="riskProfile"
+                                                title="Risk Profile"
+                                                value={"-"}
+                                            />
                                         </View>
                                     </View>
                                 </View>
                             </View>
-
-                            <View className="flex flex-col my-4">
-                                <View className="flex flex-row justify-start">
-                                    <Text className="font-bold text-base">
-                                        Recent Orders
-                                    </Text>
+                            <View className="flex flex-row justify-between rounded bg-white h-128">
+                                <View
+                                    className="w-[60%] h-full rounded"
+                                    style={{ ...BreadcrumbShadow }}
+                                >
+                                    <PortfolioCard data={data} />
                                 </View>
-
-                                {width < 830 ? (
-                                    <View className="flex flex-col mt-3">
-                                        {data.orders.map((order, index) => {
-                                            return (
-                                                <View key={index}>
-                                                    <View
-                                                        className={
-                                                            `flex flex-row p-2 justify-between flex-wrap rounded-xl   mb-3 ` +
-                                                            (index % 2
-                                                                ? "bg-[#eaf3fe]"
-                                                                : "bg-[#f0f0f0]")
-                                                        }
-                                                        style={{
-                                                            borderColor:
-                                                                "#367a88",
-                                                            borderWidth: 0.2,
-                                                        }}
-                                                    >
-                                                        <View className="flex flex-col w-full">
-                                                            <View className="flex flex-row justify-start items-center">
-                                                                <Pressable
-                                                                    onPress={() =>
-                                                                        onCopy(
-                                                                            order.id
-                                                                        )
-                                                                    }
-                                                                    className="flex flex-row items-center"
-                                                                >
-                                                                    <Text className="mr-1">
-                                                                        #
-                                                                        {
-                                                                            order.id
-                                                                        }
-                                                                    </Text>
-                                                                    <Icon
-                                                                        name="copy"
-                                                                        size={
-                                                                            14
-                                                                        }
-                                                                        color="black"
-                                                                    />
-                                                                </Pressable>
-                                                            </View>
-                                                            <View className="flex flex-row items-start justify-center w-full flex-wrap mt-3">
-                                                                <View className="flex flex-col items-center w-4/12 justify-center">
-                                                                    <Text
-                                                                        selectable
-                                                                        className="text-slate-600 font-base text-[10px]"
-                                                                    >
-                                                                        Type
-                                                                    </Text>
-
-                                                                    <Text
-                                                                        selectable
-                                                                        className="text-black font-bold text-[13px]"
-                                                                    >
-                                                                        {"order.type" ||
-                                                                            "-"}{" "}
-                                                                    </Text>
-                                                                </View>
-
-                                                                <View className="flex flex-col items-center w-4/12 justify-center">
-                                                                    <Text
-                                                                        selectable
-                                                                        className="text-slate-600 font-base text-[10px]"
-                                                                    >
-                                                                        Nav{" "}
-                                                                    </Text>
-
-                                                                    <Text
-                                                                        selectable
-                                                                        className="text-black font-bold text-[13px]"
-                                                                    >
-                                                                        {order.nav ||
-                                                                            "-"}{" "}
-                                                                    </Text>
-                                                                </View>
-
-                                                                <View className="flex flex-col items-center w-4/12 justify-center">
-                                                                    <Text
-                                                                        selectable
-                                                                        className="text-slate-600 font-base text-[10px]"
-                                                                    >
-                                                                        Status
-                                                                    </Text>
-
-                                                                    <Text
-                                                                        selectable
-                                                                        className="text-black font-bold text-[13px]"
-                                                                    >
-                                                                        {"-" ||
-                                                                            "-"}{" "}
-                                                                    </Text>
-                                                                </View>
-                                                            </View>
-
-                                                            <View className="flex flex-row items-start justify-center w-full flex-wrap mt-3">
-                                                                <View className="flex flex-col items-center w-4/12 justify-center">
-                                                                    <Text
-                                                                        selectable
-                                                                        className="text-slate-600 font-base text-[10px]"
-                                                                    >
-                                                                        Units{" "}
-                                                                    </Text>
-
-                                                                    <Text
-                                                                        selectable
-                                                                        className="text-black font-bold text-[13px]"
-                                                                    >
-                                                                        {order.units ||
-                                                                            "-"}{" "}
-                                                                    </Text>
-                                                                </View>
-                                                                <View className="flex flex-col items-center w-4/12 justify-center">
-                                                                    <Text
-                                                                        selectable
-                                                                        className="text-slate-600 font-base text-[10px]"
-                                                                    >
-                                                                        Amount
-                                                                    </Text>
-
-                                                                    <Text
-                                                                        selectable
-                                                                        className="text-black font-bold text-[13px]"
-                                                                    >
-                                                                        {`${RupeeSymbol}${order.amount}` ||
-                                                                            "-"}{" "}
-                                                                    </Text>
-                                                                </View>
-
-                                                                <View className="flex flex-col items-center w-4/12 justify-center">
-                                                                    <Text
-                                                                        selectable
-                                                                        className="text-slate-600 font-base text-[10px]"
-                                                                    >
-                                                                        Created
-                                                                        At
-                                                                    </Text>
-
-                                                                    <Text
-                                                                        selectable
-                                                                        className="text-black font-bold text-[13px] text-center"
-                                                                    >
-                                                                        {(order.createdAt &&
-                                                                            moment(
-                                                                                new Date(
-                                                                                    order.createdAt
-                                                                                )
-                                                                            ).format(
-                                                                                "DD-MM-YYYY hh:mm:ss A"
-                                                                            )) ||
-                                                                            "-"}{" "}
-                                                                    </Text>
-                                                                </View>
-                                                            </View>
-                                                        </View>
-                                                    </View>
-                                                </View>
-                                            );
-                                        })}
-                                    </View>
-                                ) : (
-                                    <View className="flex flex-col mt-3">
-                                        <View className="flex flex-row bg-[#e3e3e3] rounded-t">
-                                            <View className="w-2/12 py-[9px] px-[9px]">
-                                                <Text
-                                                    selectable
-                                                    className="font-semibold"
-                                                >
-                                                    Type
-                                                </Text>
-                                            </View>
-                                            <View className="w-2/12 py-[9px] px-[9px]">
-                                                <Text
-                                                    selectable
-                                                    className="font-semibold"
-                                                >
-                                                    Process Date
-                                                </Text>
-                                            </View>
-                                            <View className="w-2/12 py-[9px] px-[9px]">
-                                                <Text
-                                                    selectable
-                                                    className="font-semibold"
-                                                >
-                                                    NAV
-                                                </Text>
-                                            </View>
-                                            <View className="w-2/12 py-[9px] px-[9px]">
-                                                <Text
-                                                    selectable
-                                                    className="font-semibold"
-                                                >
-                                                    Units
-                                                </Text>
-                                            </View>
-                                            <View className="w-2/12 py-[9px] px-[9px]">
-                                                <Text
-                                                    selectable
-                                                    className="font-semibold"
-                                                >
-                                                    Amount
-                                                </Text>
-                                            </View>
-                                            <View className="w-2/12 py-[9px] px-[9px]">
-                                                <Text
-                                                    selectable
-                                                    className="font-semibold"
-                                                >
-                                                    Status
-                                                </Text>
-                                            </View>
-                                        </View>
-                                        <View
-                                            className="mb-2"
-                                            style={{
-                                                borderColor: "#e4e4e4",
-                                                borderBottomWidth:
-                                                    StyleSheet.hairlineWidth,
-                                            }}
-                                        />
-                                        {data.orders.map((order, index) => {
-                                            return (
-                                                <View key={index}>
-                                                    <View className="flex flex-row w-full">
-                                                        <View className="w-2/12 p-3">
-                                                            <Text selectable>
-                                                                {"-"}
-                                                            </Text>
-                                                        </View>
-                                                        <View className="w-2/12 p-3">
-                                                            <Text selectable>
-                                                                {moment(
-                                                                    new Date(
-                                                                        order.createdAt
-                                                                    )
-                                                                ).format(
-                                                                    "DD-MM-YYYY hh:mm:ss A"
-                                                                ) || "-"}
-                                                            </Text>
-                                                        </View>
-                                                        <View className="w-2/12 p-3">
-                                                            <Text selectable>
-                                                                {order.nav ||
-                                                                    "-"}
-                                                            </Text>
-                                                        </View>
-                                                        <View className="w-2/12 p-3">
-                                                            <Text selectable>
-                                                                {order.units ||
-                                                                    "-"}
-                                                            </Text>
-                                                        </View>
-                                                        <View className="w-2/12 p-3">
-                                                            <Text selectable>
-                                                                {order.amount
-                                                                    ? RupeeSymbol +
-                                                                      order.amount
-                                                                    : "-"}
-                                                            </Text>
-                                                        </View>
-                                                        <View className="w-2/12 p-3">
-                                                            <Text selectable>
-                                                                {"-"}
-                                                            </Text>
-                                                        </View>
-                                                    </View>
-                                                    <View
-                                                        className="mb-2"
-                                                        style={{
-                                                            borderColor:
-                                                                "#e4e4e4",
-                                                            borderBottomWidth:
-                                                                StyleSheet.hairlineWidth,
-                                                        }}
-                                                    />
-                                                </View>
-                                            );
-                                        })}
-                                    </View>
-                                )}
+                                <View
+                                    className="w-[39%] h-128 rounded"
+                                    style={{ ...BreadcrumbShadow }}
+                                >
+                                    <AccountDetailsCard data={data} />
+                                </View>
                             </View>
-
-                            <View className="flex flex-col my-4">
-                                <View className="flex flex-row justify-start">
-                                    <Text className="font-bold text-base">
-                                        Recent Transactions
-                                    </Text>
+                            <View className="flex flex-row justify-between rounded bg-white h-128">
+                                <View
+                                    className="w-[60%] h-full rounded"
+                                    style={{ ...BreadcrumbShadow }}
+                                >
+                                    <MutualFundCard data={data} />
                                 </View>
-                                {width < 830 ? (
-                                    <View className="flex flex-col mt-3">
-                                        {data.transactions.map(
-                                            (transaction, index) => {
-                                                return (
-                                                    <View key={index}>
-                                                        <View
-                                                            className={
-                                                                `flex flex-row p-2 justify-between flex-wrap rounded-xl   mb-3 ` +
-                                                                (index % 2
-                                                                    ? "bg-[#eaf3fe]"
-                                                                    : "bg-[#f0f0f0]")
-                                                            }
-                                                            style={{
-                                                                borderColor:
-                                                                    "#367a88",
-                                                                borderWidth: 0.2,
-                                                            }}
-                                                        >
-                                                            <View className="flex flex-col w-full">
-                                                                <View className="flex flex-row items-start justify-center w-full flex-wrap mt-3">
-                                                                    <View className="flex flex-col items-center w-4/12 justify-center">
-                                                                        <Text
-                                                                            selectable
-                                                                            className="text-slate-600 font-base text-[10px]"
-                                                                        >
-                                                                            Amount
-                                                                        </Text>
-
-                                                                        <Text
-                                                                            selectable
-                                                                            className="text-black font-bold text-[13px]"
-                                                                        >
-                                                                            {transaction.amount ||
-                                                                                "-"}{" "}
-                                                                        </Text>
-                                                                    </View>
-                                                                    <View className="flex flex-col items-center w-4/12 justify-center">
-                                                                        <Text
-                                                                            selectable
-                                                                            className="text-slate-600 font-base text-[10px]"
-                                                                        >
-                                                                            Units{" "}
-                                                                        </Text>
-
-                                                                        <Text
-                                                                            selectable
-                                                                            className="text-black font-bold text-[13px]"
-                                                                        >
-                                                                            {transaction.units ||
-                                                                                "-"}{" "}
-                                                                        </Text>
-                                                                    </View>
-                                                                    <View className="flex flex-col items-center w-4/12 justify-center">
-                                                                        <Text
-                                                                            selectable
-                                                                            className="text-slate-600 font-base text-[10px]"
-                                                                        >
-                                                                            Nav{" "}
-                                                                        </Text>
-
-                                                                        <Text
-                                                                            selectable
-                                                                            className="text-black font-bold text-[13px]"
-                                                                        >
-                                                                            {transaction.nav ||
-                                                                                "-"}{" "}
-                                                                        </Text>
-                                                                    </View>
-                                                                </View>
-                                                                <View className="flex flex-row items-start justify-center w-full flex-wrap mt-3">
-                                                                    <View className="flex flex-col items-center w-4/12 justify-center">
-                                                                        <Text
-                                                                            selectable
-                                                                            className="text-slate-600 font-base text-[10px]"
-                                                                        >
-                                                                            Nav
-                                                                            Allotment
-                                                                            Date
-                                                                        </Text>
-
-                                                                        <Text
-                                                                            selectable
-                                                                            className="text-black font-bold text-[13px]"
-                                                                        >
-                                                                            {(transaction.navAllotmentDate &&
-                                                                                moment(
-                                                                                    new Date(
-                                                                                        transaction.navAllotmentDate
-                                                                                    )
-                                                                                ).format(
-                                                                                    "DD-MM-YYYY hh:mm:ss A"
-                                                                                )) ||
-                                                                                "-"}{" "}
-                                                                        </Text>
-                                                                    </View>
-                                                                    <View className="flex flex-col items-center w-4/12 justify-center">
-                                                                        <Text
-                                                                            selectable
-                                                                            className="text-slate-600 font-base text-[10px]"
-                                                                        >
-                                                                            Settlement
-                                                                            Date{" "}
-                                                                        </Text>
-
-                                                                        <Text
-                                                                            selectable
-                                                                            className="text-black font-bold text-[13px]"
-                                                                        >
-                                                                            {(transaction.settlementDate &&
-                                                                                moment(
-                                                                                    new Date(
-                                                                                        transaction.settlementDate
-                                                                                    )
-                                                                                ).format(
-                                                                                    "DD-MM-YYYY hh:mm:ss A"
-                                                                                )) ||
-                                                                                "-"}{" "}
-                                                                        </Text>
-                                                                    </View>
-                                                                    <View className="flex flex-col items-center w-4/12 justify-center">
-                                                                        <Text
-                                                                            selectable
-                                                                            className="text-slate-600 font-base text-[10px]"
-                                                                        >
-                                                                            Payment
-                                                                            Date
-                                                                        </Text>
-
-                                                                        <Text
-                                                                            selectable
-                                                                            className="text-black font-bold text-[13px]"
-                                                                        >
-                                                                            {(transaction.paymentDate &&
-                                                                                moment(
-                                                                                    new Date(
-                                                                                        transaction.paymentDate
-                                                                                    )
-                                                                                ).format(
-                                                                                    "DD-MM-YYYY hh:mm:ss A"
-                                                                                )) ||
-                                                                                "-"}{" "}
-                                                                        </Text>
-                                                                    </View>
-                                                                </View>
-
-                                                                <View className="flex flex-row items-start justify-center w-full flex-wrap mt-3">
-                                                                    <View className="flex flex-col items-center w-4/12 justify-center">
-                                                                        <Text
-                                                                            selectable
-                                                                            className="text-slate-600 font-base text-[10px]"
-                                                                        >
-                                                                            Settlement
-                                                                            Type
-                                                                        </Text>
-
-                                                                        <Text
-                                                                            selectable
-                                                                            className="text-black font-bold text-[13px]"
-                                                                        >
-                                                                            {transaction.settlementType ||
-                                                                                "-"}{" "}
-                                                                        </Text>
-                                                                    </View>
-                                                                    <View className="flex flex-col items-center w-4/12 justify-center">
-                                                                        <Text
-                                                                            selectable
-                                                                            className="text-slate-600 font-base text-[10px]"
-                                                                        >
-                                                                            Transaction
-                                                                            Status{" "}
-                                                                        </Text>
-
-                                                                        <Text
-                                                                            selectable
-                                                                            className="text-black font-bold text-[13px]"
-                                                                        >
-                                                                            {transaction
-                                                                                .transactionStatus
-                                                                                .name ||
-                                                                                "-"}{" "}
-                                                                        </Text>
-                                                                    </View>
-                                                                    <View className="flex flex-col items-center w-4/12 justify-center">
-                                                                        <Text
-                                                                            selectable
-                                                                            className="text-slate-600 font-base text-[10px]"
-                                                                        >
-                                                                            Type
-                                                                        </Text>
-
-                                                                        <Text
-                                                                            selectable
-                                                                            className="text-black font-bold text-[13px]"
-                                                                        >
-                                                                            {transaction
-                                                                                .transactionType
-                                                                                .name ||
-                                                                                "-"}{" "}
-                                                                        </Text>
-                                                                    </View>
-                                                                </View>
-                                                            </View>
-                                                        </View>
-                                                    </View>
-                                                );
-                                            }
-                                        )}
-                                    </View>
-                                ) : (
-                                    <View className="flex flex-col mt-3">
-                                        <View className="flex flex-row bg-[#e3e3e3] rounded-t">
-                                            <View className="w-2/12 py-[9px] px-[9px]">
-                                                <Text
-                                                    selectable
-                                                    className="font-semibold"
-                                                >
-                                                    Type
-                                                </Text>
-                                            </View>
-                                            <View className="w-2/12 py-[9px] px-[9px]">
-                                                <Text
-                                                    selectable
-                                                    className="font-semibold"
-                                                >
-                                                    Payment Date
-                                                </Text>
-                                            </View>
-                                            <View className="w-2/12 py-[9px] px-[9px]">
-                                                <Text
-                                                    selectable
-                                                    className="font-semibold"
-                                                >
-                                                    Settlement Date
-                                                </Text>
-                                            </View>
-
-                                            <View className="w-2/12 py-[9px] px-[9px]">
-                                                <Text
-                                                    selectable
-                                                    className="font-semibold"
-                                                >
-                                                    Units
-                                                </Text>
-                                            </View>
-                                            <View className="w-2/12 py-[9px] px-[9px]">
-                                                <Text
-                                                    selectable
-                                                    className="font-semibold"
-                                                >
-                                                    NAV
-                                                </Text>
-                                            </View>
-                                            <View className="w-1/12 py-[9px] px-[9px]">
-                                                <Text
-                                                    selectable
-                                                    className="font-semibold"
-                                                >
-                                                    Amount
-                                                </Text>
-                                            </View>
-                                            <View className="w-1/12 py-[9px] px-[9px]">
-                                                <Text
-                                                    selectable
-                                                    className="font-semibold"
-                                                >
-                                                    Status
-                                                </Text>
-                                            </View>
-                                        </View>
-                                        <View
-                                            className="mb-2"
-                                            style={{
-                                                borderColor: "#e4e4e4",
-                                                borderBottomWidth:
-                                                    StyleSheet.hairlineWidth,
-                                            }}
-                                        />
-                                        {data?.transactions?.map(
-                                            (transaction, index) => {
-                                                return (
-                                                    <View key={index}>
-                                                        <View className="flex flex-row w-full">
-                                                            <View className="w-2/12 p-3">
-                                                                <Text
-                                                                    selectable
-                                                                >
-                                                                    {transaction
-                                                                        ?.transactionType
-                                                                        ?.name ||
-                                                                        "-"}
-                                                                </Text>
-                                                            </View>
-                                                            <View className="w-2/12 p-3">
-                                                                <Text
-                                                                    selectable
-                                                                >
-                                                                    {transaction?.paymentDate
-                                                                        ? moment(
-                                                                              new Date(
-                                                                                  transaction?.paymentDate
-                                                                              )
-                                                                          ).format(
-                                                                              "DD-MM-YYYY hh:mm:ss A"
-                                                                          )
-                                                                        : "-"}
-                                                                </Text>
-                                                            </View>
-                                                            <View className="w-2/12 p-3">
-                                                                <Text
-                                                                    selectable
-                                                                >
-                                                                    {transaction?.settlementDate
-                                                                        ? moment(
-                                                                              new Date(
-                                                                                  transaction?.settlementDate
-                                                                              )
-                                                                          ).format(
-                                                                              "DD-MM-YYYY hh:mm:ss A"
-                                                                          )
-                                                                        : "-"}
-                                                                </Text>
-                                                            </View>
-
-                                                            <View className="w-2/12 p-3">
-                                                                <Text
-                                                                    selectable
-                                                                >
-                                                                    {transaction?.units ||
-                                                                        "-"}
-                                                                </Text>
-                                                            </View>
-                                                            <View className="w-2/12 p-3">
-                                                                <Text
-                                                                    selectable
-                                                                >
-                                                                    {transaction?.nav ||
-                                                                        "-"}
-                                                                </Text>
-                                                            </View>
-                                                            <View className="w-1/12 p-3">
-                                                                <Text
-                                                                    selectable
-                                                                >
-                                                                    {transaction?.amount
-                                                                        ? RupeeSymbol +
-                                                                          transaction?.amount
-                                                                        : "-"}
-                                                                </Text>
-                                                            </View>
-                                                            <View className="w-1/12 p-3">
-                                                                <Text
-                                                                    selectable
-                                                                >
-                                                                    {transaction
-                                                                        ?.transactionStatus
-                                                                        ?.name ||
-                                                                        "-"}
-                                                                </Text>
-                                                            </View>
-                                                        </View>
-                                                        <View
-                                                            className="mb-2"
-                                                            style={{
-                                                                borderColor:
-                                                                    "#e4e4e4",
-                                                                borderBottomWidth:
-                                                                    StyleSheet.hairlineWidth,
-                                                            }}
-                                                        />
-                                                    </View>
-                                                );
-                                            }
-                                        )}
-                                    </View>
-                                )}
-                            </View>
-
-                            <View className="flex flex-col my-4">
-                                <View className="flex flex-row justify-start">
-                                    <Text className="font-bold text-base">
-                                        Holdings
-                                    </Text>
+                                <View
+                                    className="w-[39%] h-128 rounded"
+                                    style={{ ...BreadcrumbShadow }}
+                                >
+                                    <TopAMCCard data={data} />
                                 </View>
-                                {width < 830 ? (
-                                    <View className="flex flex-col mt-3">
-                                        {data.holdings.map((holding, index) => {
-                                            return (
-                                                <View key={index}>
-                                                    <View
-                                                        className={
-                                                            `flex flex-row p-2 justify-between flex-wrap rounded-xl   mb-3 ` +
-                                                            (index % 2
-                                                                ? "bg-[#eaf3fe]"
-                                                                : "bg-[#f0f0f0]")
-                                                        }
-                                                        style={{
-                                                            borderColor:
-                                                                "#367a88",
-                                                            borderWidth: 0.2,
-                                                        }}
-                                                    >
-                                                        <View className="flex flex-col w-full">
-                                                            <View className="flex flex-row items-center w-full flex-wrap ">
-                                                                <View
-                                                                    className={
-                                                                        "flex flex-row items-center justify-start w-8/12"
-                                                                    }
-                                                                >
-                                                                    <Image
-                                                                        alt="fundHouse"
-                                                                        className="mr-2"
-                                                                        style={{
-                                                                            width: 40,
-                                                                            height: 40,
-                                                                            objectFit:
-                                                                                "contain",
-                                                                        }}
-                                                                        source={{
-                                                                            uri: holding
-                                                                                .mutualfund
-                                                                                .fundhouse
-                                                                                .logoUrl,
-                                                                        }}
-                                                                    />
-                                                                    <View
-                                                                        className={
-                                                                            "flex flex-col justify-end items-start"
-                                                                        }
-                                                                    >
-                                                                        <Text
-                                                                            selectable
-                                                                            className="text-black font-semibold break-all text-sm flex-wrap"
-                                                                        >
-                                                                            {
-                                                                                holding
-                                                                                    .mutualfund
-                                                                                    .name
-                                                                            }
-                                                                        </Text>
-
-                                                                        <View className="flex flex-row items-center flex-wrap">
-                                                                            <Text
-                                                                                selectable
-                                                                                className=" text-blacktext-xs"
-                                                                            >
-                                                                                {
-                                                                                    holding
-                                                                                        .mutualfund
-                                                                                        .fundhouse
-                                                                                        .name
-                                                                                }
-                                                                            </Text>
-                                                                        </View>
-                                                                    </View>
-                                                                </View>
-                                                            </View>
-                                                            <View className="flex flex-row items-start justify-center w-full flex-wrap mt-3">
-                                                                <View className="flex flex-col items-center w-3/12 justify-center">
-                                                                    <Text
-                                                                        selectable
-                                                                        className="text-slate-600 font-base text-[10px]"
-                                                                    >
-                                                                        Units
-                                                                    </Text>
-
-                                                                    <Text
-                                                                        selectable
-                                                                        className="text-black font-bold text-[13px]"
-                                                                    >
-                                                                        {holding.units ||
-                                                                            "-"}{" "}
-                                                                    </Text>
-                                                                </View>
-
-                                                                <View className="flex flex-col items-center w-3/12 justify-center">
-                                                                    {/* <Text selectable className='text-slate-600 font-base text-[10px]'>Avg Nav</Text> */}
-                                                                    <Text
-                                                                        selectable
-                                                                        className="text-slate-600 font-base text-[10px]"
-                                                                    ></Text>
-
-                                                                    {/* <Text selectable className='text-black font-bold text-[13px]'>{holding.avgNav || '-'} </Text> */}
-                                                                </View>
-
-                                                                <View className="flex flex-col items-center w-3/12 justify-center">
-                                                                    <Text
-                                                                        selectable
-                                                                        className="text-slate-600 font-base text-[10px]"
-                                                                    >
-                                                                        Current
-                                                                        Value
-                                                                    </Text>
-
-                                                                    <Text
-                                                                        selectable
-                                                                        className="text-black font-bold text-[13px]"
-                                                                    >
-                                                                        {holding.currentValue
-                                                                            ? RupeeSymbol +
-                                                                              holding.currentValue
-                                                                            : "-"}{" "}
-                                                                    </Text>
-                                                                </View>
-
-                                                                <View className="flex flex-col items-center w-3/12 justify-center">
-                                                                    <Text
-                                                                        selectable
-                                                                        className="text-slate-600 font-base text-[10px]"
-                                                                    >
-                                                                        Invested
-                                                                        Value
-                                                                    </Text>
-
-                                                                    <Text
-                                                                        selectable
-                                                                        className="text-black font-bold text-[13px]"
-                                                                    >
-                                                                        {holding.investedValue
-                                                                            ? RupeeSymbol +
-                                                                              holding.investedValue
-                                                                            : "-"}{" "}
-                                                                    </Text>
-                                                                </View>
-                                                            </View>
-                                                            <View className="flex flex-row items-center w-full mt-3">
-                                                                {/* <TouchableRipple onPress={() => router.push(`orders/${order.id}`)} className='w-full py-2 rounded-full border-[0.4px]'> */}
-                                                                <TouchableRipple
-                                                                    rippleColor={
-                                                                        "#a2a2a252"
-                                                                    }
-                                                                    onPress={() =>
-                                                                        router.push(
-                                                                            `clients/${id}/holdings/${holding.id}/`
-                                                                        )
-                                                                    }
-                                                                    className="w-full py-2 rounded-full border-[0.4px] bg-black"
-                                                                >
-                                                                    <Text
-                                                                        selectable
-                                                                        className="text-white text-center text-xs"
-                                                                    >
-                                                                        View
-                                                                        Details
-                                                                    </Text>
-                                                                </TouchableRipple>
-                                                            </View>
-                                                        </View>
-                                                    </View>
-                                                </View>
-                                            );
-                                        })}
-                                    </View>
-                                ) : (
-                                    <View className="flex flex-col mt-3">
-                                        <View className="flex flex-row bg-[#e3e3e3] rounded-t">
-                                            <View className="w-[18%] py-[9px] px-[9px]">
-                                                <Text
-                                                    selectable
-                                                    className="font-semibold"
-                                                >
-                                                    Mutual Fund
-                                                </Text>
-                                            </View>
-                                            <View className="w-[18%] py-[9px] px-[9px]">
-                                                <Text
-                                                    selectable
-                                                    className="font-semibold"
-                                                >
-                                                    Units
-                                                </Text>
-                                            </View>
-                                            <View className="w-[18%] py-[9px] px-[9px]">
-                                                <Text
-                                                    selectable
-                                                    className="font-semibold"
-                                                >
-                                                    Avg NAV
-                                                </Text>
-                                            </View>
-                                            <View className="w-[18%] py-[9px] px-[9px]">
-                                                <Text
-                                                    selectable
-                                                    className="font-semibold"
-                                                >
-                                                    Current Value
-                                                </Text>
-                                            </View>
-                                            <View className="w-[18%] py-[9px] px-[9px]">
-                                                <Text
-                                                    selectable
-                                                    className="font-semibold"
-                                                >
-                                                    Invested Value
-                                                </Text>
-                                            </View>
-                                            <View className="w-[10%] py-[9px] px-[9px]">
-                                                <Text
-                                                    selectable
-                                                    className="font-semibold"
-                                                >
-                                                    Action
-                                                </Text>
-                                            </View>
-                                        </View>
-                                        <View
-                                            className="mb-2"
-                                            style={{
-                                                borderColor: "#e4e4e4",
-                                                borderBottomWidth:
-                                                    StyleSheet.hairlineWidth,
-                                            }}
-                                        />
-                                        {data.holdings.map((holding, index) => {
-                                            return (
-                                                <View key={index}>
-                                                    <View className="flex flex-row w-full">
-                                                        <View className="w-[18%] p-3">
-                                                            <Text selectable>
-                                                                {holding
-                                                                    .mutualfund
-                                                                    .name ||
-                                                                    "-"}
-                                                            </Text>
-                                                        </View>
-                                                        <View className="w-[18%] p-3">
-                                                            <Text selectable>
-                                                                {holding.units ||
-                                                                    "-"}
-                                                            </Text>
-                                                        </View>
-                                                        <View className="w-[18%] p-3">
-                                                            {/* <Text selectable >{holding.avgNav || "-"}</Text> */}
-                                                        </View>
-                                                        <View className="w-[18%] p-3">
-                                                            <Text selectable>
-                                                                {holding.currentValue
-                                                                    ? RupeeSymbol +
-                                                                      holding.currentValue
-                                                                    : "-"}
-                                                            </Text>
-                                                        </View>
-                                                        <View className="w-[18%] p-3">
-                                                            <Text selectable>
-                                                                {holding.investedValue
-                                                                    ? RupeeSymbol +
-                                                                      holding.investedValue
-                                                                    : "-"}
-                                                            </Text>
-                                                        </View>
-                                                        <View className="w-[10%] p-3">
-                                                            <Link
-                                                                // href={`/clients/${id}/holdings/${holding.id}`}
-                                                                href={{
-                                                                    pathname:
-                                                                        "/clients/[id]/holdings/[holdingId]",
-                                                                    params: {
-                                                                        id: id,
-                                                                        holdingId:
-                                                                            holding.id,
-                                                                    },
-                                                                }}
-                                                                className="rounded-full border-[0.4px] flex flex-row items-center justify-center bg-black w-8/12 h-6"
-                                                            >
-                                                                <Text
-                                                                    selectable
-                                                                    className="text-white text-center text-xs w-10/12"
-                                                                >
-                                                                    View
-                                                                </Text>
-                                                            </Link>
-                                                        </View>
-                                                    </View>
-                                                    <View
-                                                        className="mb-2"
-                                                        style={{
-                                                            borderColor:
-                                                                "#e4e4e4",
-                                                            borderBottomWidth:
-                                                                StyleSheet.hairlineWidth,
-                                                        }}
-                                                    />
-                                                </View>
-                                            );
-                                        })}
-                                    </View>
-                                )}
                             </View>
                         </View>
                     </View>
@@ -1522,3 +263,972 @@ export default function ClientDetail() {
         </>
     );
 }
+
+const PortfolioCard = ({ data }) => {
+    const [selectedTab, setSelectedTab] = useState(1);
+
+    const handleTabPress = (tab) => {
+        setSelectedTab(tab);
+    };
+
+    const assetBifurcation = [
+        { label: "Equity", value: 20 },
+        { label: "Hybrid", value: 20 },
+        { label: "Debt", value: 20 },
+        { label: "Others", value: 40 },
+    ];
+
+    const assetBifurcationColors = ["#715CFA", "#69E1AB", "#39C3E2", "#FA8B5C"];
+
+    const tabContent = [
+        {
+            key: "holdings",
+            name: "Holdings",
+            content: (
+                <View className="p-2 overflow-auto">
+                    <View className="flex flex-col bg-gray-100 rounded p-2 mb-2">
+                        <View className="flex flex-row justify-between items-center p-2">
+                            <DataGrid
+                                key="current"
+                                title="Current Holdings"
+                                value={
+                                    <Text className="text-blue-700">
+                                        {RupeeSymbol} 37,000
+                                    </Text>
+                                }
+                                reverse
+                            />
+                            <DataGrid
+                                key="invested"
+                                title="Invested"
+                                value={
+                                    <Text className="text-blue-700">
+                                        {RupeeSymbol} 24,67,000
+                                    </Text>
+                                }
+                                reverse
+                            />
+                            <DataGrid
+                                key="xirr"
+                                title="XIRR"
+                                value={<Text className="">21.66 %</Text>}
+                                reverse
+                            />
+                            <DataGrid
+                                key="totalReturns"
+                                title="Total Returns"
+                                value={
+                                    <Text className="text-green-700">
+                                        34.22 %
+                                    </Text>
+                                }
+                                reverse
+                            />
+                        </View>
+                        <View className="p-2">
+                            <HorizontalStackedBarChart
+                                data={assetBifurcation}
+                                colors={assetBifurcationColors}
+                            />
+                        </View>
+                    </View>
+                    <DataTable
+                        key="sips"
+                        headers={["Scheme", "Current", "Invested", "XIRR"]}
+                        cellSize={[5, 3, 2, 2]}
+                        rows={[
+                            [
+                                {
+                                    key: "scheme",
+                                    content: (
+                                        <View className="flex flex-row items-center gap-2">
+                                            <View className="w-8 h-8 rounded bg-gray-500" />
+                                            <View>
+                                                <Text className="text-xs">
+                                                    Kotak Bank Mid Cap Fund
+                                                    Direct Growth
+                                                </Text>
+                                                <Text className="text-xs text-gray-400">
+                                                    Equity | Multi Cap
+                                                </Text>
+                                            </View>
+                                        </View>
+                                    ),
+                                },
+                                {
+                                    key: "amount",
+                                    content: (
+                                        <View>
+                                            <Text
+                                                selectable
+                                                className="text-xs"
+                                            >
+                                                {RupeeSymbol} 7,388
+                                            </Text>
+                                        </View>
+                                    ),
+                                },
+                                {
+                                    key: "date",
+                                    content: (
+                                        <View>
+                                            <Text
+                                                selectable
+                                                className="text-xs text-gray-500"
+                                            >
+                                                {RupeeSymbol} 7,388
+                                            </Text>
+                                        </View>
+                                    ),
+                                },
+                                {
+                                    key: "status",
+                                    content: (
+                                        <View>
+                                            <Text
+                                                selectable
+                                                className="text-xs text-gray-500"
+                                            >
+                                                25.7% (24.8%)
+                                            </Text>
+                                        </View>
+                                    ),
+                                },
+                            ],
+                            [
+                                {
+                                    key: "scheme",
+                                    content: (
+                                        <View className="flex flex-row items-center gap-2">
+                                            <View className="w-8 h-8 rounded bg-gray-500" />
+                                            <View>
+                                                <Text className="text-xs">
+                                                    Kotak Bank Mid Cap Fund
+                                                    Direct Growth
+                                                </Text>
+                                                <Text className="text-xs text-gray-400">
+                                                    Equity | Multi Cap
+                                                </Text>
+                                            </View>
+                                        </View>
+                                    ),
+                                },
+                                {
+                                    key: "amount",
+                                    content: (
+                                        <View>
+                                            <Text
+                                                selectable
+                                                className="text-xs"
+                                            >
+                                                {RupeeSymbol} 7,388
+                                            </Text>
+                                        </View>
+                                    ),
+                                },
+                                {
+                                    key: "date",
+                                    content: (
+                                        <View>
+                                            <Text
+                                                selectable
+                                                className="text-xs text-gray-500"
+                                            >
+                                                {RupeeSymbol} 7,388
+                                            </Text>
+                                        </View>
+                                    ),
+                                },
+                                {
+                                    key: "status",
+                                    content: (
+                                        <View>
+                                            <Text
+                                                selectable
+                                                className="text-xs text-gray-500"
+                                            >
+                                                25.7% (24.8%)
+                                            </Text>
+                                        </View>
+                                    ),
+                                },
+                            ],
+                            [
+                                {
+                                    key: "scheme",
+                                    content: (
+                                        <View className="flex flex-row items-center gap-2">
+                                            <View className="w-8 h-8 rounded bg-gray-500" />
+                                            <View>
+                                                <Text className="text-xs">
+                                                    Kotak Bank Mid Cap Fund
+                                                    Direct Growth
+                                                </Text>
+                                                <Text className="text-xs text-gray-400">
+                                                    Equity | Multi Cap
+                                                </Text>
+                                            </View>
+                                        </View>
+                                    ),
+                                },
+                                {
+                                    key: "amount",
+                                    content: (
+                                        <View>
+                                            <Text
+                                                selectable
+                                                className="text-xs"
+                                            >
+                                                {RupeeSymbol} 7,388
+                                            </Text>
+                                        </View>
+                                    ),
+                                },
+                                {
+                                    key: "date",
+                                    content: (
+                                        <View>
+                                            <Text
+                                                selectable
+                                                className="text-xs text-gray-500"
+                                            >
+                                                {RupeeSymbol} 7,388
+                                            </Text>
+                                        </View>
+                                    ),
+                                },
+                                {
+                                    key: "status",
+                                    content: (
+                                        <View>
+                                            <Text
+                                                selectable
+                                                className="text-xs text-gray-500"
+                                            >
+                                                25.7% (24.8%)
+                                            </Text>
+                                        </View>
+                                    ),
+                                },
+                            ],
+                        ]}
+                    />
+                </View>
+            ),
+        },
+        {
+            key: "sips",
+            name: "SIPs",
+            content: (
+                <View className="p-2 flex flex-col w-full">
+                    <View className="w-full px-4 py-4 mb-2 bg-[#eaf3fe] flex flex-row items-center justify-between rounded">
+                        <Text className="font-bold">Total SIP Amount</Text>
+                        <Text className="font-bold">{RupeeSymbol} 57,000</Text>
+                    </View>
+                    <DataTable
+                        key="sips"
+                        headers={["Schemes", "SIP Amount", "Next Due"]}
+                        cellSize={[6, 3, 3]}
+                        rows={[
+                            [
+                                {
+                                    key: "scheme",
+                                    content: (
+                                        <View className="flex flex-row items-center gap-2">
+                                            <View className="w-8 h-8 rounded bg-gray-500" />
+                                            <View>
+                                                <Text className="text-xs">
+                                                    Kotak Bank Mid Cap Fund
+                                                    Direct Growth
+                                                </Text>
+                                                <Text className="text-xs text-gray-400">
+                                                    Equity | Multi Cap
+                                                </Text>
+                                            </View>
+                                        </View>
+                                    ),
+                                },
+                                {
+                                    key: "sip",
+                                    content: (
+                                        <View>
+                                            <Text
+                                                selectable
+                                                className="text-xs text-black"
+                                            >
+                                                {RupeeSymbol} 7,388
+                                            </Text>
+                                        </View>
+                                    ),
+                                },
+                                {
+                                    key: "nextDue",
+                                    content: (
+                                        <View>
+                                            <Text
+                                                selectable
+                                                className="text-xs text-gray-500"
+                                            >
+                                                Mar 4, 2024
+                                            </Text>
+                                        </View>
+                                    ),
+                                },
+                            ],
+                            [
+                                {
+                                    key: "scheme",
+                                    content: (
+                                        <View className="flex flex-row items-center gap-2">
+                                            <View className="w-8 h-8 rounded bg-gray-500" />
+                                            <View>
+                                                <Text className="text-xs">
+                                                    Kotak Bank Mid Cap Fund
+                                                    Direct Growth
+                                                </Text>
+                                                <Text className="text-xs text-gray-400">
+                                                    Equity | Multi Cap
+                                                </Text>
+                                            </View>
+                                        </View>
+                                    ),
+                                },
+                                {
+                                    key: "sip",
+                                    content: (
+                                        <View>
+                                            <Text
+                                                selectable
+                                                className="text-xs text-black"
+                                            >
+                                                {RupeeSymbol} 7,388
+                                            </Text>
+                                        </View>
+                                    ),
+                                },
+                                {
+                                    key: "nextDue",
+                                    content: (
+                                        <View>
+                                            <Text
+                                                selectable
+                                                className="text-xs text-gray-500"
+                                            >
+                                                Mar 4, 2024
+                                            </Text>
+                                        </View>
+                                    ),
+                                },
+                            ],
+                            [
+                                {
+                                    key: "scheme",
+                                    content: (
+                                        <View className="flex flex-row items-center gap-2">
+                                            <View className="w-8 h-8 rounded bg-gray-500" />
+                                            <View>
+                                                <Text className="text-xs">
+                                                    Kotak Bank Mid Cap Fund
+                                                    Direct Growth
+                                                </Text>
+                                                <Text className="text-xs text-gray-400">
+                                                    Equity | Multi Cap
+                                                </Text>
+                                            </View>
+                                        </View>
+                                    ),
+                                },
+                                {
+                                    key: "sip",
+                                    content: (
+                                        <View>
+                                            <Text
+                                                selectable
+                                                className="text-xs text-black"
+                                            >
+                                                {RupeeSymbol} 7,388
+                                            </Text>
+                                        </View>
+                                    ),
+                                },
+                                {
+                                    key: "nextDue",
+                                    content: (
+                                        <View>
+                                            <Text
+                                                selectable
+                                                className="text-xs text-gray-500"
+                                            >
+                                                Mar 4, 2024
+                                            </Text>
+                                        </View>
+                                    ),
+                                },
+                            ],
+                        ]}
+                    />
+                </View>
+            ),
+        },
+        {
+            key: "transactions",
+            name: "Transactions",
+            content: (
+                <View className="p-2 flex flex-col w-full">
+                    <DataTable
+                        key="sips"
+                        headers={["Schemes", "Amount", "Date", "Status"]}
+                        cellSize={[5, 3, 2, 2]}
+                        rows={[
+                            [
+                                {
+                                    key: "scheme",
+                                    content: (
+                                        <View className="flex flex-row items-center gap-2">
+                                            <View className="w-8 h-8 rounded bg-gray-500" />
+                                            <View>
+                                                <Text className="text-xs">
+                                                    Kotak Bank Mid Cap Fund
+                                                    Direct Growth
+                                                </Text>
+                                                <Text className="text-xs text-gray-400">
+                                                    Equity | Multi Cap
+                                                </Text>
+                                            </View>
+                                        </View>
+                                    ),
+                                },
+                                {
+                                    key: "amount",
+                                    content: (
+                                        <View>
+                                            <Text
+                                                selectable
+                                                className="text-xs text-black"
+                                            >
+                                                {RupeeSymbol} 7,388
+                                            </Text>
+                                        </View>
+                                    ),
+                                },
+                                {
+                                    key: "date",
+                                    content: (
+                                        <View>
+                                            <Text
+                                                selectable
+                                                className="text-xs text-gray-500"
+                                            >
+                                                23/09/2024
+                                            </Text>
+                                        </View>
+                                    ),
+                                },
+                                {
+                                    key: "status",
+                                    content: (
+                                        <View>
+                                            <Text
+                                                selectable
+                                                className="text-xs text-gray-500"
+                                            >
+                                                Success
+                                            </Text>
+                                        </View>
+                                    ),
+                                },
+                            ],
+                            [
+                                {
+                                    key: "scheme",
+                                    content: (
+                                        <View className="flex flex-row items-center gap-2">
+                                            <View className="w-8 h-8 rounded bg-gray-500" />
+                                            <View>
+                                                <Text className="text-xs">
+                                                    Kotak Bank Mid Cap Fund
+                                                    Direct Growth
+                                                </Text>
+                                                <Text className="text-xs text-gray-400">
+                                                    Equity | Multi Cap
+                                                </Text>
+                                            </View>
+                                        </View>
+                                    ),
+                                },
+                                {
+                                    key: "amount",
+                                    content: (
+                                        <View>
+                                            <Text
+                                                selectable
+                                                className="text-xs text-black"
+                                            >
+                                                {RupeeSymbol} 7,388
+                                            </Text>
+                                        </View>
+                                    ),
+                                },
+                                {
+                                    key: "date",
+                                    content: (
+                                        <View>
+                                            <Text
+                                                selectable
+                                                className="text-xs text-gray-500"
+                                            >
+                                                23/09/2024
+                                            </Text>
+                                        </View>
+                                    ),
+                                },
+                                {
+                                    key: "status",
+                                    content: (
+                                        <View>
+                                            <Text
+                                                selectable
+                                                className="text-xs text-gray-500"
+                                            >
+                                                Success
+                                            </Text>
+                                        </View>
+                                    ),
+                                },
+                            ],
+                            [
+                                {
+                                    key: "scheme",
+                                    content: (
+                                        <View className="flex flex-row items-center gap-2">
+                                            <View className="w-8 h-8 rounded bg-gray-500" />
+                                            <View>
+                                                <Text className="text-xs">
+                                                    Kotak Bank Mid Cap Fund
+                                                    Direct Growth
+                                                </Text>
+                                                <Text className="text-xs text-gray-400">
+                                                    Equity | Multi Cap
+                                                </Text>
+                                            </View>
+                                        </View>
+                                    ),
+                                },
+                                {
+                                    key: "amount",
+                                    content: (
+                                        <View>
+                                            <Text
+                                                selectable
+                                                className="text-xs text-black"
+                                            >
+                                                {RupeeSymbol} 7,388
+                                            </Text>
+                                        </View>
+                                    ),
+                                },
+                                {
+                                    key: "date",
+                                    content: (
+                                        <View>
+                                            <Text
+                                                selectable
+                                                className="text-xs text-gray-500"
+                                            >
+                                                23/09/2024
+                                            </Text>
+                                        </View>
+                                    ),
+                                },
+                                {
+                                    key: "status",
+                                    content: (
+                                        <View>
+                                            <Text
+                                                selectable
+                                                className="text-xs text-gray-500"
+                                            >
+                                                Success
+                                            </Text>
+                                        </View>
+                                    ),
+                                },
+                            ],
+                        ]}
+                    />
+                </View>
+            ),
+        },
+    ];
+
+    return (
+        <View className="overflow-auto">
+            <CardWithTabs
+                key="portfolio"
+                selectedTab={selectedTab}
+                handleTabPress={handleTabPress}
+                tabContent={tabContent}
+            />
+        </View>
+    );
+};
+
+const AccountDetailsCard = ({ data }: { data: ClientDetailItem }) => {
+    const [selectedTab, setSelectedTab] = useState(1);
+
+    const handleTabPress = (tab) => {
+        setSelectedTab(tab);
+    };
+
+    const accordionData = [
+        {
+            title: "Kotak Bank",
+            subcontent: (
+                <View className="flex flex-row items-center gap-2">
+                    <Text className="text-xs text-gray-400">
+                        xxxx xxxx 6789
+                    </Text>
+                    <Text className="text-xs text-purple-700">Primary</Text>
+                </View>
+            ),
+            content: (
+                <View className="w-full p-4">
+                    <DataValue
+                        key="branchName"
+                        title="Branch Name"
+                        value="Mahatama Gandhi Road, Bengaluru"
+                    />
+                    <DataValue
+                        key="ifsc"
+                        title="IFSC Code"
+                        value="KMB0003838"
+                    />
+                    <DataValue
+                        key="accountType"
+                        title="Account Type"
+                        value="Savings"
+                    />
+                    <DataValue key="autopay" title="Autopay" value="Enabled" />
+                    <View className="p-2">
+                        <Text className="text-md font-semibold py-4">
+                            Autopay Details
+                        </Text>
+                        <View className="flex flex-row justify-between">
+                            <DataGrid
+                                key="autopay"
+                                reverse
+                                title="Autopay ID"
+                                value={
+                                    <View className="flex flex-row items-center gap-2">
+                                        <Text className="text-sm">
+                                            73478236874789
+                                        </Text>
+                                        <Icon
+                                            name="copy"
+                                            style={{ fontWeight: "100" }}
+                                            size={12}
+                                            color="grey"
+                                        />
+                                    </View>
+                                }
+                            />
+                            <DataGrid
+                                key="status"
+                                reverse
+                                title="Status"
+                                value={
+                                    <Text className="text-green-500 text-sm">
+                                        Approved
+                                    </Text>
+                                }
+                            />
+                        </View>
+                        <View className="flex flex-row justify-between">
+                            <DataGrid
+                                key="requestedOn"
+                                reverse
+                                title="Requested on"
+                                value={
+                                    <Text className="text-sm">
+                                        Jan 22, 2024
+                                    </Text>
+                                }
+                            />
+                            <DataGrid
+                                key="autopayAmount"
+                                reverse
+                                title="Autopay Amount"
+                                value={
+                                    <Text className="text-sm">
+                                        {RupeeSymbol} 2,00,000
+                                    </Text>
+                                }
+                            />
+                        </View>
+                        <Button
+                            width="48"
+                            bgColor={"#013974"}
+                            onPress={() => console.log("Press Invest")}
+                        >
+                            Set Autopay
+                        </Button>
+                    </View>
+                </View>
+            ),
+        },
+        {
+            title: "HDFC Bank",
+            subcontent: (
+                <View className="flex flex-row items-center gap-2">
+                    <Text className="text-xs text-gray-400">
+                        xxxx xxxx 6789
+                    </Text>
+                </View>
+            ),
+            content: "HDFC Bank Details",
+        },
+        {
+            title: "Canara Bank",
+            subcontent: (
+                <View className="flex flex-row items-center gap-2">
+                    <Text className="text-xs text-gray-400">
+                        xxxx xxxx 6789
+                    </Text>
+                </View>
+            ),
+            content: "Canara Bank Details",
+        },
+    ];
+
+    const renderItem = (item) => (
+        <View style={{ padding: 10 }}>
+            <Text>{item.content}</Text>
+        </View>
+    );
+    const tabContent = [
+        {
+            key: "bankAccounts",
+            name: "Bank Accounts",
+            content: (
+                <View className="w-full p-2 flex flex-col justify-items items-center">
+                    <Accordion
+                        accordionData={accordionData}
+                        renderItem={renderItem}
+                    />
+                </View>
+            ),
+        },
+        {
+            key: "contactDetails",
+            name: "Contact Details",
+            content: (
+                <View className="w-full p-2 flex flex-col justify-items items-center">
+                    <DataValue
+                        key="email"
+                        title="Email"
+                        value={data?.users[0]?.credentials[0].email}
+                    />
+                    <DataValue
+                        key="mobile"
+                        title="Mobile Number"
+                        value={data?.users[0]?.credentials[0].mobileNumber}
+                    />
+                    <DataValue
+                        key="address"
+                        title="Address"
+                        value="21 Yemen Road, 765432, Yemen State, Yemen"
+                    />
+                </View>
+            ),
+        },
+        {
+            key: "nomineeDetails",
+            name: "Nominee Details",
+            content: (
+                <View>
+                    <Text>Nominee</Text>
+                </View>
+            ),
+        },
+    ];
+    return (
+        <CardWithTabs
+            key="account"
+            selectedTab={selectedTab}
+            handleTabPress={handleTabPress}
+            tabContent={tabContent}
+        />
+    );
+};
+
+const MutualFundCard = ({ data }) => {
+    return (
+        <View className="flex-1 bg-white rounded shadow h-full overflow-auto p-2">
+            <DataTable
+                key="topMutualFund"
+                headers={["Top Mutual Funds"]}
+                cellSize={[8, 4]}
+                rows={[
+                    [
+                        {
+                            key: "name",
+                            content: (
+                                <View className="flex flex-row items-center gap-2">
+                                    <View className="w-8 h-8 rounded bg-gray-500" />
+                                    <View>
+                                        <Text className="text-xs">
+                                            Kotak Bank Mid Cap Fund Direct
+                                            Growth
+                                        </Text>
+                                        <Text className="text-xs text-gray-400">
+                                            Equity Multi Cap
+                                        </Text>
+                                    </View>
+                                </View>
+                            ),
+                        },
+                        {
+                            key: "return",
+                            content: (
+                                <View className="flex flex-col w-full items-end gap-2">
+                                    <Text className="text-xs">16.7 %</Text>
+                                    <AntdIcon
+                                        name="right"
+                                        style={{ fontWeight: "100" }}
+                                        size={12}
+                                        color="grey"
+                                    />
+                                </View>
+                            ),
+                        },
+                    ],
+                    [
+                        {
+                            key: "name",
+                            content: (
+                                <View className="flex flex-row items-center gap-2">
+                                    <View className="w-8 h-8 rounded bg-gray-500" />
+                                    <View>
+                                        <Text className="text-xs">
+                                            Kotak Bank Mid Cap Fund Direct
+                                            Growth
+                                        </Text>
+                                        <Text className="text-xs text-gray-400">
+                                            Equity Multi Cap
+                                        </Text>
+                                    </View>
+                                </View>
+                            ),
+                        },
+                        {
+                            key: "return",
+                            content: (
+                                <View className="flex flex-col w-full items-end gap-2">
+                                    <Text className="text-xs">16.7 %</Text>
+                                    <AntdIcon
+                                        name="right"
+                                        style={{ fontWeight: "100" }}
+                                        size={8}
+                                        color="grey"
+                                    />
+                                </View>
+                            ),
+                        },
+                    ],
+                    [
+                        {
+                            key: "name",
+                            content: (
+                                <View className="flex flex-row items-center gap-2">
+                                    <View className="w-8 h-8 rounded bg-gray-500" />
+                                    <View>
+                                        <Text className="text-xs">
+                                            Kotak Bank Mid Cap Fund Direct
+                                            Growth
+                                        </Text>
+                                        <Text className="text-xs text-gray-400">
+                                            Equity Multi Cap
+                                        </Text>
+                                    </View>
+                                </View>
+                            ),
+                        },
+                        {
+                            key: "return",
+                            content: (
+                                <View className="flex flex-col w-full items-end gap-2">
+                                    <Text className="text-xs">16.7 %</Text>
+                                    <AntdIcon
+                                        name="right"
+                                        style={{ fontWeight: "100" }}
+                                        size={8}
+                                        color="grey"
+                                    />
+                                </View>
+                            ),
+                        },
+                    ],
+                ]}
+            />
+        </View>
+    );
+};
+
+const TopAMCCard = ({ data }) => {
+    return (
+        <View className="flex-1 bg-white rounded shadow h-full overflow-auto p-2">
+            <DataTable
+                key="topAMCs"
+                headers={["Top AMCs"]}
+                cellSize={[12]}
+                rows={[
+                    [
+                        {
+                            key: "name",
+                            content: (
+                                <View className="flex flex-row items-center gap-2">
+                                    <View className="w-8 h-8 rounded bg-gray-500" />
+                                    <View>
+                                        <Text className="text-xs">
+                                            Kotak Bank Mutual Fund
+                                        </Text>
+                                    </View>
+                                </View>
+                            ),
+                        },
+                    ],
+                    [
+                        {
+                            key: "name",
+                            content: (
+                                <View className="flex flex-row items-center gap-2">
+                                    <View className="w-8 h-8 rounded bg-gray-500" />
+                                    <View>
+                                        <Text className="text-xs">
+                                            Kotak Bank Mutual Fund
+                                        </Text>
+                                    </View>
+                                </View>
+                            ),
+                        },
+                    ],
+                    [
+                        {
+                            key: "name",
+                            content: (
+                                <View className="flex flex-row items-center gap-2">
+                                    <View className="w-8 h-8 rounded bg-gray-500" />
+                                    <View>
+                                        <Text className="text-xs">
+                                            Kotak Bank Mutual Fund
+                                        </Text>
+                                    </View>
+                                </View>
+                            ),
+                        },
+                    ],
+                ]}
+            />
+        </View>
+    );
+};

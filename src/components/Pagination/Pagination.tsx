@@ -74,8 +74,13 @@ export const Pagination = ({
     }, [currentPageNumber, itemsPerPage]);
 
     return (
-        <View className="flex flex-row items-center mt-[20px] mb-[80px] z-[-1] mx-2 flex-wrap">
-            <View className="flex flex-row w-full lg:w-2/12 justify-center">
+        <View className="flex flex-row items-center justify-between mt-[20px] mb-[80px] z-[-1] mx-2 flex-wrap">
+            <View className="flex flex-row w-full gap-2 lg:w-4/12 justify-start">
+                <View className="flex flex-row justify-center items-center">
+                    <Text selectable className="text-[#686868] font-semibold">
+                        Items per page
+                    </Text>
+                </View>
                 <Box maxW="100">
                     <Select
                         onValueChange={(itemValue) =>
@@ -104,23 +109,29 @@ export const Pagination = ({
                         <Select.Item label="50" value="50" />
                     </Select>
                 </Box>
+                <View className="flex flex-row justify-center items-center">
+                    <Text>
+                        {currentPageNumber} of {totalPages}
+                    </Text>
+                </View>
             </View>
-            <View className="w-full lg:w-8/12 items-center flex flex-row justify-center mt-4 lg:mt-0 flex-wrap">
+            <View className="w-full lg:w-8/12 items-center flex flex-row justify-end px-4 mt-4 gap-2 lg:mt-0 flex-wrap">
                 <View>
                     <Pressable
-                        className="px-3 py-2 mt-1"
+                        className="px-3 py-2 border-[0.5px] border-[#bdbdbd] rounded"
                         onPress={handlePrevPage}
                     >
-                        <Icon
-                            name="angle-left"
-                            size={18}
-                            color={currentPageNumber == 1 ? "#dfdcdc" : "black"}
-                        />
+                        <Text
+                            selectable
+                            className="text-[#686868] font-semibold"
+                        >
+                            Previous
+                        </Text>
                     </Pressable>
                 </View>
 
                 {generatePagesToShow(currentPageNumber).map((page, index) => (
-                    <View key={index} className="rounded-md mr-2 mt-1">
+                    <View key={index} className="rounded-md mt-1">
                         <Pressable
                             onPress={() =>
                                 setCurrentPageNumber(
@@ -150,18 +161,15 @@ export const Pagination = ({
 
                 <View>
                     <Pressable
-                        className="px-3 py-2 mt-1"
+                        className="px-3 py-2 border-[0.5px] border-[#bdbdbd] rounded"
                         onPress={handleNextPage}
                     >
-                        <Icon
-                            name="angle-right"
-                            size={18}
-                            color={
-                                currentPageNumber == totalPages
-                                    ? "#dfdcdc"
-                                    : "black"
-                            }
-                        />
+                        <Text
+                            selectable
+                            className="text-[#686868] font-semibold"
+                        >
+                            Next
+                        </Text>
                     </Pressable>
                 </View>
             </View>

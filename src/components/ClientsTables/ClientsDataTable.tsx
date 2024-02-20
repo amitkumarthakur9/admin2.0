@@ -1,23 +1,29 @@
 import * as React from "react";
+import { useState } from "react";
 import {
     View,
     Text,
     ScrollView,
-    Dimensions,
-    ImageBackground,
     useWindowDimensions,
+    Pressable,
 } from "react-native";
-import { ActivityIndicator } from "react-native-paper";
-import Icon from "react-native-vector-icons/FontAwesome";
-import { Link } from "expo-router";
-import { useState } from "react";
+import { router } from "expo-router";
+import {
+    CheckCircleIcon,
+    HStack,
+    Heading,
+    Spinner,
+    WarningIcon,
+} from "native-base";
+
 import RemoteApi from "../../services/RemoteApi";
 import { DynamicFilters } from "../Filters/DynamicFilters";
 import { Pagination } from "../Pagination/Pagination";
-import { ClientsRows } from "./ClientsRows";
-import { HStack, Heading, Spinner } from "native-base";
 import { TableBreadCrumb } from "../BreadCrumbs/TableBreadCrumb";
 import { MobileClientsRows } from "./MobileClientsRows";
+import { getInitials } from "../../helper/helper";
+import DataTable from "../DataTable/DataTable";
+import Tag from "../Tag/Tag";
 
 const ClientsDataTable = () => {
     const [isLoading, setIsLoading] = React.useState(false);
@@ -34,7 +40,7 @@ const ClientsDataTable = () => {
         key: "",
         direction: "",
     });
-    const { height, width } = useWindowDimensions();
+    const { width } = useWindowDimensions();
 
     async function getDataList(
         updatedFilterValues = [],
@@ -88,6 +94,111 @@ const ClientsDataTable = () => {
         }
     }, [appliedSorting]);
 
+    const transformedData = data?.map((item) => {
+        return [
+            {
+                key: "clientName",
+                content: (
+                    <View className="flex flex-row items-center justify-start w-full">
+                        <View className="flex flex-col rounded-full bg-[#e60202] mr-2 h-10 w-10 mb-1 items-center justify-center flex-wrap">
+                            <Text selectable className="text-white">
+                                {getInitials(item?.name)}
+                            </Text>
+                        </View>
+                        <View className="flex flex-col flex-wrap w-9/12">
+                            <View className="flex flex-row items-center text-black font-semibold flex-wrap w-11/12 mb-2">
+                                <Pressable
+                                    onPress={() =>
+                                        router.push(`clients/${item?.id}`)
+                                    }
+                                >
+                                    <Text
+                                        selectable
+                                        className="flex flex-row text-black font-semibold break-all"
+                                    >
+                                        {item?.name}&nbsp;{" "}
+                                    </Text>
+                                </Pressable>
+
+                                <View className="flex flex-row items-center">
+                                    {item?.isActive ? (
+                                        <CheckCircleIcon
+                                            color="emerald.500"
+                                            size="xs"
+                                        />
+                                    ) : (
+                                        <WarningIcon
+                                            size="xs"
+                                            color="orange.500"
+                                        />
+                                    )}
+                                </View>
+                            </View>
+                            <View className="flex flex-row items-center mt-0">
+                                <Tag>
+                                    KYC{" "}
+                                    {item?.users[0]?.kycStatus
+                                        ?.isAllowedToTransact
+                                        ? "Done"
+                                        : "Not Done"}
+                                </Tag>
+                                <Tag>SIP(N/A)</Tag>
+                                <Tag>Autopay active</Tag>
+                            </View>
+                        </View>
+                    </View>
+                ),
+            },
+            {
+                key: "panNumber",
+                content: (
+                    <Text selectable className="text-[#686868] font-semibold">
+                        {item?.users[0]?.panNumber || "-"}
+                    </Text>
+                ),
+            },
+            {
+                key: "clientCode",
+                content: (
+                    <Text selectable className="text-[#686868] font-semibold">
+                        {item?.clientId}
+                    </Text>
+                ),
+            },
+            {
+                key: "doi",
+                content: (
+                    <Text selectable className="text-[#686868] font-semibold">
+                        {"-"}
+                    </Text>
+                ),
+            },
+            {
+                key: "lastInvestment",
+                content: (
+                    <View className="flex flex-col flex-wrap w-9/12">
+                        <View className="flex flex-row items-center text-black font-semibold flex-wrap w-11/12 mb-1">
+                            <Text
+                                selectable
+                                className="text-[#686868] font-semibold"
+                            >
+                                Lumpsum Amount: 56,000
+                            </Text>
+                        </View>
+                        <View className="flex flex-row items-center mt-0">
+                            <Text
+                                selectable
+                                className="text-[#686868] font-semibold"
+                            >
+                                Jul 26, 2023, 1:38 PM
+                            </Text>
+                        </View>
+                    </View>
+                ),
+            },
+        ];
+    });
+
     return (
         <View className="bg-white">
             <View className="">
@@ -112,7 +223,17 @@ const ClientsDataTable = () => {
                         {width < 830 ? (
                             <MobileClientsRows data={data} schema={null} />
                         ) : (
-                            <ClientsRows data={data} schema={null} />
+                            <DataTable
+                                headers={[
+                                    "Name",
+                                    "PAN No",
+                                    "Client Code",
+                                    "Client DOI",
+                                    "Last Investment",
+                                ]}
+                                cellSize={[4, 2, 2, 2, 2]}
+                                rows={transformedData}
+                            />
                         )}
                     </ScrollView>
                 ) : (
