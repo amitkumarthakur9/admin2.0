@@ -25,7 +25,7 @@ const TableHeader = ({ headers, cellSize }) => {
                         <View
                             className={`flex flex-row items-center w-full justify-start`}
                         >
-                            <Text selectable className="font-semibold">
+                             <Text selectable className="font-semibold">
                                 {head}
                             </Text>
                         </View>

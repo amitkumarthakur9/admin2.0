@@ -3,17 +3,18 @@ import React from "react";
 import { View, TouchableOpacity } from "react-native";
 import { Text } from "native-base";
 
-const CardWithTabs = ({ selectedTab, handleTabPress, tabContent }) => {
+const CardWithTabs = ({ selectedTab, handleTabPress, tabContent, tabscount = 3 }) => {
+
     return (
         <View className="flex-1 bg-white rounded shadow h-full overflow-auto">
             <View>
-                <View className="w-full flex flex-row mb-2">
+                <View className="w-full flex flex-row mb-2 overflow-scroll">
                     {tabContent?.map((tab, index) => {
                         return (
                             <TouchableOpacity
                                 key={index}
                                 onPress={() => handleTabPress(index + 1)}
-                                className={`w-4/12 py-4 px-6 flex flex-row justify-center items-center border-b-2 ${
+                                className={`w-1/${tabscount} py-4 px-6 flex flex-row justify-center items-center border-b-2 ${
                                     selectedTab === index + 1
                                         ? "border-black"
                                         : "border-transparent"

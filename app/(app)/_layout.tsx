@@ -35,6 +35,8 @@ import HoldingDetail from "./clients/[id]/holdings/[holdingId]";
 import MandatesScreen from "./mandates";
 import MandateDetail from "./mandates/[id]";
 import RTASync from "./rta-sync";
+import AUMTabScreen from "./aum-reports";
+import MutualFundDetail from "./mutual-fund/[id]";
 
 NativeWindStyleSheet.setOutput({
     default: "native",
@@ -128,6 +130,17 @@ export default function AppLayout() {
                         }}
                         initialParams={{}}
                         component={ClientsScreen}
+                    />
+
+                    <Drawer.Screen
+                        name="aum-reports/index" // This is the name of the page and must match the url from root
+                        options={{
+                            drawerLabel: "AUM",
+                            title: "AUM",
+                            unmountOnBlur: true,
+                        }}
+                        initialParams={{}}
+                        component={AUMTabScreen}
                     />
 
                     <Drawer.Screen
@@ -267,6 +280,17 @@ export default function AppLayout() {
                         }}
                         initialParams={{}}
                         component={RTAReconciliationDetail}
+                    />
+                     <Drawer.Screen
+                        name="mutual-fund/[id]" // This is the name of the page and must match the url from root
+                        options={{
+                            drawerLabel: "mutualfunddetail",
+                            title: "mutualfunddetail",
+                            drawerItemStyle: { display: "none" },
+                            unmountOnBlur: true,
+                        }}
+                        initialParams={{}}
+                        component={MutualFundDetail}
                     />
 
                     {/* </Drawer> */}
