@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { View, StyleSheet, TouchableOpacity, } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import {
     Button,
@@ -39,15 +39,15 @@ const DataValue = ({ title, value }) => {
     return (
         <View className="w-full flex flex-row justify-between items-center p-2">
             <View className="w-1/2 flex ">
-                <Text className="text-bold font-medium text-gray-500" selectable>
+                <Text
+                    className="text-bold font-medium text-gray-500"
+                    selectable
+                >
                     {title ? title : "-"}
                 </Text>
             </View>
             <View className="w-1/2 flex">
-                <Text
-                    selectable
-                    className="font-medium text-start text-black"
-                >
+                <Text selectable className="font-medium text-start text-black">
                     {value ? value : "-"}
                 </Text>
             </View>
@@ -146,7 +146,7 @@ export default function MutualFundDetail() {
                                                     uri: 'https://mfapi.kotaksecurities.online/bank/74/logo',
                                                 }}
                                             /> */}
-                                            <View className="w-8 h-8 rounded bg-gray-500 mx-2"/>
+                                            <View className="w-8 h-8 rounded bg-gray-500 mx-2" />
                                             <View
                                                 className={
                                                     "flex flex-col justify-end items-start"
@@ -191,7 +191,8 @@ export default function MutualFundDetail() {
                                         className="my-2"
                                         style={{
                                             borderColor: "#e4e4e4",
-                                            borderBottomWidth: StyleSheet.hairlineWidth,
+                                            borderBottomWidth:
+                                                StyleSheet.hairlineWidth,
                                         }}
                                     />
                                     <View className="flex flex-row py-2 justify-between items-start w-full">
@@ -227,12 +228,13 @@ export default function MutualFundDetail() {
                                                 key="3YearsReturn"
                                                 title="3 Years Return:"
                                                 value={RupeeSymbol + "2500"}
-
                                             />
                                             <DataValue
                                                 key="MinInvestmentAmount"
                                                 title="Min. Investment Amount:"
-                                                value={RupeeSymbol + "250,000,000"}
+                                                value={
+                                                    RupeeSymbol + "250,000,000"
+                                                }
                                             />
                                             <DataValue
                                                 key="TotalAUM"
@@ -261,25 +263,34 @@ export default function MutualFundDetail() {
                                                 title="Expense Ratio:"
                                                 value="16%"
                                             />
-
                                         </View>
                                     </View>
                                     <View
                                         className="my-2"
                                         style={{
                                             borderColor: "#e4e4e4",
-                                            borderBottomWidth: StyleSheet.hairlineWidth,
+                                            borderBottomWidth:
+                                                StyleSheet.hairlineWidth,
                                         }}
                                     />
                                     <View className="w-4/12 pl-0">
-                                    <DataValue
-                                        key="FundHouseManagers"
-                                        title="Fund House Managers"
-                                        value="Nishant Arora"
-                                    />
+                                        <DataValue
+                                            key="FundHouseManagers"
+                                            title="Fund House Managers"
+                                            value="Nishant Arora"
+                                        />
                                     </View>
-                                    
-                                    <Text>erspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit</Text>
+
+                                    <Text>
+                                        erspiciatis unde omnis iste natus error
+                                        sit voluptatem accusantium doloremque
+                                        laudantium, totam rem aperiam, eaque
+                                        ipsa quae ab illo inventore veritatis et
+                                        quasi architecto beatae vitae dicta sunt
+                                        explicabo. Nemo enim ipsam voluptatem
+                                        quia voluptas sit aspernatur aut odit
+                                        aut fugit
+                                    </Text>
                                 </View>
                             </View>
                             <View className="flex flex-row justify-between rounded bg-white h-128">
@@ -297,42 +308,6 @@ export default function MutualFundDetail() {
         </>
     );
 }
-
-const MutualCardWithTabs = ({ selectedTab, handleTabPress, tabContent, tabscount}) => {
-
-    const width = (100 / tabscount).toFixed(2);
-    console.log(width);
-    
-
-    return (
-        <View className="flex-1 bg-white rounded shadow h-full overflow-auto">
-            <View>
-                <View className="w-full flex flex-row mb-2">
-                    {tabContent?.map((tab, index) => {
-                        return (
-                            <TouchableOpacity
-                                key={index}
-                                onPress={() => handleTabPress(index + 1)}
-                                className={`w-6/12 py-4 px-6 flex flex-row justify-center items-center border-b-2 ${
-                                    selectedTab === index + 1
-                                        ? "border-black"
-                                        : "border-transparent"
-                                }`}
-                            >
-                                <Text
-                                    className={`font-bold ${selectedTab === index + 1 ? "text-gray-800" : "text-gray-600"}`}
-                                >
-                                    {tab?.name}
-                                </Text>
-                            </TouchableOpacity>
-                        );
-                    })}
-                </View>
-                {tabContent[selectedTab - 1]?.content}
-            </View>
-        </View>
-    );
-};
 
 const PortfolioCard = ({ data }) => {
     const [selectedTab, setSelectedTab] = useState(1);
@@ -615,7 +590,15 @@ const PortfolioCard = ({ data }) => {
                 <View className="p-2 flex flex-col w-full">
                     <DataTable
                         key="transaction"
-                        headers={["Client Name", "Client Code", "PAN", "Amount", "Date", "Status", "Transaction Type"]}
+                        headers={[
+                            "Client Name",
+                            "Client Code",
+                            "PAN",
+                            "Amount",
+                            "Date",
+                            "Status",
+                            "Transaction Type",
+                        ]}
                         cellSize={[1, 1, 1, 1, 1, 1, 1]}
                         rows={[
                             [
@@ -630,96 +613,83 @@ const PortfolioCard = ({ data }) => {
                                                 </Text>
                                             </View>
                                         </View>
-
-                                    )
+                                    ),
                                 },
                                 {
                                     key: "clientcode",
                                     content: (
                                         <View className="flex flex-row items-center gap-2">
-
                                             <View>
                                                 <Text className="text-xs">
                                                     765XVJ
                                                 </Text>
                                             </View>
                                         </View>
-
-                                    )
+                                    ),
                                 },
                                 {
                                     key: "pan",
                                     content: (
                                         <View className="flex flex-row items-center gap-2">
-
                                             <View>
                                                 <Text className="text-xs">
                                                     CXN765XVJ
                                                 </Text>
                                             </View>
                                         </View>
-
-                                    )
+                                    ),
                                 },
                                 {
                                     key: "amount",
                                     content: (
                                         <View className="flex flex-row items-center gap-2">
-
                                             <View>
                                                 <Text className="text-xs">
                                                     {RupeeSymbol + "2500"}
                                                 </Text>
                                             </View>
                                         </View>
-
-                                    )
+                                    ),
                                 },
                                 {
                                     key: "date",
                                     content: (
                                         <View className="flex flex-row items-center gap-2">
-
                                             <View>
                                                 <Text className="text-xs">
                                                     23/09/2024
                                                 </Text>
                                             </View>
                                         </View>
-
-                                    )
+                                    ),
                                 },
                                 {
                                     key: "status",
                                     content: (
                                         <View className="flex flex-row items-center gap-2">
-
                                             <View>
                                                 <Text className="text-xs">
                                                     Success
                                                 </Text>
                                             </View>
                                         </View>
-
-                                    )
+                                    ),
                                 },
                                 {
                                     key: "type",
                                     content: (
                                         <View className="flex flex-row items-center gap-2">
-
                                             <View>
                                                 <Text className="text-xs">
                                                     NA
                                                 </Text>
                                             </View>
                                         </View>
-
-                                    )
+                                    ),
                                 },
                             ],
                         ]}
-                    // rows={[transactionRow]}
+                        // rows={[transactionRow]}
                     />
                 </View>
             ),
@@ -733,9 +703,8 @@ const PortfolioCard = ({ data }) => {
                 selectedTab={selectedTab}
                 handleTabPress={handleTabPress}
                 tabContent={tabContent}
-                tabscount={2}
+                tabsCount={2}
             />
         </View>
     );
 };
-

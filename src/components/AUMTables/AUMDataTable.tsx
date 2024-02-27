@@ -36,13 +36,8 @@ import HoldingWiseDataTable from "./HoldingWiseDataTable";
 import SchemeTypeWiseDataTable from "./SchemeTypeWiseDataTable";
 import CardWithTabs from "../Card/CardWithTabs";
 
-
-
-
-
 const AUMDataTable = () => {
     const [isLoading, setIsLoading] = React.useState(false);
-
 
     const [currentPageNumber, setCurrentPageNumber] = useState(1);
     const [totalItems, setTotalItems] = useState(0);
@@ -86,7 +81,7 @@ const AUMDataTable = () => {
             setTotalPages(
                 Math.ceil(
                     (response.filterCount || response.data.length) /
-                    itemsPerPage
+                        itemsPerPage
                 )
             );
         }
@@ -229,79 +224,58 @@ const AUMDataTable = () => {
             { label: "Others", value: 40 },
         ];
 
-        const assetBifurcationColors = ["#715CFA", "#69E1AB", "#39C3E2", "#FA8B5C"];
+        const assetBifurcationColors = [
+            "#715CFA",
+            "#69E1AB",
+            "#39C3E2",
+            "#FA8B5C",
+        ];
 
         const tabContent = [
             {
                 key: "folio-wise",
                 name: "Folio Wise",
-                content: (
-                    <FolioWiseDataTable />
-                ),
+                content: <FolioWiseDataTable />,
             },
             {
                 key: "client-wise",
                 name: "Client Wise",
-                content: (
-                    <ClientWiseDataTable />
-
-                ),
+                content: <ClientWiseDataTable />,
             },
             {
                 key: "scheme-wise",
-                name: 'Scheme Wise',
-                content: (
-                    <SchemeWiseDataTable />
-
-                ),
+                name: "Scheme Wise",
+                content: <SchemeWiseDataTable />,
             },
             {
                 key: "amc-wise",
-                name: 'AMC Wise',
-                content: (
-                    <AMCWiseDataTable />
-
-                ),
+                name: "AMC Wise",
+                content: <AMCWiseDataTable />,
             },
             {
                 key: "rta-wise",
-                name: 'RTA Wise',
-                content: (
-                    <RTAWiseDataTable />
-
-                ),
+                name: "RTA Wise",
+                content: <RTAWiseDataTable />,
             },
             {
                 key: "ifa-wise",
-                name: 'IFA Wise',
-                content: (
-                    <IFAWiseDataTable />
-
-                ),
+                name: "IFA Wise",
+                content: <IFAWiseDataTable />,
             },
             {
                 key: "rm-wise",
-                name: 'RM Wise',
-                content: (
-                    <RMWiseDataTable />
-
-                ),
+                name: "RM Wise",
+                content: <RMWiseDataTable />,
             },
             {
                 key: "holding-wise",
-                name: 'Holding Wise',
-                content: (
-                    <HoldingWiseDataTable />
-
-                ),
+                name: "Holding Wise",
+                content: <HoldingWiseDataTable />,
             },
             {
                 key: "schemetype-wise",
-                name: 'Scheme Type Wise',
-                content: (
-                    <SchemeTypeWiseDataTable />
-
-                ),
+                name: "Scheme Type Wise",
+                content: <SchemeTypeWiseDataTable />,
             },
         ];
 
@@ -314,7 +288,7 @@ const AUMDataTable = () => {
                     selectedTab={selectedTab}
                     handleTabPress={handleTabPress}
                     tabContent={tabContent}
-                    tabscount={9}
+                    tabsCount={9}
                 />
                 {/* </View> */}
             </View>
@@ -342,9 +316,7 @@ const AUMDataTable = () => {
 
                 {!isLoading ? (
                     <ScrollView className={"mt-4 z-[-1] "}>
-                        <View
-                            className="w-12/12 h-full rounded"
-                        >
+                        <View className="w-12/12 h-full rounded">
                             <AUMCard data={data} />
                         </View>
                     </ScrollView>
@@ -374,8 +346,6 @@ const AUMDataTable = () => {
                 totalPages={totalPages}
                 setCurrentPageNumber={setCurrentPageNumber}
             /> */}
-
-
         </View>
     );
 };
