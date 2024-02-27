@@ -25,7 +25,7 @@ export const TableBreadCrumb = ({
     };
 
     return (
-        <View className="flex flex-row justify-between items-center mt-3 bg-[#eaf3fe] h-28 px-2 ">
+        <View className="flex flex-row justify-between items-center mt-3 bg-[#eaf3fe] h-28 px-2">
             <View className="flex flex-row items-center w-6/12">
                 <Text
                     selectable

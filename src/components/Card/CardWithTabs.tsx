@@ -17,7 +17,7 @@ const CardWithTabs = ({ selectedTab, handleTabPress, tabContent, tabsCount = 3 }
                                 className={`w-1/${tabsCount} py-4 px-6 flex flex-row justify-center items-center border-b-2 ${
                                     selectedTab === index + 1
                                     ? "border-black bg-gray-800"
-                                    : "border-b-gray-400 bg-gray-200"
+                                    : "border-b-gray-400"
                                 }`}
                             >
                                 <Text

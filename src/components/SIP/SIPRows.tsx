@@ -23,6 +23,7 @@ export const SIPRows = ({
     schema: any;
 }) => {
     const getInitials = (name: string) => {
+        if(!name) return "";
         const words = name.split(" ");
         if (words.length >= 2) {
             const firstWord = words[0];

@@ -285,7 +285,7 @@ const AUMDataTable = () => {
             return (
                 <View className="flex-1 bg-white rounded shadow h-full overflow-auto">
                     <View>
-                        <View className="w-full flex flex-row mb-2 overflow-scroll">
+                        <View className="w-full flex flex-row mb-2 overflow-scroll ">
                             {tabContent?.map((tab, index) => {
                                 return (
                                     <TouchableOpacity
@@ -293,7 +293,7 @@ const AUMDataTable = () => {
                                         onPress={() => handleTabPress(index + 1)}
                                         className={`w-[12%] py-4 px-6 flex flex-row justify-center items-center border-b-2 ${selectedTab === index + 1
                                                 ? "border-black bg-gray-800"
-                                                : "border-b-gray-400 bg-gray-200"
+                                                : "border-b-gray-400 bg-[#eaf3fe]"
                                             }`}
                                     >
                                         <Text
@@ -347,7 +347,7 @@ const AUMDataTable = () => {
                 /> */}
 
                 {!isLoading ? (
-                    <ScrollView className={"mt-4 z-[-1] "}>
+                    <ScrollView className={"mt-0 z-[-1] "}>
                         <View className="w-12/12 h-full rounded">
                             <AUMCard data={data} />
                         </View>
