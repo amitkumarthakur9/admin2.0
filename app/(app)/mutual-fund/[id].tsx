@@ -198,7 +198,7 @@ export default function MutualFundDetail() {
                                     <View className="flex flex-row py-2 justify-between items-start w-full">
                                         <View className="w-4/12 flex-flex-col gap-4 px-2">
                                             <DataValue
-                                                key="NAV"
+                                                key="nav"
                                                 title="NAV:"
                                                 value={RupeeSymbol + 2500}
                                             />
@@ -208,19 +208,19 @@ export default function MutualFundDetail() {
                                                 value="16%"
                                             />
                                             <DataValue
-                                                key="MinSIPAmount"
+                                                key="minSIPAmount"
                                                 title="Min. SIP Amount:"
                                                 value={RupeeSymbol + "2500"}
                                             />
                                             <DataValue
-                                                key="FundHouseName"
+                                                key="fundHouseName"
                                                 title="Fund House Name:"
                                                 value="Axis Mutual Fund"
                                             />
                                         </View>
                                         <View className="w-4/12 flex-flex-col gap-4 px-2">
                                             <DataValue
-                                                key="YourTotalAUM"
+                                                key="yourTotalAUM"
                                                 title="Your Total AUM:"
                                                 value={RupeeSymbol + "16%"}
                                             />
@@ -230,14 +230,14 @@ export default function MutualFundDetail() {
                                                 value={RupeeSymbol + "2500"}
                                             />
                                             <DataValue
-                                                key="MinInvestmentAmount"
+                                                key="minInvestmentAmount"
                                                 title="Min. Investment Amount:"
                                                 value={
                                                     RupeeSymbol + "250,000,000"
                                                 }
                                             />
                                             <DataValue
-                                                key="TotalAUM"
+                                                key="totalAUM"
                                                 title="Total AUM:"
                                                 value="Sunil Mehra(Client)"
                                             />
@@ -323,109 +323,6 @@ const PortfolioCard = ({ data }) => {
         { label: "Others", value: 40 },
     ];
 
-    // const transactionRow = data?.transactions?.map((item) => {
-    //     return [
-    //         {
-    //             key: "clientname",
-    //             content: (
-    //                 <View className="flex flex-row items-center gap-2">
-    //                     <View className="w-8 h-8 rounded bg-gray-500" />
-    //                     <View>
-    //                         <Text className="text-xs">
-    //                             Ravi Teja
-    //                         </Text>
-    //                     </View>
-    //                 </View>
-
-    //             )
-    //         },
-    //         {
-    //             key: "clientcode",
-    //             content: (
-    //                 <View className="flex flex-row items-center gap-2">
-    //                     <View className="w-8 h-8 rounded bg-gray-500" />
-    //                     <View>
-    //                         <Text className="text-xs">
-    //                             765XVJ
-    //                         </Text>
-    //                     </View>
-    //                 </View>
-
-    //             )
-    //         },
-    //         {
-    //             key: "pan",
-    //             content: (
-    //                 <View className="flex flex-row items-center gap-2">
-    //                     <View className="w-8 h-8 rounded bg-gray-500" />
-    //                     <View>
-    //                         <Text className="text-xs">
-    //                             CXN765XVJ
-    //                         </Text>
-    //                     </View>
-    //                 </View>
-
-    //             )
-    //         },
-    //         {
-    //             key: "amount",
-    //             content: (
-    //                 <View className="flex flex-row items-center gap-2">
-    //                     <View className="w-8 h-8 rounded bg-gray-500" />
-    //                     <View>
-    //                         <Text className="text-xs">
-    //                             {RupeeSymbol + item?.amount}
-    //                         </Text>
-    //                     </View>
-    //                 </View>
-
-    //             )
-    //         },
-    //         {
-    //             key: "date",
-    //             content: (
-    //                 <View className="flex flex-row items-center gap-2">
-    //                     <View className="w-8 h-8 rounded bg-gray-500" />
-    //                     <View>
-    //                         <Text className="text-xs">
-    //                             23/09/2024
-    //                         </Text>
-    //                     </View>
-    //                 </View>
-
-    //             )
-    //         },
-    //         {
-    //             key: "status",
-    //             content: (
-    //                 <View className="flex flex-row items-center gap-2">
-    //                     <View className="w-8 h-8 rounded bg-gray-500" />
-    //                     <View>
-    //                         <Text className="text-xs">
-    //                             {item.transactionStatus.name}
-    //                         </Text>
-    //                     </View>
-    //                 </View>
-
-    //             )
-    //         },
-    //         {
-    //             key: "type",
-    //             content: (
-    //                 <View className="flex flex-row items-center gap-2">
-    //                     <View className="w-8 h-8 rounded bg-gray-500" />
-    //                     <View>
-    //                         <Text className="text-xs">
-    //                         {item.transactionType.name}
-    //                         </Text>
-    //                     </View>
-    //                 </View>
-
-    //             )
-    //         },
-    //     ]
-    // })
-
     const assetBifurcationColors = ["#715CFA", "#69E1AB", "#39C3E2", "#FA8B5C"];
 
     const tabContent = [
@@ -434,145 +331,86 @@ const PortfolioCard = ({ data }) => {
             name: "SIPs",
             content: (
                 <View className="p-2 flex flex-col w-full">
-                    <View className="w-full px-4 py-4 mb-2 bg-[#eaf3fe] flex flex-row items-center justify-between rounded">
-                        <Text className="font-bold">Total SIP Amount</Text>
-                        <Text className="font-bold">{RupeeSymbol} 57,000</Text>
-                    </View>
+
                     <DataTable
                         key="sips"
-                        headers={["Schemes", "SIP Amount", "Next Due"]}
-                        cellSize={[6, 3, 3]}
+                        headers={["Client Name", "Client Code", "PAN", "Amount", "Start Date",""]}
+                        cellSize={[1,1,1,1,1,1]}
                         rows={[
                             [
                                 {
-                                    key: "scheme",
+                                    key: "clientName",
                                     content: (
                                         <View className="flex flex-row items-center gap-2">
-                                            <View className="w-8 h-8 rounded bg-gray-500" />
                                             <View>
                                                 <Text className="text-xs">
-                                                    Kotak Bank Mid Cap Fund
-                                                    Direct Growth
-                                                </Text>
-                                                <Text className="text-xs text-gray-400">
-                                                    Equity | Multi Cap
+                                                    Ravi Kishan
                                                 </Text>
                                             </View>
                                         </View>
                                     ),
                                 },
                                 {
-                                    key: "sip",
+                                    key: "clientCode",
                                     content: (
                                         <View>
                                             <Text
                                                 selectable
                                                 className="text-xs text-black"
                                             >
-                                                {RupeeSymbol} 7,388
+                                                6754ecGH
                                             </Text>
                                         </View>
                                     ),
                                 },
                                 {
-                                    key: "nextDue",
+                                    key: "pan",
                                     content: (
                                         <View>
                                             <Text
                                                 selectable
                                                 className="text-xs text-gray-500"
                                             >
-                                                Mar 4, 2024
-                                            </Text>
-                                        </View>
-                                    ),
-                                },
-                            ],
-                            [
-                                {
-                                    key: "scheme",
-                                    content: (
-                                        <View className="flex flex-row items-center gap-2">
-                                            <View className="w-8 h-8 rounded bg-gray-500" />
-                                            <View>
-                                                <Text className="text-xs">
-                                                    Kotak Bank Mid Cap Fund
-                                                    Direct Growth
-                                                </Text>
-                                                <Text className="text-xs text-gray-400">
-                                                    Equity | Multi Cap
-                                                </Text>
-                                            </View>
-                                        </View>
-                                    ),
-                                },
-                                {
-                                    key: "sip",
-                                    content: (
-                                        <View>
-                                            <Text
-                                                selectable
-                                                className="text-xs text-black"
-                                            >
-                                                {RupeeSymbol} 7,388
+                                               CVBG786GH
                                             </Text>
                                         </View>
                                     ),
                                 },
                                 {
-                                    key: "nextDue",
+                                    key: "amount",
                                     content: (
                                         <View>
                                             <Text
                                                 selectable
                                                 className="text-xs text-gray-500"
                                             >
-                                                Mar 4, 2024
-                                            </Text>
-                                        </View>
-                                    ),
-                                },
-                            ],
-                            [
-                                {
-                                    key: "scheme",
-                                    content: (
-                                        <View className="flex flex-row items-center gap-2">
-                                            <View className="w-8 h-8 rounded bg-gray-500" />
-                                            <View>
-                                                <Text className="text-xs">
-                                                    Kotak Bank Mid Cap Fund
-                                                    Direct Growth
-                                                </Text>
-                                                <Text className="text-xs text-gray-400">
-                                                    Equity | Multi Cap
-                                                </Text>
-                                            </View>
-                                        </View>
-                                    ),
-                                },
-                                {
-                                    key: "sip",
-                                    content: (
-                                        <View>
-                                            <Text
-                                                selectable
-                                                className="text-xs text-black"
-                                            >
-                                                {RupeeSymbol} 7,388
+                                               {RupeeSymbol + "7655"}
                                             </Text>
                                         </View>
                                     ),
                                 },
                                 {
-                                    key: "nextDue",
+                                    key: "startDate",
                                     content: (
                                         <View>
                                             <Text
                                                 selectable
                                                 className="text-xs text-gray-500"
                                             >
-                                                Mar 4, 2024
+                                               23/04/2023
+                                            </Text>
+                                        </View>
+                                    ),
+                                },
+                                {
+                                    key: "detail",
+                                    content: (
+                                        <View>
+                                            <Text
+                                                selectable
+                                                className="text-xs text-gray-500 underline"
+                                            >
+                                               View Details
                                             </Text>
                                         </View>
                                     ),
@@ -606,7 +444,7 @@ const PortfolioCard = ({ data }) => {
                                     key: "clientname",
                                     content: (
                                         <View className="flex flex-row items-center gap-2">
-                                            <View className="w-8 h-8 rounded bg-gray-500" />
+                                            
                                             <View>
                                                 <Text className="text-xs">
                                                     Ravi Teja

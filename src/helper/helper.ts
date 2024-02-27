@@ -1,6 +1,7 @@
 export const getInitials = (name: string) => {
-    const words = name?.split(" ");
-    if (words?.length >= 2) {
+    if(!name) return "-"
+    const words = name.split(" ");
+    if (words.length >= 2) {
         const firstWord = words[0];
         const secondWord = words[1];
         return `${firstWord[0]}${secondWord[0]}`;

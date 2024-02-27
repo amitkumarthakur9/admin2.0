@@ -355,20 +355,6 @@ export default function SIPReportsDetail() {
                                     <AccountDetailsCard data={data} />
                                 </View>
                             </View>
-                            {/* <View className="flex flex-row justify-between rounded bg-white h-128">
-                                <View
-                                    className="w-[60%] h-full rounded"
-                                    style={{ ...BreadcrumbShadow }}
-                                >
-                                    <MutualFundCard data={data} />
-                                </View>
-                                <View
-                                    className="w-[39%] h-128 rounded"
-                                    style={{ ...BreadcrumbShadow }}
-                                >
-                                    <TopAMCCard data={data} />
-                                </View>
-                            </View> */}
                         </View>
                     </View>
                 </ScrollView>
@@ -450,9 +436,9 @@ const AccountDetailsCard = ({ data }: { data: SIPReportDetail }) => {
                         </View>
                         <View className="flex flex-row justify-between">
                             <DataGrid
-                                key="requestedOn"
+                                key="endDate"
                                 reverse
-                                title="Requested on"
+                                title="End Date"
                                 value={
                                     <Text className="text-sm">
                                         Jan 22, 2024
@@ -470,13 +456,13 @@ const AccountDetailsCard = ({ data }: { data: SIPReportDetail }) => {
                                 }
                             />
                         </View>
-                        <Button
+                        {/* <Button
                             width="48"
                             bgColor={"#013974"}
                             onPress={() => console.log("Press Invest")}
                         >
                             Set Autopay
-                        </Button>
+                        </Button> */}
                     </View>
                 </View>
             ),
@@ -539,8 +525,6 @@ const AccountDetailsCard = ({ data }: { data: SIPReportDetail }) => {
     );
 };
 
-
-//     return [
 //         {
 //             key: "amounts",
 //             content: (

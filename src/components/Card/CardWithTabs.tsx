@@ -27,17 +27,20 @@ const CardWithTabs = ({
                             <Text
                                 className={`font-bold ${
                                     selectedTab === index + 1
-                                        ? "text-gray-800"
-                                        : "text-gray-600"
+                                    ? "border-black bg-gray-800"
+                                    : "border-b-gray-400 bg-gray-200"
                                 }`}
                             >
-                                {tab?.name}
-                            </Text>
-                        </TouchableOpacity>
-                    );
-                })}
-            </View>
-            {tabContent[selectedTab - 1]?.content}
+                                <Text
+                                    className={`font-bold ${selectedTab === index + 1 ? "text-white" : "text-gray-600"}`}
+                                >
+                                    {tab?.name}
+                                </Text>
+                            </TouchableOpacity>
+                        );
+                    })}
+                </View>
+                {tabContent[selectedTab - 1]?.content}                                   
         </View>
     );
 };

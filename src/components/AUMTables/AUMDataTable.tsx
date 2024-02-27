@@ -6,6 +6,7 @@ import {
     ScrollView,
     useWindowDimensions,
     Pressable,
+    TouchableOpacity,
 } from "react-native";
 import { router } from "expo-router";
 import {
@@ -279,16 +280,47 @@ const AUMDataTable = () => {
             },
         ];
 
+        const AUMCardWithTabs = ({ selectedTab, handleTabPress, tabContent, tabscount = 3 }) => {
+
+            return (
+                <View className="flex-1 bg-white rounded shadow h-full overflow-auto">
+                    <View>
+                        <View className="w-full flex flex-row mb-2 overflow-scroll">
+                            {tabContent?.map((tab, index) => {
+                                return (
+                                    <TouchableOpacity
+                                        key={index}
+                                        onPress={() => handleTabPress(index + 1)}
+                                        className={`w-[12%] py-4 px-6 flex flex-row justify-center items-center border-b-2 ${selectedTab === index + 1
+                                                ? "border-black bg-gray-800"
+                                                : "border-b-gray-400 bg-gray-200"
+                                            }`}
+                                    >
+                                        <Text
+                                            className={`font-bold ${selectedTab === index + 1 ? "text-white" : "text-gray-600"}`}
+                                        >
+                                            {tab?.name}
+                                        </Text>
+                                    </TouchableOpacity>
+                                );
+                            })}
+                        </View>
+                        {tabContent[selectedTab - 1]?.content}
+                    </View>
+                </View>
+            );
+        };
+
         return (
             <View className="overflow-auto">
                 {/* <View className="w-full"> */}
 
-                <CardWithTabs
+                <AUMCardWithTabs
                     key="aum-tables"
                     selectedTab={selectedTab}
                     handleTabPress={handleTabPress}
                     tabContent={tabContent}
-                    tabsCount={9}
+                    tabscount={8}
                 />
                 {/* </View> */}
             </View>

@@ -37,6 +37,28 @@ import {
     AUMDetailResponseInterface,
 } from "../../../src/interfaces/AUMDetailResponseInterface";
 import { useWindowDimensions } from "react-native";
+import DataTable from "../../../src/components/DataTable/DataTable";
+import { BreadcrumbShadow } from "../../../src/components/Styles/Shadow";
+
+const DataValue = ({ title, value }) => {
+    return (
+        <View className="w-full flex flex-row justify-between items-center p-2">
+            <View className="w-1/2 flex ">
+                <Text className="text-bold font-mediumk text-gray-500" selectable>
+                    {title ? title : "-"}
+                </Text>
+            </View>
+            <View className="w-1/2 flex">
+                <Text
+                    selectable
+                    className="font-medium text-start text-blac"
+                >
+                    {value ? value : "-"}
+                </Text>
+            </View>
+        </View>
+    );
+};
 
 export default function AUMDetail() {
     const { id } = useLocalSearchParams();
@@ -109,138 +131,69 @@ export default function AUMDetail() {
                     showsVerticalScrollIndicator={true}
                 >
                     <View className="bg-white">
-                        <View className="">
-                            <View className="flex flex-row justify-between items-center mb-[30px] mt-3 bg-[#eaf3fe] h-28 px-2 ">
-                                <View className="flex flex-col w-6/12">
-                                    <Text
-                                        selectable
-                                        className="text-2xl font-extrabold mb-3"
+
+                        <View className="flex flex-col p-4 gap-4">
+                            <View className="flex flex-row items-center">
+                                <Pressable
+                                    className="mr-3"
+                                    onPress={() =>
+                                        console.log("This will go back ")
+                                    }
+                                >
+                                    <Icon
+                                        name="angle-left"
+                                        size={18}
+                                        color={"black"}
+                                    />
+                                </Pressable>
+                                <Text
+                                    selectable
+                                    className="text-base flex flex-row text-center font-bold"
+                                >
+                                    Folio Details
+                                </Text>
+                            </View>
+                            <View
+                                className="flex flex-row justify-between rounded  h-auto p-4"
+                                style={{ ...BreadcrumbShadow }}
+                            >
+                                <View className="flex flex-col gap-2 w-full">
+
+                                    <View
+                                        className={`flex flex-row items-center w-full justify-start`}
                                     >
-                                        Folio #{data.folioNumber}
-                                    </Text>
-                                    <View className="flex flex-row items-center">
-                                        <Link href={"../"} className="mr-4">
-                                            {/* <Icon name="home" size={18} color="black" /> */}
-                                            <Text>Dashboard</Text>
-                                        </Link>
-                                        <View className="mr-4">
-                                            <Icon
-                                                name="circle"
-                                                style={{ fontWeight: "100" }}
-                                                size={8}
-                                                color="grey"
+                                        <Text selectable className="text-lg font-bold text-start">
+                                            Folio Number: {data.folioNumber}
+                                        </Text>
+
+                                    </View>
+                                    <View className="flex flex-row justify-between items-start w-full">
+                                        <View className="w-4/12 flex flex-row gap-2">
+                                            <DataValue
+                                                key="clientName"
+                                                title="Client Name"
+                                                value={data?.account?.name}
+                                            />
+                                            <DataValue
+                                                key="clientCode"
+                                                title="Client Code"
+                                                value={data?.account?.clientId}
+                                            />
+                                            <DataValue
+                                                key="pan"
+                                                title="PAN"
+                                                value={data.account.user.panNumber}
                                             />
                                         </View>
-                                        <Link href={"/folio"} className="mr-4">
-                                            {/* <Icon name="home" size={18} color="black" /> */}
-                                            <Text>Folio</Text>
-                                        </Link>
-                                        {/* <View className='mr-4'>
-                                            <Icon name="circle" style={{ fontWeight: "100" }} size={8} color="grey" />
-                                        </View> */}
-                                        {/* <Link href={""} className='mr-4'>
-                                            <Text>{id}</Text>
-                                        </Link> */}
                                     </View>
-                                </View>
-                                <View className="w-6/12 overflow-hidden h-full flex flex-row justify-center">
-                                    <Image
-                                        className=""
-                                        source={require("../../../assets/images/ChatBc.png")}
-                                        style={
-                                            {
-                                                // flex: 1,
-                                                // justifyContent: 'end',
-                                            }
-                                        }
+                                    <View
+                                        className="my-2"
+                                        style={{
+                                            borderColor: "#e4e4e4",
+                                            borderBottomWidth: StyleSheet.hairlineWidth,
+                                        }}
                                     />
-                                </View>
-                            </View>
-                        </View>
-                        <View>
-                            <View className="flex flex-row justify-between mx-5">
-                                <View></View>
-                                {/* <View>
-                                    <Pressable marginRight={0} onPress={() => console.log("hello world")} paddingX={9} paddingY={2} bg={"#000000"} rounded={4} borderColor={"#bfbfbf"} borderWidth={0.3}>
-                                        <Icon name="download" style={{ fontWeight: "100" }} size={14} color="white" />
-                                    </Pressable>
-
-                                </View> */}
-                            </View>
-                            <View
-                                className="flex flex-row p-2 mx-2 items-center rounded"
-                                style={
-                                    Platform.OS == "web"
-                                        ? BorderShadow
-                                        : BorderShadowPhone
-                                }
-                            >
-                                <View className="flex flex-row items-center p-2">
-                                    <View className="flex flex-col ">
-                                        {/* <Link href={`/clients/${data.account.user.id}`} className='flex flex-row rounded-full bg-[#e60202] mr-2 h-10 w-10 items-center justify-center'>
-                                            <Text selectable className='text-white text-center'>{getInitials(data.account.name)}</Text>
-                                        </Link> */}
-                                        <Pressable
-                                            onPress={() =>
-                                                router.push(
-                                                    `/clients/${data.account.id}`
-                                                )
-                                            }
-                                            className="flex flex-row rounded-full bg-[#e60202] mr-2 h-10 w-10 items-center justify-center"
-                                        >
-                                            <Text
-                                                selectable
-                                                className="text-white"
-                                            >
-                                                {getInitials(data.account.name)}
-                                            </Text>
-                                        </Pressable>
-                                    </View>
-                                    <View className="flex flex-col ml-1">
-                                        <Text
-                                            selectable
-                                            className="font-bold text-base"
-                                        >
-                                            {data.account.name}
-                                        </Text>
-                                        <View className="flex flex-row items-center">
-                                            <Text
-                                                selectable
-                                                className=" text-xs"
-                                            >
-                                                {data.account.clientId}
-                                            </Text>
-                                            <View className="mx-2">
-                                                <Icon
-                                                    name="circle"
-                                                    style={{
-                                                        fontWeight: "100",
-                                                    }}
-                                                    size={8}
-                                                    color="grey"
-                                                />
-                                            </View>
-                                            <Text
-                                                selectable
-                                                className=" text-xs"
-                                            >
-                                                {data.account.user.panNumber}
-                                            </Text>
-                                        </View>
-                                    </View>
-                                </View>
-                            </View>
-
-                            <View
-                                className="flex flex-col mx-2 my-4 items-center justify-between rounded"
-                                style={
-                                    Platform.OS == "web"
-                                        ? BorderShadow
-                                        : BorderShadowPhone
-                                }
-                            >
-                                <View className="flex flex-col w-full p-2">
-                                    <View className="flex flex-row items-center w-full flex-wrap ">
+                                    <View className="flex flex-row py-2 items-center w-full flex-wrap ">
                                         <View
                                             className={
                                                 "flex flex-row items-center justify-start w-8/12"
@@ -305,505 +258,70 @@ export default function AUMDetail() {
                                             </View>
                                         </View>
                                     </View>
-                                    <View className="flex flex-row items-center justify-start w-full flex-wrap mt-4 p-3">
-                                        <View
-                                            className={
-                                                "flex flex-row items-center justify-center w-4/12 mb-[30px]"
-                                            }
-                                        >
-                                            <View className="flex flex-col">
-                                                <Text
-                                                    selectable
-                                                    className="font-medium"
-                                                >
-                                                    {data.units || "-"}
-                                                </Text>
-                                                <Text
-                                                    className="text-[10px] text-slate-500"
-                                                    selectable
-                                                >
-                                                    {"Units"}
-                                                </Text>
-                                            </View>
-                                        </View>
-                                        <View
-                                            className={
-                                                "flex flex-row items-center justify-center w-4/12 mb-[30px]"
-                                            }
-                                        >
-                                            <View className="flex flex-col">
-                                                <Text
-                                                    selectable
-                                                    className="font-medium"
-                                                >
-                                                    {data.currentValue
-                                                        ? RupeeSymbol +
-                                                          data.currentValue
-                                                        : "-"}
-                                                </Text>
-                                                <Text
-                                                    className="text-[10px] text-slate-500"
-                                                    selectable
-                                                >
-                                                    {"Current Value"}
-                                                </Text>
-                                            </View>
-                                        </View>
-                                        <View
-                                            className={
-                                                "flex flex-row items-center justify-center w-4/12 mb-[30px]"
-                                            }
-                                        >
-                                            <View className="flex flex-col">
-                                                <Text
-                                                    selectable
-                                                    className="font-medium"
-                                                >
-                                                    {data.investedValue
-                                                        ? RupeeSymbol +
-                                                          data.investedValue
-                                                        : "-"}
-                                                </Text>
-                                                <Text
-                                                    className="text-[10px] text-slate-500"
-                                                    selectable
-                                                >
-                                                    {"Invested Value"}
-                                                </Text>
-                                            </View>
-                                        </View>
-                                        {/* <View className={"flex flex-row items-center w-3/12 mb-[30px]"} >
-                                            <View className='flex flex-col'>
-                                                <Text selectable className='font-medium'>{data.orderStatus.name || "-"}</Text>
-                                                <Text className='text-[10px] text-slate-500' selectable>{"Status"}</Text>
-                                            </View>
-                                        </View> */}
-                                        {/* <View className={"flex flex-row items-center w-3/12 mb-[30px]"} >
-                                            <View className='flex flex-col'>
-                                                <Text selectable className='font-medium'>{data.amount ? (RupeeSymbol + data.amount.toString()) : "-"}</Text>
-                                                <Text className='text-[10px] text-slate-500' selectable>{"Amount"}</Text>
-                                            </View>
-                                        </View> */}
 
-                                        {/* <View className={"flex flex-row items-center w-3/12 mb-[30px]"} >
-                                            <View className='flex flex-col'>
-                                                <Text selectable className='font-medium'>{data.orderType.name || "-"}</Text>
-                                                <Text className='text-[10px] text-slate-500' selectable>{"Type"}</Text>
-                                            </View>
-                                        </View> */}
-                                        {/* <View className={"flex flex-row items-center w-3/12 mb-[30px]"} >
-                                            <View className='flex flex-col'>
-                                                <Text selectable className='font-medium'>{data?.transactions.length > 0 && data?.transactions[0].folio?.folioNumber || "-"}</Text>
-                                                <Text className='text-[10px] text-slate-500' selectable>{"Folio No"}</Text>
-                                            </View>
-                                        </View> */}
+                                    <View className="flex flex-row py-2 justify-between items-start w-full">
+                                        <View className="w-4/12 flex-flex-col gap-4 px-2">
+                                            <DataValue
+                                                key="optionType"
+                                                title="Option Type"
+                                                value="Monthly"
+                                            />
+                                            <DataValue
+                                                key="currentValue"
+                                                title="Current Value"
+                                                value={data.currentValue
+                                                    ? RupeeSymbol +
+                                                    data.currentValue
+                                                    : "-"}
+                                            />
+                                            <DataValue
+                                                key="createdDate"
+                                                title="Created Date"
+                                                value="23/03/23"
+                                            />
+                                        </View>
+                                        <View className="w-4/12 flex-flex-col gap-4 px-2">
+                                            <DataValue
+                                                key="dividendType"
+                                                title="Dividend Type"
+                                                value="Reinvest"
+                                            />
+                                            <DataValue
+                                                key="investedValue"
+                                                title="Invested Value"
+                                                value={data.investedValue
+                                                    ? RupeeSymbol +
+                                                    data.investedValue
+                                                    : "-"}
+                                            />
+                                            <DataValue
+                                                key="xirr"
+                                                title="XIRR"
+                                                value="25%"
+                                            />
+                                        </View>
+                                        <View className="w-4/12 flex-flex-col gap-4 px-2">
+                                            <DataValue
+                                                key="rta"
+                                                title="RTA"
+                                                value="CAMS"
+                                            />
+                                            <DataValue
+                                                key="returns"
+                                                title="Returns"
+                                                value={RupeeSymbol + "2500"}
+                                            />
+                                        </View>
                                     </View>
                                 </View>
-                                {/* <View className='flex flex-col w-full rounded-b' style={{ backgroundColor: getColorCode(data.orderStatus.name) }}>
-                                    <View className='flex flex-row items-center w-full flex-wrap py-3 px-2'>
-                                        <Text selectable className='font-normal text-[10px]'>{data.remark}</Text>
-                                    </View>
-                                </View> */}
                             </View>
-
-                            <View className="flex flex-col m-2">
-                                <View className="flex flex-row justify-start">
-                                    <Text className="font-bold text-base">
-                                        Transactions
-                                    </Text>
+                            <View className="flex flex-row justify-between rounded bg-white h-128">
+                                <View
+                                    className="w-full h-full rounded"
+                                    style={{ ...BreadcrumbShadow }}
+                                >
+                                    <TransactionsList data={data} />
                                 </View>
-                                {width < 830 ? (
-                                    <View className="flex flex-col mt-3">
-                                        {data.transactions.map(
-                                            (transaction, index) => {
-                                                return (
-                                                    <View key={index}>
-                                                        <View
-                                                            className={
-                                                                `flex flex-row p-2 justify-between flex-wrap rounded-xl   mb-3 ` +
-                                                                (index % 2
-                                                                    ? "bg-[#eaf3fe]"
-                                                                    : "bg-[#f0f0f0]")
-                                                            }
-                                                            style={{
-                                                                borderColor:
-                                                                    "#367a88",
-                                                                borderWidth: 0.2,
-                                                            }}
-                                                        >
-                                                            <View className="flex flex-col w-full">
-                                                                <View className="flex flex-row items-start justify-center w-full flex-wrap mt-3">
-                                                                    <View className="flex flex-col items-center w-4/12 justify-center">
-                                                                        <Text
-                                                                            selectable
-                                                                            className="text-slate-600 font-base text-[10px]"
-                                                                        >
-                                                                            Amount
-                                                                        </Text>
-
-                                                                        <Text
-                                                                            selectable
-                                                                            className="text-black font-bold text-[13px]"
-                                                                        >
-                                                                            {transaction.amount ||
-                                                                                "-"}{" "}
-                                                                        </Text>
-                                                                    </View>
-                                                                    <View className="flex flex-col items-center w-4/12 justify-center">
-                                                                        <Text
-                                                                            selectable
-                                                                            className="text-slate-600 font-base text-[10px]"
-                                                                        >
-                                                                            Units{" "}
-                                                                        </Text>
-
-                                                                        <Text
-                                                                            selectable
-                                                                            className="text-black font-bold text-[13px]"
-                                                                        >
-                                                                            {transaction.units ||
-                                                                                "-"}{" "}
-                                                                        </Text>
-                                                                    </View>
-                                                                    <View className="flex flex-col items-center w-4/12 justify-center">
-                                                                        <Text
-                                                                            selectable
-                                                                            className="text-slate-600 font-base text-[10px]"
-                                                                        >
-                                                                            Nav{" "}
-                                                                        </Text>
-
-                                                                        <Text
-                                                                            selectable
-                                                                            className="text-black font-bold text-[13px]"
-                                                                        >
-                                                                            {transaction.nav ||
-                                                                                "-"}{" "}
-                                                                        </Text>
-                                                                    </View>
-                                                                </View>
-                                                                <View className="flex flex-row items-start justify-center w-full flex-wrap mt-3">
-                                                                    <View className="flex flex-col items-center w-4/12 justify-center">
-                                                                        <Text
-                                                                            selectable
-                                                                            className="text-slate-600 font-base text-[10px]"
-                                                                        >
-                                                                            Nav
-                                                                            Allotment
-                                                                            Date
-                                                                        </Text>
-
-                                                                        <Text
-                                                                            selectable
-                                                                            className="text-black font-bold text-[13px]"
-                                                                        >
-                                                                            {(transaction.navAllotmentDate &&
-                                                                                moment(
-                                                                                    new Date(
-                                                                                        transaction.navAllotmentDate
-                                                                                    )
-                                                                                ).format(
-                                                                                    "DD-MM-YYYY hh:mm:ss A"
-                                                                                )) ||
-                                                                                "-"}{" "}
-                                                                        </Text>
-                                                                    </View>
-                                                                    <View className="flex flex-col items-center w-4/12 justify-center">
-                                                                        <Text
-                                                                            selectable
-                                                                            className="text-slate-600 font-base text-[10px]"
-                                                                        >
-                                                                            Settlement
-                                                                            Date{" "}
-                                                                        </Text>
-
-                                                                        <Text
-                                                                            selectable
-                                                                            className="text-black font-bold text-[13px]"
-                                                                        >
-                                                                            {(transaction.settlementDate &&
-                                                                                moment(
-                                                                                    new Date(
-                                                                                        transaction.settlementDate
-                                                                                    )
-                                                                                ).format(
-                                                                                    "DD-MM-YYYY hh:mm:ss A"
-                                                                                )) ||
-                                                                                "-"}{" "}
-                                                                        </Text>
-                                                                    </View>
-                                                                    <View className="flex flex-col items-center w-4/12 justify-center">
-                                                                        <Text
-                                                                            selectable
-                                                                            className="text-slate-600 font-base text-[10px]"
-                                                                        >
-                                                                            Payment
-                                                                            Date
-                                                                        </Text>
-
-                                                                        <Text
-                                                                            selectable
-                                                                            className="text-black font-bold text-[13px]"
-                                                                        >
-                                                                            {(transaction.paymentDate &&
-                                                                                moment(
-                                                                                    new Date(
-                                                                                        transaction.paymentDate
-                                                                                    )
-                                                                                ).format(
-                                                                                    "DD-MM-YYYY hh:mm:ss A"
-                                                                                )) ||
-                                                                                "-"}{" "}
-                                                                        </Text>
-                                                                    </View>
-                                                                </View>
-
-                                                                <View className="flex flex-row items-start justify-center w-full flex-wrap mt-3">
-                                                                    <View className="flex flex-col items-center w-4/12 justify-center">
-                                                                        <Text
-                                                                            selectable
-                                                                            className="text-slate-600 font-base text-[10px]"
-                                                                        >
-                                                                            Settlement
-                                                                            Type
-                                                                        </Text>
-
-                                                                        <Text
-                                                                            selectable
-                                                                            className="text-black font-bold text-[13px]"
-                                                                        >
-                                                                            {transaction.settlementType ||
-                                                                                "-"}{" "}
-                                                                        </Text>
-                                                                    </View>
-                                                                    <View className="flex flex-col items-center w-4/12 justify-center">
-                                                                        <Text
-                                                                            selectable
-                                                                            className="text-slate-600 font-base text-[10px]"
-                                                                        >
-                                                                            Transaction
-                                                                            Status{" "}
-                                                                        </Text>
-
-                                                                        <Text
-                                                                            selectable
-                                                                            className="text-black font-bold text-[13px]"
-                                                                        >
-                                                                            {transaction
-                                                                                .transactionStatus
-                                                                                .name ||
-                                                                                "-"}{" "}
-                                                                        </Text>
-                                                                    </View>
-                                                                    <View className="flex flex-col items-center w-4/12 justify-center">
-                                                                        <Text
-                                                                            selectable
-                                                                            className="text-slate-600 font-base text-[10px]"
-                                                                        >
-                                                                            Type
-                                                                        </Text>
-
-                                                                        <Text
-                                                                            selectable
-                                                                            className="text-black font-bold text-[13px]"
-                                                                        >
-                                                                            {transaction
-                                                                                .transactionType
-                                                                                .name ||
-                                                                                "-"}{" "}
-                                                                        </Text>
-                                                                    </View>
-                                                                </View>
-                                                            </View>
-                                                        </View>
-                                                    </View>
-                                                );
-                                            }
-                                        )}
-                                    </View>
-                                ) : (
-                                    <View className="flex flex-col mt-3">
-                                        <View className="flex flex-row bg-[#e3e3e3] rounded-t">
-                                            <View className="w-[11.11%] py-[9px] px-[9px]">
-                                                <Text
-                                                    selectable
-                                                    className="font-semibold"
-                                                >
-                                                    Payment Date
-                                                </Text>
-                                            </View>
-                                            <View className="w-[11.11%] py-[9px] px-[9px]">
-                                                <Text
-                                                    selectable
-                                                    className="font-semibold"
-                                                >
-                                                    Nav Allotment Date
-                                                </Text>
-                                            </View>
-                                            <View className="w-[11.11%] py-[9px] px-[9px]">
-                                                <Text
-                                                    selectable
-                                                    className="font-semibold"
-                                                >
-                                                    Settlement Date
-                                                </Text>
-                                            </View>
-                                            <View className="w-[11.11%] py-[9px] px-[9px]">
-                                                <Text
-                                                    selectable
-                                                    className="font-semibold"
-                                                >
-                                                    Transaction Type
-                                                </Text>
-                                            </View>
-                                            <View className="w-[11.11%] py-[9px] px-[9px]">
-                                                <Text
-                                                    selectable
-                                                    className="font-semibold"
-                                                >
-                                                    Settlement Type
-                                                </Text>
-                                            </View>
-                                            <View className="w-[11.11%] py-[9px] px-[9px]">
-                                                <Text
-                                                    selectable
-                                                    className="font-semibold"
-                                                >
-                                                    Units
-                                                </Text>
-                                            </View>
-                                            <View className="w-[11.11%] py-[9px] px-[9px]">
-                                                <Text
-                                                    selectable
-                                                    className="font-semibold"
-                                                >
-                                                    NAV
-                                                </Text>
-                                            </View>
-                                            <View className="w-[11.11%] py-[9px] px-[9px]">
-                                                <Text
-                                                    selectable
-                                                    className="font-semibold"
-                                                >
-                                                    Amount
-                                                </Text>
-                                            </View>
-                                            <View className="w-[11.11%] py-[9px] px-[9px]">
-                                                <Text
-                                                    selectable
-                                                    className="font-semibold"
-                                                >
-                                                    Status
-                                                </Text>
-                                            </View>
-                                        </View>
-                                        <View
-                                            className="mb-2"
-                                            style={{
-                                                borderColor: "#e4e4e4",
-                                                borderBottomWidth:
-                                                    StyleSheet.hairlineWidth,
-                                            }}
-                                        />
-                                        {data.transactions.map(
-                                            (transaction, index) => {
-                                                return (
-                                                    <View key={index}>
-                                                        <View className="flex flex-row w-full">
-                                                            <View className="w-[11.11%] p-3">
-                                                                <Text
-                                                                    selectable
-                                                                >
-                                                                    {transaction.paymentDate ||
-                                                                        "-"}
-                                                                </Text>
-                                                            </View>
-                                                            <View className="w-[11.11%] p-3">
-                                                                <Text
-                                                                    selectable
-                                                                >
-                                                                    {transaction.navAllotmentDate ||
-                                                                        "-"}
-                                                                </Text>
-                                                            </View>
-                                                            <View className="w-[11.11%] p-3">
-                                                                <Text
-                                                                    selectable
-                                                                >
-                                                                    {transaction.settlementDate ||
-                                                                        "-"}
-                                                                </Text>
-                                                            </View>
-                                                            <View className="w-[11.11%] p-3">
-                                                                <Text
-                                                                    selectable
-                                                                >
-                                                                    {transaction
-                                                                        .transactionType
-                                                                        .name ||
-                                                                        "-"}
-                                                                </Text>
-                                                            </View>
-                                                            <View className="w-[11.11%] p-3">
-                                                                <Text
-                                                                    selectable
-                                                                >
-                                                                    {transaction.settlementType ||
-                                                                        "-"}
-                                                                </Text>
-                                                            </View>
-                                                            <View className="w-[11.11%] p-3">
-                                                                <Text
-                                                                    selectable
-                                                                >
-                                                                    {transaction.units ||
-                                                                        "-"}
-                                                                </Text>
-                                                            </View>
-                                                            <View className="w-[11.11%] p-3">
-                                                                <Text
-                                                                    selectable
-                                                                >
-                                                                    {transaction.nav ||
-                                                                        "-"}
-                                                                </Text>
-                                                            </View>
-                                                            <View className="w-[11.11%] p-3">
-                                                                <Text
-                                                                    selectable
-                                                                >
-                                                                    {transaction.amount
-                                                                        ? RupeeSymbol +
-                                                                          transaction.amount
-                                                                        : "-"}
-                                                                </Text>
-                                                            </View>
-                                                            <View className="w-[11.11%] p-3">
-                                                                <Text
-                                                                    selectable
-                                                                >
-                                                                    {transaction
-                                                                        .transactionStatus
-                                                                        .name ||
-                                                                        "-"}
-                                                                </Text>
-                                                            </View>
-                                                        </View>
-                                                        <View
-                                                            className="mb-2"
-                                                            style={{
-                                                                borderColor:
-                                                                    "#e4e4e4",
-                                                                borderBottomWidth:
-                                                                    StyleSheet.hairlineWidth,
-                                                            }}
-                                                        />
-                                                    </View>
-                                                );
-                                            }
-                                        )}
-                                    </View>
-                                )}
                             </View>
                         </View>
                     </View>
@@ -812,3 +330,98 @@ export default function AUMDetail() {
         </>
     );
 }
+
+const TransactionsList = ({ data }: { data: AUMDetailInterface }) => {
+
+
+
+    return (
+        <View className="flex-1 bg-white rounded shadow h-full overflow-auto p-2">
+            <View className={`flex flex-row items-center w-full justify-start`}>
+                <Text selectable className="text-lg font-bold text-start">
+                    Transactions
+                </Text>
+            </View>
+            <View
+                className="my-2"
+                style={{
+                    borderColor: "#e4e4e4",
+                    borderBottomWidth: StyleSheet.hairlineWidth,
+                }}
+            />
+            <DataTable
+                key="siplist"
+                headers={["Amount", "Units", "Date", "NAV", "Status"]}
+                cellSize={[1, 1, 1, 1, 1,]}
+                rows={[
+                    [
+                        {
+                            key: "amount",
+                            content: (
+                                <View className="flex flex-row items-center gap-2">
+                                    <View>
+                                        <Text className="text-xs">
+                                            {RupeeSymbol + "7388"}
+                                        </Text>
+                                    </View>
+                                </View>
+                            ),
+                        },
+                        {
+                            key: "units",
+                            content: (
+                                <View className="flex flex-row items-center gap-2">
+
+                                    <View>
+                                        <Text className="text-xs">
+                                            {/* {data?.amount ? (RupeeSymbol + data?.amount) : "2"} */}
+                                            01
+                                        </Text>
+                                    </View>
+                                </View>
+                            ),
+                        },
+
+                        {
+                            key: "date",
+                            content: (
+                                <View className="flex flex-row items-center gap-2">
+                                    <View>
+                                        <Text className="text-xs">
+                                            23/09/2023
+                                        </Text>
+                                    </View>
+                                </View>
+                            ),
+                        },
+                        {
+                            key: "nav",
+                            content: (
+                                <View className="flex flex-row items-center gap-2">
+                                    <View>
+                                        <Text className="text-xs">
+                                            {RupeeSymbol + "7388"}
+                                        </Text>
+                                    </View>
+                                </View>
+                            ),
+                        },
+                        {
+                            key: "status",
+                            content: (
+                                <View className="flex flex-row items-center gap-2">
+                                    <View>
+                                        <Text className="text-xs">
+                                            Active
+                                        </Text>
+                                    </View>
+                                </View>
+                            ),
+                        },
+                    ],
+
+                ]}
+            />
+        </View>
+    );
+};
