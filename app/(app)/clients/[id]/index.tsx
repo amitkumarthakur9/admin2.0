@@ -15,6 +15,7 @@ import {
 } from "native-base";
 import Icon from "react-native-vector-icons/FontAwesome";
 import AntdIcon from "react-native-vector-icons/AntDesign";
+import IonIcon from "react-native-vector-icons/Ionicons";
 
 import RemoteApi from "../../../../src/services/RemoteApi";
 import {
@@ -28,6 +29,11 @@ import DataGrid from "../../../../src/components/DataGrid/DataGrid";
 import HorizontalStackedBarChart from "../../../../src/components/Chart/HorizontalBarChart";
 import Accordion from "../../../../src/components/Accordion/Accordion";
 import DataTable from "../../../../src/components/DataTable/DataTable";
+import Modal from "../../../../src/components/Modal/Modal";
+import { TextInput } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import DropdownComponent from "../../../../src/components/Dropdowns/DropDown";
+import RadioButton from "../../../../src/components/Radio/Radio";
 
 const DataValue = ({ title, value }) => {
     return (
@@ -280,6 +286,24 @@ const PortfolioCard = ({ data }) => {
 
     const assetBifurcationColors = ["#715CFA", "#69E1AB", "#39C3E2", "#FA8B5C"];
 
+    const [visible, setVisible] = useState(false);
+    const [modalKey, setModalKey] = useState("invest");
+
+    const closeModal = () => {
+        setVisible(false);
+        setModalKey("");
+    };
+
+    const modalValues = {
+        invest: <InvestModalCard hideDialog={closeModal} />,
+        redeem: <RedeemModalCard hideDialog={closeModal} />,
+    };
+
+    const showModal = (key: string) => () => {
+        setModalKey(key);
+        setVisible(true);
+    };
+
     const tabContent = [
         {
             key: "holdings",
@@ -512,7 +536,23 @@ const PortfolioCard = ({ data }) => {
                                 },
                             ],
                         ]}
+                        hasActions
+                        options={[
+                            {
+                                key: "invest",
+                                name: "Invest",
+                                onClick: showModal("invest"),
+                            },
+                            {
+                                key: "redeem",
+                                name: "Redeem",
+                                onClick: showModal("redeem"),
+                            },
+                        ]}
                     />
+                    <Modal visible={visible} hideDialog={closeModal}>
+                        {modalValues[modalKey]}
+                    </Modal>
                 </View>
             ),
         },
@@ -869,6 +909,645 @@ const PortfolioCard = ({ data }) => {
                 handleTabPress={handleTabPress}
                 tabContent={tabContent}
             />
+        </View>
+    );
+};
+
+const InvestModalCard = ({ hideDialog }) => {
+    const [cardNumber, setCardNumber] = useState(1);
+    const [selectedFund, setSelectedFund] = useState(); // This is to save fund context to render in the next modal info
+
+    const selectFund = (data: any) => {
+        setSelectedFund(data);
+        setCardNumber(2);
+    };
+
+    const deselectFund = () => {
+        setSelectedFund(null);
+        setCardNumber(1);
+    };
+
+    const tabContentForInvest = [
+        {
+            key: "lumpsum",
+            name: "Lumpsum",
+            content: (
+                <View className="w-full flex flex-col justify-items items-center py-2 gap-y-4">
+                    <View className="w-1/2 flex flex-col items-center gap-y-2">
+                        <Text className="w-full flex flex-row items-start justify-start text-xs text-gray-400 mb-2">
+                            Folio Number*
+                        </Text>
+                        <DropdownComponent
+                            label="Folio Number"
+                            data={[
+                                { label: "1", value: "1" },
+                                { label: "2", value: "2" },
+                                { label: "3", value: "3" },
+                                { label: "4", value: "4" },
+                                { label: "5", value: "5" },
+                                { label: "6", value: "6" },
+                                { label: "7", value: "7" },
+                                { label: "8", value: "8" },
+                                { label: "9", value: "9" },
+                                { label: "10", value: "10" },
+                                { label: "11", value: "11" },
+                                { label: "12", value: "12" },
+                                { label: "13", value: "13" },
+                                { label: "14", value: "14" },
+                                { label: "15", value: "15" },
+                                { label: "16", value: "16" },
+                                { label: "17", value: "17" },
+                                { label: "18", value: "18" },
+                                { label: "19", value: "19" },
+                                { label: "20", value: "20" },
+                                { label: "21", value: "21" },
+                                { label: "22", value: "22" },
+                                { label: "23", value: "23" },
+                                { label: "24", value: "24" },
+                                { label: "25", value: "25" },
+                                { label: "26", value: "26" },
+                                { label: "27", value: "27" },
+                                { label: "28", value: "28" },
+                            ]}
+                            containerStyle={{ width: "100%" }}
+                            noIcon
+                        />
+                    </View>
+                    <View className="w-1/2 flex flex-col items-center gap-y-2">
+                        <Text className="w-full flex flex-row items-start justify-start text-xs text-gray-400">
+                            Investment Amount*
+                        </Text>
+                        <TextInput
+                            className="outline-none w-full border border-gray-300 p-2 rounded"
+                            keyboardType="number-pad"
+                            placeholder="Investment Amount"
+                            underlineColorAndroid="transparent"
+                            selectionColor="transparent"
+                            placeholderTextColor={"rgb(156, 163, 175)"}
+                            cursorColor={"transparent"}
+                            style={{ outline: "none" }}
+                        />
+                        <Text className="w-full flex flex-row items-start justify-start text-xs text-gray-500">
+                            In multiples of {RupeeSymbol}1000
+                        </Text>
+                    </View>
+                    <Button
+                        width="50%"
+                        bgColor={"#013974"}
+                        onPress={() => console.log("Press Invest")}
+                        className="rounded-lg"
+                    >
+                        Invest
+                    </Button>
+                </View>
+            ),
+        },
+        {
+            key: "SIP",
+            name: "SIP",
+            content: (
+                <View className="w-full flex flex-col justify-items items-center py-2 gap-y-4">
+                    <View className="w-1/2 flex flex-col items-center gap-y-2">
+                        <Text className="w-full flex flex-row items-start justify-start text-xs text-gray-400 mb-2">
+                            Folio Number*
+                        </Text>
+                        <DropdownComponent
+                            label="Folio Number"
+                            data={[
+                                { label: "1", value: "1" },
+                                { label: "2", value: "2" },
+                                { label: "3", value: "3" },
+                                { label: "4", value: "4" },
+                                { label: "5", value: "5" },
+                                { label: "6", value: "6" },
+                                { label: "7", value: "7" },
+                                { label: "8", value: "8" },
+                                { label: "9", value: "9" },
+                                { label: "10", value: "10" },
+                                { label: "11", value: "11" },
+                                { label: "12", value: "12" },
+                                { label: "13", value: "13" },
+                                { label: "14", value: "14" },
+                                { label: "15", value: "15" },
+                                { label: "16", value: "16" },
+                                { label: "17", value: "17" },
+                                { label: "18", value: "18" },
+                                { label: "19", value: "19" },
+                                { label: "20", value: "20" },
+                                { label: "21", value: "21" },
+                                { label: "22", value: "22" },
+                                { label: "23", value: "23" },
+                                { label: "24", value: "24" },
+                                { label: "25", value: "25" },
+                                { label: "26", value: "26" },
+                                { label: "27", value: "27" },
+                                { label: "28", value: "28" },
+                            ]}
+                            containerStyle={{ width: "100%" }}
+                            noIcon
+                        />
+                    </View>
+                    <View className="w-1/2 flex flex-col items-center gap-y-2">
+                        <Text className="w-full flex flex-row items-start justify-start text-xs text-gray-400">
+                            Investment Amount*
+                        </Text>
+                        <TextInput
+                            className="outline-none w-full border border-gray-300 p-2 rounded"
+                            keyboardType="number-pad"
+                            placeholder="Investment Amount"
+                            underlineColorAndroid="transparent"
+                            selectionColor="transparent"
+                            placeholderTextColor={"rgb(156, 163, 175)"}
+                            cursorColor={"transparent"}
+                            style={{ outline: "none" }}
+                        />
+                        <Text className="w-full flex flex-row items-start justify-start text-xs text-gray-500">
+                            In multiples of {RupeeSymbol}1000
+                        </Text>
+                    </View>
+                    <View className="w-1/2 flex flex-col items-center gap-y-2">
+                        <View className="w-full flex flex-row items-center justify-start gap-x-2">
+                            <Text className="text-xs mr-2">SIP Date</Text>
+                            <DropdownComponent
+                                label="Date"
+                                data={[
+                                    { label: "1", value: "1" },
+                                    { label: "2", value: "2" },
+                                    { label: "3", value: "3" },
+                                    { label: "4", value: "4" },
+                                    { label: "5", value: "5" },
+                                    { label: "6", value: "6" },
+                                    { label: "7", value: "7" },
+                                    { label: "8", value: "8" },
+                                    { label: "9", value: "9" },
+                                    { label: "10", value: "10" },
+                                    { label: "11", value: "11" },
+                                    { label: "12", value: "12" },
+                                    { label: "13", value: "13" },
+                                    { label: "14", value: "14" },
+                                    { label: "15", value: "15" },
+                                    { label: "16", value: "16" },
+                                    { label: "17", value: "17" },
+                                    { label: "18", value: "18" },
+                                    { label: "19", value: "19" },
+                                    { label: "20", value: "20" },
+                                    { label: "21", value: "21" },
+                                    { label: "22", value: "22" },
+                                    { label: "23", value: "23" },
+                                    { label: "24", value: "24" },
+                                    { label: "25", value: "25" },
+                                    { label: "26", value: "26" },
+                                    { label: "27", value: "27" },
+                                    { label: "28", value: "28" },
+                                ]}
+                                noIcon
+                            />
+                            <Text className="text-xs ml-2">of every month</Text>
+                        </View>
+                    </View>
+                    <Button
+                        width="50%"
+                        bgColor={"#013974"}
+                        onPress={() => console.log("Press Invest")}
+                        className="rounded-lg"
+                    >
+                        Invest
+                    </Button>
+                </View>
+            ),
+        },
+    ];
+
+    const renderInfo = {
+        1: {
+            title: "Please Select Mutual Fund",
+            content: <InvestModalSearch selectFund={selectFund} />,
+        },
+        2: {
+            title: "Investing In",
+            content: (
+                <InvestModalAction
+                    deselectFund={deselectFund}
+                    tabContent={tabContentForInvest}
+                />
+            ),
+        },
+    };
+
+    return (
+        <View className="flex flex-col">
+            <View className="h-16 flex flex-row justify-between items-center p-12">
+                <View className="flex flex-row items-center gap-x-2">
+                    {cardNumber > 1 && (
+                        <IonIcon
+                            name="chevron-back-outline"
+                            size={24}
+                            onPress={deselectFund}
+                        />
+                    )}
+                    <Text className="text-xl font-medium center">
+                        {renderInfo[cardNumber].title}
+                    </Text>
+                </View>
+                <IonIcon name="close-outline" size={24} onPress={hideDialog} />
+            </View>
+            {renderInfo[cardNumber].content}
+        </View>
+    );
+};
+
+const InvestModalSearch = ({ selectFund }) => {
+    return (
+        <View className="p-2 px-8">
+            <Pressable
+                onPress={() => console.log("first")}
+                className="flex flex-row justify-start items-center w-full p-4 bg-[#E8F1FF] rounded-full"
+            >
+                <TextInput
+                    className="outline-none w-[100%]"
+                    placeholder="Search for Mutual Funds"
+                    underlineColorAndroid="transparent"
+                    selectionColor="transparent"
+                    placeholderTextColor={"rgb(100, 116, 139)"}
+                    cursorColor={"transparent"}
+                    style={{ outline: "none" }}
+                />
+            </Pressable>
+            <View className="">
+                <DataTable
+                    key="searchMutualFund"
+                    headers={[]}
+                    cellSize={[10, 2]}
+                    rows={[
+                        [
+                            {
+                                key: "name",
+                                content: (
+                                    <View className="flex flex-row items-center gap-2">
+                                        <View className="w-8 h-8 rounded bg-gray-500" />
+                                        <View>
+                                            <Text className="text-xs">
+                                                Kotak Bank Mid Cap Fund Direct
+                                                Growth
+                                            </Text>
+                                            <Text className="text-xs text-gray-400">
+                                                Equity Multi Cap
+                                            </Text>
+                                        </View>
+                                    </View>
+                                ),
+                            },
+                            {
+                                key: "return",
+                                content: (
+                                    <View className="flex flex-col w-full items-center py-2 rounded-full">
+                                        <Button
+                                            width="100%"
+                                            bgColor={"#013974"}
+                                            onPress={() => selectFund("any")}
+                                            className="rounded-full"
+                                        >
+                                            Invest
+                                        </Button>
+                                    </View>
+                                ),
+                            },
+                        ],
+                        [
+                            {
+                                key: "name",
+                                content: (
+                                    <View className="flex flex-row items-center gap-2">
+                                        <View className="w-8 h-8 rounded bg-gray-500" />
+                                        <View>
+                                            <Text className="text-xs">
+                                                Kotak Bank Mid Cap Fund Regular
+                                            </Text>
+                                            <Text className="text-xs text-gray-400">
+                                                Equity Multi Cap
+                                            </Text>
+                                        </View>
+                                    </View>
+                                ),
+                            },
+                            {
+                                key: "return",
+                                content: (
+                                    <View className="flex flex-col w-full items-center py-2 rounded-full">
+                                        <Button
+                                            width="100%"
+                                            bgColor={"#013974"}
+                                            onPress={() => selectFund("any")}
+                                            className="rounded-full"
+                                        >
+                                            Invest
+                                        </Button>
+                                    </View>
+                                ),
+                            },
+                        ],
+                        [
+                            {
+                                key: "name",
+                                content: (
+                                    <View className="flex flex-row items-center gap-2">
+                                        <View className="w-8 h-8 rounded bg-gray-500" />
+                                        <View>
+                                            <Text className="text-xs">
+                                                Kotak Bank Mid Cap Fund Direct
+                                                Growth
+                                            </Text>
+                                            <Text className="text-xs text-gray-400">
+                                                Equity Multi Cap
+                                            </Text>
+                                        </View>
+                                    </View>
+                                ),
+                            },
+                            {
+                                key: "return",
+                                content: (
+                                    <View className="flex flex-col w-full items-center py-2 rounded-full">
+                                        <Button
+                                            width="100%"
+                                            bgColor={"#013974"}
+                                            onPress={() => selectFund("any")}
+                                            className="rounded-full"
+                                        >
+                                            Invest
+                                        </Button>
+                                    </View>
+                                ),
+                            },
+                        ],
+                    ]}
+                />
+            </View>
+        </View>
+    );
+};
+
+const InvestModalAction = ({ deselectFund, tabContent }) => {
+    const [selectedTab, setSelectedTab] = useState(1);
+
+    const handleTabPress = (tab) => {
+        setSelectedTab(tab);
+    };
+
+    return (
+        <View className="flex flex-col">
+            <View className="flex flex-row items-center justify-between py-4 px-12">
+                <View className="flex flex-row items-center gap-2">
+                    <View className="w-8 h-8 rounded bg-gray-500" />
+                    <View>
+                        <Text className="text-xs">
+                            Kotak Bank Mid Cap Fund Direct Growth
+                        </Text>
+                        <Text className="text-xs text-gray-400">
+                            Equity Multi Cap
+                        </Text>
+                    </View>
+                </View>
+                <Button
+                    width="10%"
+                    bgColor="gray.400"
+                    onPress={deselectFund}
+                    className="rounded-full"
+                >
+                    Change
+                </Button>
+            </View>
+            <View className="flex-1 w-full bg-white rounded h-full overflow-auto">
+                <View className="py-4">
+                    <View className="w-full flex flex-row mb-2 border-b border-gray-400">
+                        {tabContent?.map((tab, index) => {
+                            return (
+                                <View
+                                    className={`w-1/${
+                                        tabContent && tabContent.length
+                                    } border-b-2 ${
+                                        selectedTab === index + 1 &&
+                                        tabContent &&
+                                        tabContent.length > 1
+                                            ? "border-black"
+                                            : "border-transparent"
+                                    }`}
+                                >
+                                    <TouchableOpacity
+                                        key={index}
+                                        onPress={() =>
+                                            handleTabPress(index + 1)
+                                        }
+                                        className={`w-full flex flex-row justify-center items-center p-2`}
+                                    >
+                                        <Text
+                                            className={`font-bold ${
+                                                selectedTab === index + 1
+                                                    ? "text-gray-800"
+                                                    : "text-gray-400"
+                                            }`}
+                                        >
+                                            {tab?.name}
+                                        </Text>
+                                    </TouchableOpacity>
+                                </View>
+                            );
+                        })}
+                    </View>
+                    {tabContent && tabContent[selectedTab - 1]?.content}
+                </View>
+            </View>
+        </View>
+    );
+};
+
+const RedeemModalCard = ({ hideDialog }) => {
+    const [cardNumber, setCardNumber] = useState(1);
+    const [selectedFund, setSelectedFund] = useState(); // This is to save fund context to render in the next modal info
+    const [methodSelect, setMethodSelect] = useState("Enter Amount");
+
+    const selectFund = (data: any) => {
+        setSelectedFund(data);
+        setCardNumber(2);
+    };
+
+    const deselectFund = () => {
+        setSelectedFund(null);
+        setCardNumber(1);
+    };
+
+    const tabContentForRedeem = [
+        {
+            key: "redeem",
+            name: "",
+            content: (
+                <View className="w-full flex flex-col justify-items items-center py-2 gap-y-4">
+                    <View className="w-2/3 flex flex-col items-center gap-y-2">
+                        <View className="w-full flex flex-row justify-evenly items-start">
+                            <DataGrid
+                                key="totalAmount"
+                                title={
+                                    <Text selectable className="text-xs">
+                                        Total Amount
+                                    </Text>
+                                }
+                                value={
+                                    <Text selectable className="text-xs">
+                                        {RupeeSymbol} 50,000.00
+                                    </Text>
+                                }
+                                reverse
+                            />
+                            <DataGrid
+                                key="redeemableAmount"
+                                title={
+                                    <Text selectable className="text-xs">
+                                        Total Redeemable Amount
+                                    </Text>
+                                }
+                                value={
+                                    <Text selectable className="text-xs">
+                                        {RupeeSymbol}23,000.50
+                                    </Text>
+                                }
+                                reverse
+                            />
+                        </View>
+                        <View className="w-full flex flex-row justify-evenly items-start">
+                            <DataGrid
+                                key="totalUnits"
+                                title={
+                                    <Text selectable className="text-xs">
+                                        Total Units
+                                    </Text>
+                                }
+                                value={
+                                    <Text selectable className="text-xs">
+                                        46
+                                    </Text>
+                                }
+                                reverse
+                            />
+                            <DataGrid
+                                key="totalRedeemableUnits"
+                                title={
+                                    <Text selectable className="text-xs">
+                                        Total Redeemable Units
+                                    </Text>
+                                }
+                                value={
+                                    <Text selectable className="text-xs">
+                                        21
+                                    </Text>
+                                }
+                                reverse
+                            />
+                        </View>
+                        <View className="w-full flex flex-row justify-evenly items-start">
+                            <DataGrid
+                                key="applicableNavDate"
+                                title={
+                                    <Text selectable className="text-xs">
+                                        Applicable NAV Date
+                                    </Text>
+                                }
+                                value={
+                                    <Text selectable className="text-xs">
+                                        Feb 26, 2024
+                                    </Text>
+                                }
+                                reverse
+                            />
+                            <DataGrid
+                                key="expectedCompletionDate"
+                                title={
+                                    <Text selectable className="text-xs">
+                                        Expected Completion Date
+                                    </Text>
+                                }
+                                value={
+                                    <Text selectable className="text-xs">
+                                        Nov 26, 2030
+                                    </Text>
+                                }
+                                reverse
+                            />
+                        </View>
+                    </View>
+                    <View className="w-1/2 flex flex-col items-center gap-y-2">
+                        <Text className="w-full flex flex-row items-start justify-start text-xs text-gray-400">
+                            Redeem through
+                        </Text>
+                        <RadioButton
+                            name="Redeem Through"
+                            value={methodSelect}
+                            setValue={setMethodSelect}
+                            options={[
+                                {
+                                    label: "Enter Amount",
+                                    value: "Enter Amount",
+                                },
+                                { label: "Enter Units", value: "Enter Units" },
+                            ]}
+                        />
+                        <TextInput
+                            className="outline-none w-full border border-gray-300 p-2 rounded"
+                            keyboardType="number-pad"
+                            placeholder={methodSelect}
+                            underlineColorAndroid="transparent"
+                            selectionColor="transparent"
+                            placeholderTextColor={"rgb(156, 163, 175)"}
+                            cursorColor={"transparent"}
+                            style={{ outline: "none" }}
+                        />
+                    </View>
+                    <Button
+                        width="50%"
+                        bgColor={"#013974"}
+                        onPress={() => console.log("Press Invest")}
+                        className="rounded-lg"
+                    >
+                        Invest
+                    </Button>
+                </View>
+            ),
+        },
+    ];
+
+    const renderInfo = {
+        1: {
+            title: "Please Select Mutual Fund",
+            content: <InvestModalSearch selectFund={selectFund} />,
+        },
+        2: {
+            title: "Redeem in",
+            content: (
+                <InvestModalAction
+                    deselectFund={deselectFund}
+                    tabContent={tabContentForRedeem}
+                />
+            ),
+        },
+    };
+
+    return (
+        <View className="flex flex-col">
+            <View className="h-16 flex flex-row justify-between items-center p-12">
+                <View className="flex flex-row items-center gap-x-2">
+                    {cardNumber > 1 && (
+                        <IonIcon
+                            name="chevron-back-outline"
+                            size={24}
+                            onPress={deselectFund}
+                        />
+                    )}
+                    <Text className="text-xl font-medium center">
+                        {renderInfo[cardNumber].title}
+                    </Text>
+                </View>
+                <IonIcon name="close-outline" size={24} onPress={hideDialog} />
+            </View>
+            {renderInfo[cardNumber].content}
         </View>
     );
 };

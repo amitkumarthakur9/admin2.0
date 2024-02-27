@@ -11,9 +11,13 @@ interface DropdownItem {
 const DropdownComponent = ({
     label = "",
     data = [],
+    containerStyle,
+    noIcon,
 }: {
     label: string;
     data: DropdownItem[];
+    containerStyle?: any;
+    noIcon?: boolean;
 }) => {
     const [value, setValue] = useState(null);
     const [isFocus, setIsFocus] = useState(false);
@@ -31,10 +35,17 @@ const DropdownComponent = ({
     };
 
     return (
-        <View style={styles.container} className="lg:mr-2">
+        <View
+            style={{ ...styles.container, ...containerStyle }}
+            className="lg:mr-2"
+        >
             {renderLabel()}
             <Dropdown
-                style={[styles.dropdown, isFocus && { borderColor: "blue" }]}
+                style={[
+                    styles.dropdown,
+                    { width: "100%" },
+                    isFocus && { borderColor: "blue" },
+                ]}
                 placeholderStyle={styles.placeholderStyle}
                 selectedTextStyle={styles.selectedTextStyle}
                 inputSearchStyle={styles.inputSearchStyle}
@@ -53,14 +64,18 @@ const DropdownComponent = ({
                     setValue(item.value);
                     setIsFocus(false);
                 }}
-                renderLeftIcon={() => (
-                    <AntDesign
-                        style={styles.icon}
-                        color={isFocus ? "blue" : "black"}
-                        name="Safety"
-                        size={15}
-                    />
-                )}
+                renderLeftIcon={() =>
+                    noIcon ? (
+                        <></>
+                    ) : (
+                        <AntDesign
+                            style={styles.icon}
+                            color={isFocus ? "blue" : "black"}
+                            name="Safety"
+                            size={15}
+                        />
+                    )
+                }
             />
         </View>
     );

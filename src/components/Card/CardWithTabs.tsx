@@ -6,7 +6,7 @@ import { Text } from "native-base";
 const CardWithTabs = ({ selectedTab, handleTabPress, tabContent, tabscount = 3 }) => {
 
     return (
-        <View className="flex-1 bg-white rounded shadow h-full overflow-auto">
+        <View className="flex-1 w-full bg-white rounded shadow h-full overflow-auto">
             <View>
                 <View className="w-full flex flex-row mb-2 overflow-scroll">
                     {tabContent?.map((tab, index) => {
@@ -21,7 +21,11 @@ const CardWithTabs = ({ selectedTab, handleTabPress, tabContent, tabscount = 3 }
                                 }`}
                             >
                                 <Text
-                                    className={`font-bold ${selectedTab === index + 1 ? "text-gray-800" : "text-gray-600"}`}
+                                    className={`font-bold ${
+                                        selectedTab === index + 1
+                                            ? "text-gray-800"
+                                            : "text-gray-600"
+                                    }`}
                                 >
                                     {tab?.name}
                                 </Text>
