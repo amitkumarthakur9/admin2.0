@@ -320,7 +320,7 @@ const AUMDataTable = () => {
                     selectedTab={selectedTab}
                     handleTabPress={handleTabPress}
                     tabContent={tabContent}
-                    tabscount={8}
+                    
                 />
                 {/* </View> */}
             </View>

@@ -489,7 +489,7 @@ const PortfolioCard = ({ data }) => {
                 selectedTab={selectedTab}
                 handleTabPress={handleTabPress}
                 tabContent={tabContent}
-                tabscount={2}
+                tabsCount={2}
             />
         </View>
     );
