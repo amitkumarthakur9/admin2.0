@@ -34,26 +34,7 @@ import { TextInput } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import DropdownComponent from "../../../../src/components/Dropdowns/DropDown";
 import RadioButton from "../../../../src/components/Radio/Radio";
-
-const DataValue = ({ title, value }) => {
-    return (
-        <View className="w-full flex flex-row justify-between items-center p-2">
-            <View className="w-1/2 flex ">
-                <Text className="text-bold font-medium text-black" selectable>
-                    {title ? title : "-"}
-                </Text>
-            </View>
-            <View className="w-1/2 flex">
-                <Text
-                    selectable
-                    className="font-medium text-start text-gray-500"
-                >
-                    {value ? value : "-"}
-                </Text>
-            </View>
-        </View>
-    );
-};
+import DataValue from "../../../../src/components/DataValue/DataValue";
 
 export default function ClientDetail() {
     const { id } = useLocalSearchParams();

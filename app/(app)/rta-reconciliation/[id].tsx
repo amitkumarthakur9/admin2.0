@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { ImageBackground, View } from "react-native";
-import { Link, useLocalSearchParams } from "expo-router";
+import { Pressable, StyleSheet, View } from "react-native";
+import { useLocalSearchParams } from "expo-router";
 import {
     Center,
     HStack,
@@ -10,21 +10,16 @@ import {
     Spinner,
     Text,
 } from "native-base";
-import { Platform } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
-import moment from "moment";
 
 import RemoteApi from "../../../src/services/RemoteApi";
-import {
-    BorderShadow,
-    BorderShadowPhone,
-} from "../../../src/components/Styles/Shadow";
 import { RupeeSymbol } from "../../../src/helper/helper";
 import {
     TransactionDetail,
     TransactionDetailResponseInterface,
 } from "../../../src/interfaces/RTADetailInterface";
-import DataGrid from "../../../src/components/DataGrid/DataGrid";
+import { BreadcrumbShadow } from "../../../src/components/Styles/Shadow";
+import DataValue from "../../../src/components/DataValue/DataValue";
 
 export default function RTAConciliationDetail() {
     const { id } = useLocalSearchParams();
@@ -45,99 +40,6 @@ export default function RTAConciliationDetail() {
             getOrderDetails();
         }
     }, [id]);
-
-    const getInitials = (name: string) => {
-        const words = name.split(" ");
-        if (words.length >= 2) {
-            const firstWord = words[0];
-            const secondWord = words[1];
-            return `${firstWord[0]}${secondWord[0]}`;
-        } else if (words.length === 1) {
-            return words[0][0];
-        } else {
-            return "";
-        }
-    };
-
-    const gridItems: {
-        key: string;
-        title: React.JSX.Element | string | null;
-        value: React.JSX.Element | string | number | null;
-    }[] = [
-        {
-            key: "rtaAgentCode",
-            title: "RTA Agent Code",
-            value: data?.mutualfund?.fundhouse?.rta.name,
-        },
-        {
-            key: "bseOrderNumber",
-            title: "BSE Order No",
-            value: data?.orderReferenceNumber,
-        },
-        {
-            key: "folio",
-            title: "Folio No.",
-            value: data?.account.id,
-        },
-        {
-            key: "PaymentDate",
-            title: "Payment Date",
-            value: data?.paymentDate
-                ? moment(data?.paymentDate).format("DD-MM-YYYY hh:mm:ss A")
-                : "-",
-        },
-        {
-            key: "amount",
-            title: "Amount(Stamp Duty + STT + Tax)",
-            value: (
-                <View>
-                    <Text>
-                        {data?.amount
-                            ? `${RupeeSymbol + data?.amount.toString()} (${
-                                  data?.stampDuty ? data?.stampDuty : 0
-                              } + ${data?.tax ? data?.tax : 0} + ${
-                                  data?.stt ? data?.stt : 0
-                              })`
-                            : "-"}
-                    </Text>
-                </View>
-            ),
-        },
-        {
-            key: "units",
-            title: "Units",
-            value: data?.units,
-        },
-        {
-            key: "nav",
-            title: "NAV",
-            value: data?.nav,
-        },
-        {
-            key: "allotedAmount",
-            title: "Alloted Amount",
-            value: data?.allotedAmount ? data?.allotedAmount : "-",
-        },
-        {
-            key: "transactionAStatus",
-            title: "Transaction Status",
-            value: data?.transactionStatus
-                ? data?.transactionStatus?.name
-                : "-",
-        },
-        {
-            key: "transactionType",
-            title: "Transaction Type",
-            value: data?.transactionType ? data?.transactionType?.name : "-",
-        },
-        {
-            key: "settlementDate",
-            title: "Settlement Date",
-            value: data?.settlementDate
-                ? moment(data.settlementDate).format("DD-MM-YYYY hh:mm:ss A")
-                : "-",
-        },
-    ];
 
     return (
         <>
@@ -164,170 +66,389 @@ export default function RTAConciliationDetail() {
                     showsVerticalScrollIndicator={true}
                 >
                     <View className="bg-white">
-                        <View className="">
-                            <View className="flex flex-row justify-between items-center mb-[30px] mt-3 bg-[#eaf3fe] h-28 px-2 ">
-                                <View className="flex flex-col w-6/12">
-                                    <Text
-                                        selectable
-                                        className="text-2xl font-extrabold mb-3"
-                                    >
-                                        Transaction #{id}
-                                    </Text>
-                                    <View className="flex flex-row items-center">
-                                        <Link href={"../"} className="mr-4">
-                                            <Text>Dashboard</Text>
-                                        </Link>
-                                        <View className="mr-4">
-                                            <Icon
-                                                name="circle"
-                                                style={{ fontWeight: "100" }}
-                                                size={8}
-                                                color="grey"
-                                            />
-                                        </View>
-                                        <Link
-                                            href={"/rta-reconciliation"}
-                                            className="mr-4"
-                                        >
-                                            <Text>Transactions</Text>
-                                        </Link>
-                                    </View>
-                                </View>
-                                <View className="w-6/12 overflow-hidden h-full flex flex-row justify-center">
-                                    <ImageBackground
-                                        className=""
-                                        source={require("../../../assets/images/ChatBc.png")}
-                                        resizeMode="center"
-                                    ></ImageBackground>
-                                </View>
-                            </View>
-                        </View>
-                        <View>
-                            <View className="flex flex-row justify-between mx-5">
-                                <View></View>
+                        <View className="flex flex-col p-4 gap-4">
+                            <View className="flex flex-row items-center">
+                                <Pressable
+                                    className="mr-3"
+                                    onPress={() =>
+                                        console.log("This will go back ")
+                                    }
+                                >
+                                    <Icon
+                                        name="angle-left"
+                                        size={18}
+                                        color={"black"}
+                                    />
+                                </Pressable>
+                                <Text
+                                    selectable
+                                    className="text-base flex flex-row text-center font-bold"
+                                >
+                                    Transaction Details
+                                </Text>
                             </View>
                             <View
-                                className="flex flex-row p-2 mx-2 items-center rounded"
-                                style={
-                                    Platform.OS == "web"
-                                        ? BorderShadow
-                                        : BorderShadowPhone
-                                }
+                                className="flex flex-row justify-between rounded bg-white h-auto p-4"
+                                style={{ ...BreadcrumbShadow }}
                             >
-                                <View className="flex flex-row items-center p-2">
-                                    <View className="flex flex-col ">
-                                        <View className="flex flex-row rounded-full bg-[#e60202] mr-2 h-10 w-10 items-center justify-center">
-                                            <Text
-                                                selectable
-                                                className="text-white text-center"
-                                            >
-                                                {getInitials(data.account.name)}
-                                            </Text>
-                                        </View>
-                                    </View>
-                                    <View className="flex flex-col ml-1">
+                                <View className="flex flex-col gap-2 w-full">
+                                    <View
+                                        className={`flex flex-row items-center w-full justify-start`}
+                                    >
                                         <Text
                                             selectable
-                                            className="font-bold text-base"
+                                            className="text-lg font-bold text-start"
                                         >
-                                            {data.account.name}
+                                            Transaction ID: {data.id}
                                         </Text>
+                                    </View>
+                                    <View className="w-full flex flex-row items-start justify-between">
                                         <View className="flex flex-row items-center">
                                             <Text
+                                                className="text-bold font-medium text-gray-500 mr-2"
                                                 selectable
-                                                className=" text-xs"
                                             >
-                                                {data.account.clientId}
+                                                Client Name:
+                                            </Text>
+                                            <Text
+                                                selectable
+                                                className="font-medium text-start text-black"
+                                            >
+                                                {data?.account?.name}
+                                            </Text>
+                                        </View>
+                                        <View className="flex flex-row items-center">
+                                            <Text
+                                                className="text-bold font-medium text-gray-500 mr-2"
+                                                selectable
+                                            >
+                                                Client Code:
+                                            </Text>
+                                            <Text
+                                                selectable
+                                                className="font-medium text-start text-black"
+                                            >
+                                                {data?.account?.clientId}
+                                            </Text>
+                                        </View>
+                                        <View className="flex flex-row items-center">
+                                            <Text
+                                                className="text-bold font-medium text-gray-500 mr-2"
+                                                selectable
+                                            >
+                                                PAN:
+                                            </Text>
+                                            <Text
+                                                selectable
+                                                className="font-medium text-start text-black"
+                                            >
+                                                {
+                                                    data?.account?.user[0]
+                                                        ?.panNumber
+                                                }
                                             </Text>
                                         </View>
                                     </View>
-                                </View>
-                            </View>
+                                    <View
+                                        className="my-2"
+                                        style={{
+                                            borderColor: "#e4e4e4",
+                                            borderBottomWidth:
+                                                StyleSheet.hairlineWidth,
+                                        }}
+                                    />
 
-                            <View
-                                className="flex flex-col my-4 mx-2 items-center justify-between rounded"
-                                style={
-                                    Platform.OS == "web"
-                                        ? BorderShadow
-                                        : BorderShadowPhone
-                                }
-                            >
-                                <View className="flex flex-col w-full p-2">
-                                    <View className="flex flex-row items-center w-full flex-wrap ">
+                                    <View className="flex flex-row py-2 items-center w-full flex-wrap ">
                                         <View
                                             className={
                                                 "flex flex-row items-center justify-start w-8/12"
                                             }
                                         >
-                                            <Image
-                                                alt="fundHouse"
-                                                className="mr-2"
-                                                style={{
-                                                    width: 40,
-                                                    height: 40,
-                                                    objectFit: "contain",
-                                                }}
-                                                source={{
-                                                    uri: data.mutualfund
-                                                        .fundhouse.logoUrl,
-                                                }}
-                                            />
-                                            <View
-                                                className={
-                                                    "flex flex-col justify-end items-start"
-                                                }
-                                            >
-                                                <Text
-                                                    selectable
-                                                    className="text-black font-semibold break-all text-sm flex-wrap"
-                                                >
-                                                    {data.mutualfund.name}
-                                                </Text>
-
-                                                <View className="flex flex-row items-center flex-wrap">
-                                                    <Text
-                                                        selectable
-                                                        className=" text-blacktext-xs"
-                                                    >
-                                                        {
-                                                            data.mutualfund
-                                                                .fundhouse.name
-                                                        }
+                                            <View className="flex flex-row items-center gap-2">
+                                                <Image
+                                                    alt="fundHouse"
+                                                    className="mr-2"
+                                                    style={{
+                                                        width: 32,
+                                                        height: 32,
+                                                        objectFit: "contain",
+                                                    }}
+                                                    source={{
+                                                        uri: data.mutualfund
+                                                            .fundhouse.logoUrl,
+                                                    }}
+                                                />
+                                                <View>
+                                                    <Text className="text-normal">
+                                                        {data.mutualfund.name}
                                                     </Text>
-                                                    <View className="mx-2">
-                                                        <Icon
-                                                            name="circle"
-                                                            style={{
-                                                                fontWeight:
-                                                                    "100",
-                                                            }}
-                                                            size={8}
-                                                            color="grey"
-                                                        />
+                                                    <View className="flex flex-row items-center gap-2">
+                                                        <Text className="text-xs text-gray-400">
+                                                            {
+                                                                data.mutualfund
+                                                                    .fundhouse
+                                                                    .name
+                                                            }
+                                                        </Text>
                                                     </View>
-                                                    <Text
-                                                        selectable
-                                                        className="text-black text-xs"
-                                                    >
-                                                        {
-                                                            data.mutualfund
-                                                                .bseDematSchemeCode
-                                                        }
-                                                    </Text>
                                                 </View>
                                             </View>
                                         </View>
                                     </View>
-                                    <View className="flex flex-row items-center w-full flex-wrap mt-4 p-3">
-                                        {gridItems.map((item) => {
-                                            return (
-                                                <DataGrid
-                                                    key={item.key}
-                                                    title={item.title}
-                                                    value={item.value}
+                                    <View className="flex flex-row py-2 justify-between items-start w-full">
+                                        <View className="w-3/12 flex-flex-col gap-4 px-2">
+                                            <DataValue
+                                                key="amount"
+                                                title="Amount"
+                                                value={
+                                                    data?.amount
+                                                        ? `${RupeeSymbol}${data?.amount}`
+                                                        : null
+                                                }
+                                            />
+                                            <DataValue
+                                                key="paymentDate"
+                                                title="Payment Date"
+                                                value={data?.paymentDate}
+                                            />
+                                            <DataValue
+                                                key="rta"
+                                                title="RTA"
+                                                value={`${data?.mutualfund?.fundhouse?.rta?.name.toUpperCase()}`}
+                                            />
+                                            <DataValue
+                                                key="status"
+                                                title="Status"
+                                                value={`${data?.transactionStatus?.name}`}
+                                            />
+                                        </View>
+                                        <View className="w-3/12 flex-flex-col gap-4 px-2">
+                                            <DataValue
+                                                key="allotedInvestment"
+                                                title="Alloted Investment"
+                                                value={
+                                                    data?.allotedAmount
+                                                        ? `${RupeeSymbol}${data?.allotedAmount}`
+                                                        : null
+                                                }
+                                            />
+                                            <DataValue
+                                                key="settlementInvestment"
+                                                title="Settlement Investment"
+                                                value={`-`}
+                                            />
+                                            <DataValue
+                                                key="orderNumber"
+                                                title="Order Number"
+                                                value={
+                                                    data?.orderReferenceNumber
+                                                }
+                                            />
+                                            <DataValue
+                                                key="type"
+                                                title="Type"
+                                                value={
+                                                    data?.transactionType?.name
+                                                }
+                                            />
+                                        </View>
+                                        <View className="w-3/12 flex-flex-col gap-4 px-2">
+                                            <DataValue
+                                                key="optionType"
+                                                title="Option Type"
+                                                value={
+                                                    data?.mutualfund?.optionType
+                                                        ?.name
+                                                }
+                                            />
+                                            <DataValue
+                                                key="units"
+                                                title="Units"
+                                                value={data?.units}
+                                            />
+                                            <DataValue
+                                                key="folioNo"
+                                                title="Folio Number"
+                                                value={"-"}
+                                            />
+                                            <DataValue
+                                                key="stampDuty"
+                                                title="Stamp Duty"
+                                                value={
+                                                    data?.stampDuty
+                                                        ? `${RupeeSymbol}${data?.stampDuty}`
+                                                        : null
+                                                }
+                                            />
+                                        </View>
+                                        <View className="w-3/12 flex-flex-col gap-4 px-2">
+                                            <DataValue
+                                                key="dividendType"
+                                                title="Dividend Type"
+                                                value={
+                                                    data?.mutualfund
+                                                        ?.dividendType?.name
+                                                }
+                                            />
+                                            <DataValue
+                                                key="nav"
+                                                title="NAV"
+                                                value={data?.nav}
+                                            />
+                                            <DataValue
+                                                key="orderType"
+                                                title="Order Type"
+                                                value={
+                                                    data?.transactionType?.name
+                                                }
+                                            />
+                                            <DataValue
+                                                key="stt"
+                                                title="STT"
+                                                value={data?.stt}
+                                            />
+                                        </View>
+                                    </View>
+                                </View>
+                            </View>
+                            <View
+                                className="flex flex-row justify-between rounded bg-white h-auto p-4"
+                                style={{ ...BreadcrumbShadow }}
+                            >
+                                <View className="flex flex-col gap-2 w-full">
+                                    <View
+                                        className={`flex flex-row items-center w-full justify-start`}
+                                    >
+                                        <Text
+                                            selectable
+                                            className="text-lg font-bold text-start"
+                                        >
+                                            Payment Details
+                                        </Text>
+                                    </View>
+                                    <View className="w-full flex flex-row items-start justify-between mb-2">
+                                        <View className="flex flex-row items-center">
+                                            <Text
+                                                className="text-bold font-medium text-gray-500 mr-2"
+                                                selectable
+                                            >
+                                                Payment Gateway:
+                                            </Text>
+                                            <Text
+                                                selectable
+                                                className="font-medium text-start text-black"
+                                            >
+                                                Razorpay
+                                            </Text>
+                                        </View>
+                                        <View className="flex flex-row items-center">
+                                            <Text
+                                                className="text-bold font-medium text-gray-500 mr-2"
+                                                selectable
+                                            >
+                                                Payment Mode:
+                                            </Text>
+                                            <Text
+                                                selectable
+                                                className="font-medium text-start text-black"
+                                            >
+                                                UPI
+                                            </Text>
+                                        </View>
+                                        <View className="flex flex-row items-center">
+                                            <Text
+                                                className="text-bold font-medium text-gray-500 mr-2"
+                                                selectable
+                                            >
+                                                Payment Reference Number:
+                                            </Text>
+                                            <Text
+                                                selectable
+                                                className="font-medium text-start text-black"
+                                            >
+                                                987HDSCD67
+                                            </Text>
+                                        </View>
+                                    </View>
+                                    <View
+                                        className="my-2"
+                                        style={{
+                                            borderColor: "#e4e4e4",
+                                            borderBottomWidth:
+                                                StyleSheet.hairlineWidth,
+                                        }}
+                                    />
+
+                                    <View className="flex flex-row py-2 items-center w-full flex-wrap">
+                                        <View
+                                            className={`flex flex-row items-center w-full justify-start`}
+                                        >
+                                            <Text
+                                                selectable
+                                                className="text-lg font-bold text-start"
+                                            >
+                                                Bank Details
+                                            </Text>
+                                        </View>
+                                        <View
+                                            className={
+                                                "w-full flex flex-row items-center justify-between"
+                                            }
+                                        >
+                                            <View className="w-1/3 flex flex-row items-center gap-2">
+                                                <Image
+                                                    alt="fundHouse"
+                                                    className="mr-2"
+                                                    style={{
+                                                        width: 32,
+                                                        height: 32,
+                                                        objectFit: "contain",
+                                                    }}
+                                                    source={{
+                                                        uri: data.mutualfund
+                                                            .fundhouse.logoUrl,
+                                                    }}
                                                 />
-                                            );
-                                        })}
+                                                <View>
+                                                    <Text className="text-normal">
+                                                        Axis Bank
+                                                    </Text>
+                                                    <View className="flex flex-row items-center gap-2">
+                                                        <Text className="text-xs text-gray-400">
+                                                            xxxx xxxx 6789
+                                                        </Text>
+                                                    </View>
+                                                </View>
+                                            </View>
+                                            <View className="w-1/3 flex flex-col items-center">
+                                                <View className="w-full">
+                                                    <DataValue
+                                                        key="branchName"
+                                                        title="Branch Name"
+                                                        value="Mahatma Gandhi Road, Bengaluru"
+                                                    />
+                                                    <DataValue
+                                                        key="ifscCode"
+                                                        title="IFSC Code"
+                                                        value="KMB0003838"
+                                                    />
+                                                </View>
+                                            </View>
+                                            <View className="w-1/3 flex flex-col items-center">
+                                                <View className="w-1/2">
+                                                    <DataValue
+                                                        key="accountType"
+                                                        title="Account Type"
+                                                        value="Savings"
+                                                    />
+                                                    <DataValue
+                                                        key="autopay"
+                                                        title="Autopay"
+                                                        value="Enabled"
+                                                    />
+                                                </View>
+                                            </View>
+                                        </View>
                                     </View>
                                 </View>
                             </View>

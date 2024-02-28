@@ -13,6 +13,14 @@ interface MutualFund {
     id: string;
     name: string;
     fundhouse: FundHouse;
+    optionType: {
+        id: string;
+        name: string;
+    };
+    dividendType: {
+        id: string;
+        name: string;
+    };
 }
 
 interface TransactionInfo {
