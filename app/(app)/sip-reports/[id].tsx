@@ -44,6 +44,8 @@ import DataGrid from "../../../src/components/DataGrid/DataGrid";
 import HorizontalStackedBarChart from "../../../src/components/Chart/HorizontalBarChart";
 import Accordion from "../../../src/components/Accordion/Accordion";
 import DataTable from "../../../src/components/DataTable/DataTable";
+import DataText from "../../../src/components/DataValue/DataText";
+import { dateFormat } from "../../../src/helper/DateUtils";
 
 const DataValue = ({ title, value }) => {
     return (
@@ -89,30 +91,6 @@ export default function SIPReportsDetail() {
         }
     }, [id]);
 
-    const getInitials = (name: string) => {
-        const words = name.split(" ");
-        if (words.length >= 2) {
-            const firstWord = words[0];
-            const secondWord = words[1];
-            return `${firstWord[0]}${secondWord[0]}`;
-        } else if (words.length === 1) {
-            return words[0][0];
-        } else {
-            return "";
-        }
-    };
-
-    const getColorCode = (status: string) => {
-        let color = "#ece09d";
-        if (status == "Cancelled" || status == "Failed") {
-            color = "#ffd5d5";
-        } else if (status == "Success") {
-            color = "#afc9a2";
-        }
-
-        return color;
-    };
-
     return (
         <>
             {isLoading ? (
@@ -156,7 +134,7 @@ export default function SIPReportsDetail() {
                                     selectable
                                     className="text-base flex flex-row text-center font-bold"
                                 >
-                                    Clients Details
+                                    SIP Details
                                 </Text>
                             </View>
                             <View
@@ -174,24 +152,49 @@ export default function SIPReportsDetail() {
 
                                     </View>
                                     <View className="flex flex-row justify-between items-start w-full">
-                                        <View className="w-4/12 flex flex-row gap-2">
-                                            <DataValue
-                                                key="clientName"
-                                                title="Client Name"
-                                                value={data?.account?.name}
-                                            />
-                                            <DataValue
-                                                key="clientCode"
-                                                title="Client Code"
-                                                value={data?.sipReferenceNumber}
-                                            />
-                                            <DataValue
-                                                key="pan"
-                                                title="PAN"
-                                                value={
-                                                    data?.sipReferenceNumber
-                                                }
-                                            />
+                                    <View className="w-11/12 flex flex-row items-start justify-between">
+                                            <View className="flex flex-row items-center">
+                                                <Text
+                                                    className="text-bold font-medium text-gray-500 mr-2"
+                                                    selectable
+                                                >
+                                                    Client Name:
+                                                </Text>
+                                                <Text
+                                                    selectable
+                                                    className="font-medium text-start text-black"
+                                                >
+                                                    {data?.account?.name}
+                                                </Text>
+                                            </View>
+                                            <View className="flex flex-row items-center">
+                                                <Text
+                                                    className="text-bold font-medium text-gray-500 mr-2"
+                                                    selectable
+                                                >
+                                                    Client Code:
+                                                </Text>
+                                                <Text
+                                                    selectable
+                                                    className="font-medium text-start text-black"
+                                                >
+                                                    {data?.account?.clientId}
+                                                </Text>
+                                            </View>
+                                            <View className="flex flex-row items-center">
+                                                <Text
+                                                    className="text-bold font-medium text-gray-500 mr-2"
+                                                    selectable
+                                                >
+                                                    PAN:
+                                                </Text>
+                                                <Text
+                                                    selectable
+                                                    className="font-medium text-start text-black"
+                                                >
+                                                    CVBBGF9
+                                                </Text>
+                                            </View>
                                         </View>
                                     </View>
                                     <View
@@ -346,7 +349,7 @@ export default function SIPReportsDetail() {
                                     className="w-[60%] h-full rounded"
                                     style={{ ...BreadcrumbShadow }}
                                 >
-                                    <MutualFundCard data={data} />
+                                    <TransactionList data={data} />
                                 </View>
                                 <View
                                     className="w-[39%] h-128 rounded"
@@ -373,7 +376,7 @@ const AccountDetailsCard = ({ data }: { data: SIPReportDetail }) => {
 
     const accordionData = [
         {
-            title: "Kotak Bank",
+            title: "{data?.mandate?.bankAccount}",
             subcontent: (
                 <View className="flex flex-row items-center gap-2">
                     <Text className="text-xs text-gray-400">
@@ -525,166 +528,36 @@ const AccountDetailsCard = ({ data }: { data: SIPReportDetail }) => {
     );
 };
 
-//         {
-//             key: "amounts",
-//             content: (
-//                 <View className="flex flex-row items-center gap-2">
-//                     <View>
-//                         <Text className="text-xs">
-//                             {dataItem?.amount ? (RupeeSymbol + dataItem?.amount) : "-"}
-//                         </Text>
-//                     </View>
-//                 </View>
-//             ),
-//         },
-//         {
-//             key: "units",
-//             content: (
-//                 <View className="flex flex-row items-center gap-2">
-//                     <View>
-//                         <Text className="text-xs">
-//                             {dataItem?.units ? (RupeeSymbol + dataItem?.units) : "-"}
-//                         </Text>
-//                     </View>
-//                 </View>
-//             ),
-//         },
-//         {
-//             key: "nav",
-//             content: (
-//                 <View className="flex flex-row items-center gap-2">
-//                     <View>
-//                         <Text className="text-xs">
-//                             {dataItem?.nav ? (RupeeSymbol + dataItem?.nav) : "-"}
-//                         </Text>
-//                     </View>
-//                 </View>
-//             ),
-//         },
-//         {
-//             key: "date",
-//             content: (
-//                 <View className="flex flex-row items-center gap-2">
-//                     <View>
-//                         <Text className="text-xs">
-//                             {dataItem?.date ? dataItem?.date : "-"}
-//                         </Text>
-//                     </View>
-//                 </View>
-//             ),f
-//         },
-//         {
-//             key: "dates",
-//             content: (
-//                 <View className="flex flex-row items-center gap-2">
-//                     <View>
-//                         <Text className="text-xs">
-//                             {dataItem?.dates ? dataItem?.dates : "-"}
-//                         </Text>
-//                     </View>
-//                 </View>
-//             ),
-//         },
-//     ];
-// });
+const TransactionList = ({ data }: { data: SIPReportDetail }) => {
 
-
-// const MutualFundCard = ({ data }: { data: SIPReportDetail }) => {
-//     // Check if data is an array before mapping over it
-//     const transactionRows = Array.isArray(data)
-//         ? data.map((dataItem) => {
-//             return [
-//                 {
-//                     key: "amounts",
-//                     content: (
-//                         <View className="flex flex-row items-center gap-2">
-//                             <View>
-//                                 <Text className="text-xs">
-//                                     {dataItem?.amount ? (RupeeSymbol + dataItem?.amount) : "-"}
-//                                 </Text>
-//                             </View>
-//                         </View>
-//                     ),
-//                 },
-//                 {
-//                     key: "units",
-//                     content: (
-//                         <View className="flex flex-row items-center gap-2">
-//                             <View>
-//                                 <Text className="text-xs">
-//                                     {dataItem?.units ? (RupeeSymbol + dataItem?.units) : "-"}
-//                                 </Text>
-//                             </View>
-//                         </View>
-//                     ),
-//                 },
-//                 {
-//                     key: "nav",
-//                     content: (
-//                         <View className="flex flex-row items-center gap-2">
-//                             <View>
-//                                 <Text className="text-xs">
-//                                     {dataItem?.nav ? (RupeeSymbol + dataItem?.nav) : "-"}
-//                                 </Text>
-//                             </View>
-//                         </View>
-//                     ),
-//                 },
-//                 {
-//                     key: "date",
-//                     content: (
-//                         <View className="flex flex-row items-center gap-2">
-//                             <View>
-//                                 <Text className="text-xs">
-//                                     {dataItem?.date ? dataItem?.date : "-"}
-//                                 </Text>
-//                             </View>
-//                         </View>
-//                     ),
-//                 },
-//                 {
-//                     key: "dates",
-//                     content: (
-//                         <View className="flex flex-row items-center gap-2">
-//                             <View>
-//                                 <Text className="text-xs">
-//                                     {dataItem?.dates ? dataItem?.dates : "-"}
-//                                 </Text>
-//                             </View>
-//                         </View>
-//                     ),
-//                 },
-//             ];
-//         })
-//         : []; // If data is not an array, set transactionRows to an empty array
-
-//     return (
-//         <View className="flex-1 bg-white rounded shadow h-full overflow-auto p-2">
-//             <View className={`flex flex-row items-center w-full justify-start`}>
-//                 <Text selectable className="text-lg font-bold text-start">
-//                     Transaction
-//                 </Text>
-//             </View>
-//             <View
-//                 className="my-2"
-//                 style={{
-//                     borderColor: "#e4e4e4",
-//                     borderBottomWidth: StyleSheet.hairlineWidth,
-//                 }}
-//             />
-//             <DataTable
-//                 key="transactions"
-//                 headers={["Amount", "Units", "Date", "NAV", "Status"]}
-//                 cellSize={[1, 1, 2, 1, 1]}
-//                 rows={transactionRows}
-//             />
-//         </View>
-//     );
-// };
-
-const MutualFundCard = ({ data }: { data: SIPReportDetail }) => {
-
-
+    const transactionData = data?.transactions?.map((item) => {
+        return [
+            {
+                key: "amount",
+                content: (
+                    <View className="flex flex-row justify-center ">
+                        <DataText value={RupeeSymbol + item?.amount} />
+                    </View>
+                ),
+            },
+            {
+                key: "units",
+                content: <DataText value={item?.units} />,
+            },
+            {
+                key: "createdDate",
+                content: <DataText value={dateFormat(item?.createdAt)} />,
+            },
+            {
+                key: "nav",
+                content: <DataText value={item?.nav ? RupeeSymbol + item?.nav : "-"} />,
+            },
+            {
+                key: "status",
+                content: <DataText value={item?.transactionStatus?.name} />,
+            },
+        ];
+    });
 
     return (
         <View className="flex-1 bg-white rounded shadow h-full overflow-auto p-2">
@@ -702,135 +575,77 @@ const MutualFundCard = ({ data }: { data: SIPReportDetail }) => {
             />
             <DataTable
                 key="transactions"
-                headers={["Amount", "Units", "Date", "NAV", "Status"]}
+                headers={["Amount", "Units", "Created Date", "NAV", "Status"]}
                 cellSize={[1, 1, 2, 1, 1]}
-                rows={[
-                    [
-                        {
-                            key: "amounts",
-                            content: (
-                                <View className="flex flex-row items-center gap-2">
-                                    <View>
-                                        <Text className="text-xs">
-                                            {data?.amount ? (RupeeSymbol + data?.amount) : "-"}
-                                        </Text>
-                                    </View>
-                                </View>
-                            ),
-                        },
-                        {
-                            key: "units",
-                            content: (
-                                <View className="flex flex-row items-center gap-2">
+                // rows={[
+                //     [
+                //         {
+                //             key: "amounts",
+                //             content: (
+                //                 <View className="flex flex-row items-center gap-2">
+                //                     <View>
+                //                         <Text className="text-xs">
+                //                             {data?.amount ? (RupeeSymbol + data?.amount) : "-"}
+                //                         </Text>
+                //                     </View>
+                //                 </View>
+                //             ),
+                //         },
+                //         {
+                //             key: "units",
+                //             content: (
+                //                 <View className="flex flex-row items-center gap-2">
 
-                                    <View>
-                                        <Text className="text-xs">
-                                            {data?.units ? (RupeeSymbol + data?.units) : "2"}
-                                        </Text>
-                                    </View>
-                                </View>
-                            ),
-                        },
+                //                     <View>
+                //                         <Text className="text-xs">
+                //                             {data?.units ? (RupeeSymbol + data?.units) : "2"}
+                //                         </Text>
+                //                     </View>
+                //                 </View>
+                //             ),
+                //         },
 
-                        {
-                            key: "date",
-                            content: (
-                                <View className="flex flex-row items-center gap-2">
-                                    <View>
-                                        <Text className="text-xs">
-                                            {data?.units ? (RupeeSymbol + data?.units) : "20/11/2024"}
-                                        </Text>
-                                    </View>
-                                </View>
-                            ),
-                        },
-                        {
-                            key: "nav",
-                            content: (
-                                <View className="flex flex-row items-center gap-2">
-                                    <View>
-                                        <Text className="text-xs">
-                                            {data?.units ? (RupeeSymbol + data?.units) : "350"}
-                                        </Text>
-                                    </View>
-                                </View>
-                            ),
-                        },
-                        {
-                            key: "status",
-                            content: (
-                                <View className="flex flex-row items-center gap-2">
-                                    <View>
-                                        <Text className="text-xs">
-                                            {data?.units ? (RupeeSymbol + data?.units) : "placed"}
-                                        </Text>
-                                    </View>
-                                </View>
-                            ),
-                        },
-                    ],
+                //         {
+                //             key: "date",
+                //             content: (
+                //                 <View className="flex flex-row items-center gap-2">
+                //                     <View>
+                //                         <Text className="text-xs">
+                //                             {data?.units ? (RupeeSymbol + data?.units) : "20/11/2024"}
+                //                         </Text>
+                //                     </View>
+                //                 </View>
+                //             ),
+                //         },
+                //         {
+                //             key: "nav",
+                //             content: (
+                //                 <View className="flex flex-row items-center gap-2">
+                //                     <View>
+                //                         <Text className="text-xs">
+                //                             {data?.units ? (RupeeSymbol + data?.units) : "350"}
+                //                         </Text>
+                //                     </View>
+                //                 </View>
+                //             ),
+                //         },
+                //         {
+                //             key: "status",
+                //             content: (
+                //                 <View className="flex flex-row items-center gap-2">
+                //                     <View>
+                //                         <Text className="text-xs">
+                //                             {data?.units ? (RupeeSymbol + data?.units) : "placed"}
+                //                         </Text>
+                //                     </View>
+                //                 </View>
+                //             ),
+                //         },
+                //     ],
 
-                ]}
-            />
-        </View>
-    );
-};
+                // ]}
 
-
-const TopAMCCard = ({ data }) => {
-    return (
-        <View className="flex-1 bg-white rounded shadow h-full overflow-auto p-2">
-            <DataTable
-                key="topAMCs"
-                headers={["Top AMCs"]}
-                cellSize={[12]}
-                rows={[
-                    [
-                        {
-                            key: "name",
-                            content: (
-                                <View className="flex flex-row items-center gap-2">
-                                    <View className="w-8 h-8 rounded bg-gray-500" />
-                                    <View>
-                                        <Text className="text-xs">
-                                            Kotak Bank Mutual Fund
-                                        </Text>
-                                    </View>
-                                </View>
-                            ),
-                        },
-                    ],
-                    [
-                        {
-                            key: "name",
-                            content: (
-                                <View className="flex flex-row items-center gap-2">
-                                    <View className="w-8 h-8 rounded bg-gray-500" />
-                                    <View>
-                                        <Text className="text-xs">
-                                            Kotak Bank Mutual Fund
-                                        </Text>
-                                    </View>
-                                </View>
-                            ),
-                        },
-                    ],
-                    [
-                        {
-                            key: "name",
-                            content: (
-                                <View className="flex flex-row items-center gap-2">
-                                    <View className="w-8 h-8 rounded bg-gray-500" />
-                                    <View>
-                                        <Text className="text-xs">
-                                            Kotak Bank Mutual Fund
-                                        </Text>
-                                    </View>
-                                </View>
-                            ),
-                        },
-                    ],
-                ]}
+                rows={transactionData}
             />
         </View>
     );

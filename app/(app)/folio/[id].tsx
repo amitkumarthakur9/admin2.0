@@ -39,26 +39,9 @@ import {
 import { useWindowDimensions } from "react-native";
 import DataTable from "../../../src/components/DataTable/DataTable";
 import { BreadcrumbShadow } from "../../../src/components/Styles/Shadow";
-
-const DataValue = ({ title, value }) => {
-    return (
-        <View className="w-full flex flex-row justify-between items-center p-2">
-            <View className="w-1/2 flex ">
-                <Text className="text-bold font-mediumk text-gray-500" selectable>
-                    {title ? title : "-"}
-                </Text>
-            </View>
-            <View className="w-1/2 flex">
-                <Text
-                    selectable
-                    className="font-medium text-start text-blac"
-                >
-                    {value ? value : "-"}
-                </Text>
-            </View>
-        </View>
-    );
-};
+import DataValue from "../../../src/components/DataValue/DataValue";
+import DataText from "../../../src/components/DataValue/DataText";
+import { dateFormat } from "../../../src/helper/DateUtils";
 
 export default function AUMDetail() {
     const { id } = useLocalSearchParams();
@@ -81,30 +64,6 @@ export default function AUMDetail() {
             getOrderDetails();
         }
     }, [id]);
-
-    const getInitials = (name: string) => {
-        const words = name.split(" ");
-        if (words.length >= 2) {
-            const firstWord = words[0];
-            const secondWord = words[1];
-            return `${firstWord[0]}${secondWord[0]}`;
-        } else if (words.length === 1) {
-            return words[0][0];
-        } else {
-            return "";
-        }
-    };
-
-    const getColorCode = (status: string) => {
-        let color = "#ece09d";
-        if (status == "Cancelled" || status == "Failed") {
-            color = "#ffd5d5";
-        } else if (status == "Success") {
-            color = "#afc9a2";
-        }
-
-        return color;
-    };
 
     return (
         <>
@@ -131,7 +90,6 @@ export default function AUMDetail() {
                     showsVerticalScrollIndicator={true}
                 >
                     <View className="bg-white">
-
                         <View className="flex flex-col p-4 gap-4">
                             <View className="flex flex-row items-center">
                                 <Pressable
@@ -158,39 +116,71 @@ export default function AUMDetail() {
                                 style={{ ...BreadcrumbShadow }}
                             >
                                 <View className="flex flex-col gap-2 w-full">
-
                                     <View
                                         className={`flex flex-row items-center w-full justify-start`}
                                     >
-                                        <Text selectable className="text-lg font-bold text-start">
+                                        <Text
+                                            selectable
+                                            className="text-lg font-bold text-start"
+                                        >
                                             Folio Number: {data.folioNumber}
                                         </Text>
-
                                     </View>
                                     <View className="flex flex-row justify-between items-start w-full">
-                                        <View className="w-4/12 flex flex-row gap-2">
-                                            <DataValue
-                                                key="clientName"
-                                                title="Client Name"
-                                                value={data?.account?.name}
-                                            />
-                                            <DataValue
-                                                key="clientCode"
-                                                title="Client Code"
-                                                value={data?.account?.clientId}
-                                            />
-                                            <DataValue
-                                                key="pan"
-                                                title="PAN"
-                                                value={data.account.user.panNumber}
-                                            />
+                                        <View className="w-11/12 flex flex-row items-start justify-between">
+                                            <View className="flex flex-row items-center">
+                                                <Text
+                                                    className="text-bold font-medium text-gray-500 mr-2"
+                                                    selectable
+                                                >
+                                                    Client Name:
+                                                </Text>
+                                                <Text
+                                                    selectable
+                                                    className="font-medium text-start text-black"
+                                                >
+                                                    {data?.account?.name}
+                                                </Text>
+                                            </View>
+                                            <View className="flex flex-row items-center">
+                                                <Text
+                                                    className="text-bold font-medium text-gray-500 mr-2"
+                                                    selectable
+                                                >
+                                                    Client Code:
+                                                </Text>
+                                                <Text
+                                                    selectable
+                                                    className="font-medium text-start text-black"
+                                                >
+                                                    {data?.account?.clientId}
+                                                </Text>
+                                            </View>
+                                            <View className="flex flex-row items-center">
+                                                <Text
+                                                    className="text-bold font-medium text-gray-500 mr-2"
+                                                    selectable
+                                                >
+                                                    PAN:
+                                                </Text>
+                                                <Text
+                                                    selectable
+                                                    className="font-medium text-start text-black"
+                                                >
+                                                    {
+                                                        data?.account?.user
+                                                            ?.panNumber
+                                                    }
+                                                </Text>
+                                            </View>
                                         </View>
                                     </View>
                                     <View
                                         className="my-2"
                                         style={{
                                             borderColor: "#e4e4e4",
-                                            borderBottomWidth: StyleSheet.hairlineWidth,
+                                            borderBottomWidth:
+                                                StyleSheet.hairlineWidth,
                                         }}
                                     />
                                     <View className="flex flex-row py-2 items-center w-full flex-wrap ">
@@ -264,47 +254,51 @@ export default function AUMDetail() {
                                             <DataValue
                                                 key="optionType"
                                                 title="Option Type"
-                                                value="Monthly"
+                                                value={data?.mutualfund?.optionType?.name}
                                             />
                                             <DataValue
                                                 key="currentValue"
                                                 title="Current Value"
-                                                value={data.currentValue
-                                                    ? RupeeSymbol +
+                                                value={
                                                     data.currentValue
-                                                    : "-"}
+                                                        ? RupeeSymbol +
+                                                          data.currentValue
+                                                        : "-"
+                                                }
                                             />
                                             <DataValue
                                                 key="createdDate"
                                                 title="Created Date"
-                                                value="23/03/23"
+                                                value={dateFormat("")}
                                             />
                                         </View>
                                         <View className="w-4/12 flex-flex-col gap-4 px-2">
                                             <DataValue
                                                 key="dividendType"
                                                 title="Dividend Type"
-                                                value="Reinvest"
+                                                value={data?.mutualfund?.dividendType?.name}
                                             />
                                             <DataValue
                                                 key="investedValue"
                                                 title="Invested Value"
-                                                value={data.investedValue
-                                                    ? RupeeSymbol +
+                                                value={
                                                     data.investedValue
-                                                    : "-"}
+                                                        ? RupeeSymbol +
+                                                          data.investedValue
+                                                        : "-"
+                                                }
                                             />
                                             <DataValue
                                                 key="xirr"
                                                 title="XIRR"
-                                                value="25%"
+                                                value={data?.xirr}
                                             />
                                         </View>
                                         <View className="w-4/12 flex-flex-col gap-4 px-2">
                                             <DataValue
                                                 key="rta"
                                                 title="RTA"
-                                                value="CAMS"
+                                                value={data?.mutualfund?.fundhouse?.rta?.name}
                                             />
                                             <DataValue
                                                 key="returns"
@@ -333,6 +327,34 @@ export default function AUMDetail() {
 
 const TransactionsList = ({ data }: { data: AUMDetailInterface }) => {
 
+    const transactionData = data?.transactions?.map((item) => {
+        return [
+            {
+                key: "amount",
+                content: (
+                    <View className="flex flex-row justify-center ">
+                        <DataText value={RupeeSymbol + item?.amount} />
+                    </View>
+                ),
+            },
+            {
+                key: "units",
+                content: <DataText value={item?.units} />,
+            },
+            {
+                key: "paymentDate",
+                content: <DataText value={dateFormat(item?.paymentDate)} />,
+            },
+            {
+                key: "nav",
+                content: <DataText value={item?.nav ? RupeeSymbol + item?.nav : "-"} />,
+            },
+            {
+                key: "status",
+                content: <DataText value={item?.transactionStatus?.name} />,
+            },
+        ];
+    });
 
 
     return (
@@ -351,76 +373,9 @@ const TransactionsList = ({ data }: { data: AUMDetailInterface }) => {
             />
             <DataTable
                 key="siplist"
-                headers={["Amount", "Units", "Date", "NAV", "Status"]}
-                cellSize={[1, 1, 1, 1, 1,]}
-                rows={[
-                    [
-                        {
-                            key: "amount",
-                            content: (
-                                <View className="flex flex-row items-center gap-2">
-                                    <View>
-                                        <Text className="text-xs">
-                                            {RupeeSymbol + "7388"}
-                                        </Text>
-                                    </View>
-                                </View>
-                            ),
-                        },
-                        {
-                            key: "units",
-                            content: (
-                                <View className="flex flex-row items-center gap-2">
-
-                                    <View>
-                                        <Text className="text-xs">
-                                            {/* {data?.amount ? (RupeeSymbol + data?.amount) : "2"} */}
-                                            01
-                                        </Text>
-                                    </View>
-                                </View>
-                            ),
-                        },
-
-                        {
-                            key: "date",
-                            content: (
-                                <View className="flex flex-row items-center gap-2">
-                                    <View>
-                                        <Text className="text-xs">
-                                            23/09/2023
-                                        </Text>
-                                    </View>
-                                </View>
-                            ),
-                        },
-                        {
-                            key: "nav",
-                            content: (
-                                <View className="flex flex-row items-center gap-2">
-                                    <View>
-                                        <Text className="text-xs">
-                                            {RupeeSymbol + "7388"}
-                                        </Text>
-                                    </View>
-                                </View>
-                            ),
-                        },
-                        {
-                            key: "status",
-                            content: (
-                                <View className="flex flex-row items-center gap-2">
-                                    <View>
-                                        <Text className="text-xs">
-                                            Active
-                                        </Text>
-                                    </View>
-                                </View>
-                            ),
-                        },
-                    ],
-
-                ]}
+                headers={["Amount", "Units", "Payment Date", "NAV", "Status"]}
+                cellSize={[1, 1, 1, 1, 1]}
+                rows={transactionData}
             />
         </View>
     );

@@ -65,6 +65,7 @@ export interface MandateDetailInterface {
     bankAccount: BankAccount;
     mandateStatus: MandateStatus;
     account: Account;
+    createdAt: string;
 }
 
 export interface MandateDetailInterfaceResponse {

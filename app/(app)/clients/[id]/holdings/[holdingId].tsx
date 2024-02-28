@@ -1,15 +1,7 @@
-import { Link, useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { Center, HStack, Heading, Spinner } from "native-base";
 import { useEffect, useState } from "react";
-import {
-    View,
-    Text,
-    ScrollView,
-    ImageBackground,
-    Platform,
-    Pressable,
-    StyleSheet,
-} from "react-native";
+import { View, Text, ScrollView, Pressable, StyleSheet } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import {
     ClientDetailItem,
@@ -26,33 +18,13 @@ import {
 import { RupeeSymbol, getInitials } from "../../../../../src/helper/helper";
 import CardWithTabs from "../../../../../src/components/Card/CardWithTabs";
 import DataTable from "../../../../../src/components/DataTable/DataTable";
-
-
-const DataValue = ({ title, value }) => {
-    return (
-        <View className="w-full flex flex-row justify-between items-center p-2">
-            <View className="w-1/2 flex ">
-                <Text className="text-bold font-medium text-gray-500" selectable>
-                    {title ? title : "-"}
-                </Text>
-            </View>
-            <View className="w-1/2 flex">
-                <Text
-                    selectable
-                    className="font-medium text-start text-black"
-                >
-                    {value ? value : "-"}
-                </Text>
-            </View>
-        </View>
-    );
-};
+import DataValue from "../../../../../src/components/DataValue/DataValue";
+import DataText from "../../../../../src/components/DataValue/DataText";
+import { dateFormat } from "../../../../../src/helper/DateUtils";
 
 export default function HoldingDetail() {
     const [isLoading, setIsLoading] = useState(true);
-
     const { id, holdingId } = useLocalSearchParams();
-    console.log({ id, holdingId });
     const [data, setData] = useState<ClientDetailItem>();
 
     useEffect(() => {
@@ -97,9 +69,6 @@ export default function HoldingDetail() {
                     showsVerticalScrollIndicator={true}
                 >
                     <View className="bg-white">
-
-
-
                         <View className="flex flex-col p-4 gap-4">
                             <View className="flex flex-row items-center">
                                 <Pressable
@@ -127,29 +96,57 @@ export default function HoldingDetail() {
                             >
                                 <View className="flex flex-col gap-2 w-full">
                                     <View className="flex flex-row justify-between items-start w-full">
-                                        <View className="w-4/12 flex flex-row gap-2">
-                                            <DataValue
-                                                key="clientName"
-                                                title="Client Name"
-                                                value={data?.name}
-                                            />
-                                            <DataValue
-                                                key="clientCode"
-                                                title="Client Code"
-                                                value={data?.clientId}
-                                            />
-                                            <DataValue
-                                                key="pan"
-                                                title="PAN"
-                                                value="CVBB56"
-                                            />
+                                        <View className="w-11/12 flex flex-row items-start justify-between">
+                                            <View className="flex flex-row items-center">
+                                                <Text
+                                                    className="text-bold font-medium text-gray-500 mr-2"
+                                                    selectable
+                                                >
+                                                    Client Name:
+                                                </Text>
+                                                <Text
+                                                    selectable
+                                                    className="font-medium text-start text-black"
+                                                >
+                                                    {data?.name}
+                                                </Text>
+                                            </View>
+                                            <View className="flex flex-row items-center">
+                                                <Text
+                                                    className="text-bold font-medium text-gray-500 mr-2"
+                                                    selectable
+                                                >
+                                                    Client Code:
+                                                </Text>
+                                                <Text
+                                                    selectable
+                                                    className="font-medium text-start text-black"
+                                                >
+                                                    {data?.clientId}
+                                                </Text>
+                                            </View>
+                                            <View className="flex flex-row items-center">
+                                                <Text
+                                                    className="text-bold font-medium text-gray-500 mr-2"
+                                                    selectable
+                                                >
+                                                    PAN:
+                                                </Text>
+                                                <Text
+                                                    selectable
+                                                    className="font-medium text-start text-black"
+                                                >
+                                                    {data?.users[0]?.panNumber}
+                                                </Text>
+                                            </View>
                                         </View>
                                     </View>
                                     <View
                                         className="my-2"
                                         style={{
                                             borderColor: "#e4e4e4",
-                                            borderBottomWidth: StyleSheet.hairlineWidth,
+                                            borderBottomWidth:
+                                                StyleSheet.hairlineWidth,
                                         }}
                                     />
                                     <View className="flex flex-row py-2 items-center w-full flex-wrap ">
@@ -240,12 +237,13 @@ export default function HoldingDetail() {
                                                 key="xirr"
                                                 title="XIRR:"
                                                 value="25%"
-
                                             />
                                             <DataValue
                                                 key="investedAmount"
                                                 title="Invested Amount:"
-                                                value={RupeeSymbol + "250,000,000"}
+                                                value={
+                                                    RupeeSymbol + "250,000,000"
+                                                }
                                             />
                                         </View>
                                         <View className="w-4/12 flex-flex-col gap-4 px-2">
@@ -261,7 +259,6 @@ export default function HoldingDetail() {
                                             />
                                         </View>
                                     </View>
-
                                 </View>
                             </View>
                             <View className="flex flex-row justify-between rounded bg-white h-128">
@@ -287,14 +284,64 @@ const PortfolioCard = ({ data }) => {
         setSelectedTab(tab);
     };
 
-    const assetBifurcation = [
-        { label: "Equity", value: 20 },
-        { label: "Hybrid", value: 20 },
-        { label: "Debt", value: 20 },
-        { label: "Others", value: 40 },
-    ];
+    const transactionData = data?.transactions?.map((item) => {
+        return [
+            {
+                key: "amount",
+                content: (
+                    <View className="flex flex-row justify-center ">
+                        <DataText value={RupeeSymbol + item?.amount} />
+                    </View>
+                ),
+            },
+            {
+                key: "units",
+                content: <DataText value={item?.units} />,
+            },
+            {
+                key: "createdDate",
+                content: <DataText value={dateFormat(item?.createdAt)} />,
+            },
+            {
+                key: "dividendType",
+                content: <DataText value={item?.dividendType} />,
+            },
+            {
+                key: "nav",
+                content: <DataText value={item?.nav ? RupeeSymbol + item?.nav : "-"} />,
+            },
+            {
+                key: "status",
+                content: <DataText value={item?.transactionStatus?.name} />,
+            },
+        ];
+    });
 
-    const assetBifurcationColors = ["#715CFA", "#69E1AB", "#39C3E2", "#FA8B5C"];
+    const folioData = data?.folio?.map((item) => {
+        return [
+            {
+                key: "folioNo",
+                content: <DataText value={item?.folioNumber} />,
+            },
+            {
+                key: "dividendType",
+                content: <DataText value={item?.dividendType} />,
+            },
+            {
+                key: "investedAmount",
+                content: <DataText value={RupeeSymbol + item?.investedValue} />,
+            },
+
+            {
+                key: "currentValue",
+                content: <DataText value={RupeeSymbol + item?.currentValue} />,
+            },
+            {
+                key: "returns",
+                content: <DataText value={item?.returns} />,
+            },
+        ];
+    });
 
     const tabContent = [
         {
@@ -302,92 +349,18 @@ const PortfolioCard = ({ data }) => {
             name: "Transactions",
             content: (
                 <View className="p-2 flex flex-col w-full">
-
                     <DataTable
                         key="transactions"
-                        headers={["Amount", "Units", "Date", "Dividend Type", "NAV", "Status"]}
-                        cellSize={[1, 1, 1, 1, 1, 1]}
-                        rows={[
-                            [
-                                {
-                                    key: "amount",
-                                    content: (
-                                        <View className="flex flex-row items-center gap-2">
-                                            <View>
-                                                <Text className="text-xs">
-                                                    {RupeeSymbol + "7388"}
-                                                </Text>
-                                            </View>
-                                        </View>
-                                    ),
-                                },
-                                {
-                                    key: "units",
-                                    content: (
-                                        <View>
-                                            <Text
-                                                selectable
-                                                className="text-xs text-black"
-                                            >
-                                                01
-                                            </Text>
-                                        </View>
-                                    ),
-                                },
-                                {
-                                    key: "date",
-                                    content: (
-                                        <View>
-                                            <Text
-                                                selectable
-                                                className="text-xs text-gray-500"
-                                            >
-                                                23/04/2023
-                                            </Text>
-                                        </View>
-                                    ),
-                                },
-                                {
-                                    key: "dividend Type",
-                                    content: (
-                                        <View>
-                                            <Text
-                                                selectable
-                                                className="text-xs text-gray-500"
-                                            >
-                                                Reinvest
-                                            </Text>
-                                        </View>
-                                    ),
-                                },
-                                {
-                                    key: "nav",
-                                    content: (
-                                        <View>
-                                            <Text
-                                                selectable
-                                                className="text-xs text-gray-500"
-                                            >
-                                                {RupeeSymbol + "7388"}
-                                            </Text>
-                                        </View>
-                                    ),
-                                },
-                                {
-                                    key: "status",
-                                    content: (
-                                        <View>
-                                            <Text
-                                                selectable
-                                                className="text-xs text-gray-500"
-                                            >
-                                                Success
-                                            </Text>
-                                        </View>
-                                    ),
-                                },
-                            ],
+                        headers={[
+                            "Amount",
+                            "Units",
+                            "Created Date",
+                            "Dividend Type",
+                            "NAV",
+                            "Status",
                         ]}
+                        cellSize={[1, 1, 1, 1, 1, 1]}
+                        rows={transactionData}
                     />
                 </View>
             ),
@@ -399,83 +372,15 @@ const PortfolioCard = ({ data }) => {
                 <View className="p-2 flex flex-col w-full">
                     <DataTable
                         key="folio"
-                        headers={["Folio No.", "Dividend Type", "Invested Amount", "Current Value", "Returns"]}
-                        cellSize={[1, 1, 1, 1, 1]}
-                        rows={[
-                            [
-                                {
-                                    key: "folioNo",
-                                    content: (
-                                        <View className="flex flex-row items-center gap-2">
-                                            
-                                            <View>
-                                                <Text className="text-xs">
-                                                    5677556
-                                                </Text>
-                                            </View>
-                                        </View>
-
-                                    )
-                                },
-                                {
-                                    key: "dividendType",
-                                    content: (
-                                        <View className="flex flex-row items-center gap-2">
-
-                                            <View>
-                                                <Text className="text-xs">
-                                                    Reinvest
-                                                </Text>
-                                            </View>
-                                        </View>
-
-                                    )
-                                },
-                                {
-                                    key: "investedAmount",
-                                    content: (
-                                        <View className="flex flex-row items-center gap-2">
-
-                                            <View>
-                                                <Text className="text-xs">
-                                                {RupeeSymbol + "2500"}
-                                                </Text>
-                                            </View>
-                                        </View>
-
-                                    )
-                                },
-                                {
-                                    key: "currentValue",
-                                    content: (
-                                        <View className="flex flex-row items-center gap-2">
-
-                                            <View>
-                                                <Text className="text-xs">
-                                                    {RupeeSymbol + "2500"}
-                                                </Text>
-                                            </View>
-                                        </View>
-
-                                    )
-                                },
-                                {
-                                    key: "returns",
-                                    content: (
-                                        <View className="flex flex-row items-center gap-2">
-
-                                            <View>
-                                                <Text className="text-xs">
-                                                    23%
-                                                </Text>
-                                            </View>
-                                        </View>
-
-                                    )
-                                },
-                            ],
+                        headers={[
+                            "Folio No.",
+                            "Dividend Type",
+                            "Invested Amount",
+                            "Current Value",
+                            "Returns",
                         ]}
-                    // rows={[transactionRow]}
+                        cellSize={[1, 1, 1, 1, 1]}
+                        rows={folioData}
                     />
                 </View>
             ),
