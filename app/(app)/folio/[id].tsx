@@ -269,7 +269,8 @@ export default function AUMDetail() {
                                             <DataValue
                                                 key="createdDate"
                                                 title="Created Date"
-                                                value={dateFormat("")}
+                                                // value={dateFormat("")}
+                                                value="23/01/2024"
                                             />
                                         </View>
                                         <View className="w-4/12 flex-flex-col gap-4 px-2">

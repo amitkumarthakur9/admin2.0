@@ -22,7 +22,7 @@ import RemoteApi from "../../services/RemoteApi";
 import { DynamicFilters } from "../Filters/DynamicFilters";
 import { Pagination } from "../Pagination/Pagination";
 import { TableBreadCrumb } from "../BreadCrumbs/TableBreadCrumb";
-import { getInitials } from "../../helper/helper";
+import { RupeeSymbol, getInitials } from "../../helper/helper";
 import DataTable from "../DataTable/DataTable";
 import Tag from "../Tag/Tag";
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -126,15 +126,15 @@ const SchemeWiseDataTable = () => {
                 key: "totalinvested",
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
-                        2300
+                        {RupeeSymbol + "2300"}
                     </Text>
                 ),
             },
             {
-                key: "CurrentValue",
+                key: "currentValue",
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
-                        2500
+                        {RupeeSymbol + "2200"}
                     </Text>
                 ),
             },

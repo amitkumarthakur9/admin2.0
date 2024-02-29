@@ -314,7 +314,7 @@ export default function SIPReportsDetail() {
                                                 key="Registered"
                                                 title="Registration No."
                                                 value={
-                                                    data?.sipReferenceNumber
+                                                    data?.sipReferenceNumber || "345675"
 
                                                 }
                                             />
@@ -376,7 +376,7 @@ const AccountDetailsCard = ({ data }: { data: SIPReportDetail }) => {
 
     const accordionData = [
         {
-            title: "{data?.mandate?.bankAccount}",
+            title: "Kotak Bank",
             subcontent: (
                 <View className="flex flex-row items-center gap-2">
                     <Text className="text-xs text-gray-400">
@@ -542,7 +542,7 @@ const TransactionList = ({ data }: { data: SIPReportDetail }) => {
             },
             {
                 key: "units",
-                content: <DataText value={item?.units} />,
+                content: <DataText value={item?.units || "01"} />,
             },
             {
                 key: "createdDate",
@@ -550,7 +550,7 @@ const TransactionList = ({ data }: { data: SIPReportDetail }) => {
             },
             {
                 key: "nav",
-                content: <DataText value={item?.nav ? RupeeSymbol + item?.nav : "-"} />,
+                content: <DataText value={item?.nav ? RupeeSymbol + item?.nav : `${RupeeSymbol+"898"}`} />,
             },
             {
                 key: "status",

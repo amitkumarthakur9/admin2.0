@@ -207,7 +207,7 @@ const FolioWiseDataTable = () => {
                 content: (
                     <View className="flex justify-start text-[#686868] font-semibold w-full">
                         <Text selectable className="">
-                            18
+                            18%
                         </Text>
                     </View>
                 ),

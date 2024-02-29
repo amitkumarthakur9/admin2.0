@@ -293,7 +293,7 @@ const AUMDataTable = () => {
                                         onPress={() => handleTabPress(index + 1)}
                                         className={`w-[12%] py-4 px-6 flex flex-row justify-center items-center border-b-2 ${selectedTab === index + 1
                                                 ? "border-black bg-gray-800"
-                                                : "border-b-gray-400 bg-[#eaf3fe]"
+                                                : "border-b-gray-400 bg-white"
                                             }`}
                                     >
                                         <Text
