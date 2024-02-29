@@ -1,6 +1,7 @@
 interface User {
     id: string;
     panNumber: string;
+    name: string; // Added 'name' property
 }
 
 interface Account {
@@ -31,7 +32,20 @@ interface MutualFundHouse {
     rta: any; // You may replace 'any' with the actual type if available
     logoUrl: string;
 }
+interface DeliveryType { // Added DeliveryType interface
+    id: number;
+    name: string;
+}
 
+interface OptionType { // Added OptionType interface
+    id: number;
+    name: string;
+}
+
+interface DividendType { // Added DividendType interface
+    id: number;
+    name: string;
+}
 interface MutualFund {
     id: string;
     name: string;
@@ -41,6 +55,9 @@ interface MutualFund {
     rtaCode?: string;
     nav?: number;
     navAsOnDate: any; // You may replace 'any' with the actual type if available
+    deliveryType: DeliveryType; // Added 'deliveryType' property
+    optionType: OptionType; // Added 'optionType' property
+    dividendType: DividendType; // Added 'dividendType' property
 }
 
 interface TransactionType {
@@ -75,6 +92,10 @@ export interface AUMDetailInterface {
     distributor: Distributor;
     mutualfund: MutualFund;
     transactions: Transaction[];
+    xirr: number; // Added 'xirr' property
+    redemableAmount: number; // Added 'redemableAmount' property
+    redemableUnits: number; // Added 'redemableUnits' property
+    avgNav: number; // Added 'avgNav' property
 }
 
 export interface AUMDetailResponseInterface {

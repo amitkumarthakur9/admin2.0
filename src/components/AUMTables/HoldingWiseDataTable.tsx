@@ -20,7 +20,7 @@ import RemoteApi from "../../services/RemoteApi";
 import { DynamicFilters } from "../Filters/DynamicFilters";
 import { Pagination } from "../Pagination/Pagination";
 import { TableBreadCrumb } from "../BreadCrumbs/TableBreadCrumb";
-import { getInitials } from "../../helper/helper";
+import { RupeeSymbol, getInitials } from "../../helper/helper";
 import DataTable from "../DataTable/DataTable";
 import Tag from "../Tag/Tag";
 import Icon from "react-native-vector-icons/FontAwesome";
@@ -152,24 +152,29 @@ const HoldingWiseDataTable = () => {
             {
                 key: "SchemeName",
                 content: (
-                    <Text selectable className="text-[#686868] font-semibold">
+                    <View className="flex flex-col justify-start w-11/12">
+                        <Text selectable className="text-black font-semibold">
                         Axis Mid Cap Fund
+                        </Text>
+                        <Text selectable className="text-[#686868] font-semibold text-xs">
+                            Reinvest
+                        </Text>
+                    </View>
+                ),
+            },
+            {
+                key: "totalInvested",
+                content: (
+                    <Text selectable className="text-[#686868] font-semibold">
+                        {RupeeSymbol + "2200"}
                     </Text>
                 ),
             },
             {
-                key: "totalinvested",
+                key: "currentValue",
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
-                        7383e9GH
-                    </Text>
-                ),
-            },
-            {
-                key: "CurrentValue",
-                content: (
-                    <Text selectable className="text-[#686868] font-semibold">
-                     73828
+                     {RupeeSymbol + "2200"}
                     </Text>
                 ),
             },

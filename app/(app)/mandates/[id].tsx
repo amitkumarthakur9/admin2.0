@@ -48,15 +48,15 @@ const DataValue = ({ title, value }) => {
     return (
         <View className="w-full flex flex-row justify-between items-center p-2">
             <View className="w-1/2 flex ">
-                <Text className="text-bold font-mediumk text-gray-500" selectable>
+                <Text
+                    className="text-bold font-mediumk text-gray-500"
+                    selectable
+                >
                     {title ? title : "-"}
                 </Text>
             </View>
             <View className="w-1/2 flex">
-                <Text
-                    selectable
-                    className="font-medium text-start text-blac"
-                >
+                <Text selectable className="font-medium text-start text-blac">
                     {value ? value : "-"}
                 </Text>
             </View>
@@ -84,31 +84,7 @@ export default function MandateDetail() {
             getOrderDetails();
         }
     }, [id]);
-
-    const getInitials = (name: string) => {
-        const words = name.split(" ");
-        if (words.length >= 2) {
-            const firstWord = words[0];
-            const secondWord = words[1];
-            return `${firstWord[0]}${secondWord[0]}`;
-        } else if (words.length === 1) {
-            return words[0][0];
-        } else {
-            return "";
-        }
-    };
-
-    const getColorCode = (status: string) => {
-        let color = "#ece09d";
-        if (status == "Cancelled" || status == "Failed") {
-            color = "#ffd5d5";
-        } else if (status == "Success") {
-            color = "#afc9a2";
-        }
-
-        return color;
-    };
-
+    
     return (
         <>
             {isLoading ? (
@@ -160,39 +136,71 @@ export default function MandateDetail() {
                                 style={{ ...BreadcrumbShadow }}
                             >
                                 <View className="flex flex-col gap-2 w-full">
-
                                     <View
                                         className={`flex flex-row items-center w-full justify-start`}
                                     >
-                                        <Text selectable className="text-lg font-bold text-start">
+                                        <Text
+                                            selectable
+                                            className="text-lg font-bold text-start"
+                                        >
                                             Mandate ID: {data.mandateId}
                                         </Text>
-
                                     </View>
                                     <View className="flex flex-row justify-between items-start w-full">
-                                        <View className="w-4/12 flex flex-row gap-2">
-                                            <DataValue
-                                                key="clientName"
-                                                title="Client Name"
-                                                value={data?.account?.name}
-                                            />
-                                            <DataValue
-                                                key="clientCode"
-                                                title="Client Code"
-                                                value={data?.account?.clientId}
-                                            />
-                                            <DataValue
-                                                key="pan"
-                                                title="PAN"
-                                                value="CVBB56"
-                                            />
+                                        <View className="w-11/12 flex flex-row items-start justify-between">
+                                            <View className="flex flex-row items-center">
+                                                <Text
+                                                    className="text-bold font-medium text-gray-500 mr-2"
+                                                    selectable
+                                                >
+                                                    Client Name:
+                                                </Text>
+                                                <Text
+                                                    selectable
+                                                    className="font-medium text-start text-black"
+                                                >
+                                                    {data?.account?.name}
+                                                </Text>
+                                            </View>
+                                            <View className="flex flex-row items-center">
+                                                <Text
+                                                    className="text-bold font-medium text-gray-500 mr-2"
+                                                    selectable
+                                                >
+                                                    Client Code:
+                                                </Text>
+                                                <Text
+                                                    selectable
+                                                    className="font-medium text-start text-black"
+                                                >
+                                                    {data?.account?.clientId}
+                                                </Text>
+                                            </View>
+                                            <View className="flex flex-row items-center">
+                                                <Text
+                                                    className="text-bold font-medium text-gray-500 mr-2"
+                                                    selectable
+                                                >
+                                                    PAN:
+                                                </Text>
+                                                <Text
+                                                    selectable
+                                                    className="font-medium text-start text-black"
+                                                >
+                                                    {
+                                                        data?.account?.user[0]
+                                                            ?.panNumber
+                                                    }
+                                                </Text>
+                                            </View>
                                         </View>
                                     </View>
                                     <View
                                         className="my-2"
                                         style={{
                                             borderColor: "#e4e4e4",
-                                            borderBottomWidth: StyleSheet.hairlineWidth,
+                                            borderBottomWidth:
+                                                StyleSheet.hairlineWidth,
                                         }}
                                     />
 
@@ -206,19 +214,19 @@ export default function MandateDetail() {
                                             <DataValue
                                                 key="registrationDate"
                                                 title="Registered Date"
-                                                value={data.startDate
-                                                    ? moment(
-                                                        new Date(
-                                                            data.startDate
-                                                        )
-                                                    ).format(
-                                                        "DD-MM-YYYY"
-                                                    )
-                                                    : "-"}
+                                                value={
+                                                    data.startDate
+                                                        ? moment(
+                                                              new Date(
+                                                                  data.startDate
+                                                              )
+                                                          ).format("DD-MM-YYYY")
+                                                        : "-"
+                                                }
                                             />
                                         </View>
                                         <View className="w-4/12 flex-flex-col gap-4 px-2">
-                                        <DataValue
+                                            <DataValue
                                                 key="payment Gateway"
                                                 title="Payment Gateway"
                                                 value="Razorpay"
@@ -226,22 +234,24 @@ export default function MandateDetail() {
                                             <DataValue
                                                 key="createdDate"
                                                 title="Created Date"
-                                                value={data.startDate
-                                                    ? moment(
-                                                        new Date(
-                                                            data.startDate
-                                                        )
-                                                    ).format(
-                                                        "DD-MM-YYYY"
-                                                    )
-                                                    : "-"}
+                                                value={
+                                                    data?.createdAt
+                                                        ? moment(
+                                                              new Date(
+                                                                  data?.createdAt
+                                                              )
+                                                          ).format("DD-MM-YYYY")
+                                                        : "-"
+                                                }
                                             />
                                         </View>
                                         <View className="w-4/12 flex-flex-col gap-4 px-2">
                                             <DataValue
                                                 key="status"
                                                 title="Status"
-                                                value={data?.mandateStatus?.name}
+                                                value={
+                                                    data?.mandateStatus?.name
+                                                }
                                             />
                                         </View>
                                     </View>
@@ -249,14 +259,19 @@ export default function MandateDetail() {
                                         className="my-2"
                                         style={{
                                             borderColor: "#e4e4e4",
-                                            borderBottomWidth: StyleSheet.hairlineWidth,
+                                            borderBottomWidth:
+                                                StyleSheet.hairlineWidth,
                                         }}
                                     />
                                     <View className="flex flex-row py-2 items-center w-full flex-wrap">
-                                        
-                                        <Text selectable className="text-black font-bold">Bank Details</Text>
-                                        </View>
-                                    <View className="flex flex-row py-2 items-center w-full flex-wrap">    
+                                        <Text
+                                            selectable
+                                            className="text-black font-bold"
+                                        >
+                                            Bank Details
+                                        </Text>
+                                    </View>
+                                    <View className="flex flex-row py-2 items-center w-full flex-wrap">
                                         <View
                                             className={
                                                 "flex flex-row items-center justify-start w-4/12"
@@ -277,10 +292,10 @@ export default function MandateDetail() {
                                             /> */}
                                             <View
                                                 className={
-                                                    "flex flex-row justify-end items-start w-11/12"
+                                                    "flex flex-row justify-start items-start w-11/12"
                                                 }
                                             >
-                                                <View className="w-8 h-8 rounded bg-gray-500 mx-2"/>
+                                                <View className="w-8 h-8 rounded bg-gray-500 mx-2" />
                                                 <Text
                                                     selectable
                                                     className="text-black font-semibold break-all text-sm flex-wrap"
@@ -288,39 +303,44 @@ export default function MandateDetail() {
                                                     {data.bankAccount
                                                         .bankName || "-"}
                                                 </Text>
-
                                             </View>
                                         </View>
                                         <View className="w-4/12 flex flex-col gap-2">
-
                                             <DataValue
                                                 key="accountNo"
                                                 title="Account No:"
-                                                value={data.bankAccount
-                                                    .accountNumber || "-"}
+                                                value={
+                                                    data.bankAccount
+                                                        .accountNumber || "-"
+                                                }
                                             />
                                             <DataValue
                                                 key="branchName"
                                                 title="Branch Name"
-                                                value={data.bankAccount
-                                                    .branchName || "-"}
+                                                value={
+                                                    data.bankAccount
+                                                        .branchName || "-"
+                                                }
                                             />
                                         </View>
                                         <View className="w-4/12 flex flex-col gap-2">
-                                        <DataValue
+                                            <DataValue
                                                 key="accountType"
                                                 title="Account Type"
-                                                value={data.bankAccount
-                                                    .bankAccountType.name ||
-                                                    "-"}
+                                                value={
+                                                    data.bankAccount
+                                                        .bankAccountType.name ||
+                                                    "-"
+                                                }
                                             />
                                             <DataValue
                                                 key="bankIFSC"
                                                 title="IFSC Code"
-                                                value={data.bankAccount
-                                                    .ifscCode || "-"}
+                                                value={
+                                                    data.bankAccount.ifscCode ||
+                                                    "-"
+                                                }
                                             />
-                                            
                                         </View>
                                     </View>
                                 </View>
@@ -341,11 +361,7 @@ export default function MandateDetail() {
     );
 }
 
-
 const SIPList = ({ data }: { data: MandateDetailInterface }) => {
-
-
-
     return (
         <View className="flex-1 bg-white rounded shadow h-full overflow-auto p-2">
             <View className={`flex flex-row items-center w-full justify-start`}>
@@ -362,8 +378,16 @@ const SIPList = ({ data }: { data: MandateDetailInterface }) => {
             />
             <DataTable
                 key="siplist"
-                headers={["Mutual Fund Name", "Option Type", "Dividend Type", "Amount", "Start Date", "Reg. No.", "Status"]}
-                cellSize={[1, 1, 1, 1, 1,1,1]}
+                headers={[
+                    "Mutual Fund Name",
+                    "Option Type",
+                    "Dividend Type",
+                    "Amount",
+                    "Start Date",
+                    "Reg. No.",
+                    "Status",
+                ]}
+                cellSize={[1, 1, 1, 1, 1, 1, 1]}
                 rows={[
                     [
                         {
@@ -382,7 +406,6 @@ const SIPList = ({ data }: { data: MandateDetailInterface }) => {
                             key: "optionType",
                             content: (
                                 <View className="flex flex-row items-center gap-2">
-
                                     <View>
                                         <Text className="text-xs">
                                             {/* {data?.amount ? (RupeeSymbol + data?.amount) : "2"} */}
@@ -434,9 +457,7 @@ const SIPList = ({ data }: { data: MandateDetailInterface }) => {
                             content: (
                                 <View className="flex flex-row items-center gap-2">
                                     <View>
-                                        <Text className="text-xs">
-                                            6778765
-                                        </Text>
+                                        <Text className="text-xs">6778765</Text>
                                     </View>
                                 </View>
                             ),
@@ -446,15 +467,12 @@ const SIPList = ({ data }: { data: MandateDetailInterface }) => {
                             content: (
                                 <View className="flex flex-row items-center gap-2">
                                     <View>
-                                        <Text className="text-xs">
-                                            Active
-                                        </Text>
+                                        <Text className="text-xs">Active</Text>
                                     </View>
                                 </View>
                             ),
                         },
                     ],
-
                 ]}
             />
         </View>
