@@ -51,15 +51,15 @@ const DataValue = ({ title, value }) => {
     return (
         <View className="w-full flex flex-row justify-between items-center p-2">
             <View className="w-1/2 flex ">
-                <Text className="text-bold font-mediumk text-gray-500" selectable>
+                <Text
+                    className="text-bold font-mediumk text-gray-500"
+                    selectable
+                >
                     {title ? title : "-"}
                 </Text>
             </View>
             <View className="w-1/2 flex">
-                <Text
-                    selectable
-                    className="font-medium text-start text-blac"
-                >
+                <Text selectable className="font-medium text-start text-blac">
                     {value ? value : "-"}
                 </Text>
             </View>
@@ -72,8 +72,6 @@ export default function SIPReportsDetail() {
     const [data, setData] = useState<SIPReportDetail>();
     const [isLoading, setIsLoading] = useState(true);
     const { height, width } = useWindowDimensions();
-
-
 
     useEffect(() => {
         setIsLoading(true);
@@ -142,17 +140,18 @@ export default function SIPReportsDetail() {
                                 style={{ ...BreadcrumbShadow }}
                             >
                                 <View className="flex flex-col gap-2 w-full">
-
                                     <View
                                         className={`flex flex-row items-center w-full justify-start`}
                                     >
-                                        <Text selectable className="text-lg font-bold text-start">
+                                        <Text
+                                            selectable
+                                            className="text-lg font-bold text-start"
+                                        >
                                             SIP #{data.id}
                                         </Text>
-
                                     </View>
                                     <View className="flex flex-row justify-between items-start w-full">
-                                    <View className="w-11/12 flex flex-row items-start justify-between">
+                                        <View className="w-11/12 flex flex-row items-start justify-between">
                                             <View className="flex flex-row items-center">
                                                 <Text
                                                     className="text-bold font-medium text-gray-500 mr-2"
@@ -201,7 +200,8 @@ export default function SIPReportsDetail() {
                                         className="my-2"
                                         style={{
                                             borderColor: "#e4e4e4",
-                                            borderBottomWidth: StyleSheet.hairlineWidth,
+                                            borderBottomWidth:
+                                                StyleSheet.hairlineWidth,
                                         }}
                                     />
 
@@ -272,7 +272,9 @@ export default function SIPReportsDetail() {
                                             <DataValue
                                                 key="Amount"
                                                 title="Amount"
-                                                value={RupeeSymbol + data?.amount}
+                                                value={
+                                                    RupeeSymbol + data?.amount
+                                                }
                                             />
                                             <DataValue
                                                 key="Option Type"
@@ -282,12 +284,11 @@ export default function SIPReportsDetail() {
                                             <DataValue
                                                 key="amountInvestment"
                                                 title="Amount Investment"
-                                                value={RupeeSymbol+ "57,000"}
+                                                value={RupeeSymbol + "57,000"}
                                             />
-
                                         </View>
                                         <View className="w-3/12 flex-flex-col gap-4 px-2">
-                                        <DataValue
+                                            <DataValue
                                                 key="startDate"
                                                 title="Start Date"
                                                 value={"23/09/1998"}
@@ -297,7 +298,6 @@ export default function SIPReportsDetail() {
                                                 title="Dividend Type"
                                                 value="Reinvest"
                                             />
-
                                             <DataValue
                                                 key="Registeredby"
                                                 title="Registered by"
@@ -305,27 +305,29 @@ export default function SIPReportsDetail() {
                                             />
                                         </View>
                                         <View className="w-3/12 flex-flex-col gap-4 px-2">
-                                        <DataValue
+                                            <DataValue
                                                 key="endDate"
                                                 title="End Date"
                                                 value={"23/09/2098"}
                                             />
                                             <DataValue
                                                 key="Registered"
-                                                title="Registration No."
+                                                title="Registration No.:"
                                                 value={
-                                                    data?.sipReferenceNumber || "345675"
-
+                                                    data?.sipReferenceNumber ||
+                                                    "345675"
                                                 }
                                             />
-                                            {/* <DataValue
-                                                key="riskProfile"
-                                                title="Risk Profile"
-                                                value={"-"}
-                                            /> */}
+                                            <DataValue
+                                                key="registrationDate "
+                                                title="Registration Date:"
+                                                value={dateFormat(
+                                                    data?.createdAt
+                                                )}
+                                            />
                                         </View>
                                         <View className="w-3/12 flex-flex-col gap-4 px-2">
-                                        <DataValue
+                                            <DataValue
                                                 key="DueDate"
                                                 title="Due Date"
                                                 value={"23/09/2024"}
@@ -365,7 +367,6 @@ export default function SIPReportsDetail() {
         </>
     );
 }
-
 
 const AccountDetailsCard = ({ data }: { data: SIPReportDetail }) => {
     const [selectedTab, setSelectedTab] = useState(1);
@@ -529,7 +530,6 @@ const AccountDetailsCard = ({ data }: { data: SIPReportDetail }) => {
 };
 
 const TransactionList = ({ data }: { data: SIPReportDetail }) => {
-
     const transactionData = data?.transactions?.map((item) => {
         return [
             {
@@ -550,7 +550,15 @@ const TransactionList = ({ data }: { data: SIPReportDetail }) => {
             },
             {
                 key: "nav",
-                content: <DataText value={item?.nav ? RupeeSymbol + item?.nav : `${RupeeSymbol+"898"}`} />,
+                content: (
+                    <DataText
+                        value={
+                            item?.nav
+                                ? RupeeSymbol + item?.nav
+                                : `${RupeeSymbol + "898"}`
+                        }
+                    />
+                ),
             },
             {
                 key: "status",

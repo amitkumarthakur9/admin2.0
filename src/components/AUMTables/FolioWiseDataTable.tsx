@@ -70,7 +70,7 @@ const FolioWiseDataTable = () => {
             setTotalPages(
                 Math.ceil(
                     (response.filterCount || response.data.length) /
-                    itemsPerPage
+                        itemsPerPage
                 )
             );
         }
@@ -160,34 +160,48 @@ const FolioWiseDataTable = () => {
                         <Text selectable className="text-black font-semibold">
                             {item?.mutualfund?.name}
                         </Text>
-                        <Text selectable className="text-[#686868] font-semibold text-xs">
+                        <Text
+                            selectable
+                            className="text-[#686868] font-semibold text-xs"
+                        >
                             Reinvest
                         </Text>
-
                     </View>
-
                 ),
             },
             {
                 key: "FolioNumber",
                 content: (
-                    <Text selectable className="text-[#686868] font-semibold w-11/12">
-                        {item?.folioNumber}&nbsp;
-                    </Text>
+                    <Pressable
+                        onPress={() => router.push(`folio/${item?.id}`)}
+                    >
+                        <Text
+                            selectable
+                            className="text-[#686868] font-semibold w-11/12"
+                        >
+                            {item?.folioNumber}&nbsp;
+                        </Text>
+                    </Pressable>
                 ),
             },
             {
                 key: "BalanceUnits",
                 content: (
-                    <Text selectable className="text-[#686868] font-semibold w-11/12">
+                    <Text
+                        selectable
+                        className="text-[#686868] font-semibold w-11/12"
+                    >
                         {item.units}
                     </Text>
                 ),
             },
             {
-                key: "CurrentValue",
+                key: "investedAmount",
                 content: (
-                    <Text selectable className="text-[#686868] font-semibold w-11/12">
+                    <Text
+                        selectable
+                        className="text-[#686868] font-semibold w-11/12"
+                    >
                         {item.investedValue
                             ? RupeeSymbol + item.investedValue
                             : "-"}
@@ -195,9 +209,25 @@ const FolioWiseDataTable = () => {
                 ),
             },
             {
+                key: "currentValue",
+                content: (
+                    <Text
+                        selectable
+                        className="text-[#686868] font-semibold w-11/12"
+                    >
+                        {item?.currentValue
+                            ? RupeeSymbol + item?.currentValue
+                            : "-"}
+                    </Text>
+                ),
+            },
+            {
                 key: "XIRR",
                 content: (
-                    <Text selectable className="text-[#686868] font-semibold w-11/12 ">
+                    <Text
+                        selectable
+                        className="text-[#686868] font-semibold w-11/12 "
+                    >
                         20.87%
                     </Text>
                 ),
@@ -217,14 +247,11 @@ const FolioWiseDataTable = () => {
                 content: (
                     <View className="flex flex-row w-10/12 justify-center">
                         <Pressable
-                            onPress={() =>
-                                router.push('clients/${client.id}')
-                            }
+                            onPress={() => router.push("clients/${client.id}")}
                         >
                             <Icon name="ellipsis-v" size={18} color="grey" />
                         </Pressable>
                     </View>
-
                 ),
             },
         ];
@@ -257,12 +284,13 @@ const FolioWiseDataTable = () => {
                                 "Scheme Name",
                                 "Folio Number",
                                 "Balance Units",
+                                "Invested Amount",
                                 "Current Value",
                                 "XIRR",
                                 "Returns",
                                 "",
                             ]}
-                            cellSize={[3, 2, 1, 1, 1, 1, 1, 1]}
+                            cellSize={[3, 2, 1, 1, 1, 1, 1, 1, 1]}
                             rows={transformedData}
                         />
                     </ScrollView>

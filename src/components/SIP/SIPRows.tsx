@@ -23,7 +23,7 @@ export const SIPRows = ({
     schema: any;
 }) => {
     const getInitials = (name: string) => {
-        if(!name) return "";
+        if (!name) return "";
         const words = name.split(" ");
         if (words.length >= 2) {
             const firstWord = words[0];
@@ -61,26 +61,31 @@ export const SIPRows = ({
                     </View>
                 </View>
 
-                <View className="hidden md:flex lg:flex flex-row md:flex-col lg:flex-row w-full md:w-4/12 lg:w-6/12 justify-between">
-                    <View className="flex flex-row items-center sm:w-full md:w-full lg:w-4/12 md:justify-end lg:justify-center">
+                <View className="flex flex-row w-6/12">
+                    <View className="flex flex-row items-center w-3/12 justify-center">
                         <Text selectable className="font-semibold">
                             Request Date Time
                         </Text>
                     </View>
-                    <View className="flex flex-col-reverse md:flex-col-reverse lg:flex-row sm:w-full md:w-full lg:w-6/12  items-center">
-                        <View className="flex flex-row md:flex-col lg:flex-row items-center md:items-end lg:items-center w-full lg:w-1/2  justify-start md:justify-end lg:justify-center">
-                            <Text selectable className="font-semibold">
-                                Amount/Units
-                            </Text>
-                        </View>
-
-                        <View className="flex flex-row items-center w-full lg:w-1/2 justify-start md:justify-center lg:justify-center">
-                            <Text selectable className="font-semibold">
-                                Status
-                            </Text>
-                        </View>
+                    <View className="flex flex-row items-center w-3/12 justify-center">
+                        <Text selectable className="font-semibold">
+                            Next SIP Date
+                        </Text>
                     </View>
-                    <View className="flex flex-row items-center lg:w-2/12 justify-center">
+
+                    <View className="flex flex-row items-center w-2/12 justify-center">
+                        <Text selectable className="font-semibold">
+                            Amount/Units
+                        </Text>
+                    </View>
+
+                    <View className="flex flex-row items-center w-2/12 justify-center">
+                        <Text selectable className="font-semibold">
+                            Status
+                        </Text>
+                    </View>
+
+                    <View className="flex flex-row items-center justify-center w-2/12">
                         <Text selectable className="font-semibold">
                             Action
                         </Text>
@@ -300,6 +305,20 @@ export const SIPRows = ({
                                                     : ""}
                                             </Text>
                                         </View>
+                                        <View className="flex flex-row items-center">
+                                            <Text
+                                                selectable
+                                                className="text-black text-xs"
+                                            >
+                                                {order.startDate
+                                                    ? moment(
+                                                          new Date(
+                                                              order.startDate
+                                                          )
+                                                      ).format("YYYY-MM-DD")
+                                                    : ""}
+                                            </Text>
+                                        </View>
                                     </View>
 
                                     <View
@@ -331,7 +350,7 @@ export const SIPRows = ({
                             </View>
 
                             <View className="hidden md:flex lg:flex flex-row md:flex-col lg:flex-row w-full md:w-4/12 lg:w-6/12 justify-between">
-                                <View className="flex flex-row items-center sm:w-full md:w-full lg:w-4/12 md:justify-end lg:justify-center">
+                                <View className="flex flex-row items-center sm:w-full md:w-full lg:w-3/12 md:justify-end lg:justify-center">
                                     <View className="flex flex-col">
                                         <Text
                                             selectable
@@ -340,14 +359,26 @@ export const SIPRows = ({
                                             {order.startDate
                                                 ? moment(
                                                       new Date(order.startDate)
-                                                  ).format(
-                                                      "DD-MM-YYYY hh:mm:ss A"
-                                                  )
+                                                  ).format("DD-MM-YYYY")
                                                 : ""}
                                         </Text>
                                     </View>
                                 </View>
-                                <View className="flex flex-col-reverse md:flex-col-reverse lg:flex-row sm:w-full md:w-full lg:w-6/12  items-center">
+                                <View className="flex flex-row items-center sm:w-full md:w-full lg:w-3/12 md:justify-end lg:justify-center">
+                                    <View className="flex flex-col">
+                                        <Text
+                                            selectable
+                                            className="text-[#686868] font-semibold"
+                                        >
+                                            {order.startDate
+                                                ? moment(
+                                                      new Date(order.startDate)
+                                                  ).format("DD-MM-YYYY")
+                                                : ""}
+                                        </Text>
+                                    </View>
+                                </View>
+                                <View className="flex flex-col-reverse md:flex-col-reverse lg:flex-row sm:w-full md:w-full lg:w-4/12  items-center">
                                     <View className="flex flex-row md:flex-col lg:flex-row items-center md:items-end lg:items-center w-full lg:w-1/2  justify-start md:justify-end lg:justify-center">
                                         <View className="flex flex-col md:flex-row lg:flex-col">
                                             <View className="flex flex-row items-center">

@@ -234,14 +234,24 @@ const AUMDataTable = () => {
 
         const tabContent = [
             {
+                key: "client-wise",
+                name: "Client Wise",
+                content: <ClientWiseDataTable />,
+            },
+            {
+                key: "holding-wise",
+                name: "Holding Wise",
+                content: <HoldingWiseDataTable />,
+            },
+            {
                 key: "folio-wise",
                 name: "Folio Wise",
                 content: <FolioWiseDataTable />,
             },
             {
-                key: "client-wise",
-                name: "Client Wise",
-                content: <ClientWiseDataTable />,
+                key: "amc-wise",
+                name: "AMC Wise",
+                content: <AMCWiseDataTable />,
             },
             {
                 key: "scheme-wise",
@@ -249,9 +259,9 @@ const AUMDataTable = () => {
                 content: <SchemeWiseDataTable />,
             },
             {
-                key: "amc-wise",
-                name: "AMC Wise",
-                content: <AMCWiseDataTable />,
+                key: "category",
+                name: "Category",
+                content: <SchemeTypeWiseDataTable />,
             },
             {
                 key: "rta-wise",
@@ -267,16 +277,6 @@ const AUMDataTable = () => {
                 key: "rm-wise",
                 name: "RM Wise",
                 content: <RMWiseDataTable />,
-            },
-            {
-                key: "holding-wise",
-                name: "Holding Wise",
-                content: <HoldingWiseDataTable />,
-            },
-            {
-                key: "schemetype-wise",
-                name: "Scheme Type Wise",
-                content: <SchemeTypeWiseDataTable />,
             },
         ];
 
