@@ -287,6 +287,30 @@ export interface ClientDetailItem {
     transactions: Transaction[];
     holdings: Holding[];
     nominee: Nominee[];
+    sip: SIP[];
+}
+
+export interface SIP {
+    id: string;
+    orderReferenceNumber: string;
+    sipReferenceNumber: string;
+    accountId: string;
+    amount: number;
+    orderTypeId: number;
+    mutualfundDividendTypeId: string;
+    toMutualfundDividendTypeId: null;
+    distributorId: string;
+    mandateId: string;
+    orderStatusId: number;
+    totalNoOfInstallments: number;
+    noOfInstallmentsExecuted: number;
+    startDate: string;
+    endDate: string;
+    remark: string;
+    createdAt: string;
+    bankAccountId: string;
+    nav: null;
+    units: null;
 }
 
 export interface ClientDetailResponse {

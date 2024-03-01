@@ -13,3 +13,13 @@ export const getInitials = (name: string) => {
 };
 
 export const RupeeSymbol = "₹";
+
+export const maskLetters = (str: string) => {
+    if (str.length <= 4) {
+        return str;
+    }
+
+    const maskedStr = str.slice(0, -4).replace(/[a-zA-Z0-9]/g, 'x') + str.slice(-4);
+
+    return maskedStr;
+}

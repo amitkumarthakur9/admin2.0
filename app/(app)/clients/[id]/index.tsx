@@ -13,6 +13,7 @@ import {
     Text,
     WarningIcon,
 } from "native-base";
+import moment from "moment";
 import Icon from "react-native-vector-icons/FontAwesome";
 import AntdIcon from "react-native-vector-icons/AntDesign";
 import IonIcon from "react-native-vector-icons/Ionicons";
@@ -23,7 +24,7 @@ import {
     ClientDetailResponse,
 } from "../../../../src/interfaces/ClientDetailInterface";
 import { BreadcrumbShadow } from "../../../../src/components/Styles/Shadow";
-import { RupeeSymbol } from "../../../../src/helper/helper";
+import { RupeeSymbol, maskLetters } from "../../../../src/helper/helper";
 import CardWithTabs from "../../../../src/components/Card/CardWithTabs";
 import DataGrid from "../../../../src/components/DataGrid/DataGrid";
 import HorizontalStackedBarChart from "../../../../src/components/Chart/HorizontalBarChart";
@@ -158,34 +159,36 @@ export default function ClientDetail() {
                                             <DataValue
                                                 key="dob"
                                                 title="DOB"
-                                                value={"Jul 26, 2023"}
+                                                value={moment(
+                                                    data.users[0]?.dateOfBirth
+                                                ).format("MMM DD, YYYY")}
                                             />
                                             <DataValue
                                                 key="doi"
                                                 title="DOI"
-                                                value={"Jul 26, 2023"}
+                                                value="-"
                                             />
                                         </View>
                                         <View className="w-4/12 flex-flex-col gap-4 px-2">
                                             <DataValue
                                                 key="totalInvestment"
                                                 title="Total Investment"
-                                                value={"57,000"}
+                                                value="-"
                                             />
                                             <DataValue
                                                 key="runningSip"
                                                 title="Running SIPs"
-                                                value={"2"}
+                                                value={data?.sip?.length}
                                             />
                                             <DataValue
                                                 key="lastInvestment"
-                                                title="Last Investment"
-                                                value="Lumpsum: 6,700"
+                                                title="Last Lumpsum"
+                                                value={`-`}
                                             />
                                             <DataValue
                                                 key="lastInvestmentDate"
                                                 title="Last Investment Date"
-                                                value="Jul 26, 2023, 1:38 PM"
+                                                value="-"
                                             />
                                         </View>
                                         <View className="w-4/12 flex-flex-col gap-4 px-2">
@@ -234,13 +237,13 @@ export default function ClientDetail() {
                                     className="w-[60%] h-full rounded"
                                     style={{ ...BreadcrumbShadow }}
                                 >
-                                    <MutualFundCard data={data} />
+                                    <MutualFundCard />
                                 </View>
                                 <View
                                     className="w-[39%] h-128 rounded"
                                     style={{ ...BreadcrumbShadow }}
                                 >
-                                    <TopAMCCard data={data} />
+                                    <TopAMCCard />
                                 </View>
                             </View>
                         </View>
@@ -251,7 +254,7 @@ export default function ClientDetail() {
     );
 }
 
-const PortfolioCard = ({ data }) => {
+const PortfolioCard = ({ data }: { data: ClientDetailItem }) => {
     const [selectedTab, setSelectedTab] = useState(1);
 
     const handleTabPress = (tab) => {
@@ -276,8 +279,8 @@ const PortfolioCard = ({ data }) => {
     };
 
     const modalValues = {
-        invest: <InvestModalCard hideDialog={closeModal} />,
-        redeem: <RedeemModalCard hideDialog={closeModal} />,
+        invest: <InvestModalCard hideDialog={closeModal} card={2} />,
+        redeem: <RedeemModalCard hideDialog={closeModal} card={2} />,
     };
 
     const showModal = (key: string) => () => {
@@ -298,7 +301,7 @@ const PortfolioCard = ({ data }) => {
                                 title="Current Holdings"
                                 value={
                                     <Text className="text-blue-700">
-                                        {RupeeSymbol} 37,000
+                                        {RupeeSymbol} 0
                                     </Text>
                                 }
                                 reverse
@@ -308,7 +311,7 @@ const PortfolioCard = ({ data }) => {
                                 title="Invested"
                                 value={
                                     <Text className="text-blue-700">
-                                        {RupeeSymbol} 24,67,000
+                                        {RupeeSymbol} 0
                                     </Text>
                                 }
                                 reverse
@@ -316,7 +319,7 @@ const PortfolioCard = ({ data }) => {
                             <DataGrid
                                 key="xirr"
                                 title="XIRR"
-                                value={<Text className="">21.66 %</Text>}
+                                value={<Text className="">00.00 %</Text>}
                                 reverse
                             />
                             <DataGrid
@@ -324,7 +327,7 @@ const PortfolioCard = ({ data }) => {
                                 title="Total Returns"
                                 value={
                                     <Text className="text-green-700">
-                                        34.22 %
+                                        00.00 %
                                     </Text>
                                 }
                                 reverse
@@ -368,7 +371,7 @@ const PortfolioCard = ({ data }) => {
                                                 selectable
                                                 className="text-xs"
                                             >
-                                                {RupeeSymbol} 7,388
+                                                {RupeeSymbol} 0
                                             </Text>
                                         </View>
                                     ),
@@ -381,7 +384,7 @@ const PortfolioCard = ({ data }) => {
                                                 selectable
                                                 className="text-xs text-gray-500"
                                             >
-                                                {RupeeSymbol} 7,388
+                                                {RupeeSymbol} 0
                                             </Text>
                                         </View>
                                     ),
@@ -394,7 +397,7 @@ const PortfolioCard = ({ data }) => {
                                                 selectable
                                                 className="text-xs text-gray-500"
                                             >
-                                                25.7% (24.8%)
+                                                00.00% (00.00%)
                                             </Text>
                                         </View>
                                     ),
@@ -426,7 +429,7 @@ const PortfolioCard = ({ data }) => {
                                                 selectable
                                                 className="text-xs"
                                             >
-                                                {RupeeSymbol} 7,388
+                                                {RupeeSymbol} 0
                                             </Text>
                                         </View>
                                     ),
@@ -439,7 +442,7 @@ const PortfolioCard = ({ data }) => {
                                                 selectable
                                                 className="text-xs text-gray-500"
                                             >
-                                                {RupeeSymbol} 7,388
+                                                {RupeeSymbol} 0
                                             </Text>
                                         </View>
                                     ),
@@ -452,7 +455,7 @@ const PortfolioCard = ({ data }) => {
                                                 selectable
                                                 className="text-xs text-gray-500"
                                             >
-                                                25.7% (24.8%)
+                                                00.00% (00.00%)
                                             </Text>
                                         </View>
                                     ),
@@ -484,7 +487,7 @@ const PortfolioCard = ({ data }) => {
                                                 selectable
                                                 className="text-xs"
                                             >
-                                                {RupeeSymbol} 7,388
+                                                {RupeeSymbol} 0
                                             </Text>
                                         </View>
                                     ),
@@ -497,7 +500,7 @@ const PortfolioCard = ({ data }) => {
                                                 selectable
                                                 className="text-xs text-gray-500"
                                             >
-                                                {RupeeSymbol} 7,388
+                                                {RupeeSymbol} 0
                                             </Text>
                                         </View>
                                     ),
@@ -510,7 +513,7 @@ const PortfolioCard = ({ data }) => {
                                                 selectable
                                                 className="text-xs text-gray-500"
                                             >
-                                                25.7% (24.8%)
+                                                00.00% (00.00%)
                                             </Text>
                                         </View>
                                     ),
@@ -544,14 +547,21 @@ const PortfolioCard = ({ data }) => {
                 <View className="p-2 flex flex-col w-full">
                     <View className="w-full px-4 py-4 mb-2 bg-[#eaf3fe] flex flex-row items-center justify-between rounded">
                         <Text className="font-bold">Total SIP Amount</Text>
-                        <Text className="font-bold">{RupeeSymbol} 57,000</Text>
+                        <Text className="font-bold">
+                            {RupeeSymbol}{" "}
+                            {data?.sip?.reduce(
+                                (accumulator, currentValue) =>
+                                    accumulator + currentValue.amount,
+                                0
+                            )}
+                        </Text>
                     </View>
                     <DataTable
                         key="sips"
                         headers={["Schemes", "SIP Amount", "Next Due"]}
                         cellSize={[6, 3, 3]}
-                        rows={[
-                            [
+                        rows={data?.sip?.map((sip) => {
+                            return [
                                 {
                                     key: "scheme",
                                     content: (
@@ -559,11 +569,10 @@ const PortfolioCard = ({ data }) => {
                                             <View className="w-8 h-8 rounded bg-gray-500" />
                                             <View>
                                                 <Text className="text-xs">
-                                                    Kotak Bank Mid Cap Fund
-                                                    Direct Growth
+                                                    Mutual Fund Name NA
                                                 </Text>
                                                 <Text className="text-xs text-gray-400">
-                                                    Equity | Multi Cap
+                                                    Category | Subcategory
                                                 </Text>
                                             </View>
                                         </View>
@@ -577,7 +586,7 @@ const PortfolioCard = ({ data }) => {
                                                 selectable
                                                 className="text-xs text-black"
                                             >
-                                                {RupeeSymbol} 7,388
+                                                {RupeeSymbol} {sip?.amount}
                                             </Text>
                                         </View>
                                     ),
@@ -590,103 +599,13 @@ const PortfolioCard = ({ data }) => {
                                                 selectable
                                                 className="text-xs text-gray-500"
                                             >
-                                                Mar 4, 2024
+                                                NA
                                             </Text>
                                         </View>
                                     ),
                                 },
-                            ],
-                            [
-                                {
-                                    key: "scheme",
-                                    content: (
-                                        <View className="flex flex-row items-center gap-2">
-                                            <View className="w-8 h-8 rounded bg-gray-500" />
-                                            <View>
-                                                <Text className="text-xs">
-                                                    Kotak Bank Mid Cap Fund
-                                                    Direct Growth
-                                                </Text>
-                                                <Text className="text-xs text-gray-400">
-                                                    Equity | Multi Cap
-                                                </Text>
-                                            </View>
-                                        </View>
-                                    ),
-                                },
-                                {
-                                    key: "sip",
-                                    content: (
-                                        <View>
-                                            <Text
-                                                selectable
-                                                className="text-xs text-black"
-                                            >
-                                                {RupeeSymbol} 7,388
-                                            </Text>
-                                        </View>
-                                    ),
-                                },
-                                {
-                                    key: "nextDue",
-                                    content: (
-                                        <View>
-                                            <Text
-                                                selectable
-                                                className="text-xs text-gray-500"
-                                            >
-                                                Mar 4, 2024
-                                            </Text>
-                                        </View>
-                                    ),
-                                },
-                            ],
-                            [
-                                {
-                                    key: "scheme",
-                                    content: (
-                                        <View className="flex flex-row items-center gap-2">
-                                            <View className="w-8 h-8 rounded bg-gray-500" />
-                                            <View>
-                                                <Text className="text-xs">
-                                                    Kotak Bank Mid Cap Fund
-                                                    Direct Growth
-                                                </Text>
-                                                <Text className="text-xs text-gray-400">
-                                                    Equity | Multi Cap
-                                                </Text>
-                                            </View>
-                                        </View>
-                                    ),
-                                },
-                                {
-                                    key: "sip",
-                                    content: (
-                                        <View>
-                                            <Text
-                                                selectable
-                                                className="text-xs text-black"
-                                            >
-                                                {RupeeSymbol} 7,388
-                                            </Text>
-                                        </View>
-                                    ),
-                                },
-                                {
-                                    key: "nextDue",
-                                    content: (
-                                        <View>
-                                            <Text
-                                                selectable
-                                                className="text-xs text-gray-500"
-                                            >
-                                                Mar 4, 2024
-                                            </Text>
-                                        </View>
-                                    ),
-                                },
-                            ],
-                        ]}
+                            ];
+                        })}
                     />
                 </View>
             ),
@@ -700,8 +619,8 @@ const PortfolioCard = ({ data }) => {
                         key="sips"
                         headers={["Schemes", "Amount", "Date", "Status"]}
                         cellSize={[5, 3, 2, 2]}
-                        rows={[
-                            [
+                        rows={data?.transactions?.map((transaction) => {
+                            return [
                                 {
                                     key: "scheme",
                                     content: (
@@ -709,11 +628,10 @@ const PortfolioCard = ({ data }) => {
                                             <View className="w-8 h-8 rounded bg-gray-500" />
                                             <View>
                                                 <Text className="text-xs">
-                                                    Kotak Bank Mid Cap Fund
-                                                    Direct Growth
+                                                    Mutual Fund Name NA
                                                 </Text>
                                                 <Text className="text-xs text-gray-400">
-                                                    Equity | Multi Cap
+                                                    Category | Subcategory
                                                 </Text>
                                             </View>
                                         </View>
@@ -727,7 +645,8 @@ const PortfolioCard = ({ data }) => {
                                                 selectable
                                                 className="text-xs text-black"
                                             >
-                                                {RupeeSymbol} 7,388
+                                                {RupeeSymbol}{" "}
+                                                {transaction?.amount}
                                             </Text>
                                         </View>
                                     ),
@@ -740,7 +659,9 @@ const PortfolioCard = ({ data }) => {
                                                 selectable
                                                 className="text-xs text-gray-500"
                                             >
-                                                23/09/2024
+                                                {moment(
+                                                    transaction?.createdAt
+                                                ).format("MMM DD, YYYY")}
                                             </Text>
                                         </View>
                                     ),
@@ -753,129 +674,17 @@ const PortfolioCard = ({ data }) => {
                                                 selectable
                                                 className="text-xs text-gray-500"
                                             >
-                                                Success
+                                                {
+                                                    transaction
+                                                        ?.transactionStatus
+                                                        ?.name
+                                                }
                                             </Text>
                                         </View>
                                     ),
                                 },
-                            ],
-                            [
-                                {
-                                    key: "scheme",
-                                    content: (
-                                        <View className="flex flex-row items-center gap-2">
-                                            <View className="w-8 h-8 rounded bg-gray-500" />
-                                            <View>
-                                                <Text className="text-xs">
-                                                    Kotak Bank Mid Cap Fund
-                                                    Direct Growth
-                                                </Text>
-                                                <Text className="text-xs text-gray-400">
-                                                    Equity | Multi Cap
-                                                </Text>
-                                            </View>
-                                        </View>
-                                    ),
-                                },
-                                {
-                                    key: "amount",
-                                    content: (
-                                        <View>
-                                            <Text
-                                                selectable
-                                                className="text-xs text-black"
-                                            >
-                                                {RupeeSymbol} 7,388
-                                            </Text>
-                                        </View>
-                                    ),
-                                },
-                                {
-                                    key: "date",
-                                    content: (
-                                        <View>
-                                            <Text
-                                                selectable
-                                                className="text-xs text-gray-500"
-                                            >
-                                                23/09/2024
-                                            </Text>
-                                        </View>
-                                    ),
-                                },
-                                {
-                                    key: "status",
-                                    content: (
-                                        <View>
-                                            <Text
-                                                selectable
-                                                className="text-xs text-gray-500"
-                                            >
-                                                Success
-                                            </Text>
-                                        </View>
-                                    ),
-                                },
-                            ],
-                            [
-                                {
-                                    key: "scheme",
-                                    content: (
-                                        <View className="flex flex-row items-center gap-2">
-                                            <View className="w-8 h-8 rounded bg-gray-500" />
-                                            <View>
-                                                <Text className="text-xs">
-                                                    Kotak Bank Mid Cap Fund
-                                                    Direct Growth
-                                                </Text>
-                                                <Text className="text-xs text-gray-400">
-                                                    Equity | Multi Cap
-                                                </Text>
-                                            </View>
-                                        </View>
-                                    ),
-                                },
-                                {
-                                    key: "amount",
-                                    content: (
-                                        <View>
-                                            <Text
-                                                selectable
-                                                className="text-xs text-black"
-                                            >
-                                                {RupeeSymbol} 7,388
-                                            </Text>
-                                        </View>
-                                    ),
-                                },
-                                {
-                                    key: "date",
-                                    content: (
-                                        <View>
-                                            <Text
-                                                selectable
-                                                className="text-xs text-gray-500"
-                                            >
-                                                23/09/2024
-                                            </Text>
-                                        </View>
-                                    ),
-                                },
-                                {
-                                    key: "status",
-                                    content: (
-                                        <View>
-                                            <Text
-                                                selectable
-                                                className="text-xs text-gray-500"
-                                            >
-                                                Success
-                                            </Text>
-                                        </View>
-                                    ),
-                                },
-                            ],
-                        ]}
+                            ];
+                        })}
                     />
                 </View>
             ),
@@ -895,8 +704,8 @@ const PortfolioCard = ({ data }) => {
     );
 };
 
-const InvestModalCard = ({ hideDialog }) => {
-    const [cardNumber, setCardNumber] = useState(1);
+const InvestModalCard = ({ hideDialog, card = 1 }) => {
+    const [cardNumber, setCardNumber] = useState(card);
     const [selectedFund, setSelectedFund] = useState(); // This is to save fund context to render in the next modal info
 
     const selectFund = (data: any) => {
@@ -1343,8 +1152,8 @@ const InvestModalAction = ({ deselectFund, tabContent }) => {
     );
 };
 
-const RedeemModalCard = ({ hideDialog }) => {
-    const [cardNumber, setCardNumber] = useState(1);
+const RedeemModalCard = ({ hideDialog, card = 1 }) => {
+    const [cardNumber, setCardNumber] = useState(card);
     const [selectedFund, setSelectedFund] = useState(); // This is to save fund context to render in the next modal info
     const [methodSelect, setMethodSelect] = useState("Enter Amount");
 
@@ -1541,15 +1350,17 @@ const AccountDetailsCard = ({ data }: { data: ClientDetailItem }) => {
         setSelectedTab(tab);
     };
 
-    const accordionData = [
-        {
-            title: "Kotak Bank",
+    const accordionData = data?.bankAccounts?.map((bank) => {
+        return {
+            title: bank?.bankBranch?.bank?.name,
             subcontent: (
                 <View className="flex flex-row items-center gap-2">
                     <Text className="text-xs text-gray-400">
-                        xxxx xxxx 6789
+                        {maskLetters(bank.accountNumber)}
                     </Text>
-                    <Text className="text-xs text-purple-700">Primary</Text>
+                    {bank.isPrimary && (
+                        <Text className="text-xs text-purple-700">Primary</Text>
+                    )}
                 </View>
             ),
             content: (
@@ -1557,19 +1368,19 @@ const AccountDetailsCard = ({ data }: { data: ClientDetailItem }) => {
                     <DataValue
                         key="branchName"
                         title="Branch Name"
-                        value="Mahatama Gandhi Road, Bengaluru"
+                        value={bank?.bankBranch?.name}
                     />
                     <DataValue
                         key="ifsc"
                         title="IFSC Code"
-                        value="KMB0003838"
+                        value={bank?.bankBranch?.ifscCode}
                     />
                     <DataValue
                         key="accountType"
                         title="Account Type"
-                        value="Savings"
+                        value={bank?.bankAccountType?.name}
                     />
-                    <DataValue key="autopay" title="Autopay" value="Enabled" />
+                    <DataValue key="autopay" title="Autopay" value="NA" />
                     <View className="p-2">
                         <Text className="text-md font-semibold py-4">
                             Autopay Details
@@ -1581,9 +1392,7 @@ const AccountDetailsCard = ({ data }: { data: ClientDetailItem }) => {
                                 title="Autopay ID"
                                 value={
                                     <View className="flex flex-row items-center gap-2">
-                                        <Text className="text-sm">
-                                            73478236874789
-                                        </Text>
+                                        <Text className="text-sm">NA</Text>
                                         <Icon
                                             name="copy"
                                             style={{ fontWeight: "100" }}
@@ -1599,7 +1408,7 @@ const AccountDetailsCard = ({ data }: { data: ClientDetailItem }) => {
                                 title="Status"
                                 value={
                                     <Text className="text-green-500 text-sm">
-                                        Approved
+                                        NA
                                     </Text>
                                 }
                             />
@@ -1609,11 +1418,7 @@ const AccountDetailsCard = ({ data }: { data: ClientDetailItem }) => {
                                 key="requestedOn"
                                 reverse
                                 title="Requested on"
-                                value={
-                                    <Text className="text-sm">
-                                        Jan 22, 2024
-                                    </Text>
-                                }
+                                value={<Text className="text-sm">NA</Text>}
                             />
                             <DataGrid
                                 key="autopayAmount"
@@ -1621,7 +1426,7 @@ const AccountDetailsCard = ({ data }: { data: ClientDetailItem }) => {
                                 title="Autopay Amount"
                                 value={
                                     <Text className="text-sm">
-                                        {RupeeSymbol} 2,00,000
+                                        {RupeeSymbol} 1,00,000
                                     </Text>
                                 }
                             />
@@ -1636,30 +1441,8 @@ const AccountDetailsCard = ({ data }: { data: ClientDetailItem }) => {
                     </View>
                 </View>
             ),
-        },
-        {
-            title: "HDFC Bank",
-            subcontent: (
-                <View className="flex flex-row items-center gap-2">
-                    <Text className="text-xs text-gray-400">
-                        xxxx xxxx 6789
-                    </Text>
-                </View>
-            ),
-            content: "HDFC Bank Details",
-        },
-        {
-            title: "Canara Bank",
-            subcontent: (
-                <View className="flex flex-row items-center gap-2">
-                    <Text className="text-xs text-gray-400">
-                        xxxx xxxx 6789
-                    </Text>
-                </View>
-            ),
-            content: "Canara Bank Details",
-        },
-    ];
+        };
+    });
 
     const renderItem = (item) => (
         <View style={{ padding: 10 }}>
@@ -1697,7 +1480,11 @@ const AccountDetailsCard = ({ data }: { data: ClientDetailItem }) => {
                     <DataValue
                         key="address"
                         title="Address"
-                        value="21 Yemen Road, 765432, Yemen State, Yemen"
+                        value={
+                            !!data?.users[0]?.addresses?.length
+                                ? "Address Present"
+                                : "NA"
+                        }
                     />
                 </View>
             ),
@@ -1706,8 +1493,8 @@ const AccountDetailsCard = ({ data }: { data: ClientDetailItem }) => {
             key: "nomineeDetails",
             name: "Nominee Details",
             content: (
-                <View>
-                    <Text>Nominee</Text>
+                <View className="w-full p-2 flex flex-col justify-items items-center">
+                    <Text>Nominee NA</Text>
                 </View>
             ),
         },
@@ -1722,7 +1509,7 @@ const AccountDetailsCard = ({ data }: { data: ClientDetailItem }) => {
     );
 };
 
-const MutualFundCard = ({ data }) => {
+const MutualFundCard = () => {
     return (
         <View className="flex-1 bg-white rounded shadow h-full overflow-auto p-2">
             <DataTable
@@ -1835,7 +1622,7 @@ const MutualFundCard = ({ data }) => {
     );
 };
 
-const TopAMCCard = ({ data }) => {
+const TopAMCCard = () => {
     return (
         <View className="flex-1 bg-white rounded shadow h-full overflow-auto p-2">
             <DataTable
