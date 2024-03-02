@@ -4,6 +4,7 @@ import {
     View,
     StyleSheet,
     useWindowDimensions,
+    TouchableOpacity,
 } from "react-native";
 import { Link, router, useLocalSearchParams } from "expo-router";
 import {
@@ -18,6 +19,7 @@ import {
     Text,
     WarningIcon,
     Image,
+    Popover,
 } from "native-base";
 import { useEffect, useState } from "react";
 import RemoteApi from "../../../src/services/RemoteApi";
@@ -46,6 +48,7 @@ import Accordion from "../../../src/components/Accordion/Accordion";
 import DataTable from "../../../src/components/DataTable/DataTable";
 import DataText from "../../../src/components/DataValue/DataText";
 import { dateFormat } from "../../../src/helper/DateUtils";
+import { getTransactionMessage } from "../../../src/helper/StatusInfo";
 
 const DataValue = ({ title, value }) => {
     return (
@@ -562,7 +565,32 @@ const TransactionList = ({ data }: { data: SIPReportDetail }) => {
             },
             {
                 key: "status",
-                content: <DataText value={item?.transactionStatus?.name} />,
+                content: (
+                    <View className='flex flex-row items-center w-12/12 justify-start'>
+                    <View className='flex flex-col rounded-full w-8/12 items-center justify-center'>
+                        <View className='flex flex-row items-center justify-center w-11/12'>
+                            <Popover trigger={triggerProps => {
+                                return <TouchableOpacity {...triggerProps}>
+                                    <Icon name="info-circle" size={12} color="black" />
+                                </TouchableOpacity>;
+                            }}>
+                                <Popover.Content accessibilityLabel="Order Details" w="56">
+                                    <Popover.Arrow />
+                                    <Popover.CloseButton />
+                                    <Popover.Header>{item?.transactionStatus?.name}</Popover.Header>
+                                    <Popover.Body>
+                                        <View>
+                                            <Text>{getTransactionMessage(item?.transactionStatus?.name)}</Text>
+                                        </View>
+                                    </Popover.Body>
+                                </Popover.Content>
+                            </Popover>
+                            <Text selectable className='p-1 text-black text-end md:text-center text-xs'>{item?.transactionStatus?.name}&nbsp;</Text>
+
+                        </View>
+                    </View>
+                </View>
+                ),
             },
         ];
     });

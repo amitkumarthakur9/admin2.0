@@ -14,6 +14,7 @@ import { ReportInterface } from "../../interfaces/ReportInterface";
 import moment from "moment";
 import { Popover } from "native-base";
 import { Link, router } from "expo-router";
+import { getOrderMessage } from "../../helper/StatusInfo";
 
 export const SIPRows = ({
     data,
@@ -75,15 +76,35 @@ export const SIPRows = ({
 
                     <View className="flex flex-row items-center w-2/12 justify-center">
                         <Text selectable className="font-semibold">
-                            Amount/Units
+                            Amount
                         </Text>
                     </View>
 
-                    <View className="flex flex-row items-center w-2/12 justify-center">
-                        <Text selectable className="font-semibold">
-                            Status
-                        </Text>
-                    </View>
+                    <View className='flex flex-row w-2/12 items-center justify-center'>
+                <View className='flex flex-row items-center justify-center'>
+                    <Popover trigger={triggerProps => {
+                        return <TouchableOpacity {...triggerProps}>
+                            <Icon name="info-circle" size={12} color="black" />
+                        </TouchableOpacity>;
+                    }}>
+                        <Popover.Content accessibilityLabel="Order Details" w="56">
+                            <Popover.Arrow />
+                            <Popover.CloseButton />
+                            <Popover.Header>Definition</Popover.Header>
+                            <Popover.Body>
+                                <View>
+                                    <Text className="pb-2">Initiated: Order Successfully placed.</Text>
+                                    <Text className="pb-2">Registered: order Successfully placed on BSE.</Text>
+                                    <Text className="pb-2">Cancelled: Order is Cancelled on BSE.</Text>
+                                    <Text className="pb-2">Failed: Order is Failed.</Text>
+                                    <Text className="pb-2">Success: order is successfully registered on BSE</Text>
+                                </View>
+                            </Popover.Body>
+                        </Popover.Content>
+                    </Popover>
+                    <Text selectable className='font-semibold pl-2'>Status&nbsp;</Text>
+                </View>
+            </View>
 
                     <View className="flex flex-row items-center justify-center w-2/12">
                         <Text selectable className="font-semibold">
@@ -272,7 +293,7 @@ export const SIPRows = ({
                                 <View className="pl-12 lg:pl-0 flex flex-row items-center w-full lg:w-4/12 justify-between md:justify-between lg:justify-start mt-2 md:mt-2 lg:mt-0">
                                     <View
                                         className={
-                                            "flex flex-col w-full justify-center items-start lg:items-start w-6/12 lg:w-full"
+                                            "flex flex-col justify-center items-start lg:items-start w-6/12 lg:w-full"
                                         }
                                     >
                                         <Text
@@ -388,7 +409,7 @@ export const SIPRows = ({
                                                 >
                                                     ₹{order.amount}
                                                 </Text>
-                                                <View className="ml-1">
+                                                {/* <View className="ml-1">
                                                     <Popover
                                                         trigger={(
                                                             triggerProps
@@ -443,7 +464,7 @@ export const SIPRows = ({
                                                             </Popover.Body>
                                                         </Popover.Content>
                                                     </Popover>
-                                                </View>
+                                                </View> */}
                                             </View>
                                             {order.units && (
                                                 <Text
@@ -457,7 +478,7 @@ export const SIPRows = ({
                                     </View>
 
                                     <View className="hidden md:hidden lg:flex flex-row items-center w-full lg:w-1/2 justify-start md:justify-center lg:justify-center">
-                                        <View className="flex flex-col bg-[#D7D7D7] rounded-full w-8/12 items-center justify-center">
+                                        <View className="flex flex-col rounded-full w-8/12 items-center justify-center">
                                             <View className="flex flex-row items-center justify-center w-11/12">
                                                 <Popover
                                                     trigger={(triggerProps) => {
@@ -481,13 +502,11 @@ export const SIPRows = ({
                                                         <Popover.Arrow />
                                                         <Popover.CloseButton />
                                                         <Popover.Header>
-                                                            Order Status
+                                                        {order.orderStatus.name}
                                                         </Popover.Header>
                                                         <Popover.Body>
                                                             <View>
-                                                                <Text>
-                                                                    Status
-                                                                </Text>
+                                                            <Text>{getOrderMessage(order.orderStatus.name)}</Text>
                                                             </View>
                                                         </Popover.Body>
                                                     </Popover.Content>
