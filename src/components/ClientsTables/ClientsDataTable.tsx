@@ -31,7 +31,7 @@ const ClientsDataTable = () => {
     const [currentPageNumber, setCurrentPageNumber] = useState(1);
     const [totalItems, setTotalItems] = useState(0);
     const [itemsPerPage, setItemsPerPage] = useState(10);
-    const [data, setData] = useState<AccountItem[]>([]);
+    const [data, setData] = useState<ClientDataResponse[]>([]);
     const [totalPages, setTotalPages] = useState(1);
     const [appliedFilers, setAppliedFilers] = useState([]);
     const [filtersSchema, setFiltersSchema] = useState([]);
@@ -57,10 +57,8 @@ const ClientsDataTable = () => {
             data.orderBy = appliedSorting;
         }
 
-        const response: AccountsResponse = await RemoteApi.post(
-            "client/list",
-            data
-        );
+        const response: ApiResponse<ClientDataResponse[]> =
+            await RemoteApi.post("client/list", data);
 
         if (response.code == 200) {
             setData(response.data);
@@ -135,10 +133,7 @@ const ClientsDataTable = () => {
                                 </View>
                             </View>
                             <View className="flex flex-row items-center mt-0">
-                                {!item?.users[0]?.kycStatus
-                                    ?.isAllowedToTransact && (
-                                    <Tag>KYC Not Done</Tag>
-                                )}
+                                {!item?.kycStatus && <Tag>KYC Not Done</Tag>}
                                 <Tag>SIP(N/A)</Tag>
                                 <Tag>Autopay active</Tag>
                             </View>
@@ -150,7 +145,7 @@ const ClientsDataTable = () => {
                 key: "panNumber",
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
-                        {item?.users[0]?.panNumber || "-"}
+                        {item?.panNumber || "-"}
                     </Text>
                 ),
             },
@@ -158,7 +153,7 @@ const ClientsDataTable = () => {
                 key: "clientCode",
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
-                        {item?.clientId}
+                        {item?.clientCode}
                     </Text>
                 ),
             },
