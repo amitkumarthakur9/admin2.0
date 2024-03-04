@@ -16,6 +16,7 @@ import { Popover } from "native-base";
 import { Link, router } from "expo-router";
 import { RupeeSymbol } from "../../helper/helper";
 import { MandateDataInterface } from "../../interfaces/MandateResponseInterface";
+import { getMandateMessage } from "../../helper/StatusInfo";
 
 export const MandateRows = ({ data, schema }) => {
     const getInitials = (name: string) => {
@@ -60,8 +61,29 @@ export const MandateRows = ({ data, schema }) => {
                     </Text>
                 </View>
                 <View className="flex flex-row w-[20%] items-center justify-center">
-                    <View className="flex flex-row items-center w-1/2">
-                        <Text selectable className="font-semibold">
+                <View className="flex flex-row items-center w-10/2">
+                        <Popover trigger={triggerProps => {
+                            return <TouchableOpacity {...triggerProps}>
+                                <Icon name="info-circle" size={12} color="black" />
+                            </TouchableOpacity>;
+                        }}>
+                            <Popover.Content accessibilityLabel="Order Details" w="56">
+                                <Popover.Arrow />
+                                <Popover.CloseButton />
+                                <Popover.Header>Definition</Popover.Header>
+                                <Popover.Body>
+                                    <View>
+                                        <Text className="pb-2">Initiated: Mandate order successfully placed</Text>
+                                        <Text className="pb-2">Registered: Mandate order Successfully registered on BSE.</Text>
+                                        <Text className="pb-2">Approved: Mandate is approved</Text>
+                                        <Text className="pb-2">Processing: Exchange has approved mandate, it’s pending from Bank side</Text>
+                                        <Text className="pb-2">Failed: Mandate is failed</Text>
+                                        <Text className="pb-2">Rejected - Mandate is Rejected</Text>
+                                    </View>
+                                </Popover.Body>
+                            </Popover.Content>
+                        </Popover>
+                        <Text selectable className="font-semibold ml-2">
                             Mandate Status
                         </Text>
                     </View>
@@ -161,6 +183,22 @@ export const MandateRows = ({ data, schema }) => {
                                 </View>
                             </View>
                             <View className="flex flex-row  w-[20%] items-center justify-center">
+                                <Popover trigger={triggerProps => {
+                                    return <TouchableOpacity {...triggerProps}>
+                                        <Icon name="info-circle" size={12} color="black" />
+                                    </TouchableOpacity>;
+                                }}>
+                                    <Popover.Content accessibilityLabel="Order Details" w="56">
+                                        <Popover.Arrow />
+                                        <Popover.CloseButton />
+                                        <Popover.Header>{mandate.mandateStatus.name}</Popover.Header>
+                                        <Popover.Body>
+                                            <View>
+                                                <Text>{getMandateMessage(mandate.mandateStatus.name)}</Text>
+                                            </View>
+                                        </Popover.Body>
+                                    </Popover.Content>
+                                </Popover>
                                 <Text
                                     selectable
                                     className="p-1 text-black text-end md:text-center text-xs"
@@ -168,7 +206,6 @@ export const MandateRows = ({ data, schema }) => {
                                     {mandate.mandateStatus.name}&nbsp;
                                 </Text>
                             </View>
-
                             <View className="flex flex-row items-center w-[20%] justify-center">
                                 {/* <Link
                                 href={{

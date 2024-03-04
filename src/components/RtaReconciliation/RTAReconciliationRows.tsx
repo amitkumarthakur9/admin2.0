@@ -30,6 +30,7 @@ import { router } from "expo-router";
 import { useState } from "react";
 import RemoteApi from "../../services/RemoteApi";
 import { TransactionStatusModal } from "./TransactionStatusUpdateModal";
+import { getTransactionMessage } from "../../helper/StatusInfo";
 
 export const RTAReconciliationRows = ({ data, schema, getDataList }) => {
     const [modalVisible, setModalVisible] = useState(false);
@@ -117,8 +118,34 @@ export const RTAReconciliationRows = ({ data, schema, getDataList }) => {
                     </View>
                 </View>
                 <View className="flex flex-row w-1/12">
-                    <View className="flex flex-row items-center justify-start w-4/5">
-                        <Text selectable className="font-semibold">
+                    <View className="flex flex-row items-center justify-center w-11/12">
+                        <View className='flex flex-row justify-center items-center mr-1'>
+                            <Popover trigger={triggerProps => {
+                                return <TouchableOpacity {...triggerProps}>
+                                    <Icon name="info-circle" size={12} color="black" />
+                                </TouchableOpacity>;
+                            }}>
+                                <Popover.Content accessibilityLabel="Order Details" w="56">
+                                    <Popover.Arrow />
+                                    <Popover.CloseButton />
+                                    <Popover.Header>Definition</Popover.Header>
+                                    <Popover.Body>
+                                        <View>
+                                            <Text className="pb-2">Initiated: Order Successfully Placed</Text>
+                                            <Text className="pb-2">Placed: Order Success placed on BSE</Text>
+                                            <Text className="pb-2">Payment Initiated: Payment Initiated</Text>
+                                            <Text className="pb-2">Payment Done: Payment is successfully Done</Text>
+                                            <Text className="pb-2">Registered: Order is successfully registered on BSE</Text>
+                                            <Text className="pb-2">Approved: Allotment is Done on BSE</Text>
+                                            <Text className="pb-2">Allotted: RTA allotment is done</Text>
+                                            <Text className="pb-2">Failed: Order is Failed</Text>
+                                        </View>
+                                    </Popover.Body>
+                                </Popover.Content>
+                            </Popover>
+                        </View>
+
+                        <Text selectable className="font-semibold text-center">
                             Transaction Status
                         </Text>
                     </View>
@@ -321,30 +348,60 @@ export const RTAReconciliationRows = ({ data, schema, getDataList }) => {
                                     {rta.transactionType || "-"}
                                 </Text>
                             </View>
-                            <View className="flex flex-row w-1/12">
-                                <View className="flex flex-col h-6 items-center justify-center bg-[#D7D7D7] rounded-full w-11/12">
-                                    <View className="flex flex-row items-center ">
-                                        <Text
-                                            selectable
-                                            className="p-1 text-black text-end md:text-center text-xs"
-                                        >
-                                            {rta.transactionStatus || "-"}&nbsp;
-                                        </Text>
-                                        <Pressable
-                                            onPress={() => {
-                                                setModalVisible(true),
-                                                    setId(rta.id),
-                                                    setTransactionStatus(
-                                                        rta.transactionStatus
-                                                    );
-                                            }}
-                                        >
-                                            <Icon
-                                                name="edit"
-                                                size={12}
-                                                color="black"
-                                            />
-                                        </Pressable>
+                            <View className="flex flex-row w-1/12 justify-start items-center">
+                                <View className='flex flex-row justify-center items-center mr-1'>
+                                    <Popover trigger={triggerProps => {
+                                        return <TouchableOpacity {...triggerProps}>
+                                            <Icon name="info-circle" size={12} color="black" />
+                                        </TouchableOpacity>;
+                                    }}>
+                                        <Popover.Content accessibilityLabel="Order Details" w="56">
+                                            <Popover.Arrow />
+                                            <Popover.CloseButton />
+                                            <Popover.Header>{rta.transactionStatus}</Popover.Header>
+                                            <Popover.Body>
+                                                <View>
+                                                    <Text>{getTransactionMessage(rta.transactionStatus)}</Text>
+                                                </View>
+                                            </Popover.Body>
+                                        </Popover.Content>
+                                    </Popover>
+                                </View>
+                                <View className="flex flex-col h-6 items-center justify-start  w-[99%]">
+                                    <View className="flex flex-row items-start justify-start w-11/12">
+
+                                        {rta.transactionStatus === "Alloted" || rta.transactionStatus === "Failed"
+                                            ? <Text
+                                                selectable
+                                                className="p-1 text-black text-start text-xs"
+                                            >
+                                                {rta.transactionStatus || "-"}
+                                            </Text> :
+                                            <View className="flex flex-row items-center text-start ">
+                                                <Text
+                                                    selectable
+                                                    className="p-1 text-black text-start text-xs"
+                                                >
+                                                    {rta.transactionStatus || "-"}
+                                                </Text>
+                                                <Pressable
+                                                    onPress={() => {
+                                                        setModalVisible(true),
+                                                            setId(rta.id),
+                                                            setTransactionStatus(
+                                                                rta.transactionStatus
+                                                            );
+                                                    }}
+                                                >
+                                                    <Icon
+                                                        name="edit"
+                                                        size={15}
+                                                        color="black"
+                                                    />
+                                                </Pressable>
+                                         </View>
+                                        }
+
                                     </View>
                                 </View>
                             </View>

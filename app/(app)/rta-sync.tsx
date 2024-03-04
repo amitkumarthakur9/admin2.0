@@ -23,11 +23,12 @@ import {
     FormControl,
     useToast,
 } from "native-base";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import * as DocumentPicker from "expo-document-picker";
 import Icon from "react-native-vector-icons/FontAwesome";
 import RemoteApi from "../../src/services/RemoteApi";
 import { ToastAlert } from "../../src/helper/CustomToaster";
+import { v4 as uuidv4 } from "uuid";
 
 export default function RTASync() {
     const [rta, setRta] = useState("");
@@ -35,6 +36,37 @@ export default function RTASync() {
     const [isLoading, setIsLoading] = useState(false);
     const [isSyncing, setIsSyncing] = useState(false);
     const toast = useToast();
+    const [toasts, setToasts] = useState([]);
+
+    useEffect(() => {
+        // Clear existing toasts
+        toast.closeAll();
+
+        // Show the latest toast
+        if (toasts.length > 0) {
+            const latestToast = toasts[toasts.length - 1];
+            toast.show({
+                render: () => (
+                    <ToastAlert
+                        id={latestToast.id}
+                        variant={latestToast.variant}
+                        title={latestToast.title}
+                        description=""
+                        isClosable={false}
+                        toast={toast}
+                        status={latestToast.status}
+                        onClose={() => removeToast(latestToast.id)} // Remove the toast from the 'toasts' array when closed
+                    />
+                ),
+                placement: "top",
+            });
+        }
+    }, [toasts]);
+
+    // Function to remove a toast from the toasts array
+    const removeToast = (id) => {
+        setToasts(toasts.filter((toast) => toast.id !== id));
+    };
 
     const pickDocument = async () => {
         if (pickedDocument == null) {
@@ -67,31 +99,43 @@ export default function RTASync() {
         let formData = new FormData();
         formData.append("rta", rta);
         formData.append("file", pickedDocument);
-        const response: any = await RemoteApi.postWithFormData(
-            "/file/upload",
-            formData
-        );
 
-        if (response?.message == "Success") {
-            toast.show({
-                render: ({ index }) => {
-                    return (
-                        <ToastAlert
-                            id={index}
-                            variant={"solid"}
-                            title={response?.data}
-                            description={""}
-                            isClosable={true}
-                            toast={toast}
-                            status={"success"}
-                        />
-                    );
+        try {
+            const response: any = await RemoteApi.postWithFormData(
+                "/file/upload-transaction",
+                formData
+            );
+
+            if (response?.message == "Success") {
+                const uniqueId = uuidv4();
+                // Add the success toast to the toasts array in the component's state
+                setToasts([
+                    ...toasts,
+                    {
+                        id: uniqueId,
+                        variant: "solid",
+                        title: response?.data,
+                        status: "success",
+                    },
+                ]);
+            } else {
+                // const uniqueId = uuidv4();
+                // setToasts([...toasts, { id: uniqueId, variant: "solid", title: "Upload Failed", status: "error" }]);
+            }
+        } catch (error) {
+            const uniqueId = uuidv4();
+            setToasts([
+                ...toasts,
+                {
+                    id: uniqueId,
+                    variant: "solid",
+                    title: "Upload Failed",
+                    status: "error",
                 },
-                placement: "top",
-            });
+            ]);
         }
+
         setIsLoading(false);
-        // console.log(response);
     };
 
     const handleSync = async () => {

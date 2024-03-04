@@ -72,6 +72,7 @@ interface Transaction {
 }
 
 export interface SIPReportDetail {
+    createdAt: string;
     id: string;
     account: Account;
     distributor: Distributor;
