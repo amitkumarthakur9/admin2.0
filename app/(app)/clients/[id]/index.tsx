@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { View } from "react-native";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import {
     Button,
     Center,
@@ -41,6 +41,7 @@ export default function ClientDetail() {
     const { id } = useLocalSearchParams();
     const [data, setData] = useState<ClientDetailItem>();
     const [isLoading, setIsLoading] = useState(true);
+    const router = useRouter();
 
     useEffect(() => {
         setIsLoading(true);
@@ -88,9 +89,7 @@ export default function ClientDetail() {
                             <View className="flex flex-row items-center">
                                 <Pressable
                                     className="mr-3"
-                                    onPress={() =>
-                                        console.log("This will go back ")
-                                    }
+                                    onPress={() => router.push("/clients")}
                                 >
                                     <Icon
                                         name="angle-left"
