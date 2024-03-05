@@ -1,12 +1,14 @@
 {
-    
-   "compilerOptions": {
-        "baseUrl": ".",
-        "paths": {
-        "*": ["src/*", "@types/*", "*"]
-        },
-        // Other configurations...
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "*": ["*", "src/*", "app/*", "@types/*"]
     },
-    "extends": "expo/tsconfig.base",
-    "include": ["@types/*", "src/**/*"]
+    "typeRoots": ["@types"],
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "jsx": "react-native",
+  },
+  "extends": "expo/tsconfig.base",
+  "include": ["@types/global.d.ts", "src/**/*", "app/**/*"]
 }
