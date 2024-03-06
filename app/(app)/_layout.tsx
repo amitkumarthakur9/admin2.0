@@ -37,6 +37,7 @@ import MandateDetail from "./mandates/[id]";
 import RTASync from "./rta-sync";
 import AUMTabScreen from "./aum-reports";
 import MutualFundDetail from "./mutual-fund/[id]";
+import GoogleSignInComponent from "./invite-contact";
 
 NativeWindStyleSheet.setOutput({
     default: "native",
@@ -291,6 +292,17 @@ export default function AppLayout() {
                         }}
                         initialParams={{}}
                         component={MutualFundDetail}
+                    />
+                     <Drawer.Screen
+                        name="invite-contact" // This is the name of the page and must match the url from root
+                        options={{
+                            drawerLabel: "invitecontact",
+                            title: "invitecontact",
+                            drawerItemStyle: { display: "none" },
+                            unmountOnBlur: true,
+                        }}
+                        initialParams={{}}
+                        component={GoogleSignInComponent}
                     />
 
                     {/* </Drawer> */}
