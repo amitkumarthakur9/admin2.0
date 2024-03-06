@@ -7,20 +7,20 @@ import {
     FlatList,
     TouchableOpacity,
     Platform,
-    Modal,
     ScrollView,
+    TextInput,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as MailComposer from "expo-mail-composer";
 import { TableBreadCrumb } from "../../src/components/BreadCrumbs/TableBreadCrumb";
 
-const GoogleSignInComponent = () => {
+const SendInvite = () => {
     const [userInfo, setUserInfo] = useState(null);
     const [contacts, setContacts] = useState([]);
     const [selectedContacts, setSelectedContacts] = useState([]);
-    const [showModal, setShowModal] = useState(false);
     const [nowCurrentUrl, setNowCurrentUrl] = useState("");
     const [selectAll, setSelectAll] = useState(false);
+    const [searchQuery, setSearchQuery] = useState("");
 
     useEffect(() => {
         const getCurrentUrl = async () => {
@@ -39,8 +39,8 @@ const GoogleSignInComponent = () => {
 
                     if (code) {
                         // Save the code parameter to AsyncStorage
-                        await AsyncStorage.setItem("Google_access_token", code);
-                        console.log("Code saved to AsyncStorage");
+                        // await AsyncStorage.setItem("Google_access_token", code);
+                        // console.log("Code saved to AsyncStorage");
                     }
 
                     // getGoogleContacts(code);
@@ -52,48 +52,6 @@ const GoogleSignInComponent = () => {
         };
 
         getCurrentUrl();
-
-        // let handleRedirect = async (event) => {
-        //     if (Platform.OS === "web") {
-        //         return;
-        //     }
-
-        //     const url = event.url;
-        //     if (url.includes("http://localhost:8081/invite-contact")) {
-        //         const params = new URLSearchParams(url.split("?")[1]);
-        //         const code = params.get("code");
-        //         console.log(code);
-        //         AsyncStorage.setItem(
-        //             "Google_access_token",
-        //             JSON.stringify(code)
-        //         );
-
-        //         const getCurrentUrl = async () => {
-        //             try {
-        //                 const url = await Linking.getInitialURL();
-        //                 console.log(url);
-        //             } catch (error) {
-        //                 console.error("Error getting current URL:", error);
-        //             }
-        //         };
-
-        //         getCurrentUrl();
-
-        //         if (code) {
-        //             await exchangeCodeForToken(code);
-        //         }
-        //     }
-        // };
-
-        // Linking.addEventListener("url", handleRedirect);
-
-        // return () => {
-        //     if (Platform.OS === "web") {
-        //         return;
-        //     }
-
-        //     Linking.removeEventListener("url", handleRedirect);
-        // };
     }, [nowCurrentUrl]);
 
     const exchangeCodeForToken = async (code) => {
@@ -124,10 +82,10 @@ const GoogleSignInComponent = () => {
                 const { access_token } = await response.json();
 
                 // Save user info to local storage
-                await AsyncStorage.setItem(
-                    "Google_access_token",
-                    JSON.stringify(access_token)
-                );
+                // await AsyncStorage.setItem(
+                //     "Google_access_token",
+                //     JSON.stringify(access_token)
+                // );
 
                 // Pass the access token to getGoogleContacts to fetch contacts
                 await getGoogleContacts(access_token);
@@ -146,10 +104,10 @@ const GoogleSignInComponent = () => {
                     const userInfo = await userInfoResponse.json();
 
                     // Save user info to local storage
-                    await AsyncStorage.setItem(
-                        "userInfo",
-                        JSON.stringify(userInfo)
-                    );
+                    // await AsyncStorage.setItem(
+                    //     "userInfo",
+                    //     JSON.stringify(userInfo)
+                    // );
                     setUserInfo(userInfo);
                 } else {
                     console.error(
@@ -168,51 +126,96 @@ const GoogleSignInComponent = () => {
         }
     };
 
+    // const getGoogleContacts = async (accessToken) => {
+    //     try {
+    //         const response = await fetch(
+    //             "https://people.googleapis.com/v1/people/me/connections?personFields=names,emailAddresses,phoneNumbers",
+
+    //             {
+    //                 headers: {
+    //                     Authorization: `Bearer ${accessToken}`,
+    //                 },
+    //             }
+    //         );
+
+    //         if (response.ok) {
+    //             const data = await response.json();
+    //             const contactNames = data.connections.map((connection) => {
+    //                 const name = connection.names
+    //                     ? connection.names[0].displayName
+    //                     : "No Name";
+    //                 const email = connection.emailAddresses
+    //                     ? connection.emailAddresses[0].value
+    //                     : "No Email";
+    //                 const phone = connection.phoneNumbers
+    //                     ? connection.phoneNumbers[0].value
+    //                     : "No Phone Number";
+    //                 // Add any other contact details you want to extract here
+    //                 return { name, email, phone };
+    //             });
+
+    //             setContacts(contactNames);
+
+    //             // Save contacts data to local storage
+    //             // await AsyncStorage.setItem(
+    //             //     "contacts",
+    //             //     JSON.stringify(contactNames)
+    //             // );
+
+    //             // await AsyncStorage.setItem(
+    //             //     "contacts Data",
+    //             //     JSON.stringify(data)
+    //             // );
+    //         } else {
+    //             console.error("Failed to fetch contacts:", response.statusText);
+    //         }
+    //     } catch (error) {
+    //         console.error("Error fetching contacts:", error);
+    //     }
+    // };
+
     const getGoogleContacts = async (accessToken) => {
         try {
-            const response = await fetch(
-                // "https://people.googleapis.com/v1/people/me/connections?personFields=names",
-                "https://people.googleapis.com/v1/people/me/connections?personFields=names,emailAddresses",
-                {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`,
-                    },
+            const maxResults = 100; // Set the maximum number of results per page
+            let nextPageToken = ''; // Initialize nextPageToken
+    
+            let allContacts = []; // Initialize an array to store all contacts
+    
+            // Fetch contacts until there are no more nextPageToken
+            do {
+                const response = await fetch(
+                    `https://people.googleapis.com/v1/people/me/connections?personFields=names,emailAddresses,phoneNumbers&pageSize=${maxResults}&pageToken=${nextPageToken}`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${accessToken}`,
+                        },
+                    }
+                );
+    
+                if (response.ok) {
+                    const data = await response.json();
+                    const contacts = data.connections.map((connection) => {
+                        const name = connection.names ? connection.names[0].displayName : "No Name";
+                        const email = connection.emailAddresses ? connection.emailAddresses[0].value : "No Email";
+                        const phone = connection.phoneNumbers ? connection.phoneNumbers[0].value : "No Phone Number";
+                        return { name, email, phone };
+                    });
+    
+                    allContacts = allContacts.concat(contacts);
+    
+                    nextPageToken = data.nextPageToken; // Update nextPageToken
+                } else {
+                    console.error("Failed to fetch contacts:", response.statusText);
+                    break; // Exit loop on error
                 }
-            );
-
-            if (response.ok) {
-                const data = await response.json();
-                const contactNames = data.connections.map((connection) => {
-                    const name = connection.names
-                        ? connection.names[0].displayName
-                        : "No Name";
-                    const email = connection.emailAddresses
-                        ? connection.emailAddresses[0].value
-                        : "No Email";
-                    // const phone = connection.phoneNumbers ? connection.phoneNumbers[0].value : "No Phone Number";
-                    // Add any other contact details you want to extract here
-                    return { name, email };
-                });
-
-                setContacts(contactNames);
-
-                // Save contacts data to local storage
-                await AsyncStorage.setItem(
-                    "contacts",
-                    JSON.stringify(contactNames)
-                );
-
-                await AsyncStorage.setItem(
-                    "contacts Data",
-                    JSON.stringify(data)
-                );
-            } else {
-                console.error("Failed to fetch contacts:", response.statusText);
-            }
+            } while (nextPageToken);
+    
+            setContacts(allContacts); // Update state with all contacts
         } catch (error) {
             console.error("Error fetching contacts:", error);
         }
     };
+    
 
     const signInWithGoogle = async () => {
         try {
@@ -226,8 +229,8 @@ const GoogleSignInComponent = () => {
                 scope
             )}`;
 
-            Linking.openURL(authUrl);
-            setShowModal(true);
+            // Linking.openURL(authUrl);
+            window.location.href = authUrl; // Redirect to Google sign-in URL
         } catch (error) {
             console.error("Google sign-in error:", error);
         }
@@ -284,14 +287,18 @@ const GoogleSignInComponent = () => {
     const saveLocal = async () => {
         console.log("saveLocal");
 
-        await AsyncStorage.setItem(
-            "contacts",
-            JSON.stringify("contactlocalsave")
-        );
+        // await AsyncStorage.setItem(
+        //     "contacts",
+        //     JSON.stringify("contactlocalsave")
+        // );
 
-        const userInfoString = await AsyncStorage.getItem("contacts");
-        console.log(JSON.stringify(userInfoString));
+        // const userInfoString = await AsyncStorage.getItem("contacts");
+        // console.log(JSON.stringify(userInfoString));
     };
+
+    const filteredContacts = contacts.filter((contact) =>
+        contact.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
     const toggleContactSelection = (contact) => {
         const isSelected = selectedContacts.some((c) => c === contact);
@@ -324,7 +331,7 @@ const GoogleSignInComponent = () => {
         >
             <View className="bg-white">
                 <View className="">
-                    <TableBreadCrumb name={"Invite Google Contacts"} />
+                    <TableBreadCrumb name={"Send Invite to Google Contacts"} />
                 </View>
                 <View
                     style={{
@@ -334,89 +341,122 @@ const GoogleSignInComponent = () => {
                     }}
                 >
                     {userInfo ? (
-                        <View>
-                            <Text>Welcome, {userInfo.name}!</Text>
-                            <Button
-                                title="Sign Out"
-                                onPress={() => setUserInfo(null)}
-                            />
-                            <Text>Contacts:</Text>
-                            {contacts.length > 0 ? (
-                                <View>
-                                    <TouchableOpacity onPress={toggleSelectAll}>
-                                        <Text>
-                                            {selectAll
-                                                ? "Deselect All"
-                                                : "Select All"}
-                                        </Text>
-                                    </TouchableOpacity>
-                                    <FlatList
-                                        data={contacts}
-                                        renderItem={({ item }) => (
-                                            <TouchableOpacity
-                                                onPress={() =>
-                                                    toggleContactSelection(item)
-                                                }
-                                            >
-                                                <View
-                                                    style={{
-                                                        flexDirection: "row",
-                                                        alignItems: "center",
-                                                    }}
-                                                >
-                                                    <Text>
-                                                        {isSelected(item)
-                                                            ? "☑️ "
-                                                            : "□ "}
-                                                    </Text>
-                                                    <Text>
-                                                        {item.name} -{" "}
-                                                        {item.email}
-                                                    </Text>
-                                                </View>
-                                            </TouchableOpacity>
-                                        )}
-                                        keyExtractor={(item, index) =>
-                                            index.toString()
-                                        }
+                        <View
+                            className={
+                                "mt-4 z-[-1] w-[90%] flex items-center border-[#c8c8c8] border-[0.2px] rounded-[5px]"
+                            }
+                        >
+                            <View className="flex w-8/12">
+                                <View className="flex flex-row justify-between py-1">
+                                    <Text className="font-bold text-lg">
+                                        Welcome, {userInfo.name}!
+                                    </Text>
+                                    <Button
+                                        title="Sign Out"
+                                        onPress={() => setUserInfo(null)}
                                     />
                                 </View>
-                            ) : (
-                                <Text>No Contacts</Text>
-                            )}
-                            <Button
-                                title="Send Invite"
-                                onPress={sendInvite}
-                                disabled={selectedContacts.length === 0}
-                            />
+
+                                <Text className="font-bold text-md text-center py-2">
+                                    Select Contacts
+                                </Text>
+                                <TextInput
+                                    placeholder="Search name"
+                                    value={searchQuery}
+                                    onChangeText={(text) =>
+                                        setSearchQuery(text)
+                                    }
+                                    style={{
+                                        borderWidth: 1,
+                                        borderColor: "#ccc",
+                                        padding: 8,
+                                        marginBottom: 10,
+                                    }}
+                                />
+                                {filteredContacts.length > 0 ? (
+                                    <View>
+                                        <TouchableOpacity
+                                            onPress={toggleSelectAll}
+                                        >
+                                            <Text className="font-semibold text-md border-solid border-b-2 border-gray-600 py-1">
+                                                {selectAll
+                                                    ? "☑️ Deselect All"
+                                                    : "□ Select All"}
+                                            </Text>
+                                        </TouchableOpacity>
+                                        <FlatList
+                                            data={filteredContacts}
+                                            renderItem={({ item }) => (
+                                                <TouchableOpacity
+                                                    onPress={() =>
+                                                        toggleContactSelection(
+                                                            item
+                                                        )
+                                                    }
+                                                >
+                                                    <View className="flex flex-row items-center border-solid border-b-1 border-gray-400 overflow-auto justify-between">
+                                                        <View className="w-0.5/12">
+                                                            <Text>
+                                                                {isSelected(
+                                                                    item
+                                                                )
+                                                                    ? "☑️ "
+                                                                    : "□ "}
+                                                            </Text>
+                                                        </View>
+                                                        <View className="w-3/12">
+                                                            <Text>
+                                                                {item.name}
+                                                            </Text>
+                                                        </View>
+                                                        <View className="w-4/12">
+                                                            <Text>
+                                                                {item.email}
+                                                            </Text>
+                                                        </View>
+                                                        <View className="w-4/12">
+                                                            <Text>
+                                                                {item.phone}
+                                                            </Text>
+                                                        </View>
+                                                    </View>
+                                                </TouchableOpacity>
+                                            )}
+                                            keyExtractor={(item, index) =>
+                                                index.toString()
+                                            }
+                                        />
+                                    </View>
+                                ) : (
+                                    <Text className="font-bold text-md text-center py-2">
+                                        No Contacts
+                                    </Text>
+                                )}
+
+                                <View className="py-2">
+                                    <Button
+                                        title="Send Invite"
+                                        onPress={sendInvite}
+                                        disabled={selectedContacts.length === 0}
+                                    />
+                                </View>
+                            </View>
                         </View>
                     ) : (
-                        <Button
-                            title="Sign In with Google"
-                            onPress={signInWithGoogle}
-                        />
-                    )}
-
-                    {/* <Button title="Save in Local" onPress={saveLocal} /> */}
-                    <Modal
-                        animationType="slide"
-                        transparent={true}
-                        visible={showModal}
-                        onRequestClose={() => {
-                            setShowModal(false);
-                        }}
-                    >
-                        <View>
-                            <Text>Signing in with Google...</Text>
+                        <View className="w-full flex items-center">
+                            <View className="flex flex-row justify-center items-center h-40 w-[90%]">
+                                <Button
+                                    title="Sign In Google"
+                                    onPress={signInWithGoogle}
+                                />
+                            </View>
                         </View>
-                    </Modal>
+                    )}
                 </View>
             </View>
-            
+            <View></View>
         </ScrollView>
     );
 };
 
-export default GoogleSignInComponent;
-
-
+export default SendInvite;
