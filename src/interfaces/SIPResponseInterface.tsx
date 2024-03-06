@@ -36,9 +36,30 @@ interface Transaction {
     folio: Folio;
 }
 
+interface dividendType {
+    id: number;
+    name: string;
+    
+}
+
+interface deliveryType
+{
+    id: number;
+    name: string;
+    
+}
+
+interface optionType {
+    id: number;
+    name: string;
+    
+}
 interface MutualFund {
     id: string;
     name: string;
+    dividendType: dividendType;
+    optionType: optionType;
+    deliveryType: deliveryType;
 }
 
 interface SIPReportItems {
