@@ -14,7 +14,7 @@ const SimplePieChart = () => {
 
   return (
     <div style={{ display: "flex" }}>
-      <View className='w-9/12'>
+      <View className='w-9/12 pt-4'>
     
       <VictoryPie
         data={data}

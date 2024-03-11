@@ -57,6 +57,16 @@ const IFADashboard = () => {
             title: "Rohan Invested in Axis Mutual Fund",
             description: "Just Now",
         },
+        {
+            imageUrl: "account",
+            title: "Rohan Invested in Axis Mutual Fund",
+            description: "Just Now",
+        },
+        {
+            imageUrl: "account",
+            title: "Rohan Invested in Axis Mutual Fund",
+            description: "Just Now",
+        },
     ];
 
     const topClientData = [
@@ -95,6 +105,13 @@ const IFADashboard = () => {
             sip: "14",
             investment: "1,86,564",
         },
+        {
+          imageUrl: "account",
+          title: "Rohan Invested in Axis Mutual Fund",
+          description: "Just Now",
+          sip: "14",
+          investment: "1,86,564",
+      },
     ];
 
     return (
@@ -301,23 +318,19 @@ const IFADashboard = () => {
                                             </Pressable>
                                         </View>
 
-                                        <View className="flex-1 w-full overflow-auto">
-                                            <View className="w-full flex flex-col overflow-auto">
-                                                {notificationData.map(
-                                                    (item, index) => (
-                                                        <AvatarText
-                                                            key={index} // Make sure to provide a unique key for each item
-                                                            imageUrl={
-                                                                item.imageUrl
-                                                            }
-                                                            title={item.title}
-                                                            description={
-                                                                item.description
-                                                            }
-                                                        />
-                                                    )
-                                                )}
-                                            </View>
+                                        <View className=" h-96 overflow-scroll">
+                                            {notificationData.map(
+                                                (item, index) => (
+                                                    <AvatarText
+                                                        key={index} // Make sure to provide a unique key for each item
+                                                        imageUrl={item.imageUrl}
+                                                        title={item.title}
+                                                        description={
+                                                            item.description
+                                                        }
+                                                    />
+                                                )
+                                            )}
                                         </View>
                                     </View>
                                 </View>
@@ -424,43 +437,45 @@ const IFADashboard = () => {
                                             <Text>Investment</Text>
                                         </View>
                                     </View>
-                                    {topClientData.map((item, index) => (
-                                        <View
-                                            key={index}
-                                            className="flex flex-row items-center"
-                                        >
-                                            <View className="w-6/12">
-                                                <AvatarText
-                                                    imageUrl={item.imageUrl}
-                                                    title="Natali Craig"
-                                                    description=""
-                                                />
+                                    <View className=" h-48 overflow-scroll">
+                                        {topClientData.map((item, index) => (
+                                            <View
+                                                key={index}
+                                                className="flex flex-row items-center"
+                                            >
+                                                <View className="w-6/12">
+                                                    <AvatarText
+                                                        imageUrl={item.imageUrl}
+                                                        title="Natali Craig"
+                                                        description=""
+                                                    />
+                                                </View>
+                                                <View className="w-2/12">
+                                                    <Text
+                                                        selectable
+                                                        className="text-[#686868] font-semibold"
+                                                    >
+                                                        {item.sip}
+                                                    </Text>
+                                                </View>
+                                                <View className="w-4/12">
+                                                    <Text
+                                                        selectable
+                                                        className="text-[#686868] font-semibold"
+                                                    >
+                                                        {RupeeSymbol}{" "}
+                                                        {item.investment}
+                                                    </Text>
+                                                </View>
                                             </View>
-                                            <View className="w-2/12">
-                                                <Text
-                                                    selectable
-                                                    className="text-[#686868] font-semibold"
-                                                >
-                                                    {item.sip}
-                                                </Text>
-                                            </View>
-                                            <View className="w-4/12">
-                                                <Text
-                                                    selectable
-                                                    className="text-[#686868] font-semibold"
-                                                >
-                                                    {RupeeSymbol}{" "}
-                                                    {item.investment}
-                                                </Text>
-                                            </View>
-                                        </View>
-                                    ))}
+                                        ))}
+                                    </View>
                                 </View>
-                                <View className="w-[20%] h-128 rounded pl-1">
+                                <View className="w-[20%] rounded pl-1">
                                     <Text className="font-bold ">
                                         Inactive Client
                                     </Text>
-                                    <View className="w-[99%]">
+                                    <View className=" h-48 overflow-scroll">
                                         {topClientData.map((item, index) => (
                                             <AvatarText
                                                 key={index}
