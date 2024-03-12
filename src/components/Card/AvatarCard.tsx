@@ -2,7 +2,8 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons"; // Import an icon library of your choice
 
-const AvatarText = ({ imageUrl, title, description }) => {
+const AvatarCard
+ = ({ imageUrl, title, description }) => {
     return (
         <View className="flex flex-row py-2 items-center w-full flex-wrap ">
             <View
@@ -39,4 +40,5 @@ const AvatarText = ({ imageUrl, title, description }) => {
     );
 };
 
-export default AvatarText;
+export default AvatarCard
+;

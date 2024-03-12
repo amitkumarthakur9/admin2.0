@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons"; // Import an icon library of your choice
 
-const IconText = ({ icon, title, description }) => {
+const IconCard = ({ icon, title, description }) => {
   return (
     <View style={styles.container}>
       <View style={{
@@ -48,4 +48,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default IconText;
+export default IconCard;

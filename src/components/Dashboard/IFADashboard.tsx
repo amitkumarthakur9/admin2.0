@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, View } from "react-native";
 import {
     Center,
@@ -8,18 +8,52 @@ import {
     ScrollView,
     Spinner,
     Text,
+    Menu,
+    HamburgerIcon,
+    Box,
 } from "native-base";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { router, useLocalSearchParams, useRouter } from "expo-router";
-import IconText from "./IconText";
-import AvatarText from "./AvatarText";
+import IconCard from "../Card/IconCard";
+import AvatarCard from "../Card/AvatarCard";
 import { RupeeSymbol } from "../../../src/helper/helper";
-import CustomBox from "./CustomBox";
+import BorderCard from "../Card/BorderCard";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import SimplePieChart from "./SimplePieChart";
+import DonutPieChart from "../Chart/DonutPieChart";
+import DynamicMenu from "./DynamicMenu";
+import { AUMDetailResponseInterface } from "src/interfaces/AUMDetailResponseInterface";
 
 const IFADashboard = () => {
     const [isLoading, setIsLoading] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
+    const [selectedOption, setSelectedOption] = useState("");
+    const [receivedData1, setReceivedData1] = useState(null);
+    const [receivedData2, setReceivedData2] = useState(null);
+
+    const handleOptionSelect = (option) => {
+        setSelectedOption(option);
+        // Here you can trigger your API call using the selected option
+        // Example: fetch(`your-api-endpoint/${option}`)
+        // Add your API call logic here
+        console.log(`API call triggered with option: ${option}`);
+    };
+
+    const handleDataReceived = (data) => {
+        // Handle the received data here
+        console.log("Data received:", data);
+    };
+
+    const handleDataReceived1 = (data) => {
+        // Handle the received data here, such as updating state in the parent component
+        setReceivedData1(data);
+        console.log("Data received from notification:", data);
+    };
+
+    const handleDataReceived2 = (data) => {
+        // Handle the received data here, such as updating state in the parent component
+        setReceivedData2(data);
+        console.log("Data received from YourComponent2:", data);
+    };
 
     const notificationData = [
         {
@@ -106,12 +140,12 @@ const IFADashboard = () => {
             investment: "1,86,564",
         },
         {
-          imageUrl: "account",
-          title: "Rohan Invested in Axis Mutual Fund",
-          description: "Just Now",
-          sip: "14",
-          investment: "1,86,564",
-      },
+            imageUrl: "account",
+            title: "Rohan Invested in Axis Mutual Fund",
+            description: "Just Now",
+            sip: "14",
+            investment: "1,86,564",
+        },
     ];
 
     return (
@@ -188,19 +222,19 @@ const IFADashboard = () => {
                                                 {/* <Text>4 icon Card</Text> */}
 
                                                 <View className="flex flex-col w-6/12  rounded bg-white h-auto gap-1">
-                                                    <IconText
+                                                    <IconCard
                                                         icon="account-outline"
                                                         title="Number of Clients"
                                                         description="1087"
                                                     />
-                                                    <IconText
+                                                    <IconCard
                                                         icon="chart-timeline-variant"
                                                         title="Total Running SIPs"
                                                         description="457"
                                                     />
                                                 </View>
                                                 <View className="flex flex-col w-5/12  rounded bg-white h-auto gap-1">
-                                                    <IconText
+                                                    <IconCard
                                                         icon="wallet-outline"
                                                         title="Total Lumpsun Investment"
                                                         description={
@@ -208,7 +242,7 @@ const IFADashboard = () => {
                                                             "2,00,756"
                                                         }
                                                     />
-                                                    <IconText
+                                                    <IconCard
                                                         icon="shopping-outline"
                                                         title="Total SIP Amount"
                                                         description={
@@ -257,7 +291,26 @@ const IFADashboard = () => {
                                                 </View>
 
                                                 <View>
-                                                    <SimplePieChart />
+                                                    <DonutPieChart
+                                                        pieData={[
+                                                            {
+                                                                x: "Equity",
+                                                                y: 20,
+                                                            },
+                                                            {
+                                                                x: "Hybrid",
+                                                                y: 29,
+                                                            },
+                                                            {
+                                                                x: "Debt",
+                                                                y: 35,
+                                                            },
+                                                            {
+                                                                x: "Others",
+                                                                y: 25,
+                                                            },
+                                                        ]}
+                                                    />
                                                 </View>
                                             </View>
                                             <View className="w-[50%] rounded bg-white p-4">
@@ -288,7 +341,26 @@ const IFADashboard = () => {
                                                 </View>
 
                                                 <View>
-                                                    <SimplePieChart />
+                                                    <DonutPieChart
+                                                        pieData={[
+                                                            {
+                                                                x: "Equity",
+                                                                y: 20,
+                                                            },
+                                                            {
+                                                                x: "Hybrid",
+                                                                y: 29,
+                                                            },
+                                                            {
+                                                                x: "Debt",
+                                                                y: 35,
+                                                            },
+                                                            {
+                                                                x: "Others",
+                                                                y: 25,
+                                                            },
+                                                        ]}
+                                                    />
                                                 </View>
                                             </View>
                                         </View>
@@ -298,30 +370,32 @@ const IFADashboard = () => {
                                             <Text className="text-black">
                                                 Notification
                                             </Text>
-                                            <Pressable
-                                                className="flex flex-row mr-3"
-                                                onPress={() =>
-                                                    router.push("/clients")
+                                            <DynamicMenu
+                                                onDataReceived={
+                                                    handleDataReceived1
                                                 }
-                                            >
-                                                <Text
-                                                    selectable
-                                                    className="text-base flex flex-row text-center text-slate-500 font-semibold pr-4"
-                                                >
-                                                    All
-                                                </Text>
-                                                <Icon
-                                                    name="angle-down"
-                                                    size={24}
-                                                    color={"#888"}
-                                                />
-                                            </Pressable>
+                                                options={[
+                                                    {
+                                                        option: "All",
+                                                        value: "4322",
+                                                    },
+                                                    {
+                                                        option: "last 24 hour",
+                                                        value: "4321",
+                                                    },
+                                                    {
+                                                        option: "last 1 hour",
+                                                        value: "4320",
+                                                    },
+                                                ]}
+                                                apiUrl="sip"
+                                            />
                                         </View>
 
                                         <View className=" h-96 overflow-scroll">
                                             {notificationData.map(
                                                 (item, index) => (
-                                                    <AvatarText
+                                                    <AvatarCard
                                                         key={index} // Make sure to provide a unique key for each item
                                                         imageUrl={item.imageUrl}
                                                         title={item.title}
@@ -336,38 +410,40 @@ const IFADashboard = () => {
                                 </View>
                             </View>
                             <View className="bg-[#eaf3fe]">
-                                <View className="flex flex-row">
+                                <View className="flex flex-row items-center">
                                     <Text className="text-base text-slate-500 font-bold text-medium pr-4">
                                         Time Period:
                                     </Text>
-
-                                    <Pressable
-                                        className="flex flex-row mr-3"
-                                        onPress={() => router.push("/clients")}
-                                    >
-                                        <Text
-                                            selectable
-                                            className="text-base flex flex-row text-center text-slate-500 font-semibold pr-4"
-                                        >
-                                            last 3 months
-                                        </Text>
-                                        <Icon
-                                            name="angle-down"
-                                            size={24}
-                                            color={"#888"}
-                                        />
-                                    </Pressable>
+                                    <DynamicMenu
+                                        onDataReceived={handleDataReceived}
+                                        options={[
+                                            {
+                                                option: "last 3 month",
+                                                value: "70",
+                                            },
+                                            {
+                                                option: "last 6 month",
+                                                value: "77",
+                                            },
+                                            {
+                                                option: "last 12 month",
+                                                value: "71",
+                                            },
+                                        ]}
+                                        apiUrl="folio"
+                                    />
                                     <View
                                         style={{
                                             borderBottomColor: "gray",
                                             borderBottomWidth: 1,
                                             flex: 1,
-                                            alignSelf: "center", // Aligns the line to the center horizontally
-                                            width: "100%", // Makes the line span the width of the parent container
+                                            alignSelf: "center",
+                                            width: "100%",
                                         }}
                                     />
                                 </View>
                             </View>
+
                             <View className="flex flex-row justify-between rounded bg-white h-auto gap-2 pb-4">
                                 <View
                                     className="flex flex-row w-[45%] h-full rounded gap-2"
@@ -380,33 +456,33 @@ const IFADashboard = () => {
                                 >
                                     {/* <Text>Card</Text> */}
                                     <View className="flex flex-col w-[49%]">
-                                        <CustomBox
+                                        <BorderCard
                                             title="Investment"
                                             description={
                                                 RupeeSymbol + "10,87,899"
                                             }
                                         />
-                                        <CustomBox
+                                        <BorderCard
                                             title="Redemptiom"
                                             description={
                                                 RupeeSymbol + "9,77,877"
                                             }
                                         />
-                                        <CustomBox
+                                        <BorderCard
                                             title="Inactive/Cancelled SIPs"
                                             description="15"
                                         />
                                     </View>
                                     <View className="flex flex-col w-[49%]">
-                                        <CustomBox
+                                        <BorderCard
                                             title="New SIPs"
                                             description="115"
                                         />
-                                        <CustomBox
+                                        <BorderCard
                                             title="No. of successful SIPs"
                                             description="10459"
                                         />
-                                        <CustomBox
+                                        <BorderCard
                                             title="No. of SIP Bounce"
                                             description="08"
                                         />
@@ -444,7 +520,7 @@ const IFADashboard = () => {
                                                 className="flex flex-row items-center"
                                             >
                                                 <View className="w-6/12">
-                                                    <AvatarText
+                                                    <AvatarCard
                                                         imageUrl={item.imageUrl}
                                                         title="Natali Craig"
                                                         description=""
@@ -477,7 +553,7 @@ const IFADashboard = () => {
                                     </Text>
                                     <View className=" h-48 overflow-scroll">
                                         {topClientData.map((item, index) => (
-                                            <AvatarText
+                                            <AvatarCard
                                                 key={index}
                                                 imageUrl="account"
                                                 title="Natali Craig"

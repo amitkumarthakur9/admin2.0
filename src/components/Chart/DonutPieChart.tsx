@@ -2,13 +2,13 @@ import React from "react";
 import { View } from "react-native";
 import { VictoryPie, VictoryLegend, VictoryTooltip } from "victory";
 
-const SimplePieChart = () => {
-    const data = [
-        { x: "Equity", y: 20 },
-        { x: "Hybrid", y: 29 },
-        { x: "Debt", y: 35 },
-        { x: "Others", y: 25 },
-    ];
+const DonutPieChart = ({pieData}) => {
+    // const pieData = [
+    //     { x: "Equity", y: 20 },
+    //     { x: "Hybrid", y: 29 },
+    //     { x: "Debt", y: 35 },
+    //     { x: "Others", y: 25 },
+    // ];
 
     const colorScale = ["#715CFA", "#FE9090", "#FFE456", "#B0ED8B"]; // Example colors
 
@@ -16,7 +16,7 @@ const SimplePieChart = () => {
         <div style={{ display: "flex" }}>
             <View className="w-9/12 pt-4">
                 <VictoryPie
-                    data={data}
+                    data={pieData}
                     colorScale={colorScale}
                     innerRadius={100} // Adjust inner radius for donut shape
                     labels={({ datum }) => `${datum.x}: ${datum.y}`} // Show data in labels
@@ -33,7 +33,7 @@ const SimplePieChart = () => {
                     y={0}
                     orientation="vertical"
                     gutter={2} // Adjust spacing between legend items
-                    data={data.map((item, index) => ({
+                    data={pieData.map((item, index) => ({
                         name: `${item.x}: ${item.y}`,
                         symbol: { fill: colorScale[index] },
                     }))}
@@ -44,4 +44,4 @@ const SimplePieChart = () => {
     );
 };
 
-export default SimplePieChart;
+export default DonutPieChart;
