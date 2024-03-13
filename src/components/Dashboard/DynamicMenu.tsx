@@ -26,9 +26,9 @@ const DynamicMenu = ({ onDataReceived, options, apiUrl }) => {
         }
     }, [value]);
 
-    const handleOptionSelect = (value, option) => {
+    const handleOptionSelect = (option, optionValue) => {
         setSelectedOption(option);
-        setValue(value); 
+        setValue(optionValue); 
         setIsOpen(false); 
     };
 
