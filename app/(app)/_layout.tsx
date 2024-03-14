@@ -37,6 +37,8 @@ import MandateDetail from "./mandates/[id]";
 import RTASync from "./rta-sync";
 import AUMTabScreen from "./aum-reports";
 import MutualFundDetail from "./mutual-fund/[id]";
+import AumReconcile from './aum-reconcile';
+
 
 NativeWindStyleSheet.setOutput({
     default: "native",
@@ -281,7 +283,7 @@ export default function AppLayout() {
                         initialParams={{}}
                         component={RTAReconciliationDetail}
                     />
-                     <Drawer.Screen
+                    <Drawer.Screen
                         name="mutual-fund/[id]" // This is the name of the page and must match the url from root
                         options={{
                             drawerLabel: "mutualfunddetail",
@@ -291,6 +293,17 @@ export default function AppLayout() {
                         }}
                         initialParams={{}}
                         component={MutualFundDetail}
+                    />
+
+                    <Drawer.Screen
+                        name="aum-reconcile" // This is the name of the page and must match the url from root
+                        options={{
+                            drawerLabel: "AUM Reconcile",
+                            title: "AUM Reconcile",
+                            unmountOnBlur: true,
+                        }}
+                        initialParams={{}}
+                        component={AumReconcile}
                     />
 
                     {/* </Drawer> */}
