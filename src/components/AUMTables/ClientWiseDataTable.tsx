@@ -31,7 +31,7 @@ const ClientWiseDataTable = () => {
     const [currentPageNumber, setCurrentPageNumber] = useState(1);
     const [totalItems, setTotalItems] = useState(0);
     const [itemsPerPage, setItemsPerPage] = useState(10);
-    const [data, setData] = useState<AccountItem[]>([]);
+    const [data, setData] = useState<ClientDataResponse[]>([]);
     const [totalPages, setTotalPages] = useState(1);
     const [appliedFilers, setAppliedFilers] = useState([]);
     const [filtersSchema, setFiltersSchema] = useState([]);
@@ -57,7 +57,7 @@ const ClientWiseDataTable = () => {
             data.orderBy = appliedSorting;
         }
 
-        const response: AccountsResponse = await RemoteApi.post(
+        const response: ApiResponse<ClientDataResponse[]> = await RemoteApi.post(
             "client/list",
             data
         );
@@ -135,13 +135,7 @@ const ClientWiseDataTable = () => {
                                 </View>
                             </View>
                             <View className="flex flex-row items-center mt-0">
-                                <Tag>
-                                    KYC{" "}
-                                    {item?.users[0]?.kycStatus
-                                        ?.isAllowedToTransact
-                                        ? "Done"
-                                        : "Not Done"}
-                                </Tag>
+                            {!item?.kycStatus && <Tag>KYC Not Done</Tag>}
                                 <Tag>SIP(N/A)</Tag>
                                 <Tag>Autopay active</Tag>
                             </View>

@@ -80,31 +80,58 @@ export const SIPRows = ({
                         </Text>
                     </View>
 
-                    <View className='flex flex-row w-2/12 items-center justify-center'>
-                <View className='flex flex-row items-center justify-center'>
-                    <Popover trigger={triggerProps => {
-                        return <TouchableOpacity {...triggerProps}>
-                            <Icon name="info-circle" size={12} color="black" />
-                        </TouchableOpacity>;
-                    }}>
-                        <Popover.Content accessibilityLabel="Order Details" w="56">
-                            <Popover.Arrow />
-                            <Popover.CloseButton />
-                            <Popover.Header>Definition</Popover.Header>
-                            <Popover.Body>
-                                <View>
-                                    <Text className="pb-2">Initiated: Order Successfully placed.</Text>
-                                    <Text className="pb-2">Registered: order Successfully placed on BSE.</Text>
-                                    <Text className="pb-2">Cancelled: Order is Cancelled on BSE.</Text>
-                                    <Text className="pb-2">Failed: Order is Failed.</Text>
-                                    <Text className="pb-2">Success: order is successfully registered on BSE</Text>
-                                </View>
-                            </Popover.Body>
-                        </Popover.Content>
-                    </Popover>
-                    <Text selectable className='font-semibold pl-2'>Status&nbsp;</Text>
-                </View>
-            </View>
+                    <View className="flex flex-row w-2/12 items-center justify-center">
+                        <View className="flex flex-row items-center justify-center">
+                            <Popover
+                                trigger={(triggerProps) => {
+                                    return (
+                                        <TouchableOpacity {...triggerProps}>
+                                            <Icon
+                                                name="info-circle"
+                                                size={12}
+                                                color="black"
+                                            />
+                                        </TouchableOpacity>
+                                    );
+                                }}
+                            >
+                                <Popover.Content
+                                    accessibilityLabel="Order Details"
+                                    w="56"
+                                >
+                                    <Popover.Arrow />
+                                    <Popover.CloseButton />
+                                    <Popover.Header>Definition</Popover.Header>
+                                    <Popover.Body>
+                                        <View>
+                                            <Text className="pb-2">
+                                                Initiated: Order Successfully
+                                                placed.
+                                            </Text>
+                                            <Text className="pb-2">
+                                                Registered: order Successfully
+                                                placed on BSE.
+                                            </Text>
+                                            <Text className="pb-2">
+                                                Cancelled: Order is Cancelled on
+                                                BSE.
+                                            </Text>
+                                            <Text className="pb-2">
+                                                Failed: Order is Failed.
+                                            </Text>
+                                            <Text className="pb-2">
+                                                Success: order is successfully
+                                                registered on BSE
+                                            </Text>
+                                        </View>
+                                    </Popover.Body>
+                                </Popover.Content>
+                            </Popover>
+                            <Text selectable className="font-semibold pl-2">
+                                Status&nbsp;
+                            </Text>
+                        </View>
+                    </View>
 
                     <View className="flex flex-row items-center justify-center w-2/12">
                         <Text selectable className="font-semibold">
@@ -148,12 +175,21 @@ export const SIPRows = ({
                                         </Pressable>
                                         <View className="flex flex-col">
                                             <View className="flex flex-row items-center text-black font-semibold max-w-[240px] lg:max-w-[300px] break-all">
-                                                <Text
-                                                    selectable
-                                                    className="text-black font-semibold max-w-[240px] lg:max-w-[300px] break-all"
+                                                <Pressable
+                                                    onPress={() =>
+                                                        router.push(
+                                                            `/clients/${order.account.id}`
+                                                        )
+                                                    }
                                                 >
-                                                    {order.account.name}&nbsp;
-                                                </Text>
+                                                    <Text
+                                                        selectable
+                                                        className="text-black font-semibold max-w-[240px] lg:max-w-[300px] break-all"
+                                                    >
+                                                        {order.account.name}
+                                                        &nbsp;
+                                                    </Text>
+                                                </Pressable>
                                                 <Popover
                                                     trigger={(triggerProps) => {
                                                         return (
@@ -303,6 +339,39 @@ export const SIPRows = ({
                                         >
                                             {order.mutualfund.name}
                                         </Text>
+                                        <View className="flex flex-row justify-start">
+                                            <Text
+                                                selectable
+                                                className="text-black text-xs pr-2"
+                                            >
+                                                {order.mutualfund.deliveryType
+                                                    .name == "NA"
+                                                    ? ""
+                                                    : order.mutualfund
+                                                          .deliveryType.name}
+                                            </Text>
+                                            <Text
+                                                selectable
+                                                className="text-black text-xs pr-2"
+                                            >
+                                                {order.mutualfund.optionType
+                                                    .name == "NA"
+                                                    ? ""
+                                                    : order.mutualfund
+                                                          .optionType.name}
+                                            </Text>
+                                            <Text
+                                                selectable
+                                                className="text-black text-xs pr-2"
+                                            >
+                                                {order?.mutualfund?.dividendType
+                                                    ?.name == "NA"
+                                                    ? ""
+                                                    : order?.mutualfund
+                                                          ?.dividendType?.name}
+                                            </Text>
+                                        </View>
+
                                         <View className="flex flex-row items-start">
                                             <Text
                                                 selectable
@@ -310,34 +379,6 @@ export const SIPRows = ({
                                             >
                                                 {"SIPRegnNo: "}
                                                 {order.sipReferenceNumber}
-                                            </Text>
-                                        </View>
-                                        <View className="flex flex-row items-center">
-                                            <Text
-                                                selectable
-                                                className="text-black text-xs"
-                                            >
-                                                {order.startDate
-                                                    ? moment(
-                                                          new Date(
-                                                              order.startDate
-                                                          )
-                                                      ).format("YYYY-MM-DD")
-                                                    : ""}
-                                            </Text>
-                                        </View>
-                                        <View className="flex flex-row items-center">
-                                            <Text
-                                                selectable
-                                                className="text-black text-xs"
-                                            >
-                                                {order.startDate
-                                                    ? moment(
-                                                          new Date(
-                                                              order.startDate
-                                                          )
-                                                      ).format("YYYY-MM-DD")
-                                                    : ""}
                                             </Text>
                                         </View>
                                     </View>
@@ -502,11 +543,21 @@ export const SIPRows = ({
                                                         <Popover.Arrow />
                                                         <Popover.CloseButton />
                                                         <Popover.Header>
-                                                        {order.orderStatus.name}
+                                                            {
+                                                                order
+                                                                    .orderStatus
+                                                                    .name
+                                                            }
                                                         </Popover.Header>
                                                         <Popover.Body>
                                                             <View>
-                                                            <Text>{getOrderMessage(order.orderStatus.name)}</Text>
+                                                                <Text>
+                                                                    {getOrderMessage(
+                                                                        order
+                                                                            .orderStatus
+                                                                            .name
+                                                                    )}
+                                                                </Text>
                                                             </View>
                                                         </Popover.Body>
                                                     </Popover.Content>

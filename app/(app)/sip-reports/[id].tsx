@@ -380,13 +380,29 @@ const AccountDetailsCard = ({ data }: { data: SIPReportDetail }) => {
 
     const accordionData = [
         {
-            title: "Kotak Bank",
+            title: <Text>{data?.mandate?.bankAccount?.bankName}</Text>,
             subcontent: (
                 <View className="flex flex-row items-center gap-2">
+
+                        {/* <Image
+                            alt="fundHouse"
+                            className="mr-2"
+                            style={{
+                                width: 40,
+                                height: 40,
+                                objectFit: "contain",
+                            }}
+                            source={{
+                                uri: data?.mandate?.bankAccount?.bankLogoUrl,
+                            }}
+                        /> */}
+          
                     <Text className="text-xs text-gray-400">
-                        xxxx xxxx 6789
+                        A/C no. {data?.mandate?.bankAccount?.accountNumber}
                     </Text>
-                    <Text className="text-xs text-purple-700">Primary</Text>
+                    <Text className="text-xs text-purple-700">
+                        {data?.mandate?.bankAccount?.isPrimary && "Primary"}{" "}
+                    </Text>
                 </View>
             ),
             content: (
@@ -394,12 +410,12 @@ const AccountDetailsCard = ({ data }: { data: SIPReportDetail }) => {
                     <DataValue
                         key="branchName"
                         title="Branch Name"
-                        value="Mahatama Gandhi Road, Bengaluru"
+                        value={data?.mandate?.bankAccount?.branchName}
                     />
                     <DataValue
                         key="ifsc"
                         title="IFSC Code"
-                        value="KMB0003838"
+                        value={data?.mandate?.bankAccount?.ifscCode}
                     />
                     <DataValue
                         key="accountType"
@@ -474,28 +490,6 @@ const AccountDetailsCard = ({ data }: { data: SIPReportDetail }) => {
                 </View>
             ),
         },
-        {
-            title: "HDFC Bank",
-            subcontent: (
-                <View className="flex flex-row items-center gap-2">
-                    <Text className="text-xs text-gray-400">
-                        xxxx xxxx 6789
-                    </Text>
-                </View>
-            ),
-            content: "HDFC Bank Details",
-        },
-        {
-            title: "Canara Bank",
-            subcontent: (
-                <View className="flex flex-row items-center gap-2">
-                    <Text className="text-xs text-gray-400">
-                        xxxx xxxx 6789
-                    </Text>
-                </View>
-            ),
-            content: "Canara Bank Details",
-        },
     ];
 
     const renderItem = (item) => (
@@ -520,9 +514,12 @@ const AccountDetailsCard = ({ data }: { data: SIPReportDetail }) => {
     return (
         <>
             <View className="w-full p-2 flex flex-col justify-items items-center">
-                <Text selectable className="text-lg font-bold text-start">
-                    Bank Accounts
-                </Text>
+                <View className="flex flex-row justify-start">
+                    <Text selectable className="text-lg font-bold text-start">
+                        Bank Account
+                    </Text>
+                </View>
+
                 <Accordion
                     accordionData={accordionData}
                     renderItem={renderItem}
@@ -566,30 +563,52 @@ const TransactionList = ({ data }: { data: SIPReportDetail }) => {
             {
                 key: "status",
                 content: (
-                    <View className='flex flex-row items-center w-12/12 justify-start'>
-                    <View className='flex flex-col rounded-full w-8/12 items-center justify-center'>
-                        <View className='flex flex-row items-center justify-center w-11/12'>
-                            <Popover trigger={triggerProps => {
-                                return <TouchableOpacity {...triggerProps}>
-                                    <Icon name="info-circle" size={12} color="black" />
-                                </TouchableOpacity>;
-                            }}>
-                                <Popover.Content accessibilityLabel="Order Details" w="56">
-                                    <Popover.Arrow />
-                                    <Popover.CloseButton />
-                                    <Popover.Header>{item?.transactionStatus?.name}</Popover.Header>
-                                    <Popover.Body>
-                                        <View>
-                                            <Text>{getTransactionMessage(item?.transactionStatus?.name)}</Text>
-                                        </View>
-                                    </Popover.Body>
-                                </Popover.Content>
-                            </Popover>
-                            <Text selectable className='p-1 text-black text-end md:text-center text-xs'>{item?.transactionStatus?.name}&nbsp;</Text>
-
+                    <View className="flex flex-row items-center w-12/12 justify-start">
+                        <View className="flex flex-col rounded-full w-8/12 items-center justify-center">
+                            <View className="flex flex-row items-center justify-center w-11/12">
+                                <Popover
+                                    trigger={(triggerProps) => {
+                                        return (
+                                            <TouchableOpacity {...triggerProps}>
+                                                <Icon
+                                                    name="info-circle"
+                                                    size={12}
+                                                    color="black"
+                                                />
+                                            </TouchableOpacity>
+                                        );
+                                    }}
+                                >
+                                    <Popover.Content
+                                        accessibilityLabel="Order Details"
+                                        w="56"
+                                    >
+                                        <Popover.Arrow />
+                                        <Popover.CloseButton />
+                                        <Popover.Header>
+                                            {item?.transactionStatus?.name}
+                                        </Popover.Header>
+                                        <Popover.Body>
+                                            <View>
+                                                <Text>
+                                                    {getTransactionMessage(
+                                                        item?.transactionStatus
+                                                            ?.name
+                                                    )}
+                                                </Text>
+                                            </View>
+                                        </Popover.Body>
+                                    </Popover.Content>
+                                </Popover>
+                                <Text
+                                    selectable
+                                    className="p-1 text-black text-end md:text-center text-xs"
+                                >
+                                    {item?.transactionStatus?.name}&nbsp;
+                                </Text>
+                            </View>
                         </View>
                     </View>
-                </View>
                 ),
             },
         ];

@@ -140,12 +140,21 @@ export const FolioRows = ({ data, schema }) => {
                                         </Pressable>
                                         <View className="flex flex-col flex-wrap w-9/12">
                                             <View className="flex flex-row items-center text-black font-semibold flex-wrap w-11/12">
-                                                <Text
-                                                    selectable
-                                                    className="text-black font-semibold break-all"
+                                                <Pressable
+                                                    onPress={() =>
+                                                        router.push(
+                                                            `/clients/${client.id}`
+                                                        )
+                                                    }
                                                 >
-                                                    {client.account.name}&nbsp;
-                                                </Text>
+                                                    <Text
+                                                        selectable
+                                                        className="text-black font-semibold break-all"
+                                                    >
+                                                        {client.account.name}
+                                                        &nbsp;
+                                                    </Text>
+                                                </Pressable>
                                                 <Popover
                                                     trigger={(triggerProps) => {
                                                         return (
