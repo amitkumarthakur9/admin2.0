@@ -37,8 +37,8 @@ import MandateDetail from "./mandates/[id]";
 import RTASync from "./rta-sync";
 import AUMTabScreen from "./aum-reports";
 import MutualFundDetail from "./mutual-fund/[id]";
+import DashboardIFA from "./dashboard";
 import AumReconcile from './aum-reconcile';
-
 
 NativeWindStyleSheet.setOutput({
     default: "native",
@@ -122,6 +122,17 @@ export default function AppLayout() {
                     // initialParams={{}}
                     component={OrdersScreen}
                 /> */}
+
+                    <Drawer.Screen
+                        name="dashboard" // This is the name of the page and must match the url from root
+                        options={{
+                            drawerLabel: "Dashboard",
+                            title: "Dashboard",
+                            unmountOnBlur: true,
+                        }}
+                        initialParams={{}}
+                        component={DashboardIFA}
+                    />
 
                     <Drawer.Screen
                         name="clients/index" // This is the name of the page and must match the url from root
