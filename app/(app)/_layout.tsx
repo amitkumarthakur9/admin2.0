@@ -37,6 +37,8 @@ import MandateDetail from "./mandates/[id]";
 import RTASync from "./rta-sync";
 import AUMTabScreen from "./aum-reports";
 import MutualFundDetail from "./mutual-fund/[id]";
+import DashboardIFA from "./dashboard";
+import AumReconcile from "./aum-reconcile";
 import SendInvite from "./invite-contact";
 
 NativeWindStyleSheet.setOutput({
@@ -121,6 +123,17 @@ export default function AppLayout() {
                     // initialParams={{}}
                     component={OrdersScreen}
                 /> */}
+
+                    <Drawer.Screen
+                        name="dashboard" // This is the name of the page and must match the url from root
+                        options={{
+                            drawerLabel: "Dashboard",
+                            title: "Dashboard",
+                            unmountOnBlur: true,
+                        }}
+                        initialParams={{}}
+                        component={DashboardIFA}
+                    />
 
                     <Drawer.Screen
                         name="clients/index" // This is the name of the page and must match the url from root
@@ -282,7 +295,7 @@ export default function AppLayout() {
                         initialParams={{}}
                         component={RTAReconciliationDetail}
                     />
-                     <Drawer.Screen
+                    <Drawer.Screen
                         name="mutual-fund/[id]" // This is the name of the page and must match the url from root
                         options={{
                             drawerLabel: "mutualfunddetail",
@@ -293,7 +306,17 @@ export default function AppLayout() {
                         initialParams={{}}
                         component={MutualFundDetail}
                     />
-                     <Drawer.Screen
+                    <Drawer.Screen
+                        name="aum-reconcile" // This is the name of the page and must match the url from root
+                        options={{
+                            drawerLabel: "AUM Reconcile",
+                            title: "AUM Reconcile",
+                            unmountOnBlur: true,
+                        }}
+                        initialParams={{}}
+                        component={AumReconcile}
+                    />
+                    <Drawer.Screen
                         name="invite-contact" // This is the name of the page and must match the url from root
                         options={{
                             drawerLabel: "Send Invite",

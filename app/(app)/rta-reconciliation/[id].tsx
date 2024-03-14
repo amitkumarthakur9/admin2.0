@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import {
     Center,
     HStack,
@@ -25,6 +25,7 @@ export default function RTAConciliationDetail() {
     const { id } = useLocalSearchParams();
     const [data, setData] = useState<TransactionDetail>();
     const [isLoading, setIsLoading] = useState(true);
+    const router = useRouter();
 
     useEffect(() => {
         setIsLoading(true);
@@ -71,7 +72,7 @@ export default function RTAConciliationDetail() {
                                 <Pressable
                                     className="mr-3"
                                     onPress={() =>
-                                        console.log("This will go back ")
+                                        router.push("/rta-reconciliation")
                                     }
                                 >
                                     <Icon

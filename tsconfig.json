@@ -1,4 +1,15 @@
 {
-    "compilerOptions": {},
-    "extends": "expo/tsconfig.base"
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "*": ["*", "src/*", "app/*", "@types/*"]
+    },
+    "typeRoots": ["@types"],
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "jsx": "react-native",
+    "module":"esnext",
+  },
+  "extends": "expo/tsconfig.base",
+  "include": ["@types/global.d.ts", "src/**/*", "app/**/*"]
 }
