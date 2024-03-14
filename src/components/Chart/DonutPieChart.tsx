@@ -14,7 +14,7 @@ const DonutPieChart = ({pieData}) => {
 
     return (
         <div style={{ display: "flex" }}>
-            <View className="w-9/12 pt-4">
+            <View className="w-9/12">
                 <VictoryPie
                     data={pieData}
                     colorScale={colorScale}

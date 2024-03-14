@@ -194,11 +194,11 @@ const IFADashboard = () => {
                             </View>
 
                             <View className="flex flex-row justify-between rounded bg-[#eaf3fe] pr-2">
-                                <View className=" flex flex-row w-full gap-2">
+                                <View className=" flex flex-row w-full gap-2">    {/* outer Card */}
                                     <View className="flex flex-col w-8/12 rounded bg-[#eaf3fe] h-auto ">
-                                        {/* <Text>Hidden outer Card</Text> */}
+                                     
                                         <View className="flex flex-row rounded  bg-[#eaf3fe] flex-wrap w-[99.5%] gap-1 justify-between pb-2">
-                                            {/* <Text>Pie chart</Text> */}
+                                            
                                             <View className="flex flex-col w-[32%]  rounded bg-[#0769D0] h-auto items-between gap-2">
                                                 <Text className="text-[#D2CFCF]">
                                                     Total Aum
@@ -219,7 +219,7 @@ const IFADashboard = () => {
                                                 </Text>
                                             </View>
                                             <View className="flex flex-row w-[66%] rounded bg-white h-auto gap-2">
-                                                {/* <Text>4 icon Card</Text> */}
+                                                
 
                                                 <View className="flex flex-col w-6/12  rounded bg-white h-auto gap-1">
                                                     <IconCard
@@ -254,14 +254,14 @@ const IFADashboard = () => {
                                             </View>
                                         </View>
                                         <View className="flex flex-row rounded bg-white w-[99%]">
-                                            {/* <Text>Pie charts</Text> */}
+                                            
                                             <View
                                                 className="w-[50%]  rounded bg-white p-4"
                                                 style={{
-                                                    borderColor: "#e4e4e4", // Grey border color
+                                                    borderColor: "#e4e4e4", 
 
                                                     borderRightWidth:
-                                                        StyleSheet.hairlineWidth, // Hairline right border width
+                                                        StyleSheet.hairlineWidth, 
                                                 }}
                                             >
                                                 <View className="flex flex-col justify-between">
@@ -367,9 +367,13 @@ const IFADashboard = () => {
                                     </View>
                                     <View className="w-4/12 rounded bg-white p-4">
                                         <View className="flex flex-row justify-between">
+                                            <View>
                                             <Text className="text-black">
                                                 Notification
                                             </Text>
+
+                                            </View>
+                                            
                                             <DynamicMenu
                                                 onDataReceived={
                                                     handleDataReceived1
@@ -391,8 +395,8 @@ const IFADashboard = () => {
                                                 apiUrl="sip"
                                             />
                                         </View>
-
-                                        <View className=" h-96 overflow-scroll">
+                                        <View className="h-auto">
+                                        <View className="h-96 overflow-scroll">
                                             {notificationData.map(
                                                 (item, index) => (
                                                     <AvatarCard
@@ -406,6 +410,10 @@ const IFADashboard = () => {
                                                 )
                                             )}
                                         </View>
+
+                                        </View>
+
+
                                     </View>
                                 </View>
                             </View>
