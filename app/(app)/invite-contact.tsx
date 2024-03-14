@@ -11,7 +11,6 @@ import {
     TextInput,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as MailComposer from "expo-mail-composer";
 import { TableBreadCrumb } from "../../src/components/BreadCrumbs/TableBreadCrumb";
 
 const SendInvite = () => {
@@ -273,15 +272,15 @@ const SendInvite = () => {
         };
 
         // Send the invitation email
-        MailComposer.composeAsync(mailOptions)
-            .then((result) => {
-                if (result.status === "sent") {
-                    console.log("Invitations sent successfully");
-                }
-            })
-            .catch((error) => {
-                console.error("Error sending invitations:", error);
-            });
+        // MailComposer.composeAsync(mailOptions)
+        //     .then((result) => {
+        //         if (result.status === "sent") {
+        //             console.log("Invitations sent successfully");
+        //         }
+        //     })
+        //     .catch((error) => {
+        //         console.error("Error sending invitations:", error);
+        //     });
     };
 
     const saveLocal = async () => {
