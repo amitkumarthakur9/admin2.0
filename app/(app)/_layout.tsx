@@ -38,7 +38,8 @@ import RTASync from "./rta-sync";
 import AUMTabScreen from "./aum-reports";
 import MutualFundDetail from "./mutual-fund/[id]";
 import DashboardIFA from "./dashboard";
-import AumReconcile from './aum-reconcile';
+import AumReconcile from "./aum-reconcile";
+import SendInvite from "./invite-contact";
 
 NativeWindStyleSheet.setOutput({
     default: "native",
@@ -305,7 +306,6 @@ export default function AppLayout() {
                         initialParams={{}}
                         component={MutualFundDetail}
                     />
-
                     <Drawer.Screen
                         name="aum-reconcile" // This is the name of the page and must match the url from root
                         options={{
@@ -315,6 +315,17 @@ export default function AppLayout() {
                         }}
                         initialParams={{}}
                         component={AumReconcile}
+                    />
+                    <Drawer.Screen
+                        name="invite-contact" // This is the name of the page and must match the url from root
+                        options={{
+                            drawerLabel: "Send Invite",
+                            title: "Send Invite",
+                            // drawerItemStyle: { display: "none" },
+                            unmountOnBlur: true,
+                        }}
+                        initialParams={{}}
+                        component={SendInvite}
                     />
 
                     {/* </Drawer> */}
