@@ -1,14 +1,5 @@
 import { useState } from "react";
-import {
-    Dimensions,
-    StyleSheet,
-    Text,
-    View,
-    Modal,
-    ScrollView,
-} from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
-// import { Modal } from "react-native-paper";
+import { Dimensions, StyleSheet, Text, View, Pressable } from "react-native";
 import Icon from "react-native-vector-icons/Entypo";
 
 // /**
@@ -36,7 +27,7 @@ const TableHeader = ({ headers, cellSize }) => {
                         <View
                             className={`flex flex-row items-center w-full justify-start`}
                         >
-                             <Text selectable className="font-semibold">
+                            <Text selectable className="font-semibold">
                                 {head}
                             </Text>
                         </View>
@@ -76,6 +67,7 @@ const TableRows = ({ rows, cellSize, hasActions, options }) => {
                                 isLast={row.length - 1 === itemIndex}
                                 options={options}
                                 hasActions={hasActions}
+                                data={row[0]?.data}
                             />
                         );
                     })}
@@ -94,7 +86,7 @@ const TableRows = ({ rows, cellSize, hasActions, options }) => {
     });
 };
 
-const RowItem = ({ width, content, isLast, hasActions, options }) => {
+const RowItem = ({ width, content, isLast, hasActions, options, data }) => {
     const [showDropdown, setShowDropdown] = useState(false);
 
     const toggleDropdown = () => {
@@ -111,21 +103,24 @@ const RowItem = ({ width, content, isLast, hasActions, options }) => {
                 {content}
             </View>
             {hasActions && isLast && (
-                <TouchableOpacity className="ml-[50%]" onPress={toggleDropdown}>
+                <Pressable
+                    className="absolute right-8 w-fit"
+                    onPress={toggleDropdown}
+                >
                     <Icon name="dots-three-vertical" size={16} />
-                </TouchableOpacity>
+                </Pressable>
             )}
             {showDropdown && (
-                <View className="absolute top-0 right-6 bg-white border-gray-300 border rounded shadow z-9999 cursor-pointer">
+                <View className="absolute top-0 right-14 bg-white border-gray-300 border rounded shadow z-9999 cursor-pointer">
                     {options?.map((option) => {
                         return (
-                            <TouchableOpacity
+                            <Pressable
                                 key={option.key}
                                 className="p-2"
-                                onPress={option.onClick}
+                                onPress={option.onClick(data)}
                             >
                                 <Text selectable>{option.name}</Text>
-                            </TouchableOpacity>
+                            </Pressable>
                         );
                     })}
                 </View>
@@ -153,7 +148,7 @@ interface IDataTable {
     options?: {
         key: string;
         name: string;
-        onClick: () => void;
+        onClick: (data: any) => void;
     }[];
 }
 

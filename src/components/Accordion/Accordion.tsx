@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, Pressable } from "react-native";
 import AntdIcon from "react-native-vector-icons/AntDesign";
 
 const Accordion = ({ accordionData, renderItem }) => {
@@ -14,9 +14,11 @@ const Accordion = ({ accordionData, renderItem }) => {
             {accordionData.map((item, index) => (
                 <View
                     key={index}
-                    className={`border border-gray-100 rounded ${openIndex === index ? "bg-gray-100" : "bg-white"}`}
+                    className={`border border-gray-100 rounded ${
+                        openIndex === index ? "bg-gray-100" : "bg-white"
+                    }`}
                 >
-                    <TouchableOpacity onPress={() => toggleAccordion(index)}>
+                    <Pressable onPress={() => toggleAccordion(index)}>
                         <View
                             className={`flex flex-row justify-between items-center p-4 rounded `}
                         >
@@ -36,7 +38,7 @@ const Accordion = ({ accordionData, renderItem }) => {
                                 color="grey"
                             />
                         </View>
-                    </TouchableOpacity>
+                    </Pressable>
                     {openIndex === index && renderItem(item)}
                 </View>
             ))}
