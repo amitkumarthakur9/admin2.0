@@ -7,7 +7,8 @@ import { router } from "expo-router";
 
 // Create a new Axios instance with defaults
 const axiosInstance = axios.create({
-    baseURL: "https://qvision-be.kotaksecurities.online/",
+    baseURL: process.env.API_ENDPOINT,
+    //baseURL: "https://qvision-be.kotaksecurities.online/",
     // baseURL: "https://vision-connect.azurewebsites.net/",
 });
 
