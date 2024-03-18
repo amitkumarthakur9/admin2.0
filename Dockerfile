@@ -1,6 +1,9 @@
 # Use the official Node.js runtime (latest version) as the base image
 FROM node:20
 
+ARG API_ENDPOINT
+ENV API_ENDPOINT=$API_ENDPOINT
+
 RUN apt-get update && apt-get install -y nginx && apt-get install -y nginx-extras
 
 RUN rm /etc/nginx/sites-enabled/default
