@@ -6,9 +6,9 @@ import {
     View,
     ViewStyle,
 } from "react-native";
-import GoogleContactInvite from "../../src/components/SendInvite/GoogleContactInvite";
+import AddUser from "../../src/components/AddIFA/AddUser";
 
-export default function SendInvite() {
+export default function AddIfaRm() {
     return (
         <ScrollView
             className=""
@@ -18,7 +18,7 @@ export default function SendInvite() {
                 overflow: "scroll",
             }}
         >
-            <GoogleContactInvite />
+            <AddUser />
         </ScrollView>
     );
 }

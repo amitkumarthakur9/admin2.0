@@ -33,7 +33,7 @@ const RTAWiseDataTable = () => {
     const [currentPageNumber, setCurrentPageNumber] = useState(1);
     const [totalItems, setTotalItems] = useState(0);
     const [itemsPerPage, setItemsPerPage] = useState(10);
-    const [data, setData] = useState<AccountItem[]>([]);
+    const [data, setData] = useState<RTAwiseData[]>([]);
     const [totalPages, setTotalPages] = useState(1);
     const [appliedFilers, setAppliedFilers] = useState([]);
     const [filtersSchema, setFiltersSchema] = useState([]);
@@ -59,8 +59,8 @@ const RTAWiseDataTable = () => {
             data.orderBy = appliedSorting;
         }
 
-        const response: AccountsResponse = await RemoteApi.post(
-            "client/list",
+        const response: RTAwise = await RemoteApi.post(
+            "aum/rta/list",
             data
         );
 
@@ -102,7 +102,7 @@ const RTAWiseDataTable = () => {
                 key: "rta",
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
-                        CAMS
+                        {item?.name ? item?.name : "-"}
                     </Text>
                 ),
             },
@@ -110,7 +110,9 @@ const RTAWiseDataTable = () => {
                 key: "investedAmount",
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
-                        {RupeeSymbol + "2300"}
+                        {item?.investedValue
+                            ? RupeeSymbol + item?.investedValue
+                            : "-"}
                     </Text>
                 ),
             },
@@ -118,7 +120,9 @@ const RTAWiseDataTable = () => {
                 key: "currentAmount",
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
-                        {RupeeSymbol + "2200"}
+                        {item?.currentValue
+                            ? RupeeSymbol + item?.currentValue
+                            : "-"}
                     </Text>
                 ),
             },

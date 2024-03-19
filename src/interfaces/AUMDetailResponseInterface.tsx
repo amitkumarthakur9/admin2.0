@@ -58,6 +58,9 @@ interface MutualFund {
     deliveryType: DeliveryType; // Added 'deliveryType' property
     optionType: OptionType; // Added 'optionType' property
     dividendType: DividendType; // Added 'dividendType' property
+    logoUrl: string;
+    category: string;
+    Subcategory : string;
 }
 
 interface TransactionType {

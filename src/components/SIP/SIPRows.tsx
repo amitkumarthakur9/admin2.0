@@ -159,7 +159,7 @@ export const SIPRows = ({
                                         <Pressable
                                             onPress={() =>
                                                 router.push(
-                                                    `/clients/${order.account.id}`
+                                                    `/clients/${order.client.id}`
                                                 )
                                             }
                                             className="flex flex-row rounded-full bg-[#e60202] mr-2 h-10 w-10 items-center justify-center"
@@ -169,7 +169,7 @@ export const SIPRows = ({
                                                 className="text-white"
                                             >
                                                 {getInitials(
-                                                    order.account.name
+                                                    order.client.name
                                                 )}
                                             </Text>
                                         </Pressable>
@@ -186,7 +186,7 @@ export const SIPRows = ({
                                                         selectable
                                                         className="text-black font-semibold max-w-[240px] lg:max-w-[300px] break-all"
                                                     >
-                                                        {order.account.name}
+                                                        {order.client.name}
                                                         &nbsp;
                                                     </Text>
                                                 </Pressable>
@@ -229,7 +229,7 @@ export const SIPRows = ({
                                                     selectable
                                                     className="text-[#6C6A6A] text-sm"
                                                 >
-                                                    {order.account.clientId}
+                                                    {order.client.clientId}
                                                 </Text>
                                                 {/* <View className='rounded-full bg-[#6C6A6A] h-2 w-2 mx-1'></View> */}
                                                 {/* <View className='flex flex-row items-center'>
@@ -321,8 +321,10 @@ export const SIPRows = ({
 
                                 <View className="pl-12 lg:pl-0 hidden lg:flex flex-row justify-start w-3/12">
                                     <Text>
-                                        {order.transactions[0]?.folio
-                                            ?.folioNumber || "-"}
+                                        {/* {order?.transactions[0]?.folio
+                                            ?.folioNumber ? order?.transactions[0]?.folio
+                                            ?.folioNumber : "-"} */}
+                                            -
                                     </Text>
                                 </View>
 

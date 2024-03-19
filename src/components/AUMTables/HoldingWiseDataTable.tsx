@@ -135,13 +135,7 @@ const HoldingWiseDataTable = () => {
                                 </View>
                             </View>
                             <View className="flex flex-row items-center mt-0">
-                                <Tag>
-                                    KYC{" "}
-                                    {item?.users[0]?.kycStatus
-                                        ?.isAllowedToTransact
-                                        ? "Done"
-                                        : "Not Done"}
-                                </Tag>
+                            {!item?.kycStatus && <Tag>KYC Not Done</Tag>}
                                 <Tag>SIP(N/A)</Tag>
                                 <Tag>Autopay active</Tag>
                             </View>

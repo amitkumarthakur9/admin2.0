@@ -46,6 +46,7 @@ interface AccountItem {
     distributorCompany: DistributorCompany;
     isActive: boolean;
     taxStatusId: string | null;
+    kycStatus: string;
 }
 
 interface AccountsResponse {

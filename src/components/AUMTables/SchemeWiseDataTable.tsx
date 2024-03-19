@@ -33,7 +33,7 @@ const SchemeWiseDataTable = () => {
     const [currentPageNumber, setCurrentPageNumber] = useState(1);
     const [totalItems, setTotalItems] = useState(0);
     const [itemsPerPage, setItemsPerPage] = useState(10);
-    const [data, setData] = useState<AccountItem[]>([]);
+    const [data, setData] = useState<AumSchemeWiseData[]>([]);
     const [totalPages, setTotalPages] = useState(1);
     const [appliedFilers, setAppliedFilers] = useState([]);
     const [filtersSchema, setFiltersSchema] = useState([]);
@@ -59,10 +59,15 @@ const SchemeWiseDataTable = () => {
             data.orderBy = appliedSorting;
         }
 
-        const response: AccountsResponse = await RemoteApi.post(
-            "client/list",
+        const response: AumSchemeWise = await RemoteApi.post(
+            "aum/scheme/list",
             data
         );
+
+        // const response: AUMResponseInterface = await RemoteApi.post(
+        //     "aum/scheme/list",
+        //     data
+        // );
 
         if (response.code == 200) {
             setData(response.data);
@@ -102,7 +107,7 @@ const SchemeWiseDataTable = () => {
                 key: "schemeName",
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
-                        Axis Mid Cap Fund
+                        {item?.name ? item?.name : "-"}
                     </Text>
                 ),
             },
@@ -110,7 +115,7 @@ const SchemeWiseDataTable = () => {
                 key: "optiontype",
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
-                        Monthly
+                         {item?.optionType ? item?.optionType : "-"}
                     </Text>
                 ),
             },
@@ -118,7 +123,7 @@ const SchemeWiseDataTable = () => {
                 key: "dividendtype",
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
-                        Reinvest
+                        {item?.dividendType ? item?.dividendType : "-"}
                     </Text>
                 ),
             },
@@ -126,7 +131,9 @@ const SchemeWiseDataTable = () => {
                 key: "totalinvested",
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
-                        {RupeeSymbol + "2300"}
+                       {item?.investedValue
+                            ? RupeeSymbol + item?.investedValue.toFixed(2)
+                            : "-"}
                     </Text>
                 ),
             },
@@ -134,7 +141,9 @@ const SchemeWiseDataTable = () => {
                 key: "currentValue",
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
-                        {RupeeSymbol + "2200"}
+                        {item?.currentValue
+                            ? RupeeSymbol + item?.currentValue.toFixed(2)
+                            : "-"}
                     </Text>
                 ),
             },

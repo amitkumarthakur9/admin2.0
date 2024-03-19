@@ -25,7 +25,7 @@ import { TableBreadCrumb } from "../BreadCrumbs/TableBreadCrumb";
 import { RupeeSymbol, getInitials } from "../../helper/helper";
 import DataTable from "../DataTable/DataTable";
 import Tag from "../Tag/Tag";
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from "react-native-vector-icons/FontAwesome";
 
 const IFAWiseDataTable = () => {
     const [isLoading, setIsLoading] = React.useState(false);
@@ -33,7 +33,7 @@ const IFAWiseDataTable = () => {
     const [currentPageNumber, setCurrentPageNumber] = useState(1);
     const [totalItems, setTotalItems] = useState(0);
     const [itemsPerPage, setItemsPerPage] = useState(10);
-    const [data, setData] = useState<AccountItem[]>([]);
+    const [data, setData] = useState<IFAwiseData[]>([]);
     const [totalPages, setTotalPages] = useState(1);
     const [appliedFilers, setAppliedFilers] = useState([]);
     const [filtersSchema, setFiltersSchema] = useState([]);
@@ -59,8 +59,8 @@ const IFAWiseDataTable = () => {
             data.orderBy = appliedSorting;
         }
 
-        const response: AccountsResponse = await RemoteApi.post(
-            "client/list",
+        const response: IFAwise = await RemoteApi.post(
+            "aum/distributor/list",
             data
         );
 
@@ -72,7 +72,7 @@ const IFAWiseDataTable = () => {
             setTotalPages(
                 Math.ceil(
                     (response.filterCount || response.data.length) /
-                    itemsPerPage
+                        itemsPerPage
                 )
             );
         }
@@ -102,7 +102,7 @@ const IFAWiseDataTable = () => {
                 key: "ifa",
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
-                        Sobha Rathi
+                        {item?.name ? item?.name : "-"}
                     </Text>
                 ),
             },
@@ -110,7 +110,9 @@ const IFAWiseDataTable = () => {
                 key: "totalInvested",
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
-                        {RupeeSymbol + "2300"}
+                        {item?.investedValue
+                            ? RupeeSymbol + item?.investedValue
+                            : "-"}
                     </Text>
                 ),
             },
@@ -118,7 +120,9 @@ const IFAWiseDataTable = () => {
                 key: "currentValue",
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
-                        {RupeeSymbol + "2200"}
+                        {item?.currentValue
+                            ? RupeeSymbol + item?.currentValue
+                            : "-"}
                     </Text>
                 ),
             },
@@ -127,15 +131,11 @@ const IFAWiseDataTable = () => {
                 content: (
                     <View className="flex w-10/12 justify-center">
                         <Pressable
-                        onPress={() =>
-                            router.push('clients/${client.id}')
-                        }
-                    >
-                        <Icon name="ellipsis-v" size={18} color="grey" />
-                    </Pressable>
-
+                            onPress={() => router.push("clients/${client.id}")}
+                        >
+                            <Icon name="ellipsis-v" size={18} color="grey" />
+                        </Pressable>
                     </View>
-                    
                 ),
             },
         ];

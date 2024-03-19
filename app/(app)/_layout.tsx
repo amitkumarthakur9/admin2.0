@@ -40,6 +40,7 @@ import MutualFundDetail from "./mutual-fund/[id]";
 import DashboardIFA from "./dashboard";
 import AumReconcile from "./aum-reconcile";
 import SendInvite from "./invite-contact";
+import AddIfaRm from "./add-ifa-rm";
 
 NativeWindStyleSheet.setOutput({
     default: "native",
@@ -326,6 +327,18 @@ export default function AppLayout() {
                         }}
                         initialParams={{}}
                         component={SendInvite}
+                    />
+
+                    <Drawer.Screen
+                        name="add-ifa-rm" // This is the name of the page and must match the url from root
+                        options={{
+                            drawerLabel: "Add IFA/RM",
+                            title: "Add IFA/RM",
+                            // drawerItemStyle: { display: "none" },
+                            unmountOnBlur: true,
+                        }}
+                        initialParams={{}}
+                        component={AddIfaRm}
                     />
 
                     {/* </Drawer> */}

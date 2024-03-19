@@ -16,11 +16,34 @@ interface Fundhouse {
     rta: any; // Adjust the type based on the actual structure of "rta"
 }
 
+interface optionType {
+    id: number;
+    name: string;
+
+}
+
+interface deliveryType {
+    id: number;
+    name: string;
+
+}
+
+interface dividendType {
+    id: number;
+    name: string;
+
+}
+
 interface MutualFund {
     id: string;
     name: string;
     fundhouse: Fundhouse;
     mutualfundSubcategory: MutualfundSubcategory;
+    logoUrl: string;
+    category: string;
+    optionType: optionType;
+    deliveryType: deliveryType;
+    dividendType: dividendType;
 }
 
 interface User {
@@ -34,6 +57,7 @@ interface Account {
     clientId: string;
     name: string;
     user: User[];
+    panNumber: string;
 }
 
 interface OrderStatus {
@@ -71,6 +95,28 @@ interface Transaction {
     settlementType: string;
 }
 
+interface accountType{
+    id: number;
+    name: string;
+
+}
+interface BankAccount {
+    id: string;
+    userId: string;
+    branchId: string;
+    micrCode: string | null;
+    bankAccountTypeId: number;
+    accountNumber: string;
+    isActive: boolean;
+    createdAt: string;
+    isPrimary: boolean | null;
+    branchName: string;
+    ifscCode: string;
+    accountType: accountType;
+    bankName: string;
+    logoUrl: string;
+}
+
 export interface SIPReportDetail {
     createdAt: string;
     id: string;
@@ -87,6 +133,7 @@ export interface SIPReportDetail {
     totalNoOfInstallments: number;
     transactions?: Transaction[];
     mutualfund: MutualFund;
+    bankAccount: BankAccount;
 }
 export interface SIPDetailResponseInterface {
     message: string;

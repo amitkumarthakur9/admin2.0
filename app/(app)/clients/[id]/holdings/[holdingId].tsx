@@ -1,5 +1,5 @@
 import { router, useLocalSearchParams } from "expo-router";
-import { Center, HStack, Heading, Spinner } from "native-base";
+import { Center, HStack, Heading, Spinner, Image, } from "native-base";
 import { useEffect, useState } from "react";
 import { View, Text, ScrollView, Pressable, StyleSheet } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
@@ -7,6 +7,7 @@ import {
     ClientDetailItem,
     ClientDetailResponse,
 } from "../../../../../src/interfaces/ClientDetailInterface";
+import { HoldingDetailData, HoldingDetailResponse } from "src/interfaces/HoldingDetailInterface";
 import RemoteApi from "../../../../../src/services/RemoteApi";
 import moment from "moment";
 import {
@@ -25,13 +26,13 @@ import { dateFormat } from "../../../../../src/helper/DateUtils";
 export default function HoldingDetail() {
     const [isLoading, setIsLoading] = useState(true);
     const { id, holdingId } = useLocalSearchParams();
-    const [data, setData] = useState<ClientDetailItem>();
+    const [data, setData] = useState<HoldingDetailData>();
 
     useEffect(() => {
         setIsLoading(true);
         async function getDetails() {
-            const response: ClientDetailResponse = await RemoteApi.get(
-                `client/${id}`
+            const response: HoldingDetailResponse = await RemoteApi.get(
+                `holding/${id}`
             );
             if (response) {
                 setData(response.data);
@@ -108,7 +109,7 @@ export default function HoldingDetail() {
                                                     selectable
                                                     className="font-medium text-start text-black"
                                                 >
-                                                    {data?.name}
+                                                    {data?.account?.name}
                                                 </Text>
                                             </View>
                                             <View className="flex flex-row items-center">
@@ -122,7 +123,7 @@ export default function HoldingDetail() {
                                                     selectable
                                                     className="font-medium text-start text-black"
                                                 >
-                                                    {data?.clientId}
+                                                    {data?.account?.clientId}
                                                 </Text>
                                             </View>
                                             <View className="flex flex-row items-center">
@@ -136,7 +137,7 @@ export default function HoldingDetail() {
                                                     selectable
                                                     className="font-medium text-start text-black"
                                                 >
-                                                    {data?.users[0]?.panNumber}
+                                                    {data?.account?.panNumber}
                                                 </Text>
                                             </View>
                                         </View>
@@ -155,19 +156,20 @@ export default function HoldingDetail() {
                                                 "flex flex-row items-center justify-start w-8/12"
                                             }
                                         >
-                                            {/* <Image
+                                             <Image
                                                 alt="fundHouse"
                                                 className="mr-2"
                                                 style={{
-                                                    width: 40,
-                                                    height: 40,
+                                                    width: 32,
+                                                    height: 32,
                                                     objectFit: "contain",
                                                 }}
                                                 source={{
-                                                    uri: 'https://mfapi.kotaksecurities.online/bank/74/logo',
+                                                    uri: data?.mutualfund
+                                                        ?.logoUrl,
                                                 }}
-                                            /> */}
-                                            <View className="w-8 h-8 rounded bg-gray-500 mx-2" />
+                                            />
+                                            
                                             <View
                                                 className={
                                                     "flex flex-col justify-end items-start"
@@ -177,7 +179,8 @@ export default function HoldingDetail() {
                                                     selectable
                                                     className="text-black font-semibold break-all text-sm flex-wrap"
                                                 >
-                                                    Axis Mid Cap Fund
+                                                    {data?.mutualfund
+                                                        ?.name}
                                                 </Text>
 
                                                 <View className="flex flex-row items-center flex-wrap">
@@ -185,7 +188,8 @@ export default function HoldingDetail() {
                                                         selectable
                                                         className=" text-blacktext-xs"
                                                     >
-                                                        Axis Mid Cap Fund
+                                                        {data?.mutualfund
+                                                        ?.category}
                                                     </Text>
                                                     <View className="mx-2">
                                                         <Icon
@@ -202,7 +206,8 @@ export default function HoldingDetail() {
                                                         selectable
                                                         className="text-black text-xs"
                                                     >
-                                                        Equity
+                                                        {data?.mutualfund
+                                                        ?.subCategory}
                                                     </Text>
                                                 </View>
                                             </View>
@@ -214,7 +219,8 @@ export default function HoldingDetail() {
                                             <DataValue
                                                 key="optionType"
                                                 title="Option Type:"
-                                                value="Monthly"
+                                                value= {data?.mutualfund
+                                                    ?.optionType}
                                             />
                                             <DataValue
                                                 key="createdDate"
@@ -224,38 +230,42 @@ export default function HoldingDetail() {
                                             <DataValue
                                                 key="currentValue"
                                                 title="Current Value:"
-                                                value={RupeeSymbol + "2500000"}
+                                                value={data?.currentValue ? RupeeSymbol + data?.currentValue : "-"
+            }
                                             />
                                         </View>
                                         <View className="w-4/12 flex-flex-col gap-4 px-2">
                                             <DataValue
                                                 key="dividendType"
                                                 title="Dividend Type:"
-                                                value="Reinvest"
+                                                value= {data?.mutualfund
+                                                    ?.dividentType}
                                             />
                                             <DataValue
                                                 key="xirr"
                                                 title="XIRR:"
-                                                value="25%"
+                                                value={data?.xirr
+                                                    || "-"}
                                             />
                                             <DataValue
                                                 key="investedAmount"
                                                 title="Invested Amount:"
-                                                value={
-                                                    RupeeSymbol + "250,000,000"
-                                                }
+                                                value={data?.investedValue ? RupeeSymbol + data?.investedValue : "-"
+                                            }
                                             />
                                         </View>
                                         <View className="w-4/12 flex-flex-col gap-4 px-2">
                                             <DataValue
                                                 key="rta"
                                                 title="RTA"
-                                                value="CAMS"
+                                                value={data?.mutualfund?.rta
+                                                    || "-"}
                                             />
                                             <DataValue
                                                 key="return"
                                                 title="Return"
-                                                value="16%"
+                                                value={data?.investedValue && data?.currentValue ? (data?.currentValue - data?.investedValue).toFixed(2) : "-"
+                                            }
                                             />
                                         </View>
                                     </View>
@@ -284,7 +294,12 @@ const PortfolioCard = ({ data }) => {
         setSelectedTab(tab);
     };
 
+
+
+    
     const transactionData = data?.transactions?.map((item) => {
+
+
         return [
             {
                 key: "amount",
@@ -304,7 +319,7 @@ const PortfolioCard = ({ data }) => {
             },
             {
                 key: "dividendType",
-                content: <DataText value={item?.dividendType} />,
+                content: <DataText value={item?.dividendType || "-"} />,
             },
             {
                 key: "nav",
@@ -317,7 +332,12 @@ const PortfolioCard = ({ data }) => {
         ];
     });
 
-    const folioData = data?.folio?.map((item) => {
+    const folioData = data?.folios?.map((item) => {
+
+        
+
+
+
         return [
             {
                 key: "folioNo",
@@ -338,7 +358,7 @@ const PortfolioCard = ({ data }) => {
             },
             {
                 key: "returns",
-                content: <DataText value={item?.returns} />,
+                content: <DataText value={item?.investedValue && item?.currentValue ? (item?.currentValue - item?.investedValue).toFixed(2) : "-"} />,
             },
         ];
     });

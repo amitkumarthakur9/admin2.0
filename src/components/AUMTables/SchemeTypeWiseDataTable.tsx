@@ -33,7 +33,7 @@ const SchemeTypeWiseDataTable = () => {
     const [currentPageNumber, setCurrentPageNumber] = useState(1);
     const [totalItems, setTotalItems] = useState(0);
     const [itemsPerPage, setItemsPerPage] = useState(10);
-    const [data, setData] = useState<AccountItem[]>([]);
+    const [data, setData] = useState<SchemeTypeWiseData[]>([]);
     const [totalPages, setTotalPages] = useState(1);
     const [appliedFilers, setAppliedFilers] = useState([]);
     const [filtersSchema, setFiltersSchema] = useState([]);
@@ -59,7 +59,7 @@ const SchemeTypeWiseDataTable = () => {
             data.orderBy = appliedSorting;
         }
 
-        const response: AccountsResponse = await RemoteApi.post(
+        const response: SchemeTypeWise = await RemoteApi.post(
             "client/list",
             data
         );
@@ -102,7 +102,7 @@ const SchemeTypeWiseDataTable = () => {
                 key: "schemeType",
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
-                        Equity
+                        {item?.name ? item?.name : "Equity" }
                     </Text>
                 ),
             },
@@ -110,7 +110,8 @@ const SchemeTypeWiseDataTable = () => {
                 key: "currentAmount",
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
-                        {RupeeSymbol + "2200"}
+                        
+                        {item?.currentValue ? RupeeSymbol + item?.currentValue : RupeeSymbol + "2600" }
                     </Text>
                 ),
             },
@@ -118,7 +119,8 @@ const SchemeTypeWiseDataTable = () => {
                 key: "investedAmount",
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
-                        {RupeeSymbol + "2200"}
+                                                {item?.investedValue ? RupeeSymbol + item?.investedValue : RupeeSymbol + "2500" }
+
                     </Text>
                 ),
             },

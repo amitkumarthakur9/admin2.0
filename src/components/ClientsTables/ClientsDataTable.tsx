@@ -24,6 +24,7 @@ import { MobileClientsRows } from "./MobileClientsRows";
 import { getInitials } from "../../helper/helper";
 import DataTable from "../DataTable/DataTable";
 import Tag from "../Tag/Tag";
+import AddNewClient from "./AddNewClient";
 
 const ClientsDataTable = () => {
     const [isLoading, setIsLoading] = React.useState(false);
@@ -208,6 +209,7 @@ const ClientsDataTable = () => {
                     getList={getDataList}
                     appliedFilers={appliedFilers}
                     setAppliedFilers={setAppliedFilers}
+                    newComponent={<AddNewClient />}
                 />
 
                 {!isLoading ? (

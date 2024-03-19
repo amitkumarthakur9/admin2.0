@@ -202,7 +202,7 @@ export default function AUMDetail() {
                                                 }}
                                                 source={{
                                                     uri: data.mutualfund
-                                                        ?.fundhouse?.logoUrl,
+                                                        ?.logoUrl,
                                                 }}
                                             />
                                             <View
@@ -224,9 +224,9 @@ export default function AUMDetail() {
                                                         className=" text-blacktext-xs"
                                                     >
                                                         {data?.mutualfund
-                                                            ?.mutualfundSubcategory
-                                                            ?.mutualfundCategory
-                                                            ?.name || "-"}
+                                                            ?.category
+                                                            
+                                                             || "-"}
                                                     </Text>
                                                     <View className="mx-2">
                                                         <Icon
@@ -244,8 +244,8 @@ export default function AUMDetail() {
                                                         className="text-black text-xs"
                                                     >
                                                         {data?.mutualfund
-                                                            ?.mutualfundSubcategory
-                                                            ?.name || "-"}
+                                                            ?.Subcategory
+                                                            || "-"}
                                                     </Text>
                                                 </View>
                                             </View>
@@ -257,7 +257,7 @@ export default function AUMDetail() {
                                             <DataValue
                                                 key="optionType"
                                                 title="Option Type"
-                                                value={data?.mutualfund?.optionType?.name}
+                                                value={data?.mutualfund?.optionType }
                                             />
                                             <DataValue
                                                 key="currentValue"
@@ -280,7 +280,7 @@ export default function AUMDetail() {
                                             <DataValue
                                                 key="dividendType"
                                                 title="Dividend Type"
-                                                value={data?.mutualfund?.dividendType?.name}
+                                                value={data?.mutualfund?.dividendType}
                                             />
                                             <DataValue
                                                 key="investedValue"
@@ -307,7 +307,8 @@ export default function AUMDetail() {
                                             <DataValue
                                                 key="returns"
                                                 title="Returns"
-                                                value={RupeeSymbol + "2500"}
+                                                value={data?.investedValue && data?.currentValue ? (data?.currentValue - data?.investedValue) : "-"
+                            }
                                             />
                                         </View>
                                     </View>

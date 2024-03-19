@@ -4,6 +4,12 @@ interface Account {
     name: string;
 }
 
+interface Client {
+    id: string;
+    clientId: string;
+    name: string;
+}
+
 interface OrderStatus {
     id: number;
     name: string;
@@ -76,6 +82,8 @@ interface SIPReportItems {
     transactions: Transaction[];
     mutualfund: MutualFund;
     clientId: string;
+    client: Client;
+    bankAccount: BankAccount;
 }
 
 interface SIPResponseInterface {

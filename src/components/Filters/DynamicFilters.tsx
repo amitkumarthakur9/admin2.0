@@ -48,6 +48,7 @@ export const DynamicFilters = ({
     setAppliedFilers,
     downloadApi = "",
     fileName = "",
+    newComponent=null,
 }) => {
     const filtersSchema = schemaResponse.filters;
     const [modalVisible, setModalVisible] = useState(false);
@@ -397,6 +398,9 @@ export const DynamicFilters = ({
                             />
                         )}
                     </View>
+                    {
+                        newComponent 
+                    }
                     <View className="flex flex-row lg:mt-0">
                         <Pressable
                             onPress={downloadReport}

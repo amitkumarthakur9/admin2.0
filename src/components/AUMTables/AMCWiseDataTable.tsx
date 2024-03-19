@@ -33,7 +33,7 @@ const AMCWiseDataTable = () => {
     const [currentPageNumber, setCurrentPageNumber] = useState(1);
     const [totalItems, setTotalItems] = useState(0);
     const [itemsPerPage, setItemsPerPage] = useState(10);
-    const [data, setData] = useState<AccountItem[]>([]);
+    const [data, setData] = useState<FundhouseWiseData[]>([]);
     const [totalPages, setTotalPages] = useState(1);
     const [appliedFilers, setAppliedFilers] = useState([]);
     const [filtersSchema, setFiltersSchema] = useState([]);
@@ -59,8 +59,13 @@ const AMCWiseDataTable = () => {
             data.orderBy = appliedSorting;
         }
 
-        const response: AccountsResponse = await RemoteApi.post(
-            "client/list",
+        // const response: AUMResponseInterface = await RemoteApi.post(
+        //     "client/list",
+        //     data
+        // );
+
+        const response: FundhouseWise = await RemoteApi.post(
+            "aum/fundhouse/list",
             data
         );
 
@@ -96,6 +101,9 @@ const AMCWiseDataTable = () => {
         }
     }, [appliedSorting]);
 
+    console.log(data);
+    
+
     const transformedData = data?.map((item) => {
         return [
             {
@@ -103,7 +111,7 @@ const AMCWiseDataTable = () => {
                 content: (
                     <View className="flex flex-row justify-center ">
                          <Text selectable className="text-[#686868] font-semibold">
-                        Axis Mutual Fund
+                         {item?.name ? item?.name : "-"}
                     </Text>
 
                     </View>
@@ -114,7 +122,9 @@ const AMCWiseDataTable = () => {
                 key: "investedAmount",
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
-                        {RupeeSymbol + "2300"}
+                         {item?.investedValue
+                            ? RupeeSymbol + item?.investedValue.toFixed(2)
+                            : "-"}
                     </Text>
                 ),
             },
@@ -122,7 +132,9 @@ const AMCWiseDataTable = () => {
                 key: "currentAmount",
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
-                        {RupeeSymbol + "2200"}
+                       {item?.currentValue
+                            ? RupeeSymbol + item?.currentValue.toFixed(2)
+                            : "-"}
                     </Text>
                 ),
             },
@@ -175,7 +187,10 @@ const AMCWiseDataTable = () => {
                             ]}
                             cellSize={[3, 3, 3, 1]}
                             rows={transformedData}
+                            
+                            
                         />
+                        
                     </ScrollView>
                 ) : (
                     <HStack

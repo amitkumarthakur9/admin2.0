@@ -144,7 +144,7 @@ const ClientWiseDataTable = () => {
                 ),
             },
             {
-                key: "clientcode",
+                key: "clientCode",
                 content: (
                     <Text selectable className="text-[#686868] font-semibold w-11/12">
                         XCVV567

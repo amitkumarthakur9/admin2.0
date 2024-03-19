@@ -47,12 +47,16 @@ import HorizontalStackedBarChart from "../../../src/components/Chart/HorizontalB
 import Accordion from "../../../src/components/Accordion/Accordion";
 import DataTable from "../../../src/components/DataTable/DataTable";
 import DataText from "../../../src/components/DataValue/DataText";
-import { dateFormat } from "../../../src/helper/DateUtils";
+import {
+    dateFormat,
+    dateTimeFormat,
+    getNextSipDate,
+} from "../../../src/helper/DateUtils";
 import { getTransactionMessage } from "../../../src/helper/StatusInfo";
 
 const DataValue = ({ title, value }) => {
     return (
-        <View className="w-full flex flex-row justify-between items-center p-2">
+        <View  className="w-full flex flex-row justify-between items-center p-2">
             <View className="w-1/2 flex ">
                 <Text
                     className="text-bold font-mediumk text-gray-500"
@@ -166,7 +170,9 @@ export default function SIPReportsDetail() {
                                                     selectable
                                                     className="font-medium text-start text-black"
                                                 >
-                                                    {data?.account?.name}
+                                                    {data?.account?.name
+                                                        ? data?.account?.name
+                                                        : "-"}
                                                 </Text>
                                             </View>
                                             <View className="flex flex-row items-center">
@@ -180,7 +186,10 @@ export default function SIPReportsDetail() {
                                                     selectable
                                                     className="font-medium text-start text-black"
                                                 >
-                                                    {data?.account?.clientId}
+                                                    {data?.account?.clientId
+                                                        ? data?.account
+                                                              ?.clientId
+                                                        : "-"}
                                                 </Text>
                                             </View>
                                             <View className="flex flex-row items-center">
@@ -194,7 +203,10 @@ export default function SIPReportsDetail() {
                                                     selectable
                                                     className="font-medium text-start text-black"
                                                 >
-                                                    CVBBGF9
+                                                    {data?.account?.panNumber
+                                                        ? data?.account
+                                                              ?.panNumber
+                                                        : "-"}
                                                 </Text>
                                             </View>
                                         </View>
@@ -223,8 +235,8 @@ export default function SIPReportsDetail() {
                                                     objectFit: "contain",
                                                 }}
                                                 source={{
-                                                    uri: data.mutualfund
-                                                        .fundhouse.logoUrl,
+                                                    uri: data?.mutualfund
+                                                        ?.logoUrl,
                                                 }}
                                             />
                                             <View
@@ -244,10 +256,7 @@ export default function SIPReportsDetail() {
                                                         selectable
                                                         className=" text-blacktext-xs"
                                                     >
-                                                        {
-                                                            data.mutualfund
-                                                                .fundhouse.name
-                                                        }
+                                                        {data?.mutualfund?.name}
                                                     </Text>
                                                     <View className="mx-2">
                                                         <Icon
@@ -264,7 +273,10 @@ export default function SIPReportsDetail() {
                                                         selectable
                                                         className="text-black text-xs"
                                                     >
-                                                        Equity
+                                                        {
+                                                            data.mutualfund
+                                                                .category
+                                                        }
                                                     </Text>
                                                 </View>
                                             </View>
@@ -275,31 +287,44 @@ export default function SIPReportsDetail() {
                                             <DataValue
                                                 key="Amount"
                                                 title="Amount"
-                                                value={
-                                                    RupeeSymbol + data?.amount
-                                                }
+                                                value={data?.transactions[0].amount ? RupeeSymbol + data?.transactions[0].amount : "-"}
+                                                
                                             />
                                             <DataValue
-                                                key="Option Type"
+                                                key="OptionType"
                                                 title="Option Type"
-                                                value="Monthly"
+                                                value={
+                                                    data?.mutualfund?.optionType?.name
+                                                        ? data?.mutualfund
+                                                              ?.optionType?.name
+                                                        : "-"
+                                                }
+                                                
                                             />
                                             <DataValue
                                                 key="amountInvestment"
                                                 title="Amount Investment"
-                                                value={RupeeSymbol + "57,000"}
+                                                value={data?.amount ? RupeeSymbol + data?.amount : "-"}
                                             />
                                         </View>
                                         <View className="w-3/12 flex-flex-col gap-4 px-2">
                                             <DataValue
                                                 key="startDate"
                                                 title="Start Date"
-                                                value={"23/09/1998"}
+                                                value={dateFormat(
+                                                    data?.startDate
+                                                )}
                                             />
                                             <DataValue
-                                                key="Dividend Type"
+                                                key="DividendType"
                                                 title="Dividend Type"
-                                                value="Reinvest"
+                                                value={
+                                                    data?.mutualfund
+                                                        ?.dividendType?.name
+                                                        ? data?.mutualfund
+                                                              ?.dividendType?.name
+                                                        : "-"
+                                                }
                                             />
                                             <DataValue
                                                 key="Registeredby"
@@ -311,7 +336,9 @@ export default function SIPReportsDetail() {
                                             <DataValue
                                                 key="endDate"
                                                 title="End Date"
-                                                value={"23/09/2098"}
+                                                value={dateFormat(
+                                                    data?.endDate
+                                                )}
                                             />
                                             <DataValue
                                                 key="Registered"
@@ -331,20 +358,18 @@ export default function SIPReportsDetail() {
                                         </View>
                                         <View className="w-3/12 flex-flex-col gap-4 px-2">
                                             <DataValue
-                                                key="DueDate"
-                                                title="Due Date"
-                                                value={"23/09/2024"}
+                                                key="nextDate"
+                                                title="Next SIP Date"
+                                                value={getNextSipDate(
+                                                    data?.startDate
+                                                )}
                                             />
                                             <DataValue
                                                 key="kycStatus"
                                                 title="Status"
                                                 value="Active"
                                             />
-                                            {/* <DataValue
-                                                key="riskProfile"
-                                                title="Risk Profile"
-                                                value={"-"}
-                                            /> */}
+                                            
                                         </View>
                                     </View>
                                 </View>
@@ -378,14 +403,17 @@ const AccountDetailsCard = ({ data }: { data: SIPReportDetail }) => {
         setSelectedTab(tab);
     };
 
+    console.log(data?.bankAccount?.logoUrl);
+    console.log("data?.bankAccount?.logoUrl");
+    
+
     const accordionData = [
         {
-            title: <Text>{data?.mandate?.bankAccount?.bankName}</Text>,
+            title: <Text>{data?.bankAccount?.bankName}</Text>,
             subcontent: (
                 <View className="flex flex-row items-center gap-2">
-
-                        {/* <Image
-                            alt="fundHouse"
+                    <Image
+                            alt=""
                             className="mr-2"
                             style={{
                                 width: 40,
@@ -393,15 +421,15 @@ const AccountDetailsCard = ({ data }: { data: SIPReportDetail }) => {
                                 objectFit: "contain",
                             }}
                             source={{
-                                uri: data?.mandate?.bankAccount?.bankLogoUrl,
+                                uri: data?.bankAccount?.logoUrl,
                             }}
-                        /> */}
-          
+                            
+                        /> 
                     <Text className="text-xs text-gray-400">
-                        A/C no. {data?.mandate?.bankAccount?.accountNumber}
+                        A/C no. {data?.bankAccount?.accountNumber}
                     </Text>
                     <Text className="text-xs text-purple-700">
-                        {data?.mandate?.bankAccount?.isPrimary && "Primary"}{" "}
+                        {data?.bankAccount?.isPrimary && "Primary"}{" "}
                     </Text>
                 </View>
             ),
@@ -410,17 +438,17 @@ const AccountDetailsCard = ({ data }: { data: SIPReportDetail }) => {
                     <DataValue
                         key="branchName"
                         title="Branch Name"
-                        value={data?.mandate?.bankAccount?.branchName}
+                        value={data?.bankAccount?.branchName}
                     />
                     <DataValue
                         key="ifsc"
                         title="IFSC Code"
-                        value={data?.mandate?.bankAccount?.ifscCode}
+                        value={data?.bankAccount?.ifscCode}
                     />
                     <DataValue
                         key="accountType"
                         title="Account Type"
-                        value="Savings"
+                        value={data?.bankAccount?.accountType?.name}
                     />
                     <DataValue key="autopay" title="Autopay" value="Enabled" />
                     <View className="p-2">
@@ -545,8 +573,8 @@ const TransactionList = ({ data }: { data: SIPReportDetail }) => {
                 content: <DataText value={item?.units || "01"} />,
             },
             {
-                key: "createdDate",
-                content: <DataText value={dateFormat(item?.createdAt)} />,
+                key: "paymentDate",
+                content: <DataText value={dateFormat(item?.paymentDate)} />,
             },
             {
                 key: "nav",
@@ -630,7 +658,7 @@ const TransactionList = ({ data }: { data: SIPReportDetail }) => {
             />
             <DataTable
                 key="transactions"
-                headers={["Amount", "Units", "Created Date", "NAV", "Status"]}
+                headers={["Amount", "Units", "Payment Date", "NAV", "Status"]}
                 cellSize={[1, 1, 2, 1, 1]}
                 // rows={[
                 //     [

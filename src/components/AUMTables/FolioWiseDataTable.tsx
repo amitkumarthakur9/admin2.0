@@ -58,9 +58,14 @@ const FolioWiseDataTable = () => {
         }
 
         const response: AUMResponseInterface = await RemoteApi.post(
-            "folio/list",
+            "aum/folio/list",
             data
         );
+
+        // const response: AUMResponseInterface = await RemoteApi.post(
+        //     "aum/folio/list",
+        //     data
+        // );
 
         if (response.code == 200) {
             setData(response.data);
@@ -78,7 +83,7 @@ const FolioWiseDataTable = () => {
 
     React.useEffect(() => {
         async function getSchema() {
-            const response: any = await RemoteApi.get("folio/schema");
+            const response: any = await RemoteApi.get("client/schema");
             setFiltersSchema(response);
             setSorting(response.sort);
         }
@@ -94,6 +99,8 @@ const FolioWiseDataTable = () => {
         }
     }, [appliedSorting]);
 
+    
+
     const transformedData = data?.map((item) => {
         return [
             {
@@ -102,7 +109,7 @@ const FolioWiseDataTable = () => {
                     <View className="flex flex-row items-center justify-start w-11/12">
                         <View className="flex flex-col rounded-full bg-[#e60202] mr-2 h-10 w-10 mb-1 items-center justify-center flex-wrap">
                             <Text selectable className="text-white">
-                                {getInitials(item?.account.name)}
+                                {getInitials(item?.account.name ? item?.account.name : "-")}
                             </Text>
                         </View>
                         <View className="flex flex-col flex-wrap w-[99%]">
@@ -116,7 +123,7 @@ const FolioWiseDataTable = () => {
                                         selectable
                                         className="flex flex-row text-black font-semibold break-all"
                                     >
-                                        {item?.account.name}&nbsp;{" "}
+                                        {item?.account.name ? item?.account.name : "-"}&nbsp;{" "}
                                     </Text>
                                 </Pressable>
 
@@ -158,13 +165,15 @@ const FolioWiseDataTable = () => {
                 content: (
                     <View className="flex flex-col justify-start w-11/12">
                         <Text selectable className="text-black font-semibold">
-                            {item?.mutualfund?.name}
+                            {item?.mutualfund?.name ? item?.mutualfund?.name : "-"}
                         </Text>
                         <Text
                             selectable
                             className="text-[#686868] font-semibold text-xs"
                         >
-                            Reinvest
+                            {item?.mutualfund?.deliveryType?.name ? item?.mutualfund?.deliveryType?.name : "-" }{" - "}
+                            {item?.mutualfund?.optionType?.name ? item?.mutualfund?.optionType?.name : "-" }
+                            {item?.mutualfund?.dividendType?.name ? item?.mutualfund?.dividendType?.name : "-" }
                         </Text>
                     </View>
                 ),
@@ -179,7 +188,7 @@ const FolioWiseDataTable = () => {
                             selectable
                             className="text-[#686868] font-semibold w-11/12"
                         >
-                            {item?.folioNumber}&nbsp;
+                            {item?.folioNumber ? item?.folioNumber  : "-"}&nbsp;
                         </Text>
                     </Pressable>
                 ),
@@ -191,7 +200,7 @@ const FolioWiseDataTable = () => {
                         selectable
                         className="text-[#686868] font-semibold w-11/12"
                     >
-                        {item.units}
+                        {item?.units ? item?.units : "-"}
                     </Text>
                 ),
             },
@@ -203,7 +212,7 @@ const FolioWiseDataTable = () => {
                         className="text-[#686868] font-semibold w-11/12"
                     >
                         {item.investedValue
-                            ? RupeeSymbol + item.investedValue
+                            ? RupeeSymbol + item.investedValue.toFixed(2)
                             : "-"}
                     </Text>
                 ),
@@ -216,7 +225,7 @@ const FolioWiseDataTable = () => {
                         className="text-[#686868] font-semibold w-11/12"
                     >
                         {item?.currentValue
-                            ? RupeeSymbol + item?.currentValue
+                            ? RupeeSymbol + item?.currentValue.toFixed(2)
                             : "-"}
                     </Text>
                 ),
@@ -228,7 +237,7 @@ const FolioWiseDataTable = () => {
                         selectable
                         className="text-[#686868] font-semibold w-11/12 "
                     >
-                        20.87%
+                        {item?.xirr ? item?.xirr : "-"}
                     </Text>
                 ),
             },
@@ -237,7 +246,8 @@ const FolioWiseDataTable = () => {
                 content: (
                     <View className="flex justify-start text-[#686868] font-semibold w-full">
                         <Text selectable className="">
-                            18%
+                        {item?.investedValue && item?.currentValue ? (item?.currentValue - item?.investedValue).toFixed(2) : "-"
+                            }
                         </Text>
                     </View>
                 ),
@@ -247,7 +257,7 @@ const FolioWiseDataTable = () => {
                 content: (
                     <View className="flex flex-row w-10/12 justify-center">
                         <Pressable
-                            onPress={() => router.push("clients/${client.id}")}
+                            onPress={() => router.push(`folio/${item?.id}`)}
                         >
                             <Icon name="ellipsis-v" size={18} color="grey" />
                         </Pressable>

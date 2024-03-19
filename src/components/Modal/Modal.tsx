@@ -1,6 +1,6 @@
 import { Dialog, Portal } from "react-native-paper";
 
-const Modal = ({ visible, hideDialog, children }) => {
+const Modal = ({ visible, hideDialog, children, }) => {
     return (
         <Portal>
             <Dialog
