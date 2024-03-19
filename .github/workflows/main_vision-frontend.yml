@@ -32,6 +32,8 @@ jobs:
         push: true
         tags: jarvisapiregistry.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_bdbf0b7c241045fbb55b278074844883 }}/jarvisapiregistry/vision-frontend-cp/production:${{ github.sha }}
         file: ./Dockerfile
+        build-args: |
+         API_ENDPOINT=${{ secrets.API_ENDPOINT }}
 
   deploy:
     runs-on: ubuntu-latest
