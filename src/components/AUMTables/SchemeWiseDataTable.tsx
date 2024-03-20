@@ -147,22 +147,22 @@ const SchemeWiseDataTable = () => {
                     </Text>
                 ),
             },
-            {
-                key: "detail",
-                content: (
-                    <View className="flex w-10/12 justify-center">
-                        <Pressable
-                        onPress={() =>
-                            router.push('clients/${client.id}')
-                        }
-                    >
-                        <Icon name="ellipsis-v" size={18} color="grey" />
-                    </Pressable>
+            // {
+            //     key: "detail",
+            //     content: (
+            //         <View className="flex w-10/12 justify-center">
+            //             <Pressable
+            //             onPress={() =>
+            //                 router.push('clients/${client.id}')
+            //             }
+            //         >
+            //             <Icon name="ellipsis-v" size={18} color="grey" />
+            //         </Pressable>
 
-                    </View>
+            //         </View>
                     
-                ),
-            },
+            //     ),
+            // },
         ];
     });
 
@@ -194,9 +194,9 @@ const SchemeWiseDataTable = () => {
                                 "Dividend Type",
                                 "Total Invested",
                                 "Current Value",
-                                "",
+                                // "",
                             ]}
-                            cellSize={[2, 2, 2, 2, 2, 1]}
+                            cellSize={[2, 2, 2, 2, 2,]}
                             rows={transformedData}
                         />
                     </ScrollView>

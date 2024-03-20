@@ -41,6 +41,8 @@ import DashboardIFA from "./dashboard";
 import AumReconcile from "./aum-reconcile";
 import SendInvite from "./invite-contact";
 import AddIfaRm from "./add-ifa-rm";
+import { jwtDecode } from "jwt-decode";
+import { useEffect, useState } from "react";
 
 NativeWindStyleSheet.setOutput({
     default: "native",
@@ -49,8 +51,17 @@ NativeWindStyleSheet.setOutput({
 export default function AppLayout() {
     const [[isLoading, token], setToken] = useStorageState("token");
     const { height, width } = useWindowDimensions();
+    const [roleId, setroleID] = useState(null);
 
     // console.log('token--------->', token);
+
+    useEffect(() => {
+        if (token) {
+            const decoded: any = jwtDecode(token);
+            console.log(decoded)
+            setroleID(decoded.roleId);
+        }
+    }, [token]);
 
     if (isLoading) {
         return (
@@ -154,7 +165,7 @@ export default function AppLayout() {
                             title: "AUM",
                             unmountOnBlur: true,
                         }}
-                        initialParams={{}}
+                        initialParams={{roleID: roleId}}
                         component={AUMTabScreen}
                     />
 
@@ -169,7 +180,7 @@ export default function AppLayout() {
                         component={SIPReportsScreen}
                     />
 
-                    <Drawer.Screen
+                    {/* <Drawer.Screen
                         name="folio/index" // This is the name of the page and must match the url from root
                         options={{
                             drawerLabel: "Folio",
@@ -178,7 +189,7 @@ export default function AppLayout() {
                         }}
                         initialParams={{}}
                         component={AUMReportsScreen}
-                    />
+                    /> */}
 
                     <Drawer.Screen
                         name="rta-reconciliation/index" // This is the name of the page and must match the url from root
@@ -202,7 +213,7 @@ export default function AppLayout() {
                         component={MandatesScreen}
                     />
 
-                    <Drawer.Screen
+                    {/* <Drawer.Screen
                         name="rta-sync" // This is the name of the page and must match the url from root
                         options={{
                             drawerLabel: "RTA Sync",
@@ -211,7 +222,7 @@ export default function AppLayout() {
                         }}
                         initialParams={{}}
                         component={RTASync}
-                    />
+                    /> */}
 
                     <Drawer.Screen
                         name="mandates/[id]" // This is the name of the page and must match the url from root
@@ -307,7 +318,42 @@ export default function AppLayout() {
                         initialParams={{}}
                         component={MutualFundDetail}
                     />
-                    <Drawer.Screen
+                    {(roleId === 3 || roleId === 4) && (
+                        <>
+                            <Drawer.Screen
+                                name="rta-sync" // This is the name of the page and must match the url from root
+                                options={{
+                                    drawerLabel: "RTA Sync",
+                                    title: "RTA Sync",
+                                    unmountOnBlur: true,
+                                }}
+                                initialParams={{}}
+                                component={RTASync}
+                            />
+                            <Drawer.Screen
+                                name="aum-reconcile"
+                                component={AumReconcile}
+                                options={{
+                                    drawerLabel: "AUM Reconcile",
+                                    title: "AUM Reconcile",
+                                    unmountOnBlur: true,
+                                }}
+                                initialParams={{}}
+                            />
+                            <Drawer.Screen
+                                name="add-ifa"
+                                options={{
+                                    drawerLabel: "Add IFA",
+                                    title: "Add IFA",
+                                    unmountOnBlur: true,
+                                }}
+                                initialParams={{}}
+                                component={AddIfaRm}
+                            />
+                        </>
+                    )}
+
+                    {/* <Drawer.Screen
                         name="aum-reconcile" // This is the name of the page and must match the url from root
                         options={{
                             drawerLabel: "AUM Reconcile",
@@ -316,7 +362,7 @@ export default function AppLayout() {
                         }}
                         initialParams={{}}
                         component={AumReconcile}
-                    />
+                    /> */}
                     <Drawer.Screen
                         name="invite-contact" // This is the name of the page and must match the url from root
                         options={{
@@ -329,17 +375,17 @@ export default function AppLayout() {
                         component={SendInvite}
                     />
 
-                    <Drawer.Screen
-                        name="add-ifa-rm" // This is the name of the page and must match the url from root
+                    {/* <Drawer.Screen
+                        name="add-ifa" // This is the name of the page and must match the url from root
                         options={{
-                            drawerLabel: "Add IFA/RM",
-                            title: "Add IFA/RM",
+                            drawerLabel: "Add IFA",
+                            title: "Add IFA",
                             // drawerItemStyle: { display: "none" },
                             unmountOnBlur: true,
                         }}
                         initialParams={{}}
                         component={AddIfaRm}
-                    />
+                    /> */}
 
                     {/* </Drawer> */}
                 </Drawer.Navigator>

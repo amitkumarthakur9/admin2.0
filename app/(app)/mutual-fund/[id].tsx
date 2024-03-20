@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { View, StyleSheet } from "react-native";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import {
     Button,
     Center,
@@ -23,9 +23,9 @@ import {
     ClientDetailResponse,
 } from "../../../src/interfaces/ClientDetailInterface";
 import {
-    SIPDetailResponseInterface,
-    SIPReportDetail,
-} from "../../../src/interfaces/SIPDetailInterface";
+    MutualFundDetailResponse,
+    FundInfo,
+} from "src/interfaces/MutualFundDetailInterface";
 import { BreadcrumbShadow } from "../../../src/components/Styles/Shadow";
 import { RupeeSymbol } from "../../../src/helper/helper";
 import CardWithTabs from "../../../src/components/Card/CardWithTabs";
@@ -34,6 +34,8 @@ import HorizontalStackedBarChart from "../../../src/components/Chart/HorizontalB
 import Accordion from "../../../src/components/Accordion/Accordion";
 import DataTable from "../../../src/components/DataTable/DataTable";
 import { Title } from "react-native-paper";
+import DataText from "src/components/DataValue/DataText";
+import { dateFormat, dateTimeFormat } from "../../../src/helper/DateUtils";
 
 const DataValue = ({ title, value }) => {
     return (
@@ -57,14 +59,14 @@ const DataValue = ({ title, value }) => {
 
 export default function MutualFundDetail() {
     const { id } = useLocalSearchParams();
-    const [data, setData] = useState<ClientDetailItem>();
+    const [data, setData] = useState<FundInfo>();
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         setIsLoading(true);
         async function getDetails() {
-            const response: ClientDetailResponse = await RemoteApi.get(
-                `client/${id}`
+            const response: MutualFundDetailResponse = await RemoteApi.get(
+                `mutualfund/${id}`
             );
             if (response) {
                 setData(response.data);
@@ -146,7 +148,7 @@ export default function MutualFundDetail() {
                                                     uri: 'https://mfapi.kotaksecurities.online/bank/74/logo',
                                                 }}
                                             /> */}
-                                            <View className="w-8 h-8 rounded bg-gray-500 mx-2" />
+                                            {/* <View className="w-8 h-8 rounded bg-gray-500 mx-2" /> */}
                                             <View
                                                 className={
                                                     "flex flex-col justify-end items-start"
@@ -156,7 +158,9 @@ export default function MutualFundDetail() {
                                                     selectable
                                                     className="text-black font-semibold break-all text-sm flex-wrap"
                                                 >
-                                                    Axis Mid Cap Fund
+                                                    {data?.name
+                                                        ? data?.name
+                                                        : "-"}
                                                 </Text>
 
                                                 <View className="flex flex-row items-center flex-wrap">
@@ -164,7 +168,9 @@ export default function MutualFundDetail() {
                                                         selectable
                                                         className=" text-blacktext-xs"
                                                     >
-                                                        Axis Mid Cap Fund
+                                                        {data?.category
+                                                            ? data?.category
+                                                            : "-"}
                                                     </Text>
                                                     <View className="mx-2">
                                                         <Icon
@@ -181,7 +187,9 @@ export default function MutualFundDetail() {
                                                         selectable
                                                         className="text-black text-xs"
                                                     >
-                                                        Equity
+                                                        {data?.mutualfundSubcategory
+                                                            ? data?.mutualfundSubcategory
+                                                            : "-"}
                                                     </Text>
                                                 </View>
                                             </View>
@@ -200,46 +208,87 @@ export default function MutualFundDetail() {
                                             <DataValue
                                                 key="nav"
                                                 title="NAV:"
-                                                value={RupeeSymbol + 2500}
+                                                value={
+                                                    data?.nav
+                                                        ? RupeeSymbol +
+                                                          data?.nav.toFixed(2)
+                                                        : "-"
+                                                }
                                             />
                                             <DataValue
                                                 key="1YearReturn"
                                                 title="1 Year Return:"
-                                                value="16%"
+                                                value={
+                                                    data?.annualReturns
+                                                        ? data?.annualReturns.toFixed(
+                                                              2
+                                                          ) + "%"
+                                                        : "-"
+                                                }
                                             />
                                             <DataValue
                                                 key="minSIPAmount"
                                                 title="Min. SIP Amount:"
-                                                value={RupeeSymbol + "2500"}
+                                                value={
+                                                    data?.minSIPAmount
+                                                        ? RupeeSymbol +
+                                                          data?.minSIPAmount
+                                                        : "-"
+                                                }
                                             />
                                             <DataValue
                                                 key="fundHouseName"
                                                 title="Fund House Name:"
-                                                value="Axis Mutual Fund"
+                                                value={
+                                                    data?.fundhouse?.name
+                                                        ? data?.fundhouse?.name
+                                                        : "-"
+                                                }
                                             />
                                         </View>
                                         <View className="w-4/12 flex-flex-col gap-4 px-2">
                                             <DataValue
                                                 key="yourTotalAUM"
                                                 title="Your Total AUM:"
-                                                value={RupeeSymbol + "16%"}
+                                                value={
+                                                    data?.aum
+                                                        ? RupeeSymbol +
+                                                          data?.aum.toFixed(2)
+                                                        : "-"
+                                                }
                                             />
                                             <DataValue
                                                 key="3YearsReturn"
                                                 title="3 Years Return:"
-                                                value={RupeeSymbol + "2500"}
+                                                value={
+                                                    data?.threeYearAnnualReturns
+                                                        ? data?.threeYearAnnualReturns.toFixed(
+                                                              2
+                                                          ) + "%"
+                                                        : "-"
+                                                }
                                             />
                                             <DataValue
                                                 key="minInvestmentAmount"
                                                 title="Min. Investment Amount:"
                                                 value={
-                                                    RupeeSymbol + "250,000,000"
+                                                    data?.minInvestment
+                                                        ? RupeeSymbol +
+                                                          data?.minInvestment
+                                                        : "-"
                                                 }
                                             />
                                             <DataValue
                                                 key="totalAUM"
                                                 title="Total AUM:"
-                                                value="Sunil Mehra(Client)"
+                                                value={
+                                                    data?.fundhouse?.aum
+                                                        ? RupeeSymbol +
+                                                          data?.fundhouse?.aum.toFixed(
+                                                              2
+                                                          )
+                                                        : "-"
+                                                }
                                             />
                                         </View>
                                         <View className="w-4/12 flex-flex-col gap-4 px-2">
@@ -251,17 +300,32 @@ export default function MutualFundDetail() {
                                             <DataValue
                                                 key="5YearsReturn"
                                                 title="5 Years Return"
-                                                value="16%"
+                                                value={
+                                                    data?.fiveYearAnnualReturns
+                                                        ? data?.fiveYearAnnualReturns.toFixed(
+                                                              2
+                                                          ) + "%"
+                                                        : "-"
+                                                }
                                             />
                                             <DataValue
                                                 key="MinaddlInvestmentAmount"
                                                 title="Min. addl. InvestmentAmount:"
-                                                value="16%"
+                                                value={
+                                                    data?.minAdditionalInvestment
+                                                        ? RupeeSymbol +
+                                                          data?.minAdditionalInvestment
+                                                        : "-"
+                                                }
                                             />
                                             <DataValue
                                                 key="ExpenseRatio"
                                                 title="Expense Ratio:"
-                                                value="16%"
+                                                value={
+                                                    data?.expenseRatio
+                                                        ? data?.expenseRatio
+                                                        : "-"
+                                                }
                                             />
                                         </View>
                                     </View>
@@ -323,6 +387,212 @@ const PortfolioCard = ({ data }) => {
         { label: "Others", value: 40 },
     ];
 
+    const transactionData = data?.transactions?.map((item) => {
+        return [
+            {
+                key: "clientname",
+                content: (
+                    <View className="flex flex-row items-center gap-2">
+                        <View>
+                            <Pressable
+                                onPress={() =>
+                                    router.push(`clients/${item?.account?.id}`)
+                                }
+                            >
+                                <Text className="text-xs">
+                                    {item?.account?.name
+                                        ? item?.account?.name
+                                        : "-"}
+                                </Text>
+                            </Pressable>
+                        </View>
+                    </View>
+                ),
+            },
+            {
+                key: "clientcode",
+                content: (
+                    <View className="flex flex-row items-center gap-2">
+                        <View>
+                            <Text className="text-xs">
+                                {item?.account?.clientId
+                                    ? item?.account?.clientId
+                                    : "-"}
+                            </Text>
+                        </View>
+                    </View>
+                ),
+            },
+            {
+                key: "pan",
+                content: (
+                    <View className="flex flex-row items-center gap-2">
+                        <View>
+                            <Text className="text-xs">
+                                {item?.account?.panNumber
+                                    ? item?.account?.panNumber
+                                    : "-"}
+                            </Text>
+                        </View>
+                    </View>
+                ),
+            },
+            {
+                key: "amount",
+                content: (
+                    <View className="flex flex-row items-center gap-2">
+                        <View>
+                            <Text className="text-xs">
+                                {item?.account?.amount
+                                    ? RupeeSymbol + item?.account?.amount
+                                    : "-"}
+                            </Text>
+                        </View>
+                    </View>
+                ),
+            },
+            {
+                key: "createdDate",
+                content: (
+                    <View className="flex flex-row items-center gap-2">
+                        <View>
+                            <Text className="text-xs">
+                                {item?.createdAt
+                                    ? dateTimeFormat(item?.createdAt)
+                                    : "-"}
+                            </Text>
+                        </View>
+                    </View>
+                ),
+            },
+            {
+                key: "status",
+                content: (
+                    <View className="flex flex-row items-center gap-2">
+                        <View>
+                            <Text className="text-xs">
+                                {item?.transactionStatus?.name
+                                    ? item?.transactionStatus?.name
+                                    : "-"}
+                            </Text>
+                        </View>
+                    </View>
+                ),
+            },
+            {
+                key: "type",
+                content: (
+                    <View className="flex flex-row items-center gap-2">
+                        <View>
+                            <Text className="text-xs">
+                                {item?.transactionStatus?.name
+                                    ? item?.transactionStatus?.name
+                                    : "-"}
+                            </Text>
+                        </View>
+                    </View>
+                ),
+            },
+        ];
+    });
+
+    const sipData = data?.sip?.map((item) => {
+        return [
+            {
+                key: "clientName",
+                content: (
+                    <View className="flex flex-row items-center gap-2">
+                        <View>
+                            <Pressable
+                                onPress={() =>
+                                    router.push(`clients/${item?.account?.id}`)
+                                }
+                            >
+                                <Text className="text-xs">
+                                    {item?.account?.name
+                                        ? item?.account?.name
+                                        : "-"}
+                                </Text>
+                            </Pressable>
+                        </View>
+                    </View>
+                ),
+            },
+            {
+                key: "clientCode",
+                content: (
+                    <View>
+                        <Text selectable className="text-xs text-black">
+                            {item?.account?.clientId
+                                ? item?.account?.clientId
+                                : "-"}
+                        </Text>
+                    </View>
+                ),
+            },
+            {
+                key: "pan",
+                content: (
+                    <View>
+                        <Text selectable className="text-xs text-gray-500">
+                            {item?.account?.panNumber
+                                ? item?.account?.panNumber
+                                : "-"}
+                        </Text>
+                    </View>
+                ),
+            },
+            {
+                key: "amount",
+                content: (
+                    <View>
+                        <Text selectable className="text-xs text-gray-500">
+                            {item?.amount
+                                ? RupeeSymbol + item?.amount.toFixed(2)
+                                : "-"}
+                        </Text>
+                    </View>
+                ),
+            },
+            {
+                key: "startDate",
+                content: (
+                    <View>
+                        <Text selectable className="text-xs text-gray-500">
+                            {item?.startDate
+                                ? dateFormat(item?.startDate)
+                                : "-"}
+                        </Text>
+                    </View>
+                ),
+            },
+            {
+                key: "detail",
+                content: (
+                    <View>
+                        <Text
+                            selectable
+                            className="text-xs text-gray-500 underline"
+                        >
+                            <Pressable
+                                onPress={() =>
+                                    router.push(`sip-reports/${item?.id}`)
+                                }
+                            >
+                                <Text
+                                    selectable
+                                    className="flex flex-row text-black font-semibold break-all"
+                                >
+                                    View Details
+                                </Text>
+                            </Pressable>
+                        </Text>
+                    </View>
+                ),
+            },
+        ];
+    });
+
     const assetBifurcationColors = ["#715CFA", "#69E1AB", "#39C3E2", "#FA8B5C"];
 
     const tabContent = [
@@ -331,92 +601,18 @@ const PortfolioCard = ({ data }) => {
             name: "SIPs",
             content: (
                 <View className="p-2 flex flex-col w-full">
-
                     <DataTable
                         key="sips"
-                        headers={["Client Name", "Client Code", "PAN", "Amount", "Start Date",""]}
-                        cellSize={[1,1,1,1,1,1]}
-                        rows={[
-                            [
-                                {
-                                    key: "clientName",
-                                    content: (
-                                        <View className="flex flex-row items-center gap-2">
-                                            <View>
-                                                <Text className="text-xs">
-                                                    Ravi Kishan
-                                                </Text>
-                                            </View>
-                                        </View>
-                                    ),
-                                },
-                                {
-                                    key: "clientCode",
-                                    content: (
-                                        <View>
-                                            <Text
-                                                selectable
-                                                className="text-xs text-black"
-                                            >
-                                                6754ecGH
-                                            </Text>
-                                        </View>
-                                    ),
-                                },
-                                {
-                                    key: "pan",
-                                    content: (
-                                        <View>
-                                            <Text
-                                                selectable
-                                                className="text-xs text-gray-500"
-                                            >
-                                               CVBG786GH
-                                            </Text>
-                                        </View>
-                                    ),
-                                },
-                                {
-                                    key: "amount",
-                                    content: (
-                                        <View>
-                                            <Text
-                                                selectable
-                                                className="text-xs text-gray-500"
-                                            >
-                                               {RupeeSymbol + "7655"}
-                                            </Text>
-                                        </View>
-                                    ),
-                                },
-                                {
-                                    key: "startDate",
-                                    content: (
-                                        <View>
-                                            <Text
-                                                selectable
-                                                className="text-xs text-gray-500"
-                                            >
-                                               23/04/2023
-                                            </Text>
-                                        </View>
-                                    ),
-                                },
-                                {
-                                    key: "detail",
-                                    content: (
-                                        <View>
-                                            <Text
-                                                selectable
-                                                className="text-xs text-gray-500 underline"
-                                            >
-                                               View Details
-                                            </Text>
-                                        </View>
-                                    ),
-                                },
-                            ],
+                        headers={[
+                            "Client Name",
+                            "Client Code",
+                            "PAN",
+                            "Amount",
+                            "Start Date",
+                            "",
                         ]}
+                        cellSize={[1, 1, 1, 1, 1, 1]}
+                        rows={sipData}
                     />
                 </View>
             ),
@@ -438,96 +634,7 @@ const PortfolioCard = ({ data }) => {
                             "Transaction Type",
                         ]}
                         cellSize={[1, 1, 1, 1, 1, 1, 1]}
-                        rows={[
-                            [
-                                {
-                                    key: "clientname",
-                                    content: (
-                                        <View className="flex flex-row items-center gap-2">
-                                            
-                                            <View>
-                                                <Text className="text-xs">
-                                                    Ravi Teja
-                                                </Text>
-                                            </View>
-                                        </View>
-                                    ),
-                                },
-                                {
-                                    key: "clientcode",
-                                    content: (
-                                        <View className="flex flex-row items-center gap-2">
-                                            <View>
-                                                <Text className="text-xs">
-                                                    765XVJ
-                                                </Text>
-                                            </View>
-                                        </View>
-                                    ),
-                                },
-                                {
-                                    key: "pan",
-                                    content: (
-                                        <View className="flex flex-row items-center gap-2">
-                                            <View>
-                                                <Text className="text-xs">
-                                                    CXN765XVJ
-                                                </Text>
-                                            </View>
-                                        </View>
-                                    ),
-                                },
-                                {
-                                    key: "amount",
-                                    content: (
-                                        <View className="flex flex-row items-center gap-2">
-                                            <View>
-                                                <Text className="text-xs">
-                                                    {RupeeSymbol + "2500"}
-                                                </Text>
-                                            </View>
-                                        </View>
-                                    ),
-                                },
-                                {
-                                    key: "date",
-                                    content: (
-                                        <View className="flex flex-row items-center gap-2">
-                                            <View>
-                                                <Text className="text-xs">
-                                                    23/09/2024
-                                                </Text>
-                                            </View>
-                                        </View>
-                                    ),
-                                },
-                                {
-                                    key: "status",
-                                    content: (
-                                        <View className="flex flex-row items-center gap-2">
-                                            <View>
-                                                <Text className="text-xs">
-                                                    Success
-                                                </Text>
-                                            </View>
-                                        </View>
-                                    ),
-                                },
-                                {
-                                    key: "type",
-                                    content: (
-                                        <View className="flex flex-row items-center gap-2">
-                                            <View>
-                                                <Text className="text-xs">
-                                                    NA
-                                                </Text>
-                                            </View>
-                                        </View>
-                                    ),
-                                },
-                            ],
-                        ]}
-                        // rows={[transactionRow]}
+                        rows={transactionData}
                     />
                 </View>
             ),

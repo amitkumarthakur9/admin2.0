@@ -99,7 +99,7 @@ export default function AddIFA() {
         >
             <View className="bg-white">
                 <View className="">
-                    <TableBreadCrumb name={"Add IFA/RM"} />
+                    <TableBreadCrumb name={"Add IFA"} />
                 </View>
                 <View
                     style={{
@@ -109,7 +109,7 @@ export default function AddIFA() {
                     }}
                 >
                     <View className="w-full flex items-center">
-                        <View className="flex flex-row justify-center items-center h-40 w-[90%]">
+                        <View className="flex flex-row justify-center items-center w-[50%]">
                             <View
                                 style={{
                                     flex: 1,
@@ -117,22 +117,12 @@ export default function AddIFA() {
                                     alignItems: "center",
                                 }}
                             >
-                                <View className="pb-4">
                                 <AddIFAUser />
-                                
-
-                                </View>
-                                <View>
-                                <AddRMUser />
-
-                                </View>
-                                
                             </View>
                         </View>
                     </View>
                 </View>
             </View>
-            <View></View>
         </ScrollView>
     );
 }

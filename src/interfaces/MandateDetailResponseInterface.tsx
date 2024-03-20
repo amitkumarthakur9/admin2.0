@@ -1,75 +1,57 @@
-interface BankAccountType {
+interface Fundhouse {
     id: number;
     name: string;
+    aum: number;
+    rta: {
+        id: number;
+        name: string;
+        shortName: string | null;
+    };
 }
 
-interface BankAccount {
-    micrCode: null | string;
-    bankName: string;
-    branchName: string;
-    ifscCode: string;
-    bankAccountType: BankAccountType;
-    accountNumber: string;
-    isActive: boolean;
-    createdAt: string | null;
-}
-
-interface DematAccountType {
-    id: number;
-    name: string;
-    bseCode: string;
-}
-
-interface DematAccount {
+interface Transaction {
     id: string;
-    dpId: string;
-    boId: string;
-    dematAccountType: DematAccountType;
-}
-
-interface User {
-    name: string;
-    panNumber: string;
-}
-
-interface Account {
-    id: string;
-    clientId: string;
-    name: string;
-    user: User[];
-    dematAccount: DematAccount;
-}
-
-interface MandateStatus {
-    id: number;
-    name: string;
-}
-
-interface Data {
-    id: string;
-    mandateId: string;
+    account: {
+        id: string;
+        clientId: string;
+        name: string;
+    };
     amount: number;
-    startDate: string;
-    endDate: string;
-    bankAccount: BankAccount;
-    mandateStatus: MandateStatus;
-    account: Account;
-}
-
-export interface MandateDetailInterface {
-    id: string;
-    mandateId: string;
-    amount: number;
-    startDate: string;
-    endDate: string;
-    bankAccount: BankAccount;
-    mandateStatus: MandateStatus;
-    account: Account;
+    units: null; // Adjust if units can be present
+    paymentDate: null; // Adjust if payment date can be present
+    transactionStatus: {
+        id: number;
+        name: string;
+    };
     createdAt: string;
 }
 
-export interface MandateDetailInterfaceResponse {
+interface Sip {
+    id: string;
+    amount: number;
+    startDate: string;
+    sipReferenceNumber: string;
+    account: {
+        id: string;
+        name: string;
+        clientId: string;
+    };
+    createdAt: string;
+}
+
+interface FundDetail {
+    name: string;
+    aum: number;
+    minSIPAmount: number;
+    minInvestment: number;
+    minAdditionalInvestment: number;
+    fundhouse: Fundhouse;
+    transactions: Transaction[];
+    sip: Sip[];
+}
+
+export interface MandateDetailInterface {
     message: string;
     error: any[]; // You may need to adjust the type based on your actual data structure
-    data: MandateDetailInterface;
+    data: FundDetail;
 }

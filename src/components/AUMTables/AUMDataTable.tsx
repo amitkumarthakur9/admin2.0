@@ -37,7 +37,7 @@ import HoldingWiseDataTable from "./HoldingWiseDataTable";
 import SchemeTypeWiseDataTable from "./SchemeTypeWiseDataTable";
 import CardWithTabs from "../Card/CardWithTabs";
 
-const AUMDataTable = () => {
+const AUMDataTable = (role) => {
     const [isLoading, setIsLoading] = React.useState(false);
 
     const [currentPageNumber, setCurrentPageNumber] = useState(1);
@@ -163,18 +163,38 @@ const AUMDataTable = () => {
                 key: "rta-wise",
                 name: "RTA Wise",
                 content: <RTAWiseDataTable />,
-            },
-            {
-                key: "ifa-wise",
-                name: "IFA Wise",
-                content: <IFAWiseDataTable />,
-            },
-            {
-                key: "rm-wise",
-                name: "RM Wise",
-                content: <RMWiseDataTable />,
-            },
+            },       
+            // {
+            //     key: "ifa-wise",
+            //     name: "IFA Wise",
+            //     content: <IFAWiseDataTable />,
+            // },
+            // {
+            //     key: "rm-wise",
+            //     name: "RM Wise",
+            //     content: <RMWiseDataTable />,
+            // },
         ];
+
+        if(role==3 || role==4 ){
+            tabContent.push(
+                {
+                    key: "ifa-wise",
+                    name: "IFA Wise",
+                    content: <IFAWiseDataTable />,
+                },
+            )
+        }
+
+        if(role==4){
+            tabContent.push(
+                {
+                    key: "rm-wise",
+                    name: "RM Wise",
+                    content: <RMWiseDataTable />,
+                },
+            )
+        }
 
         const AUMCardWithTabs = ({ selectedTab, handleTabPress, tabContent, tabscount = 3 }) => {
 

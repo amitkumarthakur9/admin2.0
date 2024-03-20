@@ -17,7 +17,6 @@ import {
     WarningIcon,
     WarningOutlineIcon,
 } from "native-base";
-import Modal from "../Modal/Modal";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Dialog, Portal } from "react-native-paper";
 
@@ -25,35 +24,9 @@ export default function ManualInvite() {
     const [modalVisible, setModalVisible] = useState(false);
     const showDialog = () => setModalVisible(true);
     const hideDialog = () => setModalVisible(false);
-    const [passwordVisible, setPasswordVisible] = useState(false);
-    const [selectedOption, setSelectedOption] = useState(
-        "Residential Individual"
-    );
-    const [isOpen, setIsOpen] = useState(false);
-    const [value, setValue] = useState();
 
-    const options = [
-        {
-            option: "Residential Individual",
-            value: "4322",
-        },
-        {
-            option: "Foreign",
-            value: "4321",
-        },
-        {
-            option: "NRA",
-            value: "4320",
-        },
-    ];
 
     const handleSubmit = () => {
-        // Check if passwords match
-        if (formData.password !== formData.confirmPassword) {
-            alert("Passwords do not match");
-            return;
-        }
-        // Proceed with form submission
 
         formData;
         console.log(formData);
@@ -61,11 +34,8 @@ export default function ManualInvite() {
 
     const [formData, setFormData] = useState({
         name: "",
-        password: "",
-        confirmPassword: "",
         email: "",
         phone: "",
-        pan: "",
     });
 
     const handleChange = (key, value) => {
@@ -75,15 +45,6 @@ export default function ManualInvite() {
         }));
     };
 
-    const togglePasswordVisibility = () => {
-        setPasswordVisible(!passwordVisible);
-    };
-
-    const handleOptionSelect = (option, optionValue) => {
-        setSelectedOption(option);
-        setValue(optionValue);
-        setIsOpen(false);
-    };
 
     return (
         <View

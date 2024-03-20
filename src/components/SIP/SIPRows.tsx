@@ -178,7 +178,7 @@ export const SIPRows = ({
                                                 <Pressable
                                                     onPress={() =>
                                                         router.push(
-                                                            `/clients/${order.account.id}`
+                                                            `/clients/${order.client.id}`
                                                         )
                                                     }
                                                 >

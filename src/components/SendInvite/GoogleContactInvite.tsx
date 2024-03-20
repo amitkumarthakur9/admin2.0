@@ -9,10 +9,13 @@ import {
     Platform,
     ScrollView,
     TextInput,
+    Pressable,
 } from "react-native";
+import Icon from "react-native-vector-icons/FontAwesome";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { TableBreadCrumb } from "../BreadCrumbs/TableBreadCrumb";
 import ManualInvite from "./ManualInvite";
+import { Dialog, Portal } from "react-native-paper";
 
 const GoogleContactInvite = () => {
     const [userInfo, setUserInfo] = useState(null);
@@ -21,6 +24,11 @@ const GoogleContactInvite = () => {
     const [nowCurrentUrl, setNowCurrentUrl] = useState("");
     const [selectAll, setSelectAll] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
+    const [modalVisible, setModalVisible] = useState(false);
+    const showDialog = () => setModalVisible(true);
+    const hideDialog = () => setModalVisible(false);
+      const redirectUri = "http://localhost:8081/invite-contact"; // Replace with your redirect URI
+            // const redirectUri = "https://vision.kcp.com.in/invite-contact"; // Replace with your redirect URI
 
     useEffect(() => {
         const getCurrentUrl = async () => {
@@ -59,7 +67,8 @@ const GoogleContactInvite = () => {
             const clientId =
                 "930595944152-4i6mdnppmjbljmn9spgqn2fp29spegp1.apps.googleusercontent.com";
             const clientSecret = "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"; // Replace with your Google OAuth client secret
-            const redirectUri = "http://localhost:8081/invite-contact"; // Replace with your redirect URI
+            // const redirectUri = "http://localhost:8081/invite-contact"; // Replace with your redirect URI
+            // const redirectUri = "https://vision.kcp.com.in/invite-contact"; // Replace with your redirect URI
 
             const response = await fetch(
                 "https://oauth2.googleapis.com/token",
@@ -81,12 +90,6 @@ const GoogleContactInvite = () => {
             if (response.ok) {
                 const { access_token } = await response.json();
 
-                // Save user info to local storage
-                // await AsyncStorage.setItem(
-                //     "Google_access_token",
-                //     JSON.stringify(access_token)
-                // );
-
                 // Pass the access token to getGoogleContacts to fetch contacts
                 await getGoogleContacts(access_token);
 
@@ -103,11 +106,6 @@ const GoogleContactInvite = () => {
                 if (userInfoResponse.ok) {
                     const userInfo = await userInfoResponse.json();
 
-                    // Save user info to local storage
-                    // await AsyncStorage.setItem(
-                    //     "userInfo",
-                    //     JSON.stringify(userInfo)
-                    // );
                     setUserInfo(userInfo);
                 } else {
                     console.error(
@@ -126,61 +124,13 @@ const GoogleContactInvite = () => {
         }
     };
 
-    // const getGoogleContacts = async (accessToken) => {
-    //     try {
-    //         const response = await fetch(
-    //             "https://people.googleapis.com/v1/people/me/connections?personFields=names,emailAddresses,phoneNumbers",
-
-    //             {
-    //                 headers: {
-    //                     Authorization: `Bearer ${accessToken}`,
-    //                 },
-    //             }
-    //         );
-
-    //         if (response.ok) {
-    //             const data = await response.json();
-    //             const contactNames = data.connections.map((connection) => {
-    //                 const name = connection.names
-    //                     ? connection.names[0].displayName
-    //                     : "No Name";
-    //                 const email = connection.emailAddresses
-    //                     ? connection.emailAddresses[0].value
-    //                     : "No Email";
-    //                 const phone = connection.phoneNumbers
-    //                     ? connection.phoneNumbers[0].value
-    //                     : "No Phone Number";
-    //                 // Add any other contact details you want to extract here
-    //                 return { name, email, phone };
-    //             });
-
-    //             setContacts(contactNames);
-
-    //             // Save contacts data to local storage
-    //             // await AsyncStorage.setItem(
-    //             //     "contacts",
-    //             //     JSON.stringify(contactNames)
-    //             // );
-
-    //             // await AsyncStorage.setItem(
-    //             //     "contacts Data",
-    //             //     JSON.stringify(data)
-    //             // );
-    //         } else {
-    //             console.error("Failed to fetch contacts:", response.statusText);
-    //         }
-    //     } catch (error) {
-    //         console.error("Error fetching contacts:", error);
-    //     }
-    // };
-
     const getGoogleContacts = async (accessToken) => {
         try {
             const maxResults = 100; // Set the maximum number of results per page
-            let nextPageToken = ''; // Initialize nextPageToken
-    
+            let nextPageToken = ""; // Initialize nextPageToken
+
             let allContacts = []; // Initialize an array to store all contacts
-    
+
             // Fetch contacts until there are no more nextPageToken
             do {
                 const response = await fetch(
@@ -191,35 +141,44 @@ const GoogleContactInvite = () => {
                         },
                     }
                 );
-    
+
                 if (response.ok) {
                     const data = await response.json();
                     const contacts = data.connections.map((connection) => {
-                        const name = connection.names ? connection.names[0].displayName : "No Name";
-                        const email = connection.emailAddresses ? connection.emailAddresses[0].value : "No Email";
-                        const phone = connection.phoneNumbers ? connection.phoneNumbers[0].value : "No Phone Number";
+                        const name = connection.names
+                            ? connection.names[0].displayName
+                            : "No Name";
+                        const email = connection.emailAddresses
+                            ? connection.emailAddresses[0].value
+                            : "No Email";
+                        const phone = connection.phoneNumbers
+                            ? connection.phoneNumbers[0].value
+                            : "No Phone Number";
                         return { name, email, phone };
                     });
-    
+
                     allContacts = allContacts.concat(contacts);
-    
+
                     nextPageToken = data.nextPageToken; // Update nextPageToken
                 } else {
-                    console.error("Failed to fetch contacts:", response.statusText);
+                    console.error(
+                        "Failed to fetch contacts:",
+                        response.statusText
+                    );
                     break; // Exit loop on error
                 }
             } while (nextPageToken);
-    
+
             setContacts(allContacts); // Update state with all contacts
         } catch (error) {
             console.error("Error fetching contacts:", error);
         }
     };
-    
 
     const signInWithGoogle = async () => {
         try {
-            const redirectUrl = "http://localhost:8081/invite-contact";
+            // const redirectUrl = "http://localhost:8081/invite-contact";
+            const redirectUrl = redirectUri;
             const clientId =
                 "930595944152-4i6mdnppmjbljmn9spgqn2fp29spegp1.apps.googleusercontent.com";
             const scope =
@@ -231,69 +190,16 @@ const GoogleContactInvite = () => {
 
             // Linking.openURL(authUrl);
             window.location.href = authUrl; // Redirect to Google sign-in URL
+            // window.open(authUrl, "GoogleSignIn", "toolbar=no, menubar=no, width=600, height=700, top=100, left=100").focus();
         } catch (error) {
             console.error("Google sign-in error:", error);
         }
     };
 
     const sendInvite = () => {
-        // Prepare email content
-        const emailSubject = "Invitation to download our app";
-        const emailBody =
-            "Hi,\n\nI would like to invite you to download our app. You can download it from the following link:\n\n[Download Link]\n\nBest regards,\n[Your Name]";
-
-        // Extract email addresses of selected contacts
-        const selectedEmails = selectedContacts.map((contact) => contact.email);
-
-        // Replace [Download Link] with your app's download link
-        const downloadLink = "https://example.com/download";
-
-        // Construct the deep link to open Gmail compose screen
-        // const gmailLink = `googlegmail://co?to=&subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody.replace("[Download Link]", downloadLink))}`;
-
-        // Open Gmail app with pre-filled content
-        // Linking.openURL(gmailLink)
-        //     .catch(() => {
-        //         // If Gmail app is not installed, fallback to opening Gmail in browser
-        //         const gmailWebLink = `https://mail.google.com/mail/?view=cm&fs=1&to=&su=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody.replace("[Download Link]", downloadLink))}`;
-        //         Linking.openURL(gmailWebLink);
-        //     });
-
-        // Generate mailto link with pre-filled email content
-        // const mailtoLink = `mailto:?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody.replace("[Download Link]", downloadLink))}`;
-
-        // Open default email client with pre-filled content
-        // Linking.openURL(mailtoLink);
-
-        // Construct email options
-        const mailOptions = {
-            subject: emailSubject,
-            body: emailBody.replace("[Download Link]", downloadLink),
-            recipients: selectedEmails,
-        };
-
-        // Send the invitation email
-        // MailComposer.composeAsync(mailOptions)
-        //     .then((result) => {
-        //         if (result.status === "sent") {
-        //             console.log("Invitations sent successfully");
-        //         }
-        //     })
-        //     .catch((error) => {
-        //         console.error("Error sending invitations:", error);
-        //     });
-    };
-
-    const saveLocal = async () => {
-        console.log("saveLocal");
-
-        // await AsyncStorage.setItem(
-        //     "contacts",
-        //     JSON.stringify("contactlocalsave")
-        // );
-
-        // const userInfoString = await AsyncStorage.getItem("contacts");
-        // console.log(JSON.stringify(userInfoString));
+        console.log(selectedContacts);
+        showDialog();
+        setUserInfo(null);
     };
 
     const filteredContacts = contacts.filter((contact) =>
@@ -452,11 +358,63 @@ const GoogleContactInvite = () => {
                             </View>
                             <ManualInvite />
                         </View>
-                        
                     )}
                 </View>
             </View>
-            <View></View>
+            {/* <Button title="Modal" onPress={sendInvite} /> */}
+
+            <View className="">
+                <Portal>
+                    <Dialog
+                        visible={modalVisible}
+                        onDismiss={hideDialog}
+                        dismissable
+                        style={{
+                            display: "flex",
+                            justifyContent: "flex-start",
+                            alignSelf: "center",
+                            width: 400,
+                            height: "50%",
+                            overflow: "scroll",
+                            backgroundColor: "white",
+                        }}
+                    >
+                        <View className="flex flex-row justify-between p-4">
+                            <Text className="pl-4 text-lg font-bold"></Text>
+
+                            <Pressable
+                                onPress={hideDialog}
+                                className={
+                                    "flex flex-row justify-center items-center border-[1px] rounded px-4 h-[42px] border-slate-200"
+                                }
+                                aria-describedby="addNewClient"
+                            >
+                                <Icon name="close" size={20} color="black" />
+                            </Pressable>
+                        </View>
+                        <View className="flex flex-row justify-center">
+                            <View className="flex flex-col w-1/2 justify-center items-center">
+                                <View
+                                    style={{
+                                        backgroundColor: "#114EA8",
+                                        padding: 10,
+                                        borderRadius: 10,
+                                    }}
+                                >
+                                    <Icon
+                                        name="check"
+                                        size={100}
+                                        color="white"
+                                    />
+                                </View>
+                                <Text className="pt-8 text-lg font-bold color-[#114EA8]">
+                                    Invite succesfully sent
+                                </Text>
+                            </View>
+                        </View>
+                    </Dialog>
+                </Portal>
+            </View>
         </ScrollView>
     );
 };

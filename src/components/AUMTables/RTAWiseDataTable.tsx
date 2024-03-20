@@ -126,22 +126,22 @@ const RTAWiseDataTable = () => {
                     </Text>
                 ),
             },
-            {
-                key: "detail",
-                content: (
-                    <View className="flex w-10/12 justify-center">
-                        <Pressable
-                        onPress={() =>
-                            router.push('clients/${client.id}')
-                        }
-                    >
-                        <Icon name="ellipsis-v" size={18} color="grey" />
-                    </Pressable>
+            // {
+            //     key: "detail",
+            //     content: (
+            //         <View className="flex w-10/12 justify-center">
+            //             <Pressable
+            //             onPress={() =>
+            //                 router.push('clients/${client.id}')
+            //             }
+            //         >
+            //             <Icon name="ellipsis-v" size={18} color="grey" />
+            //         </Pressable>
 
-                    </View>
+            //         </View>
                     
-                ),
-            },
+            //     ),
+            // },
         ];
     });
 
@@ -171,9 +171,9 @@ const RTAWiseDataTable = () => {
                                 "RTA",
                                 "Invested Amount",
                                 "Current Amount",
-                                "",
+                                // "",
                             ]}
-                            cellSize={[3, 3, 3, 1]}
+                            cellSize={[3, 3, 3,]}
                             rows={transformedData}
                         />
                     </ScrollView>

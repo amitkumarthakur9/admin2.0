@@ -60,7 +60,7 @@ const SchemeTypeWiseDataTable = () => {
         }
 
         const response: SchemeTypeWise = await RemoteApi.post(
-            "client/list",
+            "aum/scheme-category/list",
             data
         );
 
@@ -111,7 +111,7 @@ const SchemeTypeWiseDataTable = () => {
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
                         
-                        {item?.currentValue ? RupeeSymbol + item?.currentValue : RupeeSymbol + "2600" }
+                        {item?.currentValue ? RupeeSymbol + item?.currentValue.toFixed(2) : RupeeSymbol + "2600" }
                     </Text>
                 ),
             },
@@ -119,27 +119,27 @@ const SchemeTypeWiseDataTable = () => {
                 key: "investedAmount",
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
-                                                {item?.investedValue ? RupeeSymbol + item?.investedValue : RupeeSymbol + "2500" }
+                                                {item?.investedValue ? RupeeSymbol + item?.investedValue.toFixed(2) : RupeeSymbol + "2500" }
 
                     </Text>
                 ),
             },
-            {
-                key: "detail",
-                content: (
-                    <View className="flex w-10/12 justify-center">
-                        <Pressable
-                        onPress={() =>
-                            router.push('clients/${client.id}')
-                        }
-                    >
-                        <Icon name="ellipsis-v" size={18} color="grey" />
-                    </Pressable>
+            // {
+            //     key: "detail",
+            //     content: (
+            //         <View className="flex w-10/12 justify-center">
+            //             <Pressable
+            //             onPress={() =>
+            //                 router.push('clients/${client.id}')
+            //             }
+            //         >
+            //             <Icon name="ellipsis-v" size={18} color="grey" />
+            //         </Pressable>
 
-                    </View>
+            //         </View>
                     
-                ),
-            },
+            //     ),
+            // },
         ];
     });
 
@@ -166,12 +166,12 @@ const SchemeTypeWiseDataTable = () => {
                     <ScrollView className={"mt-4 z-[-1] "}>
                         <DataTable
                             headers={[
-                                "Scheme Type",
+                                "Category",
                                 "Current Amount",
                                 "Invested Amount",
-                                "",
+                                // "",
                             ]}
-                            cellSize={[3, 3, 3, 1]}
+                            cellSize={[4, 4, 4,]}
                             rows={transformedData}
                         />
                     </ScrollView>

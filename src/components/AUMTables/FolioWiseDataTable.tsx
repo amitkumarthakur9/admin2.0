@@ -171,9 +171,9 @@ const FolioWiseDataTable = () => {
                             selectable
                             className="text-[#686868] font-semibold text-xs"
                         >
-                            {item?.mutualfund?.deliveryType?.name ? item?.mutualfund?.deliveryType?.name : "-" }{" - "}
-                            {item?.mutualfund?.optionType?.name ? item?.mutualfund?.optionType?.name : "-" }
-                            {item?.mutualfund?.dividendType?.name ? item?.mutualfund?.dividendType?.name : "-" }
+                            {item?.mutualfund?.deliveryType?.name ? item?.mutualfund?.deliveryType?.name : "-" }
+                            {item?.mutualfund?.optionType?.name ? " - " + item?.mutualfund?.optionType?.name : "-" }
+                            {item?.mutualfund?.dividendType?.name && item?.mutualfund?.dividendType?.name!=="NA" ? " - " + item?.mutualfund?.dividendType?.name : "" }
                         </Text>
                     </View>
                 ),
@@ -213,7 +213,7 @@ const FolioWiseDataTable = () => {
                     >
                         {item.investedValue
                             ? RupeeSymbol + item.investedValue.toFixed(2)
-                            : "-"}
+                            : "0"}
                     </Text>
                 ),
             },
@@ -226,7 +226,7 @@ const FolioWiseDataTable = () => {
                     >
                         {item?.currentValue
                             ? RupeeSymbol + item?.currentValue.toFixed(2)
-                            : "-"}
+                            : "0"}
                     </Text>
                 ),
             },
@@ -246,24 +246,24 @@ const FolioWiseDataTable = () => {
                 content: (
                     <View className="flex justify-start text-[#686868] font-semibold w-full">
                         <Text selectable className="">
-                        {item?.investedValue && item?.currentValue ? (item?.currentValue - item?.investedValue).toFixed(2) : "-"
+                        {item?.investedValue && item?.currentValue ? RupeeSymbol + (item?.currentValue - item?.investedValue).toFixed(2) : RupeeSymbol +"0"
                             }
                         </Text>
                     </View>
                 ),
             },
-            {
-                key: "detail",
-                content: (
-                    <View className="flex flex-row w-10/12 justify-center">
-                        <Pressable
-                            onPress={() => router.push(`folio/${item?.id}`)}
-                        >
-                            <Icon name="ellipsis-v" size={18} color="grey" />
-                        </Pressable>
-                    </View>
-                ),
-            },
+            // {
+            //     key: "detail",
+            //     content: (
+            //         <View className="flex flex-row w-10/12 justify-center">
+            //             <Pressable
+            //                 onPress={() => router.push(`folio/${item?.id}`)}
+            //             >
+            //                 <Icon name="ellipsis-v" size={18} color="grey" />
+            //             </Pressable>
+            //         </View>
+            //     ),
+            // },
         ];
     });
 
@@ -298,9 +298,9 @@ const FolioWiseDataTable = () => {
                                 "Current Value",
                                 "XIRR",
                                 "Returns",
-                                "",
+                                // "",
                             ]}
-                            cellSize={[3, 2, 1, 1, 1, 1, 1, 1, 1]}
+                            cellSize={[3, 2, 1, 1, 1, 1, 1, 1,]}
                             rows={transformedData}
                         />
                     </ScrollView>

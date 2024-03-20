@@ -106,8 +106,8 @@ const MandateDataTable = () => {
         <View className="bg-white">
             <View className="">
                 <TableBreadCrumb
-                    name={"Folio"}
-                    url={"/folio"}
+                    name={"Mandate"}
+                    url={"/Mandates"}
                     getDataList={getDataList}
                 />
             </View>

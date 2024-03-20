@@ -31,7 +31,7 @@ const ClientWiseDataTable = () => {
     const [currentPageNumber, setCurrentPageNumber] = useState(1);
     const [totalItems, setTotalItems] = useState(0);
     const [itemsPerPage, setItemsPerPage] = useState(10);
-    const [data, setData] = useState<ClientDataResponse[]>([]);
+    const [data, setData] = useState<ClientWiseData[]>([]);
     const [totalPages, setTotalPages] = useState(1);
     const [appliedFilers, setAppliedFilers] = useState([]);
     const [filtersSchema, setFiltersSchema] = useState([]);
@@ -57,8 +57,8 @@ const ClientWiseDataTable = () => {
             data.orderBy = appliedSorting;
         }
 
-        const response: ApiResponse<ClientDataResponse[]> = await RemoteApi.post(
-            "client/list",
+        const response: ClientWiseResponse = await RemoteApi.post(
+            "aum/client/list",
             data
         );
 
@@ -121,7 +121,7 @@ const ClientWiseDataTable = () => {
                                 </Pressable>
 
                                 <View className="flex flex-row items-center">
-                                    {item?.isActive ? (
+                                    {item?.kycStatus?.isAllowedToTransact ? (
                                         <CheckCircleIcon
                                             color="emerald.500"
                                             size="xs"
@@ -135,7 +135,7 @@ const ClientWiseDataTable = () => {
                                 </View>
                             </View>
                             <View className="flex flex-row items-center mt-0">
-                            {!item?.kycStatus && <Tag>KYC Not Done</Tag>}
+                            {!item?.kycStatus?.name && <Tag>KYC Not Done</Tag>}
                                 <Tag>SIP(N/A)</Tag>
                                 <Tag>Autopay active</Tag>
                             </View>
@@ -147,7 +147,7 @@ const ClientWiseDataTable = () => {
                 key: "clientCode",
                 content: (
                     <Text selectable className="text-[#686868] font-semibold w-11/12">
-                        XCVV567
+                        {item?.clientId ? item?.clientId : "-"}  
                     </Text>
                 ),
             },
@@ -155,7 +155,7 @@ const ClientWiseDataTable = () => {
                 key: "panNumber",
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
-                        7383e9GH
+                        {item?.panNumber ? item?.panNumber : "-"}  
                     </Text>
                 ),
             },
@@ -163,7 +163,7 @@ const ClientWiseDataTable = () => {
                 key: "totalinvested",
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
-                        {RupeeSymbol + "2300"}
+                        {item?.investedValue ? RupeeSymbol + item?.investedValue : RupeeSymbol + "0"} 
                     </Text>
                 ),
             },
@@ -171,7 +171,7 @@ const ClientWiseDataTable = () => {
                 key: "CurrentValue",
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
-                        {RupeeSymbol + "2200"}
+                         {item?.currentValue ? RupeeSymbol + item?.currentValue : RupeeSymbol +"0"} 
                     </Text>
                 ),
             },
@@ -188,26 +188,27 @@ const ClientWiseDataTable = () => {
                 content: (
                     <View className="flex flex-row justify-center text-[#686868] font-semibold w-11/12 " >
                         <Text selectable className="text-[#686868] font-semibold w-11/12">
-                            19
+                        {item?.investedValue && item?.currentValue ? RupeeSymbol + (item?.currentValue - item?.investedValue).toFixed(2) : RupeeSymbol +"0"
+                            }
                         </Text>
                     </View>
                 ),
             },
-            {
-                key: "detail",
-                content: (
-                    <View className="flex flex-row w-10/12 justify-center">
-                        <Pressable
-                            onPress={() =>
-                                router.push('clients/${client.id}')
-                            }
-                        >
-                            <Icon name="ellipsis-v" size={18} color="grey" />
-                        </Pressable>
-                    </View>
+            // {
+            //     key: "detail",
+            //     content: (
+            //         <View className="flex flex-row w-10/12 justify-center">
+            //             <Pressable
+            //                 onPress={() =>
+            //                     router.push('clients/${client.id}')
+            //                 }
+            //             >
+            //                 <Icon name="ellipsis-v" size={18} color="grey" />
+            //             </Pressable>
+            //         </View>
 
-                ),
-            },
+            //     ),
+            // },
         ];
     });
 
@@ -241,9 +242,9 @@ const ClientWiseDataTable = () => {
                                 "Current Value",
                                 "XIRR",
                                 "Returns",
-                                "",
+                                // "",
                             ]}
-                            cellSize={[4, 1, 1, 1, 1, 1, 1, 1]}
+                            cellSize={[4, 1, 1, 1, 1, 1, 1, ]}
                             rows={transformedData}
                         />
                     </ScrollView>

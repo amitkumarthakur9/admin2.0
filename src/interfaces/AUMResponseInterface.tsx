@@ -151,3 +151,83 @@ interface IFAwiseData {
     currentValue: number;
     investedValue: number;
 }
+
+interface ClientWiseData {
+    id: string;
+    clientId: string;
+    name: string;
+    currentValue: number;
+    investedValue: number;
+    kycStatus: KycStatus;
+    panNumber: string;
+}
+
+interface KycStatus {
+    id: number;
+    name: string;
+    isAllowedToTransact: boolean;
+}
+
+interface ClientWiseResponse {
+    code: number;
+    message: string;
+    error: any[]; // Assuming error can be any type
+    data: ClientWiseData[];
+    count: number;
+    filterCount: number;
+}
+
+interface DeliveryType {
+    id: number;
+    name: string;
+}
+
+interface OptionType {
+    id: number;
+    name: string;
+}
+
+interface DividendType {
+    id: number;
+    name: string;
+}
+
+interface MutualFund {
+    id: string;
+    name: string;
+    logoUrl: string;
+    deliveryType: DeliveryType;
+    optionType: OptionType;
+    dividendType: DividendType;
+    category: string;
+    subCategory: string;
+}
+
+interface Account {
+    id: string;
+    clientId: string;
+    name: string;
+}
+
+interface Holding {
+    id: string;
+    currentValue: number;
+    investedValue: number;
+    units: number;
+    xirr: number;
+    mutualfund: MutualFund;
+    account: Account;
+    isActive: string;
+    kycStatus: string;
+}
+
+interface HoldingwiseApiResponse {
+    code: number;
+    message: string;
+    error: any[];
+    data: Holding[];
+    count: number;
+    filterCount: number;
+    totalCount: number;
+}
+

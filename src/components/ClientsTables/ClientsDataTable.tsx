@@ -209,7 +209,7 @@ const ClientsDataTable = () => {
                     getList={getDataList}
                     appliedFilers={appliedFilers}
                     setAppliedFilers={setAppliedFilers}
-                    newComponent={<AddNewClient />}
+                    // newComponent={<AddNewClient />}
                 />
 
                 {!isLoading ? (

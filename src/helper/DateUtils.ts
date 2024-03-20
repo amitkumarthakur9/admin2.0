@@ -46,7 +46,16 @@ export const dateFormat = (value) => {
     return formattedDate;
 };
 
-export const dateTimeFormat = "Do MMM YYYY hh:mm a";
+export const dateTimeFormat = (value) => {
+    const formattedDate = value
+        ? moment(new Date(value)).format("DD-MM-YYYY hh:mm a")
+        : "-";
+    return formattedDate;
+
+
+} ;
+
+// format("Do MMM YYYY hh:mm a")
 
 export const getNextSipDate = (newstartDate) => {
     // let startDate: Date = new Date(dates);

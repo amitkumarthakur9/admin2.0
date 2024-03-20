@@ -31,7 +31,7 @@ const HoldingWiseDataTable = () => {
     const [currentPageNumber, setCurrentPageNumber] = useState(1);
     const [totalItems, setTotalItems] = useState(0);
     const [itemsPerPage, setItemsPerPage] = useState(10);
-    const [data, setData] = useState<AccountItem[]>([]);
+    const [data, setData] = useState<Holding[]>([]);
     const [totalPages, setTotalPages] = useState(1);
     const [appliedFilers, setAppliedFilers] = useState([]);
     const [filtersSchema, setFiltersSchema] = useState([]);
@@ -57,8 +57,8 @@ const HoldingWiseDataTable = () => {
             data.orderBy = appliedSorting;
         }
 
-        const response: AccountsResponse = await RemoteApi.post(
-            "client/list",
+        const response: HoldingwiseApiResponse = await RemoteApi.post(
+            "aum/holding/list",
             data
         );
 
@@ -102,7 +102,7 @@ const HoldingWiseDataTable = () => {
                     <View className="flex flex-row items-center justify-center w-full">
                         <View className="flex flex-col rounded-full bg-[#e60202] mr-2 h-10 w-10 mb-1 items-center justify-center flex-wrap">
                             <Text selectable className="text-white">
-                                {getInitials(item?.name)}
+                                {getInitials(item?.account?.name)}
                             </Text>
                         </View>
                         <View className="flex flex-col flex-wrap w-9/12">
@@ -116,7 +116,7 @@ const HoldingWiseDataTable = () => {
                                         selectable
                                         className="flex flex-row text-black font-semibold break-all"
                                     >
-                                        {item?.name}&nbsp;{" "}
+                                        {item?.account?.name}&nbsp;{" "}
                                     </Text>
                                 </Pressable>
 
@@ -148,10 +148,12 @@ const HoldingWiseDataTable = () => {
                 content: (
                     <View className="flex flex-col justify-start w-11/12">
                         <Text selectable className="text-black font-semibold">
-                        Axis Mid Cap Fund
+                        {item?.mutualfund?.name ?item?.mutualfund?.name : "-" }
                         </Text>
                         <Text selectable className="text-[#686868] font-semibold text-xs">
-                            Reinvest
+                        {item?.mutualfund?.deliveryType?.name ? item?.mutualfund?.deliveryType?.name : "" }
+                        {item?.mutualfund?.optionType?.name ? " - " + item?.mutualfund?.optionType?.name : "" }
+                        {item?.mutualfund?.dividendType?.name && item?.mutualfund?.dividendType?.name!=="NA" ? " - " + item?.mutualfund?.dividendType?.name : "" }
                         </Text>
                     </View>
                 ),
@@ -160,7 +162,7 @@ const HoldingWiseDataTable = () => {
                 key: "totalInvested",
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
-                        {RupeeSymbol + "2200"}
+                       {item?.investedValue ? RupeeSymbol + item?.investedValue : RupeeSymbol + "0"} 
                     </Text>
                 ),
             },
@@ -168,7 +170,7 @@ const HoldingWiseDataTable = () => {
                 key: "currentValue",
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
-                     {RupeeSymbol + "2200"}
+                     {item?.currentValue ? RupeeSymbol + item?.currentValue : RupeeSymbol + "0"} 
                     </Text>
                 ),
             },
@@ -176,7 +178,7 @@ const HoldingWiseDataTable = () => {
                 key: "XIRR",
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
-                     20.87%
+                     {item?.xirr ?  item?.xirr :  "-"} 
                     </Text>
                 ),
             },
@@ -184,26 +186,27 @@ const HoldingWiseDataTable = () => {
                 key: "returns",
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
-                     20%
+                     {item?.investedValue && item?.currentValue ? RupeeSymbol + (item?.currentValue - item?.investedValue).toFixed(2) : RupeeSymbol +"0"
+                            }
                     </Text>
                 ),
             },
-            {
-                key: "detail",
-                content: (
-                    <View className="flex w-10/12 justify-center">
-                        <Pressable
-                        onPress={() =>
-                            router.push('clients/${client.id}')
-                        }
-                    >
-                        <Icon name="ellipsis-v" size={18} color="grey" />
-                    </Pressable>
+            // {
+            //     key: "detail",
+            //     content: (
+            //         <View className="flex w-10/12 justify-center">
+            //             <Pressable
+            //             onPress={() =>
+            //                 router.push('clients/${client.id}')
+            //             }
+            //         >
+            //             <Icon name="ellipsis-v" size={18} color="grey" />
+            //         </Pressable>
 
-                    </View>
+            //         </View>
                     
-                ),
-            },
+            //     ),
+            // },
         ];
     });
 
@@ -236,9 +239,9 @@ const HoldingWiseDataTable = () => {
                                     "Current Value",
                                     "XIRR",
                                     "Returns",
-                                    "",
+                                    // "",
                                 ]}
-                                cellSize={[4, 2, 1, 1,1, 1,1]}
+                                cellSize={[4, 2, 1, 1,1, 1]}
                                 rows={transformedData}
                             />
                     </ScrollView>
