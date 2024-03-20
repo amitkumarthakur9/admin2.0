@@ -47,7 +47,7 @@ const TableHeader = ({ headers, cellSize }) => {
 //  * @returns {Array.<JSX.Element>} - Array of JSX elements representing table rows
 //  */
 const TableRows = ({ rows, cellSize, hasActions, options }) => {
-    return rows.map((row, index) => {
+    return rows?.map((row, index) => {
         return (
             <View key={index}>
                 <View

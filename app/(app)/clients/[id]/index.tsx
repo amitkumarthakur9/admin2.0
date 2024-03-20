@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { View } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import {
@@ -15,6 +15,7 @@ import {
     WarningIcon,
 } from "native-base";
 import moment from "moment";
+import { useMutation, useQuery } from "react-query";
 import Icon from "react-native-vector-icons/FontAwesome";
 import AntdIcon from "react-native-vector-icons/AntDesign";
 import IonIcon from "react-native-vector-icons/Ionicons";
@@ -29,9 +30,17 @@ import Accordion from "../../../../src/components/Accordion/Accordion";
 import DataTable from "../../../../src/components/DataTable/DataTable";
 import Modal from "../../../../src/components/Modal/Modal";
 import { TextInput } from "react-native";
-import DropdownComponent from "../../../../src/components/Dropdowns/DropDown";
+import DropdownComponent from "../../../../src/components/Dropdowns/NewDropDown";
 import RadioButton from "../../../../src/components/Radio/Radio";
 import DataValue from "../../../../src/components/DataValue/DataValue";
+import useDebouncedSearch from "../../../../src/hooks/useDebounceSearch";
+import ApiRequest from "../../../../src/services/RemoteApi";
+
+const isMutualFundSearchResult = (
+    data: MutualFundSearchResult | Holding
+): data is MutualFundSearchResult => {
+    return (data as MutualFundSearchResult).category?.name !== undefined;
+};
 
 export default function ClientDetail() {
     const { id } = useLocalSearchParams();
@@ -42,7 +51,9 @@ export default function ClientDetail() {
     const [visible, setVisible] = useState(false);
     const [modalKey, setModalKey] = useState("invest");
     const [cardPage, setCardPage] = useState(1);
-    const [selectedFund, setSelectedFund] = useState(null);
+    const [selectedFund, setSelectedFund] = useState<
+        MutualFundSearchResult | Holding | null
+    >(null);
     const [allowModalCardChange, setAllowModalCardChange] = useState(true);
 
     const closeModal = () => {
@@ -79,6 +90,7 @@ export default function ClientDetail() {
             <RedeemModalCard
                 hideDialog={closeModal}
                 card={cardPage}
+                //@ts-ignore
                 selectedFund={selectedFund}
                 changeSelectedFund={changeSelectedFund}
                 allowModalCardChange={allowModalCardChange}
@@ -274,7 +286,7 @@ export default function ClientDetail() {
                                     <AccountDetailsCard data={data} />
                                 </View>
                             </View>
-                            <View className="flex flex-row justify-between rounded bg-white h-[512px]">
+                            {/* <View className="flex flex-row justify-between rounded bg-white h-[512px]">
                                 <View
                                     className="w-[60%] h-full rounded"
                                     style={{ ...BreadcrumbShadow }}
@@ -287,7 +299,7 @@ export default function ClientDetail() {
                                 >
                                     <TopAMCCard />
                                 </View>
-                            </View>
+                            </View> */}
                         </View>
                     </View>
                     <Modal visible={visible} hideDialog={closeModal}>
@@ -687,193 +699,29 @@ const InvestModalCard = ({
     selectedFund,
     changeSelectedFund,
     allowModalCardChange,
+}: {
+    hideDialog: () => void;
+    card: number;
+    selectedFund: MutualFundSearchResult | Holding | null;
+    changeSelectedFund: (data: any, card: number, from: string) => void;
+    allowModalCardChange: boolean;
 }) => {
+    const [folios, setFolios] = useState<FolioSchema[]>([]);
+
+    const changeFolios = (folioArray: FolioSchema[]) => {
+        setFolios(folioArray);
+    };
+
     const tabContentForInvest = [
         {
-            key: "lumpsum",
-            name: "Lumpsum",
-            content: (
-                <View className="w-full flex flex-col justify-items items-center py-2 gap-y-4">
-                    <View className="w-1/2 flex flex-col items-center gap-y-2">
-                        <Text className="w-full flex flex-row items-start justify-start text-xs text-gray-400 mb-2">
-                            Folio Number*
-                        </Text>
-                        <DropdownComponent
-                            label="Folio Number"
-                            data={[
-                                { label: "1", value: "1" },
-                                { label: "2", value: "2" },
-                                { label: "3", value: "3" },
-                                { label: "4", value: "4" },
-                                { label: "5", value: "5" },
-                                { label: "6", value: "6" },
-                                { label: "7", value: "7" },
-                                { label: "8", value: "8" },
-                                { label: "9", value: "9" },
-                                { label: "10", value: "10" },
-                                { label: "11", value: "11" },
-                                { label: "12", value: "12" },
-                                { label: "13", value: "13" },
-                                { label: "14", value: "14" },
-                                { label: "15", value: "15" },
-                                { label: "16", value: "16" },
-                                { label: "17", value: "17" },
-                                { label: "18", value: "18" },
-                                { label: "19", value: "19" },
-                                { label: "20", value: "20" },
-                                { label: "21", value: "21" },
-                                { label: "22", value: "22" },
-                                { label: "23", value: "23" },
-                                { label: "24", value: "24" },
-                                { label: "25", value: "25" },
-                                { label: "26", value: "26" },
-                                { label: "27", value: "27" },
-                                { label: "28", value: "28" },
-                            ]}
-                            containerStyle={{ width: "100%" }}
-                            noIcon
-                        />
-                    </View>
-                    <View className="w-1/2 flex flex-col items-center gap-y-2">
-                        <Text className="w-full flex flex-row items-start justify-start text-xs text-gray-400">
-                            Investment Amount*
-                        </Text>
-                        <TextInput
-                            className="outline-none w-full border border-gray-300 p-2 rounded"
-                            placeholder="Investment Amount"
-                            underlineColorAndroid="transparent"
-                            selectionColor="transparent"
-                            placeholderTextColor={"rgb(156, 163, 175)"}
-                            cursorColor={"transparent"}
-                            style={{ outline: "none" }}
-                        />
-                        <Text className="w-full flex flex-row items-start justify-start text-xs text-gray-500">
-                            In multiples of {RupeeSymbol}1000
-                        </Text>
-                    </View>
-                    <Button
-                        width="50%"
-                        bgColor={"#013974"}
-                        onPress={() => console.log("Press Invest")}
-                        className="rounded-lg"
-                    >
-                        Invest
-                    </Button>
-                </View>
-            ),
+            key: "lumpSum",
+            name: "Lump Sum",
+            content: <LumpSumOrderTab folios={folios} />,
         },
         {
             key: "SIP",
             name: "SIP",
-            content: (
-                <View className="w-full flex flex-col justify-items items-center py-2 gap-y-4">
-                    <View className="w-1/2 flex flex-col items-center gap-y-2">
-                        <Text className="w-full flex flex-row items-start justify-start text-xs text-gray-400 mb-2">
-                            Folio Number*
-                        </Text>
-                        <DropdownComponent
-                            label="Folio Number"
-                            data={[
-                                { label: "1", value: "1" },
-                                { label: "2", value: "2" },
-                                { label: "3", value: "3" },
-                                { label: "4", value: "4" },
-                                { label: "5", value: "5" },
-                                { label: "6", value: "6" },
-                                { label: "7", value: "7" },
-                                { label: "8", value: "8" },
-                                { label: "9", value: "9" },
-                                { label: "10", value: "10" },
-                                { label: "11", value: "11" },
-                                { label: "12", value: "12" },
-                                { label: "13", value: "13" },
-                                { label: "14", value: "14" },
-                                { label: "15", value: "15" },
-                                { label: "16", value: "16" },
-                                { label: "17", value: "17" },
-                                { label: "18", value: "18" },
-                                { label: "19", value: "19" },
-                                { label: "20", value: "20" },
-                                { label: "21", value: "21" },
-                                { label: "22", value: "22" },
-                                { label: "23", value: "23" },
-                                { label: "24", value: "24" },
-                                { label: "25", value: "25" },
-                                { label: "26", value: "26" },
-                                { label: "27", value: "27" },
-                                { label: "28", value: "28" },
-                            ]}
-                            containerStyle={{ width: "100%" }}
-                            noIcon
-                        />
-                    </View>
-                    <View className="w-1/2 flex flex-col items-center gap-y-2">
-                        <Text className="w-full flex flex-row items-start justify-start text-xs text-gray-400">
-                            Investment Amount*
-                        </Text>
-                        <TextInput
-                            className="outline-none w-full border border-gray-300 p-2 rounded"
-                            placeholder="Investment Amount"
-                            underlineColorAndroid="transparent"
-                            selectionColor="transparent"
-                            placeholderTextColor={"rgb(156, 163, 175)"}
-                            cursorColor={"transparent"}
-                            style={{ outline: "none" }}
-                        />
-                        <Text className="w-full flex flex-row items-start justify-start text-xs text-gray-500">
-                            In multiples of {RupeeSymbol}1000
-                        </Text>
-                    </View>
-                    <View className="w-1/2 flex flex-col items-center gap-y-2">
-                        <View className="w-full flex flex-row items-center justify-start gap-x-2">
-                            <Text className="text-xs mr-2">SIP Date</Text>
-                            <DropdownComponent
-                                label="Date"
-                                data={[
-                                    { label: "1", value: "1" },
-                                    { label: "2", value: "2" },
-                                    { label: "3", value: "3" },
-                                    { label: "4", value: "4" },
-                                    { label: "5", value: "5" },
-                                    { label: "6", value: "6" },
-                                    { label: "7", value: "7" },
-                                    { label: "8", value: "8" },
-                                    { label: "9", value: "9" },
-                                    { label: "10", value: "10" },
-                                    { label: "11", value: "11" },
-                                    { label: "12", value: "12" },
-                                    { label: "13", value: "13" },
-                                    { label: "14", value: "14" },
-                                    { label: "15", value: "15" },
-                                    { label: "16", value: "16" },
-                                    { label: "17", value: "17" },
-                                    { label: "18", value: "18" },
-                                    { label: "19", value: "19" },
-                                    { label: "20", value: "20" },
-                                    { label: "21", value: "21" },
-                                    { label: "22", value: "22" },
-                                    { label: "23", value: "23" },
-                                    { label: "24", value: "24" },
-                                    { label: "25", value: "25" },
-                                    { label: "26", value: "26" },
-                                    { label: "27", value: "27" },
-                                    { label: "28", value: "28" },
-                                ]}
-                                noIcon
-                            />
-                            <Text className="text-xs ml-2">of every month</Text>
-                        </View>
-                    </View>
-                    <Button
-                        width="50%"
-                        bgColor={"#013974"}
-                        onPress={() => console.log("Press Invest")}
-                        className="rounded-lg"
-                    >
-                        Invest
-                    </Button>
-                </View>
-            ),
+            content: <SipOrderTab folios={folios} />,
         },
     ];
 
@@ -892,6 +740,7 @@ const InvestModalCard = ({
                     selectedFund={selectedFund}
                     changeSelectedFund={changeSelectedFund}
                     allowModalCardChange={allowModalCardChange}
+                    changeFolio={changeFolios}
                 />
             ),
         },
@@ -919,75 +768,225 @@ const InvestModalCard = ({
     );
 };
 
+const LumpSumOrderTab = ({ folios }: { folios: FolioSchema[] }) => {
+    const [folioID, setFolioID] = useState(null);
+    const [investmentAmount, setInvestmentAmount] = useState("0");
+
+    const { id } = useLocalSearchParams();
+
+    const postData = async () => {
+        return await ApiRequest.post("/order/purchase", {
+            clientID: id,
+            folioID,
+            investmentAmount,
+        });
+    };
+
+    const {
+        mutate: invest,
+        isError,
+        error,
+    } = useMutation(postData, {
+        onSuccess: () => {
+            console.log("Success");
+        },
+        onError: () => {
+            console.log("Error while doing data thing");
+        },
+    });
+
+    return (
+        <View className="w-full flex flex-col justify-items items-center py-2 gap-y-4">
+            <View className="w-1/2 flex flex-col items-center gap-y-2">
+                <Text className="w-full flex flex-row items-start justify-start text-xs text-gray-400 mb-2">
+                    Folio Number
+                </Text>
+                <DropdownComponent
+                    label="Folio Number"
+                    data={folios?.map((el) => {
+                        return {
+                            label: el.folioNumber,
+                            value: el.id,
+                        };
+                    })}
+                    containerStyle={{ width: "100%" }}
+                    noIcon
+                    value={folioID}
+                    setValue={setFolioID}
+                />
+            </View>
+            <View className="w-1/2 flex flex-col items-center gap-y-2">
+                <Text className="w-full flex flex-row items-start justify-start text-xs text-gray-400">
+                    Investment Amount*
+                </Text>
+                <TextInput
+                    className="outline-none w-full border border-gray-300 p-2 rounded"
+                    placeholder="Investment Amount"
+                    underlineColorAndroid="transparent"
+                    selectionColor="transparent"
+                    placeholderTextColor={"rgb(156, 163, 175)"}
+                    cursorColor={"transparent"}
+                    // style={{ outline: "none" }}
+                    value={investmentAmount}
+                    onChangeText={setInvestmentAmount}
+                />
+                <Text className="w-full flex flex-row items-start justify-start text-xs text-gray-500">
+                    In multiples of {RupeeSymbol}1000
+                </Text>
+            </View>
+            <Button
+                width="50%"
+                bgColor={"#013974"}
+                onPress={() => invest()}
+                className="rounded-lg"
+            >
+                Invest
+            </Button>
+        </View>
+    );
+};
+
+const SipOrderTab = ({ folios }: { folios: FolioSchema[] }) => {
+    const [folioID, setFolioID] = useState(null);
+    const [investmentAmount, setInvestmentAmount] = useState("0");
+    const [sipDate, setSipDate] = useState();
+
+    const { id } = useLocalSearchParams();
+
+    const postData = async () => {
+        return await ApiRequest.post("/order/sip", {
+            clientID: id,
+            folioID,
+            investmentAmount,
+            sipDate,
+        });
+    };
+
+    const {
+        mutate: invest,
+        isError,
+        error,
+    } = useMutation(postData, {
+        onSuccess: () => {
+            console.log("Success");
+        },
+        onError: () => {
+            console.log("Error while doing data thing");
+        },
+    });
+    return (
+        <View className="w-full flex flex-col justify-items items-center py-2 gap-y-4">
+            <View className="w-1/2 flex flex-col items-center gap-y-2">
+                <Text className="w-full flex flex-row items-start justify-start text-xs text-gray-400 mb-2">
+                    Folio Number*
+                </Text>
+                <DropdownComponent
+                    label="Folio Number"
+                    data={folios?.map((el) => {
+                        return {
+                            label: el.folioNumber,
+                            value: el.id,
+                        };
+                    })}
+                    containerStyle={{ width: "100%" }}
+                    noIcon
+                    value={folioID}
+                    setValue={setFolioID}
+                />
+            </View>
+            <View className="w-1/2 flex flex-col items-center gap-y-2">
+                <Text className="w-full flex flex-row items-start justify-start text-xs text-gray-400">
+                    Investment Amount*
+                </Text>
+                <TextInput
+                    className="outline-none w-full border border-gray-300 p-2 rounded"
+                    placeholder="Investment Amount"
+                    underlineColorAndroid="transparent"
+                    selectionColor="transparent"
+                    placeholderTextColor={"rgb(156, 163, 175)"}
+                    cursorColor={"transparent"}
+                    // style={{ outline: "none" }}
+                    value={investmentAmount}
+                    onChangeText={setInvestmentAmount}
+                />
+                <Text className="w-full flex flex-row items-start justify-start text-xs text-gray-500">
+                    In multiples of {RupeeSymbol}1000
+                </Text>
+            </View>
+            <View className="w-1/2 flex flex-col items-center gap-y-2">
+                <View className="w-full flex flex-row items-center justify-start gap-x-2">
+                    <Text className="text-xs mr-2">SIP Date</Text>
+                    <DropdownComponent
+                        label="Date"
+                        data={[
+                            { label: "1", value: "1" },
+                            { label: "2", value: "2" },
+                            { label: "3", value: "3" },
+                            { label: "4", value: "4" },
+                            { label: "5", value: "5" },
+                            { label: "6", value: "6" },
+                            { label: "7", value: "7" },
+                            { label: "8", value: "8" },
+                            { label: "9", value: "9" },
+                            { label: "10", value: "10" },
+                            { label: "11", value: "11" },
+                            { label: "12", value: "12" },
+                            { label: "13", value: "13" },
+                            { label: "14", value: "14" },
+                            { label: "15", value: "15" },
+                            { label: "16", value: "16" },
+                            { label: "17", value: "17" },
+                            { label: "18", value: "18" },
+                            { label: "19", value: "19" },
+                            { label: "20", value: "20" },
+                            { label: "21", value: "21" },
+                            { label: "22", value: "22" },
+                            { label: "23", value: "23" },
+                            { label: "24", value: "24" },
+                            { label: "25", value: "25" },
+                            { label: "26", value: "26" },
+                            { label: "27", value: "27" },
+                            { label: "28", value: "28" },
+                        ]}
+                        noIcon
+                        value={sipDate}
+                        setValue={setSipDate}
+                    />
+                    <Text className="text-xs ml-2">of every month</Text>
+                </View>
+            </View>
+            <Button
+                width="50%"
+                bgColor={"#013974"}
+                onPress={() => invest()}
+                className="rounded-lg"
+            >
+                Invest
+            </Button>
+        </View>
+    );
+};
+
 const InvestModalSearch = ({ changeSelectedFund }) => {
-    const funds = [
-        {
-            id: "42",
-            mutualfund: {
-                name: "HDFC Liquid Fund",
-                type: "Open-ended",
-                logoUrl: "https://www.fundexpert.in/cdn/logos-neo/hdfc.png",
-                dividendType: {
-                    id: 1,
-                    name: "NA",
-                },
-                optionType: {
-                    id: 2,
-                    name: "Growth",
-                },
-                deliveryType: {
-                    id: 2,
-                    name: "Regular",
-                },
-                category: "Debt",
-                subcategory: "Liquid",
-            },
-        },
-        {
-            id: "42",
-            mutualfund: {
-                name: "HDFC Liquid Fund",
-                type: "Open-ended",
-                logoUrl: "https://www.fundexpert.in/cdn/logos-neo/hdfc.png",
-                dividendType: {
-                    id: 1,
-                    name: "NA",
-                },
-                optionType: {
-                    id: 2,
-                    name: "Growth",
-                },
-                deliveryType: {
-                    id: 2,
-                    name: "Regular",
-                },
-                category: "Debt",
-                subcategory: "Liquid",
-            },
-        },
-        {
-            id: "42",
-            mutualfund: {
-                name: "HDFC Liquid Fund",
-                type: "Open-ended",
-                logoUrl: "https://www.fundexpert.in/cdn/logos-neo/hdfc.png",
-                dividendType: {
-                    id: 1,
-                    name: "NA",
-                },
-                optionType: {
-                    id: 2,
-                    name: "Growth",
-                },
-                deliveryType: {
-                    id: 2,
-                    name: "Regular",
-                },
-                category: "Debt",
-                subcategory: "Liquid",
-            },
-        },
-    ];
+    const {
+        query,
+        setQuery,
+        data: searchResults,
+        isLoading,
+        isError,
+        error,
+    } = useDebouncedSearch("search", fetchSearchResults, 500);
+
+    async function fetchSearchResults(searchQuery: string) {
+        try {
+            const response: ApiResponse<MutualFundSearchResult[]> =
+                await RemoteApi.get(`mutualfund/list?q=${query}`);
+            return response;
+        } catch (error) {
+            // Handle errors, e.g., throw an error or return a default value
+            throw error;
+        }
+    }
 
     return (
         <View className="p-2 px-8">
@@ -1003,66 +1002,83 @@ const InvestModalSearch = ({ changeSelectedFund }) => {
                     placeholderTextColor={"rgb(100, 116, 139)"}
                     cursorColor={"transparent"}
                     style={{ outline: "none" }}
+                    value={query}
+                    onChangeText={setQuery}
                 />
             </Pressable>
             <View className="">
-                <DataTable
-                    key="searchMutualFund"
-                    headers={[]}
-                    cellSize={[10, 2]}
-                    rows={funds?.map((fund) => {
-                        return [
-                            {
-                                key: "name",
-                                content: (
-                                    <View className="flex flex-row items-center gap-2">
-                                        <Image
-                                            alt="fundHouse"
-                                            className="mr-2"
-                                            style={{
-                                                width: 32,
-                                                height: 32,
-                                                objectFit: "contain",
-                                            }}
-                                            source={{
-                                                uri: fund?.mutualfund?.logoUrl,
-                                            }}
-                                        />
-                                        <View>
-                                            <Text className="text-xs">
-                                                {fund?.mutualfund?.name}
-                                            </Text>
-                                            <Text className="text-xs text-gray-400">
-                                                {fund?.mutualfund?.category}
-                                            </Text>
+                {isLoading ? (
+                    <HStack
+                        space={2}
+                        justifyContent="center"
+                        alignItems="center"
+                    >
+                        <Spinner color={"black"} accessibilityLabel="Loading" />
+                        <Heading color="black" fontSize="md">
+                            Loading
+                        </Heading>
+                    </HStack>
+                ) : (
+                    <DataTable
+                        key="searchMutualFund"
+                        headers={[]}
+                        cellSize={[10, 2]}
+                        rows={searchResults?.data?.map((fund) => {
+                            return [
+                                {
+                                    key: "name",
+                                    content: (
+                                        <View className="flex flex-row items-center gap-2">
+                                            <Image
+                                                alt="fundHouse"
+                                                className="mr-2"
+                                                style={{
+                                                    width: 32,
+                                                    height: 32,
+                                                    objectFit: "contain",
+                                                }}
+                                                source={{
+                                                    uri: fund?.logoUrl,
+                                                }}
+                                            />
+                                            <View>
+                                                <Text className="text-xs">
+                                                    {/* {fund?.mutualfund?.name} */}
+                                                    {fund?.name}
+                                                </Text>
+                                                <Text className="text-xs text-gray-400">
+                                                    {fund?.category?.name} |{" "}
+                                                    {fund?.subCategory?.name}
+                                                </Text>
+                                            </View>
                                         </View>
-                                    </View>
-                                ),
-                            },
-                            {
-                                key: "return",
-                                content: (
-                                    <View className="flex flex-col w-full items-center py-2 rounded-full">
-                                        <Button
-                                            width="100%"
-                                            bgColor={"#013974"}
-                                            onPress={() =>
-                                                changeSelectedFund(
-                                                    fund,
-                                                    2,
-                                                    "portfolio-invest"
-                                                )
-                                            }
-                                            className="rounded-full"
-                                        >
-                                            Invest
-                                        </Button>
-                                    </View>
-                                ),
-                            },
-                        ];
-                    })}
-                />
+                                    ),
+                                },
+                                {
+                                    key: "return",
+                                    content: (
+                                        <View className="flex flex-col w-full items-center py-2 rounded-full">
+                                            <Button
+                                                width="100%"
+                                                bgColor={"#013974"}
+                                                onPress={() =>
+                                                    changeSelectedFund(
+                                                        fund,
+                                                        2,
+                                                        "portfolio-invest"
+                                                    )
+                                                }
+                                                className="rounded-full"
+                                            >
+                                                Invest
+                                            </Button>
+                                        </View>
+                                    ),
+                                },
+                            ];
+                        })}
+                    />
+                )}
             </View>
         </View>
     );
@@ -1073,12 +1089,55 @@ const InvestModalAction = ({
     selectedFund,
     changeSelectedFund,
     allowModalCardChange,
+    changeFolio,
+}: {
+    tabContent: {
+        key: string;
+        name: string;
+        content: React.JSX.Element;
+    }[];
+    selectedFund: MutualFundSearchResult | Holding | null;
+    changeSelectedFund: any;
+    allowModalCardChange: boolean;
+    changeFolio?: (folioArray: FolioSchema[]) => void;
 }) => {
+    const { id } = useLocalSearchParams();
     const [selectedTab, setSelectedTab] = useState(1);
+    const [optionType, setOptionType] = useState<number | null>(null);
+    const [dividendType, setDividendType] = useState<string | null>(null);
 
     const handleTabPress = (tab) => {
         setSelectedTab(tab);
     };
+
+    const IsMFSearch = isMutualFundSearchResult(selectedFund);
+    const qValue = IsMFSearch ? "M" : "H";
+    const fValue = IsMFSearch ? dividendType : selectedFund?.id;
+
+    const fetchFolios = async () => {
+        try {
+            const response: ApiResponse<FolioSchema[]> = await RemoteApi.get(
+                `client/${id}/folioSchema?q=${qValue}&f=${fValue}`
+            );
+            changeFolio(response?.data);
+            return response;
+        } catch (error) {
+            // Handle errors, e.g., throw an error or return a default value
+            throw error;
+        }
+    };
+
+    const { isLoading, isError, error, isStale } = useQuery({
+        queryKey: ["folio", optionType, dividendType],
+        queryFn: fetchFolios,
+        enabled: IsMFSearch
+            ? !!optionType &&
+              !!dividendType &&
+              selectedFund?.optionType
+                  ?.find((el) => el.id === optionType)
+                  .mutualfundDividendType.some((e) => e.id === dividendType)
+            : true,
+    });
 
     return (
         <View className="flex flex-col">
@@ -1093,18 +1152,70 @@ const InvestModalAction = ({
                             objectFit: "contain",
                         }}
                         source={{
-                            uri: selectedFund?.mutualfund?.logoUrl,
+                            uri: IsMFSearch
+                                ? selectedFund?.logoUrl
+                                : selectedFund?.mutualfund?.logoUrl,
                         }}
                     />
                     <View>
                         <Text className="text-xs">
-                            {selectedFund?.mutualfund?.name}
+                            {IsMFSearch
+                                ? selectedFund?.name
+                                : selectedFund?.mutualfund?.name}
                         </Text>
                         <Text className="text-xs text-gray-400">
-                            {selectedFund?.mutualfund?.category}
+                            {IsMFSearch
+                                ? selectedFund?.category?.name
+                                : selectedFund?.mutualfund?.category}{" "}
+                            |{" "}
+                            {IsMFSearch
+                                ? selectedFund?.subCategory?.name
+                                : selectedFund?.mutualfund?.subCategory}
                         </Text>
                     </View>
                 </View>
+                {IsMFSearch && (
+                    <View className="flex flex-row items-center justify-between gap-x-2">
+                        <View className="w-1/2 flex flex-col items-center gap-y-2">
+                            <Text className="w-full flex flex-row items-start justify-start text-xs text-gray-400 mb-2">
+                                Option Type
+                            </Text>
+                            <DropdownComponent
+                                label="Option Type"
+                                data={selectedFund?.optionType?.map((o) => {
+                                    return {
+                                        value: o.id as any as string,
+                                        label: o.name,
+                                    };
+                                })}
+                                containerStyle={{ width: "100%" }}
+                                noIcon
+                                value={optionType}
+                                setValue={setOptionType}
+                            />
+                        </View>
+                        <View className="w-1/2 flex flex-col items-center gap-y-2">
+                            <Text className="w-full flex flex-row items-start justify-start text-xs text-gray-400 mb-2">
+                                Dividend Type
+                            </Text>
+                            <DropdownComponent
+                                label="Dividend Type"
+                                data={selectedFund?.optionType
+                                    ?.find((el) => el.id === optionType)
+                                    ?.mutualfundDividendType?.map((e) => {
+                                        return {
+                                            label: e.dividendType.name,
+                                            value: e.id,
+                                        };
+                                    })}
+                                containerStyle={{ width: "100%" }}
+                                noIcon
+                                value={dividendType}
+                                setValue={setDividendType}
+                            />
+                        </View>
+                    </View>
+                )}
                 {/* {allowModalCardChange && (
                     <Button
                         width="10%"
@@ -1154,7 +1265,40 @@ const InvestModalAction = ({
                             );
                         })}
                     </View>
-                    {tabContent && tabContent[selectedTab - 1]?.content}
+                    {IsMFSearch ? (
+                        !!optionType && !!dividendType ? (
+                            isLoading ? (
+                                <HStack
+                                    space={2}
+                                    justifyContent="center"
+                                    alignItems="center"
+                                >
+                                    <Spinner
+                                        color={"black"}
+                                        accessibilityLabel="Loading"
+                                    />
+                                    <Heading color="black" fontSize="md">
+                                        Loading
+                                    </Heading>
+                                </HStack>
+                            ) : (
+                                tabContent &&
+                                tabContent[selectedTab - 1]?.content
+                            )
+                        ) : (
+                            <HStack
+                                space={2}
+                                justifyContent="center"
+                                alignItems="center"
+                            >
+                                <Heading color="black" fontSize="md">
+                                    Please select option type and dividend type
+                                </Heading>
+                            </HStack>
+                        )
+                    ) : (
+                        tabContent && tabContent[selectedTab - 1]?.content
+                    )}
                 </View>
             </View>
         </View>
@@ -1167,8 +1311,64 @@ const RedeemModalCard = ({
     selectedFund,
     changeSelectedFund,
     allowModalCardChange,
+}: {
+    hideDialog: () => void;
+    card: number;
+    selectedFund: Holding;
+    changeSelectedFund: (data: any, card: number, from: string) => void;
+    allowModalCardChange: boolean;
 }) => {
-    const [methodSelect, setMethodSelect] = useState("Enter Amount");
+    const [methodSelect, setMethodSelect] = useState("amount");
+    const [value, setValue] = useState("0");
+    const [selectedFolio, setSelectedFolio] = useState<string | null>(null);
+    const [folio, setFolio] = useState<FolioSchema | null>(null);
+
+    const fetchFolios = async () => {
+        try {
+            const response: ApiResponse<FolioSchema[]> = await RemoteApi.get(
+                `client/${id}/folioSchema?q=H&f=${selectedFund?.id}`
+            );
+            return response;
+        } catch (error) {
+            // Handle errors, e.g., throw an error or return a default value
+            throw error;
+        }
+    };
+
+    const { data: folios } = useQuery({
+        queryKey: ["folio"],
+        queryFn: fetchFolios,
+        enabled: true,
+    });
+
+    const { id } = useLocalSearchParams();
+
+    const postData = async () => {
+        return await ApiRequest.post("/order/redeem", {
+            clientID: id,
+            folioID: selectedFund?.id,
+            type: methodSelect,
+            value,
+        });
+    };
+
+    const updateSelectedFolio = (value: string) => {
+        setSelectedFolio(value);
+        setFolio(folios?.data?.find((el) => el.id === value));
+    };
+
+    const {
+        mutate: redeem,
+        isError,
+        error,
+    } = useMutation(postData, {
+        onSuccess: () => {
+            console.log("Success");
+        },
+        onError: () => {
+            console.log("Error while doing data thing");
+        },
+    });
 
     const tabContentForRedeem = [
         {
@@ -1176,132 +1376,159 @@ const RedeemModalCard = ({
             name: "",
             content: (
                 <View className="w-full flex flex-col justify-items items-center py-2 gap-y-4">
-                    <View className="w-2/3 flex flex-col items-center gap-y-2">
-                        <View className="w-full flex flex-row justify-evenly items-start">
-                            <DataGrid
-                                key="totalAmount"
-                                title={
-                                    <Text selectable className="text-xs">
-                                        Total Amount
-                                    </Text>
-                                }
-                                value={
-                                    <Text selectable className="text-xs">
-                                        {RupeeSymbol} 50,000.00
-                                    </Text>
-                                }
-                                reverse
-                            />
-                            <DataGrid
-                                key="redeemableAmount"
-                                title={
-                                    <Text selectable className="text-xs">
-                                        Total Redeemable Amount
-                                    </Text>
-                                }
-                                value={
-                                    <Text selectable className="text-xs">
-                                        {RupeeSymbol}23,000.50
-                                    </Text>
-                                }
-                                reverse
-                            />
-                        </View>
-                        <View className="w-full flex flex-row justify-evenly items-start">
-                            <DataGrid
-                                key="totalUnits"
-                                title={
-                                    <Text selectable className="text-xs">
-                                        Total Units
-                                    </Text>
-                                }
-                                value={
-                                    <Text selectable className="text-xs">
-                                        46
-                                    </Text>
-                                }
-                                reverse
-                            />
-                            <DataGrid
-                                key="totalRedeemableUnits"
-                                title={
-                                    <Text selectable className="text-xs">
-                                        Total Redeemable Units
-                                    </Text>
-                                }
-                                value={
-                                    <Text selectable className="text-xs">
-                                        21
-                                    </Text>
-                                }
-                                reverse
-                            />
-                        </View>
-                        <View className="w-full flex flex-row justify-evenly items-start">
-                            <DataGrid
-                                key="applicableNavDate"
-                                title={
-                                    <Text selectable className="text-xs">
-                                        Applicable NAV Date
-                                    </Text>
-                                }
-                                value={
-                                    <Text selectable className="text-xs">
-                                        Feb 26, 2024
-                                    </Text>
-                                }
-                                reverse
-                            />
-                            <DataGrid
-                                key="expectedCompletionDate"
-                                title={
-                                    <Text selectable className="text-xs">
-                                        Expected Completion Date
-                                    </Text>
-                                }
-                                value={
-                                    <Text selectable className="text-xs">
-                                        Nov 26, 2030
-                                    </Text>
-                                }
-                                reverse
-                            />
-                        </View>
-                    </View>
                     <View className="w-1/2 flex flex-col items-center gap-y-2">
-                        <Text className="w-full flex flex-row items-start justify-start text-xs text-gray-400">
-                            Redeem through
+                        <Text className="w-full flex flex-row items-start justify-start text-xs text-gray-400 mb-2">
+                            Folio Number
                         </Text>
-                        <RadioButton
-                            name="Redeem Through"
-                            value={methodSelect}
-                            setValue={setMethodSelect}
-                            options={[
-                                {
-                                    label: "Enter Amount",
-                                    value: "Enter Amount",
-                                },
-                                { label: "Enter Units", value: "Enter Units" },
-                            ]}
-                        />
-                        <TextInput
-                            className="outline-none w-full border border-gray-300 p-2 rounded"
-                            placeholder={methodSelect}
-                            underlineColorAndroid="transparent"
-                            selectionColor="transparent"
-                            placeholderTextColor={"rgb(156, 163, 175)"}
-                            cursorColor={"transparent"}
-                            style={{ outline: "none" }}
+                        <DropdownComponent
+                            label="Folio Number"
+                            data={folios?.data?.map((el) => {
+                                return {
+                                    label: el.folioNumber,
+                                    value: el.id,
+                                };
+                            })}
+                            containerStyle={{ width: "100%" }}
+                            noIcon
+                            value={selectedFolio}
+                            setValue={updateSelectedFolio}
                         />
                     </View>
-                    <Button
-                        width="50%"
-                        bgColor={"#013974"}
-                        onPress={() => console.log("Press Invest")}
-                        className="rounded-lg"
-                    >
-                        Invest
-                    </Button>
+                    {selectedFolio ? (
+                        <View className="w-1/2 flex flex-col items-center justify-between">
+                            <View className="w-full flex flex-col items-center gap-y-2">
+                                <View className="w-full flex flex-row justify-between items-start">
+                                    <DataGrid
+                                        key="totalAmount"
+                                        title={
+                                            <Text
+                                                selectable
+                                                className="text-xs"
+                                            >
+                                                Total Amount
+                                            </Text>
+                                        }
+                                        value={
+                                            <Text
+                                                selectable
+                                                className="text-xs"
+                                            >
+                                                {RupeeSymbol}{" "}
+                                                {folio?.currentValue}
+                                            </Text>
+                                        }
+                                        reverse
+                                    />
+                                    <DataGrid
+                                        key="redeemableAmount"
+                                        title={
+                                            <Text
+                                                selectable
+                                                className="text-xs"
+                                            >
+                                                Total Redeemable Amount
+                                            </Text>
+                                        }
+                                        value={
+                                            <Text
+                                                selectable
+                                                className="text-xs"
+                                            >
+                                                {RupeeSymbol}{" "}
+                                                {folio?.redeemableAmount}
+                                            </Text>
+                                        }
+                                        reverse
+                                    />
+                                </View>
+                                <View className="w-full flex flex-row justify-between items-start">
+                                    <DataGrid
+                                        key="totalUnits"
+                                        title={
+                                            <Text
+                                                selectable
+                                                className="text-xs"
+                                            >
+                                                Total Units
+                                            </Text>
+                                        }
+                                        value={
+                                            <Text
+                                                selectable
+                                                className="text-xs"
+                                            >
+                                                {selectedFund?.units}
+                                            </Text>
+                                        }
+                                        reverse
+                                    />
+                                    <DataGrid
+                                        key="totalRedeemableUnits"
+                                        title={
+                                            <Text
+                                                selectable
+                                                className="text-xs"
+                                            >
+                                                Total Redeemable Units
+                                            </Text>
+                                        }
+                                        value={
+                                            <Text
+                                                selectable
+                                                className="text-xs"
+                                            >
+                                                {folio?.redeemableUnits}
+                                            </Text>
+                                        }
+                                        reverse
+                                    />
+                                </View>
+                            </View>
+                            <View className="w-full flex flex-col items-center justify-between gap-y-2">
+                                <Text className="w-full flex flex-row items-start justify-start text-xs text-gray-400">
+                                    Redeem through
+                                </Text>
+                                <RadioButton
+                                    name="Redeem Through"
+                                    value={methodSelect}
+                                    setValue={setMethodSelect}
+                                    options={[
+                                        {
+                                            label: "Enter Amount",
+                                            value: "amount",
+                                        },
+                                        {
+                                            label: "Enter Units",
+                                            value: "units",
+                                        },
+                                    ]}
+                                />
+                                <TextInput
+                                    className="outline-none w-full border border-gray-300 p-2 rounded"
+                                    placeholder={`Enter ${methodSelect}`}
+                                    underlineColorAndroid="transparent"
+                                    selectionColor="transparent"
+                                    placeholderTextColor={"rgb(156, 163, 175)"}
+                                    cursorColor={"transparent"}
+                                    style={{ outline: "none" }}
+                                    value={value}
+                                    onChangeText={setValue}
+                                />
+                            </View>
+                            <Button
+                                width="100%"
+                                bgColor={"#013974"}
+                                onPress={() => redeem()}
+                                className="rounded-lg mt-4"
+                            >
+                                Invest
+                            </Button>
+                        </View>
+                    ) : (
+                        <Heading color="black" fontSize="md">
+                            Please select Folio Number
+                        </Heading>
+                    )}
                 </View>
             ),
         },
@@ -1497,7 +1724,11 @@ const AccountDetailsCard = ({ data }: { data: ClientDetailedDataResponse }) => {
             name: "Contact Details",
             content: (
                 <View className="w-full p-2 flex flex-col justify-items items-center">
-                    <DataValue key="email" title="Email" value={"-"} />
+                    <DataValue
+                        key="email"
+                        title="Email"
+                        value={data?.users[0]?.email}
+                    />
                     <DataValue key="address" title="Address" value={"-"} />
                 </View>
             ),

@@ -3,94 +3,95 @@ declare module "*.css";
 
 declare global {
     interface ApiResponse<T> {
-        code:        number;
-        message:     string;
-        error:       any[];
-        data:        T;
-        count:       number;
+        code: number;
+        message: string;
+        error: any[];
+        data: T;
+        count: number;
         filterCount: number;
-        totalCount:  number;
+        totalCount: number;
     }
 
     interface ClientDataResponse {
-        id:         string;
-        name:       string;
+        id: string;
+        name: string;
         clientCode: string;
         kycStatus?: string;
         panNumber?: string;
-        isActive:   boolean;
+        isActive: boolean;
     }
 
     interface ClientDetailedDataResponse {
-        id:             string;
-        name:           string;
-        clientId:       string;
+        id: string;
+        name: string;
+        clientId: string;
         isJointAccount: boolean;
-        nominee:        any[];
-        dematAccount:   DematAccount;
-        taxStatus:      TaxStatus;
-        users:          User[];
-        holdings:       Holding[];
-        sipOrders:      SIPOrder[];
-        transactions:   Transaction[];
-        bankAccounts:   BankAccount[];
-        isActive:       boolean;
+        nominee: any[];
+        dematAccount: DematAccount;
+        taxStatus: TaxStatus;
+        users: User[];
+        holdings: Holding[];
+        sipOrders: SIPOrder[];
+        transactions: Transaction[];
+        bankAccounts: BankAccount[];
+        isActive: boolean;
     }
 
     interface BankAccount {
         accountNumber: string;
-        accountType:   string;
-        branchName:    string;
-        ifscCode:      string;
-        micrCode:      any[];
-        bankName:      string;
-        mandates:      Mandate[];
+        accountType: string;
+        branchName: string;
+        ifscCode: string;
+        micrCode: any[];
+        bankName: string;
+        mandates: Mandate[];
     }
 
     interface Mandate {
         mandateStatus: DeliveryType;
-        mandateType:   DeliveryType;
-        amount:        number;
-        startDate:     string;
-        endDate:       string;
+        mandateType: DeliveryType;
+        amount: number;
+        startDate: string;
+        endDate: string;
     }
 
     interface DeliveryType {
-        id:   number;
+        id: number;
         name: string;
     }
 
     interface DematAccount {
-        id:               string;
+        id: string;
         dematAccountType: DematAccountType;
-        dpId:             string;
-        boId:             string;
+        dpId: string;
+        boId: string;
     }
 
     interface DematAccountType {
-        id:      number;
-        name:    string;
+        id: number;
+        name: string;
         bseCode: string;
     }
 
     interface Holding {
-        id:            string;
+        id: string;
         investedValue: number;
-        currentValue:  number;
-        xirr:          number;
-        units:         number;
-        mutualfund:    Mutualfund;
+        currentValue: number;
+        xirr: number;
+        units: number;
+        mutualfund: HoldingMutualfund;
     }
 
-    interface Mutualfund {
-        name:         string;
-        type:         Type;
-        logoUrl:      string;
+    interface HoldingMutualfund {
+        id: string;
+        name: string;
+        type: Type;
+        logoUrl: string;
         dividendType: DeliveryType;
-        optionType:   DeliveryType;
+        optionType: DeliveryType;
         deliveryType: DeliveryType;
-        category:     string;
-        subCategory:  string;
+        category: string;
+        subCategory: string;
     }
 
     enum Type {
@@ -98,25 +99,25 @@ declare global {
     }
 
     interface SIPOrder {
-        id:         string;
-        amount:     number;
-        startDate:  string;
-        endDate:    string;
-        mutualfund: Mutualfund;
+        id: string;
+        amount: number;
+        startDate: string;
+        endDate: string;
+        mutualfund: HoldingMutualfund;
     }
 
     interface TaxStatus {
-        id:   string;
+        id: string;
         name: string;
         code: string;
     }
 
     interface Transaction {
-        id:                string;
-        amount:            number;
-        transactionType:   TransactionType;
+        id: string;
+        amount: number;
+        transactionType: TransactionType;
         transactionStatus: TransactionStatus;
-        mutualfund:        Mutualfund;
+        mutualfund: HoldingMutualfund;
     }
 
     enum TransactionStatus {
@@ -133,19 +134,59 @@ declare global {
     }
 
     interface User {
-        name:      string;
+        name: string;
         kycStatus: KycStatus;
         panNumber: string;
         dateOfBirth: string;
+        email: string;
     }
 
     interface KycStatus {
-        id:                  number;
-        name:                string;
+        id: number;
+        name: string;
         isAllowedToTransact: boolean;
     }
 
-  // You can declare multiple interfaces or types here
+    interface MutualFundSearchResult {
+        id: string;
+        name: string;
+        mutualfundType: {
+            id: number;
+            name: string;
+        };
+        logoUrl: string | null;
+        nav: number | null;
+        rating: number;
+        optionType: {
+            id: number;
+            name: string;
+            mutualfundDividendType: {
+                id: string;
+                dividendType: {
+                    id: number;
+                    name: string;
+                };
+            }[];
+        }[];
+        category: {
+            name: string;
+        };
+        subCategory: {
+            name: string;
+            mutualfundCategory: {};
+        };
+    }
+
+    interface FolioSchema {
+        id: string;
+        folioNumber: string;
+        investedValue: number;
+        currentValue: number;
+        redeemableAmount: number;
+        redeemableUnits: number;
+    }
+
+    // You can declare multiple interfaces or types here
 }
 
 // This line is necessary to make TypeScript treat this file as a module

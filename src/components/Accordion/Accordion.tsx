@@ -1,3 +1,4 @@
+import { Image } from "native-base";
 import React, { useState } from "react";
 import { View, Text, Pressable } from "react-native";
 import AntdIcon from "react-native-vector-icons/AntDesign";
@@ -23,7 +24,18 @@ const Accordion = ({ accordionData, renderItem }) => {
                             className={`flex flex-row justify-between items-center p-4 rounded `}
                         >
                             <View className="flex flex-row items-center gap-2">
-                                <View className="w-8 h-8 rounded bg-gray-500" />
+                                <Image
+                                    alt="bank"
+                                    className="mr-2"
+                                    style={{
+                                        width: 32,
+                                        height: 32,
+                                        objectFit: "contain",
+                                    }}
+                                    source={{
+                                        uri: item?.logoUrl,
+                                    }}
+                                />
                                 <View>
                                     <Text className="text-normal">
                                         {item.title}

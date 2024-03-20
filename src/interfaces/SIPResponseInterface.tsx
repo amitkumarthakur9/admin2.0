@@ -45,20 +45,16 @@ interface Transaction {
 interface dividendType {
     id: number;
     name: string;
-    
 }
 
-interface deliveryType
-{
+interface deliveryType {
     id: number;
     name: string;
-    
 }
 
 interface optionType {
     id: number;
     name: string;
-    
 }
 interface MutualFund {
     id: string;
@@ -66,6 +62,7 @@ interface MutualFund {
     dividendType: dividendType;
     optionType: optionType;
     deliveryType: deliveryType;
+    category: string;
 }
 
 interface SIPReportItems {
