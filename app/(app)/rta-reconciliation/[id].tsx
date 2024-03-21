@@ -20,6 +20,7 @@ import {
 } from "../../../src/interfaces/RTADetailInterface";
 import { BreadcrumbShadow } from "../../../src/components/Styles/Shadow";
 import DataValue from "../../../src/components/DataValue/DataValue";
+import { dateFormat } from "../../../src/helper/DateUtils";
 
 export default function RTAConciliationDetail() {
     const { id } = useLocalSearchParams();
@@ -175,8 +176,8 @@ export default function RTAConciliationDetail() {
                                                         objectFit: "contain",
                                                     }}
                                                     source={{
-                                                        uri: data.mutualfund
-                                                            .fundhouse.logoUrl,
+                                                        uri: data?.mutualfund
+                                                            ?.logoUrl,
                                                     }}
                                                 />
                                                 <View>
@@ -186,9 +187,10 @@ export default function RTAConciliationDetail() {
                                                     <View className="flex flex-row items-center gap-2">
                                                         <Text className="text-xs text-gray-400">
                                                             {
-                                                                data.mutualfund
-                                                                    .fundhouse
-                                                                    .name
+                                                                data?.mutualfund?.category
+                                                            }
+                                                            {
+                                                               " - " + data?.mutualfund?.subCategory
                                                             }
                                                         </Text>
                                                     </View>
@@ -210,12 +212,12 @@ export default function RTAConciliationDetail() {
                                             <DataValue
                                                 key="paymentDate"
                                                 title="Payment Date"
-                                                value={data?.paymentDate}
+                                                value={data?.paymentDate ? dateFormat(data?.paymentDate) : "-"}
                                             />
                                             <DataValue
                                                 key="rta"
                                                 title="RTA"
-                                                value={`${data?.mutualfund?.fundhouse?.rta?.name.toUpperCase()}`}
+                                                value={`${data?.mutualfund?.rta.toUpperCase()}`}
                                             />
                                             <DataValue
                                                 key="status"
@@ -234,15 +236,15 @@ export default function RTAConciliationDetail() {
                                                 }
                                             />
                                             <DataValue
-                                                key="settlementInvestment"
-                                                title="Settlement Investment"
-                                                value={`-`}
+                                                key="settlementDate"
+                                                title="Settlement Date"
+                                                value={dateFormat(data?.settlementDate)}
                                             />
                                             <DataValue
-                                                key="orderNumber"
-                                                title="Order Number"
+                                                key="bseOrderNumber"
+                                                title="BSE Order Number"
                                                 value={
-                                                    data?.orderReferenceNumber
+                                                    data?.bseOrderNumber
                                                 }
                                             />
                                             <DataValue
@@ -270,7 +272,7 @@ export default function RTAConciliationDetail() {
                                             <DataValue
                                                 key="folioNo"
                                                 title="Folio Number"
-                                                value={"-"}
+                                                value={data?.folio}
                                             />
                                             <DataValue
                                                 key="stampDuty"
@@ -294,7 +296,7 @@ export default function RTAConciliationDetail() {
                                             <DataValue
                                                 key="nav"
                                                 title="NAV"
-                                                value={data?.nav}
+                                                value={data?.nav ? RupeeSymbol + data?.nav: "0"}
                                             />
                                             <DataValue
                                                 key="orderType"
@@ -406,17 +408,17 @@ export default function RTAConciliationDetail() {
                                                         objectFit: "contain",
                                                     }}
                                                     source={{
-                                                        uri: data.mutualfund
-                                                            .fundhouse.logoUrl,
+                                                        uri: data?.bank?.logoUrl
+                                                            
                                                     }}
                                                 />
                                                 <View>
                                                     <Text className="text-normal">
-                                                        Axis Bank
+                                                        {data?.bank?.bankName}
                                                     </Text>
                                                     <View className="flex flex-row items-center gap-2">
                                                         <Text className="text-xs text-gray-400">
-                                                            xxxx xxxx 6789
+                                                        {data?.bank?.accountNumber}
                                                         </Text>
                                                     </View>
                                                 </View>
@@ -426,12 +428,12 @@ export default function RTAConciliationDetail() {
                                                     <DataValue
                                                         key="branchName"
                                                         title="Branch Name"
-                                                        value="Mahatma Gandhi Road, Bengaluru"
+                                                        value={data?.bank?.branchName}
                                                     />
                                                     <DataValue
                                                         key="ifscCode"
                                                         title="IFSC Code"
-                                                        value="KMB0003838"
+                                                        value={data?.bank?.ifscCode}
                                                     />
                                                 </View>
                                             </View>
@@ -440,7 +442,7 @@ export default function RTAConciliationDetail() {
                                                     <DataValue
                                                         key="accountType"
                                                         title="Account Type"
-                                                        value="Savings"
+                                                        value={data?.bank?.bankAccountType?.name}
                                                     />
                                                     <DataValue
                                                         key="autopay"

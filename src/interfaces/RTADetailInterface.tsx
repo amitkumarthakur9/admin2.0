@@ -21,6 +21,10 @@ interface MutualFund {
         id: string;
         name: string;
     };
+    logoUrl: string;
+    category: string;
+    subCategory: string;
+    rta: string;
 }
 
 interface TransactionInfo {
@@ -41,9 +45,23 @@ export interface Remark {
     transactionId: string;
 }
 
+export interface Folio {
+    id: string;
+    folioNumber: string;
+}
+
+export interface Account {
+    id: string;
+    clientId: string;
+    name: string;
+    user: {
+        panNumber: string;
+    }[];
+}
+
 export interface TransactionDetail {
     id: string;
-    orderReferenceNumber: string;
+    bseOrderNumber: string;
     amount: number;
     units: number;
     nav: number;
@@ -55,16 +73,32 @@ export interface TransactionDetail {
     transactionStatus: TransactionInfo;
     Remarks: Remark[];
     account: Account;
+    order: {
+        id: string;
+        orderType: {
+            id: number;
+            name: string;
+        };
+    };
+    bank: {
+        accountNumber: string;
+        bankAccountType: {
+            id: number;
+            name: string;
+            bseCode: string | null;
+        };
+        ifscCode: string;
+        micrCode: any[];
+        branchName: string;
+        bankName: string;
+        logoUrl: string;
+    };
     mutualfund: TransactionMutualFund;
     stampDuty: number;
     tax: number;
     stt: number | null;
-    remainingUnits: number | null;
     allotedAmount: number;
     navAllotmentDate: Date;
-    exitLoad: number | null;
-    unitsUnlockDate: number | null;
-    isUnitsLocked: number | null;
     createdAt: Date;
 }
 

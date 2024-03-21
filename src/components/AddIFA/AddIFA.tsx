@@ -21,80 +21,203 @@ import {
     WarningOutlineIcon,
     Select,
     CheckIcon,
+    useToast,
+    Radio,
 } from "native-base";
 import Modal from "../Modal/Modal";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Dialog, Portal } from "react-native-paper";
 import { TableBreadCrumb } from "../BreadCrumbs/TableBreadCrumb";
-
+import RemoteApi from "../../services/RemoteApi";
+import { ToastAlert } from "../../helper/CustomToaster";
+import { v4 as uuidv4 } from "uuid";
+// import DatePicker from "react-native-datepicker";
+// import DatePicker from 'react-datepicker';
+// import 'react-datepicker/dist/react-datepicker.css';
 
 export default function AddIFAUser() {
     const options = [
-        { label: "RM 1", value: "ux" },
-        { label: "RM 2", value: "web" },
-        { label: "RM 3", value: "cross" },
-        { label: "RM 4", value: "ui" },
-        { label: "RM 5", value: "backend" },
+        { label: "RM 1", value: "239" },
+        // { label: "RM 2", value: "230" },
+        // { label: "RM 3", value: "249" },
+        // { label: "RM 4", value: "259" },
+        // { label: "RM 5", value: "245" },
     ];
     const [modalVisible, setModalVisible] = useState(false);
     const showDialog = () => setModalVisible(true);
     const hideDialog = () => setModalVisible(false);
     const [selectedValue, setSelectedValue] = useState<string | undefined>("");
     const [passwordVisible, setPasswordVisible] = useState(false);
-    const [selectedOption, setSelectedOption] = useState("Select RM");
     const [isOpen, setIsOpen] = useState(false);
     const [value, setValue] = useState();
     const [errors, setErrors] = useState({
         name: null,
         email: null,
-        phone: null,
+        mobileNumber: null,
         arn: null,
         euin: null,
+        rm: null,
+        sexId: null,
+        dateOfBirth: null,
+        panNumber: null,
+        password: null,
+        confirmPassword: null,
     });
     const [isSubmitted, setIsSubmitted] = useState(false);
+    // const [formData, setFormData] = useState({
+    //     name: "",
+    //     email: "",
+    //     mobileNumber: "",
+    //     arn: "",
+    //     euin: "",
+    //     rm: selectedValue,
+    //     sexId: "",
+    //     dateOfBirth: "",
+    //     panNumber: "",
+    //     password: "",
+    //     confirmPassword: "",
+    // });
     const [formData, setFormData] = useState({
-        name: null,
-        email: null,
-        phone: null,
-        arn: null,
-        euin: null,
-        rm: selectedValue,
+        name: "thdfd",
+        email: "dfgd@gmail.com",
+        mobileNumber: "1234567897",
+        arn: "arn-fgfg1234",
+        euin: "123456",
+        rm: "0",
+        sexId: "1",
+        dateOfBirth: "1990-03-23",
+        panNumber: "CVBHG1234T",
+        password: "fkdbfk",
+        confirmPassword: "fkdbfk",
     });
 
+    const toast = useToast();
+    const [toasts, setToasts] = useState([]);
     const newErrors = {
         name: null,
         email: null,
-        phone: null,
+        mobileNumber: null,
         arn: null,
         euin: null,
+        rm: null,
+        sexId: null,
+        dateOfBirth: null,
+        panNumber: null,
+        password: null,
+        confirmPassword: null,
     }; // Initialize empty error object
 
     const [searchValue, setSearchValue] = useState("");
-    const isSelectionValid = selectedValue !== undefined && selectedValue !== "";
-    
+    const isSelectionValid =
+        selectedValue !== undefined && selectedValue !== "";
+
+    useEffect(() => {
+        // Clear existing toasts
+        toast.closeAll();
+
+        // Show the latest toast
+        if (toasts.length > 0) {
+            const latestToast = toasts[toasts.length - 1];
+            toast.show({
+                render: () => (
+                    <ToastAlert
+                        id={latestToast.id}
+                        variant={latestToast.variant}
+                        title={latestToast.title}
+                        description=""
+                        isClosable={false}
+                        toast={toast}
+                        status={latestToast.status}
+                        onClose={() => removeToast(latestToast.id)} // Remove the toast from the 'toasts' array when closed
+                    />
+                ),
+                placement: "top",
+            });
+        }
+    }, [toasts]);
+
+    const removeToast = (id) => {
+        setToasts(toasts.filter((toast) => toast.id !== id));
+    };
 
     const handleSearchChange = (value: string) => {
         setSearchValue(value);
     };
 
+    const handleDateChange = (date) => {
+        setFormData({
+            ...formData,
+            dateOfBirth: date, // Update the date of birth in the form data
+        });
+    };
+
     const validate = () => {
         // Name validation
-        // if (!formData.name || formData.name.length < 3) {
-        //     newErrors.name = !formData.name
-        //         ? "Name is required"
-        //         : "Name should contain at least 3 characters";
-        // } else {
-        //     newErrors.name = null; // Clear error message if validation passes
-        // }
-
-        // Phone number validation
-        const phoneRegex = /^\d{10}$/;
-        if (!phoneRegex.test(formData.phone)) {
-            newErrors.phone = !formData.phone
-                ? "Phone number is required"
-                : "Please enter a valid 10-digit phone number";
+        if (!formData.name) {
+            newErrors.name = "Name is required";
         } else {
-            newErrors.phone = null; // Clear error message if validation passes
+            newErrors.name = null; // Clear error message if validation passes
+        }
+
+        if (!formData.arn) {
+            newErrors.arn = "ARN is required";
+        } else {
+            newErrors.arn = null; // Clear error message if validation passes
+        }
+
+        const panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]$/;
+
+        if (!panRegex.test(formData.panNumber)) {
+            newErrors.panNumber = !formData.panNumber
+                ? "PAN number is required"
+                : "Please enter a valid PAN number. Ex: AAAPZ1234C";
+        } else {
+            newErrors.panNumber = null; // Clear error message if validation passes
+        }
+
+        const dobRegex =
+            /^(19[0-9]{2}|20[0-9]{2})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/;
+
+        if (!dobRegex.test(formData.dateOfBirth)) {
+            newErrors.dateOfBirth = !formData.dateOfBirth
+                ? "Date of birth is required"
+                : "Please enter a valid format YYYY-MM-DD";
+        } else {
+            const minDate = new Date("1900-01-01");
+            const inputDate = new Date(formData.dateOfBirth);
+            if (inputDate < minDate) {
+                newErrors.dateOfBirth =
+                    "Date of birth must be after 1990-01-01";
+            } else {
+                newErrors.dateOfBirth = null; // Clear error message if validation passes
+            }
+        }
+
+        if (!formData.password) {
+            newErrors.password = "Password is required";
+        } else {
+            newErrors.password = null; // Clear error message if validation passes
+        }
+
+        if (
+            !formData.confirmPassword ||
+            formData.password !== formData.confirmPassword
+        ) {
+            newErrors.confirmPassword = !formData.confirmPassword
+                ? "Confirm the Password"
+                : "Password is mismatched";
+        } else {
+            newErrors.confirmPassword = null; // Clear error message if validation passes
+        }
+
+        // mobileNumber number validation
+        const mobileNumberRegex = /^\d{10}$/;
+        if (!mobileNumberRegex.test(formData.mobileNumber)) {
+            newErrors.mobileNumber = !formData.mobileNumber
+                ? "mobileNumber number is required"
+                : "Please enter a valid 10-digit mobileNumber number";
+        } else {
+            newErrors.mobileNumber = null; // Clear error message if validation passes
         }
 
         // Email validation
@@ -147,22 +270,16 @@ export default function AddIFAUser() {
         }));
 
         setIsSubmitted(false);
-
     };
 
     const togglePasswordVisibility = () => {
         setPasswordVisible(!passwordVisible);
     };
 
-    const handleOptionSelect = (option, optionValue) => {
-        setSelectedOption(option);
-        setValue(optionValue);
-        setIsOpen(false);
-    };
-
     const handleSelectChange = (value: string | undefined) => {
+        console.log("rm" + value);
         setSelectedValue(value);
-        setFormData(prevData => ({
+        setFormData((prevData) => ({
             ...prevData,
             rm: value,
         }));
@@ -172,7 +289,7 @@ export default function AddIFAUser() {
         option.label.toLowerCase().includes(searchValue.toLowerCase())
     );
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         // Set the form as submitted
         setIsSubmitted(true);
 
@@ -180,17 +297,136 @@ export default function AddIFAUser() {
         const isValid = validate();
 
         if (isValid) {
+            // const data = {
+            //     userInfo: {
+            //         name: formData.name,
+            //         panNumber: formData.panNumber,
+            //         dateOfBirth: formData.dateOfBirth,
+            //         sexId: formData.sexId,
+            //     },
+            //     credentials: {
+            //         email: formData.email,
+            //         mobileNumber: formData.mobileNumber,
+            //         password: formData.name,
+            //     },
+            //     distributorInfo: {
+            //         arn: formData.arn,
+            //         euin: formData.euin,
+            //     },
+            // };
+
+            const data = {
+                name: formData.name,
+                panNumber: formData.panNumber,
+                dateOfBirth: formData.dateOfBirth,
+                sexId: parseInt(formData.sexId),
+                email: formData.email,
+                password: formData.password,
+                mobileNumber: formData.mobileNumber,
+                arn: "arn-" + formData.arn,
+                euin: formData.euin,
+                assignedTo: parseInt(formData.rm),
+            };
+
+            try {
+                console.log("trydata");
+                console.log(data);
+
+                const response: any = await RemoteApi.post(
+                    "/onboard/distributor",
+                    data
+                );
+
+                if (response?.message == "Success") {
+                    const uniqueId = uuidv4();
+                    // Add the success toast to the toasts array in the component's state
+                    setToasts([
+                        ...toasts,
+                        {
+                            id: uniqueId,
+                            variant: "solid",
+                            title: response?.data,
+                            status: "success",
+                        },
+                    ]);
+                } else if (
+                    response?.message == "Error in Adding User." ||
+                    response?.code == 425
+                ) {
+                    const uniqueId = uuidv4();
+
+                    const errorMessage = response?.errors[0]?.message;
+
+                    const fieldsToCheck = [
+                        "email",
+                        "mobileNumber",
+                        "arn",
+                        "euin",
+                        "panNumber",
+                    ];
+
+                    let message;
+
+                    if (errorMessage) {
+                        // Check if any of the fields are mentioned in the error message
+                        const mentionedField = fieldsToCheck.find((field) =>
+                            errorMessage.includes(field)
+                        );
+
+                        // If a mentioned field is found, assign it to the message variable
+                        if (mentionedField) {
+                            message = mentionedField;
+                        } else {
+                            // Handle the case where none of the fields are mentioned in the error message
+                            message = "Unknown error"; // Or whatever you want to assign in this case
+                        }
+                    } else {
+                        // Handle the case where there is no error message
+                        message = "No error message";
+                    }
+
+                    // Now you can use the `message` variable as needed
+                    console.log(message);
+
+                    setToasts([
+                        ...toasts,
+                        {
+                            id: uniqueId,
+                            variant: "solid",
+                            title: `${message} alreay in Database`,
+                            status: "error",
+                        },
+                    ]);
+                }
+            } catch (error) {
+                const uniqueId = uuidv4();
+                setToasts([
+                    ...toasts,
+                    {
+                        id: uniqueId,
+                        variant: "solid",
+                        title: "error",
+                        status: "error",
+                    },
+                ]);
+            }
+
             console.log("Submitted successfully");
             console.log(formData);
             // Reset submitted state and clear form data
             setIsSubmitted(false);
             setFormData({
-                name: null,
-                email: null,
-                phone: null,
-                arn: null,
-                euin: null,
-                rm: null,
+                name: "thdfd",
+                email: "dfgd@gmail.com",
+                mobileNumber: "123456787",
+                arn: "arn-fgfg1234",
+                euin: "123456",
+                rm: "0",
+                sexId: "1",
+                dateOfBirth: "1990-03-23",
+                panNumber: "CVBHG1234T",
+                password: "fkdbfk",
+                confirmPassword: "dknfkd",
             });
         } else {
             console.log("Validation failed");
@@ -302,7 +538,7 @@ export default function AddIFAUser() {
                                     </FormControl>
                                     <FormControl
                                         isRequired
-                                        isInvalid={errors.phone !== null}
+                                        isInvalid={errors.mobileNumber !== null}
                                         w="100%"
                                         maxW="300px"
                                     >
@@ -313,24 +549,24 @@ export default function AddIFAUser() {
                                             size="lg"
                                             variant="outline"
                                             placeholder="Mobile Number"
-                                            value={formData.phone}
+                                            value={formData.mobileNumber}
                                             onChangeText={(value) =>
-                                                handleChange("phone", value)
+                                                handleChange("mobileNumber", value)
                                             }
                                         />
-                                        {errors.phone ? (
+                                        {errors.mobileNumber ? (
                                             <FormControl.ErrorMessage>
-                                                {errors.phone}
+                                                {errors.mobileNumber}
                                             </FormControl.ErrorMessage>
                                         ) : (
                                             <FormControl.HelperText>
-                                                Enter 10 digit phone Number.
+                                                Enter 10 digit mobileNumber Number.
                                             </FormControl.HelperText>
                                         )}
                                     </FormControl>
                                     <FormControl
                                         isRequired
-                                        isInvalid={errors.phone !== null}
+                                        isInvalid={errors.mobileNumber !== null}
                                         w="100%"
                                         maxW="300px"
                                     >
@@ -387,6 +623,8 @@ export default function AddIFAUser() {
                                 variant="outline"
                                 placeholder="Name as on PAN"
                                 value={formData.name}
+                                aria-label="Name"
+                                aria-labelledby="NameLabel"
                                 onChangeText={(value) =>
                                     handleChange("name", value)
                                 }
@@ -403,6 +641,118 @@ export default function AddIFAUser() {
                         </FormControl>
                         <FormControl
                             isRequired
+                            isInvalid={errors.panNumber !== null}
+                            w="100%"
+                            maxW="300px"
+                        >
+                            <FormControl.Label>PAN Number</FormControl.Label>
+                            <Input
+                                size="lg"
+                                variant="outline"
+                                placeholder="PAN Number"
+                                value={formData.panNumber}
+                                aria-label="Pan Number"
+                                onChangeText={(value) =>
+                                    handleChange("panNumber", value)
+                                }
+                            />
+                            {"panNumber" in errors && (
+                                <FormControl.ErrorMessage>
+                                    {errors.panNumber}
+                                </FormControl.ErrorMessage>
+                            )}
+                        </FormControl>
+                        <FormControl
+                            isRequired
+                            isInvalid={errors.sexId !== null}
+                            w="100%"
+                            maxW="300px"
+                        >
+                            <FormControl.Label>Gender</FormControl.Label>
+                            <HStack space={4}>
+                                <Radio.Group
+                                    name="gender"
+                                    value={formData.sexId}
+                                    aria-label="Gender"
+                                    onChange={(value) =>
+                                        handleChange("sexId", value)
+                                    }
+                                >
+                                    <HStack space={4}>
+                                        <Radio value="1">Male</Radio>
+                                        <Radio value="2">Female</Radio>
+                                    </HStack>
+                                </Radio.Group>
+                            </HStack>
+                            {"sexId" in errors && (
+                                <FormControl.ErrorMessage>
+                                    {errors.sexId}
+                                </FormControl.ErrorMessage>
+                            )}
+                        </FormControl>
+                        <FormControl
+                            isRequired
+                            isInvalid={errors.dateOfBirth !== null}
+                            w="100%"
+                            maxW="300px"
+                        >
+                            <FormControl.Label>Date of Birth</FormControl.Label>
+                            <Input
+                                size="lg"
+                                variant="outline"
+                                placeholder="1990-03-25"
+                                aria-label="Date of Birth"
+                                value={formData.dateOfBirth}
+                                onChangeText={(value) =>
+                                    handleChange("dateOfBirth", value)
+                                }
+                            />
+                            {errors.dateOfBirth ? (
+                                <FormControl.ErrorMessage>
+                                    {errors.dateOfBirth}
+                                </FormControl.ErrorMessage>
+                            ) : (
+                                <FormControl.HelperText>
+                                    Enter in YYYY-MM-DD format. Example:
+                                    1990-03-25
+                                </FormControl.HelperText>
+                            )}
+                            {/* <DatePicker
+                                style={{ width: 200 }}
+                                date={formData.dateOfBirth} // Date value from state
+                                mode="date" // Set the mode to date
+                                placeholder="Select Date of Birth"
+                                format="YYYY-MM-DD" // Date format
+                                minDate="1900-01-01" // Minimum selectable date
+                                maxDate={new Date()} // Maximum selectable date (today)
+                                confirmBtnText="Confirm"
+                                cancelBtnText="Cancel"
+                                customStyles={{
+                                    dateIcon: {
+                                        position: "absolute",
+                                        left: 0,
+                                        top: 4,
+                                        marginLeft: 0,
+                                    },
+                                    dateInput: {
+                                        marginLeft: 36,
+                                    },
+                                }}
+                                onDateChange={handleDateChange} // Callback function for date change
+                            /> */}
+                            {/* <DatePicker
+      selected={formData.dateOfBirth}
+      onChange={handleDateChange}
+      placeholderText="Select Date of Birth"
+      dateFormat="yyyy-MM-dd"
+      maxDate={new Date()} // Optional: Maximum selectable date (today)
+      showYearDropdown
+      scrollableYearDropdown
+    /> */}
+                        </FormControl>
+
+                        <FormControl
+                            isRequired
                             isInvalid={errors.email !== null}
                             w="100%"
                             maxW="300px"
@@ -412,6 +762,7 @@ export default function AddIFAUser() {
                                 size="lg"
                                 variant="outline"
                                 placeholder="Email Address"
+                                aria-label="Email Address"
                                 value={formData.email}
                                 onChangeText={(value) =>
                                     handleChange("email", value)
@@ -425,7 +776,75 @@ export default function AddIFAUser() {
                         </FormControl>
                         <FormControl
                             isRequired
-                            isInvalid={errors.phone !== null}
+                            isInvalid={errors.password !== null}
+                            w="100%"
+                            maxW="300px"
+                            style={{ marginTop: 10 }}
+                        >
+                            <FormControl.Label>Password</FormControl.Label>
+                            <Input
+                                size="lg"
+                                variant="outline"
+                                placeholder="Password"
+                                value={formData.password}
+                                aria-label="Password"
+                                onChangeText={(value) =>
+                                    handleChange("password", value)
+                                }
+                                secureTextEntry={!passwordVisible}
+                                InputRightElement={
+                                    <Pressable
+                                        onPress={togglePasswordVisibility}
+                                        style={{ paddingRight: 4 }}
+                                    >
+                                        <Icon
+                                            name={
+                                                passwordVisible
+                                                    ? "eye"
+                                                    : "eye-slash"
+                                            }
+                                            size={20}
+                                            color="#484848"
+                                        />
+                                    </Pressable>
+                                }
+                            />
+                            {"password" in errors && (
+                                <FormControl.ErrorMessage>
+                                    {errors.password}
+                                </FormControl.ErrorMessage>
+                            )}
+                        </FormControl>
+                        <FormControl
+                            isRequired
+                            isInvalid={errors.confirmPassword !== null}
+                            w="100%"
+                            maxW="300px"
+                            style={{ marginTop: 10 }}
+                        >
+                            <FormControl.Label>
+                                Confirm Password
+                            </FormControl.Label>
+                            <Input
+                                size="lg"
+                                variant="outline"
+                                placeholder="Confirm Password"
+                                value={formData.confirmPassword}
+                                aria-label="Confirm Password"
+                                onChangeText={(value) =>
+                                    handleChange("confirmPassword", value)
+                                }
+                                secureTextEntry={!passwordVisible}
+                            />
+                            {"confirmPassword" in errors && (
+                                <FormControl.ErrorMessage>
+                                    {errors.confirmPassword}
+                                </FormControl.ErrorMessage>
+                            )}
+                        </FormControl>
+                        <FormControl
+                            isRequired
+                            isInvalid={errors.mobileNumber !== null}
                             w="100%"
                             maxW="300px"
                         >
@@ -434,24 +853,25 @@ export default function AddIFAUser() {
                                 size="lg"
                                 variant="outline"
                                 placeholder="Mobile Number"
-                                value={formData.phone}
+                                aria-label="Mobile Numbe"
+                                value={formData.mobileNumber}
                                 onChangeText={(value) =>
-                                    handleChange("phone", value)
+                                    handleChange("mobileNumber", value)
                                 }
                             />
-                            {errors.phone ? (
+                            {errors.mobileNumber ? (
                                 <FormControl.ErrorMessage>
-                                    {errors.phone}
+                                    {errors.mobileNumber}
                                 </FormControl.ErrorMessage>
                             ) : (
                                 <FormControl.HelperText>
-                                    Enter 10 digit phone Number.
+                                    Enter 10 digit mobileNumber Number.
                                 </FormControl.HelperText>
                             )}
                         </FormControl>
                         <FormControl
                             isRequired
-                            isInvalid={errors.phone !== null}
+                            isInvalid={errors.arn !== null}
                             w="100%"
                             maxW="300px"
                         >
@@ -469,6 +889,7 @@ export default function AddIFAUser() {
                                     variant="outline"
                                     placeholder="ARN Number"
                                     value={formData.arn}
+                                    aria-label="ARN number"
                                     onChangeText={(value) =>
                                         handleChange("arn", value)
                                     }
@@ -487,7 +908,7 @@ export default function AddIFAUser() {
                         </FormControl>
                         <FormControl
                             isRequired
-                            isInvalid={errors.phone !== null}
+                            isInvalid={errors.euin !== null}
                             w="100%"
                             maxW="300px"
                         >
@@ -504,6 +925,7 @@ export default function AddIFAUser() {
                                     size="lg"
                                     variant="outline"
                                     placeholder="EUIN Number"
+                                    aria-label="EUIN Number"
                                     value={formData.euin}
                                     onChangeText={(value) =>
                                         handleChange("euin", value)
@@ -531,25 +953,18 @@ export default function AddIFAUser() {
                             <FormControl.Label>
                                 Choose Relationship Manager
                             </FormControl.Label>
-                            <View>
-                                {/* <Input
-                    placeholder="Search..."
-                    value={searchValue}
-                    onChangeText={handleSearchChange}
-                    mt={1}
-                /> */}
-                            </View>
+                            <View></View>
                             <Select
                                 minWidth={200}
                                 accessibilityLabel="Relationship Manager"
                                 placeholder="Relationship Manager"
+                                aria-label="Relationship Manager"
                                 _selectedItem={{
                                     bg: "teal.600",
                                     endIcon: <CheckIcon size={5} />,
                                 }}
                                 mt={1}
                                 onValueChange={handleSelectChange}
-                                
                             >
                                 {filteredOptions.map((option) => (
                                     <Select.Item
@@ -562,8 +977,7 @@ export default function AddIFAUser() {
                             <FormControl.ErrorMessage
                                 leftIcon={<WarningOutlineIcon size="xs" />}
                             >
-                            "Please make a selection!"
-                                
+                                "Please make a selection!"
                             </FormControl.ErrorMessage>
                             <FormControl.HelperText>
                                 {filteredOptions.length === 0 &&

@@ -103,7 +103,7 @@ const RTAReconciliation = () => {
         async function getSchema() {
             const response: any = await RemoteApi.get("transaction/schema");
             setFiltersSchema(response);
-            setSorting(response.sort);
+            setSorting(response?.sort);
         }
         getSchema();
     }, []);

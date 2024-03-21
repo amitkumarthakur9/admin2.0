@@ -27,8 +27,8 @@ const GoogleContactInvite = () => {
     const [modalVisible, setModalVisible] = useState(false);
     const showDialog = () => setModalVisible(true);
     const hideDialog = () => setModalVisible(false);
-      const redirectUri = "http://localhost:8081/invite-contact"; // Replace with your redirect URI
-            // const redirectUri = "https://vision.kcp.com.in/invite-contact"; // Replace with your redirect URI
+    //   const redirectUri = "http://localhost:8081/invite-contact"; // Replace with your redirect URI
+            const redirectUri = "https://vision.kcp.com.in/invite-contact"; // Replace with your redirect URI
 
     useEffect(() => {
         const getCurrentUrl = async () => {

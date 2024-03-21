@@ -22,6 +22,11 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import DonutPieChart from "../Chart/DonutPieChart";
 import DynamicMenu from "./DynamicMenu";
 import { AUMDetailResponseInterface } from "src/interfaces/AUMDetailResponseInterface";
+import {
+    DashboardData,
+    DashboardResponse,
+} from "../../../src/interfaces/DashboardInterface";
+import RemoteApi from "../../../src/services/RemoteApi";
 
 const IFADashboard = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -29,6 +34,21 @@ const IFADashboard = () => {
     const [selectedOption, setSelectedOption] = useState("");
     const [receivedData1, setReceivedData1] = useState(null);
     const [receivedData2, setReceivedData2] = useState(null);
+    const [data, setData] = useState<DashboardData>();
+    useEffect(() => {
+        setIsLoading(true);
+        async function getDetails() {
+            const response: DashboardResponse = await RemoteApi.get(
+                `dashboard/?d=2`
+            );
+            if (response) {
+                setData(response.data);
+                setIsLoading(false);
+            }
+        }
+
+        getDetails();
+    }, []);
 
     const handleOptionSelect = (option) => {
         setSelectedOption(option);
@@ -148,6 +168,43 @@ const IFADashboard = () => {
         },
     ];
 
+    const sipBreakdownChart = data?.order?.sip?.breakDown.map((item) => ({
+        x: item.category,
+        y: item.count,
+    }));
+
+    console.log(sipBreakdownChart);
+
+    const aumBreakdownChart = data?.aum?.breakDown.map((item) => ({
+        x: item.category,
+        y: item.currentValue,
+    }));
+
+    console.log(sipBreakdownChart);
+
+    const breakDown = [
+        {
+            "category": "Debt",
+            "currentValue": 2154.6
+        },
+        {
+            "category": "Equity",
+            "currentValue": 1814.1522999999997
+        }
+    ];
+    
+    // Step 1: Calculate the total value of all categories
+    const totalValue = breakDown.reduce((total, category) => total + category.currentValue, 0);
+    
+    // Step 2: Calculate the percentage of each category
+    const categoryPercentages = breakDown.map(category => ({
+        category: category.category,
+        percentage: (category.currentValue / totalValue) * 100
+    }));
+    
+    console.log(categoryPercentages);
+    
+
     return (
         <>
             {isLoading ? (
@@ -194,17 +251,22 @@ const IFADashboard = () => {
                             </View>
 
                             <View className="flex flex-row justify-between rounded bg-[#eaf3fe] pr-2">
-                                <View className=" flex flex-row w-full gap-2">    {/* outer Card */}
+                                <View className=" flex flex-row w-full gap-2">
+                                    {" "}
+                                    {/* outer Card */}
                                     <View className="flex flex-col w-8/12 rounded bg-[#eaf3fe] h-auto ">
-                                     
                                         <View className="flex flex-row rounded  bg-[#eaf3fe] flex-wrap w-[99.5%] gap-1 justify-between pb-2">
-                                            
                                             <View className="flex flex-col w-[32%]  rounded bg-[#0769D0] h-auto items-between gap-2">
                                                 <Text className="text-[#D2CFCF]">
                                                     Total Aum
                                                 </Text>
                                                 <Text className="text-white font-bold text-[36px]">
-                                                    1.8 Cr
+                                                    {data?.aum?.total
+                                                        ? RupeeSymbol +
+                                                          data?.aum?.total.toFixed(
+                                                              2
+                                                          )
+                                                        : RupeeSymbol + "0"}
                                                 </Text>
                                                 <Text className="text-[#00AC4F] text-xs inline-block align-text-bottom text-right">
                                                     <MaterialCommunityIcons
@@ -219,18 +281,21 @@ const IFADashboard = () => {
                                                 </Text>
                                             </View>
                                             <View className="flex flex-row w-[66%] rounded bg-white h-auto gap-2">
-                                                
-
                                                 <View className="flex flex-col w-6/12  rounded bg-white h-auto gap-1">
                                                     <IconCard
                                                         icon="account-outline"
                                                         title="Number of Clients"
-                                                        description="1087"
+                                                        description={
+                                                            data?.clientCount
+                                                        }
                                                     />
                                                     <IconCard
                                                         icon="chart-timeline-variant"
                                                         title="Total Running SIPs"
-                                                        description="457"
+                                                        description={
+                                                            data?.order?.sip
+                                                                ?.sipCount
+                                                        }
                                                     />
                                                 </View>
                                                 <View className="flex flex-col w-5/12  rounded bg-white h-auto gap-1">
@@ -238,8 +303,14 @@ const IFADashboard = () => {
                                                         icon="wallet-outline"
                                                         title="Total Lumpsun Investment"
                                                         description={
-                                                            RupeeSymbol +
-                                                            "2,00,756"
+                                                            data?.order?.lumpsum
+                                                                ?.total
+                                                                ? RupeeSymbol +
+                                                                  data?.order?.lumpsum?.total.toFixed(
+                                                                      2
+                                                                  )
+                                                                : RupeeSymbol +
+                                                                  "0"
                                                         }
                                                     />
                                                     <IconCard
@@ -254,14 +325,13 @@ const IFADashboard = () => {
                                             </View>
                                         </View>
                                         <View className="flex flex-row rounded bg-white w-[99%]">
-                                            
                                             <View
                                                 className="w-[50%]  rounded bg-white p-4"
                                                 style={{
-                                                    borderColor: "#e4e4e4", 
+                                                    borderColor: "#e4e4e4",
 
                                                     borderRightWidth:
-                                                        StyleSheet.hairlineWidth, 
+                                                        StyleSheet.hairlineWidth,
                                                 }}
                                             >
                                                 <View className="flex flex-col justify-between">
@@ -292,24 +362,34 @@ const IFADashboard = () => {
 
                                                 <View>
                                                     <DonutPieChart
+                                                        // pieData={[
+                                                        //     {
+                                                        //         x: data?.aum?.breakDown[0].category,
+                                                        //         y: data?.aum?.breakDown[0].currentValue.toFixed(2),
+                                                        //     },
+                                                        //     {
+                                                        //         x: data?.aum?.breakDown[1].category,
+                                                        //         y: data?.aum?.breakDown[1].currentValue.toFixed(2),
+                                                        //     },
+                                                           
+                                                        // ]}
+
                                                         pieData={[
                                                             {
-                                                                x: "Equity",
-                                                                y: 20,
-                                                            },
-                                                            {
-                                                                x: "Hybrid",
-                                                                y: 29,
-                                                            },
-                                                            {
                                                                 x: "Debt",
-                                                                y: 35,
+                                                                y: 54.2,
                                                             },
                                                             {
-                                                                x: "Others",
-                                                                y: 25,
+                                                                x: "Equity",
+                                                                y: 45.8,
                                                             },
+                                                           
                                                         ]}
+
+                                                        
+
+                                                        // pieData = {[aumBreakdownChart]}
+                                            
                                                     />
                                                 </View>
                                             </View>
@@ -360,6 +440,9 @@ const IFADashboard = () => {
                                                                 y: 25,
                                                             },
                                                         ]}
+                                                        // pieData={[
+                                                        //     sipBreakdownChart,
+                                                        // ]}
                                                     />
                                                 </View>
                                             </View>
@@ -368,12 +451,11 @@ const IFADashboard = () => {
                                     <View className="w-4/12 rounded bg-white p-4">
                                         <View className="flex flex-row justify-between">
                                             <View>
-                                            <Text className="text-black">
-                                                Notification
-                                            </Text>
-
+                                                <Text className="text-black">
+                                                    Notification
+                                                </Text>
                                             </View>
-                                            
+
                                             <DynamicMenu
                                                 onDataReceived={
                                                     handleDataReceived1
@@ -396,24 +478,23 @@ const IFADashboard = () => {
                                             />
                                         </View>
                                         <View className="h-auto">
-                                        <View className="h-96 overflow-scroll">
-                                            {notificationData.map(
-                                                (item, index) => (
-                                                    <AvatarCard
-                                                        key={index} // Make sure to provide a unique key for each item
-                                                        imageUrl={item.imageUrl}
-                                                        title={item.title}
-                                                        description={
-                                                            item.description
-                                                        }
-                                                    />
-                                                )
-                                            )}
+                                            <View className="h-96 overflow-scroll">
+                                                {notificationData.map(
+                                                    (item, index) => (
+                                                        <AvatarCard
+                                                            key={index} // Make sure to provide a unique key for each item
+                                                            imageUrl={
+                                                                item.imageUrl
+                                                            }
+                                                            title={item.title}
+                                                            description={
+                                                                item.description
+                                                            }
+                                                        />
+                                                    )
+                                                )}
+                                            </View>
                                         </View>
-
-                                        </View>
-
-
                                     </View>
                                 </View>
                             </View>
@@ -472,23 +553,27 @@ const IFADashboard = () => {
                                         />
                                         <BorderCard
                                             title="Redemptiom"
-                                            description={
-                                                RupeeSymbol + "9,77,877"
+                                            description={data?.transaction?.redemption ? 
+                                                RupeeSymbol + data?.transaction?.redemption : RupeeSymbol +"0"
                                             }
                                         />
                                         <BorderCard
                                             title="Inactive/Cancelled SIPs"
-                                            description="15"
+                                            description={data?.transaction?.totalSipTransactionsFailed ? 
+                                                 data?.transaction?.totalSipTransactionsFailed :"0"
+                                            }
                                         />
                                     </View>
                                     <View className="flex flex-col w-[49%]">
                                         <BorderCard
                                             title="New SIPs"
-                                            description="115"
+                                            description={data?.order?.sip?.newSip ? data?.order?.sip?.newSip : "0"}
                                         />
                                         <BorderCard
                                             title="No. of successful SIPs"
-                                            description="10459"
+                                            description={data?.transaction?.totalSipTransactionsFailed && data?.transaction?.totalSipTransactions? 
+                                                (data?.transaction?.totalSipTransactions - data?.transaction?.totalSipTransactionsFailed) :"0"
+                                           }
                                         />
                                         <BorderCard
                                             title="No. of SIP Bounce"
