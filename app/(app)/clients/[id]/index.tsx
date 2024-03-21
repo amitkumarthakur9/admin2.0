@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { View } from "react-native";
+import { Alert, View } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import {
     Button,
@@ -707,6 +707,8 @@ const InvestModalCard = ({
     allowModalCardChange: boolean;
 }) => {
     const [folios, setFolios] = useState<FolioSchema[]>([]);
+    const [optionType, setOptionType] = useState<number | null>(null);
+    const [dividendType, setDividendType] = useState<string | null>(null);
 
     const changeFolios = (folioArray: FolioSchema[]) => {
         setFolios(folioArray);
@@ -716,12 +718,28 @@ const InvestModalCard = ({
         {
             key: "lumpSum",
             name: "Lump Sum",
-            content: <LumpSumOrderTab folios={folios} />,
+            content: (
+                <LumpSumOrderTab
+                    folios={folios}
+                    optionType={optionType}
+                    dividendType={dividendType}
+                    mutualFund={selectedFund}
+                    hideDialog={hideDialog}
+                />
+            ),
         },
         {
             key: "SIP",
             name: "SIP",
-            content: <SipOrderTab folios={folios} />,
+            content: (
+                <SipOrderTab
+                    folios={folios}
+                    optionType={optionType}
+                    dividendType={dividendType}
+                    mutualFund={selectedFund}
+                    hideDialog={hideDialog}
+                />
+            ),
         },
     ];
 
@@ -741,6 +759,10 @@ const InvestModalCard = ({
                     changeSelectedFund={changeSelectedFund}
                     allowModalCardChange={allowModalCardChange}
                     changeFolio={changeFolios}
+                    optionType={optionType}
+                    dividendType={dividendType}
+                    setOptionType={setOptionType}
+                    setDividendType={setDividendType}
                 />
             ),
         },
@@ -768,17 +790,43 @@ const InvestModalCard = ({
     );
 };
 
-const LumpSumOrderTab = ({ folios }: { folios: FolioSchema[] }) => {
+const LumpSumOrderTab = ({
+    folios,
+    optionType,
+    dividendType,
+    mutualFund,
+    hideDialog,
+}: {
+    folios: FolioSchema[];
+    optionType: any;
+    dividendType: any;
+    mutualFund: MutualFundSearchResult | Holding;
+    hideDialog: () => void;
+}) => {
     const [folioID, setFolioID] = useState(null);
-    const [investmentAmount, setInvestmentAmount] = useState("0");
+    const [investmentAmount, setInvestmentAmount] = useState("5000");
 
     const { id } = useLocalSearchParams();
 
+    const IsMFSearch = isMutualFundSearchResult(mutualFund);
+
     const postData = async () => {
         return await ApiRequest.post("/order/purchase", {
-            clientID: id,
-            folioID,
-            investmentAmount,
+            accountID: id,
+            amount: investmentAmount,
+            mutualFundID: IsMFSearch
+                ? mutualFund.id
+                : mutualFund?.mutualfund?.id, //ID of the mutual fund
+            optionTypeID: IsMFSearch
+                ? optionType
+                : mutualFund?.mutualfund?.optionType?.id,
+            mutualfundDividendTypeID: IsMFSearch
+                ? mutualFund.optionType
+                      ?.find((el) => el.id === optionType)
+                      .mutualfundDividendType?.find(
+                          (el) => el.id === dividendType
+                      ).dividendType.id
+                : mutualFund?.mutualfund?.dividendType?.id, // Reinvest, Payout, NA
         });
     };
 
@@ -788,10 +836,12 @@ const LumpSumOrderTab = ({ folios }: { folios: FolioSchema[] }) => {
         error,
     } = useMutation(postData, {
         onSuccess: () => {
-            console.log("Success");
+            setFolioID(null);
+            setInvestmentAmount("5000");
+            hideDialog();
         },
         onError: () => {
-            console.log("Error while doing data thing");
+            hideDialog();
         },
     });
 
@@ -846,19 +896,43 @@ const LumpSumOrderTab = ({ folios }: { folios: FolioSchema[] }) => {
     );
 };
 
-const SipOrderTab = ({ folios }: { folios: FolioSchema[] }) => {
+const SipOrderTab = ({
+    folios,
+    optionType,
+    dividendType,
+    mutualFund,
+    hideDialog,
+}: {
+    folios: FolioSchema[];
+    optionType: any;
+    dividendType: any;
+    mutualFund: MutualFundSearchResult | Holding;
+    hideDialog: () => void;
+}) => {
     const [folioID, setFolioID] = useState(null);
     const [investmentAmount, setInvestmentAmount] = useState("0");
     const [sipDate, setSipDate] = useState();
 
     const { id } = useLocalSearchParams();
 
+    const IsMFSearch = isMutualFundSearchResult(mutualFund);
+
     const postData = async () => {
         return await ApiRequest.post("/order/sip", {
-            clientID: id,
-            folioID,
-            investmentAmount,
-            sipDate,
+            accountID: id,
+            amount: investmentAmount,
+            mutualFundID: IsMFSearch
+                ? mutualFund.id
+                : mutualFund?.mutualfund?.id, //ID of the mutual fund
+            optionTypeID: optionType,
+            mutualfundDividendTypeID: IsMFSearch
+                ? mutualFund.optionType
+                      ?.find((el) => el.id === optionType)
+                      .mutualfundDividendType?.find(
+                          (el) => el.id === dividendType
+                      ).dividendType.id
+                : null, // Reinvest, Payout, NA
+            startDate: sipDate,
         });
     };
 
@@ -869,9 +943,11 @@ const SipOrderTab = ({ folios }: { folios: FolioSchema[] }) => {
     } = useMutation(postData, {
         onSuccess: () => {
             console.log("Success");
+            hideDialog();
         },
         onError: () => {
             console.log("Error while doing data thing");
+            hideDialog();
         },
     });
     return (
@@ -1090,6 +1166,10 @@ const InvestModalAction = ({
     changeSelectedFund,
     allowModalCardChange,
     changeFolio,
+    optionType,
+    setOptionType,
+    dividendType,
+    setDividendType,
 }: {
     tabContent: {
         key: string;
@@ -1100,11 +1180,13 @@ const InvestModalAction = ({
     changeSelectedFund: any;
     allowModalCardChange: boolean;
     changeFolio?: (folioArray: FolioSchema[]) => void;
+    optionType?: any;
+    setOptionType?: any;
+    dividendType?: any;
+    setDividendType?: any;
 }) => {
     const { id } = useLocalSearchParams();
     const [selectedTab, setSelectedTab] = useState(1);
-    const [optionType, setOptionType] = useState<number | null>(null);
-    const [dividendType, setDividendType] = useState<string | null>(null);
 
     const handleTabPress = (tab) => {
         setSelectedTab(tab);
@@ -1135,7 +1217,7 @@ const InvestModalAction = ({
               !!dividendType &&
               selectedFund?.optionType
                   ?.find((el) => el.id === optionType)
-                  .mutualfundDividendType.some((e) => e.id === dividendType)
+                  .mutualfundDividendType.some((e) => e.id == dividendType)
             : true,
     });
 
@@ -1204,6 +1286,7 @@ const InvestModalAction = ({
                                     ?.find((el) => el.id === optionType)
                                     ?.mutualfundDividendType?.map((e) => {
                                         return {
+                                            key: e.id,
                                             label: e.dividendType.name,
                                             value: e.id,
                                         };
