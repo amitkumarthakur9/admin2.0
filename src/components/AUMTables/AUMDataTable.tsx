@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
     View,
     Text,
@@ -36,8 +36,31 @@ import RMWiseDataTable from "./RMWiseDataTable";
 import HoldingWiseDataTable from "./HoldingWiseDataTable";
 import SchemeTypeWiseDataTable from "./SchemeTypeWiseDataTable";
 import CardWithTabs from "../Card/CardWithTabs";
+import { useStorageState } from "../../services/useStorageState";
+import { jwtDecode } from "jwt-decode";
+const roldID = () => {
+    const [[isLoading, token], setToken] = useStorageState("token");
+    // const [roleId, setroleID] = useState(null);
+    // useEffect(() => {
+        
+    if (token) {
+        const decoded: any = jwtDecode(token);
+        console.log(decoded);
+        // setroleID(decoded.roleId);
+        console.log(decoded.roleId);
+        return decoded.roleId;
+    }
+
+    
+};
 
 const AUMDataTable = (role) => {
+    // console.log("role");
+    // console.log(role);
+    // const [[isLoading, token], setToken] = useStorageState("token");
+
+    const roles: number = roldID();
+
     const [isLoading, setIsLoading] = React.useState(false);
 
     const [currentPageNumber, setCurrentPageNumber] = useState(1);
@@ -106,7 +129,6 @@ const AUMDataTable = (role) => {
         }
     }, [appliedSorting]);
 
-
     const AUMCard = ({ data }) => {
         const [selectedTab, setSelectedTab] = useState(1);
 
@@ -163,7 +185,7 @@ const AUMDataTable = (role) => {
                 key: "rta-wise",
                 name: "RTA Wise",
                 content: <RTAWiseDataTable />,
-            },       
+            },
             // {
             //     key: "ifa-wise",
             //     name: "IFA Wise",
@@ -175,29 +197,32 @@ const AUMDataTable = (role) => {
             //     content: <RMWiseDataTable />,
             // },
         ];
+    console.log("aumrole");
 
-        if(role==3 || role==4 ){
-            tabContent.push(
-                {
-                    key: "ifa-wise",
-                    name: "IFA Wise",
-                    content: <IFAWiseDataTable />,
-                },
-            )
+        console.log(roles)
+
+        if (roles == 3 || roles == 4) {
+            tabContent.push({
+                key: "ifa-wise",
+                name: "IFA Wise",
+                content: <IFAWiseDataTable />,
+            });
         }
 
-        if(role==4){
-            tabContent.push(
-                {
-                    key: "rm-wise",
-                    name: "RM Wise",
-                    content: <RMWiseDataTable />,
-                },
-            )
+        if (roles == 4) {
+            tabContent.push({
+                key: "rm-wise",
+                name: "RM Wise",
+                content: <RMWiseDataTable />,
+            });
         }
 
-        const AUMCardWithTabs = ({ selectedTab, handleTabPress, tabContent, tabscount = 3 }) => {
-
+        const AUMCardWithTabs = ({
+            selectedTab,
+            handleTabPress,
+            tabContent,
+            tabscount = 3,
+        }) => {
             return (
                 <View className="flex-1 bg-white rounded shadow h-full overflow-auto">
                     <View>
@@ -206,14 +231,21 @@ const AUMDataTable = (role) => {
                                 return (
                                     <TouchableOpacity
                                         key={index}
-                                        onPress={() => handleTabPress(index + 1)}
-                                        className={`w-[12%] py-4 px-6 flex flex-row justify-center items-center border-b-2 ${selectedTab === index + 1
+                                        onPress={() =>
+                                            handleTabPress(index + 1)
+                                        }
+                                        className={`w-[12%] py-4 px-6 flex flex-row justify-center items-center border-b-2 ${
+                                            selectedTab === index + 1
                                                 ? "border-black bg-gray-800"
                                                 : "border-b-gray-400 bg-white"
-                                            }`}
+                                        }`}
                                     >
                                         <Text
-                                            className={`font-bold ${selectedTab === index + 1 ? "text-white" : "text-gray-600"}`}
+                                            className={`font-bold ${
+                                                selectedTab === index + 1
+                                                    ? "text-white"
+                                                    : "text-gray-600"
+                                            }`}
                                         >
                                             {tab?.name}
                                         </Text>
@@ -236,7 +268,6 @@ const AUMDataTable = (role) => {
                     selectedTab={selectedTab}
                     handleTabPress={handleTabPress}
                     tabContent={tabContent}
-                    
                 />
                 {/* </View> */}
             </View>

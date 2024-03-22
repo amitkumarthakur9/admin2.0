@@ -19,24 +19,57 @@ import {
 } from "native-base";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Dialog, Portal } from "react-native-paper";
+import RemoteApi from "../../../src/services/RemoteApi";
 
 export default function ManualInvite() {
     const [modalVisible, setModalVisible] = useState(false);
     const showDialog = () => setModalVisible(true);
     const hideDialog = () => setModalVisible(false);
-
-
-    const handleSubmit = () => {
-
-        formData;
-        console.log(formData);
-    };
-
     const [formData, setFormData] = useState({
         name: "",
         email: "",
         phone: "",
     });
+
+
+    const handleSubmit = async () => {
+        console.log("manualcontactformData");
+
+        console.log(formData);
+
+      const  data =  {
+            contacts: [
+                {
+                    name: formData.name,
+                    email: formData.email,
+                    mobileNumber: formData.phone,
+                    sourceId: 1,
+                }
+            ]
+        }
+
+
+        try {
+            console.log("ManualContact");
+            console.log(data);
+
+            const response: any = await RemoteApi.post(
+                "onboard/client/save",
+                data
+            );
+
+            if (response?.message == "Success") {
+               
+            } else {
+            }
+        } catch (error) {
+            console.log(error);
+        }
+
+        hideDialog()
+    };
+
+
 
     const handleChange = (key, value) => {
         setFormData((prevData) => ({

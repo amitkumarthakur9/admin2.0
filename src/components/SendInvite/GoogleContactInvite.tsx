@@ -16,6 +16,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { TableBreadCrumb } from "../BreadCrumbs/TableBreadCrumb";
 import ManualInvite from "./ManualInvite";
 import { Dialog, Portal } from "react-native-paper";
+import RemoteApi from "../../../src/services/RemoteApi";
+import { Center, HStack, Spinner, Heading } from "native-base";
 
 const GoogleContactInvite = () => {
     const [userInfo, setUserInfo] = useState(null);
@@ -27,8 +29,10 @@ const GoogleContactInvite = () => {
     const [modalVisible, setModalVisible] = useState(false);
     const showDialog = () => setModalVisible(true);
     const hideDialog = () => setModalVisible(false);
-    //   const redirectUri = "http://localhost:8081/invite-contact"; // Replace with your redirect URI
-            const redirectUri = "https://vision.kcp.com.in/invite-contact"; // Replace with your redirect URI
+    const [isLoading, setIsLoading] = useState(false);
+
+    // const redirectUri = "http://localhost:8081/invite-contact"; // Replace with your redirect URI
+    const redirectUri = "https://vision.kcp.com.in/invite-contact"; // Replace with your redirect URI
 
     useEffect(() => {
         const getCurrentUrl = async () => {
@@ -61,6 +65,12 @@ const GoogleContactInvite = () => {
 
         getCurrentUrl();
     }, [nowCurrentUrl]);
+
+    useEffect(() => {
+
+
+
+    }, []);
 
     const exchangeCodeForToken = async (code) => {
         try {
@@ -107,6 +117,7 @@ const GoogleContactInvite = () => {
                     const userInfo = await userInfoResponse.json();
 
                     setUserInfo(userInfo);
+                    
                 } else {
                     console.error(
                         "Failed to fetch user info:",
@@ -124,7 +135,52 @@ const GoogleContactInvite = () => {
         }
     };
 
+    const submitContactsDB = async (allContacts) => {
+        // setIsLoading(true);
+        try {
+            console.log("trydata");
+            console.log(allContacts);
+
+            const data = {
+                contacts: allContacts,
+            };
+
+            const response: any = await RemoteApi.post(
+                "onboard/client/save",
+                data
+            );
+
+            if (response?.message == "Success") {
+                console.log(data);
+
+                setContacts(response?.data?.contacts); // Update state with all contacts
+            } else {
+            }
+        } catch (error) {}
+        // setIsLoading(false);
+    };
+
+    // const getContactsDB = async () => {
+    //     setIsLoading(true);
+
+    //     try {
+    //         const response: any = await RemoteApi.get("/onboard/distributor");
+
+    //         if (response?.message == "Success") {
+    //             console.log(response?.data);
+
+    //             setContacts(response?.data);
+    //         } else {
+    //             console.log(response?.errors);
+    //         }
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    //     setIsLoading(false);
+    // };
+
     const getGoogleContacts = async (accessToken) => {
+        // setIsLoading(true);
         try {
             const maxResults = 100; // Set the maximum number of results per page
             let nextPageToken = ""; // Initialize nextPageToken
@@ -151,10 +207,11 @@ const GoogleContactInvite = () => {
                         const email = connection.emailAddresses
                             ? connection.emailAddresses[0].value
                             : "No Email";
-                        const phone = connection.phoneNumbers
+                        const mobileNumber = connection.phoneNumbers
                             ? connection.phoneNumbers[0].value
                             : "No Phone Number";
-                        return { name, email, phone };
+                        const sourceId = 2;
+                        return { name, email, mobileNumber, sourceId };
                     });
 
                     allContacts = allContacts.concat(contacts);
@@ -169,7 +226,29 @@ const GoogleContactInvite = () => {
                 }
             } while (nextPageToken);
 
-            setContacts(allContacts); // Update state with all contacts
+            // setContacts(allContacts); // Update state with all contacts
+            // setIsLoading(false);
+            submitContactsDB(allContacts);
+            // try {
+            //     console.log("trydata");
+            //     console.log(allContacts);
+    
+            //     const data = {
+            //         contacts: allContacts,
+            //     };
+    
+            //     const response: any = await RemoteApi.post(
+            //         "onboard/client/save",
+            //         data
+            //     );
+    
+            //     if (response?.message == "Success") {
+            //         console.log(data);
+    
+            //         setContacts(response?.data?.contacts); // Update state with all contacts
+            //     } else {
+            //     }
+            // } catch (error) {}
         } catch (error) {
             console.error("Error fetching contacts:", error);
         }
@@ -196,10 +275,29 @@ const GoogleContactInvite = () => {
         }
     };
 
-    const sendInvite = () => {
+    const sendInvite = async () => {
         console.log(selectedContacts);
-        showDialog();
-        setUserInfo(null);
+        try {
+            console.log("selectedContacts");
+            console.log(selectedContacts);
+
+            const contactID = {
+                contacts: selectedContacts.map(obj => (obj.id)),
+            };
+
+            const response: any = await RemoteApi.patch(
+                "onboard/client/invite",
+                contactID
+            );
+
+            if (response?.message == "Success") {
+                showDialog();
+                setUserInfo(null);
+            } else {
+            }
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     const filteredContacts = contacts.filter((contact) =>
@@ -227,195 +325,235 @@ const GoogleContactInvite = () => {
     const isSelected = (contact) => selectedContacts.includes(contact);
 
     return (
-        <ScrollView
-            className=""
-            style={{
-                backgroundColor: "white",
-                height: "100%",
-                overflow: "scroll",
-            }}
-        >
-            <View className="bg-white">
-                <View className="">
-                    <TableBreadCrumb name={"Send Invite to Google Contacts"} />
-                </View>
-                <View
+        <>
+            {/* {isLoading ? (
+                <Center>
+                    <HStack
+                        space={2}
+                        marginTop={20}
+                        marginBottom={20}
+                        justifyContent="center"
+                    >
+                        <Spinner
+                            color={"black"}
+                            accessibilityLabel="Loading order"
+                        />
+                        <Heading color="black" fontSize="md">
+                            Loading
+                        </Heading>
+                    </HStack>
+                </Center>
+            ) : ( */}
+                <ScrollView
+                    className=""
                     style={{
-                        flex: 1,
-                        alignItems: "center",
-                        justifyContent: "center",
+                        backgroundColor: "white",
+                        height: "100%",
+                        overflow: "scroll",
                     }}
                 >
-                    {userInfo ? (
+                    <View className="bg-white">
+                        <View className="">
+                            <TableBreadCrumb
+                                name={"Send Invite to Google Contacts"}
+                            />
+                        </View>
                         <View
-                            className={
-                                "mt-4 z-[-1] w-[90%] flex items-center border-[#c8c8c8] border-[0.2px] rounded-[5px]"
-                            }
+                            style={{
+                                flex: 1,
+                                alignItems: "center",
+                                justifyContent: "center",
+                            }}
                         >
-                            <View className="flex w-8/12">
-                                <View className="flex flex-row justify-between py-1">
-                                    <Text className="font-bold text-lg">
-                                        Welcome, {userInfo.name}!
-                                    </Text>
-                                    <Button
-                                        title="Sign Out"
-                                        onPress={() => setUserInfo(null)}
-                                    />
-                                </View>
-
-                                <Text className="font-bold text-md text-center py-2">
-                                    Select Contacts
-                                </Text>
-                                <TextInput
-                                    placeholder="Search name"
-                                    value={searchQuery}
-                                    onChangeText={(text) =>
-                                        setSearchQuery(text)
+                            {userInfo ? (
+                                <View
+                                    className={
+                                        "mt-4 z-[-1] w-[90%] flex items-center border-[#c8c8c8] border-[0.2px] rounded-[5px]"
                                     }
-                                    style={{
-                                        borderWidth: 1,
-                                        borderColor: "#ccc",
-                                        padding: 8,
-                                        marginBottom: 10,
-                                    }}
-                                />
-                                {filteredContacts.length > 0 ? (
-                                    <View>
-                                        <TouchableOpacity
-                                            onPress={toggleSelectAll}
-                                        >
-                                            <Text className="font-semibold text-md border-solid border-b-2 border-gray-600 py-1">
-                                                {selectAll
-                                                    ? "☑️ Deselect All"
-                                                    : "□ Select All"}
+                                >
+                                    <View className="flex w-8/12">
+                                        <View className="flex flex-row justify-between py-1">
+                                            <Text className="font-bold text-lg">
+                                                Welcome, {userInfo.name}!
                                             </Text>
-                                        </TouchableOpacity>
-                                        <FlatList
-                                            data={filteredContacts}
-                                            renderItem={({ item }) => (
+                                            <Button
+                                                title="Sign Out"
+                                                onPress={() => {
+                                                    setUserInfo(null);
+                                                   
+                                                }}
+                                            />
+                                        </View>
+
+                                        <Text className="font-bold text-md text-center py-2">
+                                            Select Contacts
+                                        </Text>
+                                        <TextInput
+                                            placeholder="Search name"
+                                            value={searchQuery}
+                                            onChangeText={(text) =>
+                                                setSearchQuery(text)
+                                            }
+                                            style={{
+                                                borderWidth: 1,
+                                                borderColor: "#ccc",
+                                                padding: 8,
+                                                marginBottom: 10,
+                                            }}
+                                        />
+                                        {filteredContacts.length > 0 ? (
+                                            <View>
                                                 <TouchableOpacity
-                                                    onPress={() =>
-                                                        toggleContactSelection(
-                                                            item
-                                                        )
-                                                    }
+                                                    onPress={toggleSelectAll}
                                                 >
-                                                    <View className="flex flex-row items-center border-solid border-b-1 border-gray-400 overflow-auto justify-between">
-                                                        <View className="w-0.5/12">
-                                                            <Text>
-                                                                {isSelected(
+                                                    <Text className="font-semibold text-md border-solid border-b-2 border-gray-600 py-1">
+                                                        {selectAll
+                                                            ? "☑️ Deselect All"
+                                                            : "□ Select All"}
+                                                    </Text>
+                                                </TouchableOpacity>
+                                                <FlatList
+                                                    data={filteredContacts}
+                                                    renderItem={({ item }) => (
+                                                        <TouchableOpacity
+                                                            onPress={() =>
+                                                                toggleContactSelection(
                                                                     item
                                                                 )
-                                                                    ? "☑️ "
-                                                                    : "□ "}
-                                                            </Text>
-                                                        </View>
-                                                        <View className="w-3/12">
-                                                            <Text>
-                                                                {item.name}
-                                                            </Text>
-                                                        </View>
-                                                        <View className="w-4/12">
-                                                            <Text>
-                                                                {item.email}
-                                                            </Text>
-                                                        </View>
-                                                        <View className="w-4/12">
-                                                            <Text>
-                                                                {item.phone}
-                                                            </Text>
-                                                        </View>
-                                                    </View>
-                                                </TouchableOpacity>
-                                            )}
-                                            keyExtractor={(item, index) =>
-                                                index.toString()
-                                            }
+                                                            }
+                                                        >
+                                                            <View className="flex flex-row items-center border-solid border-b-1 border-gray-400 overflow-auto justify-between">
+                                                                <View className="w-0.5/12">
+                                                                    <Text>
+                                                                        {isSelected(
+                                                                            item
+                                                                        )
+                                                                            ? "☑️ "
+                                                                            : "□ "}
+                                                                    </Text>
+                                                                </View>
+                                                                <View className="w-3/12">
+                                                                    <Text>
+                                                                        {
+                                                                            item.name
+                                                                        }
+                                                                    </Text>
+                                                                </View>
+                                                                <View className="w-4/12">
+                                                                    <Text>
+                                                                        {
+                                                                            item.email
+                                                                        }
+                                                                    </Text>
+                                                                </View>
+                                                                <View className="w-4/12">
+                                                                    <Text>
+                                                                        {
+                                                                            item.mobileNumber
+                                                                        }
+                                                                    </Text>
+                                                                </View>
+                                                            </View>
+                                                        </TouchableOpacity>
+                                                    )}
+                                                    keyExtractor={(
+                                                        item,
+                                                        index
+                                                    ) => index.toString()}
+                                                />
+                                            </View>
+                                        ) : (
+                                            <Text className="font-bold text-md text-center py-2">
+                                                No Contacts
+                                            </Text>
+                                        )}
+
+                                        <View className="py-2">
+                                            <Button
+                                                title="Send Invite"
+                                                onPress={sendInvite}
+                                                disabled={
+                                                    selectedContacts.length ===
+                                                    0
+                                                }
+                                            />
+                                        </View>
+                                    </View>
+                                </View>
+                            ) : (
+                                <View className="w-full flex items-center">
+                                    <View className="flex flex-row justify-center items-center h-40 w-[90%]">
+                                        <Button
+                                            title="Sign In Google"
+                                            onPress={signInWithGoogle}
                                         />
                                     </View>
-                                ) : (
-                                    <Text className="font-bold text-md text-center py-2">
-                                        No Contacts
-                                    </Text>
-                                )}
-
-                                <View className="py-2">
-                                    <Button
-                                        title="Send Invite"
-                                        onPress={sendInvite}
-                                        disabled={selectedContacts.length === 0}
-                                    />
+                                    <ManualInvite />
                                 </View>
-                            </View>
+                            )}
                         </View>
-                    ) : (
-                        <View className="w-full flex items-center">
-                            <View className="flex flex-row justify-center items-center h-40 w-[90%]">
-                                <Button
-                                    title="Sign In Google"
-                                    onPress={signInWithGoogle}
-                                />
-                            </View>
-                            <ManualInvite />
-                        </View>
-                    )}
-                </View>
-            </View>
-            {/* <Button title="Modal" onPress={sendInvite} /> */}
+                    </View>
+                    {/* <Button title="Modal" onPress={sendInvite} /> */}
 
-            <View className="">
-                <Portal>
-                    <Dialog
-                        visible={modalVisible}
-                        onDismiss={hideDialog}
-                        dismissable
-                        style={{
-                            display: "flex",
-                            justifyContent: "flex-start",
-                            alignSelf: "center",
-                            width: 400,
-                            height: "50%",
-                            overflow: "scroll",
-                            backgroundColor: "white",
-                        }}
-                    >
-                        <View className="flex flex-row justify-between p-4">
-                            <Text className="pl-4 text-lg font-bold"></Text>
-
-                            <Pressable
-                                onPress={hideDialog}
-                                className={
-                                    "flex flex-row justify-center items-center border-[1px] rounded px-4 h-[42px] border-slate-200"
-                                }
-                                aria-describedby="addNewClient"
+                    <View className="">
+                        <Portal>
+                            <Dialog
+                                visible={modalVisible}
+                                onDismiss={hideDialog}
+                                dismissable
+                                style={{
+                                    display: "flex",
+                                    justifyContent: "flex-start",
+                                    alignSelf: "center",
+                                    width: 400,
+                                    height: "50%",
+                                    overflow: "scroll",
+                                    backgroundColor: "white",
+                                }}
                             >
-                                <Icon name="close" size={20} color="black" />
-                            </Pressable>
-                        </View>
-                        <View className="flex flex-row justify-center">
-                            <View className="flex flex-col w-1/2 justify-center items-center">
-                                <View
-                                    style={{
-                                        backgroundColor: "#114EA8",
-                                        padding: 10,
-                                        borderRadius: 10,
-                                    }}
-                                >
-                                    <Icon
-                                        name="check"
-                                        size={100}
-                                        color="white"
-                                    />
+                                <View className="flex flex-row justify-between p-4">
+                                    <Text className="pl-4 text-lg font-bold"></Text>
+
+                                    <Pressable
+                                        onPress={hideDialog}
+                                        className={
+                                            "flex flex-row justify-center items-center border-[1px] rounded px-4 h-[42px] border-slate-200"
+                                        }
+                                        aria-describedby="addNewClient"
+                                    >
+                                        <Icon
+                                            name="close"
+                                            size={20}
+                                            color="black"
+                                        />
+                                    </Pressable>
                                 </View>
-                                <Text className="pt-8 text-lg font-bold color-[#114EA8]">
-                                    Invite succesfully sent
-                                </Text>
-                            </View>
-                        </View>
-                    </Dialog>
-                </Portal>
-            </View>
-        </ScrollView>
+                                <View className="flex flex-row justify-center">
+                                    <View className="flex flex-col w-1/2 justify-center items-center">
+                                        <View
+                                            style={{
+                                                backgroundColor: "#114EA8",
+                                                padding: 10,
+                                                borderRadius: 10,
+                                            }}
+                                        >
+                                            <Icon
+                                                name="check"
+                                                size={100}
+                                                color="white"
+                                            />
+                                        </View>
+                                        <Text className="pt-8 text-lg font-bold color-[#114EA8]">
+                                            Invite succesfully sent
+                                        </Text>
+                                    </View>
+                                </View>
+                            </Dialog>
+                        </Portal>
+                    </View>
+                </ScrollView>
+            {/* )} */}
+        </>
     );
 };
 

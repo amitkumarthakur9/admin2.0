@@ -11,6 +11,8 @@ import { useNavigation } from "expo-router";
 import AUMDataTable from "../../../src/components/AUMTables/AUMDataTable";
 
 export default function AUMTabScreen({ roleID }) {
+    console.log("roleID");
+    console.log(roleID);
     return (
         <ScrollView
             className=""

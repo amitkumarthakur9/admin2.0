@@ -64,6 +64,9 @@ export default function AppLayout() {
             const decoded: any = jwtDecode(token);
             console.log(decoded);
             setroleID(decoded.roleId);
+            console.log(decoded.roleId)
+
+            
         }
     }, [token]);
 
@@ -85,6 +88,25 @@ export default function AppLayout() {
     }
 
     const Drawer = createDrawerNavigator();
+
+    let screenForIFA = null;
+
+    if(roleId === 2){
+
+        screenForIFA = <Drawer.Screen
+        name="invite-contact" // This is the name of the page and must match the url from root
+        options={{
+            drawerLabel: "Send Invite",
+            title: "Send Invite",
+            // drawerItemStyle: { display: "none" },
+            unmountOnBlur: true,
+        }}
+        initialParams={{}}
+        component={SendInvite}
+    />
+    }
+    
+
 
     // This layout can be deferred because it's not the root layout.
     // return <PaperProvider theme={PaperTheme}>
@@ -370,6 +392,7 @@ export default function AppLayout() {
                         initialParams={{}}
                         component={AumReconcile}
                     /> */}
+                     {/* {(roleId === 2) && ( */}
                         <Drawer.Screen
                             name="invite-contact" // This is the name of the page and must match the url from root
                             options={{
@@ -381,6 +404,8 @@ export default function AppLayout() {
                             initialParams={{}}
                             component={SendInvite}
                         />
+                        {/* )} */}
+                        {/* {screenForIFA} */}
 
                         {/* <Drawer.Screen
                         name="add-ifa" // This is the name of the page and must match the url from root

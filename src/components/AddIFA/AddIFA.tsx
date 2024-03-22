@@ -37,7 +37,7 @@ import { v4 as uuidv4 } from "uuid";
 
 export default function AddIFAUser() {
     const options = [
-        { label: "RM 1", value: "239" },
+        { label: "RM 1", value: "238" },
         // { label: "RM 2", value: "230" },
         // { label: "RM 3", value: "249" },
         // { label: "RM 4", value: "259" },
@@ -78,12 +78,12 @@ export default function AddIFAUser() {
     //     confirmPassword: "",
     // });
     const [formData, setFormData] = useState({
-        name: "thdfd",
-        email: "dfgd@gmail.com",
+        name: "Saffi",
+        email: "Saffi@gmail.com",
         mobileNumber: "1234567897",
-        arn: "arn-fgfg1234",
+        arn: "DGH1234",
         euin: "123456",
-        rm: "0",
+        rm: "238",
         sexId: "1",
         dateOfBirth: "1990-03-23",
         panNumber: "CVBHG1234T",
@@ -339,16 +339,17 @@ export default function AddIFAUser() {
 
                 if (response?.message == "Success") {
                     const uniqueId = uuidv4();
+                    alert("IFA added succesfully");
                     // Add the success toast to the toasts array in the component's state
-                    setToasts([
-                        ...toasts,
-                        {
-                            id: uniqueId,
-                            variant: "solid",
-                            title: response?.data,
-                            status: "success",
-                        },
-                    ]);
+                    // setToasts([
+                    //     ...toasts,
+                    //     {
+                    //         id: uniqueId,
+                    //         variant: "solid",
+                    //         title: response?.data,
+                    //         status: "success",
+                    //     },
+                    // ]);
                 } else if (
                     response?.message == "Error in Adding User." ||
                     response?.code == 425
@@ -387,6 +388,7 @@ export default function AddIFAUser() {
 
                     // Now you can use the `message` variable as needed
                     console.log(message);
+                    // alert("IFA added Succesfully");
 
                     setToasts([
                         ...toasts,
@@ -399,16 +401,16 @@ export default function AddIFAUser() {
                     ]);
                 }
             } catch (error) {
-                const uniqueId = uuidv4();
-                setToasts([
-                    ...toasts,
-                    {
-                        id: uniqueId,
-                        variant: "solid",
-                        title: "error",
-                        status: "error",
-                    },
-                ]);
+                // const uniqueId = uuidv4();
+                // setToasts([
+                //     ...toasts,
+                //     {
+                //         id: uniqueId,
+                //         variant: "solid",
+                //         title: "error",
+                //         status: "error",
+                //     },
+                // ]);
             }
 
             console.log("Submitted successfully");
@@ -416,17 +418,17 @@ export default function AddIFAUser() {
             // Reset submitted state and clear form data
             setIsSubmitted(false);
             setFormData({
-                name: "thdfd",
-                email: "dfgd@gmail.com",
-                mobileNumber: "123456787",
-                arn: "arn-fgfg1234",
+                name: "Saffi",
+                email: "Saffi@gmail.com",
+                mobileNumber: "1234567898",
+                arn: "ADFG1234",
                 euin: "123456",
                 rm: "0",
                 sexId: "1",
                 dateOfBirth: "1990-03-23",
                 panNumber: "CVBHG1234T",
                 password: "fkdbfk",
-                confirmPassword: "dknfkd",
+                confirmPassword: "fkdbfk",
             });
         } else {
             console.log("Validation failed");
