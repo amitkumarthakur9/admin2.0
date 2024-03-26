@@ -924,14 +924,16 @@ const SipOrderTab = ({
             mutualFundID: IsMFSearch
                 ? mutualFund.id
                 : mutualFund?.mutualfund?.id, //ID of the mutual fund
-            optionTypeID: optionType,
+            optionTypeID: IsMFSearch
+                ? optionType
+                : mutualFund?.mutualfund?.optionType?.id,
             mutualfundDividendTypeID: IsMFSearch
                 ? mutualFund.optionType
                       ?.find((el) => el.id === optionType)
                       .mutualfundDividendType?.find(
                           (el) => el.id === dividendType
                       ).dividendType.id
-                : null, // Reinvest, Payout, NA
+                : mutualFund?.mutualfund?.dividendType?.id, // Reinvest, Payout, NA
             startDate: sipDate,
         });
     };
@@ -1431,7 +1433,11 @@ const RedeemModalCard = ({
             clientID: id,
             folioID: selectedFund?.id,
             type: methodSelect,
+            mutualFundID: selectedFund?.mutualfund?.id,
             value,
+            optionTypeID: selectedFund?.mutualfund?.optionType?.id,
+            mutualfundDividendTypeID:
+                selectedFund?.mutualfund?.dividendType?.id, // Reinvest, Payout, NA
         });
     };
 
