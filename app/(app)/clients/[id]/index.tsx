@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Alert, View } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import {
+    Box,
     Button,
     Center,
     CheckCircleIcon,
@@ -19,6 +20,7 @@ import { useMutation, useQuery } from "react-query";
 import Icon from "react-native-vector-icons/FontAwesome";
 import AntdIcon from "react-native-vector-icons/AntDesign";
 import IonIcon from "react-native-vector-icons/Ionicons";
+import { useToast } from "native-base";
 
 import RemoteApi from "../../../../src/services/RemoteApi";
 import { BreadcrumbShadow } from "../../../../src/components/Styles/Shadow";
@@ -809,6 +811,7 @@ const LumpSumOrderTab = ({
     const { id } = useLocalSearchParams();
 
     const IsMFSearch = isMutualFundSearchResult(mutualFund);
+    const toast = useToast();
 
     const postData = async () => {
         return await ApiRequest.post("/order/purchase", {
@@ -835,13 +838,46 @@ const LumpSumOrderTab = ({
         isError,
         error,
     } = useMutation(postData, {
-        onSuccess: () => {
+        onSuccess: (res: any) => {
             setFolioID(null);
             setInvestmentAmount("5000");
             hideDialog();
+            if (res && res.code > 299) {
+                toast.show({
+                    placement: "top",
+                    render: () => {
+                        return (
+                            <Box bg="red.400" p="2" rounded="sm" mb={5}>
+                                {res.message}
+                            </Box>
+                        );
+                    },
+                });
+            } else {
+                hideDialog();
+                toast.show({
+                    placement: "top",
+                    render: () => {
+                        return (
+                            <Box bg="green.400" p="2" rounded="sm" mb={5}>
+                                {res.message}
+                            </Box>
+                        );
+                    },
+                });
+            }
         },
         onError: () => {
-            hideDialog();
+            toast.show({
+                placement: "top",
+                render: () => {
+                    return (
+                        <Box bg="red.400" p="2" rounded="sm" mb={5}>
+                            Error while creating order
+                        </Box>
+                    );
+                },
+            });
         },
     });
 
@@ -912,6 +948,7 @@ const SipOrderTab = ({
     const [folioID, setFolioID] = useState(null);
     const [investmentAmount, setInvestmentAmount] = useState("0");
     const [sipDate, setSipDate] = useState();
+    const toast = useToast();
 
     const { id } = useLocalSearchParams();
 
@@ -943,13 +980,43 @@ const SipOrderTab = ({
         isError,
         error,
     } = useMutation(postData, {
-        onSuccess: () => {
-            console.log("Success");
-            hideDialog();
+        onSuccess: (res: any) => {
+            if (res && res.code > 299) {
+                toast.show({
+                    placement: "top",
+                    render: () => {
+                        return (
+                            <Box bg="red.400" p="2" rounded="sm" mb={5}>
+                                {res.message}
+                            </Box>
+                        );
+                    },
+                });
+            } else {
+                hideDialog();
+                toast.show({
+                    placement: "top",
+                    render: () => {
+                        return (
+                            <Box bg="green.400" p="2" rounded="sm" mb={5}>
+                                {res.message}
+                            </Box>
+                        );
+                    },
+                });
+            }
         },
         onError: () => {
-            console.log("Error while doing data thing");
-            hideDialog();
+            toast.show({
+                placement: "top",
+                render: () => {
+                    return (
+                        <Box bg="red.400" p="2" rounded="sm" mb={5}>
+                            Error while creating order
+                        </Box>
+                    );
+                },
+            });
         },
     });
     return (
@@ -1430,9 +1497,11 @@ const RedeemModalCard = ({
 
     const postData = async () => {
         return await ApiRequest.post("/order/redeem", {
-            clientID: id,
+            accountID: id,
             folioID: selectedFund?.id,
-            type: methodSelect,
+            amount: methodSelect === "amount" ? value : 0,
+            units: methodSelect === "units" ? value : 0,
+            method: methodSelect,
             mutualFundID: selectedFund?.mutualfund?.id,
             value,
             optionTypeID: selectedFund?.mutualfund?.optionType?.id,
@@ -1445,17 +1514,49 @@ const RedeemModalCard = ({
         setSelectedFolio(value);
         setFolio(folios?.data?.find((el) => el.id === value));
     };
+    const toast = useToast();
 
     const {
         mutate: redeem,
         isError,
         error,
     } = useMutation(postData, {
-        onSuccess: () => {
-            console.log("Success");
+        onSuccess: (res: any) => {
+            if (res && res.code > 299) {
+                toast.show({
+                    placement: "top",
+                    render: () => {
+                        return (
+                            <Box bg="red.400" p="2" rounded="sm" mb={5}>
+                                {res.message}
+                            </Box>
+                        );
+                    },
+                });
+            } else {
+                toast.show({
+                    placement: "top",
+                    render: () => {
+                        return (
+                            <Box bg="green.400" p="2" rounded="sm" mb={5}>
+                                {res.message}
+                            </Box>
+                        );
+                    },
+                });
+            }
         },
         onError: () => {
-            console.log("Error while doing data thing");
+            toast.show({
+                placement: "top",
+                render: () => {
+                    return (
+                        <Box bg="green.400" p="2" rounded="sm" mb={5}>
+                            Some error occurred while creating redeem order
+                        </Box>
+                    );
+                },
+            });
         },
     });
 
@@ -1610,7 +1711,7 @@ const RedeemModalCard = ({
                                 onPress={() => redeem()}
                                 className="rounded-lg mt-4"
                             >
-                                Invest
+                                Redeem
                             </Button>
                         </View>
                     ) : (
