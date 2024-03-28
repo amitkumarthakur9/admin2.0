@@ -45,21 +45,90 @@ import DataValue from "../../../src/components/DataValue/DataValue";
 import DataText from "../../../src/components/DataValue/DataText";
 import { dateFormat } from "../../../src/helper/DateUtils";
 import { getTransactionMessage } from "../../../src/helper/StatusInfo";
+import {
+    IFADetailData,
+    IfaDetailResponse,
+} from "../../../src/interfaces/IfaResponseInterface";
 
-export default function AUMDetail() {
+export default function IFADetail() {
     const { id } = useLocalSearchParams();
-    const [data, setData] = useState<AUMDetailInterface>();
+    const [data, setData] = useState<IFADetailData>();
     const [isLoading, setIsLoading] = useState(true);
     const { height, width } = useWindowDimensions();
+
+    const dummyData = {
+        id: "1",
+        name: "EESHAN SHUKLAA",
+        panNumber: "MALPS3268K",
+        arn: "ARNS3268K",
+        euin: "EUINS3268K",
+        activeAccountCount: 20,
+        activeSipCount: 37,
+        aum: {
+            total: 3968.7522999999997,
+            breakDown: [
+                {
+                    category: "Debt",
+                    currentValue: 2154.6,
+                },
+                {
+                    category: "Equity",
+                    currentValue: 1814.1522999999997,
+                },
+            ],
+        },
+        clientCount: 337,
+        transaction: {
+            purchase: 5278,
+            redemption: 0,
+            totalSipTransactions: 1,
+            totalSipTransactionsFailed: 34,
+        },
+        order: {
+            lumpsum: {
+                total: 14600,
+            },
+            sip: {
+                monthlySipAmount: 278098,
+                sipCount: 37,
+                breakDown: [
+                    {
+                        category: "Debt",
+                        count: 4,
+                    },
+                    {
+                        category: "Equity",
+                        count: 33,
+                    },
+                    {
+                        category: "Hybrid",
+                        count: 0,
+                    },
+                    {
+                        category: "Other",
+                        count: 0,
+                    },
+                    {
+                        category: "Solution Oriented",
+                        count: 0,
+                    },
+                ],
+                newSip: 34,
+            },
+        },
+    };
 
     useEffect(() => {
         setIsLoading(true);
         async function getOrderDetails() {
-            const response: AUMDetailResponseInterface = await RemoteApi.get(
-                `folio/${id}`
+            const response: IfaDetailResponse = await RemoteApi.get(
+                `distributor/${id}`
             );
             if (response) {
                 setData(response.data);
+                setIsLoading(false);
+            } else {
+                setData(dummyData);
                 setIsLoading(false);
             }
         }
@@ -98,7 +167,7 @@ export default function AUMDetail() {
                                 <Pressable
                                     className="mr-3"
                                     onPress={() =>
-                                        console.log("This will go back ")
+                                        router.push(`distributor/list}`)
                                     }
                                 >
                                     <Icon
@@ -111,7 +180,7 @@ export default function AUMDetail() {
                                     selectable
                                     className="text-base flex flex-row text-center font-bold"
                                 >
-                                    Folio Details
+                                    IFA Details
                                 </Text>
                             </View>
                             <View
@@ -126,7 +195,8 @@ export default function AUMDetail() {
                                             selectable
                                             className="text-lg font-bold text-start"
                                         >
-                                            Folio Number: {data.folioNumber}
+                                            IFA Name:{" "}
+                                            {data?.name || "EESHAN SHUKLAA"}
                                         </Text>
                                     </View>
                                     <View className="flex flex-row justify-between items-start w-full">
@@ -136,13 +206,13 @@ export default function AUMDetail() {
                                                     className="text-bold font-medium text-gray-500 mr-2"
                                                     selectable
                                                 >
-                                                    Client Name:
+                                                    ARN:
                                                 </Text>
                                                 <Text
                                                     selectable
                                                     className="font-medium text-start text-black"
                                                 >
-                                                    {data?.account?.name}
+                                                    {data?.arn || "ARN23456"}
                                                 </Text>
                                             </View>
                                             <View className="flex flex-row items-center">
@@ -150,13 +220,13 @@ export default function AUMDetail() {
                                                     className="text-bold font-medium text-gray-500 mr-2"
                                                     selectable
                                                 >
-                                                    Client Code:
+                                                    EUIN:
                                                 </Text>
                                                 <Text
                                                     selectable
                                                     className="font-medium text-start text-black"
                                                 >
-                                                    {data?.account?.clientId}
+                                                    {data?.euin || "EUIN23456"}
                                                 </Text>
                                             </View>
                                             <View className="flex flex-row items-center">
@@ -170,10 +240,8 @@ export default function AUMDetail() {
                                                     selectable
                                                     className="font-medium text-start text-black"
                                                 >
-                                                    {
-                                                        data?.account?.user
-                                                            ?.panNumber
-                                                    }
+                                                    {data?.panNumber ||
+                                                        "PAN23456"}
                                                 </Text>
                                             </View>
                                         </View>
@@ -186,26 +254,13 @@ export default function AUMDetail() {
                                                 StyleSheet.hairlineWidth,
                                         }}
                                     />
-                                    
                                     <View className="flex flex-row py-2 items-center w-full flex-wrap ">
                                         <View
                                             className={
                                                 "flex flex-row items-center justify-start w-8/12"
                                             }
                                         >
-                                            <Image
-                                                alt="fundHouse"
-                                                className="mr-2"
-                                                style={{
-                                                    width: 40,
-                                                    height: 40,
-                                                    objectFit: "contain",
-                                                }}
-                                                source={{
-                                                    uri: data.mutualfund
-                                                        ?.logoUrl,
-                                                }}
-                                            />
+                                            
                                             <View
                                                 className={
                                                     "flex flex-col justify-end items-start"
@@ -215,40 +270,10 @@ export default function AUMDetail() {
                                                     selectable
                                                     className="text-black font-semibold break-all text-sm flex-wrap"
                                                 >
-                                                    {data?.mutualfund?.name ||
-                                                        "-"}
+
                                                 </Text>
 
-                                                <View className="flex flex-row items-center flex-wrap">
-                                                    <Text
-                                                        selectable
-                                                        className=" text-blacktext-xs"
-                                                    >
-                                                        {data?.mutualfund
-                                                            ?.category
-                                                            
-                                                             || "-"}
-                                                    </Text>
-                                                    <View className="mx-2">
-                                                        <Icon
-                                                            name="circle"
-                                                            style={{
-                                                                fontWeight:
-                                                                    "100",
-                                                            }}
-                                                            size={8}
-                                                            color="grey"
-                                                        />
-                                                    </View>
-                                                    <Text
-                                                        selectable
-                                                        className="text-black text-xs"
-                                                    >
-                                                        {data?.mutualfund
-                                                            ?.Subcategory
-                                                            || "-"}
-                                                    </Text>
-                                                </View>
+                                                
                                             </View>
                                         </View>
                                     </View>
@@ -256,63 +281,65 @@ export default function AUMDetail() {
                                     <View className="flex flex-row py-2 justify-between items-start w-full">
                                         <View className="w-4/12 flex-flex-col gap-4 px-2">
                                             <DataValue
-                                                key="optionType"
-                                                title="Option Type"
-                                                value={data?.mutualfund?.optionType }
+                                                key="purchase"
+                                                title="Purchase"
+                                                value={data?.transaction?.purchase ? RupeeSymbol + data?.transaction?.purchase : "5278"}
                                             />
                                             <DataValue
-                                                key="currentValue"
-                                                title="Current Value"
-                                                value={
-                                                    data.currentValue
-                                                        ? RupeeSymbol +
-                                                          data.currentValue
-                                                        : "-"
-                                                }
+                                                key="redemption"
+                                                title="Redemption"
+                                                value={data?.transaction?.redemption ? RupeeSymbol + data?.transaction?.redemption : "0"}
                                             />
-                                            <DataValue
-                                                key="createdDate"
-                                                title="Created Date"
-                                                // value={dateFormat("")}
-                                                value="23/01/2024"
+                                             <DataValue
+                                                key="totalLumpsum"
+                                                title="Total Lumpsum"
+                                                value={data?.order?.lumpsum?.total ? RupeeSymbol + data?.order?.lumpsum?.total : "14600"}
                                             />
                                         </View>
                                         <View className="w-4/12 flex-flex-col gap-4 px-2">
                                             <DataValue
-                                                key="dividendType"
-                                                title="Dividend Type"
-                                                value={data?.mutualfund?.dividendType}
+                                                key="totalSipTransactions"
+                                                title="Total Sip Transactions"
+                                                value={data?.transaction?.totalSipTransactions || "1"}
                                             />
                                             <DataValue
-                                                key="investedValue"
-                                                title="Invested Value"
-                                                value={
-                                                    data.investedValue
-                                                        ? RupeeSymbol +
-                                                          data.investedValue
-                                                        : "-"
-                                                }
+                                                key="totalSipTransactionsFailed"
+                                                title="Total Sip Transactions Failed"
+                                                value={data?.transaction?.totalSipTransactionsFailed || "34"}
                                             />
-                                            <DataValue
-                                                key="xirr"
-                                                title="XIRR"
-                                                value={data?.xirr}
-                                            />
+                                          
                                         </View>
                                         <View className="w-4/12 flex-flex-col gap-4 px-2">
+                                           
                                             <DataValue
-                                                key="rta"
-                                                title="RTA"
-                                                value={data?.mutualfund?.fundhouse?.rta?.name}
+                                                key="monthlySipAmount"
+                                                title="Monthly Sip Amount"
+                                                value={data?.order?.sip?.monthlySipAmount ? RupeeSymbol + data?.order?.sip?.monthlySipAmount : "278098"}
+
+                                            />
+                                                                                        <DataValue
+                                                key="sipCount"
+                                                title="SIP Count"
+                                                value={data?.order?.sip?.sipCount ||  "37"}
+
                                             />
                                             <DataValue
-                                                key="returns"
-                                                title="Returns"
-                                                value={data?.investedValue && data?.currentValue ? (data?.currentValue - data?.investedValue) : "-"
-                            }
+                                                key="newSip"
+                                                title="New SIP"
+                                                value={data?.order?.sip?.newSip ||  "34"}
+
                                             />
                                         </View>
                                     </View>
+                                </View>
+                            </View>
+
+                            <View className="flex flex-row justify-between rounded bg-white h-128">
+                                <View
+                                    className="w-full h-full rounded"
+                                    style={{ ...BreadcrumbShadow }}
+                                >
+                                    <AUMBreakDown data={dummyData} />
                                 </View>
                             </View>
                             <View className="flex flex-row justify-between rounded bg-white h-128">
@@ -320,7 +347,7 @@ export default function AUMDetail() {
                                     className="w-full h-full rounded"
                                     style={{ ...BreadcrumbShadow }}
                                 >
-                                    <TransactionsList data={data} />
+                                    <SIPBreakDown data={dummyData} />
                                 </View>
                             </View>
                         </View>
@@ -331,66 +358,43 @@ export default function AUMDetail() {
     );
 }
 
-const TransactionsList = ({ data }: { data: AUMDetailInterface }) => {
+// const AUMBreakDown = ({ data }: { data: IFADetailData }) => {
+const AUMBreakDown = (data) => {
+    console.log("aumbrekdown" + JSON.stringify(data));
 
-    const transactionData = data?.transactions?.map((item) => {
+    const transactionData = data?.aum?.breakDown.map((item) => {
         return [
             {
-                key: "amount",
+                key: "category",
                 content: (
                     <View className="flex flex-row justify-center ">
-                        <DataText value={RupeeSymbol + item?.amount} />
+                        <DataText value={item?.category} />
                     </View>
                 ),
             },
             {
-                key: "units",
-                content: <DataText value={item?.units} />,
-            },
-            {
-                key: "paymentDate",
-                content: <DataText value={dateFormat(item?.paymentDate)} />,
-            },
-            {
-                key: "nav",
-                content: <DataText value={item?.nav ? RupeeSymbol + item?.nav : "-"} />,
-            },
-            {
-                key: "status",
-                content:                     <View className='flex flex-row items-center w-12/12 justify-start'>
-                <View className='flex flex-col rounded-full w-8/12 items-center justify-center'>
-                    <View className='flex flex-row items-center justify-center w-11/12'>
-                        <Popover trigger={triggerProps => {
-                            return <TouchableOpacity {...triggerProps}>
-                                <Icon name="info-circle" size={12} color="black" />
-                            </TouchableOpacity>;
-                        }}>
-                            <Popover.Content accessibilityLabel="Order Details" w="56">
-                                <Popover.Arrow />
-                                <Popover.CloseButton />
-                                <Popover.Header>{item?.transactionStatus?.name}</Popover.Header>
-                                <Popover.Body>
-                                    <View>
-                                        <Text>{getTransactionMessage(item?.transactionStatus?.name)}</Text>
-                                    </View>
-                                </Popover.Body>
-                            </Popover.Content>
-                        </Popover>
-                        <Text selectable className='p-1 text-black text-end md:text-center text-xs'>{item?.transactionStatus?.name}&nbsp;</Text>
-
+                key: "currentValue",
+                content: (
+                    <View className="flex flex-row justify-center ">
+                        <DataText value={RupeeSymbol + item?.currentValue} />
                     </View>
-                </View>
-            </View>,
+                ),
             },
         ];
     });
 
+    console.log("transactionData" + JSON.stringify(transactionData));
 
     return (
         <View className="flex-1 bg-white rounded shadow h-full overflow-auto p-2">
-            <View className={`flex flex-row items-center w-full justify-start`}>
+            <View
+                className={`flex flex-row items-center w-full justify-between`}
+            >
                 <Text selectable className="text-lg font-bold text-start">
-                    Transactions
+                    AUM Breakdown
+                </Text>
+                <Text selectable className="text-lg font-bold text-start">
+                    Total AUM: {data?.aum?.total || "2345566"}
                 </Text>
             </View>
             <View
@@ -402,8 +406,57 @@ const TransactionsList = ({ data }: { data: AUMDetailInterface }) => {
             />
             <DataTable
                 key="siplist"
-                headers={["Amount", "Units", "Payment Date", "NAV", "Status"]}
-                cellSize={[1, 1, 1, 1, 1]}
+                headers={["Category", "CurrentValue"]}
+                cellSize={[4, 4]}
+                rows={transactionData}
+            />
+        </View>
+    );
+};
+
+// const SIPBreakDown = ({ data }: { data: IFADetailData }) => {
+const SIPBreakDown = (data) => {
+    const transactionData = data?.order?.sip?.breakDown.map((item) => {
+        return [
+            {
+                key: "category",
+                content: (
+                    <View className="flex flex-row justify-center ">
+                        <DataText value={item?.category} />
+                    </View>
+                ),
+            },
+            {
+                key: "currentValue",
+                content: (
+                    <View className="flex flex-row justify-center ">
+                        <DataText value={RupeeSymbol + item?.count} />
+                    </View>
+                ),
+            },
+        ];
+    });
+
+    
+
+    return (
+        <View className="flex-1 bg-white rounded shadow h-full overflow-auto p-2">
+            <View className={`flex flex-row items-center w-full justify-start`}>
+                <Text selectable className="text-lg font-bold text-start">
+                    SIP Breakdown
+                </Text>
+            </View>
+            <View
+                className="my-2"
+                style={{
+                    borderColor: "#e4e4e4",
+                    borderBottomWidth: StyleSheet.hairlineWidth,
+                }}
+            />
+            <DataTable
+                key="siplist"
+                headers={["Category", "Count"]}
+                cellSize={[4, 4]}
                 rows={transactionData}
             />
         </View>

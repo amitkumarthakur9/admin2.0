@@ -16,7 +16,7 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import { router, useLocalSearchParams, useRouter } from "expo-router";
 import IconCard from "../Card/IconCard";
 import AvatarCard from "../Card/AvatarCard";
-import { RupeeSymbol } from "../../../src/helper/helper";
+import { RupeeSymbol, aumChartPercentage, sipChartPercentage } from "../../../src/helper/helper";
 import BorderCard from "../Card/BorderCard";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import DonutPieChart from "../Chart/DonutPieChart";
@@ -34,7 +34,13 @@ const IFADashboard = () => {
     const [selectedOption, setSelectedOption] = useState("");
     const [receivedData1, setReceivedData1] = useState(null);
     const [receivedData2, setReceivedData2] = useState(null);
+    const [aumPercentage, setAumPercentage] = useState([]);
+    const [sipPercentage, setSipPercentage] = useState([]);
     const [data, setData] = useState<DashboardData>();
+
+
+
+
     useEffect(() => {
         setIsLoading(true);
         async function getDetails() {
@@ -42,8 +48,12 @@ const IFADashboard = () => {
                 `dashboard/?d=2`
             );
             if (response) {
-                setData(response.data);
+                setData(response?.data);
+                setAumPercentage(aumChartPercentage(response?.data?.aum?.breakDown ))   ;
+                setSipPercentage(sipChartPercentage(response?.data?.order?.sip?.breakDown));
                 setIsLoading(false);
+                console.log(aumPercentage);
+                console.log(sipPercentage);
             }
         }
 
@@ -173,37 +183,28 @@ const IFADashboard = () => {
         y: item.count,
     }));
 
-    console.log(sipBreakdownChart);
+    // console.log(sipBreakdownChart);
 
-    const aumBreakdownChart = data?.aum?.breakDown.map((item) => ({
-        x: item.category,
-        y: item.currentValue,
-    }));
+    // const aumBreakdownChart = data?.aum?.breakDown.map((item) => ({
+    //     x: item.category,
+    //     y: item.currentValue,
+    // }));
 
-    console.log(sipBreakdownChart);
+    // console.log("aumBreakdownChart: ", JSON.stringify(aumBreakdownChart));
 
-    const breakDown = [
-        {
-            "category": "Debt",
-            "currentValue": 2154.6
-        },
-        {
-            "category": "Equity",
-            "currentValue": 1814.1522999999997
-        }
-    ];
-    
-    // Step 1: Calculate the total value of all categories
-    const totalValue = breakDown.reduce((total, category) => total + category.currentValue, 0);
-    
-    // Step 2: Calculate the percentage of each category
-    const categoryPercentages = breakDown.map(category => ({
-        category: category.category,
-        percentage: (category.currentValue / totalValue) * 100
-    }));
-    
-    console.log(categoryPercentages);
-    
+    // const breakDown = [
+    //     {
+    //         "category": "Debt",
+    //         "currentValue": 2154.6
+    //     },
+    //     {
+    //         "category": "Equity",
+    //         "currentValue": 1814.1522999999997
+    //     }
+    // ];
+
+
+
 
     return (
         <>
@@ -301,7 +302,7 @@ const IFADashboard = () => {
                                                 <View className="flex flex-col w-5/12  rounded bg-white h-auto gap-1">
                                                     <IconCard
                                                         icon="wallet-outline"
-                                                        title="Total Lumpsun Investment"
+                                                        title="Total Lumpsum Investment"
                                                         description={
                                                             data?.order?.lumpsum
                                                                 ?.total
@@ -371,25 +372,24 @@ const IFADashboard = () => {
                                                         //         x: data?.aum?.breakDown[1].category,
                                                         //         y: data?.aum?.breakDown[1].currentValue.toFixed(2),
                                                         //     },
-                                                           
+
                                                         // ]}
 
-                                                        pieData={[
-                                                            {
-                                                                x: "Debt",
-                                                                y: 54.2,
-                                                            },
-                                                            {
-                                                                x: "Equity",
-                                                                y: 45.8,
-                                                            },
-                                                           
-                                                        ]}
+                                                        // pieData={[
+                                                        //     {
+                                                        //         x: "Debt",
+                                                        //         y: 54.2,
+                                                        //     },
+                                                        //     {
+                                                        //         x: "Equity",
+                                                        //         y: 45.8,
+                                                        //     },
 
-                                                        
+                                                        // ]}
 
-                                                        // pieData = {[aumBreakdownChart]}
-                                            
+                                                        pieData={aumPercentage
+                                                            
+                                                        }
                                                     />
                                                 </View>
                                             </View>
@@ -422,27 +422,27 @@ const IFADashboard = () => {
 
                                                 <View>
                                                     <DonutPieChart
-                                                        pieData={[
-                                                            {
-                                                                x: "Equity",
-                                                                y: 20,
-                                                            },
-                                                            {
-                                                                x: "Hybrid",
-                                                                y: 29,
-                                                            },
-                                                            {
-                                                                x: "Debt",
-                                                                y: 35,
-                                                            },
-                                                            {
-                                                                x: "Others",
-                                                                y: 25,
-                                                            },
-                                                        ]}
                                                         // pieData={[
-                                                        //     sipBreakdownChart,
+                                                        //     {
+                                                        //         x: "Equity",
+                                                        //         y: 20,
+                                                        //     },
+                                                        //     {
+                                                        //         x: "Hybrid",
+                                                        //         y: 29,
+                                                        //     },
+                                                        //     {
+                                                        //         x: "Debt",
+                                                        //         y: 35,
+                                                        //     },
+                                                        //     {
+                                                        //         x: "Others",
+                                                        //         y: 25,
+                                                        //     },
                                                         // ]}
+                                                        pieData={
+                                                            sipPercentage
+                                                        }
                                                     />
                                                 </View>
                                             </View>
@@ -552,28 +552,48 @@ const IFADashboard = () => {
                                             }
                                         />
                                         <BorderCard
-                                            title="Redemptiom"
-                                            description={data?.transaction?.redemption ? 
-                                                RupeeSymbol + data?.transaction?.redemption : RupeeSymbol +"0"
+                                            title="Redemption"
+                                            description={
+                                                data?.transaction?.redemption
+                                                    ? RupeeSymbol +
+                                                      data?.transaction
+                                                          ?.redemption
+                                                    : RupeeSymbol + "0"
                                             }
                                         />
                                         <BorderCard
                                             title="Inactive/Cancelled SIPs"
-                                            description={data?.transaction?.totalSipTransactionsFailed ? 
-                                                 data?.transaction?.totalSipTransactionsFailed :"0"
+                                            description={
+                                                data?.transaction
+                                                    ?.totalSipTransactionsFailed
+                                                    ? data?.transaction
+                                                          ?.totalSipTransactionsFailed
+                                                    : "0"
                                             }
                                         />
                                     </View>
                                     <View className="flex flex-col w-[49%]">
                                         <BorderCard
                                             title="New SIPs"
-                                            description={data?.order?.sip?.newSip ? data?.order?.sip?.newSip : "0"}
+                                            description={
+                                                data?.order?.sip?.newSip
+                                                    ? data?.order?.sip?.newSip
+                                                    : "0"
+                                            }
                                         />
                                         <BorderCard
                                             title="No. of successful SIPs"
-                                            description={data?.transaction?.totalSipTransactionsFailed && data?.transaction?.totalSipTransactions? 
-                                                (data?.transaction?.totalSipTransactions - data?.transaction?.totalSipTransactionsFailed) :"0"
-                                           }
+                                            description={
+                                                data?.transaction
+                                                    ?.totalSipTransactionsFailed &&
+                                                data?.transaction
+                                                    ?.totalSipTransactions
+                                                    ? data?.transaction
+                                                          ?.totalSipTransactions -
+                                                      data?.transaction
+                                                          ?.totalSipTransactionsFailed
+                                                    : "0"
+                                            }
                                         />
                                         <BorderCard
                                             title="No. of SIP Bounce"

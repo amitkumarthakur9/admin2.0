@@ -45,6 +45,8 @@ import SendInvite from "./invite-contact";
 import AddIfaRm from "./add-ifa-rm";
 import { jwtDecode } from "jwt-decode";
 import { useEffect, useState } from "react";
+import IFAReportsScreen from "./ifa";
+import IFADetail from "./ifa/[id]";
 
 NativeWindStyleSheet.setOutput({
     default: "native",
@@ -64,9 +66,7 @@ export default function AppLayout() {
             const decoded: any = jwtDecode(token);
             console.log(decoded);
             setroleID(decoded.roleId);
-            console.log(decoded.roleId)
-
-            
+            console.log(decoded.roleId);
         }
     }, [token]);
 
@@ -91,22 +91,21 @@ export default function AppLayout() {
 
     let screenForIFA = null;
 
-    if(roleId === 2){
-
-        screenForIFA = <Drawer.Screen
-        name="invite-contact" // This is the name of the page and must match the url from root
-        options={{
-            drawerLabel: "Send Invite",
-            title: "Send Invite",
-            // drawerItemStyle: { display: "none" },
-            unmountOnBlur: true,
-        }}
-        initialParams={{}}
-        component={SendInvite}
-    />
+    if (roleId === 2) {
+        screenForIFA = (
+            <Drawer.Screen
+                name="invite-contact" // This is the name of the page and must match the url from root
+                options={{
+                    drawerLabel: "Send Invite",
+                    title: "Send Invite",
+                    // drawerItemStyle: { display: "none" },
+                    unmountOnBlur: true,
+                }}
+                initialParams={{}}
+                component={SendInvite}
+            />
+        );
     }
-    
-
 
     // This layout can be deferred because it's not the root layout.
     // return <PaperProvider theme={PaperTheme}>
@@ -379,6 +378,28 @@ export default function AppLayout() {
                                     initialParams={{}}
                                     component={AddIfaRm}
                                 />
+                                <Drawer.Screen
+                                    name="ifa-report/index" // This is the name of the page and must match the url from root
+                                    options={{
+                                        drawerLabel: "IFA Report",
+                                        title: "IFA Report",
+                                        unmountOnBlur: true,
+                                    }}
+                                    initialParams={{}}
+                                    component={IFAReportsScreen}
+                                />
+
+                                <Drawer.Screen
+                                    name="ifa/[id]" // This is the name of the page and must match the url from root
+                                    options={{
+                                        drawerLabel: "IFADetail",
+                                        title: "IFADetail",
+                                        drawerItemStyle: { display: "none" },
+                                        unmountOnBlur: true,
+                                    }}
+                                    initialParams={{}}
+                                    component={IFADetail}
+                                />
                             </>
                         )}
 
@@ -392,7 +413,7 @@ export default function AppLayout() {
                         initialParams={{}}
                         component={AumReconcile}
                     /> */}
-                     {/* {(roleId === 2) && ( */}
+                        {/* {(roleId === 2) && ( */}
                         <Drawer.Screen
                             name="invite-contact" // This is the name of the page and must match the url from root
                             options={{

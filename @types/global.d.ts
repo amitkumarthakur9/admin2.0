@@ -19,6 +19,12 @@ declare global {
         kycStatus?: string;
         panNumber?: string;
         isActive: boolean;
+        distributor: {
+            id: string;
+            name: string;
+        },
+        lastInvestment: string;
+
     }
 
     interface ClientDetailedDataResponse {

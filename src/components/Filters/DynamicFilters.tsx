@@ -48,7 +48,7 @@ export const DynamicFilters = ({
     setAppliedFilers,
     downloadApi = "",
     fileName = "",
-    newComponent=null,
+    newComponent = null,
 }) => {
     const filtersSchema = schemaResponse?.filters;
     const [modalVisible, setModalVisible] = useState(false);
@@ -398,33 +398,35 @@ export const DynamicFilters = ({
                             />
                         )}
                     </View>
-                    {
-                        newComponent 
-                    }
-                    <View className="flex flex-row lg:mt-0">
-                        <Pressable
-                            onPress={downloadReport}
-                            className={
-                                "flex flex-row justify-center items-center border-[1px] rounded px-4 h-[42px] border-slate-200"
-                            }
-                            accessibilityLabel="Download"
-                        >
-                            {isDownloadProcessing ? (
-                                <Spinner
-                                    color={"black"}
-                                    size={14}
-                                    accessibilityLabel="Loading"
-                                />
-                            ) : (
-                                <Icon
-                                    name="download"
-                                    size={14}
-                                    color="#484848"
-                                />
-                            )}
-                            {<Text className="mx-2">Download</Text>}
-                        </Pressable>
-                    </View>
+                    {newComponent}
+                    {downloadApi === "" ? (
+                        <View></View>
+                    ) : (
+                        <View className="flex flex-row lg:mt-0">
+                            <Pressable
+                                onPress={downloadReport}
+                                className={
+                                    "flex flex-row justify-center items-center border-[1px] rounded px-4 h-[42px] border-slate-200"
+                                }
+                                accessibilityLabel="Download"
+                            >
+                                {isDownloadProcessing ? (
+                                    <Spinner
+                                        color={"black"}
+                                        size={14}
+                                        accessibilityLabel="Loading"
+                                    />
+                                ) : (
+                                    <Icon
+                                        name="download"
+                                        size={14}
+                                        color="#484848"
+                                    />
+                                )}
+                                {<Text className="mx-2">Download</Text>}
+                            </Pressable>
+                        </View>
+                    )}
                 </View>
             </View>
         </View>

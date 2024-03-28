@@ -81,7 +81,7 @@ export default function ManualInvite() {
 
     return (
         <View
-            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+            // style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
         >
             <View className="flex flex-row lg:mt-0">
                 <Pressable
@@ -93,7 +93,7 @@ export default function ManualInvite() {
                 >
                     {/* <Icon name="plus" size={14} color="#484848" /> */}
 
-                    {<Text className="mx-2">Send invite manually</Text>}
+                    {<Text className="mx-2">Add Contact</Text>}
                 </Pressable>
                 <Portal>
                     <Dialog
@@ -218,7 +218,7 @@ export default function ManualInvite() {
                                         bgColor={"#013974"}
                                         onPress={handleSubmit}
                                     >
-                                        Send Invite
+                                        Add Contact
                                     </Button>
                                 </View>
                             </View>
