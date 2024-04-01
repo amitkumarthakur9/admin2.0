@@ -25,10 +25,11 @@ import { getInitials } from "../../helper/helper";
 import DataTable from "../DataTable/DataTable";
 import Tag from "../Tag/Tag";
 import AddNewClient from "./AddNewClient";
+import { useUserRole } from "../../../src/context/useRoleContext";
 
 const ClientsDataTable = () => {
+    const { roleId } = useUserRole();
     const [isLoading, setIsLoading] = React.useState(false);
-
     const [currentPageNumber, setCurrentPageNumber] = useState(1);
     const [totalItems, setTotalItems] = useState(0);
     const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -94,7 +95,7 @@ const ClientsDataTable = () => {
     }, [appliedSorting]);
 
     const transformedData = data?.map((item) => {
-        return [
+        const itemStructure = [
             {
                 key: "clientName",
                 content: (
@@ -135,7 +136,7 @@ const ClientsDataTable = () => {
                             </View>
                             <View className="flex flex-row items-center mt-0">
                                 {!item?.kycStatus && <Tag>KYC Not Done</Tag>}
-                                <Tag>SIP(N/A)</Tag>
+                                <Tag>SIP({item?.activeSip})</Tag>
                                 <Tag>Autopay active</Tag>
                             </View>
                         </View>
@@ -162,7 +163,7 @@ const ClientsDataTable = () => {
                 key: "doi",
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
-                        {"-"}
+                        -
                     </Text>
                 ),
             },
@@ -175,7 +176,7 @@ const ClientsDataTable = () => {
                                 selectable
                                 className="text-[#686868] font-semibold"
                             >
-                                Lumpsum Amount: 56,000
+                                -
                             </Text>
                         </View>
                         <View className="flex flex-row items-center mt-0">
@@ -183,13 +184,27 @@ const ClientsDataTable = () => {
                                 selectable
                                 className="text-[#686868] font-semibold"
                             >
-                                Jul 26, 2023, 1:38 PM
+                                -
                             </Text>
                         </View>
                     </View>
                 ),
             },
         ];
+
+        // Conditionally add an additional object based on roleId to index 2
+        if (roleId > 2) {
+            itemStructure.splice(2, 0, {
+                key: "distributor",
+                content: (
+                    <Text selectable className="text-[#686868] font-semibold">
+                        {item?.distributor?.name}
+                    </Text>
+                ),
+            });
+        }
+
+        return itemStructure;
     });
 
     return (
@@ -216,6 +231,19 @@ const ClientsDataTable = () => {
                     <ScrollView className={"mt-4 z-[-1] "}>
                         {width < 830 ? (
                             <MobileClientsRows data={data} schema={null} />
+                        ) : roleId > 2 ? (
+                            <DataTable
+                                headers={[
+                                    "Name",
+                                    "PAN No",
+                                    "Distributor",
+                                    "Client Code",
+                                    "Client DOI",
+                                    "Last Investment",
+                                ]}
+                                cellSize={[3, 1, 2, 2, 2, 2]}
+                                rows={transformedData}
+                            />
                         ) : (
                             <DataTable
                                 headers={[

@@ -22,9 +22,9 @@ declare global {
         distributor: {
             id: string;
             name: string;
-        },
+        };
         lastInvestment: string;
-
+        activeSip: number;
     }
 
     interface ClientDetailedDataResponse {
