@@ -13,11 +13,7 @@ const axiosInstance = axios.create({
 // Set up a response interceptor to handle errors
 axiosInstance.interceptors.response.use(
     (response: AxiosResponse) => {
-        if (response.status === 200) {
-            return response;
-        } else {
-            return;
-        }
+        return response;
     },
     (error: AxiosError) => {
         // console.error('API Error:', error.toJSON());
