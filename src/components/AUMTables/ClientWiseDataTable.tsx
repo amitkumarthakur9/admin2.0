@@ -121,7 +121,7 @@ const ClientWiseDataTable = () => {
                                 </Pressable>
 
                                 <View className="flex flex-row items-center">
-                                    {item?.kycStatus?.isAllowedToTransact ? (
+                                    {item?.isActive == true ? (
                                         <CheckCircleIcon
                                             color="emerald.500"
                                             size="xs"
@@ -135,9 +135,9 @@ const ClientWiseDataTable = () => {
                                 </View>
                             </View>
                             <View className="flex flex-row items-center mt-0">
-                            {!item?.kycStatus?.name && <Tag>KYC Not Done</Tag>}
-                                <Tag>SIP(N/A)</Tag>
-                                <Tag>Autopay active</Tag>
+                            {item?.kycStatus?.name=="Verified" ? <Tag>KYC Done</Tag> : <Tag>KYC Not Done</Tag>}
+                                {/* <Tag>SIP(N/A)</Tag> */}
+                                {/* <Tag>Autopay active</Tag> */}
                             </View>
                         </View>
                     </View>
@@ -179,7 +179,7 @@ const ClientWiseDataTable = () => {
                 key: "XIRR",
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
-                        20.87%
+                       {item?.xirr ? item?.xirr + "%": "0%"}  
                     </Text>
                 ),
             },
@@ -244,7 +244,7 @@ const ClientWiseDataTable = () => {
                                 "Returns",
                                 // "",
                             ]}
-                            cellSize={[4, 1, 1, 1, 1, 1, 1, ]}
+                            cellSize={[3, 2, 1, 1, 1, 1, 1, ]}
                             rows={transformedData}
                         />
                     </ScrollView>

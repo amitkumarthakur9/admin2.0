@@ -101,9 +101,27 @@ const IFAWiseDataTable = () => {
             {
                 key: "ifa",
                 content: (
-                    <Text selectable className="text-[#686868] font-semibold">
+                    <View>
+                        {/* <Pressable
+                            onPress={() =>
+                                router.push(`clients/${item?.mutualfund?.id}`)
+                            }
+                        >
+                            <Text
+                                selectable
+                                className="flex flex-row text-black font-semibold break-all"
+                            >
+                                {item?.name
+                                    ? item?.name
+                                    : "-"}
+                            </Text>
+                        </Pressable> */}
+                        <Text selectable className="text-[#686868] font-semibold">
                         {item?.name ? item?.name : "-"}
                     </Text>
+
+                    </View>
+                    
                 ),
             },
             {
@@ -111,7 +129,7 @@ const IFAWiseDataTable = () => {
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
                         {item?.investedValue
-                            ? RupeeSymbol + item?.investedValue
+                            ? RupeeSymbol + item?.investedValue.toFixed(2)
                             : "-"}
                     </Text>
                 ),
@@ -121,23 +139,23 @@ const IFAWiseDataTable = () => {
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
                         {item?.currentValue
-                            ? RupeeSymbol + item?.currentValue
+                            ? RupeeSymbol + item?.currentValue.toFixed(2)
                             : "-"}
                     </Text>
                 ),
             },
-            {
-                key: "detail",
-                content: (
-                    <View className="flex w-10/12 justify-center">
-                        <Pressable
-                            onPress={() => router.push("clients/${client.id}")}
-                        >
-                            <Icon name="ellipsis-v" size={18} color="grey" />
-                        </Pressable>
-                    </View>
-                ),
-            },
+            // {
+            //     key: "detail",
+            //     content: (
+            //         <View className="flex w-10/12 justify-center">
+            //             <Pressable
+            //                 onPress={() => router.push("clients/${client.id}")}
+            //             >
+            //                 <Icon name="ellipsis-v" size={18} color="grey" />
+            //             </Pressable>
+            //         </View>
+            //     ),
+            // },
         ];
     });
 
@@ -167,9 +185,9 @@ const IFAWiseDataTable = () => {
                                 "IFA Name",
                                 "Total Invested",
                                 "Current Value",
-                                "",
+                                // "",
                             ]}
-                            cellSize={[3, 3, 3, 1]}
+                            cellSize={[3, 3, 3,]}
                             rows={transformedData}
                         />
                     </ScrollView>

@@ -26,14 +26,17 @@ interface Contact {
 
 interface Data {
     data: Contact[];
+    filterCount: number;
+    totalCount: number;
+    error: any[];
+    count: number;
 }
 
 interface ContactResponse {
     code: number;
     message: string;
     data: Data;
-    error: any[];
-    count: number;
-    filterCount: number;
-    totalCount: number;
+  
+   
+    
 }

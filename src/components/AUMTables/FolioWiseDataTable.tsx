@@ -139,22 +139,22 @@ const FolioWiseDataTable = () => {
                                             color="orange.500"
                                         />
                                     )} */}
-                                    <CheckCircleIcon
+                                    {/* <CheckCircleIcon
                                         color="emerald.500"
                                         size="xs"
-                                    />
+                                    /> */}
                                 </View>
                             </View>
                             <View className="flex flex-row flex-wrap items-center mt-0 w-11/12">
-                                <Tag>
-                                    KYC{" "}
+                                {/* <Tag>
+                                    KYC{" "} */}
                                     {/* {item?.users[0]?.kycStatus
                                         ?.isAllowedToTransact
                                         ? "Done"
                                         : "Not Done"} */}
-                                </Tag>
-                                <Tag>SIP(N/A)</Tag>
-                                <Tag>Autopay active</Tag>
+                                {/* </Tag> */}
+                                {/* <Tag>SIP(N/A)</Tag> */}
+                                {/* <Tag>Autopay active</Tag> */}
                             </View>
                         </View>
                     </View>
@@ -164,6 +164,21 @@ const FolioWiseDataTable = () => {
                 key: "SchemeName",
                 content: (
                     <View className="flex flex-col justify-start w-11/12">
+                        {/* <Pressable
+                            onPress={() =>
+                                router.push(`clients/${item?.mutualfund?.id}`)
+                            }
+                        >
+                            <Text
+                                selectable
+                                className="flex flex-row text-black font-semibold break-all"
+                            >
+                                {item?.mutualfund?.name
+                                    ? item?.mutualfund?.name
+                                    : "-"}
+                            </Text>
+                        </Pressable> */}
+
                         <Text selectable className="text-black font-semibold">
                             {item?.mutualfund?.name ? item?.mutualfund?.name : "-"}
                         </Text>
@@ -175,6 +190,10 @@ const FolioWiseDataTable = () => {
                             {item?.mutualfund?.optionType?.name ? " - " + item?.mutualfund?.optionType?.name : "-" }
                             {item?.mutualfund?.dividendType?.name && item?.mutualfund?.dividendType?.name!=="NA" ? " - " + item?.mutualfund?.dividendType?.name : "" }
                         </Text>
+                        {/* <Text selectable className="text-[#686868] font-semibold text-xs">
+                        {item?.mutualfund?.category ? item?.mutualfund?.category : "" }
+                        {item?.mutualfund?.subCategory ? " - " + item?.mutualfund?.subCategory : "" }
+                        </Text> */}
                     </View>
                 ),
             },
@@ -300,7 +319,7 @@ const FolioWiseDataTable = () => {
                                 "Returns",
                                 // "",
                             ]}
-                            cellSize={[3, 2, 1, 1, 1, 1, 1, 1,]}
+                            cellSize={[2, 2, 1, 1, 1, 1, 1, 1,]}
                             rows={transformedData}
                         />
                     </ScrollView>

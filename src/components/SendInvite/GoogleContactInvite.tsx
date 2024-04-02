@@ -37,7 +37,7 @@ const GoogleContactInvite = () => {
     const [selectAll, setSelectAll] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const [inviteModalVisible, setModalVisible] = useState(false);
-
+    const [dbContact, setDbContacts] = useState(false);
     const [GooglemodalVisible, setGooglemodalVisible] = useState(false);
     const [filteredContacts, setFilteredContacts] = useState(contacts);
 
@@ -98,7 +98,37 @@ const GoogleContactInvite = () => {
         getCurrentUrl();
     }, [nowCurrentUrl]);
 
-    useEffect(() => {}, []);
+    useEffect(() => {
+        async function getContactList(
+            updatedFilterValues = [],
+            applyDirectly = false
+        ) {
+            setIsLoading(true);
+            let data: any = {
+                page: 1,
+                limit: 10,
+                filters: false,
+            };
+
+            const response: ContactResponse = await RemoteApi.post(
+                "onboard/client/list",
+                data
+            );
+
+            if (response.code == 200) {
+                if (response.data.data.length > 0) {
+                    setDbContacts(true);
+                }
+
+                console.log(
+                    "response.data.data.length" + response.data.data.length
+                );
+            } else {
+            }
+        }
+
+        getContactList();
+    }, []);
 
     const exchangeCodeForToken = async (code) => {
         try {
@@ -419,9 +449,7 @@ const GoogleContactInvite = () => {
             >
                 <View className="bg-white">
                     <View className="">
-                        <TableBreadCrumb
-                            name={"Send Invite"}
-                        />
+                        <TableBreadCrumb name={"Send Invite"} />
                     </View>
                     <View
                         style={{
@@ -430,7 +458,7 @@ const GoogleContactInvite = () => {
                             // justifyContent: "center",
                         }}
                     >
-                        {userInfo ? (
+                        {userInfo || dbContact ? (
                             <ContactDataTable />
                         ) : (
                             // <View
@@ -675,8 +703,6 @@ const GoogleContactInvite = () => {
                             //     </View>
                             // </View>
                             <>
-                                
-
                                 <View
                                     style={{
                                         flex: 1,
@@ -713,9 +739,8 @@ const GoogleContactInvite = () => {
                                 </View>
 
                                 <View className="flex flex-row justify-center items-center  p-4 h-[42px">
-                                <ManualInvite/>
+                                    <ManualInvite />
                                 </View>
-                                
 
                                 {/* <ContactDataTable /> */}
                             </>
@@ -1011,7 +1036,7 @@ const GoogleContactInvite = () => {
                                                                                         {item
                                                                                             .status
                                                                                             .name ==
-                                                                                        "google" ? (
+                                                                                        "Invited" ? (
                                                                                             <View>
                                                                                                 <Text className="text-slate-500">
                                                                                                     Invite
@@ -1074,7 +1099,7 @@ const GoogleContactInvite = () => {
                                                         )}
                                                     </View>
 
-                                                    <View className="py-2">
+                                                    <View className="">
                                                         <Button
                                                             title="Send Invite"
                                                             onPress={sendInvite}
@@ -1082,6 +1107,7 @@ const GoogleContactInvite = () => {
                                                                 selectedContacts.length ===
                                                                 0
                                                             }
+                                                            
                                                         />
                                                     </View>
                                                 </View>

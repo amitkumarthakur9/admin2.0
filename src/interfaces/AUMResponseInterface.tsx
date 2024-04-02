@@ -160,6 +160,8 @@ interface ClientWiseData {
     investedValue: number;
     kycStatus: KycStatus;
     panNumber: string;
+    xirr:  number;
+    isActive: boolean;
 }
 
 interface KycStatus {

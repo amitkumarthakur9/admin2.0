@@ -16,10 +16,12 @@ import {
     Text,
     WarningIcon,
     WarningOutlineIcon,
+    useToast,
 } from "native-base";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Dialog, Portal } from "react-native-paper";
 import RemoteApi from "../../../src/services/RemoteApi";
+import { ToastAlert } from "../../../src/helper/CustomToaster";
 
 export default function ManualInvite() {
     const [modalVisible, setModalVisible] = useState(false);
@@ -30,6 +32,56 @@ export default function ManualInvite() {
         email: "",
         phone: "",
     });
+    const toast = useToast();
+    const [errors, setErrors] = useState({
+        name: null,
+        email: null,
+        phone: null,
+    });
+    const newErrors = {
+        name: null,
+        email: null,
+        phone: null,
+        
+    }; // Initialize empty error object
+    const [isSubmitted, setIsSubmitted] = useState(false);
+
+
+    const validate = () => {
+        // Name validation
+        if (!formData.name) {
+            newErrors.name = "Name is required";
+        } else {
+            newErrors.name = null; // Clear error message if validation passes
+        }
+
+
+        // phone number validation
+        const phoneRegex = /^\d{10}$/;
+        if (!phoneRegex.test(formData.phone)) {
+            newErrors.phone = !formData.phone
+                ? "phone number is required"
+                : "Please enter a valid 10-digit phone number";
+        } else {
+            newErrors.phone = null; // Clear error message if validation passes
+        }
+
+        // Email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(formData.email)) {
+            newErrors.email = !formData.email
+                ? "Email is required"
+                : "Please enter a valid email address";
+        } else {
+            newErrors.email = null; // Clear error message if validation passes
+        }
+
+        // Update the error state
+        setErrors(newErrors);
+
+        // Return validation result
+        return Object.values(newErrors).every((error) => error === null); // Return true if there are no errors
+    };
 
 
     const handleSubmit = async () => {
@@ -37,36 +89,104 @@ export default function ManualInvite() {
 
         console.log(formData);
 
-      const  data =  {
-            contacts: [
-                {
-                    name: formData.name,
-                    email: formData.email,
-                    mobileNumber: formData.phone,
-                    sourceId: 1,
-                }
-            ]
-        }
+        setIsSubmitted(true);
+
+        const isValid = validate();
+
+        if (isValid) {
 
 
-        try {
-            console.log("ManualContact");
-            console.log(data);
-
-            const response: any = await RemoteApi.post(
-                "onboard/client/save",
-                data
-            );
-
-            if (response?.message == "Success") {
-               
-            } else {
+            const  data =  {
+                contacts: [
+                    {
+                        name: formData.name,
+                        email: formData.email,
+                        mobileNumber: formData.phone,
+                        sourceId: 1,
+                    }
+                ]
             }
-        } catch (error) {
-            console.log(error);
+    
+    
+            try {
+                console.log("ManualContact");
+                console.log(data);
+                // throw new Error('This is an explicitly thrown error');
+                const response: any = await RemoteApi.post(
+                    "onboard/client/save",
+                    data
+                );
+    
+                // const response = {
+                //     message: "success",
+                //     error: "blunder"
+                // }
+    
+                if (response?.message == "Success") {
+                    hideDialog()
+    
+                    toast.show({
+                        render: () => (
+                          <ToastAlert
+                            id={123} // Unique identifier for the toast
+                            status="success" // Toast status (success, error, warning, info)
+                            variant="solid" // Toast variant (solid, subtle, left-accent, top-accent)
+                            title="Success" // Toast title
+                            description="Contact added succesfully" // Toast description
+                            isClosable = {false} // Whether the toast is closable
+                            toast={toast} // Pass the toast function to close the toast
+                          />
+                        ),
+                        duration: 1000
+                      });
+    
+                      setFormData({
+                        name: "",
+                        email: "",
+                        phone: "",
+                    });
+                   
+                } else {
+                }
+            } catch (error) {
+                hideDialog()
+                console.log(error);
+                toast.show({
+                render: () => (
+                  <ToastAlert
+                    id={123} // Unique identifier for the toast
+                    status="error" // Toast status (success, error, warning, info)
+                    variant="solid" // Toast variant (solid, subtle, left-accent, top-accent)
+                    title={error} // Toast title
+                    description={error} // Toast description
+                    isClosable = {false} // Whether the toast is closable
+                    toast={toast} // Pass the toast function to close the toast
+                  />
+                ),
+                duration: 1500
+              });
+            }
+        } else {
+          
+            // toast.show({
+            //     render: () => (
+            //       <ToastAlert
+            //         id={123} // Unique identifier for the toast
+            //         status="Warning" // Toast status (success, error, warning, info)
+            //         variant="solid" // Toast variant (solid, subtle, left-accent, top-accent)
+            //         title="Validation error" // Toast title
+            //         description="Validation error" // Toast description
+            //         isClosable = {false} // Whether the toast is closable
+            //         toast={toast} // Pass the toast function to close the toast
+            //       />
+            //     ),
+            //     duration: 1500
+            //   });
         }
 
-        hideDialog()
+
+
+      
     };
 
 
@@ -134,7 +254,7 @@ export default function ManualInvite() {
                                 <View className="gap-4">
                                     <FormControl
                                         isRequired
-                                        isInvalid={false}
+                                        isInvalid={errors.name !== null}
                                         w="100%"
                                         maxW="300px"
                                     >
@@ -150,18 +270,16 @@ export default function ManualInvite() {
                                                 handleChange("name", value)
                                             }
                                         />
-                                        <FormControl.ErrorMessage
-                                            leftIcon={
-                                                <WarningOutlineIcon size="xs" />
-                                            }
-                                        >
-                                            Try different from previous
-                                            passwords.
-                                        </FormControl.ErrorMessage>
+                                        {"name" in errors && (
+                                <FormControl.ErrorMessage>
+                                    {errors.name}
+                                </FormControl.ErrorMessage>
+                            )}
+                                        
                                     </FormControl>
                                     <FormControl
                                         isRequired
-                                        isInvalid={false}
+                                        isInvalid={errors.email !== null}
                                         w="100%"
                                         maxW="300px"
                                     >
@@ -177,18 +295,16 @@ export default function ManualInvite() {
                                                 handleChange("email", value)
                                             }
                                         />
-                                        <FormControl.ErrorMessage
-                                            leftIcon={
-                                                <WarningOutlineIcon size="xs" />
-                                            }
-                                        >
-                                            Try different from previous
-                                            passwords.
-                                        </FormControl.ErrorMessage>
+                                        {"email" in errors && (
+                                <FormControl.ErrorMessage>
+                                    {errors.email}
+                                </FormControl.ErrorMessage>
+                            )}
+                                       
                                     </FormControl>
                                     <FormControl
                                         isRequired
-                                        isInvalid={false}
+                                        isInvalid={errors.phone !== null}
                                         w="100%"
                                         maxW="300px"
                                     >
@@ -204,14 +320,15 @@ export default function ManualInvite() {
                                                 handleChange("phone", value)
                                             }
                                         />
-                                        <FormControl.ErrorMessage
-                                            leftIcon={
-                                                <WarningOutlineIcon size="xs" />
-                                            }
-                                        >
-                                            Try different from previous
-                                            passwords.
-                                        </FormControl.ErrorMessage>
+                                        {errors.phone ? (
+                                <FormControl.ErrorMessage>
+                                    {errors.phone}
+                                </FormControl.ErrorMessage>
+                            ) : (
+                                <FormControl.HelperText>
+                                    Enter 10 digit mobileNumber Number.
+                                </FormControl.HelperText>
+                            )}
                                     </FormControl>
                                     <Button
                                         width="100%"

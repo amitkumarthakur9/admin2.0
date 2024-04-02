@@ -111,7 +111,7 @@ const RMWiseDataTable = () => {
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
                         {item?.investedValue
-                            ? RupeeSymbol + item?.investedValue
+                            ? RupeeSymbol + item?.investedValue.toFixed(2)
                             : "-"}
                     </Text>
                 ),
@@ -121,27 +121,27 @@ const RMWiseDataTable = () => {
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
                         {item?.currentValue
-                            ? RupeeSymbol + item?.currentValue
+                            ? RupeeSymbol + item?.currentValue.toFixed(2)
                             : "-"}
                     </Text>
                 ),
             },
-            {
-                key: "detail",
-                content: (
-                    <View className="flex w-10/12 justify-center">
-                        <Pressable
-                        onPress={() =>
-                            router.push('clients/${client.id}')
-                        }
-                    >
-                        <Icon name="ellipsis-v" size={18} color="grey" />
-                    </Pressable>
+            // {
+            //     key: "detail",
+            //     content: (
+            //         <View className="flex w-10/12 justify-center">
+            //             <Pressable
+            //             onPress={() =>
+            //                 router.push('clients/${client.id}')
+            //             }
+            //         >
+            //             <Icon name="ellipsis-v" size={18} color="grey" />
+            //         </Pressable>
 
-                    </View>
+            //         </View>
                     
-                ),
-            },
+            //     ),
+            // },
         ];
     });
 
@@ -171,9 +171,9 @@ const RMWiseDataTable = () => {
                                 "RM Name",
                                 "Invested Amount",
                                 "Current Amount",
-                                "",
+                                // "",
                             ]}
-                            cellSize={[3, 3, 3, 1]}
+                            cellSize={[3, 3, 3,]}
                             rows={transformedData}
                         />
                     </ScrollView>

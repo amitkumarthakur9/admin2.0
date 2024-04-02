@@ -106,9 +106,25 @@ const SchemeWiseDataTable = () => {
             {
                 key: "schemeName",
                 content: (
+                    <View className="w-[99%]">
+                    {/* <Pressable
+                            onPress={() =>
+                                router.push(`clients/${item?.mutualfund?.id}`)
+                            }
+                        >
+                            <Text
+                                selectable
+                                className="flex flex-row text-black font-semibold break-all"
+                            >
+                                {item?.mutualfund?.name
+                                    ? item?.mutualfund?.name
+                                    : "-"}
+                            </Text>
+                        </Pressable> */}
                     <Text selectable className="text-[#686868] font-semibold">
                         {item?.name ? item?.name : "-"}
                     </Text>
+                    </View>
                 ),
             },
             {

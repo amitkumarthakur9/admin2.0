@@ -190,7 +190,7 @@ export const SIPRows = ({
                                                         &nbsp;
                                                     </Text>
                                                 </Pressable>
-                                                <Popover
+                                                {/* <Popover
                                                     trigger={(triggerProps) => {
                                                         return (
                                                             <TouchableOpacity
@@ -222,7 +222,7 @@ export const SIPRows = ({
                                                             </View>
                                                         </Popover.Body>
                                                     </Popover.Content>
-                                                </Popover>
+                                                </Popover> */}
                                             </View>
                                             <View className="flex flex-row items-center mt-1 md:mt-0 lg:mt-0">
                                                 <Text

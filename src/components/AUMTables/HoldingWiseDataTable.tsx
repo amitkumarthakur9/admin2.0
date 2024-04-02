@@ -109,7 +109,9 @@ const HoldingWiseDataTable = () => {
                             <View className="flex flex-row items-center text-black font-semibold flex-wrap w-11/12 mb-2">
                                 <Pressable
                                     onPress={() =>
-                                        router.push(`clients/${item?.id}`)
+                                        router.push(
+                                            `clients/${item?.account?.id}`
+                                        )
                                     }
                                 >
                                     <Text
@@ -121,23 +123,23 @@ const HoldingWiseDataTable = () => {
                                 </Pressable>
 
                                 <View className="flex flex-row items-center">
-                                    {item?.isActive ? (
-                                        <CheckCircleIcon
-                                            color="emerald.500"
-                                            size="xs"
-                                        />
-                                    ) : (
-                                        <WarningIcon
+                                    {/* {item?.isActive ? ( */}
+                                    {/* <CheckCircleIcon
+                                        color="emerald.500"
+                                        size="xs"
+                                    /> */}
+                                    {/* ) : ( */}
+                                    {/* <WarningIcon
                                             size="xs"
                                             color="orange.500"
-                                        />
-                                    )}
+                                        /> */}
+                                    {/* )} */}
                                 </View>
                             </View>
                             <View className="flex flex-row items-center mt-0">
-                            {!item?.kycStatus && <Tag>KYC Not Done</Tag>}
+                                {/* {!item?.kycStatus && <Tag>KYC Not Done</Tag>}
                                 <Tag>SIP(N/A)</Tag>
-                                <Tag>Autopay active</Tag>
+                                <Tag>Autopay active</Tag> */}
                             </View>
                         </View>
                     </View>
@@ -147,13 +149,46 @@ const HoldingWiseDataTable = () => {
                 key: "SchemeName",
                 content: (
                     <View className="flex flex-col justify-start w-11/12">
-                        <Text selectable className="text-black font-semibold">
-                        {item?.mutualfund?.name ?item?.mutualfund?.name : "-" }
+                        <Pressable
+                            onPress={() =>
+                                router.push(`clients/${item?.mutualfund?.id}`)
+                            }
+                        >
+                            <Text
+                                selectable
+                                className="flex flex-row text-black font-semibold break-all"
+                            >
+                                {item?.mutualfund?.name
+                                    ? item?.mutualfund?.name
+                                    : "-"}
+                            </Text>
+                        </Pressable>
+
+                        <Text
+                            selectable
+                            className="text-[#686868] font-semibold text-xs"
+                        >
+                            {item?.mutualfund?.deliveryType?.name
+                                ? item?.mutualfund?.deliveryType?.name
+                                : ""}
+                            {item?.mutualfund?.optionType?.name
+                                ? " - " + item?.mutualfund?.optionType?.name
+                                : ""}
+                            {item?.mutualfund?.dividendType?.name &&
+                            item?.mutualfund?.dividendType?.name !== "NA"
+                                ? " - " + item?.mutualfund?.dividendType?.name
+                                : ""}
                         </Text>
-                        <Text selectable className="text-[#686868] font-semibold text-xs">
-                        {item?.mutualfund?.deliveryType?.name ? item?.mutualfund?.deliveryType?.name : "" }
-                        {item?.mutualfund?.optionType?.name ? " - " + item?.mutualfund?.optionType?.name : "" }
-                        {item?.mutualfund?.dividendType?.name && item?.mutualfund?.dividendType?.name!=="NA" ? " - " + item?.mutualfund?.dividendType?.name : "" }
+                        <Text
+                            selectable
+                            className="text-[#686868] font-semibold text-xs"
+                        >
+                            {item?.mutualfund?.category
+                                ? item?.mutualfund?.category
+                                : ""}
+                            {item?.mutualfund?.subCategory
+                                ? " - " + item?.mutualfund?.subCategory
+                                : ""}
                         </Text>
                     </View>
                 ),
@@ -162,7 +197,9 @@ const HoldingWiseDataTable = () => {
                 key: "totalInvested",
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
-                       {item?.investedValue ? RupeeSymbol + item?.investedValue : RupeeSymbol + "0"} 
+                        {item?.investedValue
+                            ? RupeeSymbol + item?.investedValue
+                            : RupeeSymbol + "0"}
                     </Text>
                 ),
             },
@@ -170,7 +207,9 @@ const HoldingWiseDataTable = () => {
                 key: "currentValue",
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
-                     {item?.currentValue ? RupeeSymbol + item?.currentValue : RupeeSymbol + "0"} 
+                        {item?.currentValue
+                            ? RupeeSymbol + item?.currentValue
+                            : RupeeSymbol + "0"}
                     </Text>
                 ),
             },
@@ -178,7 +217,7 @@ const HoldingWiseDataTable = () => {
                 key: "XIRR",
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
-                     {item?.xirr ?  item?.xirr :  "-"} 
+                        {item?.xirr ? item?.xirr : "-"}
                     </Text>
                 ),
             },
@@ -186,8 +225,12 @@ const HoldingWiseDataTable = () => {
                 key: "returns",
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
-                     {item?.investedValue && item?.currentValue ? RupeeSymbol + (item?.currentValue - item?.investedValue).toFixed(2) : RupeeSymbol +"0"
-                            }
+                        {item?.investedValue && item?.currentValue
+                            ? RupeeSymbol +
+                              (
+                                  item?.currentValue - item?.investedValue
+                              ).toFixed(2)
+                            : RupeeSymbol + "0"}
                     </Text>
                 ),
             },
@@ -204,7 +247,7 @@ const HoldingWiseDataTable = () => {
             //         </Pressable>
 
             //         </View>
-                    
+
             //     ),
             // },
         ];
@@ -230,20 +273,20 @@ const HoldingWiseDataTable = () => {
                 />
 
                 {!isLoading ? (
-                    <ScrollView className={"mt-4 z-[-1] "}>                    
-                            <DataTable
-                                headers={[
-                                    "Client Name",
-                                    "Scheme Name",
-                                    "Total invested",
-                                    "Current Value",
-                                    "XIRR",
-                                    "Returns",
-                                    // "",
-                                ]}
-                                cellSize={[4, 2, 1, 1,1, 1]}
-                                rows={transformedData}
-                            />
+                    <ScrollView className={"mt-4 z-[-1] "}>
+                        <DataTable
+                            headers={[
+                                "Client Name",
+                                "Scheme Name",
+                                "Total invested",
+                                "Current Value",
+                                "XIRR",
+                                "Returns",
+                                // "",
+                            ]}
+                            cellSize={[3, 3, 1, 1, 1, 1]}
+                            rows={transformedData}
+                        />
                     </ScrollView>
                 ) : (
                     <HStack

@@ -1,3 +1,6 @@
+import { jwtDecode } from "jwt-decode";
+import { useStorageState } from "../../src/services/useStorageState";
+
 export const getInitials = (name: string) => {
     if(!name) return "-"
     const words = name.split(" ");
@@ -67,6 +70,39 @@ export const sipChartPercentage = (breakDown) => {
     });
 
     return categoryPercentages;
+};
+
+
+export const roldID = () => {
+    const [[isLoading, token], setToken] = useStorageState("token");
+    // const [roleId, setroleID] = useState(null);
+    // useEffect(() => {
+        
+    if (token) {
+        const decoded: any = jwtDecode(token);
+        console.log(decoded);
+        // setroleID(decoded.roleId);
+        console.log(decoded.roleId);
+        return decoded.roleId;
+    }
+
+    
+};
+
+export const RMid = () => {
+    const [[isLoading, token], setToken] = useStorageState("token");
+    // const [roleId, setroleID] = useState(null);
+    // useEffect(() => {
+        
+    if (token) {
+        const decoded: any = jwtDecode(token);
+        console.log(decoded);
+        // setroleID(decoded.roleId);
+        console.log(decoded.roleId);
+        return {roldeID: decoded.roleId, rmID: decoded._id,};
+    }
+
+    
 };
 
 

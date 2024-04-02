@@ -16,7 +16,12 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import { router, useLocalSearchParams, useRouter } from "expo-router";
 import IconCard from "../Card/IconCard";
 import AvatarCard from "../Card/AvatarCard";
-import { RupeeSymbol, aumChartPercentage, sipChartPercentage } from "../../../src/helper/helper";
+import {
+    RupeeSymbol,
+    aumChartPercentage,
+    roldID,
+    sipChartPercentage,
+} from "../../../src/helper/helper";
 import BorderCard from "../Card/BorderCard";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import DonutPieChart from "../Chart/DonutPieChart";
@@ -27,6 +32,8 @@ import {
     DashboardResponse,
 } from "../../../src/interfaces/DashboardInterface";
 import RemoteApi from "../../../src/services/RemoteApi";
+import { jwtDecode } from "jwt-decode";
+import { useStorageState } from "../../../src/services/useStorageState";
 
 const IFADashboard = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -37,9 +44,17 @@ const IFADashboard = () => {
     const [aumPercentage, setAumPercentage] = useState([]);
     const [sipPercentage, setSipPercentage] = useState([]);
     const [data, setData] = useState<DashboardData>();
+    // const [role, setRole] = useState(null);
 
+    // useEffect(()=>{
 
+    //     const roles = roldID();
 
+    //     setRole(roles);
+
+    // })
+
+    const role = roldID();
 
     useEffect(() => {
         setIsLoading(true);
@@ -49,8 +64,12 @@ const IFADashboard = () => {
             );
             if (response) {
                 setData(response?.data);
-                setAumPercentage(aumChartPercentage(response?.data?.aum?.breakDown ))   ;
-                setSipPercentage(sipChartPercentage(response?.data?.order?.sip?.breakDown));
+                setAumPercentage(
+                    aumChartPercentage(response?.data?.aum?.breakDown)
+                );
+                setSipPercentage(
+                    sipChartPercentage(response?.data?.order?.sip?.breakDown)
+                );
                 setIsLoading(false);
                 console.log(aumPercentage);
                 console.log(sipPercentage);
@@ -203,9 +222,6 @@ const IFADashboard = () => {
     //     }
     // ];
 
-
-
-
     return (
         <>
             {isLoading ? (
@@ -247,11 +263,11 @@ const IFADashboard = () => {
                                     selectable
                                     className="text-base flex flex-row text-center font-bold"
                                 >
-                                    IFA Dashboard
+                                    Dashboard
                                 </Text>
                             </View>
 
-                            <View className="flex flex-row justify-between rounded bg-[#eaf3fe] pr-2">
+                            <View className="flex flex-row justify-between rounded bg-[#eaf3fe] pr-2 ">
                                 <View className=" flex flex-row w-full gap-2">
                                     {" "}
                                     {/* outer Card */}
@@ -387,9 +403,7 @@ const IFADashboard = () => {
 
                                                         // ]}
 
-                                                        pieData={aumPercentage
-                                                            
-                                                        }
+                                                        pieData={aumPercentage}
                                                     />
                                                 </View>
                                             </View>
@@ -440,9 +454,7 @@ const IFADashboard = () => {
                                                         //         y: 25,
                                                         //     },
                                                         // ]}
-                                                        pieData={
-                                                            sipPercentage
-                                                        }
+                                                        pieData={sipPercentage}
                                                     />
                                                 </View>
                                             </View>
@@ -450,8 +462,8 @@ const IFADashboard = () => {
                                     </View>
                                     <View className="w-4/12 rounded bg-white p-4">
                                         <View className="flex flex-row justify-between">
-                                            <View>
-                                                <Text className="text-black">
+                                            <View className="">
+                                                <Text className="text-black font-bold">
                                                     Notification
                                                 </Text>
                                             </View>
@@ -477,8 +489,8 @@ const IFADashboard = () => {
                                                 apiUrl="sip"
                                             />
                                         </View>
-                                        <View className="h-auto">
-                                            <View className="h-96 overflow-scroll">
+                                        <View className="">
+                                            <View className="h-[350px] overflow-scroll">
                                                 {notificationData.map(
                                                     (item, index) => (
                                                         <AvatarCard
@@ -664,7 +676,8 @@ const IFADashboard = () => {
                                     <Text className="font-bold ">
                                         Inactive Client
                                     </Text>
-                                    <View className=" h-48 overflow-scroll">
+                                    <View className="">
+                                    <View className=" h-56 overflow-scroll">
                                         {topClientData.map((item, index) => (
                                             <AvatarCard
                                                 key={index}
@@ -674,8 +687,323 @@ const IFADashboard = () => {
                                             />
                                         ))}
                                     </View>
+
+                                    </View>
+                                    
                                 </View>
                             </View>
+
+                            {(role == 3 || role == 4) && (
+                                <View className="flex flex-row justify-between rounded bg-white h-auto gap-2 pb-4">
+                                    <View
+                                        className="flex flex-row w-[45%] h-full rounded gap-2"
+                                        style={{
+                                            borderColor: "#e4e4e4", // Grey border color
+
+                                            borderRightWidth:
+                                                StyleSheet.hairlineWidth, // Hairline right border width
+                                        }}
+                                    >
+                                        {/* <Text>Card</Text> */}
+                                        <View className="flex flex-col w-[49%]">
+                                            <BorderCard
+                                                title="Investment"
+                                                description={
+                                                    RupeeSymbol + "10,87,899"
+                                                }
+                                            />
+                                            <BorderCard
+                                                title="Redemption"
+                                                description={
+                                                    data?.transaction
+                                                        ?.redemption
+                                                        ? RupeeSymbol +
+                                                          data?.transaction
+                                                              ?.redemption
+                                                        : RupeeSymbol + "0"
+                                                }
+                                            />
+                                            <BorderCard
+                                                title="Inactive/Cancelled SIPs"
+                                                description={
+                                                    data?.transaction
+                                                        ?.totalSipTransactionsFailed
+                                                        ? data?.transaction
+                                                              ?.totalSipTransactionsFailed
+                                                        : "0"
+                                                }
+                                            />
+                                        </View>
+                                        <View className="flex flex-col w-[49%]">
+                                            <BorderCard
+                                                title="New SIPs"
+                                                description={
+                                                    data?.order?.sip?.newSip
+                                                        ? data?.order?.sip
+                                                              ?.newSip
+                                                        : "0"
+                                                }
+                                            />
+                                            <BorderCard
+                                                title="No. of successful SIPs"
+                                                description={
+                                                    data?.transaction
+                                                        ?.totalSipTransactionsFailed &&
+                                                    data?.transaction
+                                                        ?.totalSipTransactions
+                                                        ? data?.transaction
+                                                              ?.totalSipTransactions -
+                                                          data?.transaction
+                                                              ?.totalSipTransactionsFailed
+                                                        : "0"
+                                                }
+                                            />
+                                            <BorderCard
+                                                title="No. of SIP Bounce"
+                                                description="08"
+                                            />
+                                        </View>
+                                    </View>
+                                    <View
+                                        className="w-[35%] h-128 rounded px-4"
+                                        style={{
+                                            borderColor: "#e4e4e4", // Grey border color
+
+                                            borderRightWidth:
+                                                StyleSheet.hairlineWidth, // Hairline right border width
+                                        }}
+                                    >
+                                        <Text className="font-bold ">
+                                            Top 5 IFA
+                                        </Text>
+                                        <View className="flex flex-row py-2">
+                                            <View className="w-6/12">
+                                                <Text className="text-black">
+                                                    Name
+                                                </Text>
+                                            </View>
+                                            <View className="w-2/12">
+                                                <Text>SIPs</Text>
+                                            </View>
+                                            <View className="w-4/12">
+                                                <Text>Investment</Text>
+                                            </View>
+                                        </View>
+                                        <View className=" h-48 overflow-scroll">
+                                            {topClientData.map(
+                                                (item, index) => (
+                                                    <View
+                                                        key={index}
+                                                        className="flex flex-row items-center"
+                                                    >
+                                                        <View className="w-6/12">
+                                                            <AvatarCard
+                                                                imageUrl={
+                                                                    item.imageUrl
+                                                                }
+                                                                title="Natali Craig"
+                                                                description=""
+                                                            />
+                                                        </View>
+                                                        <View className="w-2/12">
+                                                            <Text
+                                                                selectable
+                                                                className="text-[#686868] font-semibold"
+                                                            >
+                                                                {item.sip}
+                                                            </Text>
+                                                        </View>
+                                                        <View className="w-4/12">
+                                                            <Text
+                                                                selectable
+                                                                className="text-[#686868] font-semibold"
+                                                            >
+                                                                {RupeeSymbol}{" "}
+                                                                {
+                                                                    item.investment
+                                                                }
+                                                            </Text>
+                                                        </View>
+                                                    </View>
+                                                )
+                                            )}
+                                        </View>
+                                    </View>
+                                    <View className="w-[20%] rounded pl-1">
+                                        <Text className="font-bold ">
+                                            Inactive IFA
+                                        </Text>
+                                        <View className=" h-56 overflow-scroll">
+                                            {topClientData.map(
+                                                (item, index) => (
+                                                    <AvatarCard
+                                                        key={index}
+                                                        imageUrl="account"
+                                                        title="Natali Craig"
+                                                        description=""
+                                                    />
+                                                )
+                                            )}
+                                        </View>
+                                    </View>
+                                </View>
+                            )}
+
+{(role == 4) && (
+                                <View className="flex flex-row justify-between rounded bg-white h-auto gap-2 pb-4">
+                                    <View
+                                        className="flex flex-row w-[45%] h-full rounded gap-2"
+                                        style={{
+                                            borderColor: "#e4e4e4", // Grey border color
+
+                                            borderRightWidth:
+                                                StyleSheet.hairlineWidth, // Hairline right border width
+                                        }}
+                                    >
+                                        {/* <Text>Card</Text> */}
+                                        <View className="flex flex-col w-[49%]">
+                                            <BorderCard
+                                                title="Investment"
+                                                description={
+                                                    RupeeSymbol + "10,87,899"
+                                                }
+                                            />
+                                            <BorderCard
+                                                title="Redemption"
+                                                description={
+                                                    data?.transaction
+                                                        ?.redemption
+                                                        ? RupeeSymbol +
+                                                          data?.transaction
+                                                              ?.redemption
+                                                        : RupeeSymbol + "0"
+                                                }
+                                            />
+                                            <BorderCard
+                                                title="Inactive/Cancelled SIPs"
+                                                description={
+                                                    data?.transaction
+                                                        ?.totalSipTransactionsFailed
+                                                        ? data?.transaction
+                                                              ?.totalSipTransactionsFailed
+                                                        : "0"
+                                                }
+                                            />
+                                        </View>
+                                        <View className="flex flex-col w-[49%]">
+                                            <BorderCard
+                                                title="New SIPs"
+                                                description={
+                                                    data?.order?.sip?.newSip
+                                                        ? data?.order?.sip
+                                                              ?.newSip
+                                                        : "0"
+                                                }
+                                            />
+                                            <BorderCard
+                                                title="No. of successful SIPs"
+                                                description={
+                                                    data?.transaction
+                                                        ?.totalSipTransactionsFailed &&
+                                                    data?.transaction
+                                                        ?.totalSipTransactions
+                                                        ? data?.transaction
+                                                              ?.totalSipTransactions -
+                                                          data?.transaction
+                                                              ?.totalSipTransactionsFailed
+                                                        : "0"
+                                                }
+                                            />
+                                            <BorderCard
+                                                title="No. of SIP Bounce"
+                                                description="08"
+                                            />
+                                        </View>
+                                    </View>
+                                    <View
+                                        className="w-[35%] h-128 rounded px-4"
+                                        style={{
+                                            borderColor: "#e4e4e4", // Grey border color
+
+                                            borderRightWidth:
+                                                StyleSheet.hairlineWidth, // Hairline right border width
+                                        }}
+                                    >
+                                        <Text className="font-bold ">
+                                            Top 5 RM
+                                        </Text>
+                                        <View className="flex flex-row py-2">
+                                            <View className="w-6/12">
+                                                <Text className="text-black">
+                                                    Name
+                                                </Text>
+                                            </View>
+                                            <View className="w-2/12">
+                                                <Text>SIPs</Text>
+                                            </View>
+                                            <View className="w-4/12">
+                                                <Text>Investment</Text>
+                                            </View>
+                                        </View>
+                                        <View className=" h-48 overflow-scroll">
+                                            {topClientData.map(
+                                                (item, index) => (
+                                                    <View
+                                                        key={index}
+                                                        className="flex flex-row items-center"
+                                                    >
+                                                        <View className="w-6/12">
+                                                            <AvatarCard
+                                                                imageUrl={
+                                                                    item.imageUrl
+                                                                }
+                                                                title="Natali Craig"
+                                                                description=""
+                                                            />
+                                                        </View>
+                                                        <View className="w-2/12">
+                                                            <Text
+                                                                selectable
+                                                                className="text-[#686868] font-semibold"
+                                                            >
+                                                                {item.sip}
+                                                            </Text>
+                                                        </View>
+                                                        <View className="w-4/12">
+                                                            <Text
+                                                                selectable
+                                                                className="text-[#686868] font-semibold"
+                                                            >
+                                                                {RupeeSymbol}{" "}
+                                                                {
+                                                                    item.investment
+                                                                }
+                                                            </Text>
+                                                        </View>
+                                                    </View>
+                                                )
+                                            )}
+                                        </View>
+                                    </View>
+                                    <View className="w-[20%] rounded pl-1">
+                                        <Text className="font-bold ">
+                                            Inactive RM
+                                        </Text>
+                                        <View className=" h-56 overflow-scroll">
+                                            {topClientData.map(
+                                                (item, index) => (
+                                                    <AvatarCard
+                                                        key={index}
+                                                        imageUrl="account"
+                                                        title="Natali Craig"
+                                                        description=""
+                                                    />
+                                                )
+                                            )}
+                                        </View>
+                                    </View>
+                                </View>
+                            )}
                         </View>
                     </View>
                 </ScrollView>

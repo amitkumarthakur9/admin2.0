@@ -9,6 +9,8 @@ import {
     Button,
     TouchableOpacity,
     FlatList,
+    StyleSheet,
+    TouchableWithoutFeedback,
 } from "react-native";
 import { router } from "expo-router";
 import {
@@ -207,6 +209,17 @@ const ContactDataTable = () => {
     const [selectedContacts, setSelectedContacts] = useState([]);
     const [filteredContacts, setFilteredContacts] = useState([]);
     const [inviteModalVisible, setModalVisible] = useState(false);
+    const [isHovered, setIsHovered] = useState(false);
+
+    const handleMouseEnter = () => {
+        setIsHovered(true);
+        console.log("hover");
+    };
+
+    const handleMouseLeave = () => {
+        setIsHovered(false);
+        console.log("hover out");
+    };
 
     const toggleContactSelection = (contact) => {
         const isSelected = selectedContacts.some((c) => c === contact);
@@ -256,16 +269,16 @@ const ContactDataTable = () => {
         if (response.code == 200) {
             setData(response.data.data);
             setFilteredContacts(response.data.data);
-            console.log(filteredContacts);
-            setTotalItems(response?.filterCount);
+            // console.log(filteredContacts);
+            setTotalItems(response?.data?.filterCount);
             setIsLoading(false);
             setTotalPages(
                 Math.ceil(
-                    (response?.filterCount || response.data.data.length) /
+                    (response?.data?.filterCount || response.data.data.length) /
                         itemsPerPage
                 )
             );
-        }else{
+        } else {
             setIsLoading(false);
             setFilteredContacts(dummyData.contacts);
         }
@@ -329,7 +342,7 @@ const ContactDataTable = () => {
         }
     };
 
-    console.log("filteredContacts)" + JSON.stringify(filteredContacts));
+    // console.log("filteredContacts)" + JSON.stringify(filteredContacts));
 
     return (
         <View className="bg-white">
@@ -347,13 +360,17 @@ const ContactDataTable = () => {
                     setAppliedFilers={setAppliedFilers}
                     newComponent={
                         <>
-                            <View className="py-1 h-[42px] ">
-                                <Button
-                                    title="Send Invite"
-                                    onPress={sendInvite}
-                                    disabled={selectedContacts.length === 0}
-                                />
+                            {/* <View className="w-2/12 border-[1px] rounded border-slate-200 bg-[] "> */}
+                            <View className=" ">
+                                <View className="py-1">
+                                    <Button
+                                        title=" Send Invite "
+                                        onPress={sendInvite}
+                                        disabled={selectedContacts.length === 0}
+                                    />
+                                </View>
                             </View>
+
                             <ManualInvite />
                         </>
                     }
@@ -361,12 +378,13 @@ const ContactDataTable = () => {
 
                 {!isLoading ? (
                     <>
-                        <View className="flex w-full">
-                            <View className="flex flex-row justify-between py-1">
-                                <Text className="font-bold text-lg">
-                                    {/* Welcome, {userInfo.name}! */}
-                                </Text>
-                                {/* <Button
+                        <ScrollView className={"mt-4 z-[-2] "}>
+                            <View className="flex w-full">
+                                <View className="flex flex-row justify-between py-1">
+                                    <Text className="font-bold text-lg">
+                                        {/* Welcome, {userInfo.name}! */}
+                                    </Text>
+                                    {/* <Button
                                                     title="Sign Out"
                                                     onPress={() => {
                                                         setGooglemodalVisible(
@@ -378,10 +396,10 @@ const ContactDataTable = () => {
                                                         setUserInfo(null);
                                                     }}
                                                 /> */}
-                            </View>
-                            <View className="flex flex-row justify-center">
-                                <View className="w-full ">
-                                    {/* <TextInput
+                                </View>
+                                <View className="flex flex-row justify-center">
+                                    <View className="w-full ">
+                                        {/* <TextInput
                                                         placeholder="Search name"
                                                         value={searchQuery}
                                                         onChangeText={(text) =>
@@ -396,7 +414,7 @@ const ContactDataTable = () => {
                                                             marginBottom: 10,
                                                         }}
                                                     /> */}
-                                    {/* <Select
+                                        {/* <Select
                                                         selectedValue={filter}
                                                         minWidth="200"
                                                         accessibilityLabel="Filter"
@@ -426,208 +444,59 @@ const ContactDataTable = () => {
                                                         />
                                                     </Select> */}
 
-                                    <View>
-                                        {filteredContacts.length > 0 ? (
-                                            <View>
-                                                <View className="flex flex-row items-center p-4 w-[99%] border-y-2 border-slate-200">
-                                                    <View className="flex flex-row items-start justify-center w-2/12">
-                                                        <TouchableOpacity
-                                                            onPress={
-                                                                toggleSelectAll
-                                                            }
-                                                        >
-                                                            {selectedContacts.length >
-                                                            0 ? (
-                                                                <Text className="font-semibold text-md">
-                                                                    {selectAll ? (
-                                                                        <>
-                                                                            <View className="flex flex-col justify-between pr-2 items-center">
-                                                                                <View className="flex flex-col">
-                                                                                    <View
-                                                                                        style={{
-                                                                                            backgroundColor:
-                                                                                                "#114EA8",
-                                                                                            // padding: 10,
-                                                                                            borderRadius: 5,
-                                                                                            //    width:20,
-                                                                                            //    height:20,
-                                                                                            paddingTop: 4,
-                                                                                            paddingLeft: 4,
-                                                                                            paddingRight: 4,
-                                                                                            paddingBottom: 4,
-                                                                                        }}
-                                                                                    >
-                                                                                        <Icon
-                                                                                            name="check"
-                                                                                            size={
-                                                                                                10
-                                                                                            }
-                                                                                            color="white"
-                                                                                        />
-                                                                                    </View>
-                                                                                </View>
-                                                                                <View className="pl-2">
-                                                                                    <Text className="">
-                                                                                        Deselect
-                                                                                        All
-                                                                                    </Text>
-                                                                                </View>
-                                                                            </View>
-                                                                        </>
-                                                                    ) : (
-                                                                        <>
-                                                                            <View className="flex flex-row justify-center">
-                                                                                <View className="flex flex-col items-center justify-center">
-                                                                                    <View className="flex flex-row justify-center">
+                                        <View>
+                                            {filteredContacts.length > 0 ? (
+                                                <View>
+                                                    <View className="flex flex-row items-center p-4 w-[99%] border-y-2 border-slate-200">
+                                                        <View className="flex flex-row items-start justify-center w-2/12">
+                                                            <TouchableOpacity
+                                                                onPress={
+                                                                    toggleSelectAll
+                                                                }
+                                                            >
+                                                                {selectedContacts.length >
+                                                                0 ? (
+                                                                    <Text className="font-semibold text-md">
+                                                                        {selectAll ? (
+                                                                            <>
+                                                                                <View className="flex flex-col justify-between pr-2 items-center">
+                                                                                    <View className="flex flex-col">
                                                                                         <View
                                                                                             style={{
                                                                                                 backgroundColor:
-                                                                                                    "transparent",
-                                                                                                padding: 8,
-                                                                                                borderRadius: 4,
-                                                                                                borderWidth: 2,
-                                                                                                borderColor:
-                                                                                                    "#CCCCCC",
-                                                                                                height: 2,
+                                                                                                    "#114EA8",
+                                                                                                // padding: 10,
+                                                                                                borderRadius: 5,
+                                                                                                //    width:20,
+                                                                                                //    height:20,
+                                                                                                paddingTop: 4,
+                                                                                                paddingLeft: 4,
+                                                                                                paddingRight: 4,
+                                                                                                paddingBottom: 4,
                                                                                             }}
-                                                                                        ></View>
+                                                                                        >
+                                                                                            <Icon
+                                                                                                name="check"
+                                                                                                size={
+                                                                                                    10
+                                                                                                }
+                                                                                                color="white"
+                                                                                            />
+                                                                                        </View>
                                                                                     </View>
                                                                                     <View className="pl-2">
-                                                                                        <Text className="text-xs">
-                                                                                            Select
+                                                                                        <Text className="">
+                                                                                            Deselect
                                                                                             All
                                                                                         </Text>
                                                                                     </View>
                                                                                 </View>
-                                                                            </View>
-                                                                        </>
-                                                                    )}
-                                                                </Text>
-                                                            ) : (
-                                                                <View></View>
-                                                            )}
-                                                        </TouchableOpacity>
-                                                    </View>
-                                                    <View className="flex flex-row items-start justify-center w-3/12">
-                                                        <View className="flex flex-row items-start justify-start w-9/12">
-                                                            <Text className="py-2">
-                                                                Name
-                                                            </Text>
-                                                        </View>
-                                                    </View>
-
-                                                    <View className="flex flex-row items-start justify-start w-3/12">
-                                                        <Text className="py-2">Phone</Text>
-                                                    </View>
-                                                    <View className="flex flex-row items-start justify-start w-3/12">
-                                                        <Text className="py-2">Email</Text>
-                                                    </View>
-                                                </View>
-
-                                                <View className="">
-                                                    <FlatList
-                                                        data={filteredContacts}
-                                                        renderItem={({
-                                                            item,
-                                                        }) => (
-                                                            <View
-                                                            // style={{
-                                                            //     flexDirection:
-                                                            //         "row",
-                                                            //     alignItems:
-                                                            //         "center",
-                                                            //     borderBottomWidth: 1,
-                                                            //     borderBottomColor:
-                                                            //         "#ccc",
-                                                            //     padding: 10,
-                                                            // }}
-                                                            >
-                                                                {item.status
-                                                                    .name ===
-                                                                "Invited" ? (
-                                                                    <View className="flex flex-row items-center border-solid border-b-1 border-gray-400 w-[99%] p-2">
-                                                                        <View className="flex flex-row justify-center w-2/12">
-                                                                            <View className="w-0.5/12">
-                                                                                <View
-                                                                                    style={{
-                                                                                        flex: 1,
-                                                                                        flexDirection:
-                                                                                            "row",
-                                                                                        alignItems:
-                                                                                            "center",
-                                                                                    }}
-                                                                                >
-                                                                                    <Text
-                                                                                        style={{
-                                                                                            marginLeft: 10,
-                                                                                            color: "#778899",
-                                                                                        }}
-                                                                                    >
-                                                                                        Invite
-                                                                                        Sent
-                                                                                    </Text>
-                                                                                </View>
-                                                                            </View>
-                                                                        </View>
-
-                                                                        <View className="flex flex-row items-start justify-center w-3/12">
-                                                                            <View className="flex flex-row items-start justify-start w-8/12">
-                                                                                <Text className="text-slate-500 text-base">
-                                                                                    {
-                                                                                        item.name
-                                                                                    }
-                                                                                </Text>
-                                                                            </View>
-                                                                        </View>
-
-                                                                        <View className="flex flex-row items-start justify-start w-3/12">
-                                                                            <Text className="text-slate-500 text-base">
-                                                                                {
-                                                                                    item.mobileNumber
-                                                                                }
-                                                                            </Text>
-                                                                        </View>
-
-                                                                        <View className="flex flex-row items-start justify-start w-3/12">
-                                                                            <Text className="text-slate-500 text-base">
-                                                                                {
-                                                                                    item.email
-                                                                                }
-                                                                            </Text>
-                                                                        </View>
-                                                                    </View>
-                                                                ) : (
-                                                                    <TouchableOpacity
-                                                                        onPress={() =>
-                                                                            toggleContactSelection(
-                                                                                item
-                                                                            )
-                                                                        }
-                                                                    >
-                                                                        <View className="flex flex-row items-center border-solid border-b-1 border-gray-400 w-[99%] p-2">
-                                                                            <View className="flex flex-row justify-center w-2/12">
-                                                                                <View className="w-0.5/12">
-                                                                                    <View>
-                                                                                        {isSelected(
-                                                                                            item
-                                                                                        ) ? (
-                                                                                            <View
-                                                                                                style={{
-                                                                                                    backgroundColor:
-                                                                                                        "#114EA8",
-                                                                                                    padding: 7,
-                                                                                                    borderRadius: 5,
-                                                                                                }}
-                                                                                            >
-                                                                                                <Icon
-                                                                                                    name="check"
-                                                                                                    size={
-                                                                                                        6
-                                                                                                    }
-                                                                                                    color="white"
-                                                                                                />
-                                                                                            </View>
-                                                                                        ) : (
+                                                                            </>
+                                                                        ) : (
+                                                                            <>
+                                                                                <View className="flex flex-row justify-center">
+                                                                                    <View className="flex flex-col items-center justify-center">
+                                                                                        <View className="flex flex-row justify-center">
                                                                                             <View
                                                                                                 style={{
                                                                                                     backgroundColor:
@@ -637,16 +506,97 @@ const ContactDataTable = () => {
                                                                                                     borderWidth: 2,
                                                                                                     borderColor:
                                                                                                         "#CCCCCC",
+                                                                                                    height: 2,
                                                                                                 }}
                                                                                             ></View>
-                                                                                        )}
+                                                                                        </View>
+                                                                                        <View className="pl-2">
+                                                                                            <Text className="text-xs">
+                                                                                                Select
+                                                                                                All
+                                                                                            </Text>
+                                                                                        </View>
+                                                                                    </View>
+                                                                                </View>
+                                                                            </>
+                                                                        )}
+                                                                    </Text>
+                                                                ) : (
+                                                                    <View></View>
+                                                                )}
+                                                            </TouchableOpacity>
+                                                        </View>
+                                                        <View className="flex flex-row items-start justify-center w-3/12">
+                                                            <View className="flex flex-row items-start justify-start w-9/12">
+                                                                <Text className="py-2">
+                                                                    Name
+                                                                </Text>
+                                                            </View>
+                                                        </View>
+
+                                                        <View className="flex flex-row items-start justify-start w-3/12">
+                                                            <Text className="py-2">
+                                                                Phone
+                                                            </Text>
+                                                        </View>
+                                                        <View className="flex flex-row items-start justify-start w-3/12">
+                                                            <Text className="py-2">
+                                                                Email
+                                                            </Text>
+                                                        </View>
+                                                    </View>
+
+                                                    <View className="">
+                                                        <FlatList
+                                                            data={
+                                                                filteredContacts
+                                                            }
+                                                            renderItem={({
+                                                                item,
+                                                            }) => (
+                                                                <View
+                                                                // style={{
+                                                                //     flexDirection:
+                                                                //         "row",
+                                                                //     alignItems:
+                                                                //         "center",
+                                                                //     borderBottomWidth: 1,
+                                                                //     borderBottomColor:
+                                                                //         "#ccc",
+                                                                //     padding: 10,
+                                                                // }}
+                                                                >
+                                                                    {item.status
+                                                                        .name ===
+                                                                    "Invited" ? (
+                                                                        <View className="flex flex-row items-center border-solid border-b-1 border-gray-400 w-[99%] p-2">
+                                                                            <View className="flex flex-row justify-center w-2/12">
+                                                                                <View className="w-0.5/12">
+                                                                                    <View
+                                                                                        style={{
+                                                                                            flex: 1,
+                                                                                            flexDirection:
+                                                                                                "row",
+                                                                                            alignItems:
+                                                                                                "center",
+                                                                                        }}
+                                                                                    >
+                                                                                        <Text
+                                                                                            style={{
+                                                                                                marginLeft: 10,
+                                                                                                color: "#778899",
+                                                                                            }}
+                                                                                        >
+                                                                                            Invite
+                                                                                            Sent
+                                                                                        </Text>
                                                                                     </View>
                                                                                 </View>
                                                                             </View>
 
                                                                             <View className="flex flex-row items-start justify-center w-3/12">
                                                                                 <View className="flex flex-row items-start justify-start w-8/12">
-                                                                                    <Text className="text-slate-500 text-base">
+                                                                                    <Text selectable className="text-slate-500 text-base">
                                                                                         {
                                                                                             item.name
                                                                                         }
@@ -655,48 +605,133 @@ const ContactDataTable = () => {
                                                                             </View>
 
                                                                             <View className="flex flex-row items-start justify-start w-3/12">
-                                                                                <Text className="text-slate-500 text-base">
+                                                                                <Text selectable className="text-slate-500 text-base">
                                                                                     {
                                                                                         item.mobileNumber
                                                                                     }
                                                                                 </Text>
                                                                             </View>
+
                                                                             <View className="flex flex-row items-start justify-start w-3/12">
-                                                                                <Text className="text-slate-500 text-base">
+                                                                                <Text selectable className="text-slate-500 text-base">
                                                                                     {
                                                                                         item.email
                                                                                     }
                                                                                 </Text>
                                                                             </View>
                                                                         </View>
-                                                                    </TouchableOpacity>
-                                                                )}
-                                                            </View>
-                                                        )}
-                                                        keyExtractor={(
-                                                            item,
-                                                            index
-                                                        ) => index.toString()}
-                                                    />
+                                                                    ) : (
+                                                                        <TouchableWithoutFeedback
+                                                                            onPressIn={
+                                                                                handleMouseEnter
+                                                                            }
+                                                                            onPressOut={
+                                                                                handleMouseLeave
+                                                                            }
+                                                                            onPress={() =>
+                                                                                toggleContactSelection(
+                                                                                    item
+                                                                                )
+                                                                            }
+                                                                        >
+                                                                            {/* <View style={[styles.container, isHovered && styles.hovered]}> */}
+                                                                            <View className="flex flex-row items-center border-solid border-b-1 border-gray-400 w-[99%] p-2">
+                                                                                <View className="flex flex-row justify-center w-2/12">
+                                                                                    <View className="w-0.5/12">
+                                                                                        <View>
+                                                                                            {isSelected(
+                                                                                                item
+                                                                                            ) ? (
+                                                                                                <View
+                                                                                                    style={{
+                                                                                                        backgroundColor:
+                                                                                                            "#114EA8",
+                                                                                                        padding: 7,
+                                                                                                        borderRadius: 5,
+                                                                                                    }}
+                                                                                                >
+                                                                                                    <Icon
+                                                                                                        name="check"
+                                                                                                        size={
+                                                                                                            6
+                                                                                                        }
+                                                                                                        color="white"
+                                                                                                    />
+                                                                                                </View>
+                                                                                            ) : (
+                                                                                                <View
+                                                                                                    style={{
+                                                                                                        backgroundColor:
+                                                                                                            "transparent",
+                                                                                                        padding: 8,
+                                                                                                        borderRadius: 4,
+                                                                                                        borderWidth: 2,
+                                                                                                        borderColor:
+                                                                                                            "#CCCCCC",
+                                                                                                    }}
+                                                                                                ></View>
+                                                                                            )}
+                                                                                        </View>
+                                                                                    </View>
+                                                                                </View>
+
+                                                                                <View className="flex flex-row items-start justify-center w-3/12">
+                                                                                    <View className="flex flex-row items-start justify-start w-8/12">
+                                                                                        <Text selectable className="text-slate-500 text-base">
+                                                                                            {
+                                                                                                item.name
+                                                                                            }
+                                                                                        </Text>
+                                                                                    </View>
+                                                                                </View>
+
+                                                                                <View className="flex flex-row items-start justify-start w-3/12">
+                                                                                    <Text selectable className="text-slate-500 text-base">
+                                                                                        {
+                                                                                            item.mobileNumber
+                                                                                        }
+                                                                                    </Text>
+                                                                                </View>
+                                                                                <View className="flex flex-row items-start justify-start w-3/12">
+                                                                                    <Text selectable className="text-slate-500 text-base">
+                                                                                        {
+                                                                                            item.email
+                                                                                        }
+                                                                                    </Text>
+                                                                                </View>
+                                                                            </View>
+                                                                            {/* </View> */}
+                                                                        </TouchableWithoutFeedback>
+                                                                    )}
+                                                                </View>
+                                                            )}
+                                                            keyExtractor={(
+                                                                item,
+                                                                index
+                                                            ) =>
+                                                                index.toString()
+                                                            }
+                                                        />
+                                                    </View>
                                                 </View>
-                                            </View>
-                                        ) : (
-                                            <Text className="font-bold text-md text-center py-2">
-                                                No Contacts
-                                            </Text>
-                                        )}
+                                            ) : (
+                                                <Text className="font-bold text-md text-center py-2">
+                                                    No Contacts
+                                                </Text>
+                                            )}
+                                        </View>
                                     </View>
                                 </View>
                             </View>
-                        </View>
 
-                        <View
-                            style={{
-                                flex: 1,
-                                alignItems: "center",
-                                justifyContent: "center",
-                            }}
-                        ></View>
+                            <View
+                                style={{
+                                    flex: 1,
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                }}
+                            ></View>
+                        </ScrollView>
                     </>
                 ) : (
                     <HStack
@@ -777,5 +812,21 @@ const ContactDataTable = () => {
         </View>
     );
 };
+
+const styles = StyleSheet.create({
+    container: {
+        padding: 10,
+        backgroundColor: "#eee",
+        borderRadius: 5,
+        alignItems: "center",
+    },
+    hovered: {
+        backgroundColor: "#ddd", // Change background color on hover
+    },
+    text: {
+        fontSize: 16,
+        fontWeight: "bold",
+    },
+});
 
 export default ContactDataTable;

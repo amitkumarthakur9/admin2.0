@@ -31,13 +31,16 @@ import { TableBreadCrumb } from "../BreadCrumbs/TableBreadCrumb";
 import RemoteApi from "../../services/RemoteApi";
 import { ToastAlert } from "../../helper/CustomToaster";
 import { v4 as uuidv4 } from "uuid";
+import CalendarPicker from "../CustomDatePicker/CalendarPicker";
+import CalendarSinglePicker from "../CustomDatePicker/CalendarSinglePicker";
+import { RMid } from "../../helper/helper";
 // import DatePicker from "react-native-datepicker";
 // import DatePicker from 'react-datepicker';
 // import 'react-datepicker/dist/react-datepicker.css';
 
 export default function AddIFAUser() {
     const options = [
-        { label: "RM 1", value: "238" },
+        { label: "Relationship Manager", value: "238" },
         // { label: "RM 2", value: "230" },
         // { label: "RM 3", value: "249" },
         // { label: "RM 4", value: "259" },
@@ -64,32 +67,34 @@ export default function AddIFAUser() {
         confirmPassword: null,
     });
     const [isSubmitted, setIsSubmitted] = useState(false);
-    // const [formData, setFormData] = useState({
-    //     name: "",
-    //     email: "",
-    //     mobileNumber: "",
-    //     arn: "",
-    //     euin: "",
-    //     rm: selectedValue,
-    //     sexId: "",
-    //     dateOfBirth: "",
-    //     panNumber: "",
-    //     password: "",
-    //     confirmPassword: "",
-    // });
+//    const [role, setRole] = useState("");
+   const role = RMid();
     const [formData, setFormData] = useState({
-        name: "Saffi",
-        email: "Saffi@gmail.com",
-        mobileNumber: "1234567897",
-        arn: "DGH1234",
-        euin: "123456",
-        rm: "238",
-        sexId: "1",
-        dateOfBirth: "1990-03-23",
-        panNumber: "CVBHG1234T",
-        password: "fkdbfk",
-        confirmPassword: "fkdbfk",
+        name: "",
+        email: "",
+        mobileNumber: "",
+        arn: "",
+        euin: "",
+        rm: selectedValue,
+        sexId: "",
+        dateOfBirth: "",
+        panNumber: "",
+        password: "",
+        confirmPassword: "",
     });
+    // const [formData, setFormData] = useState({
+    //     name: "Saffi",
+    //     email: "Saffi@gmail.com",
+    //     mobileNumber: "1234567898",
+    //     arn: "ADFG1234",
+    //     euin: "123456",
+    //     rm: selectedValue,
+    //     sexId: "0",
+    //     dateOfBirth: "1990-03-23",
+    //     panNumber: "CVBHG1234T",
+    //     password: "fkdbfk",
+    //     confirmPassword: "fkdbfk",
+    // });
 
     const toast = useToast();
     const [toasts, setToasts] = useState([]);
@@ -110,6 +115,19 @@ export default function AddIFAUser() {
     const [searchValue, setSearchValue] = useState("");
     const isSelectionValid =
         selectedValue !== undefined && selectedValue !== "";
+
+        // useEffect(() => {
+
+            
+
+        //     setSelectedValue(role.rmID);
+        //     // setFormData((prevData) => ({
+        //     //     ...prevData,
+        //     //     [rm]: role.rmID,
+        //     // }));
+
+        // }, []);
+
 
     useEffect(() => {
         // Clear existing toasts
@@ -329,7 +347,7 @@ export default function AddIFAUser() {
             };
 
             try {
-                console.log("trydata");
+                console.log("SubmitFormdata");
                 console.log(data);
 
                 const response: any = await RemoteApi.post(
@@ -337,19 +355,31 @@ export default function AddIFAUser() {
                     data
                 );
 
+                // const response = {
+                //     message: "Error in Adding User.",
+                //     code: 425,
+                //     errors: [{ message: "dfdemail" }],
+                // };
+
+                // const response = {
+                //     message: "Success",
+                //     code: 200,
+                //     errors: [{ message: "dfdemail" }],
+                // };
+
                 if (response?.message == "Success") {
                     const uniqueId = uuidv4();
-                    alert("IFA added succesfully");
+                    // alert("IFA added succesfully");
                     // Add the success toast to the toasts array in the component's state
-                    // setToasts([
-                    //     ...toasts,
-                    //     {
-                    //         id: uniqueId,
-                    //         variant: "solid",
-                    //         title: response?.data,
-                    //         status: "success",
-                    //     },
-                    // ]);
+                    setToasts([
+                        ...toasts,
+                        {
+                            id: uniqueId,
+                            variant: "solid",
+                            title: `IFA addedd successfully`,
+                            status: "success",
+                        },
+                    ]);
                 } else if (
                     response?.message == "Error in Adding User." ||
                     response?.code == 425
@@ -413,23 +443,25 @@ export default function AddIFAUser() {
                 // ]);
             }
 
-            console.log("Submitted successfully");
-            console.log(formData);
+            // console.log("Submitted successfully");
+            // console.log(formData);
             // Reset submitted state and clear form data
             setIsSubmitted(false);
             setFormData({
-                name: "Saffi",
-                email: "Saffi@gmail.com",
-                mobileNumber: "1234567898",
-                arn: "ADFG1234",
-                euin: "123456",
+                name: "",
+                email: "",
+                mobileNumber: "",
+                arn: "",
+                euin: "",
                 rm: "0",
                 sexId: "1",
-                dateOfBirth: "1990-03-23",
-                panNumber: "CVBHG1234T",
-                password: "fkdbfk",
-                confirmPassword: "fkdbfk",
+                dateOfBirth: "",
+                panNumber: "",
+                password: "",
+                confirmPassword: "",
             });
+
+           
         } else {
             console.log("Validation failed");
         }
@@ -699,7 +731,7 @@ export default function AddIFAUser() {
                             maxW="300px"
                         >
                             <FormControl.Label>Date of Birth</FormControl.Label>
-                            <Input
+                            {/* <Input
                                 size="lg"
                                 variant="outline"
                                 placeholder="1990-03-25"
@@ -708,6 +740,14 @@ export default function AddIFAUser() {
                                 onChangeText={(value) =>
                                     handleChange("dateOfBirth", value)
                                 }
+                               
+                            /> */}
+                            <CalendarSinglePicker
+                                value={formData.dateOfBirth}
+                                handleFilterChange={(value) =>
+                                    handleChange("dateOfBirth", value)
+                                }
+                               
                             />
                             {errors.dateOfBirth ? (
                                 <FormControl.ErrorMessage>
@@ -968,13 +1008,25 @@ export default function AddIFAUser() {
                                 mt={1}
                                 onValueChange={handleSelectChange}
                             >
-                                {filteredOptions.map((option) => (
+                                {role?.roldeID == 3
+                                    ?
                                     <Select.Item
-                                        key={option.value}
-                                        label={option.label}
-                                        value={option.value}
+                                        key={role?.roldeID}
+                                        label="Self"
+                                        value={role?.rmID}
                                     />
-                                ))}
+                                    
+                                    : 
+
+                                    filteredOptions.map((option) => (
+                                        <Select.Item
+                                            key={option.value}
+                                            label={option.label}
+                                            value={option.value}
+                                        />
+                                    ))
+                                }
+                                
                             </Select>
                             <FormControl.ErrorMessage
                                 leftIcon={<WarningOutlineIcon size="xs" />}

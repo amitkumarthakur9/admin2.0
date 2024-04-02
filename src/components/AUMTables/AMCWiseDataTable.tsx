@@ -25,7 +25,7 @@ import { TableBreadCrumb } from "../BreadCrumbs/TableBreadCrumb";
 import { RupeeSymbol, getInitials } from "../../helper/helper";
 import DataTable from "../DataTable/DataTable";
 import Tag from "../Tag/Tag";
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from "react-native-vector-icons/FontAwesome";
 
 const AMCWiseDataTable = () => {
     const [isLoading, setIsLoading] = React.useState(false);
@@ -77,7 +77,7 @@ const AMCWiseDataTable = () => {
             setTotalPages(
                 Math.ceil(
                     (response.filterCount || response.data.length) /
-                    itemsPerPage
+                        itemsPerPage
                 )
             );
         }
@@ -102,7 +102,6 @@ const AMCWiseDataTable = () => {
     }, [appliedSorting]);
 
     console.log(data);
-    
 
     const transformedData = data?.map((item) => {
         return [
@@ -110,19 +109,21 @@ const AMCWiseDataTable = () => {
                 key: "fundhouse",
                 content: (
                     <View className="flex flex-row justify-center ">
-                         <Text selectable className="text-[#686868] font-semibold">
-                         {item?.name ? item?.name : "-"}
-                    </Text>
-
+                         
+                        <Text
+                            selectable
+                            className="text-[#686868] font-semibold"
+                        >
+                            {item?.name ? item?.name : "-"}
+                        </Text>
                     </View>
-                   
                 ),
             },
             {
                 key: "investedAmount",
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
-                         {item?.investedValue
+                        {item?.investedValue
                             ? RupeeSymbol + item?.investedValue.toFixed(2)
                             : "-"}
                     </Text>
@@ -132,7 +133,7 @@ const AMCWiseDataTable = () => {
                 key: "currentAmount",
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
-                       {item?.currentValue
+                        {item?.currentValue
                             ? RupeeSymbol + item?.currentValue.toFixed(2)
                             : "-"}
                     </Text>
@@ -151,7 +152,7 @@ const AMCWiseDataTable = () => {
             //         </Pressable>
 
             //         </View>
-                    
+
             //     ),
             // },
         ];
@@ -185,12 +186,9 @@ const AMCWiseDataTable = () => {
                                 "Current Value",
                                 // "",
                             ]}
-                            cellSize={[3, 3, 3,]}
+                            cellSize={[3, 3, 3]}
                             rows={transformedData}
-                            
-                            
                         />
-                        
                     </ScrollView>
                 ) : (
                     <HStack
