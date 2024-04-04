@@ -1,3 +1,4 @@
+import { Image } from "native-base";
 import { useState } from "react";
 import { Dimensions, StyleSheet, Text, View, Pressable } from "react-native";
 import Icon from "react-native-vector-icons/Entypo";
@@ -170,12 +171,23 @@ const DataTable = ({
                     borderBottomWidth: StyleSheet.hairlineWidth,
                 }}
             />
-            <TableRows
-                rows={rows}
-                cellSize={cellSize}
-                options={options}
-                hasActions={hasActions}
-            />
+            {!!rows?.length ? (
+                <TableRows
+                    rows={rows}
+                    cellSize={cellSize}
+                    options={options}
+                    hasActions={hasActions}
+                />
+            ) : (
+                <View className="flex flex-col items-center gap-8">
+                    <Text className="text-black font-bold">
+                        No Data Available
+                    </Text>
+                    <Image
+                        source={require("../../../assets/images/noData.png")}
+                    />
+                </View>
+            )}
         </View>
     );
 };
