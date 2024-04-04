@@ -23,7 +23,7 @@ import { Dialog, Portal } from "react-native-paper";
 import RemoteApi from "../../../src/services/RemoteApi";
 import { ToastAlert } from "../../../src/helper/CustomToaster";
 
-export default function ManualInvite() {
+export default function ManualInvite({ getlist=() => {} }) {
     const [modalVisible, setModalVisible] = useState(false);
     const showDialog = () => setModalVisible(true);
     const hideDialog = () => setModalVisible(false);
@@ -42,10 +42,8 @@ export default function ManualInvite() {
         name: null,
         email: null,
         phone: null,
-        
     }; // Initialize empty error object
     const [isSubmitted, setIsSubmitted] = useState(false);
-
 
     const validate = () => {
         // Name validation
@@ -54,7 +52,6 @@ export default function ManualInvite() {
         } else {
             newErrors.name = null; // Clear error message if validation passes
         }
-
 
         // phone number validation
         const phoneRegex = /^\d{10}$/;
@@ -83,7 +80,6 @@ export default function ManualInvite() {
         return Object.values(newErrors).every((error) => error === null); // Return true if there are no errors
     };
 
-
     const handleSubmit = async () => {
         console.log("manualcontactformData");
 
@@ -94,20 +90,17 @@ export default function ManualInvite() {
         const isValid = validate();
 
         if (isValid) {
-
-
-            const  data =  {
+            const data = {
                 contacts: [
                     {
                         name: formData.name,
                         email: formData.email,
                         mobileNumber: formData.phone,
                         sourceId: 1,
-                    }
-                ]
-            }
-    
-    
+                    },
+                ],
+            };
+
             try {
                 console.log("ManualContact");
                 console.log(data);
@@ -116,58 +109,58 @@ export default function ManualInvite() {
                     "onboard/client/save",
                     data
                 );
-    
+
                 // const response = {
                 //     message: "success",
                 //     error: "blunder"
                 // }
-    
+
                 if (response?.message == "Success") {
-                    hideDialog()
-    
+                    hideDialog();
+
                     toast.show({
                         render: () => (
-                          <ToastAlert
-                            id={123} // Unique identifier for the toast
-                            status="success" // Toast status (success, error, warning, info)
-                            variant="solid" // Toast variant (solid, subtle, left-accent, top-accent)
-                            title="Success" // Toast title
-                            description="Contact added succesfully" // Toast description
-                            isClosable = {false} // Whether the toast is closable
-                            toast={toast} // Pass the toast function to close the toast
-                          />
+                            <ToastAlert
+                                id={123} // Unique identifier for the toast
+                                status="success" // Toast status (success, error, warning, info)
+                                variant="solid" // Toast variant (solid, subtle, left-accent, top-accent)
+                                title="Success" // Toast title
+                                description="Contact added succesfully" // Toast description
+                                isClosable={false} // Whether the toast is closable
+                                toast={toast} // Pass the toast function to close the toast
+                            />
                         ),
-                        duration: 1000
-                      });
-    
-                      setFormData({
+                        duration: 1000,
+                    });
+
+                    setFormData({
                         name: "",
                         email: "",
                         phone: "",
                     });
-                   
+
+                    getlist();
                 } else {
                 }
             } catch (error) {
-                hideDialog()
+                hideDialog();
                 console.log(error);
                 toast.show({
-                render: () => (
-                  <ToastAlert
-                    id={123} // Unique identifier for the toast
-                    status="error" // Toast status (success, error, warning, info)
-                    variant="solid" // Toast variant (solid, subtle, left-accent, top-accent)
-                    title={error} // Toast title
-                    description={error} // Toast description
-                    isClosable = {false} // Whether the toast is closable
-                    toast={toast} // Pass the toast function to close the toast
-                  />
-                ),
-                duration: 1500
-              });
+                    render: () => (
+                        <ToastAlert
+                            id={123} // Unique identifier for the toast
+                            status="error" // Toast status (success, error, warning, info)
+                            variant="solid" // Toast variant (solid, subtle, left-accent, top-accent)
+                            title={error} // Toast title
+                            description={error} // Toast description
+                            isClosable={false} // Whether the toast is closable
+                            toast={toast} // Pass the toast function to close the toast
+                        />
+                    ),
+                    duration: 1500,
+                });
             }
         } else {
-          
             // toast.show({
             //     render: () => (
             //       <ToastAlert
@@ -183,13 +176,7 @@ export default function ManualInvite() {
             //     duration: 1500
             //   });
         }
-
-
-
-      
     };
-
-
 
     const handleChange = (key, value) => {
         setFormData((prevData) => ({
@@ -198,10 +185,9 @@ export default function ManualInvite() {
         }));
     };
 
-
     return (
         <View
-            // style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        // style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
         >
             <View className="flex flex-row lg:mt-0">
                 <Pressable
@@ -271,11 +257,10 @@ export default function ManualInvite() {
                                             }
                                         />
                                         {"name" in errors && (
-                                <FormControl.ErrorMessage>
-                                    {errors.name}
-                                </FormControl.ErrorMessage>
-                            )}
-                                        
+                                            <FormControl.ErrorMessage>
+                                                {errors.name}
+                                            </FormControl.ErrorMessage>
+                                        )}
                                     </FormControl>
                                     <FormControl
                                         isRequired
@@ -296,11 +281,10 @@ export default function ManualInvite() {
                                             }
                                         />
                                         {"email" in errors && (
-                                <FormControl.ErrorMessage>
-                                    {errors.email}
-                                </FormControl.ErrorMessage>
-                            )}
-                                       
+                                            <FormControl.ErrorMessage>
+                                                {errors.email}
+                                            </FormControl.ErrorMessage>
+                                        )}
                                     </FormControl>
                                     <FormControl
                                         isRequired
@@ -321,14 +305,15 @@ export default function ManualInvite() {
                                             }
                                         />
                                         {errors.phone ? (
-                                <FormControl.ErrorMessage>
-                                    {errors.phone}
-                                </FormControl.ErrorMessage>
-                            ) : (
-                                <FormControl.HelperText>
-                                    Enter 10 digit mobileNumber Number.
-                                </FormControl.HelperText>
-                            )}
+                                            <FormControl.ErrorMessage>
+                                                {errors.phone}
+                                            </FormControl.ErrorMessage>
+                                        ) : (
+                                            <FormControl.HelperText>
+                                                Enter 10 digit mobileNumber
+                                                Number.
+                                            </FormControl.HelperText>
+                                        )}
                                     </FormControl>
                                     <Button
                                         width="100%"

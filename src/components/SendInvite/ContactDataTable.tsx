@@ -33,6 +33,8 @@ import Tag from "../Tag/Tag";
 import Icon from "react-native-vector-icons/FontAwesome";
 import ManualInvite from "./ManualInvite";
 import { Dialog, Portal } from "react-native-paper";
+import CustomButton from "../Buttons/CustomButton";
+import HoverEffectComponent from "./Hover";
 
 const ContactDataTable = () => {
     const dummyData = {
@@ -210,6 +212,16 @@ const ContactDataTable = () => {
     const [filteredContacts, setFilteredContacts] = useState([]);
     const [inviteModalVisible, setModalVisible] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
+    console.log("selectedContacts")
+    console.log(selectedContacts)
+    const isSelected = (contact) => {
+        console.log("Selected Contacts: ", selectedContacts);
+        console.log("Checking if contact is selected: ", contact);
+        console.log("isSelectContact: ", selectedContacts.includes(contact));
+        
+        return selectedContacts.some(c => c.id === contact.id);
+    };
+    
 
     const handleMouseEnter = () => {
         setIsHovered(true);
@@ -222,13 +234,14 @@ const ContactDataTable = () => {
     };
 
     const toggleContactSelection = (contact) => {
-        const isSelected = selectedContacts.some((c) => c === contact);
+        const isSelected = selectedContacts.some((c) => c.id === contact.id); // Compare by id
         if (isSelected) {
-            setSelectedContacts(selectedContacts.filter((c) => c !== contact));
+            setSelectedContacts(selectedContacts.filter((c) => c.id !== contact.id)); // Remove contact if selected
         } else {
-            setSelectedContacts([...selectedContacts, contact]);
+            setSelectedContacts([...selectedContacts, contact]); // Add contact if not selected
         }
     };
+    
 
     const toggleSelectAll = () => {
         if (selectAll) {
@@ -238,9 +251,7 @@ const ContactDataTable = () => {
         }
         setSelectAll(!selectAll);
     };
-
-    const isSelected = (contact) => selectedContacts.includes(contact);
-
+    
     async function getDataList(
         updatedFilterValues = [],
         applyDirectly = false
@@ -269,6 +280,7 @@ const ContactDataTable = () => {
         if (response.code == 200) {
             setData(response.data.data);
             setFilteredContacts(response.data.data);
+            // setFilteredContacts(dummyData.contacts);
             // console.log(filteredContacts);
             setTotalItems(response?.data?.filterCount);
             setIsLoading(false);
@@ -302,7 +314,7 @@ const ContactDataTable = () => {
         }
     }, [appliedSorting]);
 
-    console.log(data);
+    // console.log(data);
 
     const showDialog = (key: string) => {
         if (key === "invite") {
@@ -321,8 +333,8 @@ const ContactDataTable = () => {
     const sendInvite = async () => {
         console.log(selectedContacts);
         try {
-            console.log("selectedContacts");
-            console.log(selectedContacts);
+            // console.log("selectedContacts");
+            // console.log(selectedContacts);
 
             const contactID = {
                 contacts: selectedContacts.map((obj) => obj.id),
@@ -335,6 +347,8 @@ const ContactDataTable = () => {
 
             if (response?.message == "Success") {
                 showDialog("invite");
+                getDataList();
+                setSelectedContacts([]);
             } else {
             }
         } catch (error) {
@@ -360,8 +374,7 @@ const ContactDataTable = () => {
                     setAppliedFilers={setAppliedFilers}
                     newComponent={
                         <>
-                            {/* <View className="w-2/12 border-[1px] rounded border-slate-200 bg-[] "> */}
-                            <View className=" ">
+                            {/* <View className=" ">
                                 <View className="py-1">
                                     <Button
                                         title=" Send Invite "
@@ -369,9 +382,15 @@ const ContactDataTable = () => {
                                         disabled={selectedContacts.length === 0}
                                     />
                                 </View>
-                            </View>
+                            </View> */}
 
-                            <ManualInvite />
+                            <ManualInvite getlist={getDataList} />
+                            <CustomButton
+                                onPress={sendInvite}
+                                title=" Send Invite "
+                                disabled={selectedContacts.length === 0}
+                                style
+                            />
                         </>
                     }
                 />
@@ -449,17 +468,17 @@ const ContactDataTable = () => {
                                                 <View>
                                                     <View className="flex flex-row items-center p-4 w-[99%] border-y-2 border-slate-200">
                                                         <View className="flex flex-row items-start justify-center w-2/12">
-                                                            <TouchableOpacity
-                                                                onPress={
-                                                                    toggleSelectAll
-                                                                }
-                                                            >
-                                                                {selectedContacts.length >
-                                                                0 ? (
+                                                            {selectedContacts.length >
+                                                            0 ? (
+                                                                <TouchableOpacity
+                                                                    onPress={
+                                                                        toggleSelectAll
+                                                                    }
+                                                                >
                                                                     <Text className="font-semibold text-md">
                                                                         {selectAll ? (
                                                                             <>
-                                                                                <View className="flex flex-col justify-between pr-2 items-center">
+                                                                                <View className="flex flex-col justify-between pr-3 items-center">
                                                                                     <View className="flex flex-col">
                                                                                         <View
                                                                                             style={{
@@ -495,7 +514,7 @@ const ContactDataTable = () => {
                                                                         ) : (
                                                                             <>
                                                                                 <View className="flex flex-row justify-center">
-                                                                                    <View className="flex flex-col items-center justify-center">
+                                                                                    <View className="flex flex-col pr-3 items-center justify-center">
                                                                                         <View className="flex flex-row justify-center">
                                                                                             <View
                                                                                                 style={{
@@ -506,7 +525,6 @@ const ContactDataTable = () => {
                                                                                                     borderWidth: 2,
                                                                                                     borderColor:
                                                                                                         "#CCCCCC",
-                                                                                                    height: 2,
                                                                                                 }}
                                                                                             ></View>
                                                                                         </View>
@@ -521,32 +539,57 @@ const ContactDataTable = () => {
                                                                             </>
                                                                         )}
                                                                     </Text>
-                                                                ) : (
+                                                                </TouchableOpacity>
+                                                            ) : (
+                                                                <>
                                                                     <View></View>
-                                                                )}
-                                                            </TouchableOpacity>
+                                                                    {/* <View className="flex flex-row justify-center">
+                                                                        <View className="flex flex-col pr-3 items-center justify-center">
+                                                                            <View className="flex flex-row justify-center">
+                                                                                <View
+                                                                                    style={{
+                                                                                        backgroundColor:
+                                                                                            "#CCCCCC",
+                                                                                        padding: 8,
+                                                                                        borderRadius: 4,
+                                                                                        borderWidth: 2,
+                                                                                        borderColor:
+                                                                                            "#CCCCCC",
+                                                                                    }}
+                                                                                ></View>
+                                                                            </View>
+                                                                            <View className="pl-2">
+                                                                                <Text className="text-xs text-slate-400">
+                                                                                    Select
+                                                                                    All
+                                                                                </Text>
+                                                                            </View>
+                                                                        </View>
+                                                                    </View> */}
+                                                                </>
+                                                            )}
                                                         </View>
                                                         <View className="flex flex-row items-start justify-center w-3/12">
                                                             <View className="flex flex-row items-start justify-start w-9/12">
-                                                                <Text className="py-2">
+                                                                <Text className="py-3">
                                                                     Name
                                                                 </Text>
                                                             </View>
                                                         </View>
 
                                                         <View className="flex flex-row items-start justify-start w-3/12">
-                                                            <Text className="py-2">
+                                                            <Text className="py-3">
                                                                 Phone
                                                             </Text>
                                                         </View>
                                                         <View className="flex flex-row items-start justify-start w-3/12">
-                                                            <Text className="py-2">
+                                                            <Text className="py-3">
                                                                 Email
                                                             </Text>
                                                         </View>
                                                     </View>
 
-                                                    <View className="">
+                                                    <View className=" ">
                                                         <FlatList
                                                             data={
                                                                 filteredContacts
@@ -554,18 +597,7 @@ const ContactDataTable = () => {
                                                             renderItem={({
                                                                 item,
                                                             }) => (
-                                                                <View
-                                                                // style={{
-                                                                //     flexDirection:
-                                                                //         "row",
-                                                                //     alignItems:
-                                                                //         "center",
-                                                                //     borderBottomWidth: 1,
-                                                                //     borderBottomColor:
-                                                                //         "#ccc",
-                                                                //     padding: 10,
-                                                                // }}
-                                                                >
+                                                                <View>
                                                                     {item.status
                                                                         .name ===
                                                                     "Invited" ? (
@@ -581,22 +613,32 @@ const ContactDataTable = () => {
                                                                                                 "center",
                                                                                         }}
                                                                                     >
-                                                                                        <Text
+                                                                                        <View
                                                                                             style={{
-                                                                                                marginLeft: 10,
-                                                                                                color: "#778899",
+                                                                                                backgroundColor:
+                                                                                                    "#C8C8C8",
+                                                                                                padding: 4,
+                                                                                                borderRadius: 5,
                                                                                             }}
                                                                                         >
-                                                                                            Invite
-                                                                                            Sent
-                                                                                        </Text>
+                                                                                            <Icon
+                                                                                                name="check"
+                                                                                                size={
+                                                                                                    10
+                                                                                                }
+                                                                                                color="white"
+                                                                                            />
+                                                                                        </View>
                                                                                     </View>
                                                                                 </View>
                                                                             </View>
 
                                                                             <View className="flex flex-row items-start justify-center w-3/12">
                                                                                 <View className="flex flex-row items-start justify-start w-8/12">
-                                                                                    <Text selectable className="text-slate-500 text-base">
+                                                                                    <Text
+                                                                                        selectable
+                                                                                        className="text-slate-500 text-base"
+                                                                                    >
                                                                                         {
                                                                                             item.name
                                                                                         }
@@ -605,7 +647,10 @@ const ContactDataTable = () => {
                                                                             </View>
 
                                                                             <View className="flex flex-row items-start justify-start w-3/12">
-                                                                                <Text selectable className="text-slate-500 text-base">
+                                                                                <Text
+                                                                                    selectable
+                                                                                    className="text-slate-500 text-base"
+                                                                                >
                                                                                     {
                                                                                         item.mobileNumber
                                                                                     }
@@ -613,7 +658,10 @@ const ContactDataTable = () => {
                                                                             </View>
 
                                                                             <View className="flex flex-row items-start justify-start w-3/12">
-                                                                                <Text selectable className="text-slate-500 text-base">
+                                                                                <Text
+                                                                                    selectable
+                                                                                    className="text-slate-500 text-base"
+                                                                                >
                                                                                     {
                                                                                         item.email
                                                                                     }
@@ -634,73 +682,136 @@ const ContactDataTable = () => {
                                                                                 )
                                                                             }
                                                                         >
-                                                                            {/* <View style={[styles.container, isHovered && styles.hovered]}> */}
-                                                                            <View className="flex flex-row items-center border-solid border-b-1 border-gray-400 w-[99%] p-2">
-                                                                                <View className="flex flex-row justify-center w-2/12">
-                                                                                    <View className="w-0.5/12">
-                                                                                        <View>
-                                                                                            {isSelected(
-                                                                                                item
-                                                                                            ) ? (
+                                                                            {isSelected(
+                                                                                item
+                                                                            ) ? (
+                                                                                <View className="flex flex-row items-center border-solid border-b-1 border-gray-400 w-[99%] p-2 bg-blue-100">
+                                                                                    <View className="flex flex-row justify-center w-2/12">
+                                                                                        <View className="w-0.5/12">
+                                                                                            <View>
                                                                                                 <View
                                                                                                     style={{
                                                                                                         backgroundColor:
                                                                                                             "#114EA8",
-                                                                                                        padding: 7,
+                                                                                                        padding: 4,
                                                                                                         borderRadius: 5,
                                                                                                     }}
                                                                                                 >
                                                                                                     <Icon
                                                                                                         name="check"
                                                                                                         size={
-                                                                                                            6
+                                                                                                            10
                                                                                                         }
                                                                                                         color="white"
                                                                                                     />
                                                                                                 </View>
-                                                                                            ) : (
-                                                                                                <View
-                                                                                                    style={{
-                                                                                                        backgroundColor:
-                                                                                                            "transparent",
-                                                                                                        padding: 8,
-                                                                                                        borderRadius: 4,
-                                                                                                        borderWidth: 2,
-                                                                                                        borderColor:
-                                                                                                            "#CCCCCC",
-                                                                                                    }}
-                                                                                                ></View>
-                                                                                            )}
+                                                                                            </View>
                                                                                         </View>
                                                                                     </View>
-                                                                                </View>
+                                                                                    <View className="flex flex-row items-start justify-center w-3/12">
+                                                                                        <View className="flex flex-row items-start justify-start w-8/12">
+                                                                                            <Text
+                                                                                                selectable
+                                                                                                className="text-slate-500 text-base"
+                                                                                            >
+                                                                                                {
+                                                                                                    item.name
+                                                                                                }
+                                                                                            </Text>
+                                                                                        </View>
+                                                                                    </View>
 
-                                                                                <View className="flex flex-row items-start justify-center w-3/12">
-                                                                                    <View className="flex flex-row items-start justify-start w-8/12">
-                                                                                        <Text selectable className="text-slate-500 text-base">
+                                                                                    <View className="flex flex-row items-start justify-start w-3/12">
+                                                                                        <Text
+                                                                                            selectable
+                                                                                            className="text-slate-500 text-base"
+                                                                                        >
                                                                                             {
-                                                                                                item.name
+                                                                                                item.mobileNumber
+                                                                                            }
+                                                                                        </Text>
+                                                                                    </View>
+                                                                                    <View className="flex flex-row items-start justify-start w-3/12">
+                                                                                        <Text
+                                                                                            selectable
+                                                                                            className="text-slate-500 text-base"
+                                                                                        >
+                                                                                            {
+                                                                                                item.email
                                                                                             }
                                                                                         </Text>
                                                                                     </View>
                                                                                 </View>
+                                                                            ) : (
+                                                                                <>
+                                                                                    <TouchableWithoutFeedback
+                                                                                        onPressIn={
+                                                                                            handleMouseEnter
+                                                                                        }
+                                                                                        onPressOut={
+                                                                                            handleMouseLeave
+                                                                                        }
+                                                                                        onPress={() =>
+                                                                                            toggleContactSelection(
+                                                                                                item
+                                                                                            )
+                                                                                        }
+                                                                                    >
+                                                                                        <View className="flex flex-row items-center border-solid border-b-1 border-gray-400 w-[99%] p-2 ">
+                                                                                            <View className="flex flex-row justify-center w-2/12">
+                                                                                                <View className="w-0.5/12">
+                                                                                                    <View>
+                                                                                                        <View
+                                                                                                            style={{
+                                                                                                                backgroundColor:
+                                                                                                                    "transparent",
+                                                                                                                padding: 8,
+                                                                                                                borderRadius: 4,
+                                                                                                                borderWidth: 2,
+                                                                                                                borderColor:
+                                                                                                                    "#CCCCCC",
+                                                                                                            }}
+                                                                                                        ></View>
+                                                                                                    </View>
+                                                                                                </View>
+                                                                                            </View>
+                                                                                            <View className="flex flex-row items-start justify-center w-3/12 ">
+                                                                                                <View className="flex flex-row items-start justify-start w-8/12">
+                                                                                                    <Text
+                                                                                                        selectable
+                                                                                                        className="text-slate-500 text-base"
+                                                                                                    >
+                                                                                                        {
+                                                                                                            item.name
+                                                                                                        }
+                                                                                                    </Text>
+                                                                                                </View>
+                                                                                            </View>
 
-                                                                                <View className="flex flex-row items-start justify-start w-3/12">
-                                                                                    <Text selectable className="text-slate-500 text-base">
-                                                                                        {
-                                                                                            item.mobileNumber
-                                                                                        }
-                                                                                    </Text>
-                                                                                </View>
-                                                                                <View className="flex flex-row items-start justify-start w-3/12">
-                                                                                    <Text selectable className="text-slate-500 text-base">
-                                                                                        {
-                                                                                            item.email
-                                                                                        }
-                                                                                    </Text>
-                                                                                </View>
-                                                                            </View>
-                                                                            {/* </View> */}
+                                                                                            <View className="flex flex-row items-start justify-start w-3/12">
+                                                                                                <Text
+                                                                                                    selectable
+                                                                                                    className="text-slate-500 text-base"
+                                                                                                >
+                                                                                                    {
+                                                                                                        item.mobileNumber
+                                                                                                    }
+                                                                                                </Text>
+                                                                                            </View>
+                                                                                            <View className="flex flex-row items-start justify-start w-3/12">
+                                                                                                <Text
+                                                                                                    selectable
+                                                                                                    className="text-slate-500 text-base"
+                                                                                                >
+                                                                                                    {
+                                                                                                        item.email
+                                                                                                    }
+                                                                                                </Text>
+                                                                                            </View>
+                                                                                        </View>
+                                                                                    </TouchableWithoutFeedback>
+                                                                                </>
+                                                                            )}
                                                                         </TouchableWithoutFeedback>
                                                                     )}
                                                                 </View>
@@ -715,9 +826,11 @@ const ContactDataTable = () => {
                                                     </View>
                                                 </View>
                                             ) : (
-                                                <Text className="font-bold text-md text-center py-2">
-                                                    No Contacts
-                                                </Text>
+                                                <View>
+                                                    <Text className="font-bold text-md text-center py-2">
+                                                        No Contacts
+                                                    </Text>
+                                                </View>
                                             )}
                                         </View>
                                     </View>
@@ -759,6 +872,8 @@ const ContactDataTable = () => {
                 totalPages={totalPages}
                 setCurrentPageNumber={setCurrentPageNumber}
             />
+
+            {/* <HoverEffectComponent /> */}
             <View className="">
                 <Portal>
                     <Dialog

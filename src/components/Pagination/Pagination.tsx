@@ -11,51 +11,108 @@ export const Pagination = ({
     setItemsPerPage,
     itemsPerPage,
 }) => {
+    // const generatePagesToShow = (currentPage: number) => {
+    //     const pagesToShow = [];
+
+    //     if (currentPage > 1) {
+    //         for (let i = 0; i < (currentPage > 2 ? 2 : currentPage - 1); i++) {
+    //             pagesToShow.push(i + 1);
+    //         }
+    //     }
+
+    //     if (currentPage > 5) {
+    //         pagesToShow.push("...");
+    //     }
+
+    //     if (currentPage >= 4) {
+    //         for (let i = 0; i < (currentPage == 4 ? 1 : 2); i++) {
+    //             pagesToShow.push(
+    //                 currentPage == 4
+    //                     ? currentPage - (1 - i)
+    //                     : currentPage - (2 - i)
+    //             );
+    //         }
+    //     }
+
+    //     for (
+    //         let i = currentPage;
+    //         i <= currentPage + 2 && i <= totalPages - 2;
+    //         i++
+    //     ) {
+    //         pagesToShow.push(i);
+    //     }
+
+    //     if (pagesToShow[pagesToShow.length - 1] < totalPages - 1) {
+    //         pagesToShow.push("...");
+    //     }
+
+    //     for (
+    //         let i = Math.max(currentPage, totalPages - 1);
+    //         i <= totalPages;
+    //         i++
+    //     ) {
+    //         pagesToShow.push(i);
+    //     }
+
+    //     return pagesToShow;
+    // };
+
+
     const generatePagesToShow = (currentPage: number) => {
         const pagesToShow = [];
-
-        if (currentPage > 1) {
-            for (let i = 0; i < (currentPage > 2 ? 2 : currentPage - 1); i++) {
-                pagesToShow.push(i + 1);
+    
+        // Check if total pages is less than or equal to 5
+        if (totalPages <= 5) {
+            // If so, add all pages without ellipses
+            for (let i = 1; i <= totalPages; i++) {
+                pagesToShow.push(i);
+            }
+        } else {
+            // Existing logic for handling ellipses when total pages is greater than 5
+            if (currentPage > 1) {
+                for (let i = 0; i < (currentPage > 2 ? 2 : currentPage - 1); i++) {
+                    pagesToShow.push(i + 1);
+                }
+            }
+    
+            if (currentPage > 5) {
+                pagesToShow.push("...");
+            }
+    
+            if (currentPage >= 4) {
+                for (let i = 0; i < (currentPage == 4 ? 1 : 2); i++) {
+                    pagesToShow.push(
+                        currentPage == 4
+                            ? currentPage - (1 - i)
+                            : currentPage - (2 - i)
+                    );
+                }
+            }
+    
+            for (
+                let i = currentPage;
+                i <= currentPage + 2 && i <= totalPages - 2;
+                i++
+            ) {
+                pagesToShow.push(i);
+            }
+    
+            if (pagesToShow[pagesToShow.length - 1] < totalPages - 1) {
+                pagesToShow.push("...");
+            }
+    
+            for (
+                let i = Math.max(currentPage, totalPages - 1);
+                i <= totalPages;
+                i++
+            ) {
+                pagesToShow.push(i);
             }
         }
-
-        if (currentPage > 5) {
-            pagesToShow.push("...");
-        }
-
-        if (currentPage >= 4) {
-            for (let i = 0; i < (currentPage == 4 ? 1 : 2); i++) {
-                pagesToShow.push(
-                    currentPage == 4
-                        ? currentPage - (1 - i)
-                        : currentPage - (2 - i)
-                );
-            }
-        }
-
-        for (
-            let i = currentPage;
-            i <= currentPage + 2 && i <= totalPages - 2;
-            i++
-        ) {
-            pagesToShow.push(i);
-        }
-
-        if (pagesToShow[pagesToShow.length - 1] < totalPages - 1) {
-            pagesToShow.push("...");
-        }
-
-        for (
-            let i = Math.max(currentPage, totalPages - 1);
-            i <= totalPages;
-            i++
-        ) {
-            pagesToShow.push(i);
-        }
-
+    
         return pagesToShow;
     };
+    
 
     const handleNextPage = () => {
         if (currentPageNumber < totalPages) {

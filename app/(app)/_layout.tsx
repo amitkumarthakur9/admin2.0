@@ -420,8 +420,8 @@ export default function AppLayout() {
                         <Drawer.Screen
                             name="invite-contact" // This is the name of the page and must match the url from root
                             options={{
-                                drawerLabel: "Send Invite",
-                                title: "Send Invite",
+                                drawerLabel: "Invite Client",
+                                title: "Invite Client",
                                 drawerItemStyle: { display: inviteDisplay },
                                 unmountOnBlur: true,
                             }}

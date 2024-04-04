@@ -226,7 +226,7 @@ const AUMDataTable = (role) => {
             return (
                 <View className="flex-1 bg-white rounded shadow h-full overflow-auto">
                     <View>
-                        <View className="w-full flex flex-row mb-2 overflow-scroll ">
+                        <View className="w-full flex flex-row mb-2 overflow-scroll">
                             {tabContent?.map((tab, index) => {
                                 return (
                                     <TouchableOpacity
@@ -234,10 +234,10 @@ const AUMDataTable = (role) => {
                                         onPress={() =>
                                             handleTabPress(index + 1)
                                         }
-                                        className={`w-[12%] py-4 px-6 flex flex-row justify-center items-center border-b-2 ${
+                                        className={`w-[15%] py-4 px-6 flex flex-row justify-center items-center border-b-2 ${
                                             selectedTab === index + 1
                                                 ? "border-black bg-gray-800"
-                                                : "border-b-gray-400 bg-white"
+                                                : "border-b-gray-100 bg-white"
                                         }`}
                                     >
                                         <Text

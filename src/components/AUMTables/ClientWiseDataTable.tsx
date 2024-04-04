@@ -78,9 +78,9 @@ const ClientWiseDataTable = () => {
 
     React.useEffect(() => {
         async function getSchema() {
-            const response: any = await RemoteApi.get("client/schema");
-            setFiltersSchema(response);
-            setSorting(response.sort);
+            const response: any = await RemoteApi.get("aum/client/schema");
+            setFiltersSchema(response.data);
+            setSorting(response.data.sort);
         }
         getSchema();
     }, []);

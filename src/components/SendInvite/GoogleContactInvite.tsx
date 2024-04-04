@@ -362,6 +362,7 @@ const GoogleContactInvite = () => {
             if (response?.message == "Success") {
                 showDialog("invite");
                 setUserInfo(null);
+                setSelectedContacts([]);
             } else {
             }
         } catch (error) {
@@ -449,7 +450,7 @@ const GoogleContactInvite = () => {
             >
                 <View className="bg-white">
                     <View className="">
-                        <TableBreadCrumb name={"Send Invite"} />
+                        <TableBreadCrumb name={"Invite Client"} />
                     </View>
                     <View
                         style={{
@@ -1093,9 +1094,12 @@ const GoogleContactInvite = () => {
                                                                 </View>
                                                             </View>
                                                         ) : (
+                                                            <View>
                                                             <Text className="font-bold text-md text-center py-2">
                                                                 No Contacts
                                                             </Text>
+                                                            
+                                                            </View>
                                                         )}
                                                     </View>
 
@@ -1134,5 +1138,8 @@ const GoogleContactInvite = () => {
         </>
     );
 };
+
+
+
 
 export default GoogleContactInvite;
