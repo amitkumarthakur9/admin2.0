@@ -717,17 +717,17 @@ const InvestModalCard = ({
     useEffect(() => {
         setOptionType(
             isMutualFundSearchResult(selectedFund)
-                ? selectedFund?.optionType?.find((el) => el.name === "Growth")
-                      .id
+                ? selectedFund?.optionType?.find((el) => el?.name === "Growth")
+                      ?.id
                 : null
         );
         setDividendType(
             isMutualFundSearchResult(selectedFund)
                 ? selectedFund?.optionType
-                      ?.find((el) => el.name === "Growth")
-                      .mutualfundDividendType?.find(
+                      ?.find((el) => el?.name === "Growth")
+                      ?.mutualfundDividendType?.find(
                           (el) => el.dividendType.name === "NA"
-                      ).id
+                      )?.id
                 : null
         );
     }, [card]);
@@ -848,8 +848,15 @@ const LumpSumOrderTab = ({
                       ?.find((el) => el.id === optionType)
                       .mutualfundDividendType?.find(
                           (el) => el.id === dividendType
-                      ).dividendType.id
+                      )?.dividendType?.id
                 : mutualFund?.mutualfund?.dividendType?.id, // Reinvest, Payout, NA
+            mutualFundOptionDividendID: IsMFSearch
+                ? mutualFund.optionType
+                      ?.find((el) => el.id === optionType)
+                      .mutualfundDividendType?.find(
+                          (el) => el.id === dividendType
+                      ).id
+                : mutualFund?.mutualfund?.id,
         });
     };
 
@@ -861,8 +868,8 @@ const LumpSumOrderTab = ({
         onSuccess: (res: any) => {
             setFolioID(null);
             setInvestmentAmount("5000");
-            hideDialog();
             if (res && res.code > 299) {
+                // error
                 toast.show({
                     placement: "top",
                     render: () => {
@@ -874,6 +881,7 @@ const LumpSumOrderTab = ({
                     },
                 });
             } else {
+                // success
                 hideDialog();
                 toast.show({
                     placement: "top",
@@ -965,7 +973,7 @@ const SipOrderTab = ({
     hideDialog: () => void;
 }) => {
     const [folioID, setFolioID] = useState(null);
-    const [investmentAmount, setInvestmentAmount] = useState("0");
+    const [investmentAmount, setInvestmentAmount] = useState("5000");
     const [sipDate, setSipDate] = useState();
     const toast = useToast();
 
@@ -988,8 +996,15 @@ const SipOrderTab = ({
                       ?.find((el) => el.id === optionType)
                       .mutualfundDividendType?.find(
                           (el) => el.id === dividendType
-                      ).dividendType.id
+                      )?.dividendType?.id
                 : mutualFund?.mutualfund?.dividendType?.id, // Reinvest, Payout, NA
+            mutualFundOptionDividendID: IsMFSearch
+                ? mutualFund.optionType
+                      ?.find((el) => el.id === optionType)
+                      .mutualfundDividendType?.find(
+                          (el) => el.id === dividendType
+                      ).id
+                : mutualFund?.mutualfund?.id,
             startDate: sipDate,
         });
     };
@@ -1042,7 +1057,7 @@ const SipOrderTab = ({
         <View className="w-full flex flex-col justify-items items-center py-2 gap-y-4">
             <View className="w-1/2 flex flex-col items-center gap-y-2">
                 <Text className="w-full flex flex-row items-start justify-start text-xs text-gray-400 mb-2">
-                    Folio Number*
+                    Folio Number
                 </Text>
                 <DropdownComponent
                     label="Folio Number"
@@ -1522,6 +1537,7 @@ const RedeemModalCard = ({
             optionTypeID: selectedFund?.mutualfund?.optionType?.id,
             mutualfundDividendTypeID:
                 selectedFund?.mutualfund?.dividendType?.id, // Reinvest, Payout, NA
+            mutualFundOptionDividendID: selectedFund?.mutualfund?.id,
         });
     };
 
