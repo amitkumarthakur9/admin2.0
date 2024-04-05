@@ -41,7 +41,7 @@ import ApiRequest from "../../../../src/services/RemoteApi";
 const isMutualFundSearchResult = (
     data: MutualFundSearchResult | Holding
 ): data is MutualFundSearchResult => {
-    return (data as MutualFundSearchResult).category?.name !== undefined;
+    return (data as MutualFundSearchResult)?.category?.name !== undefined;
 };
 
 export default function ClientDetail() {
@@ -710,7 +710,27 @@ const InvestModalCard = ({
 }) => {
     const [folios, setFolios] = useState<FolioSchema[]>([]);
     const [optionType, setOptionType] = useState<number | null>(null);
-    const [dividendType, setDividendType] = useState<string | null>(null);
+    const [dividendType, setDividendType] = useState<string | number | null>(
+        null
+    );
+
+    useEffect(() => {
+        setOptionType(
+            isMutualFundSearchResult(selectedFund)
+                ? selectedFund?.optionType?.find((el) => el.name === "Growth")
+                      .id
+                : null
+        );
+        setDividendType(
+            isMutualFundSearchResult(selectedFund)
+                ? selectedFund?.optionType
+                      ?.find((el) => el.name === "Growth")
+                      .mutualfundDividendType?.find(
+                          (el) => el.dividendType.name === "NA"
+                      ).id
+                : null
+        );
+    }, [card]);
 
     const changeFolios = (folioArray: FolioSchema[]) => {
         setFolios(folioArray);
@@ -912,7 +932,6 @@ const LumpSumOrderTab = ({
                     selectionColor="transparent"
                     placeholderTextColor={"rgb(156, 163, 175)"}
                     cursorColor={"transparent"}
-                    // style={{ outline: "none" }}
                     value={investmentAmount}
                     onChangeText={setInvestmentAmount}
                 />
@@ -1050,7 +1069,6 @@ const SipOrderTab = ({
                     selectionColor="transparent"
                     placeholderTextColor={"rgb(156, 163, 175)"}
                     cursorColor={"transparent"}
-                    // style={{ outline: "none" }}
                     value={investmentAmount}
                     onChangeText={setInvestmentAmount}
                 />
@@ -1135,10 +1153,7 @@ const InvestModalSearch = ({ changeSelectedFund }) => {
 
     return (
         <View className="p-2 px-8">
-            <Pressable
-                onPress={() => console.log("first")}
-                className="flex flex-row justify-start items-center w-full p-4 bg-[#E8F1FF] rounded-full"
-            >
+            <Pressable className="flex flex-row justify-start items-center w-full p-4 bg-[#E8F1FF] rounded-full">
                 <TextInput
                     className="outline-none w-[100%]"
                     placeholder="Search for Mutual Funds"

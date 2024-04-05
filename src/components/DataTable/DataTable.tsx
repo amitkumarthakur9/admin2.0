@@ -1,6 +1,13 @@
 import { Image } from "native-base";
-import { useState } from "react";
-import { Dimensions, StyleSheet, Text, View, Pressable } from "react-native";
+import { useState, useRef } from "react";
+import {
+    Dimensions,
+    StyleSheet,
+    Text,
+    View,
+    Pressable,
+    TouchableWithoutFeedback,
+} from "react-native";
 import Icon from "react-native-vector-icons/Entypo";
 
 // /**
@@ -90,43 +97,46 @@ const TableRows = ({ rows, cellSize, hasActions, options }) => {
 const RowItem = ({ width, content, isLast, hasActions, options, data }) => {
     const [showDropdown, setShowDropdown] = useState(false);
 
-    const toggleDropdown = () => {
-        setShowDropdown(!showDropdown);
-    };
+    const toggleDropdown = () => setShowDropdown(!showDropdown);
+    const closeDropdown = () => setShowDropdown(false);
 
     return (
-        <View className={`flex flex-row relative items-center w-${width}/12`}>
+        <TouchableWithoutFeedback onPress={closeDropdown}>
             <View
-                className={`flex flex-row items-center -z-9999 ${
-                    hasActions && isLast ? "w-fit" : "w-full"
-                } justify-start`}
+                className={`flex flex-row relative items-center w-${width}/12`}
             >
-                {content}
-            </View>
-            {hasActions && isLast && (
-                <Pressable
-                    className="absolute right-8 w-fit"
-                    onPress={toggleDropdown}
+                <View
+                    className={`flex flex-row items-center -z-9999 ${
+                        hasActions && isLast ? "w-fit" : "w-full"
+                    } justify-start`}
                 >
-                    <Icon name="dots-three-vertical" size={16} />
-                </Pressable>
-            )}
-            {showDropdown && (
-                <View className="absolute top-0 right-14 bg-white border-gray-300 border rounded shadow z-9999 cursor-pointer">
-                    {options?.map((option) => {
-                        return (
-                            <Pressable
-                                key={option.key}
-                                className="p-2"
-                                onPress={option.onClick(data)}
-                            >
-                                <Text selectable>{option.name}</Text>
-                            </Pressable>
-                        );
-                    })}
+                    {content}
                 </View>
-            )}
-        </View>
+                {hasActions && isLast && (
+                    <Pressable
+                        className="absolute right-8 w-fit"
+                        onPress={toggleDropdown}
+                    >
+                        <Icon name="dots-three-vertical" size={16} />
+                    </Pressable>
+                )}
+                {showDropdown && (
+                    <View className="absolute top-0 right-14 bg-white border-gray-300 border rounded shadow z-9999 cursor-pointer">
+                        {options?.map((option) => {
+                            return (
+                                <Pressable
+                                    key={option.key}
+                                    className="p-2"
+                                    onPress={option.onClick(data)}
+                                >
+                                    <Text selectable>{option.name}</Text>
+                                </Pressable>
+                            );
+                        })}
+                    </View>
+                )}
+            </View>
+        </TouchableWithoutFeedback>
     );
 };
 
