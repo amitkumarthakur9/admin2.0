@@ -16,6 +16,7 @@ import { HStack, Heading, Spinner } from "native-base";
 import { TableBreadCrumb } from "../BreadCrumbs/TableBreadCrumb";
 import { Card } from "./Card";
 import { MandateRows } from "./MandateRows";
+import NoDataAvailable from "../Others/NoDataAvailable";
 
 const MandateDataTable = () => {
     const [isLoading, setIsLoading] = React.useState(false);
@@ -111,54 +112,65 @@ const MandateDataTable = () => {
                     getDataList={getDataList}
                 />
             </View>
-            <View className="border-[0.2px] border-[#e4e4e4]">
-                <DynamicFilters
-                    appliedSorting={appliedSorting}
-                    setAppliedSorting={setAppliedSorting}
-                    sorting={sorting}
-                    fileName="Mandate"
-                    downloadApi={"mandate/download-report"}
-                    schemaResponse={filtersSchema}
-                    setCurrentPageNumber={setCurrentPageNumber}
-                    getList={getDataList}
-                    appliedFilers={appliedFilers}
-                    setAppliedFilers={setAppliedFilers}
-                />
-
-                {!isLoading ? (
-                    <View className={"mt-4 z-[-1] "}>
-                        {width < 830 ? (
-                            <Card data={data} schema={null} />
-                        ) : (
-                            <MandateRows data={data} schema={null} />
-                        )}
-                    </View>
+            <View className="h-screen">
+                {data.length === 0 ? (
+                    <NoDataAvailable />
                 ) : (
-                    <HStack
-                        space={2}
-                        marginTop={20}
-                        marginBottom={20}
-                        justifyContent="center"
-                    >
-                        <Spinner
-                            color={"black"}
-                            accessibilityLabel="Loading order"
+                    <>
+                        <View className="border-[0.2px] border-[#e4e4e4]">
+                            <DynamicFilters
+                                appliedSorting={appliedSorting}
+                                setAppliedSorting={setAppliedSorting}
+                                sorting={sorting}
+                                fileName="Mandate"
+                                downloadApi={"mandate/download-report"}
+                                schemaResponse={filtersSchema}
+                                setCurrentPageNumber={setCurrentPageNumber}
+                                getList={getDataList}
+                                appliedFilers={appliedFilers}
+                                setAppliedFilers={setAppliedFilers}
+                            />
+
+                            {!isLoading ? (
+                                <View className={"mt-4 z-[-1] "}>
+                                    {width < 830 ? (
+                                        <Card data={data} schema={null} />
+                                    ) : (
+                                        <MandateRows
+                                            data={data}
+                                            schema={null}
+                                        />
+                                    )}
+                                </View>
+                            ) : (
+                                <HStack
+                                    space={2}
+                                    marginTop={20}
+                                    marginBottom={20}
+                                    justifyContent="center"
+                                >
+                                    <Spinner
+                                        color={"black"}
+                                        accessibilityLabel="Loading order"
+                                    />
+                                    <Heading color="black" fontSize="md">
+                                        Loading
+                                    </Heading>
+                                </HStack>
+                            )}
+                        </View>
+
+                        <Pagination
+                            itemsPerPage={itemsPerPage}
+                            setItemsPerPage={setItemsPerPage}
+                            getDataList={getDataList}
+                            currentPageNumber={currentPageNumber}
+                            totalPages={totalPages}
+                            setCurrentPageNumber={setCurrentPageNumber}
                         />
-                        <Heading color="black" fontSize="md">
-                            Loading
-                        </Heading>
-                    </HStack>
+                    </>
                 )}
             </View>
-
-            <Pagination
-                itemsPerPage={itemsPerPage}
-                setItemsPerPage={setItemsPerPage}
-                getDataList={getDataList}
-                currentPageNumber={currentPageNumber}
-                totalPages={totalPages}
-                setCurrentPageNumber={setCurrentPageNumber}
-            />
         </View>
     );
 };

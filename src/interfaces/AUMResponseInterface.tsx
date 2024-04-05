@@ -47,6 +47,8 @@ interface AUMDataItem {
     account: Account;
     mutualfund?: MutualFund;
     xirr: number;
+    distributor: Distributor;
+
 }
 
 interface AUMResponseInterface {
@@ -162,6 +164,7 @@ interface ClientWiseData {
     panNumber: string;
     xirr:  number;
     isActive: boolean;
+    distributor: Distributor;
 }
 
 interface KycStatus {
@@ -221,6 +224,8 @@ interface Holding {
     account: Account;
     isActive: string;
     kycStatus: string;
+    distributor: Distributor;
+
 }
 
 interface HoldingwiseApiResponse {
@@ -231,5 +236,16 @@ interface HoldingwiseApiResponse {
     count: number;
     filterCount: number;
     totalCount: number;
+}
+
+interface ManagementUser {
+    id: string;
+    name: string;
+}
+
+interface Distributor {
+    id: string;
+    name: string;
+    managementUsers: ManagementUser[];
 }
 

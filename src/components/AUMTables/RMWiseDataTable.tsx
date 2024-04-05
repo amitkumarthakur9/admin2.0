@@ -26,6 +26,7 @@ import { RupeeSymbol, getInitials } from "../../helper/helper";
 import DataTable from "../DataTable/DataTable";
 import Tag from "../Tag/Tag";
 import Icon from 'react-native-vector-icons/FontAwesome';
+import NoDataAvailable from "../Others/NoDataAvailable";
 
 const RMWiseDataTable = () => {
     const [isLoading, setIsLoading] = React.useState(false);
@@ -80,7 +81,7 @@ const RMWiseDataTable = () => {
 
     React.useEffect(() => {
         async function getSchema() {
-            const response: any = await RemoteApi.get("client/schema");
+            const response: any = await RemoteApi.get("aum/management-user/schema");
             setFiltersSchema(response);
             setSorting(response.sort);
         }
@@ -146,6 +147,12 @@ const RMWiseDataTable = () => {
     });
 
     return (
+        <View className="h-screen">
+
+        { data.length === 0
+            ? (
+                <NoDataAvailable />
+            ) : (
         <View className="bg-white">
             {/* <View className="">
                 <TableBreadCrumb name={"Scheme Wise"} />
@@ -204,6 +211,9 @@ const RMWiseDataTable = () => {
                 setCurrentPageNumber={setCurrentPageNumber}
             />
         </View>
+        )
+    }
+    </View>
     );
 };
 

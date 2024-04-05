@@ -13,6 +13,7 @@ import { Pagination } from "../Pagination/Pagination";
 import { HStack, Heading, Spinner } from "native-base";
 import { TableBreadCrumb } from "../BreadCrumbs/TableBreadCrumb";
 import { MobileSIPRows } from "./MobileSIPRows";
+import NoDataAvailable from "../Others/NoDataAvailable";
 
 const SIPDataTable = () => {
     const [isLoading, setIsLoading] = React.useState(false);
@@ -89,6 +90,13 @@ const SIPDataTable = () => {
             <View className="">
                 <TableBreadCrumb name={"SIP Reports"} />
             </View>
+            <View className="h-screen">
+
+        { data.length === 0
+            ? (
+                <NoDataAvailable />
+            ) : (
+                <>
             <View className="border-[0.2px]  border-[#e4e4e4]">
                 <DynamicFilters
                     appliedSorting={appliedSorting}
@@ -137,6 +145,10 @@ const SIPDataTable = () => {
                 totalPages={totalPages}
                 setCurrentPageNumber={setCurrentPageNumber}
             />
+            </>
+            )
+        }
+        </View>
         </View>
     );
 };

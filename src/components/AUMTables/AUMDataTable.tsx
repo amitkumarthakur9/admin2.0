@@ -224,9 +224,20 @@ const AUMDataTable = (role) => {
             tabscount = 3,
         }) => {
             return (
+                
                 <View className="flex-1 bg-white rounded shadow h-full overflow-auto">
                     <View>
-                        <View className="w-full flex flex-row mb-2 overflow-scroll">
+
+
+                        {/* <View className="w-full flex flex-row mb-2 overflow-scroll ">
+                         */}
+                         <ScrollView
+      horizontal={true} // Set horizontal to true for horizontal scrolling
+      showsHorizontalScrollIndicator={true} // Hide the horizontal scrollbar
+    //   invertStickyHeaders={true}
+   className="flex flex-row"
+    >
+
                             {tabContent?.map((tab, index) => {
                                 return (
                                     <TouchableOpacity
@@ -252,10 +263,15 @@ const AUMDataTable = (role) => {
                                     </TouchableOpacity>
                                 );
                             })}
-                        </View>
+                        {/* </View>
+                         */}
+                         </ScrollView>
+                    
                         {tabContent[selectedTab - 1]?.content}
                     </View>
+                    
                 </View>
+               
             );
         };
 

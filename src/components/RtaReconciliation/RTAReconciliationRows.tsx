@@ -31,11 +31,14 @@ import { useState } from "react";
 import RemoteApi from "../../services/RemoteApi";
 import { TransactionStatusModal } from "./TransactionStatusUpdateModal";
 import { getTransactionMessage } from "../../helper/StatusInfo";
+import { useUserRole } from "../../context/useRoleContext";
+
 
 export const RTAReconciliationRows = ({ data, schema, getDataList }) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [id, setId] = useState("");
     const [transactionStatus, setTransactionStatus] = useState("");
+    const { roleId } = useUserRole();
 
     const getInitials = (name: string) => {
         const words = name.split(" ");
@@ -68,13 +71,16 @@ export const RTAReconciliationRows = ({ data, schema, getDataList }) => {
                         </Text>
                     </View>
                 </View>
-                <View className="flex flex-row w-1/12">
-                    <View className="flex flex-row items-center w-full justify-start">
-                        <Text selectable className="font-semibold">
-                            RTA Agent Code
-                        </Text>
-                    </View>
-                </View>
+                {roleId > 2 && (
+           <View className="flex flex-row w-1/12">
+           <View className="flex flex-row items-center w-full justify-start">
+               <Text selectable className="font-semibold">
+                   Distributor
+               </Text>
+           </View>
+       </View>
+        )}
+                
                 <View className="flex flex-row w-1/12">
                     <View className="flex flex-row items-center w-full justify-start">
                         <Text selectable className="font-semibold">
@@ -385,7 +391,7 @@ export const RTAReconciliationRows = ({ data, schema, getDataList }) => {
                                                 >
                                                     {rta.transactionStatus || "-"}
                                                 </Text>
-                                                <Pressable
+                                                {/* <Pressable
                                                     onPress={() => {
                                                         setModalVisible(true),
                                                             setId(rta.id),
@@ -399,7 +405,7 @@ export const RTAReconciliationRows = ({ data, schema, getDataList }) => {
                                                         size={15}
                                                         color="black"
                                                     />
-                                                </Pressable>
+                                                </Pressable> */}
 
                                                 
 

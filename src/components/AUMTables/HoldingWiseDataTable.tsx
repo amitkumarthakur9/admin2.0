@@ -14,6 +14,7 @@ import {
     Heading,
     Spinner,
     WarningIcon,
+    Image,
 } from "native-base";
 
 import RemoteApi from "../../services/RemoteApi";
@@ -24,10 +25,13 @@ import { RupeeSymbol, getInitials } from "../../helper/helper";
 import DataTable from "../DataTable/DataTable";
 import Tag from "../Tag/Tag";
 import Icon from "react-native-vector-icons/FontAwesome";
+import { useUserRole } from "../../context/useRoleContext";
+import TableCard from "../Card/TableCard";
+import NoDataAvailable from "../Others/NoDataAvailable";
 
 const HoldingWiseDataTable = () => {
     const [isLoading, setIsLoading] = React.useState(false);
-
+    const { roleId } = useUserRole();
     const [currentPageNumber, setCurrentPageNumber] = useState(1);
     const [totalItems, setTotalItems] = useState(0);
     const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -41,6 +45,16 @@ const HoldingWiseDataTable = () => {
         direction: "",
     });
     const { width } = useWindowDimensions();
+    const mobileData = data.map(item => ({
+        // id: item.id,
+        // Name: item?.name,
+        // ClientId: item?.clientId,
+        // PanNumber: item?.panNumber,
+        CurrentValue: RupeeSymbol + item.currentValue,
+        InvestedValue: RupeeSymbol + item.investedValue,
+        XIRR: item?.xirr,
+
+      }));
 
     async function getDataList(
         updatedFilterValues = [],
@@ -78,7 +92,7 @@ const HoldingWiseDataTable = () => {
 
     React.useEffect(() => {
         async function getSchema() {
-            const response: any = await RemoteApi.get("client/schema");
+            const response: any = await RemoteApi.get("aum/holding/schema");
             setFiltersSchema(response);
             setSorting(response.sort);
         }
@@ -95,7 +109,7 @@ const HoldingWiseDataTable = () => {
     }, [appliedSorting]);
 
     const transformedData = data?.map((item) => {
-        return [
+        const itemStructure =  [
             {
                 key: "clientName",
                 content: (
@@ -251,10 +265,31 @@ const HoldingWiseDataTable = () => {
             //     ),
             // },
         ];
+
+         // Conditionally add an additional object based on roleId to index 2
+         if (roleId > 2) {
+            itemStructure.splice(2, 0, {
+                key: "distributor",
+                content: (
+                    <Text selectable className="text-[#686868] font-semibold">
+                        {item?.distributor?.name}
+                    </Text>
+                ),
+            });
+        }
+
+        return itemStructure;
     });
 
     return (
-        <View className="bg-white">
+        <View className="h-screen">
+
+        { data.length === 0
+            ? (
+                <NoDataAvailable />
+            ) : (
+
+                <View className="bg-white">
             {/* <View className="">
                 <TableBreadCrumb name={"Folio Wise"} />
             </View> */}
@@ -274,7 +309,25 @@ const HoldingWiseDataTable = () => {
 
                 {!isLoading ? (
                     <ScrollView className={"mt-4 z-[-1] "}>
+                        {width < 830 ? (
+                            <TableCard data={mobileData} />
+                        ) : roleId > 2 ? (
                         <DataTable
+                            headers={[
+                                "Client Name",
+                                "Scheme Name",
+                                "Distributor",
+                                "Total invested",
+                                "Current Value",
+                                "XIRR",
+                                "Returns",
+                                // "",
+                            ]}
+                            cellSize={[3, 2,1, 1, 1, 1, 1]}
+                            rows={transformedData}
+                        />
+                        ) : (
+                            <DataTable
                             headers={[
                                 "Client Name",
                                 "Scheme Name",
@@ -287,6 +340,7 @@ const HoldingWiseDataTable = () => {
                             cellSize={[3, 3, 1, 1, 1, 1]}
                             rows={transformedData}
                         />
+                        )}
                     </ScrollView>
                 ) : (
                     <HStack
@@ -314,6 +368,9 @@ const HoldingWiseDataTable = () => {
                 totalPages={totalPages}
                 setCurrentPageNumber={setCurrentPageNumber}
             />
+        </View>
+            )
+        }
         </View>
     );
 };

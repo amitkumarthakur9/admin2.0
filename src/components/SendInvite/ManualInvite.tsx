@@ -64,14 +64,12 @@ export default function ManualInvite({ getlist=() => {} }) {
         }
 
         // Email validation
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(formData.email)) {
-            newErrors.email = !formData.email
-                ? "Email is required"
-                : "Please enter a valid email address";
-        } else {
-            newErrors.email = null; // Clear error message if validation passes
-        }
+        // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        // if (!emailRegex.test(formData.email)) {
+        //     newErrors.email =  "Please enter a valid email address";
+        // } else {
+        //     newErrors.email = null; // Clear error message if validation passes
+        // }
 
         // Update the error state
         setErrors(newErrors);
@@ -263,7 +261,7 @@ export default function ManualInvite({ getlist=() => {} }) {
                                         )}
                                     </FormControl>
                                     <FormControl
-                                        isRequired
+                                       
                                         isInvalid={errors.email !== null}
                                         w="100%"
                                         maxW="300px"
@@ -310,7 +308,8 @@ export default function ManualInvite({ getlist=() => {} }) {
                                             </FormControl.ErrorMessage>
                                         ) : (
                                             <FormControl.HelperText>
-                                                Enter 10 digit mobileNumber
+                                                Enter 10 digit mobile
+
                                                 Number.
                                             </FormControl.HelperText>
                                         )}

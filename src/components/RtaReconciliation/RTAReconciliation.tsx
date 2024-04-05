@@ -25,6 +25,7 @@ import CalendarPicker from "../CustomDatePicker/CalendarPicker";
 import { DynamicFilters } from "../Filters/DynamicFilters";
 import { TableBreadCrumb } from "../BreadCrumbs/TableBreadCrumb";
 import { Cards } from "./Cards";
+import NoDataAvailable from "../Others/NoDataAvailable";
 
 const RTAReconciliation = () => {
     const [isLoading, setIsLoading] = React.useState(false);
@@ -122,6 +123,13 @@ const RTAReconciliation = () => {
             <View className="">
                 <TableBreadCrumb name={"Transactions"} />
             </View>
+            <View className="h-screen">
+
+        { data.length === 0
+            ? (
+                <NoDataAvailable />
+            ) : (
+                <>
             <View className="border-[0.2px]  border-[#e4e4e4]">
                 <DynamicFilters
                     appliedSorting={appliedSorting}
@@ -178,6 +186,10 @@ const RTAReconciliation = () => {
                 totalPages={totalPages}
                 setCurrentPageNumber={setCurrentPageNumber}
             />
+            </>
+            )
+        }
+        </View>
         </View>
     );
 };

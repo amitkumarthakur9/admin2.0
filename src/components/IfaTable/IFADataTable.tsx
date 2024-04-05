@@ -28,6 +28,7 @@ import {
     IfaListResponse,
     Investor,
 } from "../../interfaces/IfaResponseInterface";
+import NoDataAvailable from "../Others/NoDataAvailable";
 
 const IFADataTable = () => {
     const [isLoading, setIsLoading] = React.useState(false);
@@ -46,17 +47,17 @@ const IFADataTable = () => {
     });
     const { width } = useWindowDimensions();
 
-    const dummyData = [
-        {
-            id: "1",
-            name: "EESHAN SHUKLAA",
-            panNumber: "MALPS3268K",
-            arn: "ARNS3268K",
-            euin: "EUINS3268K",
-            activeAccountCount: 20,
-            activeSipCount: 37,
-        },
-    ];
+    // const dummyData = [
+    //     {
+    //         id: "1",
+    //         name: "EESHAN SHUKLAA",
+    //         panNumber: "MALPS3268K",
+    //         arn: "ARNS3268K",
+    //         euin: "EUINS3268K",
+    //         activeAccountCount: 20,
+    //         activeSipCount: 37,
+    //     },
+    // ];
 
     async function getDataList(
         updatedFilterValues = [],
@@ -78,8 +79,11 @@ const IFADataTable = () => {
             data
         );
 
-        if (response.code == 200) {
+        if (response.code == 200 ||response.message == "Success" ) {
             setData(response?.data);
+            console.log("ifadatalist")
+
+            console.log(response?.data)
 
             // setItemsPerPage(response.count)
             setTotalItems(response.filterCount);
@@ -91,7 +95,7 @@ const IFADataTable = () => {
                 )
             );
         } else {
-            setData(dummyData);
+            // setData(dummyData);
             setIsLoading(false);
         }
     }
@@ -129,7 +133,7 @@ const IFADataTable = () => {
                             <View className="flex flex-row items-center text-black font-semibold flex-wrap w-11/12 mb-2">
                                 <Pressable
                                     onPress={() =>
-                                        router.push(`ifa/${item?.id}`)
+                                        router.push(`dashboard/${item?.id}`)
                                     }
                                 >
                                     <Text
@@ -192,6 +196,13 @@ const IFADataTable = () => {
             <View className="">
                 <TableBreadCrumb name={"IFA Report"} />
             </View>
+            <View className="h-screen">
+
+            { data.length === 0
+            ? (
+                <NoDataAvailable />
+            ) : (
+                <>
             <View className="border-[0.2px]  border-[#e4e4e4]">
                 <DynamicFilters
                     appliedSorting={appliedSorting}
@@ -218,7 +229,7 @@ const IFADataTable = () => {
                                     "PAN No.",
                                     "ARN No.",
                                     "EUIN No.",
-                                    "Active Account Count",
+                                    "No. of Clients",
                                     "Active SIP Count",
                                 ]}
                                 cellSize={[2, 2, 2, 2, 2, 2]}
@@ -252,6 +263,10 @@ const IFADataTable = () => {
                 totalPages={totalPages}
                 setCurrentPageNumber={setCurrentPageNumber}
             />
+            </>
+            )
+        }
+        </View>
         </View>
     );
 };

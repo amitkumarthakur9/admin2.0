@@ -24,10 +24,14 @@ import { RupeeSymbol, getInitials } from "../../helper/helper";
 import DataTable from "../DataTable/DataTable";
 import Tag from "../Tag/Tag";
 import Icon from "react-native-vector-icons/FontAwesome";
+import { useUserRole } from "../../context/useRoleContext";
+import TableCard from "../Card/TableCard";
+import NoDataAvailable from "../Others/NoDataAvailable";
+
 
 const FolioWiseDataTable = () => {
     const [isLoading, setIsLoading] = React.useState(false);
-
+    const { roleId } = useUserRole();
     const [currentPageNumber, setCurrentPageNumber] = useState(1);
     const [totalItems, setTotalItems] = useState(0);
     const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -41,6 +45,16 @@ const FolioWiseDataTable = () => {
         direction: "",
     });
     const { width } = useWindowDimensions();
+    const mobileData = data.map(item => ({
+        // id: item.id,
+        // Name: item?.name,
+        // ClientId: item?.clientId,
+        // PanNumber: item?.panNumber,
+        CurrentValue: RupeeSymbol + item.currentValue,
+        InvestedValue: RupeeSymbol + item.investedValue,
+        XIRR: item?.xirr,
+
+      }));
 
     async function getDataList(
         updatedFilterValues = [],
@@ -83,9 +97,9 @@ const FolioWiseDataTable = () => {
 
     React.useEffect(() => {
         async function getSchema() {
-            const response: any = await RemoteApi.get("client/schema");
-            setFiltersSchema(response);
-            setSorting(response.sort);
+            const response: any = await RemoteApi.get("aum/folio/schema");
+            setFiltersSchema(response?.data);
+            setSorting(response?.data?.sort);
         }
         getSchema();
     }, []);
@@ -102,7 +116,7 @@ const FolioWiseDataTable = () => {
     
 
     const transformedData = data?.map((item) => {
-        return [
+        const itemStructure = [
             {
                 key: "clientName",
                 content: (
@@ -284,9 +298,30 @@ const FolioWiseDataTable = () => {
             //     ),
             // },
         ];
+
+         // Conditionally add an additional object based on roleId to index 2
+         if (roleId > 2) {
+            itemStructure.splice(2, 0, {
+                key: "distributor",
+                content: (
+                    <Text selectable className="text-[#686868] font-semibold">
+                        {item?.distributor?.name}
+                    </Text>
+                ),
+            });
+        }
+
+        return itemStructure;
     });
 
     return (
+
+        <View className="h-screen">
+
+        { data.length === 0
+            ? (
+                <NoDataAvailable />
+            ) : (
         <View className="bg-white">
             {/* <View className="">
                 <TableBreadCrumb name={"Folio Wise"} />
@@ -307,7 +342,27 @@ const FolioWiseDataTable = () => {
 
                 {!isLoading ? (
                     <ScrollView className={"mt-4 z-[-1] "}>
+                        {width < 830 ? (
+                            <TableCard data={mobileData} />
+                        ) : roleId > 2 ? (
                         <DataTable
+                            headers={[
+                                "Client Name",
+                                "Scheme Name",
+                                "Distributor",
+                                "Folio Number",
+                                "Balance Units",
+                                "Invested Amount",
+                                "Current Value",
+                                "XIRR",
+                                "Returns",
+                                // "",
+                            ]}
+                            cellSize={[2, 1,1, 1, 1, 1, 1, 1, 1,]}
+                            rows={transformedData}
+                        />
+                        ) : (
+                            <DataTable
                             headers={[
                                 "Client Name",
                                 "Scheme Name",
@@ -322,6 +377,7 @@ const FolioWiseDataTable = () => {
                             cellSize={[2, 2, 1, 1, 1, 1, 1, 1,]}
                             rows={transformedData}
                         />
+                        )}
                     </ScrollView>
                 ) : (
                     <HStack
@@ -350,6 +406,9 @@ const FolioWiseDataTable = () => {
                 setCurrentPageNumber={setCurrentPageNumber}
             />
         </View>
+        )
+    }
+    </View>
     );
 };
 

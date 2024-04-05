@@ -26,6 +26,7 @@ import { RupeeSymbol, getInitials } from "../../helper/helper";
 import DataTable from "../DataTable/DataTable";
 import Tag from "../Tag/Tag";
 import Icon from "react-native-vector-icons/FontAwesome";
+import NoDataAvailable from "../Others/NoDataAvailable";
 
 const AMCWiseDataTable = () => {
     const [isLoading, setIsLoading] = React.useState(false);
@@ -43,6 +44,7 @@ const AMCWiseDataTable = () => {
         direction: "",
     });
     const { width } = useWindowDimensions();
+    const [isDownloadProcessing, setIsDownloadProcessing] = useState(false);
 
     async function getDataList(
         updatedFilterValues = [],
@@ -85,7 +87,7 @@ const AMCWiseDataTable = () => {
 
     React.useEffect(() => {
         async function getSchema() {
-            const response: any = await RemoteApi.get("client/schema");
+            const response: any = await RemoteApi.get("aum/client/schema");
             setFiltersSchema(response);
             setSorting(response.sort);
         }
@@ -103,13 +105,28 @@ const AMCWiseDataTable = () => {
 
     console.log(data);
 
+    const downloadReport = async () => {
+        setIsDownloadProcessing(true);
+        let data: any = { filters: appliedFilers };
+
+        if (appliedSorting.key != "") {
+            data["orderBy"] = appliedSorting;
+        }
+
+        const response: any = await RemoteApi.downloadFile({
+            endpoint: downloadApi,
+            fileName: fileName,
+            data: data,
+        });
+        setIsDownloadProcessing(false);
+    };
+
     const transformedData = data?.map((item) => {
         return [
             {
                 key: "fundhouse",
                 content: (
                     <View className="flex flex-row justify-center ">
-                         
                         <Text
                             selectable
                             className="text-[#686868] font-semibold"
@@ -155,14 +172,42 @@ const AMCWiseDataTable = () => {
 
             //     ),
             // },
+
+            
         ];
     });
 
     return (
+        <View className="h-screen">
+
+        { data.length === 0
+            ? (
+                <NoDataAvailable />
+            ) : (
         <View className="bg-white">
             {/* <View className="">
                 <TableBreadCrumb name={"Scheme Wise"} />
             </View> */}
+            {/* <View className="flex flex-row justify-end items-end py-2 lg:mt-0">
+                    <Pressable
+                        onPress={downloadReport}
+                        className={
+                            "flex flex-row justify-center items-center border-[1px] rounded px-4 h-[42px] border-slate-200"
+                        }
+                        accessibilityLabel="Download"
+                    >
+                        {isDownloadProcessing ? (
+                            <Spinner
+                                color={"black"}
+                                size={14}
+                                accessibilityLabel="Loading"
+                            />
+                        ) : (
+                            <Icon name="download" size={14} color="#484848" />
+                        )}
+                        {<Text className="mx-2">Download</Text>}
+                    </Pressable>
+                </View> */}
             <View className="border-[0.2px]  border-[#e4e4e4]">
                 <DynamicFilters
                     appliedSorting={appliedSorting}
@@ -172,13 +217,15 @@ const AMCWiseDataTable = () => {
                     downloadApi={"client/download-report"}
                     schemaResponse={filtersSchema}
                     setCurrentPageNumber={setCurrentPageNumber}
-                    getList={getDataList}
+                    getList=""
                     appliedFilers={appliedFilers}
                     setAppliedFilers={setAppliedFilers}
                 />
+                
 
                 {!isLoading ? (
                     <ScrollView className={"mt-4 z-[-1] "}>
+                        
                         <DataTable
                             headers={[
                                 "Fund House",
@@ -189,6 +236,7 @@ const AMCWiseDataTable = () => {
                             cellSize={[3, 3, 3]}
                             rows={transformedData}
                         />
+                        
                     </ScrollView>
                 ) : (
                     <HStack
@@ -208,14 +256,17 @@ const AMCWiseDataTable = () => {
                 )}
             </View>
 
-            <Pagination
+            {/* <Pagination
                 itemsPerPage={itemsPerPage}
                 setItemsPerPage={setItemsPerPage}
                 getDataList={getDataList}
                 currentPageNumber={currentPageNumber}
                 totalPages={totalPages}
                 setCurrentPageNumber={setCurrentPageNumber}
-            />
+            /> */}
+        </View>
+         )
+        }
         </View>
     );
 };

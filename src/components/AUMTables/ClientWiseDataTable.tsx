@@ -24,10 +24,13 @@ import { RupeeSymbol, getInitials } from "../../helper/helper";
 import DataTable from "../DataTable/DataTable";
 import Tag from "../Tag/Tag";
 import Icon from "react-native-vector-icons/FontAwesome";
+import TableCard from "../Card/TableCard";
+import { useUserRole } from "../../context/useRoleContext";
+import NoDataAvailable from "../Others/NoDataAvailable";
 
 const ClientWiseDataTable = () => {
     const [isLoading, setIsLoading] = React.useState(false);
-
+    const { roleId } = useUserRole();
     const [currentPageNumber, setCurrentPageNumber] = useState(1);
     const [totalItems, setTotalItems] = useState(0);
     const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -70,7 +73,7 @@ const ClientWiseDataTable = () => {
             setTotalPages(
                 Math.ceil(
                     (response.filterCount || response.data.length) /
-                    itemsPerPage
+                        itemsPerPage
                 )
             );
         }
@@ -94,8 +97,20 @@ const ClientWiseDataTable = () => {
         }
     }, [appliedSorting]);
 
+
+    const mobileData = data.map(item => ({
+        // id: item.id,
+        Name: item?.name,
+        ClientId: item?.clientId,
+        PanNumber: item?.panNumber,
+        CurrentValue: RupeeSymbol + item.currentValue,
+        InvestedValue: RupeeSymbol + item.investedValue,
+        XIRR: item?.xirr,
+
+      }));
+
     const transformedData = data?.map((item) => {
-        return [
+        const itemStructure =  [
             {
                 key: "clientName",
                 content: (
@@ -135,7 +150,11 @@ const ClientWiseDataTable = () => {
                                 </View>
                             </View>
                             <View className="flex flex-row items-center mt-0">
-                            {item?.kycStatus?.name=="Verified" ? <Tag>KYC Done</Tag> : <Tag>KYC Not Done</Tag>}
+                                {item?.kycStatus?.name == "Verified" ? (
+                                    <Tag>KYC Done</Tag>
+                                ) : (
+                                    <Tag>KYC Not Done</Tag>
+                                )}
                                 {/* <Tag>SIP(N/A)</Tag> */}
                                 {/* <Tag>Autopay active</Tag> */}
                             </View>
@@ -146,8 +165,11 @@ const ClientWiseDataTable = () => {
             {
                 key: "clientCode",
                 content: (
-                    <Text selectable className="text-[#686868] font-semibold w-11/12">
-                        {item?.clientId ? item?.clientId : "-"}  
+                    <Text
+                        selectable
+                        className="text-[#686868] font-semibold w-11/12"
+                    >
+                        {item?.clientId ? item?.clientId : "-"}
                     </Text>
                 ),
             },
@@ -155,7 +177,7 @@ const ClientWiseDataTable = () => {
                 key: "panNumber",
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
-                        {item?.panNumber ? item?.panNumber : "-"}  
+                        {item?.panNumber ? item?.panNumber : "-"}
                     </Text>
                 ),
             },
@@ -163,7 +185,9 @@ const ClientWiseDataTable = () => {
                 key: "totalinvested",
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
-                        {item?.investedValue ? RupeeSymbol + item?.investedValue : RupeeSymbol + "0"} 
+                        {item?.investedValue
+                            ? RupeeSymbol + item?.investedValue
+                            : RupeeSymbol + "0"}
                     </Text>
                 ),
             },
@@ -171,7 +195,9 @@ const ClientWiseDataTable = () => {
                 key: "CurrentValue",
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
-                         {item?.currentValue ? RupeeSymbol + item?.currentValue : RupeeSymbol +"0"} 
+                        {item?.currentValue
+                            ? RupeeSymbol + item?.currentValue
+                            : RupeeSymbol + "0"}
                     </Text>
                 ),
             },
@@ -179,17 +205,24 @@ const ClientWiseDataTable = () => {
                 key: "XIRR",
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
-                       {item?.xirr ? item?.xirr + "%": "0%"}  
+                        {item?.xirr ? item?.xirr + "%" : "0%"}
                     </Text>
                 ),
             },
             {
                 key: "returns",
                 content: (
-                    <View className="flex flex-row justify-center text-[#686868] font-semibold w-11/12 " >
-                        <Text selectable className="text-[#686868] font-semibold w-11/12">
-                        {item?.investedValue && item?.currentValue ? RupeeSymbol + (item?.currentValue - item?.investedValue).toFixed(2) : RupeeSymbol +"0"
-                            }
+                    <View className="flex flex-row justify-center text-[#686868] font-semibold w-11/12 ">
+                        <Text
+                            selectable
+                            className="text-[#686868] font-semibold w-11/12"
+                        >
+                            {item?.investedValue && item?.currentValue
+                                ? RupeeSymbol +
+                                  (
+                                      item?.currentValue - item?.investedValue
+                                  ).toFixed(2)
+                                : RupeeSymbol + "0"}
                         </Text>
                     </View>
                 ),
@@ -210,9 +243,30 @@ const ClientWiseDataTable = () => {
             //     ),
             // },
         ];
+
+         // Conditionally add an additional object based on roleId to index 2
+         if (roleId > 2) {
+            itemStructure.splice(2, 0, {
+                key: "distributor",
+                content: (
+                    <Text selectable className="text-[#686868] font-semibold">
+                        {item?.distributor?.name}
+                    </Text>
+                ),
+            });
+        }
+
+        return itemStructure;
     });
 
     return (
+
+        <View className="h-screen">
+
+        { data.length === 0
+            ? (
+                <NoDataAvailable />
+            ) : (
         <View className="bg-white">
             {/* <View className="">
                 <TableBreadCrumb name={"Client Wise"} />
@@ -233,20 +287,40 @@ const ClientWiseDataTable = () => {
 
                 {!isLoading ? (
                     <ScrollView className={"mt-4 z-[-1] "}>
-                        <DataTable
-                            headers={[
-                                "Client Name",
-                                "Client Code",
-                                "PAN",
-                                "Total Invested",
-                                "Current Value",
-                                "XIRR",
-                                "Returns",
-                                // "",
-                            ]}
-                            cellSize={[3, 2, 1, 1, 1, 1, 1, ]}
-                            rows={transformedData}
-                        />
+                        {width < 830 ? (
+                            <TableCard data={mobileData} />
+                        ) : roleId > 2 ? (
+                            <DataTable
+                                headers={[
+                                    "Client Name",
+                                    "Client Code",
+                                    "Distributor",
+                                    "PAN",
+                                    "Total Invested",
+                                    "Current Value",
+                                    "XIRR",
+                                    "Returns",
+                                    // "",
+                                ]}
+                                cellSize={[3, 1,1, 1, 1, 1, 1, 1]}
+                                rows={transformedData}
+                            />
+                            ) : (
+                                <DataTable
+                                headers={[
+                                    "Client Name",
+                                    "Client Code",
+                                    "PAN",
+                                    "Total Invested",
+                                    "Current Value",
+                                    "XIRR",
+                                    "Returns",
+                                    // "",
+                                ]}
+                                cellSize={[3, 2, 1, 1, 1, 1, 1]}
+                                rows={transformedData}
+                            />
+                            )}
                     </ScrollView>
                 ) : (
                     <HStack
@@ -275,6 +349,9 @@ const ClientWiseDataTable = () => {
                 setCurrentPageNumber={setCurrentPageNumber}
             />
         </View>
+        )
+    }
+    </View>
     );
 };
 

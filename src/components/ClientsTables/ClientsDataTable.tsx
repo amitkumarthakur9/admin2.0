@@ -26,6 +26,7 @@ import DataTable from "../DataTable/DataTable";
 import Tag from "../Tag/Tag";
 import AddNewClient from "./AddNewClient";
 import { useUserRole } from "../../../src/context/useRoleContext";
+import NoDataAvailable from "../Others/NoDataAvailable";
 
 const ClientsDataTable = () => {
     const { roleId } = useUserRole();
@@ -212,6 +213,14 @@ const ClientsDataTable = () => {
             <View className="">
                 <TableBreadCrumb name={"Clients"} />
             </View>
+
+            <View className="h-screen">
+
+        { data.length === 0
+            ? (
+                <NoDataAvailable />
+            ) : (
+                <>
             <View className="border-[0.2px]  border-[#e4e4e4]">
                 <DynamicFilters
                     appliedSorting={appliedSorting}
@@ -284,6 +293,10 @@ const ClientsDataTable = () => {
                 totalPages={totalPages}
                 setCurrentPageNumber={setCurrentPageNumber}
             />
+            </>
+            )
+        }
+        </View>
         </View>
     );
 };

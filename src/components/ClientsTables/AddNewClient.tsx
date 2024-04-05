@@ -166,7 +166,7 @@ export default function AddNewClient() {
                                         </FormControl.ErrorMessage>
                                     </FormControl>
                                     <FormControl
-                                        isRequired
+                                        
                                         isInvalid={false}
                                         w="100%"
                                         maxW="300px"

@@ -33,6 +33,11 @@ interface OrderCategory {
 }
 
 export interface DashboardData{
+    id:number,
+    name: string;
+    panNumber: string;
+    arn: string;
+    euin: string;
     aum: AUMData;
         clientCount: number;
         transaction: TransactionData;

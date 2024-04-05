@@ -26,6 +26,7 @@ import { RupeeSymbol, getInitials } from "../../helper/helper";
 import DataTable from "../DataTable/DataTable";
 import Tag from "../Tag/Tag";
 import Icon from 'react-native-vector-icons/FontAwesome';
+import NoDataAvailable from "../Others/NoDataAvailable";
 
 const RTAWiseDataTable = () => {
     const [isLoading, setIsLoading] = React.useState(false);
@@ -146,6 +147,12 @@ const RTAWiseDataTable = () => {
     });
 
     return (
+        <View className="h-screen">
+
+        { data.length === 0
+            ? (
+                <NoDataAvailable />
+            ) : (
         <View className="bg-white">
             {/* <View className="">
                 <TableBreadCrumb name={"Scheme Wise"} />
@@ -159,7 +166,7 @@ const RTAWiseDataTable = () => {
                     downloadApi={"client/download-report"}
                     schemaResponse={filtersSchema}
                     setCurrentPageNumber={setCurrentPageNumber}
-                    getList={getDataList}
+                    getList=""
                     appliedFilers={appliedFilers}
                     setAppliedFilers={setAppliedFilers}
                 />
@@ -195,15 +202,18 @@ const RTAWiseDataTable = () => {
                 )}
             </View>
 
-            <Pagination
+            {/* <Pagination
                 itemsPerPage={itemsPerPage}
                 setItemsPerPage={setItemsPerPage}
                 getDataList={getDataList}
                 currentPageNumber={currentPageNumber}
                 totalPages={totalPages}
                 setCurrentPageNumber={setCurrentPageNumber}
-            />
+            /> */}
         </View>
+        )
+    }
+    </View>
     );
 };
 

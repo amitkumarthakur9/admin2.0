@@ -45,8 +45,8 @@ import SendInvite from "./invite-contact";
 import AddIfaRm from "./add-ifa-rm";
 import { jwtDecode } from "jwt-decode";
 import { useEffect, useState } from "react";
+import DistributorDashboardScreen from "./dashboard/[id]";
 import IFAReportsScreen from "./ifa";
-import IFADetail from "./ifa/[id]";
 import { UserRoleProvider } from "../../src/context/useRoleContext";
 
 NativeWindStyleSheet.setOutput({
@@ -161,7 +161,7 @@ export default function AppLayout() {
                 /> */}
 
                             <Drawer.Screen
-                                name="dashboard" // This is the name of the page and must match the url from root
+                                name="dashboard/index" // This is the name of the page and must match the url from root
                                 options={{
                                     drawerLabel: "Dashboard",
                                     title: "Dashboard",
@@ -260,6 +260,7 @@ export default function AppLayout() {
                             initialParams={{}}
                             component={MandateDetail}
                         />
+
 
                         <Drawer.Screen
                             name="orders/[id]" // This is the name of the page and must match the url from root
@@ -368,18 +369,18 @@ export default function AppLayout() {
                                 <Drawer.Screen
                                     name="add-ifa"
                                     options={{
-                                        drawerLabel: "Add IFA",
-                                        title: "Add IFA",
+                                        drawerLabel: "Add Distributor",
+                                        title: "Add Distributor",
                                         unmountOnBlur: true,
                                     }}
                                     initialParams={{}}
                                     component={AddIfaRm}
                                 />
                                 <Drawer.Screen
-                                    name="ifa-report/index" // This is the name of the page and must match the url from root
+                                    name="ifa/index" // This is the name of the page and must match the url from root
                                     options={{
-                                        drawerLabel: "IFA Report",
-                                        title: "IFA Report",
+                                        drawerLabel: "Distributor Report",
+                                        title: "Distributor Report",
                                         unmountOnBlur: true,
                                     }}
                                     initialParams={{}}
@@ -395,7 +396,7 @@ export default function AppLayout() {
                                         unmountOnBlur: true,
                                     }}
                                     initialParams={{}}
-                                    component={IFADetail}
+                                    component={DistributorDashboardScreen}
                                 />
                             </>
                         )}
@@ -445,6 +446,18 @@ export default function AppLayout() {
                     /> */}
 
                             {/* </Drawer> */}
+
+                            <Drawer.Screen
+                                name="dashboard/[id]" // This is the name of the page and must match the url from root
+                                options={{
+                                    drawerLabel: "IFA Dashboard",
+                                    title: "IFA Dashboard",
+                                    drawerItemStyle: { display: "none" },
+                                    unmountOnBlur: true,
+                                }}
+                                initialParams={{}}
+                                component={DistributorDashboardScreen}
+                            />
                         </Drawer.Navigator>
                     </UserRoleProvider>
                 </PaperProvider>
