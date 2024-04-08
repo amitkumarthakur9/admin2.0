@@ -383,11 +383,11 @@ export const RTAReconciliationRows = ({ data, schema, getDataList }) => {
                                             >
                                                 {rta.transactionStatus || "-"}
                                             </Text> :
-                                            <View className="flex flex-col flex-wrap items-center justify-start text-start w-[99%]">
+                                            <View className="flex flex-col flex-wrap items-start justify-start text-start w-[99%]">
                                                 
                                                 <Text
                                                     selectable
-                                                    className="p-1 text-black text-start text-xs"
+                                                    className="p-1 text-black text-start text-xs w-[99%]"
                                                 >
                                                     {rta.transactionStatus || "-"}
                                                 </Text>

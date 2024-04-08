@@ -9,12 +9,15 @@ import {
 import { Avatar, TextInput, TouchableRipple } from "react-native-paper";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { useSession } from "../../services/ctx";
-import { Box, Menu, Pressable } from "native-base";
+import { Box, Menu, Pressable, Text } from "native-base";
 
 const TopHeader = ({ navigation }) => {
     const [text, setText] = useState("");
-    const { signOut } = useSession();
+    const { signOut, userData } = useSession();
     const { height, width } = useWindowDimensions();
+
+    console.log("userData")
+    console.log(userData)
 
     return (
         <View
@@ -44,6 +47,7 @@ const TopHeader = ({ navigation }) => {
             )}
             <View className="flex flex-row items-center w-4/12 justify-end ">
                 {/* <Box w="90%" alignItems="center"> */}
+            
                 <Menu
                     w="190"
                     placement={"bottom left"}
@@ -62,7 +66,20 @@ const TopHeader = ({ navigation }) => {
                     }}
                 >
                     {/* <Menu.Item>Profile</Menu.Item> */}
+                    <Box  p={4}  width="100%" height="100%">
+                        
+                        {/* <Text>Name</Text> */}
+                        <Text className="text-base font-semibold">{userData?.name}</Text>
+                        {/* <Text>Role</Text> */}
+
+                        <Text>{userData?.role?.name}</Text>
+               
+
+                        {/* <Text>{userData?.role?.roleType?.name}</Text> */}
+                       
+                    </Box>
                 </Menu>
+               
                 {/* </Box> */}
                 <TouchableRipple
                     rippleColor="rgba(0, 0, 0, .32)"

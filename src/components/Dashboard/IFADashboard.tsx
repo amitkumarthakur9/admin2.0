@@ -518,7 +518,11 @@ const IFADashboard = () => {
                                                     }
                                                 }
                                             />
-                                            <Text className="py-4 text-lg font-bold">Coming Soon</Text>
+
+                                            <Text className="py-4 text-lg font-bold">
+                                                Coming Soon
+                                            </Text>
+
                                         </View>
                                     </View>
                                 </View>
@@ -557,154 +561,196 @@ const IFADashboard = () => {
                                     />
                                 </View> */}
                             </View>
+                            {role == 2 && (
+                                <View className="flex flex-row justify-between rounded bg-white h-auto gap-2 pb-4">
+                                    <View
+                                        className="flex flex-row w-[45%] h-full rounded gap-2"
+                                        style={{
+                                            borderColor: "#e4e4e4", // Grey border color
 
-                            {/* <View className="flex flex-row justify-between rounded bg-white h-auto gap-2 pb-4">
-                                <View
-                                    className="flex flex-row w-[45%] h-full rounded gap-2"
-                                    style={{
-                                        borderColor: "#e4e4e4", // Grey border color
+                                            borderRightWidth:
+                                                StyleSheet.hairlineWidth, // Hairline right border width
+                                        }}
+                                    >
+                                        <View className="flex flex-col w-[49%]">
+                                            <BorderCard
+                                                title="Investment"
+                                                description={
+                                                    RupeeSymbol + "10,87,899"
+                                                }
+                                            />
+                                            <BorderCard
+                                                title="Redemption"
+                                                description={
+                                                    data?.transaction
+                                                        ?.redemption
+                                                        ? RupeeSymbol +
+                                                          data?.transaction
+                                                              ?.redemption
+                                                        : RupeeSymbol + "0"
+                                                }
+                                            />
+                                            <BorderCard
+                                                title="Inactive/Cancelled SIPs"
+                                                description={
+                                                    data?.transaction
+                                                        ?.totalSipTransactionsFailed
+                                                        ? data?.transaction
+                                                              ?.totalSipTransactionsFailed
+                                                        : "0"
+                                                }
+                                            />
+                                        </View>
+                                        <View className="flex flex-col w-[49%]">
+                                            <BorderCard
+                                                title="New SIPs"
+                                                description={
+                                                    data?.order?.sip?.newSip
+                                                        ? data?.order?.sip
+                                                              ?.newSip
+                                                        : "0"
+                                                }
+                                            />
+                                            <BorderCard
+                                                title="No. of successful SIPs"
+                                                description={
+                                                    data?.transaction
+                                                        ?.totalSipTransactionsFailed &&
+                                                    data?.transaction
+                                                        ?.totalSipTransactions
+                                                        ? data?.transaction
+                                                              ?.totalSipTransactions -
+                                                          data?.transaction
+                                                              ?.totalSipTransactionsFailed
+                                                        : "0"
+                                                }
+                                            />
+                                            <BorderCard
+                                                title="No. of SIP Bounce"
+                                                description="08"
+                                            />
+                                        </View>
 
-                                        borderRightWidth:
-                                            StyleSheet.hairlineWidth, // Hairline right border width
-                                    }}
-                                >
-                                  
-                                    <View className="flex flex-col w-[49%]">
-                                        <BorderCard
-                                            title="Investment"
-                                            description={
-                                                RupeeSymbol + "10,87,899"
-                                            }
-                                        />
-                                        <BorderCard
-                                            title="Redemption"
-                                            description={
-                                                data?.transaction?.redemption
-                                                    ? RupeeSymbol +
-                                                      data?.transaction
-                                                          ?.redemption
-                                                    : RupeeSymbol + "0"
-                                            }
-                                        />
-                                        <BorderCard
-                                            title="Inactive/Cancelled SIPs"
-                                            description={
-                                                data?.transaction
-                                                    ?.totalSipTransactionsFailed
-                                                    ? data?.transaction
-                                                          ?.totalSipTransactionsFailed
-                                                    : "0"
-                                            }
-                                        />
                                     </View>
-                                    <View className="flex flex-col w-[49%]">
-                                        <BorderCard
-                                            title="New SIPs"
-                                            description={
-                                                data?.order?.sip?.newSip
-                                                    ? data?.order?.sip?.newSip
-                                                    : "0"
-                                            }
-                                        />
-                                        <BorderCard
-                                            title="No. of successful SIPs"
-                                            description={
-                                                data?.transaction
-                                                    ?.totalSipTransactionsFailed &&
-                                                data?.transaction
-                                                    ?.totalSipTransactions
-                                                    ? data?.transaction
-                                                          ?.totalSipTransactions -
-                                                      data?.transaction
-                                                          ?.totalSipTransactionsFailed
-                                                    : "0"
-                                            }
-                                        />
-                                        <BorderCard
-                                            title="No. of SIP Bounce"
-                                            description="08"
-                                        />
-                                    </View>
-                                </View>
-                                <View
-                                    className="w-[35%] h-128 rounded px-4"
-                                    style={{
-                                        borderColor: "#e4e4e4", // Grey border color
+                                    <View
+                                        className="w-[35%] h-128 rounded px-4"
+                                        style={{
+                                            borderColor: "#e4e4e4", // Grey border color
 
-                                        borderRightWidth:
-                                            StyleSheet.hairlineWidth, // Hairline right border width
-                                    }}
-                                >
-                                    <Text className="font-bold ">
-                                        Top 5 Clients
-                                    </Text>
-                                    <View className="flex flex-row py-2">
-                                        <View className="w-6/12">
-                                            <Text className="text-black">
-                                                Name
+                                            borderRightWidth:
+                                                StyleSheet.hairlineWidth, // Hairline right border width
+                                        }}
+                                    >
+                                        <Text className="font-bold ">
+                                            Top 5 Clients
+                                        </Text>
+                                        <View className="flex flex-col h-auto justify-center items-center pt-4">
+                                            <Image
+                                                className=""
+                                                alt="ico"
+                                                source={require("../../../assets/images/comingsoon.png")}
+                                                style={{
+                                                    // flex: 1,
+                                                    // justifyContent: 'end',
+                                                    width: 100, // specify the desired width
+                                                    height: 100,
+                                                }}
+                                            />
+                                            <Text className="py-4 text-lg font-bold text-center">
+                                                Coming Soon
                                             </Text>
                                         </View>
-                                        <View className="w-2/12">
-                                            <Text>SIPs</Text>
-                                        </View>
-                                        <View className="w-4/12">
-                                            <Text>Investment</Text>
-                                        </View>
-                                    </View>
-                                    <View className=" h-48 overflow-scroll">
-                                        {topClientData.map((item, index) => (
-                                            <View
-                                                key={index}
-                                                className="flex flex-row items-center"
-                                            >
-                                                <View className="w-6/12">
-                                                    <AvatarCard
-                                                        imageUrl={item.imageUrl}
-                                                        title="Natali Craig"
-                                                        description=""
-                                                    />
-                                                </View>
-                                                <View className="w-2/12">
-                                                    <Text
-                                                        selectable
-                                                        className="text-[#686868] font-semibold"
-                                                    >
-                                                        {item.sip}
-                                                    </Text>
-                                                </View>
-                                                <View className="w-4/12">
-                                                    <Text
-                                                        selectable
-                                                        className="text-[#686868] font-semibold"
-                                                    >
-                                                        {RupeeSymbol}{" "}
-                                                        {item.investment}
-                                                    </Text>
-                                                </View>
+                                        {/* <View className="flex flex-row py-2">
+                                            <View className="w-6/12">
+                                                <Text className="text-black">
+                                                    Name
+                                                </Text>
                                             </View>
-                                        ))}
+                                            <View className="w-2/12">
+                                                <Text>SIPs</Text>
+                                            </View>
+                                            <View className="w-4/12">
+                                                <Text>Investment</Text>
+                                            </View>
+                                        </View>
+                                        <View className=" h-48 overflow-scroll">
+                                            {topClientData.map(
+                                                (item, index) => (
+                                                    <View
+                                                        key={index}
+                                                        className="flex flex-row items-center"
+                                                    >
+                                                        <View className="w-6/12">
+                                                            <AvatarCard
+                                                                imageUrl={
+                                                                    item.imageUrl
+                                                                }
+                                                                title="Natali Craig"
+                                                                description=""
+                                                            />
+                                                        </View>
+                                                        <View className="w-2/12">
+                                                            <Text
+                                                                selectable
+                                                                className="text-[#686868] font-semibold"
+                                                            >
+                                                                {item.sip}
+                                                            </Text>
+                                                        </View>
+                                                        <View className="w-4/12">
+                                                            <Text
+                                                                selectable
+                                                                className="text-[#686868] font-semibold"
+                                                            >
+                                                                {RupeeSymbol}{" "}
+                                                                {
+                                                                    item.investment
+                                                                }
+                                                            </Text>
+                                                        </View>
+                                                    </View>
+                                                )
+                                            )}
+                                        </View> */}
                                     </View>
-                                </View>
-                                <View className="w-[20%] rounded pl-1">
-                                    <Text className="font-bold ">
-                                        Inactive Client
-                                    </Text>
-                                    <View className="">
-                                    <View className=" h-56 overflow-scroll">
-                                        {topClientData.map((item, index) => (
-                                            <AvatarCard
-                                                key={index}
-                                                imageUrl="account"
-                                                title="Natali Craig"
-                                                description=""
+                                    <View className="w-[16%] rounded pl-1">
+                                        <Text className="font-bold ">
+                                            Inactive Client
+                                        </Text>
+                                        <View className="flex flex-col h-auto justify-center items-center pt-5">
+                                            <Image
+                                                className=""
+                                                alt="ico"
+                                                source={require("../../../assets/images/comingsoon.png")}
+                                                style={{
+                                                    // flex: 1,
+                                                    // justifyContent: 'end',
+                                                    width: 100, // specify the desired width
+                                                    height: 100,
+                                                }}
                                             />
-                                        ))}
+                                            <Text className="py-4 text-base font-bold text-center">
+                                                Coming Soon
+                                            </Text>
+                                        </View>
+                                        {/* <View className="">
+                                            <View className=" h-56 overflow-scroll">
+                                                {topClientData.map(
+                                                    (item, index) => (
+                                                        <AvatarCard
+                                                            key={index}
+                                                            imageUrl="account"
+                                                            title="Natali Craig"
+                                                            description=""
+                                                        />
+                                                    )
+                                                )}
+                                            </View>
+                                        </View> */}
                                     </View>
-
-                                    </View>
-                                    
                                 </View>
-                            </View> */}
+
+                            )}
 
                             {(role == 3 || role == 4) && (
                                 <View className="flex flex-row justify-between rounded bg-white h-auto gap-2 pb-4">
@@ -787,9 +833,25 @@ const IFADashboard = () => {
                                         }}
                                     >
                                         <Text className="font-bold ">
-                                            Top 5 IFA
+                                            Top 5 distributor
                                         </Text>
-                                        <View className="flex flex-row py-2">
+                                        <View className="flex flex-col h-auto justify-center items-center pt-4">
+                                            <Image
+                                                className=""
+                                                alt="ico"
+                                                source={require("../../../assets/images/comingsoon.png")}
+                                                style={{
+                                                    // flex: 1,
+                                                    // justifyContent: 'end',
+                                                    width: 100, // specify the desired width
+                                                    height: 100,
+                                                }}
+                                            />
+                                            <Text className="py-4 text-lg font-bold text-center">
+                                                Coming Soon
+                                            </Text>
+                                        </View>
+                                        {/* <View className="flex flex-row py-2">
                                             <View className="w-6/12">
                                                 <Text className="text-black">
                                                     Name
@@ -840,13 +902,29 @@ const IFADashboard = () => {
                                                     </View>
                                                 )
                                             )}
-                                        </View>
+                                        </View> */}
                                     </View>
-                                    <View className="w-[20%] rounded pl-1">
+                                    <View className="w-[16%] rounded pl-1">
                                         <Text className="font-bold ">
-                                            Inactive IFA
+                                            Inactive distributor
                                         </Text>
-                                        <View className=" h-56 overflow-scroll">
+                                        <View className="flex flex-col h-auto justify-center items-center pt-5">
+                                            <Image
+                                                className=""
+                                                alt="ico"
+                                                source={require("../../../assets/images/comingsoon.png")}
+                                                style={{
+                                                    // flex: 1,
+                                                    // justifyContent: 'end',
+                                                    width: 100, // specify the desired width
+                                                    height: 100,
+                                                }}
+                                            />
+                                            <Text className="py-4 text-base font-bold text-center">
+                                                Coming Soon
+                                            </Text>
+                                        </View>
+                                        {/* <View className=" h-56 overflow-scroll">
                                             {topClientData.map(
                                                 (item, index) => (
                                                     <AvatarCard
@@ -857,12 +935,14 @@ const IFADashboard = () => {
                                                     />
                                                 )
                                             )}
-                                        </View>
+                                        </View> */}
                                     </View>
                                 </View>
                             )}
 
-                            {role == 4 && (
+
+                            {/* {role == 4 && (
+
                                 <View className="flex flex-row justify-between rounded bg-white h-auto gap-2 pb-4">
                                     <View
                                         className="flex flex-row w-[45%] h-full rounded gap-2"
@@ -873,7 +953,7 @@ const IFADashboard = () => {
                                                 StyleSheet.hairlineWidth, // Hairline right border width
                                         }}
                                     >
-                                        {/* <Text>Card</Text> */}
+                                     
                                         <View className="flex flex-col w-[49%]">
                                             <BorderCard
                                                 title="Investment"
@@ -1016,7 +1096,7 @@ const IFADashboard = () => {
                                         </View>
                                     </View>
                                 </View>
-                            )}
+                            )} */}
                         </View>
                     </View>
                 </ScrollView>

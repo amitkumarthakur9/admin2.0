@@ -68,7 +68,7 @@ export default function SignIn() {
             console.log("response", response);
 
             if (response.message == "Success") {
-                signIn(response.token);
+                signIn(response.token, response.data);
                 router.replace("/orders");
                 setIsLoggedIn(true);
             } else {

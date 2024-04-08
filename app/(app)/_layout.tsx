@@ -69,11 +69,9 @@ export default function AppLayout() {
             console.log(decoded);
             setroleID(decoded.roleId);
             console.log(decoded.roleId);
-            if (decoded.roleId === 3 || decoded.roleId === 4 ) {
-        
-                setinviteDisplay("none")
+            if (decoded.roleId === 3 || decoded.roleId === 4) {
+                setinviteDisplay("none");
             }
-           
         }
     }, [token]);
 
@@ -98,7 +96,72 @@ export default function AppLayout() {
 
     let screenForIFA = null;
 
+    const drawerStructure = [
+        {
+            key: "Dashboard",
+            content: (
+                <Drawer.Screen
+                    name="dashboard/index" // This is the name of the page and must match the url from root
+                    options={{
+                        drawerLabel: "Dashboard",
+                        title: "Dashboard",
+                        unmountOnBlur: true,
+                    }}
+                    initialParams={{}}
+                    component={DashboardIFA}
+                />
+            ),
+        },
+        {
+            key: "clientName",
+            content: (
+                <Drawer.Screen
+                    name="clients/index"
+                    options={{
+                        drawerLabel: "Clients",
+                        title: "Clients",
+                        unmountOnBlur: true,
+                    }}
+                    initialParams={{}}
+                    component={ClientsScreen}
+                />
+            ),
+        },
+        {
+            key: "AUM",
+            content: (
+                <Drawer.Screen
+                    name="aum-reports/index"
+                    options={{
+                        drawerLabel: "AUM",
+                        title: "AUM",
+                        unmountOnBlur: true,
+                    }}
+                    initialParams={{ roleID: roleId }}
+                    component={AUMTabScreen}
+                />
+            ),
+        },
+    ];
 
+    // Conditionally add an additional object based on roleId to index 2
+    if (roleId > 2) {
+        drawerStructure.splice(1, 0, {
+            key: "distributor",
+            content: (
+                <Drawer.Screen
+                    name="ifa/index"
+                    options={{
+                        drawerLabel: "Distributor Report",
+                        title: "Distributor Report",
+                        unmountOnBlur: true,
+                    }}
+                    initialParams={{}}
+                    component={IFAReportsScreen}
+                />
+            ),
+        });
+    }
 
     // This layout can be deferred because it's not the root layout.
     // return <PaperProvider theme={PaperTheme}>
@@ -134,67 +197,12 @@ export default function AppLayout() {
                                 <CustomSidebarMenu {...props} />
                             )}
                         >
-                            {/* <Drawer.Screen
-                        // name="index" // This is the name of the page and must match the url from root
-                        // options={{
-                        //     drawerLabel: "Dashboard",
-                        //     title: "Dashboard",
-                        // }}
-
-                        name='Home'
-                        component={Dashboard}
-                    /> */}
-
-                            {/* <Drawer.Screen
-                    name="orders/index" // This is the name of the page and must match the url from root
-                    options={{
-                        drawerLabel: "Orders",
-                        title: "",
-                        drawerContentContainerStyle: {
-                            backgroundColor: "white"
-                        },
-                        unmountOnBlur: true
-                    }}
-
-                    // initialParams={{}}
-                    component={OrdersScreen}
-                /> */}
+                            {drawerStructure.map((item) => item.content)}
 
                             <Drawer.Screen
-                                name="dashboard/index" // This is the name of the page and must match the url from root
-                                options={{
-                                    drawerLabel: "Dashboard",
-                                    title: "Dashboard",
-                                    unmountOnBlur: true,
-                                }}
-                                initialParams={{}}
-                                component={DashboardIFA}
-                            />
 
-                            <Drawer.Screen
-                                name="clients/index" // This is the name of the page and must match the url from root
-                                options={{
-                                    drawerLabel: "Clients",
-                                    title: "Clients",
-                                    unmountOnBlur: true,
-                                }}
-                                initialParams={{}}
-                                component={ClientsScreen}
-                            />
+                                name="sip-reports/index"
 
-                            <Drawer.Screen
-                                name="aum-reports/index" // This is the name of the page and must match the url from root
-                                options={{
-                                    drawerLabel: "AUM",
-                                    title: "AUM",
-                                    unmountOnBlur: true,
-                                }}
-                                initialParams={{ roleID: roleId }}
-                                component={AUMTabScreen}
-                            />
-
-                            <Drawer.Screen
-                                name="sip-reports/index" // This is the name of the page and must match the url from root
                                 options={{
                                     drawerLabel: "SIP Reports",
                                     title: "SIP Reports",
@@ -204,19 +212,8 @@ export default function AppLayout() {
                                 component={SIPReportsScreen}
                             />
 
-                            {/* <Drawer.Screen
-                        name="folio/index" // This is the name of the page and must match the url from root
-                        options={{
-                            drawerLabel: "Folio",
-                            title: "Folio",
-                            unmountOnBlur: true,
-                        }}
-                        initialParams={{}}
-                        component={AUMReportsScreen}
-                    /> */}
-
                             <Drawer.Screen
-                                name="rta-reconciliation/index" // This is the name of the page and must match the url from root
+                                name="rta-reconciliation/index"
                                 options={{
                                     drawerLabel: "Transactions",
                                     title: "Transactions",
@@ -227,7 +224,7 @@ export default function AppLayout() {
                             />
 
                             <Drawer.Screen
-                                name="mandates/index" // This is the name of the page and must match the url from root
+                                name="mandates/index"
                                 options={{
                                     drawerLabel: "Mandates",
                                     title: "Mandates",
@@ -237,218 +234,166 @@ export default function AppLayout() {
                                 component={MandatesScreen}
                             />
 
-                            {/* <Drawer.Screen
-                        name="rta-sync" // This is the name of the page and must match the url from root
-                        options={{
-                            drawerLabel: "RTA Sync",
-                            title: "RTA Sync",
-                            unmountOnBlur: true,
-                        }}
-                        initialParams={{}}
-                        component={RTASync}
-                    /> */}
-
-
-                        <Drawer.Screen
-                            name="mandates/[id]" // This is the name of the page and must match the url from root
-                            options={{
-                                drawerLabel: "MandateDetail",
-                                title: "MandateDetail",
-                                drawerItemStyle: { display: "none" },
-                                unmountOnBlur: true,
-                            }}
-                            initialParams={{}}
-                            component={MandateDetail}
-                        />
-
-
-                        <Drawer.Screen
-                            name="orders/[id]" // This is the name of the page and must match the url from root
-                            options={{
-                                drawerLabel: "OrderDetail",
-                                title: "OrderDetail",
-                                drawerItemStyle: { display: "none" },
-                                unmountOnBlur: true,
-                            }}
-                            initialParams={{}}
-                            component={OrderDetail}
-                        />
-
-                        <Drawer.Screen
-                            name="clients/[id]/holdings/[holdingId]" // This is the name of the page and must match the url from root
-                            options={{
-                                drawerLabel: "HoldingDetail",
-                                title: "HoldingDetail",
-                                drawerItemStyle: { display: "none" },
-                                unmountOnBlur: true,
-                            }}
-                            initialParams={{}}
-                            component={HoldingDetail}
-                        />
-
-                        <Drawer.Screen
-                            name="clients/[id]/index" // This is the name of the page and must match the url from root
-                            options={{
-                                drawerLabel: "ClientDetail",
-                                title: "ClientDetail",
-                                drawerItemStyle: { display: "none" },
-                                unmountOnBlur: true,
-                            }}
-                            initialParams={{}}
-                            component={ClientDetail}
-                        />
-
-                        <Drawer.Screen
-                            name="sip-reports/[id]" // This is the name of the page and must match the url from root
-                            options={{
-                                drawerLabel: "SipReportsDetail",
-                                title: "SipReportsDetail",
-                                drawerItemStyle: { display: "none" },
-                                unmountOnBlur: true,
-                            }}
-                            initialParams={{}}
-                            component={SIPReportsDetail}
-                        />
-
-                        <Drawer.Screen
-                            name="folio/[id]" // This is the name of the page and must match the url from root
-                            options={{
-                                drawerLabel: "FolioDetail",
-                                title: "FolioDetail",
-                                drawerItemStyle: { display: "none" },
-                                unmountOnBlur: true,
-                            }}
-                            initialParams={{}}
-                            component={AUMDetail}
-                        />
-
-                        <Drawer.Screen
-                            name="rta-reconciliation/[id]" // This is the name of the page and must match the url from root
-                            options={{
-                                drawerLabel: "RTAReconciliationDetail",
-                                title: "RTAReconciliationDetail",
-                                drawerItemStyle: { display: "none" },
-                                unmountOnBlur: true,
-                            }}
-                            initialParams={{}}
-                            component={RTAReconciliationDetail}
-                        />
-                        <Drawer.Screen
-                            name="mutual-fund/[id]" // This is the name of the page and must match the url from root
-                            options={{
-                                drawerLabel: "mutualfunddetail",
-                                title: "mutualfunddetail",
-                                drawerItemStyle: { display: "none" },
-                                unmountOnBlur: true,
-                            }}
-                            initialParams={{}}
-                            component={MutualFundDetail}
-                        />
-                        {(roleId === 3 || roleId === 4) && (
-                            <>
-                                <Drawer.Screen
-                                    name="rta-sync" // This is the name of the page and must match the url from root
-                                    options={{
-                                        drawerLabel: "RTA Sync",
-                                        title: "RTA Sync",
-                                        unmountOnBlur: true,
-                                    }}
-                                    initialParams={{}}
-                                    component={RTASync}
-                                />
-                                <Drawer.Screen
-                                    name="aum-reconcile"
-                                    component={AumReconcile}
-                                    options={{
-                                        drawerLabel: "AUM Reconcile",
-                                        title: "AUM Reconcile",
-                                        unmountOnBlur: true,
-                                    }}
-                                    initialParams={{}}
-                                />
-                                <Drawer.Screen
-                                    name="add-ifa"
-                                    options={{
-                                        drawerLabel: "Add Distributor",
-                                        title: "Add Distributor",
-                                        unmountOnBlur: true,
-                                    }}
-                                    initialParams={{}}
-                                    component={AddIfaRm}
-                                />
-                                <Drawer.Screen
-                                    name="ifa/index" // This is the name of the page and must match the url from root
-                                    options={{
-                                        drawerLabel: "Distributor Report",
-                                        title: "Distributor Report",
-                                        unmountOnBlur: true,
-                                    }}
-                                    initialParams={{}}
-                                    component={IFAReportsScreen}
-                                />
-
-                                <Drawer.Screen
-                                    name="ifa/[id]" // This is the name of the page and must match the url from root
-                                    options={{
-                                        drawerLabel: "IFADetail",
-                                        title: "IFADetail",
-                                        drawerItemStyle: { display: "none" },
-                                        unmountOnBlur: true,
-                                    }}
-                                    initialParams={{}}
-                                    component={DistributorDashboardScreen}
-                                />
-                            </>
-                        )}
-
-
-
-
-
-                        {/* <Drawer.Screen
-
-                        name="aum-reconcile" // This is the name of the page and must match the url from root
-                        options={{
-                            drawerLabel: "AUM Reconcile",
-                            title: "AUM Reconcile",
-                            unmountOnBlur: true,
-                        }}
-                        initialParams={{}}
-                        component={AumReconcile}
-                    /> */}
-
-                        {/* {(roleId === 2) && ( */}
-                        <Drawer.Screen
-                            name="invite-contact" // This is the name of the page and must match the url from root
-                            options={{
-                                drawerLabel: "Invite Client",
-                                title: "Invite Client",
-                                drawerItemStyle: { display: inviteDisplay },
-                                unmountOnBlur: true,
-                            }}
-                            initialParams={{}}
-                            component={SendInvite}
-                        />
-                        {/* )} */}
-                        {/* {screenForIFA} */}
-
-                        {/* <Drawer.Screen
-
-                        name="add-ifa" // This is the name of the page and must match the url from root
-                        options={{
-                            drawerLabel: "Add IFA",
-                            title: "Add IFA",
-                            // drawerItemStyle: { display: "none" },
-                            unmountOnBlur: true,
-                        }}
-                        initialParams={{}}
-                        component={AddIfaRm}
-                    /> */}
-
-                            {/* </Drawer> */}
+                            <Drawer.Screen
+                                name="mandates/[id]"
+                                options={{
+                                    drawerLabel: "MandateDetail",
+                                    title: "MandateDetail",
+                                    drawerItemStyle: { display: "none" },
+                                    unmountOnBlur: true,
+                                }}
+                                initialParams={{}}
+                                component={MandateDetail}
+                            />
 
                             <Drawer.Screen
-                                name="dashboard/[id]" // This is the name of the page and must match the url from root
+                                name="orders/[id]"
+                                options={{
+                                    drawerLabel: "OrderDetail",
+                                    title: "OrderDetail",
+                                    drawerItemStyle: { display: "none" },
+                                    unmountOnBlur: true,
+                                }}
+                                initialParams={{}}
+                                component={OrderDetail}
+                            />
+
+                            <Drawer.Screen
+                                name="clients/[id]/holdings/[holdingId]"
+                                options={{
+                                    drawerLabel: "HoldingDetail",
+                                    title: "HoldingDetail",
+                                    drawerItemStyle: { display: "none" },
+                                    unmountOnBlur: true,
+                                }}
+                                initialParams={{}}
+                                component={HoldingDetail}
+                            />
+
+                            <Drawer.Screen
+                                name="clients/[id]/index"
+                                options={{
+                                    drawerLabel: "ClientDetail",
+                                    title: "ClientDetail",
+                                    drawerItemStyle: { display: "none" },
+                                    unmountOnBlur: true,
+                                }}
+                                initialParams={{}}
+                                component={ClientDetail}
+                            />
+
+
+                            <Drawer.Screen
+                                name="sip-reports/[id]"
+                                options={{
+                                    drawerLabel: "SipReportsDetail",
+                                    title: "SipReportsDetail",
+                                    drawerItemStyle: { display: "none" },
+                                    unmountOnBlur: true,
+                                }}
+                                initialParams={{}}
+                                component={SIPReportsDetail}
+                            />
+
+                            <Drawer.Screen
+                                name="folio/[id]"
+                                options={{
+                                    drawerLabel: "FolioDetail",
+                                    title: "FolioDetail",
+                                    drawerItemStyle: { display: "none" },
+                                    unmountOnBlur: true,
+                                }}
+                                initialParams={{}}
+                                component={AUMDetail}
+                            />
+
+                            <Drawer.Screen
+                                name="rta-reconciliation/[id]"
+                                options={{
+                                    drawerLabel: "RTAReconciliationDetail",
+                                    title: "RTAReconciliationDetail",
+                                    drawerItemStyle: { display: "none" },
+                                    unmountOnBlur: true,
+                                }}
+                                initialParams={{}}
+                                component={RTAReconciliationDetail}
+                            />
+                            <Drawer.Screen
+                                name="mutual-fund/[id]"
+                                options={{
+                                    drawerLabel: "mutualfunddetail",
+                                    title: "mutualfunddetail",
+                                    drawerItemStyle: { display: "none" },
+                                    unmountOnBlur: true,
+                                }}
+                                initialParams={{}}
+                                component={MutualFundDetail}
+                            />
+                            {(roleId === 3 || roleId === 4) && (
+                                <>
+                                    <Drawer.Screen
+                                        name="rta-sync"
+                                        options={{
+                                            drawerLabel: "RTA Sync",
+                                            title: "RTA Sync",
+                                            unmountOnBlur: true,
+                                        }}
+                                        initialParams={{}}
+                                        component={RTASync}
+                                    />
+                                    <Drawer.Screen
+                                        name="aum-reconcile"
+                                        component={AumReconcile}
+                                        options={{
+                                            drawerLabel: "AUM Reconcile",
+                                            title: "AUM Reconcile",
+                                            unmountOnBlur: true,
+                                        }}
+                                        initialParams={{}}
+                                    />
+                                    <Drawer.Screen
+                                        name="add-ifa"
+                                        options={{
+                                            drawerLabel: "Add Distributor",
+                                            title: "Add Distributor",
+                                            unmountOnBlur: true,
+                                        }}
+                                        initialParams={{}}
+                                        component={AddIfaRm}
+                                    />
+
+                                    <Drawer.Screen
+                                        name="ifa/[id]"
+                                        options={{
+                                            drawerLabel: "IFADetail",
+                                            title: "IFADetail",
+                                            drawerItemStyle: {
+                                                display: "none",
+                                            },
+                                            unmountOnBlur: true,
+                                        }}
+                                        initialParams={{}}
+                                        component={DistributorDashboardScreen}
+                                    />
+                                </>
+                            )}
+
+                            <Drawer.Screen
+                                name="invite-contact"
+                                options={{
+                                    drawerLabel: "Invite Client",
+                                    title: "Invite Client",
+                                    drawerItemStyle: { display: inviteDisplay },
+                                    unmountOnBlur: true,
+                                }}
+                                initialParams={{}}
+                                component={SendInvite}
+                            />
+
+
+                            <Drawer.Screen
+                                name="dashboard/[id]"
+
                                 options={{
                                     drawerLabel: "IFA Dashboard",
                                     title: "IFA Dashboard",
