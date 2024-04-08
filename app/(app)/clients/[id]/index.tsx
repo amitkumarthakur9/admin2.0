@@ -862,6 +862,7 @@ const LumpSumOrderTab = ({
 
     const {
         mutate: invest,
+        isLoading: mutateLoading,
         isError,
         error,
     } = useMutation(postData, {
@@ -950,10 +951,12 @@ const LumpSumOrderTab = ({
             <Button
                 width="50%"
                 bgColor={"#013974"}
+                opacity={mutateLoading ? "50" : "100"}
                 onPress={() => invest()}
                 className="rounded-lg"
+                disabled={mutateLoading}
             >
-                Invest
+                {mutateLoading ? "Investing..." : "Invest"}
             </Button>
         </View>
     );
@@ -1011,6 +1014,7 @@ const SipOrderTab = ({
 
     const {
         mutate: invest,
+        isLoading: mutateLoading,
         isError,
         error,
     } = useMutation(postData, {
@@ -1136,10 +1140,12 @@ const SipOrderTab = ({
             <Button
                 width="50%"
                 bgColor={"#013974"}
+                opacity={mutateLoading ? "50" : "100"}
                 onPress={() => invest()}
                 className="rounded-lg"
+                disabled={mutateLoading}
             >
-                Invest
+                {mutateLoading ? "Investing..." : "Invest"}
             </Button>
         </View>
     );
