@@ -7,8 +7,7 @@ import { router } from "expo-router";
 
 // Create a new Axios instance with defaults
 const axiosInstance = axios.create({
-    // baseURL: process.env.API_ENDPOINT,
-    baseURL: "https://vision-be.kcp.com.in",
+    baseURL: process.env.API_ENDPOINT,
 });
 
 // Set up a response interceptor to handle errors
