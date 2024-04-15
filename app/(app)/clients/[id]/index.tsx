@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
-import { Alert, View } from "react-native";
+import { useEffect, useState } from "react";
+import { View } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import {
     Box,
@@ -21,6 +21,8 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import AntdIcon from "react-native-vector-icons/AntDesign";
 import IonIcon from "react-native-vector-icons/Ionicons";
 import { useToast } from "native-base";
+import { Checkbox } from "react-native-paper";
+import { TextInput } from "react-native";
 
 import RemoteApi from "../../../../src/services/RemoteApi";
 import { BreadcrumbShadow } from "../../../../src/components/Styles/Shadow";
@@ -31,7 +33,6 @@ import HorizontalStackedBarChart from "../../../../src/components/Chart/Horizont
 import Accordion from "../../../../src/components/Accordion/Accordion";
 import DataTable from "../../../../src/components/DataTable/DataTable";
 import Modal from "../../../../src/components/Modal/Modal";
-import { TextInput } from "react-native";
 import DropdownComponent from "../../../../src/components/Dropdowns/NewDropDown";
 import RadioButton from "../../../../src/components/Radio/Radio";
 import DataValue from "../../../../src/components/DataValue/DataValue";
@@ -1510,6 +1511,7 @@ const RedeemModalCard = ({
     const [value, setValue] = useState("0");
     const [selectedFolio, setSelectedFolio] = useState<string | null>(null);
     const [folio, setFolio] = useState<FolioSchema | null>(null);
+    const [redeemAll, setRedeemAll] = useState(false);
 
     const fetchFolios = async () => {
         try {
@@ -1530,6 +1532,8 @@ const RedeemModalCard = ({
     });
 
     const { id } = useLocalSearchParams();
+
+    console.log("seele", selectedFund);
 
     const postData = async () => {
         return await ApiRequest.post("/order/redeem", {
@@ -1552,6 +1556,11 @@ const RedeemModalCard = ({
         setFolio(folios?.data?.find((el) => el.id === value));
     };
     const toast = useToast();
+
+    useEffect(() => {
+        setValue("0");
+        setRedeemAll(false);
+    }, [methodSelect]);
 
     const {
         mutate: redeem,
@@ -1731,7 +1740,11 @@ const RedeemModalCard = ({
                                     ]}
                                 />
                                 <TextInput
-                                    className="outline-none w-full border border-gray-300 p-2 rounded"
+                                    className={`outline-none w-full border border-gray-300 p-2 rounded ${
+                                        redeemAll &&
+                                        "bg-gray-200 cursor-not-allowed"
+                                    }`}
+                                    editable={!redeemAll}
                                     placeholder={`Enter ${methodSelect}`}
                                     underlineColorAndroid="transparent"
                                     selectionColor="transparent"
@@ -1741,6 +1754,33 @@ const RedeemModalCard = ({
                                     value={value}
                                     onChangeText={setValue}
                                 />
+                            </View>
+                            <View className="w-full flex flex-row items-center">
+                                <Checkbox
+                                    color="#013974"
+                                    status={redeemAll ? "checked" : "unchecked"}
+                                    onPress={() => {
+                                        if (!redeemAll) {
+                                            if (methodSelect === "amount") {
+                                                setValue(
+                                                    folio?.redeemableAmount.toString()
+                                                );
+                                            } else if (
+                                                methodSelect === "units"
+                                            ) {
+                                                setValue(
+                                                    folio.redeemableUnits.toString()
+                                                );
+                                            }
+                                        }
+                                        setRedeemAll((prev) => !prev);
+                                    }}
+                                />
+                                <View className="">
+                                    <Text selectable className="text-sm">
+                                        Redeem all
+                                    </Text>
+                                </View>
                             </View>
                             <Button
                                 width="100%"
