@@ -14,8 +14,11 @@ const CustomButton = ({ onPress, title, disabled=false, style }) => {
     buttonStyles.backgroundColor = 'bg-gray-200'; // Gray color when disabled
     buttonStyles.textColor = 'text-gray-400'; // Gray color when disabled
   } else {
-    buttonStyles.backgroundColor = ''; // Blue color when enabled
+    buttonStyles.backgroundColor = `${style.button}`; // Blue color when enabled
+    buttonStyles.textColor = `${style.text}`; // Blue color when enabled
   }
+
+  console.log(buttonStyles.backgroundColor);
 
   return (
     <Pressable
@@ -26,6 +29,7 @@ const CustomButton = ({ onPress, title, disabled=false, style }) => {
         
     }
 
+    
 
       
     >

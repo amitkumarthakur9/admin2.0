@@ -48,7 +48,12 @@ import { useEffect, useState } from "react";
 import DistributorDashboardScreen from "./dashboard/[id]";
 import IFAReportsScreen from "./ifa";
 import { UserRoleProvider } from "../../src/context/useRoleContext";
+
+import ARNTabScreen from "./arn-transfer";
+import ClientARNDetail from "./arn-transfer/[id]";
+
 import BrokerageScreen from "./brokerage";
+
 
 NativeWindStyleSheet.setOutput({
     default: "native",
@@ -274,6 +279,7 @@ export default function AppLayout() {
                                 initialParams={{}}
                                 component={ClientDetail}
                             />
+
                             <Drawer.Screen
                                 name="sip-reports/[id]"
                                 options={{
@@ -388,6 +394,7 @@ export default function AppLayout() {
                                 initialParams={{}}
                                 component={SendInvite}
                             />
+
                             <Drawer.Screen
                                 name="dashboard/[id]"
                                 options={{
@@ -398,6 +405,27 @@ export default function AppLayout() {
                                 }}
                                 initialParams={{}}
                                 component={DistributorDashboardScreen}
+                            />
+                            <Drawer.Screen
+                                name="arn-transfer/index"
+                                options={{
+                                    drawerLabel: "ARN Transfer",
+                                    title: "ARN Transfe",
+                                    unmountOnBlur: true,
+                                }}
+                                initialParams={{ }}
+                                component={ARNTabScreen}
+                            />
+                            <Drawer.Screen
+                                name="arn-transfer/[id]/index"
+                                options={{
+                                    drawerLabel: "ClientArnDetail",
+                                    title: "ClientArnDetail",
+                                    drawerItemStyle: { display: "none" },
+                                    unmountOnBlur: true,
+                                }}
+                                initialParams={{}}
+                                component={ClientARNDetail}
                             />
                         </Drawer.Navigator>
                     </UserRoleProvider>

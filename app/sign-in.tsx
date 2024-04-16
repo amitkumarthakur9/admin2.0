@@ -33,6 +33,7 @@ import {
 } from "native-base";
 import { ToastAlert } from "../src/helper/CustomToaster";
 import Icon from "react-native-vector-icons/FontAwesome";
+import ForgotPassword from "../src/components/Password/ForgotPassword";
 
 export default function SignIn() {
     const [email, setEmail] = useState({ value: "", error: "" });
@@ -250,6 +251,7 @@ export default function SignIn() {
                     >
                         Login
                     </Button>
+                    <ForgotPassword />
                 </View>
             </ScrollView>
         </View>

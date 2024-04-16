@@ -468,176 +468,7 @@ export default function AddIFAUser() {
     };
     return (
         <>
-            {/* <View className="flex flex-row lg:mt-0">
-                <Pressable
-                    onPress={showDialog}
-                    className={
-                        "flex flex-row justify-center items-center border-[1px] rounded px-4 h-[42px] border-slate-200"
-                    }
-                    aria-require="addNewClient"
-                >
-                    <Icon name="plus" size={14} color="#484848" />
-
-                    {<Text className="mx-2">Add IFA</Text>}
-                </Pressable>
-                <Portal>
-                    <Dialog
-                        visible={modalVisible}
-                        onDismiss={hideDialog}
-                        dismissable
-                        style={{
-                            display: "flex",
-                            justifyContent: "flex-start",
-                            alignSelf: "center",
-                            width: 600,
-                            height: "80%",
-                            overflow: "scroll",
-                            backgroundColor: "white",
-                        }}
-                    >
-                        <View className="p-4">
-                            <View className="flex flex-row justify-between">
-                                <Text className="pl-4 text-lg font-bold">
-                                    Add IFA
-                                </Text>
-
-                                <Pressable
-                                    onPress={hideDialog}
-                                    className={
-                                        "flex flex-row justify-center items-center border-[1px] rounded px-4 h-[42px] border-slate-200"
-                                    }
-                                    aria-describedby="addNewClient"
-                                >
-                                    <Icon
-                                        name="close"
-                                        size={14}
-                                        color="#484848"
-                                    />
-                                </Pressable>
-                            </View>
-                            <View className="flex flex-col items-center">
-                                <View className="gap-4">
-                                    <FormControl
-                                        isRequired
-                                        isInvalid={errors.name !== null}
-                                        w="100%"
-                                        maxW="300px"
-                                    >
-                                        <FormControl.Label>
-                                            Name
-                                        </FormControl.Label>
-                                        <Input
-                                            size="lg"
-                                            variant="outline"
-                                            placeholder="Name as on PAN"
-                                            value={formData.name}
-                                            onChangeText={(value) =>
-                                                handleChange("name", value)
-                                            }
-                                        />
-                                        {errors.name ? (
-                                            <FormControl.ErrorMessage>
-                                                {errors.name}
-                                            </FormControl.ErrorMessage>
-                                        ) : (
-                                            <FormControl.HelperText>
-                                                Name should contain at least 3
-                                                characters.
-                                            </FormControl.HelperText>
-                                        )}
-                                    </FormControl>
-                                    <FormControl
-                                        isRequired
-                                        isInvalid={errors.email !== null}
-                                        w="100%"
-                                        maxW="300px"
-                                    >
-                                        <FormControl.Label>
-                                            Email Address
-                                        </FormControl.Label>
-                                        <Input
-                                            size="lg"
-                                            variant="outline"
-                                            placeholder="Email Address"
-                                            value={formData.email}
-                                            onChangeText={(value) =>
-                                                handleChange("email", value)
-                                            }
-                                        />
-                                        {"email" in errors && (
-                                            <FormControl.ErrorMessage>
-                                                {errors.email}
-                                            </FormControl.ErrorMessage>
-                                        )}
-                                    </FormControl>
-                                    <FormControl
-                                        isRequired
-                                        isInvalid={errors.mobileNumber !== null}
-                                        w="100%"
-                                        maxW="300px"
-                                    >
-                                        <FormControl.Label>
-                                            Mobile Number
-                                        </FormControl.Label>
-                                        <Input
-                                            size="lg"
-                                            variant="outline"
-                                            placeholder="Mobile Number"
-                                            value={formData.mobileNumber}
-                                            onChangeText={(value) =>
-                                                handleChange("mobileNumber", value)
-                                            }
-                                        />
-                                        {errors.mobileNumber ? (
-                                            <FormControl.ErrorMessage>
-                                                {errors.mobileNumber}
-                                            </FormControl.ErrorMessage>
-                                        ) : (
-                                            <FormControl.HelperText>
-                                                Enter 10 digit mobileNumber Number.
-                                            </FormControl.HelperText>
-                                        )}
-                                    </FormControl>
-                                    <FormControl
-                                        isRequired
-                                        isInvalid={errors.mobileNumber !== null}
-                                        w="100%"
-                                        maxW="300px"
-                                    >
-                                        <FormControl.Label>
-                                            ARN Number
-                                        </FormControl.Label>
-                                        <Input
-                                            size="lg"
-                                            variant="outline"
-                                            placeholder="ARN Number"
-                                            value={formData.arn}
-                                            onChangeText={(value) =>
-                                                handleChange("arn", value)
-                                            }
-                                        />
-                                        {errors.arn ? (
-                                            <FormControl.ErrorMessage>
-                                                {errors.arn}
-                                            </FormControl.ErrorMessage>
-                                        ) : (
-                                            <FormControl.HelperText></FormControl.HelperText>
-                                        )}
-                                    </FormControl>
-                                    <Button
-                                        width="100%"
-                                        bgColor={"#013974"}
-                                        onPress={handleSubmit}
-                                    >
-                                        Submit
-                                    </Button>
-                                </View>
-                            </View>
-                        </View>
-                    </Dialog>
-                </Portal>
-            </View> */}
-
+            
             <View
                 className={
                     "mt-4 z-[-1] w-[90%] flex items-center border-[#c8c8c8] border-[0.2px] rounded-[5px]"
@@ -731,17 +562,7 @@ export default function AddIFAUser() {
                             maxW="300px"
                         >
                             <FormControl.Label>Date of Birth</FormControl.Label>
-                            {/* <Input
-                                size="lg"
-                                variant="outline"
-                                placeholder="1990-03-25"
-                                aria-label="Date of Birth"
-                                value={formData.dateOfBirth}
-                                onChangeText={(value) =>
-                                    handleChange("dateOfBirth", value)
-                                }
-                               
-                            /> */}
+                            
                             <CalendarSinglePicker
                                 value={formData.dateOfBirth}
                                 handleFilterChange={(value) =>
@@ -755,42 +576,10 @@ export default function AddIFAUser() {
                                 </FormControl.ErrorMessage>
                             ) : (
                                 <FormControl.HelperText>
-                                    Enter in YYYY-MM-DD format. Example:
-                                    1990-03-25
+                                    
                                 </FormControl.HelperText>
                             )}
-                            {/* <DatePicker
-                                style={{ width: 200 }}
-                                date={formData.dateOfBirth} // Date value from state
-                                mode="date" // Set the mode to date
-                                placeholder="Select Date of Birth"
-                                format="YYYY-MM-DD" // Date format
-                                minDate="1900-01-01" // Minimum selectable date
-                                maxDate={new Date()} // Maximum selectable date (today)
-                                confirmBtnText="Confirm"
-                                cancelBtnText="Cancel"
-                                customStyles={{
-                                    dateIcon: {
-                                        position: "absolute",
-                                        left: 0,
-                                        top: 4,
-                                        marginLeft: 0,
-                                    },
-                                    dateInput: {
-                                        marginLeft: 36,
-                                    },
-                                }}
-                                onDateChange={handleDateChange} // Callback function for date change
-                            /> */}
-                            {/* <DatePicker
-      selected={formData.dateOfBirth}
-      onChange={handleDateChange}
-      placeholderText="Select Date of Birth"
-      dateFormat="yyyy-MM-dd"
-      maxDate={new Date()} // Optional: Maximum selectable date (today)
-      showYearDropdown
-      scrollableYearDropdown
-    /> */}
+                            
                         </FormControl>
 
                         <FormControl

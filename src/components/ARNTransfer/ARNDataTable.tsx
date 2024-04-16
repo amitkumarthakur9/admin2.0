@@ -26,18 +26,12 @@ import DataTable from "../DataTable/DataTable";
 import Tag from "../Tag/Tag";
 import DataGrid from "../DataGrid/DataGrid";
 import HorizontalStackedBarChart from "../Chart/HorizontalBarChart";
-import FolioWiseDataTable from "./FolioWiseDataTable";
-import ClientWiseDataTable from "./ClientWiseDataTable";
-import SchemeWiseDataTable from "./SchemeWiseDataTable";
-import AMCWiseDataTable from "./AMCWiseDataTable";
-import RTAWiseDataTable from "./RTAWiseDataTable";
-import IFAWiseDataTable from "./IFAWiseDataTable";
-import RMWiseDataTable from "./RMWiseDataTable";
-import HoldingWiseDataTable from "./HoldingWiseDataTable";
-import SchemeTypeWiseDataTable from "./SchemeTypeWiseDataTable";
+
 import CardWithTabs from "../Card/CardWithTabs";
 import { useStorageState } from "../../services/useStorageState";
 import { jwtDecode } from "jwt-decode";
+import ClientARNDataTable from "./ClientARNDataTable";
+import ARNRequest from "./ARNRequest";
 const roldID = () => {
     const [[isLoading, token], setToken] = useStorageState("token");
     // const [roleId, setroleID] = useState(null);
@@ -52,7 +46,7 @@ const roldID = () => {
     }
 };
 
-const AUMDataTable = (role) => {
+const ARNDataTable = (role) => {
     // console.log("role");
     // console.log(role);
     // const [[isLoading, token], setToken] = useStorageState("token");
@@ -113,7 +107,7 @@ const AUMDataTable = (role) => {
         async function getSchema() {
             const response: any = await RemoteApi.get("client/schema");
             setFiltersSchema(response);
-            setSorting(response.sort);
+            setSorting(response?.sort);
         }
         getSchema();
     }, []);
@@ -150,80 +144,32 @@ const AUMDataTable = (role) => {
 
         const tabContent = [
             {
-                key: "client-wise",
-                name: "Client Wise",
-                content: <ClientWiseDataTable />,
+                key: "client-list",
+                name: "Client List",
+                content: <ClientARNDataTable />,
             },
             {
-                key: "holding-wise",
-                name: "Holding Wise",
-                content: <HoldingWiseDataTable />,
+                key: "ARN-Transfer-Request",
+                name: "ARN Transfer Request",
+                content: <ARNRequest />,
             },
-            {
-                key: "folio-wise",
-                name: "Folio Wise",
-                content: <FolioWiseDataTable />,
-            },
-            {
-                key: "amc-wise",
-                name: "AMC Wise",
-                content: <AMCWiseDataTable />,
-            },
-            {
-                key: "scheme-wise",
-                name: "Scheme Wise",
-                content: <SchemeWiseDataTable />,
-            },
-            {
-                key: "category",
-                name: "Category",
-                content: <SchemeTypeWiseDataTable />,
-            },
-            {
-                key: "rta-wise",
-                name: "RTA Wise",
-                content: <RTAWiseDataTable />,
-            },
-            // {
-            //     key: "ifa-wise",
-            //     name: "IFA Wise",
-            //     content: <IFAWiseDataTable />,
-            // },
-            // {
-            //     key: "rm-wise",
-            //     name: "RM Wise",
-            //     content: <RMWiseDataTable />,
-            // },
+            
         ];
         console.log("aumrole");
 
         console.log(roles);
 
-        if (roles == 3 || roles == 4) {
-            tabContent.push({
-                key: "ifa-wise",
-                name: "IFA Wise",
-                content: <IFAWiseDataTable />,
-            });
-        }
-
-        if (roles == 4) {
-            tabContent.push({
-                key: "rm-wise",
-                name: "RM Wise",
-                content: <RMWiseDataTable />,
-            });
-        }
+       
 
         const AUMCardWithTabs = ({
             selectedTab,
             handleTabPress,
             tabContent,
-            tabscount = 3,
+            tabscount = 2,
         }) => {
             return (
-                <View className="flex-1 bg-white rounded shadow h-full overflow-auto w-full">
-                    <View>
+                <View className="flex-1 bg-white rounded shadow h-full w-full">
+                    <View className="">
                         {/* <View className="w-full flex flex-row mb-2 overflow-scroll ">
                          */}
                         <ScrollView
@@ -239,7 +185,7 @@ const AUMDataTable = (role) => {
                                         onPress={() =>
                                             handleTabPress(index + 1)
                                         }
-                                        className={`w-[20%] py-4 px-6 flex flex-row justify-center items-center border-b-2 ${
+                                        className={`w-full py-4 px-6 flex flex-row justify-center items-center border-b-2 ${
                                             selectedTab === index + 1
                                                 ? "border-black bg-gray-800"
                                                 : "border-b-gray-100 bg-white"
@@ -337,4 +283,4 @@ const AUMDataTable = (role) => {
     );
 };
 
-export default AUMDataTable;
+export default ARNDataTable;

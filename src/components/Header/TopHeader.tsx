@@ -10,6 +10,7 @@ import { Avatar, TextInput, TouchableRipple } from "react-native-paper";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { useSession } from "../../services/ctx";
 import { Box, Menu, Pressable, Text } from "native-base";
+import ChangePassword from "../Password/ChangePassword";
 
 const TopHeader = ({ navigation }) => {
     const [text, setText] = useState("");
@@ -76,6 +77,8 @@ const TopHeader = ({ navigation }) => {
                
 
                         {/* <Text>{userData?.role?.roleType?.name}</Text> */}
+
+                        <ChangePassword />
                        
                     </Box>
                 </Menu>
