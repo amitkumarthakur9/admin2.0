@@ -9,7 +9,7 @@ const GradientBar = ({ label, value, maxValue }) => {
         <View className="mb-4">
             <View className="h-8 w-full bg-transparent rounded">
                 <LinearGradient
-                    colors={["#f0ab00", "rgba(255,255,255,0)"]}
+                    colors={["#FFCD71", "rgba(255,255,255,0)"]}
                     start={{ x: 0, y: 0 }}
                     end={{ x: 1, y: 0 }}
                     style={{
@@ -34,7 +34,7 @@ export const BarChart = ({ title, data }) => {
 
     return (
         <View className="p-2">
-            <Text className="text-lg font-bold mb-8">{title}</Text>
+            <Text className="text-md font-bold mb-8">{title}</Text>
             {data.map((item, index) => (
                 <GradientBar
                     key={index}

@@ -30,46 +30,49 @@ export const maskLetters = (str: string) => {
 
 export const aumChartPercentage = (breakDown) => {
     // Step 1: Calculate the total value of all categories
-    const totalValue = breakDown.reduce(
-        (total, category) => total + category.currentValue,
-        0
-    );
+    if (breakDown) {
+        const totalValue = breakDown.reduce(
+            (total, category) => total + category.currentValue,
+            0
+        );
 
-    // Step 2: Calculate the percentage of each category
-    const categoryPercentages = breakDown.map((category) => {
-        const percentage = totalValue !== 0 ? (category.currentValue / totalValue) * 100 : 0;
-        return {
-            x: category.category,
-            y: isNaN(percentage) ? 0 : percentage, // Ensure 0 when percentage is NaN
-        };
-    });
+        // Step 2: Calculate the percentage of each category
+        const categoryPercentages = breakDown.map((category) => {
+            const percentage =
+                totalValue !== 0
+                    ? (category.currentValue / totalValue) * 100
+                    : 0;
+            return {
+                x: category.category,
+                y: isNaN(percentage) ? 0 : percentage, // Ensure 0 when percentage is NaN
+            };
+        });
 
-    console.log(
-        "categoryPercentages: ",
-        JSON.stringify(categoryPercentages)
-    );
-
-    return categoryPercentages;
+        return categoryPercentages;
+    }
 };
 
 
 export const sipChartPercentage = (breakDown) => {
     // Step 1: Calculate the total value of all categories
-    const totalValue = breakDown.reduce(
-        (total, category) => total + category.count,
-        0
-    );
+    if (breakDown) {
+        const totalValue = breakDown.reduce(
+            (total, category) => total + category.count,
+            0
+        );
 
-    // Step 2: Calculate the percentage of each category
-    const categoryPercentages = breakDown.map((category) => {
-        const percentage = totalValue !== 0 ? (category.count / totalValue) * 100 : 0;
-        return {
-            x: category.category,
-            y: isNaN(percentage) ? 0 : percentage, // Ensure 0 when percentage is NaN
-        };
-    });
+        // Step 2: Calculate the percentage of each category
+        const categoryPercentages = breakDown.map((category) => {
+            const percentage =
+                totalValue !== 0 ? (category.count / totalValue) * 100 : 0;
+            return {
+                x: category.category,
+                y: isNaN(percentage) ? 0 : percentage, // Ensure 0 when percentage is NaN
+            };
+        });
 
-    return categoryPercentages;
+        return categoryPercentages;
+    }
 };
 
 

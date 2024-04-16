@@ -124,13 +124,14 @@ export const Brokerage = () => {
                                             </View>
                                         </View>
                                         <View className="flex flex-col rounded-3xl bg-white w-full mt-4">
-                                            <Text className="p-4 text-md font-bold">
+                                            <Text className="p-4 text-lg font-bold">
                                                 Brokerage Split
                                             </Text>
+                                            <Divider />
                                             <View className="flex flex-row w-full rounded h-auto">
                                                 <View className="w-1/3 flex-row justify-between rounded-3xl bg-white p-4">
                                                     <View className="w-full flex flex-col">
-                                                        <Text className="text-lg font-bold mb-8">
+                                                        <Text className="text-md font-bold">
                                                             By Investment Type
                                                         </Text>
 
