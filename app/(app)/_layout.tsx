@@ -48,6 +48,7 @@ import { useEffect, useState } from "react";
 import DistributorDashboardScreen from "./dashboard/[id]";
 import IFAReportsScreen from "./ifa";
 import { UserRoleProvider } from "../../src/context/useRoleContext";
+import BrokerageScreen from "./brokerage";
 
 NativeWindStyleSheet.setOutput({
     default: "native",
@@ -112,6 +113,7 @@ export default function AppLayout() {
                 />
             ),
         },
+
         {
             key: "clientName",
             content: (
@@ -198,11 +200,8 @@ export default function AppLayout() {
                             )}
                         >
                             {drawerStructure.map((item) => item.content)}
-
                             <Drawer.Screen
-
                                 name="sip-reports/index"
-
                                 options={{
                                     drawerLabel: "SIP Reports",
                                     title: "SIP Reports",
@@ -211,7 +210,6 @@ export default function AppLayout() {
                                 initialParams={{}}
                                 component={SIPReportsScreen}
                             />
-
                             <Drawer.Screen
                                 name="rta-reconciliation/index"
                                 options={{
@@ -222,7 +220,6 @@ export default function AppLayout() {
                                 initialParams={{}}
                                 component={RTAReconciliationScreen}
                             />
-
                             <Drawer.Screen
                                 name="mandates/index"
                                 options={{
@@ -233,7 +230,6 @@ export default function AppLayout() {
                                 initialParams={{}}
                                 component={MandatesScreen}
                             />
-
                             <Drawer.Screen
                                 name="mandates/[id]"
                                 options={{
@@ -245,7 +241,6 @@ export default function AppLayout() {
                                 initialParams={{}}
                                 component={MandateDetail}
                             />
-
                             <Drawer.Screen
                                 name="orders/[id]"
                                 options={{
@@ -257,7 +252,6 @@ export default function AppLayout() {
                                 initialParams={{}}
                                 component={OrderDetail}
                             />
-
                             <Drawer.Screen
                                 name="clients/[id]/holdings/[holdingId]"
                                 options={{
@@ -269,7 +263,6 @@ export default function AppLayout() {
                                 initialParams={{}}
                                 component={HoldingDetail}
                             />
-
                             <Drawer.Screen
                                 name="clients/[id]/index"
                                 options={{
@@ -281,8 +274,6 @@ export default function AppLayout() {
                                 initialParams={{}}
                                 component={ClientDetail}
                             />
-
-
                             <Drawer.Screen
                                 name="sip-reports/[id]"
                                 options={{
@@ -294,7 +285,6 @@ export default function AppLayout() {
                                 initialParams={{}}
                                 component={SIPReportsDetail}
                             />
-
                             <Drawer.Screen
                                 name="folio/[id]"
                                 options={{
@@ -306,7 +296,6 @@ export default function AppLayout() {
                                 initialParams={{}}
                                 component={AUMDetail}
                             />
-
                             <Drawer.Screen
                                 name="rta-reconciliation/[id]"
                                 options={{
@@ -328,6 +317,17 @@ export default function AppLayout() {
                                 }}
                                 initialParams={{}}
                                 component={MutualFundDetail}
+                            />
+                            <Drawer.Screen
+                                name="brokerage/index"
+                                options={{
+                                    drawerLabel: "Brokerage",
+                                    title: "Brokerage",
+                                    drawerItemStyle: { display: "none" },
+                                    unmountOnBlur: true,
+                                }}
+                                initialParams={{}}
+                                component={BrokerageScreen}
                             />
                             {(roleId === 3 || roleId === 4) && (
                                 <>
@@ -377,7 +377,6 @@ export default function AppLayout() {
                                     />
                                 </>
                             )}
-
                             <Drawer.Screen
                                 name="invite-contact"
                                 options={{
@@ -389,11 +388,8 @@ export default function AppLayout() {
                                 initialParams={{}}
                                 component={SendInvite}
                             />
-
-
                             <Drawer.Screen
                                 name="dashboard/[id]"
-
                                 options={{
                                     drawerLabel: "IFA Dashboard",
                                     title: "IFA Dashboard",

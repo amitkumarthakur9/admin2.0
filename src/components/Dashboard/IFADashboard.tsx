@@ -4,37 +4,28 @@ import {
     Center,
     HStack,
     Heading,
-    Pressable,
     ScrollView,
     Spinner,
     Text,
-    Menu,
-    HamburgerIcon,
-    Box,
     Image,
+    Button,
 } from "native-base";
-import Icon from "react-native-vector-icons/FontAwesome";
-import { router, useLocalSearchParams, useRouter } from "expo-router";
+import { router } from "expo-router";
 import IconCard from "../Card/IconCard";
-import AvatarCard from "../Card/AvatarCard";
 import {
     RupeeSymbol,
     aumChartPercentage,
-    roldID,
     sipChartPercentage,
 } from "../../../src/helper/helper";
 import BorderCard from "../Card/BorderCard";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import DonutPieChart from "../Chart/DonutPieChart";
 import DynamicMenu from "./DynamicMenu";
-import { AUMDetailResponseInterface } from "src/interfaces/AUMDetailResponseInterface";
 import {
     DashboardData,
     DashboardResponse,
 } from "../../../src/interfaces/DashboardInterface";
 import RemoteApi from "../../../src/services/RemoteApi";
-import { jwtDecode } from "jwt-decode";
-import { useStorageState } from "../../../src/services/useStorageState";
+import { useUserRole } from "../../../src/context/useRoleContext";
 
 const IFADashboard = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -45,17 +36,8 @@ const IFADashboard = () => {
     const [aumPercentage, setAumPercentage] = useState([]);
     const [sipPercentage, setSipPercentage] = useState([]);
     const [data, setData] = useState<DashboardData>();
-    // const [role, setRole] = useState(null);
 
-    // useEffect(()=>{
-
-    //     const roles = roldID();
-
-    //     setRole(roles);
-
-    // })
-
-    const role = roldID();
+    const { roleId } = useUserRole();
 
     useEffect(() => {
         setIsLoading(true);
@@ -249,25 +231,26 @@ const IFADashboard = () => {
                 >
                     <View className="bg-[#eaf3fe]">
                         <View className="flex flex-col p-4 gap-4">
-                            <View className="flex flex-row items-center">
-                                <Pressable
-                                    className="mr-3"
-                                    onPress={() => router.push("/clients")}
+                            <View className="flex flex-row items-center justify-between">
+                                <View className="flex flex-row items-center">
+                                    <Text
+                                        selectable
+                                        className="text-base flex flex-row text-center font-bold"
+                                    >
+                                        Dashboard
+                                    </Text>
+                                </View>
+                                <Button
+                                    borderColor={"#013974"}
+                                    bgColor={"#fff"}
+                                    _text={{ color: "#013974" }}
+                                    variant="outline"
+                                    className="rounded-lg"
+                                    onPress={() => router.push(`brokerage`)}
                                 >
-                                    <Icon
-                                        name="angle-left"
-                                        size={18}
-                                        color={"black"}
-                                    />
-                                </Pressable>
-                                <Text
-                                    selectable
-                                    className="text-base flex flex-row text-center font-bold"
-                                >
-                                    Dashboard
-                                </Text>
+                                    Go to Brokerage Dashboard
+                                </Button>
                             </View>
-
                             <View className="flex flex-row justify-between rounded bg-[#eaf3fe] pr-2 ">
                                 <View className=" flex flex-row w-full gap-2">
                                     {" "}
@@ -522,7 +505,6 @@ const IFADashboard = () => {
                                             <Text className="py-4 text-lg font-bold">
                                                 Coming Soon
                                             </Text>
-
                                         </View>
                                     </View>
                                 </View>
@@ -561,7 +543,7 @@ const IFADashboard = () => {
                                     />
                                 </View> */}
                             </View>
-                            {role == 2 && (
+                            {roleId == 2 && (
                                 <View className="flex flex-row justify-between rounded bg-white h-auto gap-2 pb-4">
                                     <View
                                         className="flex flex-row w-[45%] h-full rounded gap-2"
@@ -630,7 +612,6 @@ const IFADashboard = () => {
                                                 description="08"
                                             />
                                         </View>
-
                                     </View>
                                     <View
                                         className="w-[35%] h-128 rounded px-4"
@@ -749,10 +730,9 @@ const IFADashboard = () => {
                                         </View> */}
                                     </View>
                                 </View>
-
                             )}
 
-                            {(role == 3 || role == 4) && (
+                            {(roleId == 3 || roleId == 4) && (
                                 <View className="flex flex-row justify-between rounded bg-white h-auto gap-2 pb-4">
                                     <View
                                         className="flex flex-row w-[45%] h-full rounded gap-2"
@@ -939,7 +919,6 @@ const IFADashboard = () => {
                                     </View>
                                 </View>
                             )}
-
 
                             {/* {role == 4 && (
 
