@@ -59,7 +59,7 @@ const SIPDelay = () => {
         return futureValue;
     };
 
-    const calculateRequiredSIP = () => {
+    const calculateRequiredSIP = (futureValue: number) => {
         const monthlyRate = (1 + annualReturnRate / 100) ** (1 / 12) - 1;
 
         let requiredInvestment = 0;
@@ -67,7 +67,7 @@ const SIPDelay = () => {
         for (let month = 1; month <= investmentPeriod - delayMonths; month++) {
             sum += Math.pow(1 + monthlyRate, month);
         }
-        requiredInvestment = maturityWithoutDelay / sum;
+        requiredInvestment = futureValue / sum;
 
         return requiredInvestment;
     };
@@ -76,7 +76,7 @@ const SIPDelay = () => {
         const maturityWithoutDelay = calculateFutureValue(0);
         const maturityWithDelay = calculateFutureValue(delayMonths);
         const lossDueToDelay = maturityWithoutDelay - maturityWithDelay;
-        const newSIP = calculateRequiredSIP();
+        const newSIP = calculateRequiredSIP(maturityWithoutDelay);
 
         setMaturityWithoutDelay(maturityWithoutDelay);
         setMaturityWithDelay(maturityWithDelay);
@@ -87,6 +87,7 @@ const SIPDelay = () => {
     useEffect(() => {
         calculate();
     }, [calculate]);
+
 
     return (
         <View className="h-screen p-4">
