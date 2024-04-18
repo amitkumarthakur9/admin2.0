@@ -20,7 +20,7 @@ const DonutPieChart = ({pieData}) => {
                     }))}
                     style={{
                         labels: {
-                            fontSize: 40,
+                            fontSize: 32,
                             flex: 1,
                             flexDirection: "col",
                             flexWrap: "wrap",
@@ -43,7 +43,7 @@ const DonutPieChart = ({pieData}) => {
                             dy={0}
                             centerOffset={{ x: 25 }}
                             flyoutHeight={40}
-                            style={{ fontSize: 24 }}
+                            style={{ fontSize: 16 }}
                         />
                     }
                 />

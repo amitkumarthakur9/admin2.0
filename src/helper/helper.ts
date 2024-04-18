@@ -109,6 +109,40 @@ export const RMid = () => {
 };
 
 
+export const rupeeCurrencyFormatter = (num: number) => {
+    var result = num.toString().split(".");
+    var lastThree = result[0].substring(result[0].length - 3);
+    var otherNumbers = result[0].substring(0, result[0].length - 3);
+    if (otherNumbers != "" && otherNumbers != "-") lastThree = "," + lastThree;
+    var output = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree;
+    if (result.length > 1) {
+        output += "." + result[1].slice(0, 2);
+    }
+    return output;
+};
+
+export const formatAmountInWords = (amount) => {
+    let absAmount = Math.abs(amount);
+
+    if (absAmount < 1000) return `${amount.toFixed(2)}`;
+
+    const units = ["Crore", "Lakh", "K"];
+    const steps = [10000000, 100000, 1000];
+
+    let unitIndex = -1;
+    for (let i = 0; i < steps.length; i++) {
+        if (absAmount >= steps[i]) {
+            unitIndex = i;
+            break;
+        }
+    }
+
+    if (unitIndex === -1) return `${amount}`;
+
+    const formattedAmount = (absAmount / steps[unitIndex]).toFixed(2);
+    const amountInWords = `${parseFloat(formattedAmount)} ${units[unitIndex]}`;
+    return amount < 0 ? `-${amountInWords}` : amountInWords;
+};
 
 
 

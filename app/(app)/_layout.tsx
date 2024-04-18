@@ -53,7 +53,9 @@ import ARNTabScreen from "./arn-transfer";
 import ClientARNDetail from "./arn-transfer/[id]";
 
 import BrokerageScreen from "./brokerage";
-
+import Calculators from "./calculators";
+import Sip from "./calculators/sip";
+import SIPDelay from "./calculators/sip-delay";
 
 NativeWindStyleSheet.setOutput({
     default: "native",
@@ -67,14 +69,10 @@ export default function AppLayout() {
     const [roleId, setroleID] = useState(null);
     const [inviteDisplay, setinviteDisplay] = useState("");
 
-    // console.log('token--------->', token);
-
     useEffect(() => {
         if (token) {
             const decoded: any = jwtDecode(token);
-            console.log(decoded);
             setroleID(decoded.roleId);
-            console.log(decoded.roleId);
             if (decoded.roleId === 3 || decoded.roleId === 4) {
                 setinviteDisplay("none");
             }
@@ -100,8 +98,6 @@ export default function AppLayout() {
 
     const Drawer = createDrawerNavigator();
 
-    let screenForIFA = null;
-
     const drawerStructure = [
         {
             key: "Dashboard",
@@ -118,7 +114,6 @@ export default function AppLayout() {
                 />
             ),
         },
-
         {
             key: "clientName",
             content: (
@@ -410,10 +405,10 @@ export default function AppLayout() {
                                 name="arn-transfer/index"
                                 options={{
                                     drawerLabel: "ARN Transfer",
-                                    title: "ARN Transfe",
+                                    title: "ARN Transfer",
                                     unmountOnBlur: true,
                                 }}
-                                initialParams={{ }}
+                                initialParams={{}}
                                 component={ARNTabScreen}
                             />
                             <Drawer.Screen
@@ -426,6 +421,39 @@ export default function AppLayout() {
                                 }}
                                 initialParams={{}}
                                 component={ClientARNDetail}
+                            />
+                            <Drawer.Screen
+                                name="calculators/index"
+                                options={{
+                                    drawerLabel: "Calculators",
+                                    title: "Calculators",
+                                    unmountOnBlur: true,
+                                }}
+                                initialParams={{}}
+                                component={Calculators}
+                            />
+
+                            <Drawer.Screen
+                                name="calculators/sip/index"
+                                options={{
+                                    drawerLabel: "Calculators",
+                                    title: "Calculators",
+                                    unmountOnBlur: true,
+                                    drawerItemStyle: { display: "none" },
+                                }}
+                                initialParams={{}}
+                                component={Sip}
+                            />
+                            <Drawer.Screen
+                                name="calculators/sip-delay/index"
+                                options={{
+                                    drawerLabel: "Calculators",
+                                    title: "Calculators",
+                                    unmountOnBlur: true,
+                                    drawerItemStyle: { display: "none" },
+                                }}
+                                initialParams={{}}
+                                component={SIPDelay}
                             />
                         </Drawer.Navigator>
                     </UserRoleProvider>
