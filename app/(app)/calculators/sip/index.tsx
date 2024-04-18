@@ -14,7 +14,7 @@ import { router } from "expo-router";
 const Sip = () => {
     const [monthlyInvestment, setMonthlyInvestment] = useState(5000);
     const [expectedReturnRate, setExpectedReturnRate] = useState(12);
-    const [timePeriod, setTimePeriod] = useState(10);
+    const [timePeriod, setTimePeriod] = useState(60);
     const [totalDeposit, setTotalDeposit] = useState(0);
     const [totalEarnings, setTotalEarnings] = useState(0);
     const [futureValue, setFutureValue] = useState(0);
@@ -44,22 +44,27 @@ const Sip = () => {
                 alignItems="center"
                 className="w-full bg-white rounded-xl p-6 shadow"
             >
-                <View className="w-full flex flex-row items-center justify-between">
+                <View className="w-full flex flex-row items-center">
                     <Pressable
                         className="mr-3"
                         onPress={() => router.push("/calculators")}
                     >
                         <Icon name="angle-left" size={18} color={"black"} />
                     </Pressable>
-                    <View className="w-full flex items-center justify-start">
+                    <View className="w-full flex">
                         <Text fontSize="xl" color="black.300" bold>
-                            SIP Calculator
-                        </Text>
-                        <Text fontSize="sm" color="black.400">
-                            Systematic Investment Plan
+                            SIP Returns Calculator
                         </Text>
                     </View>
                 </View>
+                <Text fontSize="md" color="black.300">
+                    Maximize your financial growth with our SIP Calculator.
+                    Discover how regular, disciplined investments can
+                    significantly amplify your savings over time. Start planning
+                    today to turn your financial goals into reality
+                    tomorrow—every small step in investing can lead to
+                    substantial rewards.
+                </Text>
 
                 <Divider orientation="horizontal" className="my-4" />
 
@@ -113,21 +118,18 @@ const Sip = () => {
                                     totalEarnings
                                 )} (${formatAmountInWords(totalEarnings)})`}
                             </Text>
-
-                            <Divider my="2" color="black.700" />
-
-                            <Text color="black.300">Your Future Value:</Text>
-                            <Text
-                                color="black"
-                                bold
-                                fontSize="lg"
-                            >{`₹ ${rupeeCurrencyFormatter(
-                                futureValue
-                            )} (${formatAmountInWords(futureValue)})`}</Text>
                         </VStack>
                     </View>
                     <Divider orientation="vertical" className="mx-4" />
                     <View className="w-1/2 px-4">
+                        <Text color="black.300">Your Future Value:</Text>
+                        <Text
+                            color="black"
+                            bold
+                            fontSize="2xl"
+                        >{`₹ ${rupeeCurrencyFormatter(
+                            futureValue
+                        )} (${formatAmountInWords(futureValue)})`}</Text>
                         <DonutPieChart
                             pieData={[
                                 {
@@ -142,6 +144,7 @@ const Sip = () => {
                         />
                     </View>
                 </View>
+                <Divider my="2" color="black.700" orientation="horizontal" />
                 <Text fontSize="xs" color="black.500" italic>
                     Market risks: SIP are subject to market risks. Fluctuations
                     in market conditions can affect the performance of the fund,

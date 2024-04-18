@@ -11,7 +11,7 @@ const DonutPieChart = ({pieData}) => {
             <View className="w-4/12">
                 <VictoryLegend
                     x={0}
-                    y={-150}
+                    y={-140}
                     orientation="vertical"
                     gutter={2}
                     data={pieData?.map((item, index) => ({
