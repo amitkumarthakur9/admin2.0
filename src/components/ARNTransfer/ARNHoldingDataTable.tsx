@@ -21,6 +21,8 @@ import {
     Spinner,
     ThreeDotsIcon,
     WarningIcon,
+    Modal,
+    Image,
 } from "native-base";
 
 import RemoteApi from "../../services/RemoteApi";
@@ -37,6 +39,16 @@ import CustomButton from "../Buttons/CustomButton";
 // import HoverEffectComponent from "./Hover";
 
 const ARNHoldingDataTable = () => {
+    const [showImport, setShowImport] = useState(false);
+    const handleRefreshPortfolio = () => {
+        setShowImport(true);
+    };
+
+    const handleCloseModal = () => {
+        setSelectedContacts([]);
+        setSelectAll(false);
+        setShowImport(false);
+    };
     const dummyData = [
         {
             id: 1,
@@ -287,6 +299,7 @@ const ARNHoldingDataTable = () => {
 
     const downloadReport = async () => {
         setIsDownloadProcessing(true);
+        setShowImport(true);
         // let data: any = { filters: appliedFilers };
 
         // if (appliedSorting.key != "") {
@@ -321,6 +334,7 @@ const ARNHoldingDataTable = () => {
     // console.log("filteredContacts)" + JSON.stringify(filteredContacts));
 
     return (
+        <>
         <View className="bg-white">
             <View className=" mt-2">
                 {/* <DynamicFilters
@@ -1001,6 +1015,63 @@ const ARNHoldingDataTable = () => {
                 </Portal>
             </View>
         </View>
+        <View>
+                <Modal
+                    isOpen={showImport}
+                    onClose={handleCloseModal}
+                    p="10"
+                    className=""
+                >
+                    <Modal.Content className="bg-white p-8">
+                        <Modal.CloseButton />
+                        <Modal.Body>
+                            <View className="flex flex-row  justify-center">
+                                {/* <View className="w-full">
+                                    <Text className="text-lg text-bold">
+                                        Change password
+                                    </Text>
+                                    <Text className="text-sm text-semibold text-[#898989]">
+                                        In order to keep your account safe you
+                                        need to create a strong password.
+                                    </Text>
+                                </View> */}
+                                <Image
+                                    className=""
+                                    alt="ico"
+                                    source={require("../../../assets/images/Tick.png")}
+                                    style={{
+                                        // flex: 1,
+                                        // justifyContent: 'end',
+                                        width: 100, // specify the desired width
+                                        height: 100,
+                                    }}
+                                />
+
+                                {/* <Pressable
+                                    onPress={handleCloseModal}
+                                    className={
+                                        "flex flex-row justify-center items-center border-[1px] rounded px-2 h-[20px] border-slate-200"
+                                    }
+                                    aria-describedby="addNewClient"
+                                >
+                                    <Icon
+                                        name="close"
+                                        size={14}
+                                        color="#484848"
+                                    />
+                                </Pressable> */}
+                            </View>
+
+                            <View className="flex flex-row justify-center pt-8">
+                                <Text className="text-center">
+                                ARN transfer form has been downloaded and sent on Kshittij45@gmail.com
+                                </Text>
+                            </View>
+                        </Modal.Body>
+                    </Modal.Content>
+                </Modal>
+            </View>
+        </>
     );
 };
 

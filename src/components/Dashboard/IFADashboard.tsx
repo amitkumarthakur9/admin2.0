@@ -262,12 +262,13 @@ const IFADashboard = () => {
                                                     Total Aum
                                                 </Text>
                                                 <Text className="text-white font-bold text-[36px]">
-                                                    {data?.aum?.total
+                                                    {/* {data?.aum?.total
                                                         ? RupeeSymbol +
                                                           data?.aum?.total.toFixed(
                                                               2
                                                           )
-                                                        : RupeeSymbol + "0"}
+                                                        : RupeeSymbol + "0"} */}
+                                                        {RupeeSymbol + 100}
                                                 </Text>
                                                 {/* <Text className="text-[#00AC4F] text-xs inline-block align-text-bottom text-right">
                                                     <MaterialCommunityIcons
@@ -375,19 +376,19 @@ const IFADashboard = () => {
 
                                                         // ]}
 
-                                                        // pieData={[
-                                                        //     {
-                                                        //         x: "Debt",
-                                                        //         y: 54.2,
-                                                        //     },
-                                                        //     {
-                                                        //         x: "Equity",
-                                                        //         y: 45.8,
-                                                        //     },
+                                                        pieData={[
+                                                            {
+                                                                x: "Debt",
+                                                                y: 54.2,
+                                                            },
+                                                            {
+                                                                x: "Equity",
+                                                                y: 45.8,
+                                                            },
 
-                                                        // ]}
+                                                        ]}
 
-                                                        pieData={aumPercentage}
+                                                        // pieData={aumPercentage}
                                                     />
                                                 </View>
                                             </View>
@@ -420,25 +421,25 @@ const IFADashboard = () => {
 
                                                 <View>
                                                     <DonutPieChart
-                                                        // pieData={[
-                                                        //     {
-                                                        //         x: "Equity",
-                                                        //         y: 20,
-                                                        //     },
-                                                        //     {
-                                                        //         x: "Hybrid",
-                                                        //         y: 29,
-                                                        //     },
-                                                        //     {
-                                                        //         x: "Debt",
-                                                        //         y: 35,
-                                                        //     },
-                                                        //     {
-                                                        //         x: "Others",
-                                                        //         y: 25,
-                                                        //     },
-                                                        // ]}
-                                                        pieData={sipPercentage}
+                                                        pieData={[
+                                                            {
+                                                                x: "Equity",
+                                                                y: 20,
+                                                            },
+                                                            {
+                                                                x: "Hybrid",
+                                                                y: 29,
+                                                            },
+                                                            {
+                                                                x: "Debt",
+                                                                y: 35,
+                                                            },
+                                                            {
+                                                                x: "Others",
+                                                                y: 25,
+                                                            },
+                                                        ]}
+                                                        // pieData={sipPercentage}
                                                     />
                                                 </View>
                                             </View>

@@ -14,8 +14,9 @@ import {
     Heading,
     Spinner,
     WarningIcon,
+    Modal,
+    Image,
 } from "native-base";
-
 import RemoteApi from "../../services/RemoteApi";
 import { DynamicFilters } from "../Filters/DynamicFilters";
 import { Pagination } from "../Pagination/Pagination";
@@ -27,6 +28,7 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import TableCard from "../Card/TableCard";
 import { useUserRole } from "../../context/useRoleContext";
 import NoDataAvailable from "../Others/NoDataAvailable";
+import CustomModal from "../Modal/CustomModal";
 
 const ClientARNDataTable = () => {
     const [isLoading, setIsLoading] = React.useState(false);
@@ -44,6 +46,7 @@ const ClientARNDataTable = () => {
         direction: "",
     });
     const { width } = useWindowDimensions();
+    const [showModal, setShowModal] = useState(false);
 
     async function getDataList(
         updatedFilterValues = [],
@@ -117,38 +120,54 @@ const ClientARNDataTable = () => {
             lastUpdate: "Jul 26, 2023, 1:38 PM",
         },
         {
-            id: 314,
-            name: "Anand Gupta",
+            id: 1,
+            name: "Kshitish",
             panNumber: "ACVB34356G",
             clientId: "ACVB34356G",
             externalFund: "Available",
             lastUpdate: "Jul 26, 2023, 1:38 PM",
         },
         {
-            id: 314,
-            name: "Anand Gupta",
+            id: 1,
+            name: "Kshitish",
             panNumber: "ACVB34356G",
             clientId: "ACVB34356G",
             externalFund: "Available",
             lastUpdate: "Jul 26, 2023, 1:38 PM",
         },
         {
-            id: 314,
-            name: "Anand Gupta",
+            id: 1,
+            name: "Kshitish",
             panNumber: "ACVB34356G",
             clientId: "ACVB34356G",
             externalFund: "Available",
             lastUpdate: "Jul 26, 2023, 1:38 PM",
         },
         {
-            id: 314,
-            name: "Anand Gupta",
+            id: 1,
+            name: "Kshitish",
             panNumber: "ACVB34356G",
             clientId: "ACVB34356G",
             externalFund: "Available",
             lastUpdate: "Jul 26, 2023, 1:38 PM",
         },
     ];
+
+    const handleRefreshPortfolio = () => {
+        setShowModal(true);
+    };
+
+    const modalRefreshContent = () => {
+        return (
+            <>
+                <View>Refresh Portfolio</View>
+            </>
+        );
+    };
+
+    const handleCloseModal = () => {
+        setShowModal(false);
+    };
 
     const transformedData = dummyData?.map((item) => {
         const itemStructure = [
@@ -244,7 +263,10 @@ const ClientARNDataTable = () => {
                     <View className="flex flex-row justify-start text-[#686868] font-semibold w-11/12 ">
                         <Pressable
                             className="rounded-full border-2 px-6 py-3"
-                            onPress={() => router.push(`arn-transfer/${item?.id}`)}
+                            // onPress={() =>
+                            //     router.push(`arn-transfer/${item?.id}`)
+                            // }
+                            onPress={handleRefreshPortfolio}
                         >
                             <Text
                                 selectable
@@ -262,76 +284,137 @@ const ClientARNDataTable = () => {
     });
 
     return (
-        <View className="h-screen">
-            {data.length === 0 ? (
-                <NoDataAvailable />
-            ) : (
-                <View className="bg-white">
-                    {/* <View className="">
+        <>
+            <View className="h-screen">
+                {data.length === 0 ? (
+                    <NoDataAvailable />
+                ) : (
+                    <View className="bg-white">
+                        {/* <View className="">
                 <TableBreadCrumb name={"Client Wise"} />
             </View> */}
-                    <View className="border-[0.2px]  border-[#e4e4e4]">
-                        <DynamicFilters
-                            appliedSorting={appliedSorting}
-                            setAppliedSorting={setAppliedSorting}
-                            sorting={sorting}
-                            fileName="Clients"
-                            downloadApi={"client/download-report"}
-                            schemaResponse={filtersSchema}
-                            setCurrentPageNumber={setCurrentPageNumber}
-                            getList={getDataList}
-                            appliedFilers={appliedFilers}
-                            setAppliedFilers={setAppliedFilers}
-                        />
+                        <View className="border-[0.2px]  border-[#e4e4e4]">
+                            <DynamicFilters
+                                appliedSorting={appliedSorting}
+                                setAppliedSorting={setAppliedSorting}
+                                sorting={sorting}
+                                fileName="Clients"
+                                downloadApi={"client/download-report"}
+                                schemaResponse={filtersSchema}
+                                setCurrentPageNumber={setCurrentPageNumber}
+                                getList={getDataList}
+                                appliedFilers={appliedFilers}
+                                setAppliedFilers={setAppliedFilers}
+                            />
 
-                        {!isLoading ? (
-                            <ScrollView className={"mt-4 z-[-1] "}>
-                                {width < 830 ? (
-                                    <TableCard data={mobileData} />
-                                ) : (
-                                    <DataTable
-                                        headers={[
-                                            "Client Name",
-                                            "PAN",
-                                            "Client Code",
-                                            "External Funds imported",
-                                            "Last Updated date for external funds",
-                                            "Actions",
-                                        ]}
-                                        cellSize={[2, 1, 1, 1, 2, 2]}
-                                        rows={transformedData}
+                            {!isLoading ? (
+                                <ScrollView className={"mt-4 z-[-1] "}>
+                                    {width < 830 ? (
+                                        <TableCard data={mobileData} />
+                                    ) : (
+                                        <DataTable
+                                            headers={[
+                                                "Client Name",
+                                                "PAN",
+                                                "Client Code",
+                                                "External Funds imported",
+                                                "Last Updated date for external funds",
+                                                "Actions",
+                                            ]}
+                                            cellSize={[2, 1, 1, 1, 2, 2]}
+                                            rows={transformedData}
+                                        />
+                                    )}
+                                </ScrollView>
+                            ) : (
+                                <HStack
+                                    space={"md"}
+                                    marginTop={20}
+                                    marginBottom={20}
+                                    justifyContent="center"
+                                >
+                                    <Spinner
+                                        color={"black"}
+                                        accessibilityLabel="Loading order"
                                     />
-                                )}
-                            </ScrollView>
-                        ) : (
-                            <HStack
-                                space={"md"}
-                                marginTop={20}
-                                marginBottom={20}
-                                justifyContent="center"
-                            >
-                                <Spinner
-                                    color={"black"}
-                                    accessibilityLabel="Loading order"
-                                />
-                                <Heading color="black" fontSize="md">
-                                    Loading
-                                </Heading>
-                            </HStack>
-                        )}
-                    </View>
+                                    <Heading color="black" fontSize="md">
+                                        Loading
+                                    </Heading>
+                                </HStack>
+                            )}
+                        </View>
 
-                    <Pagination
-                        itemsPerPage={itemsPerPage}
-                        setItemsPerPage={setItemsPerPage}
-                        getDataList={getDataList}
-                        currentPageNumber={currentPageNumber}
-                        totalPages={totalPages}
-                        setCurrentPageNumber={setCurrentPageNumber}
-                    />
-                </View>
-            )}
-        </View>
+                        <Pagination
+                            itemsPerPage={itemsPerPage}
+                            setItemsPerPage={setItemsPerPage}
+                            getDataList={getDataList}
+                            currentPageNumber={currentPageNumber}
+                            totalPages={totalPages}
+                            setCurrentPageNumber={setCurrentPageNumber}
+                        />
+                    </View>
+                )}
+            </View>
+
+            {/* <CustomModal children={modalRefreshContent} show={showModal} /> */}
+            <View>
+                <Modal
+                    isOpen={showModal}
+                    onClose={handleCloseModal}
+                    p="10"
+                    className=""
+                >
+                    <Modal.Content className="bg-white p-8">
+                        <Modal.CloseButton />
+                        <Modal.Body>
+                            <View className="flex flex-row  justify-center">
+                                {/* <View className="w-full">
+                                    <Text className="text-lg text-bold">
+                                        Change password
+                                    </Text>
+                                    <Text className="text-sm text-semibold text-[#898989]">
+                                        In order to keep your account safe you
+                                        need to create a strong password.
+                                    </Text>
+                                </View> */}
+                                <Image
+                                    className=""
+                                    alt="ico"
+                                    source={require("../../../assets/images/Tick.png")}
+                                    style={{
+                                        // flex: 1,
+                                        // justifyContent: 'end',
+                                        width: 100, // specify the desired width
+                                        height: 100,
+                                    }}
+                                />
+
+                                {/* <Pressable
+                                    onPress={handleCloseModal}
+                                    className={
+                                        "flex flex-row justify-center items-center border-[1px] rounded px-2 h-[20px] border-slate-200"
+                                    }
+                                    aria-describedby="addNewClient"
+                                >
+                                    <Icon
+                                        name="close"
+                                        size={14}
+                                        color="#484848"
+                                    />
+                                </Pressable> */}
+                            </View>
+
+                            <View className="flex flex-row justify-center pt-8">
+                                <Text className="text-center">
+                                    Refresh Portfolio request has been
+                                    successfully sent to Kshitish
+                                </Text>
+                            </View>
+                        </Modal.Body>
+                    </Modal.Content>
+                </Modal>
+            </View>
+        </>
     );
 };
 

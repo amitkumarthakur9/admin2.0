@@ -117,48 +117,48 @@ const ARNRequest = () => {
 
     const dummyData = [
         {
-            id: 314,
-            name: "Anand Gupta",
+            id: 1,
+            name: "Kshitish",
             folio: "ACVB34356G",
             clientId: "ACVB34356G",
             raisedBy: "Sanjay Singh",
             raisedDate: "Jul 26, 2023, 1:38 PM",
         },
         {
-            id: 314,
-            name: "Anand Gupta",
+            id: 1,
+            name: "Kshitish",
             folio: "ACVB34356G",
             clientId: "ACVB34356G",
             raisedBy: "Sanjay Singh",
             raisedDate: "Jul 26, 2023, 1:38 PM",
         },
         {
-            id: 314,
-            name: "Anand Gupta",
+           id: 1,
+            name: "Kshitish",
             folio: "ACVB34356G",
             clientId: "ACVB34356G",
             raisedBy: "Sanjay Singh",
             raisedDate: "Jul 26, 2023, 1:38 PM",
         },
         {
-            id: 314,
-            name: "Anand Gupta",
+           id: 1,
+            name: "Kshitish",
             folio: "ACVB34356G",
             clientId: "ACVB34356G",
             raisedBy: "Sanjay Singh",
             raisedDate: "Jul 26, 2023, 1:38 PM",
         },
         {
-            id: 314,
-            name: "Anand Gupta",
+           id: 1,
+            name: "Kshitish",
             folio: "ACVB34356G",
             clientId: "ACVB34356G",
             raisedBy: "Sanjay Singh",
             raisedDate: "Jul 26, 2023, 1:38 PM",
         },
         {
-            id: 314,
-            name: "Anand Gupta",
+           id: 1,
+            name: "Kshitish",
             folio: "ACVB34356G",
             clientId: "ACVB34356G",
             raisedBy: "Sanjay Singh",
@@ -180,9 +180,9 @@ const ARNRequest = () => {
                         <View className="flex flex-col flex-wrap w-9/12">
                             <View className="flex flex-row items-center text-black font-semibold flex-wrap w-11/12 mb-2">
                                 <Pressable
-                                    onPress={() =>
-                                        router.push(`clients/${item?.id}`)
-                                    }
+                                   onPress={() =>
+                                    router.push(`arn-transfer/${item?.id}`)
+                                }
                                 >
                                     <Text
                                         selectable
@@ -260,7 +260,9 @@ const ARNRequest = () => {
                     <View className="flex flex-row justify-start text-[#686868] font-semibold w-11/12 ">
                         <Pressable
                             className="rounded-full border-2 px-6 py-3"
-                            onPress={() => router.push(`clients/${item?.id}`)}
+                            onPress={() =>
+                                router.push(`arn-transfer/${item?.id}`)
+                            }
                         >
                             <Text
                                 selectable
