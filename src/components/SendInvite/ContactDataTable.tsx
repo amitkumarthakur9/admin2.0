@@ -350,6 +350,8 @@ const ContactDataTable = () => {
                 getDataList();
                 setSelectedContacts([]);
             } else {
+
+                alert("Server Error" + ": " + response?.message)
             }
         } catch (error) {
             console.log(error);
