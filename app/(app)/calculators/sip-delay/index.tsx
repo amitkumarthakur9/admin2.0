@@ -262,14 +262,13 @@ const SIPDelay = () => {
                                 lossDueToDelay
                             )} (${formatAmountInWords(lossDueToDelay)})`}
                         </Text>
-                        <View className="py-4 flex flex-col items-center">
+                        <View className="py-8 flex flex-col items-start">
                             <Image
                                 className=""
                                 alt="icon"
                                 source={require("../../../../assets/images/comingsoon.png")}
-                                style={{ width: "50px", height: "50px" }}
+                                style={{ width: "100px", height: "100px" }}
                             />
-
                             <Text className="py-4 text-md">
                                 Area Line Chart Coming Soon
                             </Text>

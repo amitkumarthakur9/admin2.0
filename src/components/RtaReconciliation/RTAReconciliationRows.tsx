@@ -64,7 +64,11 @@ export const RTAReconciliationRows = ({ data, schema, getDataList }) => {
                     </View>
                 </View>
 
-                <View className="flex flex-row w-1/12">
+                <View
+                    className={`flex flex-row w-${
+                        roleId > 2 ? "1/12" : "2/12"
+                    }`}
+                >
                     <View className="flex flex-row items-center w-full justify-start">
                         <Text selectable className="font-semibold">
                             Scheme
@@ -72,15 +76,14 @@ export const RTAReconciliationRows = ({ data, schema, getDataList }) => {
                     </View>
                 </View>
                 {roleId > 2 && (
-           <View className="flex flex-row w-1/12">
-           <View className="flex flex-row items-center w-full justify-start">
-               <Text selectable className="font-semibold">
-                   Distributor
-               </Text>
-           </View>
-       </View>
-        )}
-                
+                    <View className="flex flex-row w-1/12">
+                        <View className="flex flex-row items-center w-full justify-start">
+                            <Text selectable className="font-semibold">
+                                Distributor
+                            </Text>
+                        </View>
+                    </View>
+                )}
                 <View className="flex flex-row w-1/12">
                     <View className="flex flex-row items-center w-full justify-start">
                         <Text selectable className="font-semibold">
@@ -89,7 +92,7 @@ export const RTAReconciliationRows = ({ data, schema, getDataList }) => {
                     </View>
                 </View>
                 <View className="flex flex-row w-1/12">
-                    <View className="flex flex-row items-center w-full justify-start w-4/5">
+                    <View className="flex flex-row items-center justify-start w-4/5">
                         <Text selectable className="font-semibold">
                             Payment Date
                         </Text>
@@ -124,36 +127,68 @@ export const RTAReconciliationRows = ({ data, schema, getDataList }) => {
                     </View>
                 </View>
                 <View className="flex flex-row w-1/12">
-                    <View className="flex flex-row items-center justify-center w-11/12">
-                        <View className='flex flex-row justify-center items-center mr-1'>
-                            <Popover trigger={triggerProps => {
-                                return <TouchableOpacity {...triggerProps}>
-                                    <Icon name="info-circle" size={12} color="black" />
-                                </TouchableOpacity>;
-                            }}>
-                                <Popover.Content accessibilityLabel="Order Details" w="56">
+                    <View className="flex flex-row items-center justify-start w-11/12">
+                        <Text selectable className="font-semibold text-center">
+                            Transaction Status
+                        </Text>
+                        <View className="flex flex-row justify-center items-center ml-2">
+                            <Popover
+                                trigger={(triggerProps) => {
+                                    return (
+                                        <TouchableOpacity {...triggerProps}>
+                                            <Icon
+                                                name="info-circle"
+                                                size={12}
+                                                color="black"
+                                            />
+                                        </TouchableOpacity>
+                                    );
+                                }}
+                            >
+                                <Popover.Content
+                                    accessibilityLabel="Order Details"
+                                    w="56"
+                                >
                                     <Popover.Arrow />
                                     <Popover.CloseButton />
                                     <Popover.Header>Definition</Popover.Header>
                                     <Popover.Body>
                                         <View>
-                                            <Text className="pb-2">Initiated: Order Successfully Placed</Text>
-                                            <Text className="pb-2">Placed: Order Success placed on BSE</Text>
-                                            <Text className="pb-2">Payment Initiated: Payment Initiated</Text>
-                                            <Text className="pb-2">Payment Done: Payment is successfully Done</Text>
-                                            <Text className="pb-2">Registered: Order is successfully registered on BSE</Text>
-                                            <Text className="pb-2">Approved: Allotment is Done on BSE</Text>
-                                            <Text className="pb-2">Allotted: RTA allotment is done</Text>
-                                            <Text className="pb-2">Failed: Order is Failed</Text>
+                                            <Text className="pb-2">
+                                                Initiated: Order Successfully
+                                                Placed
+                                            </Text>
+                                            <Text className="pb-2">
+                                                Placed: Order Success placed on
+                                                BSE
+                                            </Text>
+                                            <Text className="pb-2">
+                                                Payment Initiated: Payment
+                                                Initiated
+                                            </Text>
+                                            <Text className="pb-2">
+                                                Payment Done: Payment is
+                                                successfully Done
+                                            </Text>
+                                            <Text className="pb-2">
+                                                Registered: Order is
+                                                successfully registered on BSE
+                                            </Text>
+                                            <Text className="pb-2">
+                                                Approved: Allotment is Done on
+                                                BSE
+                                            </Text>
+                                            <Text className="pb-2">
+                                                Allotted: RTA allotment is done
+                                            </Text>
+                                            <Text className="pb-2">
+                                                Failed: Order is Failed
+                                            </Text>
                                         </View>
                                     </Popover.Body>
                                 </Popover.Content>
                             </Popover>
                         </View>
-
-                        <Text selectable className="font-semibold text-center">
-                            Transaction Status
-                        </Text>
                     </View>
                 </View>
                 <View className="flex flex-row w-1/12">
@@ -269,7 +304,11 @@ export const RTAReconciliationRows = ({ data, schema, getDataList }) => {
                                     </View>
                                 </View>
                             </View>
-                            <View className="flex flex-row w-1/12 ">
+                            <View
+                                className={`flex flex-row w-${
+                                    roleId > 2 ? "1/12" : "2/12"
+                                }`}
+                            >
                                 <View className="flex flex-col w-9/12">
                                     <Text
                                         selectable
@@ -285,11 +324,14 @@ export const RTAReconciliationRows = ({ data, schema, getDataList }) => {
                                     </Text>
                                 </View>
                             </View>
-                            <View className="flex flex-row w-1/12">
-                                <Text className="w-10/12" selectable>
-                                    {rta.mutualfund.fundhouse?.rta?.name || "-"}
-                                </Text>
-                            </View>
+                            {roleId > 2 && (
+                                <View className="flex flex-row w-1/12">
+                                    <Text className="w-10/12" selectable>
+                                        {rta.mutualfund.fundhouse?.rta?.name ||
+                                            "-"}
+                                    </Text>
+                                </View>
+                            )}
                             <View className="flex flex-row w-1/12">
                                 <Text className="w-10/12" selectable>
                                     {rta.orderReferenceNumber || "-"}
@@ -348,70 +390,59 @@ export const RTAReconciliationRows = ({ data, schema, getDataList }) => {
                                         : "-"}
                                 </Text>
                             </View>
-
                             <View className="flex flex-row w-1/12">
                                 <Text className="w-10/12" selectable>
                                     {rta.transactionType || "-"}
                                 </Text>
                             </View>
-                            <View className="flex flex-row w-1/12 justify-start items-center">
-                                <View className='flex flex-row justify-center items-center mr-1'>
-                                    <Popover trigger={triggerProps => {
-                                        return <TouchableOpacity {...triggerProps}>
-                                            <Icon name="info-circle" size={12} color="black" />
-                                        </TouchableOpacity>;
-                                    }}>
-                                        <Popover.Content accessibilityLabel="Order Details" w="56">
-                                            <Popover.Arrow />
-                                            <Popover.CloseButton />
-                                            <Popover.Header>{rta.transactionStatus}</Popover.Header>
-                                            <Popover.Body>
-                                                <View>
-                                                    <Text>{getTransactionMessage(rta.transactionStatus)}</Text>
-                                                </View>
-                                            </Popover.Body>
-                                        </Popover.Content>
-                                    </Popover>
-                                </View>
-                                <View className="flex flex-col h-6 items-center justify-start  w-[99%]">
-                                    <View className="flex flex-row items-start justify-start w-11/12">
-
-                                        {rta.transactionStatus === "Alloted" || rta.transactionStatus === "Failed"
-                                            ? <Text
+                            <View className="flex flex-row w-1/12 justify-start items-start">
+                                <View className="flex flex-col h-6 items-start justify-start w-full">
+                                    <View className="w-full flex flex-row items-center justify-start">
+                                        <View className="flex flex-row items-start justify-start w-2/3">
+                                            <Text
                                                 selectable
-                                                className="p-1 text-black text-start text-xs"
+                                                className="text-black text-md w-[99%]"
                                             >
                                                 {rta.transactionStatus || "-"}
-                                            </Text> :
-                                            <View className="flex flex-col flex-wrap items-start justify-start text-start w-[99%]">
-                                                
-                                                <Text
-                                                    selectable
-                                                    className="p-1 text-black text-start text-xs w-[99%]"
+                                            </Text>
+                                        </View>
+                                        <View className="flex flex-row h-full justify-start items-start pt-1">
+                                            <Popover
+                                                trigger={(triggerProps) => {
+                                                    return (
+                                                        <TouchableOpacity
+                                                            {...triggerProps}
+                                                        >
+                                                            <Icon
+                                                                name="info-circle"
+                                                                size={12}
+                                                                color="black"
+                                                            />
+                                                        </TouchableOpacity>
+                                                    );
+                                                }}
+                                            >
+                                                <Popover.Content
+                                                    accessibilityLabel="Order Details"
+                                                    w="56"
                                                 >
-                                                    {rta.transactionStatus || "-"}
-                                                </Text>
-                                                {/* <Pressable
-                                                    onPress={() => {
-                                                        setModalVisible(true),
-                                                            setId(rta.id),
-                                                            setTransactionStatus(
-                                                                rta.transactionStatus
-                                                            );
-                                                    }}
-                                                >
-                                                    <Icon
-                                                        name="edit"
-                                                        size={15}
-                                                        color="black"
-                                                    />
-                                                </Pressable> */}
-
-                                                
-
-                                         </View>
-                                        }
-
+                                                    <Popover.Arrow />
+                                                    <Popover.CloseButton />
+                                                    <Popover.Header>
+                                                        {rta.transactionStatus}
+                                                    </Popover.Header>
+                                                    <Popover.Body>
+                                                        <View>
+                                                            <Text>
+                                                                {getTransactionMessage(
+                                                                    rta.transactionStatus
+                                                                )}
+                                                            </Text>
+                                                        </View>
+                                                    </Popover.Body>
+                                                </Popover.Content>
+                                            </Popover>
+                                        </View>
                                     </View>
                                 </View>
                             </View>
