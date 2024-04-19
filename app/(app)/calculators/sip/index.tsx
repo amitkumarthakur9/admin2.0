@@ -21,7 +21,7 @@ const Sip = () => {
 
     const calculateSIP = useCallback(() => {
         const P = monthlyInvestment;
-        const r = expectedReturnRate / 100 / 12;
+        const r = (1 + expectedReturnRate / 100) ** (1 / 12) - 1;
         const n = timePeriod;
 
         const futureVal = P * (((1 + r) ** n - 1) / r) * (1 + r);

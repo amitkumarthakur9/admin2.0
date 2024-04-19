@@ -58,7 +58,7 @@ const SIPDelay = () => {
         const monthlyRate = (1 + annualReturnRate / 100) ** (1 / 12) - 1;
         let futureValue = 0;
 
-        for (let month = startMonth; month <= investmentPeriod; month++) {
+        for (let month = startMonth; month <= investmentPeriod - 1; month++) {
             const monthsInvested = investmentPeriod - month;
             futureValue +=
                 monthlyInvestment * Math.pow(1 + monthlyRate, monthsInvested);
