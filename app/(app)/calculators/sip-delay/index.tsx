@@ -1,5 +1,13 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { VStack, Text, Divider, View, Pressable, Button } from "native-base";
+import {
+    VStack,
+    Text,
+    Divider,
+    View,
+    Pressable,
+    Button,
+    Image,
+} from "native-base";
 import { jsPDF } from "jspdf";
 import Icon from "react-native-vector-icons/FontAwesome";
 import ADIcon from "react-native-vector-icons/AntDesign";
@@ -87,7 +95,6 @@ const SIPDelay = () => {
     useEffect(() => {
         calculate();
     }, [calculate]);
-
 
     return (
         <View className="h-screen p-4">
@@ -255,8 +262,17 @@ const SIPDelay = () => {
                                 lossDueToDelay
                             )} (${formatAmountInWords(lossDueToDelay)})`}
                         </Text>
-                        <View className="py-4">
-                            <Text italic>todo: add line chart</Text>
+                        <View className="py-4 flex flex-col items-center">
+                            <Image
+                                className=""
+                                alt="icon"
+                                source={require("../../../../assets/images/comingsoon.png")}
+                                style={{ width: "50px", height: "50px" }}
+                            />
+
+                            <Text className="py-4 text-md">
+                                Area Line Chart Coming Soon
+                            </Text>
                         </View>
                     </View>
                 </View>
