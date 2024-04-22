@@ -41,6 +41,7 @@ declare global {
         transactions: Transaction[];
         bankAccounts: BankAccount[];
         isActive: boolean;
+        externalFundLastUpdatedOn: string | null;
     }
 
     interface BankAccount {
@@ -123,6 +124,7 @@ declare global {
         amount: number;
         transactionType: TransactionType;
         transactionStatus: TransactionStatus;
+        paymentDate: string;
         mutualfund: HoldingMutualfund;
     }
 

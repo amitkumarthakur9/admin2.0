@@ -191,6 +191,14 @@ const ClientsDataTable = () => {
                     </View>
                 ),
             },
+            {
+                key: "externalFundDate",
+                content: (
+                    <Text selectable className="text-[#686868] font-semibold">
+                        Jul 26, 2023, 1:38 PM
+                    </Text>
+                ),
+            },
         ];
 
         // Conditionally add an additional object based on roleId to index 2
@@ -215,88 +223,90 @@ const ClientsDataTable = () => {
             </View>
 
             <View className="h-screen">
-
-        { data.length === 0
-            ? (
-                <NoDataAvailable />
-            ) : (
-                <>
-            <View className="border-[0.2px]  border-[#e4e4e4]">
-                <DynamicFilters
-                    appliedSorting={appliedSorting}
-                    setAppliedSorting={setAppliedSorting}
-                    sorting={sorting}
-                    fileName="Clients"
-                    downloadApi={"client/download-report"}
-                    schemaResponse={filtersSchema}
-                    setCurrentPageNumber={setCurrentPageNumber}
-                    getList={getDataList}
-                    appliedFilers={appliedFilers}
-                    setAppliedFilers={setAppliedFilers}
-                    // newComponent={<AddNewClient />}
-                />
-
-                {!isLoading ? (
-                    <ScrollView className={"mt-4 z-[-1] "}>
-                        {width < 830 ? (
-                            <MobileClientsRows data={data} schema={null} />
-                        ) : roleId > 2 ? (
-                            <DataTable
-                                headers={[
-                                    "Name",
-                                    "PAN No",
-                                    "Distributor",
-                                    "Client Code",
-                                    "Client DOI",
-                                    "Last Investment",
-                                ]}
-                                cellSize={[3, 1, 2, 2, 2, 2]}
-                                rows={transformedData}
-                            />
-                        ) : (
-                            <DataTable
-                                headers={[
-                                    "Name",
-                                    "PAN No",
-                                    "Client Code",
-                                    "Client DOI",
-                                    "Last Investment",
-                                ]}
-                                cellSize={[4, 2, 2, 2, 2]}
-                                rows={transformedData}
-                            />
-                        )}
-                    </ScrollView>
+                {data.length === 0 ? (
+                    <NoDataAvailable />
                 ) : (
-                    <HStack
-                        space={"md"}
-                        marginTop={20}
-                        marginBottom={20}
-                        justifyContent="center"
-                    >
-                        <Spinner
-                            color={"black"}
-                            accessibilityLabel="Loading order"
+                    <>
+                        <View className="border-[0.2px]  border-[#e4e4e4]">
+                            <DynamicFilters
+                                appliedSorting={appliedSorting}
+                                setAppliedSorting={setAppliedSorting}
+                                sorting={sorting}
+                                fileName="Clients"
+                                downloadApi={"client/download-report"}
+                                schemaResponse={filtersSchema}
+                                setCurrentPageNumber={setCurrentPageNumber}
+                                getList={getDataList}
+                                appliedFilers={appliedFilers}
+                                setAppliedFilers={setAppliedFilers}
+                                // newComponent={<AddNewClient />}
+                            />
+
+                            {!isLoading ? (
+                                <ScrollView className={"mt-4 z-[-1] "}>
+                                    {width < 830 ? (
+                                        <MobileClientsRows
+                                            data={data}
+                                            schema={null}
+                                        />
+                                    ) : roleId > 2 ? (
+                                        <DataTable
+                                            headers={[
+                                                "Name",
+                                                "PAN No",
+                                                "Distributor",
+                                                "Client Code",
+                                                "Client DOI",
+                                                "Last Investment",
+                                                "External Fund Update Date",
+                                            ]}
+                                            cellSize={[3, 1, 1, 1, 2, 2, 2]}
+                                            rows={transformedData}
+                                        />
+                                    ) : (
+                                        <DataTable
+                                            headers={[
+                                                "Name",
+                                                "PAN No",
+                                                "Client Code",
+                                                "Client DOI",
+                                                "Last Investment",
+                                                "External Fund Update Date",
+                                            ]}
+                                            cellSize={[4, 2, 1, 1, 2, 2]}
+                                            rows={transformedData}
+                                        />
+                                    )}
+                                </ScrollView>
+                            ) : (
+                                <HStack
+                                    space={"md"}
+                                    marginTop={20}
+                                    marginBottom={20}
+                                    justifyContent="center"
+                                >
+                                    <Spinner
+                                        color={"black"}
+                                        accessibilityLabel="Loading order"
+                                    />
+                                    <Heading color="black" fontSize="md">
+                                        Loading
+                                    </Heading>
+                                </HStack>
+                            )}
+                        </View>
+
+                        <Pagination
+                            itemsPerPage={itemsPerPage}
+                            setItemsPerPage={setItemsPerPage}
+                            getDataList={getDataList}
+                            currentPageNumber={currentPageNumber}
+                            totalPages={totalPages}
+                            setCurrentPageNumber={setCurrentPageNumber}
                         />
-                        <Heading color="black" fontSize="md">
-                            Loading
-                        </Heading>
-                    </HStack>
+                    </>
                 )}
             </View>
-
-            <Pagination
-                itemsPerPage={itemsPerPage}
-                setItemsPerPage={setItemsPerPage}
-                getDataList={getDataList}
-                currentPageNumber={currentPageNumber}
-                totalPages={totalPages}
-                setCurrentPageNumber={setCurrentPageNumber}
-            />
-            </>
-            )
-        }
-        </View>
         </View>
     );
 };

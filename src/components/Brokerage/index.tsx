@@ -88,7 +88,6 @@ export const Brokerage = () => {
                                     Go to Overall Dashboard
                                 </Button>
                             </View>
-
                             <View className="flex flex-row justify-between rounded bg-[#eaf3fe] pr-2 ">
                                 <View className="flex flex-row w-full gap-2">
                                     <View className="flex flex-col w-full rounded bg-[#eaf3fe] h-auto ">

@@ -23,6 +23,7 @@ import IonIcon from "react-native-vector-icons/Ionicons";
 import { useToast } from "native-base";
 import { Checkbox } from "react-native-paper";
 import { TextInput } from "react-native";
+import { DateTime } from "luxon";
 
 import RemoteApi from "../../../../src/services/RemoteApi";
 import { BreadcrumbShadow } from "../../../../src/components/Styles/Shadow";
@@ -38,12 +39,19 @@ import RadioButton from "../../../../src/components/Radio/Radio";
 import DataValue from "../../../../src/components/DataValue/DataValue";
 import useDebouncedSearch from "../../../../src/hooks/useDebounceSearch";
 import ApiRequest from "../../../../src/services/RemoteApi";
+import { dateTimeFormat } from "../../../../src/helper/DateUtils";
 
 const isMutualFundSearchResult = (
     data: MutualFundSearchResult | Holding
 ): data is MutualFundSearchResult => {
     return (data as MutualFundSearchResult)?.category?.name !== undefined;
 };
+
+const holdingDropper = [
+    { label: "External", value: "external" },
+    { label: "Internal", value: "internal" },
+    { label: "All", value: "all" },
+];
 
 export default function ClientDetail() {
     const { id } = useLocalSearchParams();
@@ -97,6 +105,19 @@ export default function ClientDetail() {
                 selectedFund={selectedFund}
                 changeSelectedFund={changeSelectedFund}
                 allowModalCardChange={allowModalCardChange}
+            />
+        ),
+        externalPortfolio: (
+            <ExternalPortfolioModalCard
+                hideDialog={closeModal}
+                card={cardPage}
+                selectedFund={selectedFund}
+                changeSelectedFund={changeSelectedFund}
+                allowModalCardChange={allowModalCardChange}
+                clientInfo={{
+                    lastDate: data?.externalFundLastUpdatedOn,
+                    clientName: data?.name,
+                }}
             />
         ),
     };
@@ -186,7 +207,22 @@ export default function ClientDetail() {
                                                 />
                                             )}
                                         </View>
-                                        <View>
+                                        <View className="flex flex-row gap-4">
+                                            <Button
+                                                borderColor={"#013974"}
+                                                bgColor={"#fff"}
+                                                _text={{ color: "#013974" }}
+                                                variant="outline"
+                                                width="48"
+                                                onPress={showModal(
+                                                    "externalPortfolio"
+                                                )}
+                                            >
+                                                {data?.externalFundLastUpdatedOn ==
+                                                null
+                                                    ? "Import Portfolio"
+                                                    : "Refresh Portfolio"}
+                                            </Button>
                                             <Button
                                                 width="48"
                                                 bgColor={"#013974"}
@@ -322,6 +358,7 @@ const PortfolioCard = ({
     showModal: (key: string, card?: number, selectedFund?: any) => () => void;
 }) => {
     const [selectedTab, setSelectedTab] = useState(1);
+    const [typeHolding, setTypeHolding] = useState("internal");
 
     const handleTabPress = (tab) => {
         setSelectedTab(tab);
@@ -337,6 +374,30 @@ const PortfolioCard = ({
             name: "Holdings",
             content: (
                 <View className="p-2 w-full">
+                    <View className="flex flex-row items-center justify-between py-2">
+                        <DropdownComponent
+                            label="Folio Number"
+                            data={holdingDropper}
+                            containerStyle={{
+                                width: "200px",
+                            }}
+                            noIcon
+                            value={typeHolding}
+                            setValue={setTypeHolding}
+                        />
+                        <Button
+                            borderColor={"#013974"}
+                            bgColor={"#fff"}
+                            _text={{ color: "#013974" }}
+                            variant="outline"
+                            width="48"
+                            // onPress={() =>
+                            //     router.push(`dashboard`)
+                            // }
+                        >
+                            Transfer Portfolio
+                        </Button>
+                    </View>
                     <View className="flex flex-col bg-gray-100 rounded p-2">
                         <View className="flex flex-row justify-between items-center p-2">
                             <DataGrid
@@ -672,7 +733,13 @@ const PortfolioCard = ({
                                                 selectable
                                                 className="text-xs text-gray-500"
                                             >
-                                                -
+                                                {transaction?.paymentDate
+                                                    ? DateTime.fromISO(
+                                                          transaction?.paymentDate
+                                                      ).toFormat(
+                                                          "dd LLL yyyy, t"
+                                                      )
+                                                    : "-"}
                                             </Text>
                                         </View>
                                     ),
@@ -2233,4 +2300,115 @@ const generateAssetBifurcation = (holdings: Holding[]) => {
     });
 
     return result;
+};
+
+const ExternalPortfolioModalCard = ({
+    hideDialog,
+    card,
+    selectedFund,
+    changeSelectedFund,
+    allowModalCardChange,
+    clientInfo,
+}: {
+    hideDialog: () => void;
+    card: number;
+    selectedFund: MutualFundSearchResult | Holding | null;
+    changeSelectedFund: (data: any, card: number, from: string) => void;
+    allowModalCardChange: boolean;
+    clientInfo: any;
+}) => {
+    const checkDate = (date: Date): string => {
+        const currentDate = new Date();
+        const inputDate = new Date(date);
+
+        // Calculate the difference in milliseconds
+        const differenceInMs = currentDate.getTime() - inputDate.getTime();
+
+        // Convert the difference to days
+        const differenceInDays = Math.floor(
+            differenceInMs / (1000 * 60 * 60 * 24)
+        );
+
+        if (differenceInDays < 7) {
+            // Calculate remaining days
+            const remainingDays = 7 - differenceInDays;
+            const remainingDate = new Date(
+                currentDate.getTime() + remainingDays * (1000 * 60 * 60 * 24)
+            );
+            return `Wait for ${remainingDays} days, ${remainingDate.toLocaleString()}`;
+        } else {
+            //   return 'The date is 7 days old.';
+            return "false";
+        }
+    };
+
+    // Example usage:
+    const inputDate = new Date("2024-04-15T12:00:00");
+    console.log(checkDate(clientInfo.lastDate)); // Output depends on current date
+    console.log(checkDate(inputDate)); // Output depends on current date
+
+    const refreshDate = checkDate(inputDate);
+
+    return (
+        <View className="flex flex-col">
+            <View className="h-16 flex flex-row justify-between items-center p-12">
+                <View className="flex flex-row items-center gap-x-2"></View>
+                <IonIcon name="close-outline" size={24} onPress={hideDialog} />
+            </View>
+
+            {refreshDate == "false" ? (
+                <>
+                    <View className="flex flex-row  justify-center">
+                        <Image
+                            className=""
+                            alt="ico"
+                            source={require("../../../../assets/images/Tick.png")}
+                            style={
+                                {
+                                    // flex: 1,
+                                    // justifyContent: 'end',
+                                    // width: 300, // specify the desired width
+                                    // height: 300,
+                                }
+                            }
+                        />
+                    </View>
+                    <View className="flex flex-row justify-center pt-8">
+                        <Text className="text-center font-semibold text-lg">
+                            Portfolio request has been successfully sent to{" "}
+                            {clientInfo.clientName}
+                        </Text>
+                    </View>
+                </>
+            ) : (
+                <>
+                    <View className="flex flex-row  justify-center">
+                        <Image
+                            className=""
+                            alt="ico"
+                            source={require("../../../../assets/images/warning.png")}
+                            style={
+                                {
+                                    // flex: 1,
+                                    // justifyContent: 'end',
+                                    // width: 200, // specify the desired width
+                                    // height: 200,
+                                }
+                            }
+                        />
+                    </View>
+                    <View className="flex flex-col justify-center pt-8 gap-4">
+                        <Text className="text-center font-semibold text-lg">
+                            You can resend the request only after 7 days of last
+                            request sent
+                        </Text>
+                        <Text className="text-center text-base">
+                            Last request sent:{" "}
+                            {dateTimeFormat(clientInfo.lastDate)}
+                        </Text>
+                    </View>
+                </>
+            )}
+        </View>
+    );
 };

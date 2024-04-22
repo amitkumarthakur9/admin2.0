@@ -40,6 +40,7 @@ import useDebouncedSearch from "../../../../src/hooks/useDebounceSearch";
 import ApiRequest from "../../../../src/services/RemoteApi";
 import ARNHoldingDataTable from "../../../../src/components/ARNTransfer/ARNHoldingDataTable";
 import CustomButton from "../../../../src/components/Buttons/CustomButton";
+import { VictoryPie, VictoryLegend, VictoryTooltip } from "victory";
 
 export default function ClientARNDetail() {
     const { id } = useLocalSearchParams();
@@ -112,6 +113,59 @@ export default function ClientARNDetail() {
         // }
     };
 
+
+    const DonutPieChart = ({pieData}) => {
+
+        const colorScale = ["#715CFA", "#B0ED8B", "#FE9090", "#FFE456"];
+    
+        return (
+            <div style={{ display: "flex" }}>
+                
+                <View className="w-8/12">
+                    <VictoryPie
+                        data={pieData}
+                        colorScale={colorScale}
+                        innerRadius={100}
+                        labels={({ datum }) =>
+                            `${datum.x}: ${datum.y.toFixed(1)}${"%"}`
+                        }
+                        style={{ labels: { fill: "black" } }}
+                        width={500}
+                        labelComponent={
+                            <VictoryTooltip
+                                dy={0}
+                                centerOffset={{ x: 25 }}
+                                flyoutHeight={40}
+                                style={{ fontSize: 16 }}
+                            />
+                        }
+                    />
+                </View>
+                <View className="w-4/12">
+                    <VictoryLegend
+                        x={0}
+                        y={-140}
+                        orientation="vertical"
+                        gutter={2}
+                        data={pieData?.map((item, index) => ({
+                            name: `${item.x}: ${item.y.toFixed(1)}${"%"}`,
+                            symbol: { fill: colorScale[index] },
+                        }))}
+                        style={{
+                            labels: {
+                                fontSize: 56,
+                                flex: 1,
+                                flexDirection: "col",
+                                flexWrap: "wrap",
+                            },
+                        }}
+                    />
+                </View>
+            </div>
+        );
+    };
+
+
     const handleRefreshPortfolio = () => {
         setShowImport(true);
     };
@@ -119,6 +173,7 @@ export default function ClientARNDetail() {
     const handleCloseModal = () => {
         setShowImport(false);
     };
+
     return (
         <>
             {isLoading ? (
@@ -163,119 +218,208 @@ export default function ClientARNDetail() {
                                     Client details external funds
                                 </Text>
                             </View>
-                            <View
-                                className="flex flex-row justify-between rounded g-white h-auto p-4"
-                                style={{ ...BreadcrumbShadow }}
-                            >
-                                <View className="flex flex-col gap-6 w-full">
-                                    <View className="flex flex-row w-full justify-between items-center">
-                                        <View className="flex flex-row gap-2 items-center">
-                                            <Text
-                                                selectable
-                                                className="text-lg flex flex-row text-center font-semibold"
-                                            >
-                                                {data?.name}
-                                            </Text>
-                                            {data?.isActive ? (
-                                                <CheckCircleIcon
-                                                    color="emerald.500"
-                                                    size="md"
-                                                />
-                                            ) : (
-                                                <WarningIcon
-                                                    size="md"
-                                                    color="orange.500"
-                                                />
-                                            )}
-                                        </View>
-                                        <View>
-                                            <Pressable
-                                                onPress={handleRefreshPortfolio}
-                                                className={`flex flex-row justify-center items-center border-[1px] border-[#013974] rounded px-8 h-[38px] `}
-                                            >
-                                                <Text className="text-[#013974] font-bold">
-                                                    {" "}
-                                                    Refresh Portfolio
+<View className="flex flex-row">
+<View
+                                    className="flex flex-row justify-between rounded g-white h-auto p-4 w-1/2 mr-2"
+                                    style={{ ...BreadcrumbShadow }}
+                                >
+                                    <View className="flex flex-col gap-6 w-full">
+                                        <View className="flex flex-row w-full justify-between items-center">
+                                            <View className="flex flex-row gap-2 items-center">
+                                                <Text
+                                                    selectable
+                                                    className="text-lg flex flex-row text-center font-semibold"
+                                                >
+                                                    {data?.name}
                                                 </Text>
-                                            </Pressable>
+                                                {data?.isActive ? (
+                                                    <CheckCircleIcon
+                                                        color="emerald.500"
+                                                        size="md"
+                                                    />
+                                                ) : (
+                                                    <WarningIcon
+                                                        size="md"
+                                                        color="orange.500"
+                                                    />
+                                                )}
+                                            </View>
+                                            <View>
+                                                <Pressable
+                                                    onPress={importPortfolio}
+                                                    className={`flex flex-row justify-center items-center border-[1px] border-[#013974] rounded px-8 h-[38px] `}
+                                                >
+                                                    <Text className="text-[#013974] font-bold">
+                                                        {" "}
+                                                        Import Portfolio
+                                                    </Text>
+                                                </Pressable>
+                                            </View>
                                         </View>
-                                    </View>
-                                    <View className="flex flex-row justify-between items-start w-full">
-                                        <View className="w-4/12 flex-flex-col gap-4 px-2">
-                                            <DataValue
-                                                key="pan"
-                                                title="Pan No."
-                                                value={
-                                                    data?.users[0]?.panNumber
-                                                }
-                                            />
-                                            <DataValue
-                                                key="clientCode"
-                                                title="Client Code"
-                                                value={data?.clientId}
-                                            />
-                                            <DataValue
-                                                key="dob"
-                                                title="DOB"
-                                                value={moment(
-                                                    data?.users[0]?.dateOfBirth
-                                                ).format("MMM DD, YYYY")}
-                                            />
-                                            <DataValue
-                                                key="doi"
-                                                title="DOI"
-                                                value="-"
-                                            />
-                                        </View>
-                                        <View className="w-4/12 flex-flex-col gap-4 px-2">
-                                            <DataValue
-                                                key="totalInvestment"
-                                                title="Total Investment"
-                                                value="-"
-                                            />
-                                            <DataValue
-                                                key="runningSip"
-                                                title="Running SIPs"
-                                                value={data?.sipOrders?.length}
-                                            />
-                                            <DataValue
-                                                key="lastInvestment"
-                                                title="Last Lumpsum"
-                                                value={`-`}
-                                            />
-                                            <DataValue
-                                                key="lastInvestmentDate"
-                                                title="Last Investment Date"
-                                                value="-"
-                                            />
-                                        </View>
-                                        <View className="w-4/12 flex-flex-col gap-4 px-2">
-                                            <DataValue
-                                                key="autopay"
-                                                title="Autopay"
-                                                value={
-                                                    data?.isActive
-                                                        ? "Active"
-                                                        : "Not Active"
-                                                }
-                                            />
-                                            <DataValue
-                                                key="kycStatus"
-                                                title="KYC Status"
-                                                value={
-                                                    data?.users[0]?.kycStatus
-                                                        ?.name
-                                                }
-                                            />
-                                            <DataValue
-                                                key="riskProfile"
-                                                title="Risk Profile"
-                                                value={"-"}
-                                            />
+                                        <View className="flex flex-row justify-between items-start w-full">
+                                            <View className="w-6/12 flex-flex-col gap-4 px-2">
+                                                <DataValue
+                                                    key="pan"
+                                                    title="Pan No."
+                                                    value={
+                                                        data?.users[0]
+                                                            ?.panNumber
+                                                    }
+                                                />
+                                                <DataValue
+                                                    key="clientCode"
+                                                    title="Client Code"
+                                                    value={data?.clientId}
+                                                />
+
+                                                <DataValue
+                                                    key="dob"
+                                                    title="DOB"
+                                                    value={moment(
+                                                        data?.users[0]
+                                                            ?.dateOfBirth
+                                                    ).format("MMM DD, YYYY")}
+                                                />
+                                                <DataValue
+                                                    key="doi"
+                                                    title="DOI"
+                                                    value="-"
+                                                />
+                                            </View>
+                                            
+                                            <View className="w-6/12 flex-flex-col gap-4 px-2">
+                                                <DataValue
+                                                    key="totalInvestment"
+                                                    title="Total Investment"
+                                                    value={
+                                                        RupeeSymbol + 
+                                                            "6,32,83,345"
+                                                    }
+                                                />
+                                                <DataValue
+                                                    key="kycStatus"
+                                                    title="KYC Status"
+                                                    value={
+                                                        data?.users[0]
+                                                            ?.kycStatus?.name
+                                                    }
+                                                />
+                                                <DataValue
+                                                    key="riskProfile"
+                                                    title="Risk Profile"
+                                                    value={"-"}
+                                                />
+                                            </View>
+
                                         </View>
                                     </View>
                                 </View>
-                            </View>
+                                <View
+                                    className="flex flex-row justify-between rounded g-white h-auto p-4 w-1/2 "
+                                    style={{ ...BreadcrumbShadow }}
+                                >
+                                    
+                                        <View className="flex flex-row justify-between items-start w-full">
+                                            <View className="w-3/12 flex flex-col">
+                                                <View className="w-full flex flex-col justify-between items-start p-2">
+                                                    <View className="">
+                                                        <Text
+                                                            className="text-bold font-medium text-gray-500"
+                                                            selectable
+                                                        >
+                                                            Current holding
+                                                        </Text>
+                                                    </View>
+                                                    <View className="">
+                                                        <Text
+                                                            selectable
+                                                            className="font-medium text-start text-[#114EA8]"
+                                                        >
+                                                            {RupeeSymbol + "38,98,348"}
+                                                        </Text>
+                                                    </View>
+                                                </View>
+                                                <View className="w-full flex flex-col justify-between items-start p-2">
+                                                    <View className="">
+                                                        <Text
+                                                            className="text-bold font-medium text-gray-500"
+                                                            selectable
+                                                        >
+                                                            XIRR
+                                                        </Text>
+                                                    </View>
+                                                    <View className="">
+                                                        <Text
+                                                            selectable
+                                                            className="font-medium text-start text-black"
+                                                        >
+                                                            21.11 %
+                                                        </Text>
+                                                    </View>
+                                                </View>
+                                                
+                                            </View>
+                                            <View className="w-3/12 flex-flex-col gap-4 px-2">
+                                            <View className="w-full flex flex-col justify-between items-start p-2">
+                                                    <View className="w-full">
+                                                        <Text
+                                                            className="text-bold font-medium text-gray-500"
+                                                            selectable
+                                                        >
+                                                            Invested
+                                                        </Text>
+                                                    </View>
+                                                    <View className="">
+                                                        <Text
+                                                            selectable
+                                                            className="font-medium text-start text-gray-500"
+                                                        >
+                                                            {RupeeSymbol + "38,98,348"}
+                                                        </Text>
+                                                    </View>
+                                                </View>
+                                                <View className="w-full flex flex-col justify-between items-start p-2">
+                                                    <View className="">
+                                                        <Text
+                                                            className="text-bold font-medium text-black"
+                                                            selectable
+                                                        >
+                                                            Total Returns
+                                                        </Text>
+                                                    </View>
+                                                    <View className="">
+                                                        <Text
+                                                            selectable
+                                                            className="font-medium text-start text-[#539D39]"
+                                                        >
+                                                            {RupeeSymbol + "2,98,348"}
+                                                        </Text>
+                                                    </View>
+                                                </View>
+                                            </View>
+                                            <View className="w-6/12">
+                                                <DonutPieChart 
+                                                 pieData={[
+                                                            {
+                                                                x: "Debt",
+                                                                y: 54.2,
+                                                            },
+                                                            {
+                                                                x: "Equity",
+                                                                y: 45.8,
+                                                            },
+
+                                                        ]}
+                                                
+                                                />
+                                            </View>
+                                        </View>
+                              
+                                </View>
+</View>
+                                
+                  
+
                             <View className="flex flex-row justify-between rounded bg-white">
                                 <View
                                     className="w-full rounded"
