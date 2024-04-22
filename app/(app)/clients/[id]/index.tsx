@@ -74,7 +74,7 @@ export default function ClientDetail() {
             setVisible(true);
         };
 
-    const changeSelectedFund = (data: any, card: number, from: string) => {
+    const changeSelectedFund = (data: any, card: number, from?: string) => {
         setSelectedFund(data);
         setCardPage(card);
     };
@@ -345,12 +345,14 @@ const PortfolioCard = ({
                                 value={
                                     <Text className="text-blue-700">
                                         {RupeeSymbol}{" "}
-                                        {data?.holdings?.reduce(
-                                            (accumulator, currentValue) =>
-                                                accumulator +
-                                                currentValue.currentValue,
-                                            0
-                                        )}
+                                        {data?.holdings
+                                            ?.reduce(
+                                                (accumulator, currentValue) =>
+                                                    accumulator +
+                                                    currentValue.currentValue,
+                                                0
+                                            )
+                                            .toFixed(2)}
                                     </Text>
                                 }
                                 reverse
@@ -361,12 +363,14 @@ const PortfolioCard = ({
                                 value={
                                     <Text className="text-blue-700">
                                         {RupeeSymbol}{" "}
-                                        {data?.holdings?.reduce(
-                                            (accumulator, currentValue) =>
-                                                accumulator +
-                                                currentValue.investedValue,
-                                            0
-                                        )}
+                                        {data?.holdings
+                                            ?.reduce(
+                                                (accumulator, currentValue) =>
+                                                    accumulator +
+                                                    currentValue.investedValue,
+                                                0
+                                            )
+                                            .toFixed(2)}
                                     </Text>
                                 }
                                 reverse
@@ -447,7 +451,9 @@ const PortfolioCard = ({
                                                 className="text-xs text-black"
                                             >
                                                 {RupeeSymbol}{" "}
-                                                {holding?.currentValue}
+                                                {holding?.currentValue?.toFixed(
+                                                    2
+                                                )}
                                             </Text>
                                         </View>
                                     ),
@@ -461,7 +467,9 @@ const PortfolioCard = ({
                                                 className="text-xs text-gray-500"
                                             >
                                                 {RupeeSymbol}{" "}
-                                                {holding?.investedValue}
+                                                {holding?.investedValue?.toFixed(
+                                                    2
+                                                )}
                                             </Text>
                                         </View>
                                     ),
@@ -474,7 +482,7 @@ const PortfolioCard = ({
                                                 selectable
                                                 className="text-xs text-gray-500"
                                             >
-                                                {holding?.xirr} %
+                                                {holding?.xirr?.toFixed(2)} %
                                             </Text>
                                         </View>
                                     ),
@@ -507,11 +515,13 @@ const PortfolioCard = ({
                         <Text className="font-bold">Total SIP Amount</Text>
                         <Text className="font-bold">
                             {RupeeSymbol}{" "}
-                            {data?.sipOrders?.reduce(
-                                (accumulator, currentValue) =>
-                                    accumulator + currentValue.amount,
-                                0
-                            )}
+                            {data?.sipOrders
+                                ?.reduce(
+                                    (accumulator, currentValue) =>
+                                        accumulator + currentValue.amount,
+                                    0
+                                )
+                                .toFixed(2)}
                         </Text>
                     </View>
                     <DataTable
@@ -561,7 +571,8 @@ const PortfolioCard = ({
                                                 selectable
                                                 className="text-xs text-black"
                                             >
-                                                {RupeeSymbol} {sip?.amount}
+                                                {RupeeSymbol}{" "}
+                                                {sip?.amount?.toFixed(2)}
                                             </Text>
                                         </View>
                                     ),
@@ -646,7 +657,9 @@ const PortfolioCard = ({
                                                 className="text-xs text-black"
                                             >
                                                 {RupeeSymbol}{" "}
-                                                {transaction?.amount}
+                                                {transaction?.amount?.toFixed(
+                                                    2
+                                                )}
                                             </Text>
                                         </View>
                                     ),
@@ -706,7 +719,7 @@ const InvestModalCard = ({
     hideDialog: () => void;
     card: number;
     selectedFund: MutualFundSearchResult | Holding | null;
-    changeSelectedFund: (data: any, card: number, from: string) => void;
+    changeSelectedFund: (data: any, card: number, from?: string) => void;
     allowModalCardChange: boolean;
 }) => {
     const [folios, setFolios] = useState<FolioSchema[]>([]);
@@ -732,6 +745,8 @@ const InvestModalCard = ({
                 : null
         );
     }, [card]);
+
+    const IsMFSearch = isMutualFundSearchResult(selectedFund);
 
     const changeFolios = (folioArray: FolioSchema[]) => {
         setFolios(folioArray);
@@ -795,13 +810,11 @@ const InvestModalCard = ({
         <View className="flex flex-col">
             <View className="h-16 flex flex-row justify-between items-center p-12">
                 <View className="flex flex-row items-center gap-x-2">
-                    {/* {card > 1 && (
-                        <Pressable
-                            onPress={changeSelectedFund(null, 1, "back")}
-                        >
+                    {IsMFSearch && (
+                        <Pressable onPress={() => changeSelectedFund(null, 1)}>
                             <IonIcon name="chevron-back-outline" size={24} />
                         </Pressable>
-                    )} */}
+                    )}
                     <Text className="text-xl font-medium center">
                         {renderInfo[card]?.title}
                     </Text>
@@ -1504,7 +1517,7 @@ const RedeemModalCard = ({
     hideDialog: () => void;
     card: number;
     selectedFund: Holding;
-    changeSelectedFund: (data: any, card: number, from: string) => void;
+    changeSelectedFund: (data: any, card: number, from?: string) => void;
     allowModalCardChange: boolean;
 }) => {
     const [methodSelect, setMethodSelect] = useState("amount");
@@ -1532,8 +1545,6 @@ const RedeemModalCard = ({
     });
 
     const { id } = useLocalSearchParams();
-
-    console.log("seele", selectedFund);
 
     const postData = async () => {
         return await ApiRequest.post("/order/redeem", {

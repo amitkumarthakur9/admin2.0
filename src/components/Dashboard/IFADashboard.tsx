@@ -262,13 +262,12 @@ const IFADashboard = () => {
                                                     Total Aum
                                                 </Text>
                                                 <Text className="text-white font-bold text-[36px]">
-                                                    {/* {data?.aum?.total
+                                                    {data?.aum?.total
                                                         ? RupeeSymbol +
                                                           data?.aum?.total.toFixed(
                                                               2
                                                           )
-                                                        : RupeeSymbol + "0"} */}
-                                                        {RupeeSymbol + 100}
+                                                        : RupeeSymbol + "0"}
                                                 </Text>
                                                 {/* <Text className="text-[#00AC4F] text-xs inline-block align-text-bottom text-right">
                                                     <MaterialCommunityIcons
@@ -385,7 +384,6 @@ const IFADashboard = () => {
                                                                 x: "Equity",
                                                                 y: 45.8,
                                                             },
-
                                                         ]}
 
                                                         // pieData={aumPercentage}
