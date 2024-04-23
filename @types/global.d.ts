@@ -194,6 +194,47 @@ declare global {
         redeemableUnits: number;
     }
 
+    interface BrokerageResponse {
+        totalAmount: number;
+        subBrokerAmount: number;
+        distributorAmount: number;
+        sipTotal: number;
+        oneTimeTotal: number;
+        topFundhouse: TopFundhouse[];
+    }
+
+    interface TopFundhouse {
+        fundhouse: string;
+        totalAmount: number;
+        subBrokerAmount: number;
+        distributorAmount: number;
+    }
+
+    interface BrokerageTopClientsResponse {
+        account: DeliveryType;
+        totalAmount: number;
+        subBrokerAmount: number;
+        distributorAmount: number;
+    }
+
+    interface ClientBrokerageTransaction {
+        id: string;
+        amount: number;
+        account: DeliveryType;
+        mutualfund: {
+            dividendType: DeliveryType;
+            optionType: DeliveryType;
+            deliveryType: DeliveryType;
+            name: string;
+            logoUrl: string;
+            category: string;
+            subCategory: string;
+        };
+        totalAmount: number;
+        subBrokerAmount: number;
+        distributorAmount: number;
+    }
+
     // You can declare multiple interfaces or types here
 }
 

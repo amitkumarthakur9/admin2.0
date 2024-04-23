@@ -44,10 +44,7 @@ export default function ResetPasswordScreen() {
     const [isLoading, setIsLoading] = useState(false);
     const toast = useToast();
     const { height, width } = useWindowDimensions();
-    // console.log('in login------');
     const onLoginPressed = async () => {
-        // console.log('clicked');
-
         setIsLoading(true);
         const emailError = emailValidator(email.value);
         const passwordError = passwordValidator(password.value);
@@ -58,16 +55,11 @@ export default function ResetPasswordScreen() {
             return;
         }
 
-        // console.log(process.env.API_ENDPOINT);
-
         try {
             const response: any = await RemoteApi.post("/user/login", {
                 email: email.value,
                 password: password.value,
-                // email: "bhupendrajogi@gmail.com", password: "US me bohot jagha gaye hai"
             });
-
-            console.log("response", response);
 
             if (response.message == "Success") {
                 signIn(response.token, response.data);

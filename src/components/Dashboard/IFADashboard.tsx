@@ -54,8 +54,6 @@ const IFADashboard = () => {
                     sipChartPercentage(response?.data?.order?.sip?.breakDown)
                 );
                 setIsLoading(false);
-                console.log(aumPercentage);
-                console.log(sipPercentage);
             }
         }
 
@@ -87,123 +85,23 @@ const IFADashboard = () => {
         console.log("Data received from YourComponent2:", data);
     };
 
-    const notificationData = [
-        {
-            imageUrl: "account",
-            title: "Rohan Invested in Axis Mutual Fund",
-            description: "Just Now",
-        },
-        {
-            imageUrl: "account",
-            title: "Rohan Invested in Axis Mutual Fund",
-            description: "Just Now",
-        },
-        {
-            imageUrl: "account",
-            title: "Rohan Invested in Axis Mutual Fund",
-            description: "Just Now",
-        },
-        {
-            imageUrl: "account",
-            title: "Rohan Invested in Axis Mutual Fund",
-            description: "Just Now",
-        },
-        {
-            imageUrl: "account",
-            title: "Rohan Invested in Axis Mutual Fund",
-            description: "Just Now",
-        },
-        {
-            imageUrl: "account",
-            title: "Rohan Invested in Axis Mutual Fund",
-            description: "Just Now",
-        },
-        {
-            imageUrl: "account",
-            title: "Rohan Invested in Axis Mutual Fund",
-            description: "Just Now",
-        },
-        {
-            imageUrl: "account",
-            title: "Rohan Invested in Axis Mutual Fund",
-            description: "Just Now",
-        },
-        {
-            imageUrl: "account",
-            title: "Rohan Invested in Axis Mutual Fund",
-            description: "Just Now",
-        },
-    ];
-
-    const topClientData = [
-        {
-            imageUrl: "account",
-            title: "Rohan Invested in Axis Mutual Fund",
-            description: "Just Now",
-            sip: "14",
-            investment: "1,86,564",
-        },
-        {
-            imageUrl: "account",
-            title: "Rohan Invested in Axis Mutual Fund",
-            description: "Just Now",
-            sip: "14",
-            investment: "1,86,564",
-        },
-        {
-            imageUrl: "account",
-            title: "Rohan Invested in Axis Mutual Fund",
-            description: "Just Now",
-            sip: "14",
-            investment: "1,86,564",
-        },
-        {
-            imageUrl: "account",
-            title: "Rohan Invested in Axis Mutual Fund",
-            description: "Just Now",
-            sip: "14",
-            investment: "1,86,564",
-        },
-        {
-            imageUrl: "account",
-            title: "Rohan Invested in Axis Mutual Fund",
-            description: "Just Now",
-            sip: "14",
-            investment: "1,86,564",
-        },
-        {
-            imageUrl: "account",
-            title: "Rohan Invested in Axis Mutual Fund",
-            description: "Just Now",
-            sip: "14",
-            investment: "1,86,564",
-        },
-    ];
-
     const sipBreakdownChart = data?.order?.sip?.breakDown.map((item) => ({
         x: item.category,
         y: item.count,
     }));
 
-    // console.log(sipBreakdownChart);
+    const aumBreakdownChart = (aum) => {
+        const totalValue = aum?.reduce(
+            (accumulator, currentValue) =>
+                accumulator + currentValue.currentValue,
+            0
+        );
 
-    // const aumBreakdownChart = data?.aum?.breakDown.map((item) => ({
-    //     x: item.category,
-    //     y: item.currentValue,
-    // }));
-
-    // console.log("aumBreakdownChart: ", JSON.stringify(aumBreakdownChart));
-
-    // const breakDown = [
-    //     {
-    //         "category": "Debt",
-    //         "currentValue": 2154.6
-    //     },
-    //     {
-    //         "category": "Equity",
-    //         "currentValue": 1814.1522999999997
-    //     }
-    // ];
+        return aum?.map((item) => ({
+            x: item.category,
+            y: (item.currentValue / totalValue) * 100,
+        }));
+    };
 
     return (
         <>
@@ -304,14 +202,9 @@ const IFADashboard = () => {
                                                         icon="wallet-outline"
                                                         title="Total Lumpsum Investment"
                                                         description={
+                                                            RupeeSymbol +
                                                             data?.order?.lumpsum
                                                                 ?.total
-                                                                ? RupeeSymbol +
-                                                                  data?.order?.lumpsum?.total.toFixed(
-                                                                      2
-                                                                  )
-                                                                : RupeeSymbol +
-                                                                  "0"
                                                         }
                                                     />
                                                     <IconCard
@@ -319,7 +212,8 @@ const IFADashboard = () => {
                                                         title="Total SIP Amount"
                                                         description={
                                                             RupeeSymbol +
-                                                            "25,00,000"
+                                                            data?.order?.sip
+                                                                ?.monthlySipAmount
                                                         }
                                                     />
                                                 </View>
@@ -339,54 +233,13 @@ const IFADashboard = () => {
                                                     <Text className="text-black font-bold text-lg">
                                                         AUM Breakdown
                                                     </Text>
-                                                    {/* <Pressable
-                                                        className="flex flex-row mr-3"
-                                                        onPress={() =>
-                                                            router.push(
-                                                                "/clients"
-                                                            )
-                                                        }
-                                                    >
-                                                        <Text
-                                                            selectable
-                                                            className="text-base flex flex-row text-center text-slate-500 font-semibold pr-4"
-                                                        >
-                                                            Asset class
-                                                        </Text>
-                                                        <Icon
-                                                            name="angle-down"
-                                                            size={24}
-                                                            color={"#888"}
-                                                        />
-                                                    </Pressable> */}
                                                 </View>
 
                                                 <View>
                                                     <DonutPieChart
-                                                        // pieData={[
-                                                        //     {
-                                                        //         x: data?.aum?.breakDown[0].category,
-                                                        //         y: data?.aum?.breakDown[0].currentValue.toFixed(2),
-                                                        //     },
-                                                        //     {
-                                                        //         x: data?.aum?.breakDown[1].category,
-                                                        //         y: data?.aum?.breakDown[1].currentValue.toFixed(2),
-                                                        //     },
-
-                                                        // ]}
-
-                                                        pieData={[
-                                                            {
-                                                                x: "Debt",
-                                                                y: 54.2,
-                                                            },
-                                                            {
-                                                                x: "Equity",
-                                                                y: 45.8,
-                                                            },
-                                                        ]}
-
-                                                        // pieData={aumPercentage}
+                                                        pieData={aumBreakdownChart(
+                                                            data?.aum?.breakDown
+                                                        )}
                                                     />
                                                 </View>
                                             </View>
@@ -395,51 +248,11 @@ const IFADashboard = () => {
                                                     <Text className="text-black font-bold text-lg">
                                                         SIP Breakdown
                                                     </Text>
-                                                    {/* <Pressable
-                                                        className="flex flex-row mr-3"
-                                                        onPress={() =>
-                                                            router.push(
-                                                                "/clients"
-                                                            )
-                                                        }
-                                                    >
-                                                        <Text
-                                                            selectable
-                                                            className="text-base flex flex-row text-center text-slate-500 font-semibold pr-4"
-                                                        >
-                                                            Asset class
-                                                        </Text>
-                                                        <Icon
-                                                            name="angle-down"
-                                                            size={24}
-                                                            color={"#888"}
-                                                        />
-                                                    </Pressable> */}
                                                 </View>
 
-                                                <View>
-                                                    <DonutPieChart
-                                                        pieData={[
-                                                            {
-                                                                x: "Equity",
-                                                                y: 20,
-                                                            },
-                                                            {
-                                                                x: "Hybrid",
-                                                                y: 29,
-                                                            },
-                                                            {
-                                                                x: "Debt",
-                                                                y: 35,
-                                                            },
-                                                            {
-                                                                x: "Others",
-                                                                y: 25,
-                                                            },
-                                                        ]}
-                                                        // pieData={sipPercentage}
-                                                    />
-                                                </View>
+                                                <DonutPieChart
+                                                    pieData={sipBreakdownChart}
+                                                />
                                             </View>
                                         </View>
                                     </View>

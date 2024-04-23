@@ -17,9 +17,6 @@ const TopHeader = ({ navigation }) => {
     const { signOut, userData } = useSession();
     const { height, width } = useWindowDimensions();
 
-    console.log("userData")
-    console.log(userData)
-
     return (
         <View
             className="bg-white h-[60px] lg:h-14 flex flex-row justify-between items-center px-4"

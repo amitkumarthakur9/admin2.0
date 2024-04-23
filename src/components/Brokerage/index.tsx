@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View } from "react-native";
 import {
     Center,
@@ -9,23 +9,97 @@ import {
     Text,
     Divider,
     Button,
+    Image,
 } from "native-base";
 import { router } from "expo-router";
+import { useMutation, useQuery } from "react-query";
+import { DateTime } from "luxon";
+
 import { RupeeSymbol } from "../../../src/helper/helper";
 import DataTable from "../DataTable/DataTable";
 import DonutPieChart from "../Chart/DonutPieChart";
 import { BarChart } from "../Chart/BarChart";
 import IconCard from "../Card/IconCard";
 import DropdownComponent from "../Dropdowns/NewDropDown";
-
-const timePeriodDrop = [
-    { label: "last 3 months", value: "3m" },
-    { label: "last 6 months", value: "6m" },
-    { label: "all time", value: "all" },
-];
+import RemoteApi from "../../../src/services/RemoteApi";
 
 export const Brokerage = () => {
-    let isLoading = false;
+    const now = DateTime.now();
+    const timePeriodDrop = [
+        {
+            label: "last month",
+            value: now.minus({ months: 1 }).toFormat("yyyy-MM-dd"),
+        },
+        {
+            label: "last 3 months",
+            value: now.minus({ months: 3 }).toFormat("yyyy-MM-dd"),
+        },
+        {
+            label: "last 6 months",
+            value: now.minus({ months: 6 }).toFormat("yyyy-MM-dd"),
+        },
+        { label: "all time", value: "" },
+    ];
+    const [duration, setDuration] = useState(
+        now.minus({ months: 1 }).toFormat("yyyy-MM-dd")
+    );
+
+    const changeDuration = (text) => {
+        setDuration(text);
+    };
+
+    const fetchBrokerage = async () => {
+        try {
+            const response: ApiResponse<BrokerageResponse> =
+                await RemoteApi.get(`dashboard/brokerage?from=${duration}`);
+            return response;
+        } catch (error) {
+            throw error;
+        }
+    };
+
+    const fetchTopClients = async () => {
+        try {
+            const response: ApiResponse<BrokerageTopClientsResponse[]> =
+                await RemoteApi.get(`dashboard/brokerage/top-clients`);
+            return response;
+        } catch (error) {
+            throw error;
+        }
+    };
+
+    const postBrokerageTransactions = async () => {
+        try {
+            const response: ApiResponse<ClientBrokerageTransaction[]> =
+                await RemoteApi.post(`dashboard/brokerage/transactions`);
+            return response;
+        } catch (error) {
+            throw error;
+        }
+    };
+
+    const { data: brokerage, isLoading } = useQuery({
+        queryKey: ["brokerage", duration],
+        queryFn: fetchBrokerage,
+        enabled: true,
+    });
+
+    const { data: brokerageTopClients, isLoading: topClientsLoading } =
+        useQuery({
+            queryKey: ["brokerage-top-clients"],
+            queryFn: fetchTopClients,
+            enabled: true,
+        });
+
+    const { data: brokerageTransactions, mutate } = useMutation({
+        mutationFn: postBrokerageTransactions,
+        mutationKey: ["brokerage-transactions"],
+    });
+
+    useEffect(() => {
+        mutate();
+    }, []);
+
     return (
         <>
             {isLoading ? (
@@ -73,8 +147,8 @@ export const Brokerage = () => {
                                         data={timePeriodDrop}
                                         containerStyle={{ width: "100%" }}
                                         noIcon
-                                        value={"3m"}
-                                        setValue={(op) => console.log(op)}
+                                        value={duration}
+                                        setValue={changeDuration}
                                     />
                                 </View>
                                 <Button
@@ -98,7 +172,14 @@ export const Brokerage = () => {
                                                     title="Actual Commission"
                                                     description={
                                                         RupeeSymbol +
-                                                        "34,00,000"
+                                                        `${
+                                                            brokerage?.data
+                                                                ?.totalAmount
+                                                                ? brokerage
+                                                                      ?.data
+                                                                      ?.totalAmount
+                                                                : "0"
+                                                        }`
                                                     }
                                                 />
                                                 <Divider orientation="vertical" />
@@ -109,18 +190,25 @@ export const Brokerage = () => {
                                                     title="Payable Commission"
                                                     description={
                                                         RupeeSymbol +
-                                                        "24,00,000"
+                                                        `${
+                                                            brokerage?.data
+                                                                ?.subBrokerAmount
+                                                                ? brokerage
+                                                                      ?.data
+                                                                      ?.subBrokerAmount
+                                                                : "0"
+                                                        }`
                                                     }
                                                 />
                                                 <Divider orientation="vertical" />
                                             </View>
-                                            <View className="w-1/3 flex-row justify-between rounded-3xl bg-white p-4">
+                                            {/* <View className="w-1/3 flex-row justify-between rounded-3xl bg-white p-4">
                                                 <IconCard
                                                     icon="percent-outline"
                                                     title="Commission rate"
                                                     description={"80%"}
                                                 />
-                                            </View>
+                                            </View> */}
                                         </View>
                                         <View className="flex flex-col rounded-3xl bg-white w-full mt-4">
                                             <Text className="p-4 text-lg font-bold">
@@ -134,17 +222,63 @@ export const Brokerage = () => {
                                                             By Investment Type
                                                         </Text>
 
-                                                        <DonutPieChart
-                                                            pieData={[
-                                                                {
-                                                                    x: "SIP",
-                                                                    y: 54.2,
-                                                                },
-                                                                {
-                                                                    x: "One Time",
-                                                                    y: 45.8,
-                                                                },
-                                                            ]}
+                                                        {brokerage?.data
+                                                            ?.totalAmount >
+                                                        0 ? (
+                                                            <DonutPieChart
+                                                                pieData={[
+                                                                    {
+                                                                        x: "SIP",
+                                                                        y:
+                                                                            brokerage
+                                                                                ?.data
+                                                                                ?.sipTotal /
+                                                                            brokerage
+                                                                                ?.data
+                                                                                ?.totalAmount,
+                                                                    },
+                                                                    {
+                                                                        x: "One Time",
+                                                                        y:
+                                                                            brokerage
+                                                                                ?.data
+                                                                                ?.oneTimeTotal /
+                                                                            brokerage
+                                                                                ?.data
+                                                                                ?.totalAmount,
+                                                                    },
+                                                                ]}
+                                                            />
+                                                        ) : (
+                                                            <View className="h-full flex flex-col items-center justify-center gap-8">
+                                                                <Image
+                                                                    width="72px"
+                                                                    height="72px"
+                                                                    source={require("../../../assets/images/noData.png")}
+                                                                />
+                                                                <Text className="text-md font-bold">
+                                                                    No Data
+                                                                    Available
+                                                                </Text>
+                                                            </View>
+                                                        )}
+                                                    </View>
+                                                    <Divider orientation="vertical" />
+                                                </View>
+                                                <View className="w-1/3 flex-row justify-between rounded-3xl bg-white p-4">
+                                                    <View className="w-[99%] flex">
+                                                        <BarChart
+                                                            title={
+                                                                "By Top AMCs"
+                                                            }
+                                                            data={brokerage?.data?.topFundhouse?.map(
+                                                                (el) => {
+                                                                    return {
+                                                                        label: el.fundhouse,
+                                                                        value: el.subBrokerAmount,
+                                                                    };
+                                                                }
+                                                            )}
                                                         />
                                                     </View>
                                                     <Divider orientation="vertical" />
@@ -153,54 +287,21 @@ export const Brokerage = () => {
                                                     <View className="w-[99%] flex">
                                                         <BarChart
                                                             title={
-                                                                "By Top 3 AMCs"
+                                                                "By Top 3 Clients (All time)"
                                                             }
-                                                            data={[
-                                                                {
-                                                                    label: "Axis MF",
-                                                                    value: 120000,
-                                                                },
-                                                                {
-                                                                    label: "Nippon India MF",
-                                                                    value: 80000,
-                                                                },
-                                                                {
-                                                                    label: "Aditya Birla",
-                                                                    value: 70000,
-                                                                },
-                                                                {
-                                                                    label: "Others",
-                                                                    value: 50000,
-                                                                },
-                                                            ]}
-                                                        />
-                                                    </View>
-                                                    <Divider orientation="vertical" />
-                                                </View>
-                                                <View className="w-1/3 flex-row justify-between rounded-3xl bg-white p-4">
-                                                    <View className="w-[99%] flex">
-                                                        <BarChart
-                                                            title={
-                                                                "By Top 3 Clients"
+                                                            data={brokerageTopClients?.data?.map(
+                                                                (el) => {
+                                                                    return {
+                                                                        label: el
+                                                                            ?.account
+                                                                            ?.name,
+                                                                        value: el?.subBrokerAmount,
+                                                                    };
+                                                                }
+                                                            )}
+                                                            loading={
+                                                                topClientsLoading
                                                             }
-                                                            data={[
-                                                                {
-                                                                    label: "Karan",
-                                                                    value: 120000,
-                                                                },
-                                                                {
-                                                                    label: "Arjun",
-                                                                    value: 80000,
-                                                                },
-                                                                {
-                                                                    label: "Sonia",
-                                                                    value: 70000,
-                                                                },
-                                                                {
-                                                                    label: "Others",
-                                                                    value: 50000,
-                                                                },
-                                                            ]}
                                                         />
                                                     </View>
                                                 </View>
@@ -208,20 +309,173 @@ export const Brokerage = () => {
                                         </View>
                                         <View className="p-2 rounded bg-white w-full mt-4">
                                             <DataTable
-                                                rows={[]}
+                                                rows={brokerageTransactions?.data?.map(
+                                                    (transaction) => {
+                                                        return [
+                                                            {
+                                                                key: "client",
+                                                                content: (
+                                                                    <View>
+                                                                        <Text
+                                                                            selectable
+                                                                            className="text-xs text-gray-500"
+                                                                        >
+                                                                            {
+                                                                                transaction
+                                                                                    ?.account
+                                                                                    ?.name
+                                                                            }
+                                                                        </Text>
+                                                                    </View>
+                                                                ),
+                                                            },
+                                                            {
+                                                                key: "scheme",
+                                                                content: (
+                                                                    <View className="flex flex-row items-center gap-2">
+                                                                        <Image
+                                                                            alt="fundHouse"
+                                                                            className="mr-2"
+                                                                            style={{
+                                                                                width: 32,
+                                                                                height: 32,
+                                                                                objectFit:
+                                                                                    "contain",
+                                                                            }}
+                                                                            source={{
+                                                                                uri: transaction
+                                                                                    ?.mutualfund
+                                                                                    ?.logoUrl,
+                                                                            }}
+                                                                        />
+                                                                        <View>
+                                                                            <Text className="text-xs">
+                                                                                {
+                                                                                    transaction
+                                                                                        ?.mutualfund
+                                                                                        ?.name
+                                                                                }
+                                                                            </Text>
+                                                                            <Text className="text-xs text-gray-400">
+                                                                                {
+                                                                                    transaction
+                                                                                        ?.mutualfund
+                                                                                        ?.category
+                                                                                }{" "}
+                                                                                |{" "}
+                                                                                {
+                                                                                    transaction
+                                                                                        ?.mutualfund
+                                                                                        ?.subCategory
+                                                                                }
+                                                                            </Text>
+                                                                        </View>
+                                                                    </View>
+                                                                ),
+                                                            },
+                                                            {
+                                                                key: "folio",
+                                                                content: (
+                                                                    <View>
+                                                                        <Text
+                                                                            selectable
+                                                                            className="text-xs text-black"
+                                                                        >
+                                                                            -
+                                                                        </Text>
+                                                                    </View>
+                                                                ),
+                                                            },
+                                                            {
+                                                                key: "transactionDate",
+                                                                content: (
+                                                                    <View>
+                                                                        <Text
+                                                                            selectable
+                                                                            className="text-xs text-gray-500"
+                                                                        >
+                                                                            -
+                                                                        </Text>
+                                                                    </View>
+                                                                ),
+                                                            },
+                                                            {
+                                                                key: "brokerageAmount",
+                                                                content: (
+                                                                    <View>
+                                                                        <Text
+                                                                            selectable
+                                                                            className="text-xs text-gray-500"
+                                                                        >
+                                                                            {
+                                                                                RupeeSymbol
+                                                                            }{" "}
+                                                                            {
+                                                                                transaction?.subBrokerAmount
+                                                                            }
+                                                                        </Text>
+                                                                    </View>
+                                                                ),
+                                                            },
+                                                            {
+                                                                key: "TransactionType",
+                                                                content: (
+                                                                    <View>
+                                                                        <Text
+                                                                            selectable
+                                                                            className="text-xs text-gray-500"
+                                                                        >
+                                                                            -
+                                                                        </Text>
+                                                                    </View>
+                                                                ),
+                                                            },
+                                                            {
+                                                                key: "units",
+                                                                content: (
+                                                                    <View>
+                                                                        <Text
+                                                                            selectable
+                                                                            className="text-xs text-gray-500"
+                                                                        >
+                                                                            -
+                                                                        </Text>
+                                                                    </View>
+                                                                ),
+                                                            },
+                                                            {
+                                                                key: "amount",
+                                                                content: (
+                                                                    <View>
+                                                                        <Text
+                                                                            selectable
+                                                                            className="text-xs text-gray-500"
+                                                                        >
+                                                                            {
+                                                                                RupeeSymbol
+                                                                            }{" "}
+                                                                            {
+                                                                                transaction?.amount
+                                                                            }
+                                                                        </Text>
+                                                                    </View>
+                                                                ),
+                                                            },
+                                                        ];
+                                                    }
+                                                )}
                                                 headers={[
                                                     "Client",
                                                     "Scheme",
                                                     "Folio Number",
                                                     "Transaction Date",
                                                     "Brokerage Amount",
-                                                    "Brokerage Type",
                                                     "Transaction Type",
                                                     "Units",
                                                     "Amount",
                                                 ]}
                                                 cellSize={[
-                                                    2, 2, 1, 1, 1, 2, 1, 1,
+                                                    2, 2, 2, 2, 1, 1, 1, 1,
                                                 ]}
                                             />
                                         </View>
