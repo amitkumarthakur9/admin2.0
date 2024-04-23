@@ -51,7 +51,11 @@ export const Brokerage = () => {
     const fetchBrokerage = async () => {
         try {
             const response: ApiResponse<BrokerageResponse> =
-                await RemoteApi.get(`dashboard/brokerage?from=${duration}`);
+                await RemoteApi.get(
+                    `dashboard/brokerage${
+                        duration.length > 1 ? `?from=${duration}` : ``
+                    }`
+                );
             return response;
         } catch (error) {
             throw error;
