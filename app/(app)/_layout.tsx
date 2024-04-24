@@ -56,6 +56,7 @@ import BrokerageScreen from "./brokerage";
 import Calculators from "./calculators";
 import Sip from "./calculators/sip";
 import SIPDelay from "./calculators/sip-delay";
+import RiskProfile from "./calculators/risk-profile";
 
 NativeWindStyleSheet.setOutput({
     default: "native",
@@ -454,6 +455,17 @@ export default function AppLayout() {
                                 }}
                                 initialParams={{}}
                                 component={SIPDelay}
+                            />
+                            <Drawer.Screen
+                                name="calculators/risk-profile/index"
+                                options={{
+                                    drawerLabel: "Calculators",
+                                    title: "Calculators",
+                                    unmountOnBlur: true,
+                                    drawerItemStyle: { display: "none" },
+                                }}
+                                initialParams={{}}
+                                component={RiskProfile}
                             />
                         </Drawer.Navigator>
                     </UserRoleProvider>
