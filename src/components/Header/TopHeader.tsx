@@ -7,9 +7,15 @@ import {
     useWindowDimensions,
 } from "react-native";
 import { Avatar, TextInput, TouchableRipple } from "react-native-paper";
-import Icon from "react-native-vector-icons/FontAwesome";
 import { useSession } from "../../services/ctx";
-import { Box, Menu, Pressable, Text } from "native-base";
+import {
+    Box,
+    HamburgerIcon,
+    Menu,
+    Pressable,
+    Text,
+    ArrowForwardIcon,
+} from "native-base";
 import ChangePassword from "../Password/ChangePassword";
 
 const TopHeader = ({ navigation }) => {
@@ -24,12 +30,11 @@ const TopHeader = ({ navigation }) => {
         >
             <View className="flex flex-row items-center w-4/12 justify-start ">
                 {width < 830 && (
-                    <TouchableOpacity className="mr-4">
-                        <Icon
-                            size={18}
-                            name={"bars"}
-                            onPress={navigation.toggleDrawer}
-                        />
+                    <TouchableOpacity
+                        className="mr-4"
+                        onPress={navigation.toggleDrawer}
+                    >
+                        <HamburgerIcon />
                     </TouchableOpacity>
                 )}
             </View>
@@ -45,7 +50,7 @@ const TopHeader = ({ navigation }) => {
             )}
             <View className="flex flex-row items-center w-4/12 justify-end ">
                 {/* <Box w="90%" alignItems="center"> */}
-            
+
                 <Menu
                     w="190"
                     placement={"bottom left"}
@@ -64,35 +69,43 @@ const TopHeader = ({ navigation }) => {
                     }}
                 >
                     {/* <Menu.Item>Profile</Menu.Item> */}
-                    <Box  p={4}  width="100%" height="100%">
-                        
+                    <Box p={4} width="100%" height="100%">
                         {/* <Text>Name</Text> */}
-                        <Text className="text-base font-semibold">{userData?.name}</Text>
+                        <Text className="text-base">
+                            { userData?.name}
+                        </Text>
                         {/* <Text>Role</Text> */}
 
-                        <Text>{userData?.role?.name}</Text>
-               
+                        <Text>{"Designation: "+userData?.role?.name}</Text>
 
                         {/* <Text>{userData?.role?.roleType?.name}</Text> */}
-
-                        <ChangePassword />
-                       
+                    <View className="mt-2 pt-1 border-t border-gray-300">
+                    <ChangePassword />
+                    </View>
+                        
                     </Box>
                 </Menu>
-               
+
                 {/* </Box> */}
-                <TouchableRipple
-                    rippleColor="rgba(0, 0, 0, .32)"
+
+                <TouchableOpacity
+                    // rippleColor="rgba(0, 0, 0, .32)"
                     className="flex flex-row justify-start ml-2"
                     onPress={() => {
-                        signOut();
+                        signOut(); // Call the sign-out function when pressed
                     }}
                 >
-                    {/* <View className='flex flex-row'> */}
-                    <Icon name="sign-out" size={22} color="red" />
-                    {/* <Text selectable className='text-sm font-bold text-rose-500'>Sign out</Text> */}
-                    {/* </View> */}
-                </TouchableRipple>
+                    {/* <View className="border-y border-l rounded p-1 border-gray-500">
+                        <View className="mr-[-6] pl-1">
+                            <ArrowForwardIcon size={3} />
+                        </View>
+                    </View> */}
+                    <View>
+                        <Image
+                            source={require("../../../assets/images/logout.svg")}
+                        />
+                    </View>
+                </TouchableOpacity>
             </View>
         </View>
     );

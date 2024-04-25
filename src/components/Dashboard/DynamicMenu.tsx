@@ -7,7 +7,8 @@ import RemoteApi from "../../../src/services/RemoteApi";
 const DynamicMenu = ({ onDataReceived, options, apiUrl }) => {
     const [selectedOption, setSelectedOption] = useState(options[0].option);
     const [isOpen, setIsOpen] = useState(false);
-    const [value, setValue] = useState(options[0].value);
+    // const [value, setValue] = useState(options[0].value);
+    const [value, setValue] = useState(null);
 
     useEffect(() => {
         if (value !== null) {

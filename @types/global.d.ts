@@ -194,6 +194,14 @@ declare global {
         redeemableUnits: number;
     }
 
+
+    interface ArnImport {
+        message: string;
+        error: any[]; // Change the type of error array if it has a specific structure
+        data: string;
+    }
+    
+
     interface BrokerageResponse {
         totalAmount: number;
         subBrokerAmount: number;
@@ -234,6 +242,7 @@ declare global {
         subBrokerAmount: number;
         distributorAmount: number;
     }
+
 
     // You can declare multiple interfaces or types here
 }

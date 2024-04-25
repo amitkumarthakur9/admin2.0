@@ -460,7 +460,17 @@ const GoogleContactInvite = () => {
                         }}
                     >
                         {userInfo || dbContact ? (
-                            <ContactDataTable />
+                            <>
+                                <View className="flex flex-row justify-center items-center  p-4 h-[42px]">
+                                    <Button
+                                        title="Import Contacts from Google"
+                                        onPress={signInWithGoogle}
+                                        style={{ width: "100%" }}
+                                    />
+                                </View>
+
+                                <ContactDataTable />
+                            </>
                         ) : (
                             // <View
                             //     className={
@@ -1095,10 +1105,9 @@ const GoogleContactInvite = () => {
                                                             </View>
                                                         ) : (
                                                             <View>
-                                                            <Text className="font-bold text-md text-center py-2">
-                                                                No Contacts
-                                                            </Text>
-                                                            
+                                                                <Text className="font-bold text-md text-center py-2">
+                                                                    No Contacts
+                                                                </Text>
                                                             </View>
                                                         )}
                                                     </View>
@@ -1111,7 +1120,6 @@ const GoogleContactInvite = () => {
                                                                 selectedContacts.length ===
                                                                 0
                                                             }
-                                                            
                                                         />
                                                     </View>
                                                 </View>
@@ -1138,8 +1146,5 @@ const GoogleContactInvite = () => {
         </>
     );
 };
-
-
-
 
 export default GoogleContactInvite;

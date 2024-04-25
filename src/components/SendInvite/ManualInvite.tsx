@@ -22,8 +22,9 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import { Dialog, Portal } from "react-native-paper";
 import RemoteApi from "../../../src/services/RemoteApi";
 import { ToastAlert } from "../../../src/helper/CustomToaster";
+import UploadCsv from "./UploadCSV";
 
-export default function ManualInvite({ getlist=() => {} }) {
+export default function ManualInvite({ getlist = () => {} }) {
     const [modalVisible, setModalVisible] = useState(false);
     const showDialog = () => setModalVisible(true);
     const hideDialog = () => setModalVisible(false);
@@ -208,16 +209,17 @@ export default function ManualInvite({ getlist=() => {} }) {
                             display: "flex",
                             justifyContent: "flex-start",
                             alignSelf: "center",
-                            width: 600,
                             height: "80%",
                             overflow: "scroll",
                             backgroundColor: "white",
+                            minWidth: 320,
+                            maxWidth: 600,
                         }}
                     >
                         <View className="p-4">
-                            <View className="flex flex-row justify-between">
-                                <Text className="pl-4 text-lg font-bold">
-                                    Add Details
+                            <View className="flex flex-row justify-between md:w-[500px]">
+                                <Text className="text-lg pl-4 font-bold">
+                                    Add Contacts
                                 </Text>
 
                                 <Pressable
@@ -234,93 +236,127 @@ export default function ManualInvite({ getlist=() => {} }) {
                                     />
                                 </Pressable>
                             </View>
-                            <View className="flex flex-col items-center">
-                                <View className="gap-4">
-                                    <FormControl
-                                        isRequired
-                                        isInvalid={errors.name !== null}
-                                        w="100%"
-                                        maxW="300px"
-                                    >
-                                        <FormControl.Label>
-                                            Name
-                                        </FormControl.Label>
-                                        <Input
-                                            size="lg"
-                                            variant="outline"
-                                            placeholder="Name"
-                                            value={formData.name}
-                                            onChangeText={(value) =>
-                                                handleChange("name", value)
-                                            }
-                                        />
-                                        {"name" in errors && (
-                                            <FormControl.ErrorMessage>
-                                                {errors.name}
-                                            </FormControl.ErrorMessage>
-                                        )}
-                                    </FormControl>
-                                    <FormControl
-                                       
-                                        isInvalid={errors.email !== null}
-                                        w="100%"
-                                        maxW="300px"
-                                    >
-                                        <FormControl.Label>
-                                            Email Address
-                                        </FormControl.Label>
-                                        <Input
-                                            size="lg"
-                                            variant="outline"
-                                            placeholder="Email Address"
-                                            value={formData.email}
-                                            onChangeText={(value) =>
-                                                handleChange("email", value)
-                                            }
-                                        />
-                                        {"email" in errors && (
-                                            <FormControl.ErrorMessage>
-                                                {errors.email}
-                                            </FormControl.ErrorMessage>
-                                        )}
-                                    </FormControl>
-                                    <FormControl
-                                        isRequired
-                                        isInvalid={errors.phone !== null}
-                                        w="100%"
-                                        maxW="300px"
-                                    >
-                                        <FormControl.Label>
-                                            Mobile Number
-                                        </FormControl.Label>
-                                        <Input
-                                            size="lg"
-                                            variant="outline"
-                                            placeholder="Mobile Number"
-                                            value={formData.phone}
-                                            onChangeText={(value) =>
-                                                handleChange("phone", value)
-                                            }
-                                        />
-                                        {errors.phone ? (
-                                            <FormControl.ErrorMessage>
-                                                {errors.phone}
-                                            </FormControl.ErrorMessage>
-                                        ) : (
-                                            <FormControl.HelperText>
-                                                Enter 10 digit mobile
+                            <UploadCsv />
 
-                                                Number.
-                                            </FormControl.HelperText>
-                                        )}
-                                    </FormControl>
-                                    <Button
-                                        width="100%"
-                                        bgColor={"#013974"}
-                                        onPress={handleSubmit}
+                            <View className="bg-white">
+                                <View className="w-full flex items-center">
+                                    <View
+                                        className={
+                                            "mt-4 z-[-1] w-[99%] flex items-center border-[#c8c8c8] border-[0.2px] rounded-[5px] shadow"
+                                        }
                                     >
-                                        Add Contact
-                                    </Button>
+                                        <Text
+                                            selectable
+                                            className={
+                                                "text-base md:text-lg font-bold mt-[10px]"
+                                            }
+                                        >
+                                            {"Add contact manually"}
+                                        </Text>
+                                        <View className="flex flex-col items-center">
+                                            <View className="gap-4">
+                                                <FormControl
+                                                    isRequired
+                                                    isInvalid={
+                                                        errors.name !== null
+                                                    }
+                                                    w="100%"
+                                                    maxW="300px"
+                                                >
+                                                    <FormControl.Label>
+                                                        Name
+                                                    </FormControl.Label>
+                                                    <Input
+                                                        size="lg"
+                                                        variant="outline"
+                                                        placeholder="Name"
+                                                        value={formData.name}
+                                                        onChangeText={(value) =>
+                                                            handleChange(
+                                                                "name",
+                                                                value
+                                                            )
+                                                        }
+                                                    />
+                                                    {"name" in errors && (
+                                                        <FormControl.ErrorMessage>
+                                                            {errors.name}
+                                                        </FormControl.ErrorMessage>
+                                                    )}
+                                                </FormControl>
+                                                <FormControl
+                                                    isInvalid={
+                                                        errors.email !== null
+                                                    }
+                                                    w="100%"
+                                                    maxW="300px"
+                                                >
+                                                    <FormControl.Label>
+                                                        Email Address
+                                                    </FormControl.Label>
+                                                    <Input
+                                                        size="lg"
+                                                        variant="outline"
+                                                        placeholder="Email Address"
+                                                        value={formData.email}
+                                                        onChangeText={(value) =>
+                                                            handleChange(
+                                                                "email",
+                                                                value
+                                                            )
+                                                        }
+                                                    />
+                                                    {"email" in errors && (
+                                                        <FormControl.ErrorMessage>
+                                                            {errors.email}
+                                                        </FormControl.ErrorMessage>
+                                                    )}
+                                                </FormControl>
+                                                <FormControl
+                                                    isRequired
+                                                    isInvalid={
+                                                        errors.phone !== null
+                                                    }
+                                                    w="100%"
+                                                    maxW="300px"
+                                                >
+                                                    <FormControl.Label>
+                                                        Mobile Number
+                                                    </FormControl.Label>
+                                                    <Input
+                                                        size="lg"
+                                                        variant="outline"
+                                                        placeholder="Mobile Number"
+                                                        value={formData.phone}
+                                                        onChangeText={(value) =>
+                                                            handleChange(
+                                                                "phone",
+                                                                value
+                                                            )
+                                                        }
+                                                    />
+                                                    {errors.phone ? (
+                                                        <FormControl.ErrorMessage>
+                                                            {errors.phone}
+                                                        </FormControl.ErrorMessage>
+                                                    ) : (
+                                                        <FormControl.HelperText>
+                                                            Enter 10 digit
+                                                            mobile Number.
+                                                        </FormControl.HelperText>
+                                                    )}
+                                                </FormControl>
+                                                <Button
+                                                    width="100%"
+                                                    bgColor={"#013974"}
+                                                    marginBottom={2}
+                                                    onPress={handleSubmit}
+                                                >
+                                                    Add Contact
+                                                </Button>
+                                            </View>
+                                        </View>
+                                    </View>
                                 </View>
                             </View>
                         </View>

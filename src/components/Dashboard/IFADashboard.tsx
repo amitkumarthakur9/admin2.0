@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View,  } from "react-native";
 import {
     Center,
     HStack,
@@ -26,6 +26,7 @@ import {
 } from "../../../src/interfaces/DashboardInterface";
 import RemoteApi from "../../../src/services/RemoteApi";
 import { useUserRole } from "../../../src/context/useRoleContext";
+import AvatarCard from "../Card/AvatarCard";
 
 const IFADashboard = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -129,7 +130,7 @@ const IFADashboard = () => {
                 >
                     <View className="bg-[#eaf3fe]">
                         <View className="flex flex-col p-4 gap-4">
-                            <View className="flex flex-row items-center justify-between">
+                            <View className="flex flex-col md:flex-row items-center justify-between">
                                 <View className="flex flex-row items-center">
                                     <Text
                                         selectable
@@ -149,17 +150,17 @@ const IFADashboard = () => {
                                     Go to Brokerage Dashboard
                                 </Button>
                             </View>
-                            <View className="flex flex-row justify-between rounded bg-[#eaf3fe] pr-2 ">
-                                <View className=" flex flex-row w-full gap-2">
+                            <View className="flex flex-col md:flex-row  justify-between rounded bg-[#eaf3fe] md:pr-2 ">
+                                <View className=" flex flex-col md:flex-row  w-full gap-2">
                                     {" "}
                                     {/* outer Card */}
-                                    <View className="flex flex-col w-8/12 rounded bg-[#eaf3fe] h-auto ">
-                                        <View className="flex flex-row rounded  bg-[#eaf3fe] flex-wrap w-[99.5%] gap-1 justify-between pb-2">
-                                            <View className="flex flex-col w-[32%]  rounded bg-[#0769D0] h-auto items-between gap-2">
-                                                <Text className="text-[#D2CFCF]">
+                                    <View className="flex flex-col md:w-8/12 rounded bg-[#eaf3fe] h-auto ">
+                                        <View className="flex flex-col md:flex-row rounded  bg-[#eaf3fe] flex-wrap md:w-[99.5%] gap-1 justify-between pb-2">
+                                            <View className="flex flex-col md:w-[32%]  rounded bg-[#0769D0] h-auto items-between gap-2">
+                                                <Text className="text-[#D2CFCF]  ">
                                                     Total Aum
                                                 </Text>
-                                                <Text className="text-white font-bold text-[36px]">
+                                                <Text className="text-white font-bold text-lg ">
                                                     {data?.aum?.total
                                                         ? RupeeSymbol +
                                                           data?.aum?.total.toFixed(
@@ -179,8 +180,8 @@ const IFADashboard = () => {
                                                     </Text>{" "}
                                                 </Text> */}
                                             </View>
-                                            <View className="flex flex-row w-[66%] rounded bg-white h-auto gap-2">
-                                                <View className="flex flex-col w-6/12  rounded bg-white h-auto gap-1">
+                                            <View className="flex flex-col md:flex-row md:w-[66%] rounded bg-white h-auto gap-2">
+                                                <View className="flex flex-col md:w-6/12  rounded bg-white h-auto gap-1">
                                                     <IconCard
                                                         icon="account-outline"
                                                         title="Number of Clients"
@@ -197,7 +198,7 @@ const IFADashboard = () => {
                                                         }
                                                     />
                                                 </View>
-                                                <View className="flex flex-col w-5/12  rounded bg-white h-auto gap-1">
+                                                <View className="flex flex-col md:w-5/12  rounded bg-white h-auto gap-1">
                                                     <IconCard
                                                         icon="wallet-outline"
                                                         title="Total Lumpsum Investment"
@@ -219,9 +220,9 @@ const IFADashboard = () => {
                                                 </View>
                                             </View>
                                         </View>
-                                        <View className="flex flex-row rounded bg-white w-[99%]">
+                                        <View className="flex flex-col md:flex-row rounded bg-white w-[99%]">
                                             <View
-                                                className="w-[50%]  rounded bg-white p-4"
+                                                className="md:w-[50%]  rounded bg-white p-4"
                                                 style={{
                                                     borderColor: "#e4e4e4",
 
@@ -243,7 +244,7 @@ const IFADashboard = () => {
                                                     />
                                                 </View>
                                             </View>
-                                            <View className="w-[50%] rounded bg-white p-4">
+                                            <View className="md:w-[50%] rounded bg-white p-4">
                                                 <View className="flex flex-col justify-between">
                                                     <Text className="text-black font-bold text-lg">
                                                         SIP Breakdown
@@ -256,7 +257,7 @@ const IFADashboard = () => {
                                             </View>
                                         </View>
                                     </View>
-                                    <View className="w-4/12 rounded bg-white p-4">
+                                    <View className="md:w-4/12 rounded bg-white p-4">
                                         <View className="flex flex-row justify-between">
                                             <View className="">
                                                 <Text className="text-black font-bold">
@@ -356,9 +357,9 @@ const IFADashboard = () => {
                                 </View> */}
                             </View>
                             {roleId == 2 && (
-                                <View className="flex flex-row justify-between rounded bg-white h-auto gap-2 pb-4">
+                                <View className="flex flex-col md:flex-row justify-between rounded bg-white h-auto gap-2 pb-4">
                                     <View
-                                        className="flex flex-row w-[45%] h-full rounded gap-2"
+                                        className="flex flex-col md:flex-row md:w-[45%] md:h-full rounded gap-2"
                                         style={{
                                             borderColor: "#e4e4e4", // Grey border color
 
@@ -366,7 +367,7 @@ const IFADashboard = () => {
                                                 StyleSheet.hairlineWidth, // Hairline right border width
                                         }}
                                     >
-                                        <View className="flex flex-col w-[49%]">
+                                        <View className="flex flex-col md:w-[49%]">
                                             <BorderCard
                                                 title="Investment"
                                                 description={
@@ -395,7 +396,7 @@ const IFADashboard = () => {
                                                 }
                                             />
                                         </View>
-                                        <View className="flex flex-col w-[49%]">
+                                        <View className="flex flex-col md:w-[49%]">
                                             <BorderCard
                                                 title="New SIPs"
                                                 description={
@@ -426,7 +427,7 @@ const IFADashboard = () => {
                                         </View>
                                     </View>
                                     <View
-                                        className="w-[35%] h-128 rounded px-4"
+                                        className="md:w-[35%] md:h-128 rounded px-4"
                                         style={{
                                             borderColor: "#e4e4e4", // Grey border color
 
@@ -434,7 +435,7 @@ const IFADashboard = () => {
                                                 StyleSheet.hairlineWidth, // Hairline right border width
                                         }}
                                     >
-                                        <Text className="font-bold ">
+                                        <Text className="font-bold text-center md:text-start">
                                             Top 5 Clients
                                         </Text>
                                         <View className="flex flex-col h-auto justify-center items-center pt-4">
@@ -455,12 +456,12 @@ const IFADashboard = () => {
                                         </View>
                                         {/* <View className="flex flex-row py-2">
                                             <View className="w-6/12">
-                                                <Text className="text-black">
+                                                <Text className="text-black text-center">
                                                     Name
                                                 </Text>
                                             </View>
                                             <View className="w-2/12">
-                                                <Text>SIPs</Text>
+                                                <Text className="text-center">SIPs</Text>
                                             </View>
                                             <View className="w-4/12">
                                                 <Text>Investment</Text>
@@ -485,7 +486,7 @@ const IFADashboard = () => {
                                                         <View className="w-2/12">
                                                             <Text
                                                                 selectable
-                                                                className="text-[#686868] font-semibold"
+                                                                className="text-[#686868] font-semibold text-center"
                                                             >
                                                                 {item.sip}
                                                             </Text>
@@ -506,11 +507,11 @@ const IFADashboard = () => {
                                             )}
                                         </View> */}
                                     </View>
-                                    <View className="w-[16%] rounded pl-1">
-                                        <Text className="font-bold ">
+                                    <View className="md:w-[16%] rounded pl-1">
+                                        <Text className="font-bold text-center md:text-start ">
                                             Inactive Client
                                         </Text>
-                                        <View className="flex flex-col h-auto justify-center items-center pt-5">
+                                        <View className="flex flex-col h-full md:h-auto justify-center items-center pt-5">
                                             <Image
                                                 className=""
                                                 alt="ico"

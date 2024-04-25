@@ -10,6 +10,7 @@ import ClientDataTable from "../../../src/components/ClientsTables/ClientsDataTa
 import { useNavigation } from "expo-router";
 import AUMDataTable from "../../../src/components/AUMTables/AUMDataTable";
 import ARNDataTable from "../../../src/components/ARNTransfer/ARNDataTable";
+import ARNRequest from "../../../src/components/ARNTransfer/ARNRequest";
 
 export default function ARNTabScreen() {
 
@@ -22,7 +23,9 @@ export default function ARNTabScreen() {
                 overflow: "scroll",
             }}
         >
-            <ARNDataTable   />
+            {/* <ARNDataTable   /> */}
+            
+            <ARNRequest />
         </ScrollView>
     );
 }

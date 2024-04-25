@@ -30,7 +30,7 @@ import RTAReconciliationDetail from "./rta-reconciliation/[id]";
 // import ClientDetail from './clients/[id]';
 import SIPReportsDetail from "./sip-reports/[id]";
 import AUMDetail from "./folio/[id]";
-import { Center, HStack, Heading, Spinner } from "native-base";
+import { Center, HStack, HamburgerIcon, Heading, Spinner } from "native-base";
 import { useStorageState } from "../../src/services/useStorageState";
 import ClientDetail from "./clients/[id]/index";
 import HoldingDetail from "./clients/[id]/holdings/[holdingId]";
@@ -405,8 +405,8 @@ export default function AppLayout() {
                             <Drawer.Screen
                                 name="arn-transfer/index"
                                 options={{
-                                    drawerLabel: "ARN Transfer",
-                                    title: "ARN Transfer",
+                                    drawerLabel: "Requests",
+                                    title: "Requests",
                                     unmountOnBlur: true,
                                 }}
                                 initialParams={{}}

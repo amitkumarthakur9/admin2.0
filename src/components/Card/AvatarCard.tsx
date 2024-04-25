@@ -2,8 +2,7 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons"; // Import an icon library of your choice
 
-const AvatarCard
- = ({ imageUrl, title, description }) => {
+const AvatarCard = ({ imageUrl, title, description }) => {
     return (
         <View className="flex flex-row py-2 items-center w-full flex-wrap ">
             <View
@@ -23,10 +22,10 @@ const AvatarCard
 /> */}
                 <View className="w-6 h-6 rounded-[50%] bg-gray-500 mx-2" />
                 <View className={"flex flex-col justify-end items-start"}>
-                <View className="">
-                    <Text selectable className="text-black text-sm">
-                        {title}
-                    </Text>
+                    <View className="text-wrap">
+                        <Text selectable className="text-black text-sm text-wrap">
+                            {title}
+                        </Text>
                     </View>
 
                     <View className="flex flex-row items-center w-[99%]">
@@ -40,5 +39,4 @@ const AvatarCard
     );
 };
 
-export default AvatarCard
-;
+export default AvatarCard;

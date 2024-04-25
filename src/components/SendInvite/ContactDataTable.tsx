@@ -212,16 +212,15 @@ const ContactDataTable = () => {
     const [filteredContacts, setFilteredContacts] = useState([]);
     const [inviteModalVisible, setModalVisible] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
-    console.log("selectedContacts")
-    console.log(selectedContacts)
+    console.log("selectedContacts");
+    console.log(selectedContacts);
     const isSelected = (contact) => {
         console.log("Selected Contacts: ", selectedContacts);
         console.log("Checking if contact is selected: ", contact);
         console.log("isSelectContact: ", selectedContacts.includes(contact));
-        
-        return selectedContacts.some(c => c.id === contact.id);
+
+        return selectedContacts.some((c) => c.id === contact.id);
     };
-    
 
     const handleMouseEnter = () => {
         setIsHovered(true);
@@ -236,12 +235,13 @@ const ContactDataTable = () => {
     const toggleContactSelection = (contact) => {
         const isSelected = selectedContacts.some((c) => c.id === contact.id); // Compare by id
         if (isSelected) {
-            setSelectedContacts(selectedContacts.filter((c) => c.id !== contact.id)); // Remove contact if selected
+            setSelectedContacts(
+                selectedContacts.filter((c) => c.id !== contact.id)
+            ); // Remove contact if selected
         } else {
             setSelectedContacts([...selectedContacts, contact]); // Add contact if not selected
         }
     };
-    
 
     const toggleSelectAll = () => {
         if (selectAll) {
@@ -251,7 +251,7 @@ const ContactDataTable = () => {
         }
         setSelectAll(!selectAll);
     };
-    
+
     async function getDataList(
         updatedFilterValues = [],
         applyDirectly = false
@@ -350,8 +350,7 @@ const ContactDataTable = () => {
                 getDataList();
                 setSelectedContacts([]);
             } else {
-
-                alert("Server Error" + ": " + response?.message)
+                alert("Server Error" + ": " + response?.message);
             }
         } catch (error) {
             console.log(error);
@@ -387,12 +386,16 @@ const ContactDataTable = () => {
                             </View> */}
 
                             <ManualInvite getlist={getDataList} />
-                            <CustomButton
-                                onPress={sendInvite}
-                                title=" Send Invite "
-                                disabled={selectedContacts.length === 0}
-                                style
-                            />
+                            {width < 830 ? (
+                                <></>
+                            ) : (
+                                <CustomButton
+                                    onPress={sendInvite}
+                                    title=" Send Invite "
+                                    disabled={selectedContacts.length === 0}
+                                    style
+                                />
+                            )}
                         </>
                     }
                 />
@@ -571,24 +574,43 @@ const ContactDataTable = () => {
                                                                 </>
                                                             )}
                                                         </View>
-                                                        <View className="flex flex-row items-start justify-center w-3/12">
-                                                            <View className="flex flex-row items-start justify-start w-9/12">
-                                                                <Text className="py-3">
-                                                                    Name
-                                                                </Text>
+                                                        {width < 830 ? (
+                                                            <View className="pl-8">
+                                                                <View className="">
+                                                                    <CustomButton
+                                                                        onPress={
+                                                                            sendInvite
+                                                                        }
+                                                                        title=" Send Invite "
+                                                                        disabled={
+                                                                            selectedContacts.length ===
+                                                                            0
+                                                                        }
+                                                                        style
+                                                                    />
+                                                                </View>
                                                             </View>
-                                                        </View>
-
-                                                        <View className="flex flex-row items-start justify-start w-3/12">
-                                                            <Text className="py-3">
-                                                                Phone
-                                                            </Text>
-                                                        </View>
-                                                        <View className="flex flex-row items-start justify-start w-3/12">
-                                                            <Text className="py-3">
-                                                                Email
-                                                            </Text>
-                                                        </View>
+                                                        ) : (
+                                                            <View className="flex flex-row items-start justify-start md:w-10/12">
+                                                                <View className=" flex flex-row items-start justify-center w-3/12">
+                                                                    <View className="flex flex-row items-start justify-start w-9/12">
+                                                                        <Text className="py-3">
+                                                                            Name
+                                                                        </Text>
+                                                                    </View>
+                                                                </View>
+                                                                <View className="flex flex-row items-start justify-start w-3/12">
+                                                                    <Text className="py-3">
+                                                                        Phone
+                                                                    </Text>
+                                                                </View>
+                                                                <View className="flex flex-row items-start justify-start w-3/12">
+                                                                    <Text className="py-3">
+                                                                        Email
+                                                                    </Text>
+                                                                </View>
+                                                            </View>
+                                                        )}
                                                     </View>
 
                                                     <View className=" ">
@@ -634,43 +656,43 @@ const ContactDataTable = () => {
                                                                                     </View>
                                                                                 </View>
                                                                             </View>
+                                                                            <View className="flex flex-col md:flex-row w-10/12">
+                                                                                <View className="flex flex-row items-start md:justify-center md:w-3/12">
+                                                                                    <View className="flex flex-row items-start justify-start md:w-8/12">
+                                                                                        <Text
+                                                                                            selectable
+                                                                                            className="text-slate-500 text-lg font-bold md:font-normal md:text-base"
+                                                                                        >
+                                                                                            {item.name +
+                                                                                                "f"}
+                                                                                        </Text>
+                                                                                    </View>
+                                                                                </View>
 
-                                                                            <View className="flex flex-row items-start justify-center w-3/12">
-                                                                                <View className="flex flex-row items-start justify-start w-8/12">
+                                                                                <View className="flex flex-row items-start justify-start md:w-3/12">
                                                                                     <Text
                                                                                         selectable
                                                                                         className="text-slate-500 text-base"
                                                                                     >
                                                                                         {
-                                                                                            item.name
+                                                                                            item.mobileNumber
+                                                                                        }
+                                                                                    </Text>
+                                                                                </View>
+                                                                                <View className="flex flex-row items-start justify-start md:w-3/12">
+                                                                                    <Text
+                                                                                        selectable
+                                                                                        className="text-slate-500 text-base"
+                                                                                    >
+                                                                                        {
+                                                                                            item.email
                                                                                         }
                                                                                     </Text>
                                                                                 </View>
                                                                             </View>
-
-                                                                            <View className="flex flex-row items-start justify-start w-3/12">
-                                                                                <Text
-                                                                                    selectable
-                                                                                    className="text-slate-500 text-base"
-                                                                                >
-                                                                                    {
-                                                                                        item.mobileNumber
-                                                                                    }
-                                                                                </Text>
-                                                                            </View>
-
-                                                                            <View className="flex flex-row items-start justify-start w-3/12">
-                                                                                <Text
-                                                                                    selectable
-                                                                                    className="text-slate-500 text-base"
-                                                                                >
-                                                                                    {
-                                                                                        item.email
-                                                                                    }
-                                                                                </Text>
-                                                                            </View>
                                                                         </View>
                                                                     ) : (
+                                                                        // </View>
                                                                         <TouchableWithoutFeedback
                                                                             onPressIn={
                                                                                 handleMouseEnter
@@ -710,38 +732,41 @@ const ContactDataTable = () => {
                                                                                             </View>
                                                                                         </View>
                                                                                     </View>
-                                                                                    <View className="flex flex-row items-start justify-center w-3/12">
-                                                                                        <View className="flex flex-row items-start justify-start w-8/12">
+
+                                                                                    <View className="flex flex-col md:flex-row w-10/12 ">
+                                                                                        <View className="flex flex-row items-start md:justify-center md:w-3/12">
+                                                                                            <View className="flex flex-row items-start justify-start md:w-8/12">
+                                                                                                <Text
+                                                                                                    selectable
+                                                                                                    className="text-slate-500 text-lg font-bold md:font-normal md:text-base"
+                                                                                                >
+                                                                                                    {
+                                                                                                        item.name
+                                                                                                    }
+                                                                                                </Text>
+                                                                                            </View>
+                                                                                        </View>
+
+                                                                                        <View className="flex flex-row items-start justify-start md:w-3/12">
                                                                                             <Text
                                                                                                 selectable
                                                                                                 className="text-slate-500 text-base"
                                                                                             >
                                                                                                 {
-                                                                                                    item.name
+                                                                                                    item.mobileNumber
                                                                                                 }
                                                                                             </Text>
                                                                                         </View>
-                                                                                    </View>
-
-                                                                                    <View className="flex flex-row items-start justify-start w-3/12">
-                                                                                        <Text
-                                                                                            selectable
-                                                                                            className="text-slate-500 text-base"
-                                                                                        >
-                                                                                            {
-                                                                                                item.mobileNumber
-                                                                                            }
-                                                                                        </Text>
-                                                                                    </View>
-                                                                                    <View className="flex flex-row items-start justify-start w-3/12">
-                                                                                        <Text
-                                                                                            selectable
-                                                                                            className="text-slate-500 text-base"
-                                                                                        >
-                                                                                            {
-                                                                                                item.email
-                                                                                            }
-                                                                                        </Text>
+                                                                                        <View className="flex flex-row items-start justify-start md:w-3/12">
+                                                                                            <Text
+                                                                                                selectable
+                                                                                                className="text-slate-500 text-base"
+                                                                                            >
+                                                                                                {
+                                                                                                    item.email
+                                                                                                }
+                                                                                            </Text>
+                                                                                        </View>
                                                                                     </View>
                                                                                 </View>
                                                                             ) : (
@@ -777,38 +802,40 @@ const ContactDataTable = () => {
                                                                                                     </View>
                                                                                                 </View>
                                                                                             </View>
-                                                                                            <View className="flex flex-row items-start justify-center w-3/12 ">
-                                                                                                <View className="flex flex-row items-start justify-start w-8/12">
+                                                                                            <View className="flex flex-col md:flex-row w-10/12">
+                                                                                                <View className="flex flex-row items-start md:justify-center md:w-3/12">
+                                                                                                    <View className="flex flex-row items-start justify-start md:w-8/12">
+                                                                                                        <Text
+                                                                                                            selectable
+                                                                                                            className="text-slate-500 text-lg font-bold md:font-normal md:text-base"
+                                                                                                        >
+                                                                                                            {
+                                                                                                                item.name
+                                                                                                            }
+                                                                                                        </Text>
+                                                                                                    </View>
+                                                                                                </View>
+
+                                                                                                <View className="flex flex-row items-start justify-start md:w-3/12">
                                                                                                     <Text
                                                                                                         selectable
                                                                                                         className="text-slate-500 text-base"
                                                                                                     >
                                                                                                         {
-                                                                                                            item.name
+                                                                                                            item.mobileNumber
                                                                                                         }
                                                                                                     </Text>
                                                                                                 </View>
-                                                                                            </View>
-
-                                                                                            <View className="flex flex-row items-start justify-start w-3/12">
-                                                                                                <Text
-                                                                                                    selectable
-                                                                                                    className="text-slate-500 text-base"
-                                                                                                >
-                                                                                                    {
-                                                                                                        item.mobileNumber
-                                                                                                    }
-                                                                                                </Text>
-                                                                                            </View>
-                                                                                            <View className="flex flex-row items-start justify-start w-3/12">
-                                                                                                <Text
-                                                                                                    selectable
-                                                                                                    className="text-slate-500 text-base"
-                                                                                                >
-                                                                                                    {
-                                                                                                        item.email
-                                                                                                    }
-                                                                                                </Text>
+                                                                                                <View className="flex flex-row items-start justify-start md:w-3/12">
+                                                                                                    <Text
+                                                                                                        selectable
+                                                                                                        className="text-slate-500 text-base"
+                                                                                                    >
+                                                                                                        {
+                                                                                                            item.email
+                                                                                                        }
+                                                                                                    </Text>
+                                                                                                </View>
                                                                                             </View>
                                                                                         </View>
                                                                                     </TouchableWithoutFeedback>

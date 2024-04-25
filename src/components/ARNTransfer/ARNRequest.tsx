@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
     View,
     Text,
@@ -14,6 +14,7 @@ import {
     Heading,
     Spinner,
     WarningIcon,
+    useToast,
 } from "native-base";
 
 import RemoteApi from "../../services/RemoteApi";
@@ -27,7 +28,10 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import { useUserRole } from "../../context/useRoleContext";
 import TableCard from "../Card/TableCard";
 import NoDataAvailable from "../Others/NoDataAvailable";
-
+import DropdownComponent from "../Dropdowns/NewDropDown";
+import DynamicMenu from "../Dashboard/DynamicMenu";
+import { ToastAlert } from "../../helper/CustomToaster";
+import { v4 as uuidv4 } from "uuid";
 
 const ARNRequest = () => {
     const [isLoading, setIsLoading] = React.useState(false);
@@ -45,7 +49,8 @@ const ARNRequest = () => {
         direction: "",
     });
     const { width } = useWindowDimensions();
-    const mobileData = data.map(item => ({
+    const [receivedData1, setReceivedData1] = useState(null);
+    const mobileData = data.map((item) => ({
         // id: item.id,
         // Name: item?.name,
         // ClientId: item?.clientId,
@@ -53,8 +58,56 @@ const ARNRequest = () => {
         CurrentValue: RupeeSymbol + item.currentValue,
         InvestedValue: RupeeSymbol + item.investedValue,
         XIRR: item?.xirr,
+    }));
+    const toast = useToast();
+    const [toasts, setToasts] = useState([]);
 
-      }));
+    useEffect(() => {
+        // Clear existing toasts
+        toast.closeAll();
+
+        // Show the latest toast
+        if (toasts.length > 0) {
+            const latestToast = toasts[toasts.length - 1];
+            toast.show({
+                render: () => (
+                    <ToastAlert
+                        id={latestToast.id}
+                        variant={latestToast.variant}
+                        title={latestToast.title}
+                        description=""
+                        isClosable={false}
+                        toast={toast}
+                        status={latestToast.status}
+                        onClose={() => removeToast(latestToast.id)} // Remove the toast from the 'toasts' array when closed
+                    />
+                ),
+                placement: "top",
+            });
+        }
+    }, [toasts]);
+
+    const removeToast = (id) => {
+        setToasts(toasts.filter((toast) => toast.id !== id));
+    };
+
+    const handleDataReceived1 = (data) => {
+        // Handle the received data here, such as updating state in the parent component
+        setReceivedData1(data);
+        console.log("Data received from notification:", data);
+        const uniqueId = uuidv4();
+                // Add the success toast to the toasts array in the component's state
+                setToasts([
+                    ...toasts,
+                    {
+                        id: uniqueId,
+                        variant: "solid",
+                        title: "status changed succesfully",
+                        status: "success",
+                    },
+                ]);
+        
+    };
 
     async function getDataList(
         updatedFilterValues = [],
@@ -113,8 +166,6 @@ const ARNRequest = () => {
         }
     }, [appliedSorting]);
 
-    
-
     const dummyData = [
         {
             id: 1,
@@ -133,7 +184,7 @@ const ARNRequest = () => {
             raisedDate: "Jul 26, 2023, 1:38 PM",
         },
         {
-           id: 1,
+            id: 1,
             name: "Kshitish",
             folio: "ACVB34356G",
             clientId: "ACVB34356G",
@@ -141,7 +192,7 @@ const ARNRequest = () => {
             raisedDate: "Jul 26, 2023, 1:38 PM",
         },
         {
-           id: 1,
+            id: 1,
             name: "Kshitish",
             folio: "ACVB34356G",
             clientId: "ACVB34356G",
@@ -149,7 +200,7 @@ const ARNRequest = () => {
             raisedDate: "Jul 26, 2023, 1:38 PM",
         },
         {
-           id: 1,
+            id: 1,
             name: "Kshitish",
             folio: "ACVB34356G",
             clientId: "ACVB34356G",
@@ -157,7 +208,7 @@ const ARNRequest = () => {
             raisedDate: "Jul 26, 2023, 1:38 PM",
         },
         {
-           id: 1,
+            id: 1,
             name: "Kshitish",
             folio: "ACVB34356G",
             clientId: "ACVB34356G",
@@ -180,9 +231,9 @@ const ARNRequest = () => {
                         <View className="flex flex-col flex-wrap w-9/12">
                             <View className="flex flex-row items-center text-black font-semibold flex-wrap w-11/12 mb-2">
                                 <Pressable
-                                   onPress={() =>
-                                    router.push(`arn-transfer/${item?.id}`)
-                                }
+                                    onPress={() =>
+                                        router.push(`arn-transfer/${item?.id}`)
+                                    }
                                 >
                                     <Text
                                         selectable
@@ -258,19 +309,24 @@ const ARNRequest = () => {
                 key: "Actions",
                 content: (
                     <View className="flex flex-row justify-start text-[#686868] font-semibold w-11/12 ">
-                        <Pressable
-                            className="rounded-full border-2 px-6 py-3"
-                            onPress={() =>
-                                router.push(`arn-transfer/${item?.id}`)
-                            }
-                        >
-                            <Text
-                                selectable
-                                className="flex flex-row text-black font-semibold break-all text-center"
-                            >
-                                Close Request
-                            </Text>
-                        </Pressable>
+                        <DynamicMenu
+                            onDataReceived={handleDataReceived1}
+                            options={[
+                                {
+                                    option: "Status 1",
+                                    value: "4322",
+                                },
+                                {
+                                    option: "Status 2",
+                                    value: "4321",
+                                },
+                                {
+                                    option: "Status 3",
+                                    value: "4320",
+                                },
+                            ]}
+                            apiUrl="sip"
+                        />
                     </View>
                 ),
             },
@@ -280,83 +336,76 @@ const ARNRequest = () => {
     });
 
     return (
-
         <View className="h-screen">
-
-        { data.length === 0
-            ? (
+            {data.length === 0 ? (
                 <NoDataAvailable />
             ) : (
-        <View className="bg-white">
-            {/* <View className="">
-                <TableBreadCrumb name={"Folio Wise"} />
-            </View> */}
-            <View className="border-[0.2px]  border-[#e4e4e4]">
-                <DynamicFilters
-                    appliedSorting={appliedSorting}
-                    setAppliedSorting={setAppliedSorting}
-                    sorting={sorting}
-                    fileName="Folio"
-                    downloadApi={"folio/download-report"}
-                    schemaResponse={filtersSchema}
-                    setCurrentPageNumber={setCurrentPageNumber}
-                    getList={getDataList}
-                    appliedFilers={appliedFilers}
-                    setAppliedFilers={setAppliedFilers}
-                />
-
-                {!isLoading ? (
-                    <ScrollView className={"mt-4 z-[-1] "}>
-                        {width < 830 ? (
-                            <TableCard data={mobileData} />
-                        ) : 
-                        <DataTable
-                            headers={[
-                                "Client Name",
-                                "Folio No.",
-                                "Client Code",
-                                "Request raised by",
-                                "Request raised date",
-                                "Actions",
-                                
-                  
-                            ]}
-                            cellSize={[2, 1,1, 1, 2, 2,]}
-                            rows={transformedData}
+                <View className="bg-white">
+                    <View className="">
+                        <TableBreadCrumb name={"Requests"} />
+                    </View>
+                    <View className="border-[0.2px]  border-[#e4e4e4]">
+                        <DynamicFilters
+                            appliedSorting={appliedSorting}
+                            setAppliedSorting={setAppliedSorting}
+                            sorting={sorting}
+                            fileName="Folio"
+                            downloadApi={"folio/download-report"}
+                            schemaResponse={filtersSchema}
+                            setCurrentPageNumber={setCurrentPageNumber}
+                            getList={getDataList}
+                            appliedFilers={appliedFilers}
+                            setAppliedFilers={setAppliedFilers}
                         />
-                        
-                        }
-                    </ScrollView>
-                ) : (
-                    <HStack
-                        space={"md"}
-                        marginTop={20}
-                        marginBottom={20}
-                        justifyContent="center"
-                    >
-                        <Spinner
-                            color={"black"}
-                            accessibilityLabel="Loading order"
-                        />
-                        <Heading color="black" fontSize="md">
-                            Loading
-                        </Heading>
-                    </HStack>
-                )}
-            </View>
 
-            <Pagination
-                itemsPerPage={itemsPerPage}
-                setItemsPerPage={setItemsPerPage}
-                getDataList={getDataList}
-                currentPageNumber={currentPageNumber}
-                totalPages={totalPages}
-                setCurrentPageNumber={setCurrentPageNumber}
-            />
+                        {!isLoading ? (
+                            <ScrollView className={"mt-4 z-[-1] "}>
+                                {width < 830 ? (
+                                    <TableCard data={mobileData} />
+                                ) : (
+                                    <DataTable
+                                        headers={[
+                                            "Client Name",
+                                            "Folio No.",
+                                            "Client Code",
+                                            "Request raised by",
+                                            "Request raised date",
+                                            "Actions",
+                                        ]}
+                                        cellSize={[2, 1, 1, 1, 2, 2]}
+                                        rows={transformedData}
+                                    />
+                                )}
+                            </ScrollView>
+                        ) : (
+                            <HStack
+                                space={"md"}
+                                marginTop={20}
+                                marginBottom={20}
+                                justifyContent="center"
+                            >
+                                <Spinner
+                                    color={"black"}
+                                    accessibilityLabel="Loading order"
+                                />
+                                <Heading color="black" fontSize="md">
+                                    Loading
+                                </Heading>
+                            </HStack>
+                        )}
+                    </View>
+
+                    <Pagination
+                        itemsPerPage={itemsPerPage}
+                        setItemsPerPage={setItemsPerPage}
+                        getDataList={getDataList}
+                        currentPageNumber={currentPageNumber}
+                        totalPages={totalPages}
+                        setCurrentPageNumber={setCurrentPageNumber}
+                    />
+                </View>
+            )}
         </View>
-        )
-    }
-    </View>
     );
 };
 

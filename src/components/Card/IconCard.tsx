@@ -18,8 +18,8 @@ const IconCard = ({ icon, title, description }) => {
                 <MaterialCommunityIcons name={icon} size={24} color="#0F5FC2" />
             </View>
             <View style={styles.textContainer}>
-                <Text style={styles.title}>{title}</Text>
-                <Text style={styles.description}>{description}</Text>
+                <Text className ="text-xs font-bold text-slate-500" >{title}</Text>
+                <Text className ="text-base font-bold" >{description}</Text>
             </View>
         </View>
     );
@@ -35,17 +35,7 @@ const styles = StyleSheet.create({
         marginLeft: 16,
         flex: 1,
     },
-    title: {
-        fontSize: 14,
-        fontWeight: "bold",
-        color: "#888",
-    },
-    description: {
-        fontSize: 20,
-        color: "black",
-        flexWrap: "wrap",
-        fontWeight: "bold",
-    },
+    
 });
 
 export default IconCard;

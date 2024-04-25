@@ -41,13 +41,15 @@ import ApiRequest from "../../../../src/services/RemoteApi";
 import ARNHoldingDataTable from "../../../../src/components/ARNTransfer/ARNHoldingDataTable";
 import CustomButton from "../../../../src/components/Buttons/CustomButton";
 import { VictoryPie, VictoryLegend, VictoryTooltip } from "victory";
+import { AUMDetailResponseInterface } from "../../../../src/interfaces/AUMDetailResponseInterface";
+import { dateTimeFormat } from "../../../../src/helper/DateUtils";
 
 export default function ClientARNDetail() {
     const { id } = useLocalSearchParams();
     const [data, setData] = useState<ClientDetailedDataResponse>();
     const [isLoading, setIsLoading] = useState(true);
     const router = useRouter();
-
+    const [refreshDate, setRefreshDate] = useState(false);
     const [visible, setVisible] = useState(false);
     const [modalKey, setModalKey] = useState("invest");
     const [cardPage, setCardPage] = useState(1);
@@ -64,7 +66,7 @@ export default function ClientARNDetail() {
         setSelectedFund(null);
     };
     const [showImport, setShowImport] = useState(false);
-
+    const [refreshImport, setRefreshImport] = useState(false);
 
     const showModal =
         (key: string, card?: number, selectedFund?: any) => () => {
@@ -95,32 +97,11 @@ export default function ClientARNDetail() {
         }
     }, [id]);
 
-    const importPortfolio = async () => {
-        console.log("importPortfolio");
-        // try {
-        //     const response: any = await RemoteApi.patch(
-        //         "onboard/client/invite",
-        //         contactID
-        //     );
-
-        //     if (response?.message == "Success") {
-        //         showDialog("invite");
-        //         getDataList();
-        //     } else {
-        //     }
-        // } catch (error) {
-        //     console.log(error);
-        // }
-    };
-
-
-    const DonutPieChart = ({pieData}) => {
-
+    const DonutPieChart = ({ pieData }) => {
         const colorScale = ["#715CFA", "#B0ED8B", "#FE9090", "#FFE456"];
-    
+
         return (
             <div style={{ display: "flex" }}>
-                
                 <View className="w-8/12">
                     <VictoryPie
                         data={pieData}
@@ -165,13 +146,61 @@ export default function ClientARNDetail() {
         );
     };
 
+    const handleRefreshPortfolio = (lastDate, name) => {
+        const checkDate = (date: Date): string => {
+            const currentDate = new Date();
+            const inputDate = new Date(date);
 
-    const handleRefreshPortfolio = () => {
-        setShowImport(true);
+            // Calculate the difference in milliseconds
+            const differenceInMs = currentDate.getTime() - inputDate.getTime();
+
+            // Convert the difference to days
+            const differenceInDays = Math.floor(
+                differenceInMs / (1000 * 60 * 60 * 24)
+            );
+
+            if (differenceInDays < 7) {
+                // Calculate remaining days
+                const remainingDays = 7 - differenceInDays;
+                const remainingDate = new Date(
+                    currentDate.getTime() +
+                        remainingDays * (1000 * 60 * 60 * 24)
+                );
+                return `Wait for ${remainingDays} days, ${remainingDate.toLocaleString()}`;
+            } else {
+                //   return 'The date is 7 days old.';
+                return "false";
+            }
+        };
+
+        // Example usage:
+        const inputDate = new Date("2024-04-15T12:00:00");
+
+        async function sendRequest() {
+            const response: ArnImport = await RemoteApi.get(
+                `client/${id}/request-import-folio`
+            );
+
+            const refreshDate = await checkDate(lastDate);
+            console.log(refreshDate);
+            if (response.message == "Success") {
+                setIsLoading(false);
+                if (refreshDate == "false") {
+                    setShowImport(true);
+                }else{
+                    setRefreshImport(true);
+                }
+
+               
+            }
+        }
+
+        sendRequest();
     };
 
     const handleCloseModal = () => {
         setShowImport(false);
+        setRefreshImport(false);
     };
 
     return (
@@ -218,8 +247,8 @@ export default function ClientARNDetail() {
                                     Client details external funds
                                 </Text>
                             </View>
-<View className="flex flex-row">
-<View
+                            <View className="flex flex-row mr-2">
+                                <View
                                     className="flex flex-row justify-between rounded g-white h-auto p-4 w-1/2 mr-2"
                                     style={{ ...BreadcrumbShadow }}
                                 >
@@ -246,12 +275,20 @@ export default function ClientARNDetail() {
                                             </View>
                                             <View>
                                                 <Pressable
-                                                    onPress={importPortfolio}
+                                                    onPress={() =>
+                                                        handleRefreshPortfolio(
+                                                            data?.externalFundLastUpdatedOn,
+                                                            data?.name
+                                                        )
+                                                    }
                                                     className={`flex flex-row justify-center items-center border-[1px] border-[#013974] rounded px-8 h-[38px] `}
                                                 >
                                                     <Text className="text-[#013974] font-bold">
                                                         {" "}
-                                                        Import Portfolio
+                                                        {data?.externalFundLastUpdatedOn ==
+                                                        null
+                                                            ? "Import Portfolio"
+                                                            : "Refresh Portfolio"}
                                                     </Text>
                                                 </Pressable>
                                             </View>
@@ -286,14 +323,14 @@ export default function ClientARNDetail() {
                                                     value="-"
                                                 />
                                             </View>
-                                            
+
                                             <View className="w-6/12 flex-flex-col gap-4 px-2">
                                                 <DataValue
                                                     key="totalInvestment"
                                                     title="Total Investment"
                                                     value={
-                                                        RupeeSymbol + 
-                                                            "6,32,83,345"
+                                                        RupeeSymbol +
+                                                        "6,32,83,345"
                                                     }
                                                 />
                                                 <DataValue
@@ -310,7 +347,6 @@ export default function ClientARNDetail() {
                                                     value={"-"}
                                                 />
                                             </View>
-
                                         </View>
                                     </View>
                                 </View>
@@ -318,107 +354,103 @@ export default function ClientARNDetail() {
                                     className="flex flex-row justify-between rounded g-white h-auto p-4 w-1/2 "
                                     style={{ ...BreadcrumbShadow }}
                                 >
-                                    
-                                        <View className="flex flex-row justify-between items-start w-full">
-                                            <View className="w-3/12 flex flex-col">
-                                                <View className="w-full flex flex-col justify-between items-start p-2">
-                                                    <View className="">
-                                                        <Text
-                                                            className="text-bold font-medium text-gray-500"
-                                                            selectable
-                                                        >
-                                                            Current holding
-                                                        </Text>
-                                                    </View>
-                                                    <View className="">
-                                                        <Text
-                                                            selectable
-                                                            className="font-medium text-start text-[#114EA8]"
-                                                        >
-                                                            {RupeeSymbol + "38,98,348"}
-                                                        </Text>
-                                                    </View>
-                                                </View>
-                                                <View className="w-full flex flex-col justify-between items-start p-2">
-                                                    <View className="">
-                                                        <Text
-                                                            className="text-bold font-medium text-gray-500"
-                                                            selectable
-                                                        >
-                                                            XIRR
-                                                        </Text>
-                                                    </View>
-                                                    <View className="">
-                                                        <Text
-                                                            selectable
-                                                            className="font-medium text-start text-black"
-                                                        >
-                                                            21.11 %
-                                                        </Text>
-                                                    </View>
-                                                </View>
-                                                
-                                            </View>
-                                            <View className="w-3/12 flex-flex-col gap-4 px-2">
+                                    <View className="flex flex-row justify-between items-start w-full">
+                                        <View className="w-3/12 flex flex-col">
                                             <View className="w-full flex flex-col justify-between items-start p-2">
-                                                    <View className="w-full">
-                                                        <Text
-                                                            className="text-bold font-medium text-gray-500"
-                                                            selectable
-                                                        >
-                                                            Invested
-                                                        </Text>
-                                                    </View>
-                                                    <View className="">
-                                                        <Text
-                                                            selectable
-                                                            className="font-medium text-start text-gray-500"
-                                                        >
-                                                            {RupeeSymbol + "38,98,348"}
-                                                        </Text>
-                                                    </View>
+                                                <View className="">
+                                                    <Text
+                                                        className="text-bold font-medium text-gray-500"
+                                                        selectable
+                                                    >
+                                                        Current holding
+                                                    </Text>
                                                 </View>
-                                                <View className="w-full flex flex-col justify-between items-start p-2">
-                                                    <View className="">
-                                                        <Text
-                                                            className="text-bold font-medium text-black"
-                                                            selectable
-                                                        >
-                                                            Total Returns
-                                                        </Text>
-                                                    </View>
-                                                    <View className="">
-                                                        <Text
-                                                            selectable
-                                                            className="font-medium text-start text-[#539D39]"
-                                                        >
-                                                            {RupeeSymbol + "2,98,348"}
-                                                        </Text>
-                                                    </View>
+                                                <View className="">
+                                                    <Text
+                                                        selectable
+                                                        className="font-medium text-start text-[#114EA8]"
+                                                    >
+                                                        {RupeeSymbol +
+                                                            "38,98,348"}
+                                                    </Text>
                                                 </View>
                                             </View>
-                                            <View className="w-6/12">
-                                                <DonutPieChart 
-                                                 pieData={[
-                                                            {
-                                                                x: "Debt",
-                                                                y: 54.2,
-                                                            },
-                                                            {
-                                                                x: "Equity",
-                                                                y: 45.8,
-                                                            },
-
-                                                        ]}
-                                                
-                                                />
+                                            <View className="w-full flex flex-col justify-between items-start p-2">
+                                                <View className="">
+                                                    <Text
+                                                        className="text-bold font-medium text-gray-500"
+                                                        selectable
+                                                    >
+                                                        XIRR
+                                                    </Text>
+                                                </View>
+                                                <View className="">
+                                                    <Text
+                                                        selectable
+                                                        className="font-medium text-start text-black"
+                                                    >
+                                                        21.11 %
+                                                    </Text>
+                                                </View>
                                             </View>
                                         </View>
-                              
+                                        <View className="w-3/12 flex-flex-col gap-4 px-2">
+                                            <View className="w-full flex flex-col justify-between items-start p-2">
+                                                <View className="w-full">
+                                                    <Text
+                                                        className="text-bold font-medium text-gray-500"
+                                                        selectable
+                                                    >
+                                                        Invested
+                                                    </Text>
+                                                </View>
+                                                <View className="">
+                                                    <Text
+                                                        selectable
+                                                        className="font-medium text-start text-gray-500"
+                                                    >
+                                                        {RupeeSymbol +
+                                                            "38,98,348"}
+                                                    </Text>
+                                                </View>
+                                            </View>
+                                            <View className="w-full flex flex-col justify-between items-start p-2">
+                                                <View className="">
+                                                    <Text
+                                                        className="text-bold font-medium text-black"
+                                                        selectable
+                                                    >
+                                                        Total Returns
+                                                    </Text>
+                                                </View>
+                                                <View className="">
+                                                    <Text
+                                                        selectable
+                                                        className="font-medium text-start text-[#539D39]"
+                                                    >
+                                                        {RupeeSymbol +
+                                                            "2,98,348"}
+                                                    </Text>
+                                                </View>
+                                            </View>
+                                        </View>
+                                        <View className="w-6/12">
+                                            <DonutPieChart
+                                                pieData={[
+                                                    {
+                                                        x: "Debt",
+                                                        y: 54.2,
+                                                    },
+                                                    {
+                                                        x: "Equity",
+                                                        y: 45.8,
+                                                    },
+                                                ]}
+                                            />
+                                        </View>
+                                    </View>
                                 </View>
-</View>
-                                
-                  
+                            </View>
 
                             <View className="flex flex-row justify-between rounded bg-white">
                                 <View
@@ -436,7 +468,7 @@ export default function ClientARNDetail() {
                 </ScrollView>
             )}
 
-<View>
+            <View>
                 <Modal
                     isOpen={showImport}
                     onClose={handleCloseModal}
@@ -447,48 +479,70 @@ export default function ClientARNDetail() {
                         <Modal.CloseButton />
                         <Modal.Body>
                             <View className="flex flex-row  justify-center">
-                                {/* <View className="w-full">
-                                    <Text className="text-lg text-bold">
-                                        Change password
-                                    </Text>
-                                    <Text className="text-sm text-semibold text-[#898989]">
-                                        In order to keep your account safe you
-                                        need to create a strong password.
-                                    </Text>
-                                </View> */}
                                 <Image
                                     className=""
                                     alt="ico"
                                     source={require("../../../../assets/images/Tick.png")}
-                                    style={{
-                                        // flex: 1,
-                                        // justifyContent: 'end',
-                                        width: 100, // specify the desired width
-                                        height: 100,
-                                    }}
-                                />
-
-                                {/* <Pressable
-                                    onPress={handleCloseModal}
-                                    className={
-                                        "flex flex-row justify-center items-center border-[1px] rounded px-2 h-[20px] border-slate-200"
+                                    style={
+                                        {
+                                            // flex: 1,
+                                            // justifyContent: 'end',
+                                            // width: 300, // specify the desired width
+                                            // height: 300,
+                                        }
                                     }
-                                    aria-describedby="addNewClient"
-                                >
-                                    <Icon
-                                        name="close"
-                                        size={14}
-                                        color="#484848"
-                                    />
-                                </Pressable> */}
+                                />
                             </View>
-
                             <View className="flex flex-row justify-center pt-8">
-                                <Text className="text-center">
-                                    Refresh Portfolio request has been
-                                    successfully sent to Kshitish
+                                <Text className="text-center font-semibold text-lg">
+                                    Portfolio request has been successfully sent
+                                    to {data?.name}
                                 </Text>
                             </View>
+                        </Modal.Body>
+                    </Modal.Content>
+                </Modal>
+            </View>
+
+            <View>
+                <Modal
+                    isOpen={refreshImport}
+                    onClose={handleCloseModal}
+                    p="10"
+                    className=""
+                >
+                    <Modal.Content className="bg-white p-8">
+                        <Modal.CloseButton />
+                        <Modal.Body>
+                            <>
+                                <View className="flex flex-row  justify-center">
+                                    <Image
+                                        className=""
+                                        alt="ico"
+                                        source={require("../../../../assets/images/warning.png")}
+                                        style={
+                                            {
+                                                // flex: 1,
+                                                // justifyContent: 'end',
+                                                // width: 200, // specify the desired width
+                                                // height: 200,
+                                            }
+                                        }
+                                    />
+                                </View>
+                                <View className="flex flex-col justify-center pt-8 gap-4">
+                                    <Text className="text-center font-semibold text-lg">
+                                        You can resend the request only after 7
+                                        days of last request sent
+                                    </Text>
+                                    <Text className="text-center text-base">
+                                        Last request sent:{" "}
+                                        {dateTimeFormat(
+                                            data?.externalFundLastUpdatedOn
+                                        )}
+                                    </Text>
+                                </View>
+                            </>
                         </Modal.Body>
                     </Modal.Content>
                 </Modal>
@@ -516,69 +570,71 @@ const PortfolioCard = ({
 
     return (
         <>
-        <View className="p-2 w-full">
-            <View className="p-2 border-b border-gray-200 mb-4">
-                <Text className="font-bold text-lg">External Holdings</Text>
-            </View>
-            <View className="flex flex-col bg-gray-100 rounded p-2">
-                <View className="flex flex-row justify-between items-center p-2">
-                    <DataGrid
-                        key="current"
-                        title="Current Holdings"
-                        value={
-                            <Text className="text-blue-700">
-                                {RupeeSymbol}{" "}
-                                {data?.holdings
-                                    ?.reduce(
+            <View className="p-2 w-full">
+                <View className="p-2 border-b border-gray-200 mb-4">
+                    <Text className="font-bold text-lg">External Holdings</Text>
+                </View>
+                <View className="flex flex-col bg-gray-100 rounded p-2">
+                    <View className="flex flex-row justify-between items-center p-2">
+                        <DataGrid
+                            key="current"
+                            title="Current Holdings"
+                            value={
+                                <Text className="text-blue-700">
+                                    {RupeeSymbol}{" "}
+                                    {data?.holdings
+                                        ?.reduce(
+                                            (accumulator, currentValue) =>
+                                                accumulator +
+                                                currentValue.currentValue,
+                                            0
+                                        )
+                                        .toFixed(2)}
+                                </Text>
+                            }
+                            reverse
+                        />
+                        <DataGrid
+                            key="invested"
+                            title="Invested"
+                            value={
+                                <Text className="text-blue-700">
+                                    {RupeeSymbol}{" "}
+                                    {data?.holdings?.reduce(
                                         (accumulator, currentValue) =>
                                             accumulator +
-                                            currentValue.currentValue,
+                                            currentValue.investedValue,
                                         0
-                                    )
-                                    .toFixed(2)}
-                            </Text>
-                        }
-                        reverse
-                    />
-                    <DataGrid
-                        key="invested"
-                        title="Invested"
-                        value={
-                            <Text className="text-blue-700">
-                                {RupeeSymbol}{" "}
-                                {data?.holdings?.reduce(
-                                    (accumulator, currentValue) =>
-                                        accumulator +
-                                        currentValue.investedValue,
-                                    0
-                                )}
-                            </Text>
-                        }
-                        reverse
-                    />
-                    <DataGrid
-                        key="xirr"
-                        title="XIRR"
-                        value={<Text className="">00.00 %</Text>}
-                        reverse
-                    />
-                    <DataGrid
-                        key="totalReturns"
-                        title="Total Returns"
-                        value={<Text className="text-green-700">00.00 %</Text>}
-                        reverse
-                    />
+                                    )}
+                                </Text>
+                            }
+                            reverse
+                        />
+                        <DataGrid
+                            key="xirr"
+                            title="XIRR"
+                            value={<Text className="">00.00 %</Text>}
+                            reverse
+                        />
+                        <DataGrid
+                            key="totalReturns"
+                            title="Total Returns"
+                            value={
+                                <Text className="text-green-700">00.00 %</Text>
+                            }
+                            reverse
+                        />
+                    </View>
+                    <View className="p-2">
+                        <HorizontalStackedBarChart
+                            data={assetBifurcation}
+                            colors={assetBifurcationColors}
+                        />
+                    </View>
                 </View>
-                <View className="p-2">
-                    <HorizontalStackedBarChart
-                        data={assetBifurcation}
-                        colors={assetBifurcationColors}
-                    />
-                </View>
-            </View>
 
-            <ARNHoldingDataTable />
-        </View>
+                <ARNHoldingDataTable />
+            </View>
         </>
     );
 };

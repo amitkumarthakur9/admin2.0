@@ -28,6 +28,14 @@ const ChangePassword = () => {
         specialChar: false,
     });
     const [showModal, setShowModal] = useState(false);
+    const [errors, setErrors] = useState({
+        confirmPassword: null,
+    });
+    const newErrors = {
+        confirmPassword: null,
+    };
+    const [isSubmitted, setIsSubmitted] = useState(false);
+
 
     const handleChange = (field, value) => {
         setFormData({ ...formData, [field]: value });
@@ -55,22 +63,159 @@ const ChangePassword = () => {
         });
     };
 
+    const validate = () => {
+        if (
+            !formData.confirmPassword ||
+            formData.newPassword !== formData.confirmPassword
+        ) {
+            newErrors.confirmPassword = !formData.confirmPassword
+                ? "Confirm the Password"
+                : "Password is mismatched";
+        } else {
+            newErrors.confirmPassword = null; // Clear error message if validation passes
+        }
+
+        setErrors(newErrors);
+
+        // Return validation result
+        return Object.values(newErrors).every((error) => error === null); // Return true if there are no errors
+
+    };
+
     const handleSubmit = () => {
+        const isValid = validate();
+        if (isValid) {
+            
+
+            const data = {
+                oldPassword: formData.oldPassword,
+                newPassword: formData.newPassword,
+                confirmPassword: formData.confirmPassword,
+                
+            };
+
+            try {
+                console.log("SubmitFormdata");
+                console.log(data);
+
+                // const response: any = await RemoteApi.post(
+                //     "/onboard/distributor",
+                //     data
+                // );
+
+                // const response = {
+                //     message: "Error in Adding User.",
+                //     code: 425,
+                //     errors: [{ message: "dfdemail" }],
+                // };
+
+                // const response = {
+                //     message: "Success",
+                //     code: 200,
+                //     errors: [{ message: "dfdemail" }],
+                // };
+
+                // if (response?.message == "Success") {
+                //     const uniqueId = uuidv4();
+                //     // alert("IFA added succesfully");
+                //     // Add the success toast to the toasts array in the component's state
+                //     setToasts([
+                //         ...toasts,
+                //         {
+                //             id: uniqueId,
+                //             variant: "solid",
+                //             title: `IFA addedd successfully`,
+                //             status: "success",
+                //         },
+                //     ]);
+                // } else if (
+                //     response?.message == "Error in Adding User." ||
+                //     response?.code == 425
+                // ) {
+                //     const uniqueId = uuidv4();
+
+                //     const errorMessage = response?.errors[0]?.message;
+
+                //     const fieldsToCheck = [
+                //         "email",
+                //         "mobileNumber",
+                //         "arn",
+                //         "euin",
+                //         "panNumber",
+                //     ];
+
+                //     let message;
+
+                //     if (errorMessage) {
+                //         // Check if any of the fields are mentioned in the error message
+                //         const mentionedField = fieldsToCheck.find((field) =>
+                //             errorMessage.includes(field)
+                //         );
+
+                //         // If a mentioned field is found, assign it to the message variable
+                //         if (mentionedField) {
+                //             message = mentionedField;
+                //         } else {
+                //             // Handle the case where none of the fields are mentioned in the error message
+                //             message = "Unknown error"; // Or whatever you want to assign in this case
+                //         }
+                //     } else {
+                //         // Handle the case where there is no error message
+                //         message = "No error message";
+                //     }
+
+                //     // Now you can use the `message` variable as needed
+                //     console.log(message);
+                //     // alert("IFA added Succesfully");
+
+                //     setToasts([
+                //         ...toasts,
+                //         {
+                //             id: uniqueId,
+                //             variant: "solid",
+                //             title: `${message} alreay in Database`,
+                //             status: "error",
+                //         },
+                //     ]);
+                // }
+            } catch (error) {
+                // const uniqueId = uuidv4();
+                // setToasts([
+                //     ...toasts,
+                //     {
+                //         id: uniqueId,
+                //         variant: "solid",
+                //         title: "error",
+                //         status: "error",
+                //     },
+                // ]);
+            }
+
+            // console.log("Submitted successfully");
+            // console.log(formData);
+            // Reset submitted state and clear form data
+            setIsSubmitted(false);
+            setFormData({
+                oldPassword: "",
+                newPassword: "",
+                confirmPassword: "",
+            });
+            setValidation({
+                length: false,
+                upperCase: false,
+                number: false,
+                specialChar: false,
+            });
+
+           
+        } else {
+            console.log("Validation failed");
+        }
         // Perform API request to submit old and new password
         console.log("Submitting old and new password...");
         setShowModal(true);
         // Reset form data and validation after submission
-        setFormData({
-            oldPassword: "",
-            newPassword: "",
-            confirmPassword: "",
-        });
-        setValidation({
-            length: false,
-            upperCase: false,
-            number: false,
-            specialChar: false,
-        });
+        
     };
 
     const handleCloseModal = () => {
@@ -90,7 +235,7 @@ const ChangePassword = () => {
     return (
         <>
             <Pressable onPress={() => setShowModal(true)}>
-                {<Text>Change Password</Text>}
+                {<Text className="font-semibold">Change Password</Text>}
             </Pressable>
             <View>
                 <Modal
@@ -214,7 +359,7 @@ const ChangePassword = () => {
                             </FormControl>
                             <FormControl
                                 isRequired
-                                isInvalid={false}
+                                isInvalid={errors.confirmPassword !== null}
                                 w="100%"
                                 maxW="300px"
                                 style={{ marginTop: 10 }}
@@ -254,6 +399,11 @@ const ChangePassword = () => {
                                         </Pressable>
                                     }
                                 />
+                                  {"confirmPassword" in errors && (
+                                <FormControl.ErrorMessage>
+                                    {errors.confirmPassword}
+                                </FormControl.ErrorMessage>
+                            )}
                             </FormControl>
                             <View className="flex flex-col justify-start items-start pt-8">
                                 <Text
@@ -284,13 +434,14 @@ const ChangePassword = () => {
                             </View>
                             <View className="flex flex-row justify-center pt-4">
                                 <Pressable
-                                    className="bg-[#114EA8] rounded w-6/12 "
+                                    className={`bg-[#114EA8] rounded w-8/12 ${(!validation.length || !validation.upperCase || !validation.number || !validation.specialChar) && 'bg-gray-400 pointer-events-none'}`}
                                     onPress={() => handleSubmit()}
-                                    style={{ paddingRight: 4 }}
+                                    style={{ padding: 4 }}
+                                    disabled={!validation.length || !validation.upperCase || !validation.number || !validation.specialChar}
                                 >
                                     <Text className="text-white text-center">
                                         {" "}
-                                        Confirm
+                                        Change Password
                                     </Text>
                                 </Pressable>
                             </View>

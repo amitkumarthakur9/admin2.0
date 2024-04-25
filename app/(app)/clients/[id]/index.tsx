@@ -117,6 +117,7 @@ export default function ClientDetail() {
                 clientInfo={{
                     lastDate: data?.externalFundLastUpdatedOn,
                     clientName: data?.name,
+                    id: data?.id,
                 }}
             />
         ),
@@ -2317,6 +2318,8 @@ const ExternalPortfolioModalCard = ({
     allowModalCardChange: boolean;
     clientInfo: any;
 }) => {
+    const [apisuccess, setApisuccess] = useState(false);
+    const [importDate, setImportDate] = useState(false);
     const checkDate = (date: Date): string => {
         const currentDate = new Date();
         const inputDate = new Date(date);
@@ -2343,72 +2346,104 @@ const ExternalPortfolioModalCard = ({
     };
 
     // Example usage:
-    const inputDate = new Date("2024-04-15T12:00:00");
-    console.log(checkDate(clientInfo.lastDate)); // Output depends on current date
-    console.log(checkDate(inputDate)); // Output depends on current date
+    const inputDate = new Date("2024-04-20T12:00:00");
 
-    const refreshDate = checkDate(inputDate);
+    async function sendRequest() {
+        const response: ArnImport = await RemoteApi.get(
+            `client/${clientInfo.id}/request-import-folio`
+        );
+
+        const refreshDate = await checkDate(clientInfo.lastDate);
+        // const refreshDate = await checkDate(inputDate);
+        console.log(refreshDate);
+        if (response.message == "Success") {
+            setApisuccess(true);
+            if (refreshDate == "false") {
+                setImportDate(true);
+            }
+        } else {
+            setApisuccess(false);
+        }
+    }
+
+    sendRequest();
 
     return (
-        <View className="flex flex-col">
-            <View className="h-16 flex flex-row justify-between items-center p-12">
-                <View className="flex flex-row items-center gap-x-2"></View>
-                <IonIcon name="close-outline" size={24} onPress={hideDialog} />
-            </View>
-
-            {refreshDate == "false" ? (
-                <>
-                    <View className="flex flex-row  justify-center">
-                        <Image
-                            className=""
-                            alt="ico"
-                            source={require("../../../../assets/images/Tick.png")}
-                            style={
-                                {
-                                    // flex: 1,
-                                    // justifyContent: 'end',
-                                    // width: 300, // specify the desired width
-                                    // height: 300,
-                                }
-                            }
+        <>
+            {apisuccess ? (
+                <View className="flex flex-col">
+                    <View className="h-16 flex flex-row justify-between items-center p-12">
+                        <View className="flex flex-row items-center gap-x-2"></View>
+                        <IonIcon
+                            name="close-outline"
+                            size={24}
+                            onPress={hideDialog}
                         />
                     </View>
-                    <View className="flex flex-row justify-center pt-8">
-                        <Text className="text-center font-semibold text-lg">
-                            Portfolio request has been successfully sent to{" "}
-                            {clientInfo.clientName}
-                        </Text>
-                    </View>
-                </>
+
+                    {importDate ? (
+                        <>
+                            <View className="flex flex-row  justify-center">
+                                <Image
+                                    className=""
+                                    alt="ico"
+                                    source={require("../../../../assets/images/Tick.png")}
+                                    style={
+                                        {
+                                            // flex: 1,
+                                            // justifyContent: 'end',
+                                            // width: 300, // specify the desired width
+                                            // height: 300,
+                                        }
+                                    }
+                                />
+                            </View>
+                            <View className="flex flex-row justify-center pt-8">
+                                <Text className="text-center font-semibold text-lg">
+                                    Portfolio request has been successfully sent
+                                    to {clientInfo.clientName}
+                                </Text>
+                            </View>
+                        </>
+                    ) : (
+                        <>
+                            <View className="flex flex-row  justify-center">
+                                <Image
+                                    className=""
+                                    alt="ico"
+                                    source={require("../../../../assets/images/warning.png")}
+                                    style={
+                                        {
+                                            // flex: 1,
+                                            // justifyContent: 'end',
+                                            // width: 200, // specify the desired width
+                                            // height: 200,
+                                        }
+                                    }
+                                />
+                            </View>
+                            <View className="flex flex-col justify-center pt-8 gap-4">
+                                <Text className="text-center font-semibold text-lg">
+                                    You can resend the request only after 7 days
+                                    of last request sent
+                                </Text>
+                                <Text className="text-center text-base">
+                                    Last request sent:{" "}
+                                    {dateTimeFormat(clientInfo.lastDate)}
+                                </Text>
+                            </View>
+                        </>
+                    )}
+                </View>
             ) : (
                 <>
-                    <View className="flex flex-row  justify-center">
-                        <Image
-                            className=""
-                            alt="ico"
-                            source={require("../../../../assets/images/warning.png")}
-                            style={
-                                {
-                                    // flex: 1,
-                                    // justifyContent: 'end',
-                                    // width: 200, // specify the desired width
-                                    // height: 200,
-                                }
-                            }
-                        />
-                    </View>
-                    <View className="flex flex-col justify-center pt-8 gap-4">
+                    <View className="flex flex-col justify-center items-center pt-8 gap-4">
                         <Text className="text-center font-semibold text-lg">
-                            You can resend the request only after 7 days of last
-                            request sent
-                        </Text>
-                        <Text className="text-center text-base">
-                            Last request sent:{" "}
-                            {dateTimeFormat(clientInfo.lastDate)}
+                            Server Error! Request Failed!
                         </Text>
                     </View>
                 </>
             )}
-        </View>
+        </>
     );
 };
