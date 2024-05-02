@@ -187,11 +187,9 @@ export default function ClientARNDetail() {
                 setIsLoading(false);
                 if (refreshDate == "false") {
                     setShowImport(true);
-                }else{
+                } else {
                     setRefreshImport(true);
                 }
-
-               
             }
         }
 
@@ -247,13 +245,13 @@ export default function ClientARNDetail() {
                                     Client details external funds
                                 </Text>
                             </View>
-                            <View className="flex flex-row mr-2">
+                            <View className="flex flex-col md:flex-row mr-2">
                                 <View
-                                    className="flex flex-row justify-between rounded g-white h-auto p-4 w-1/2 mr-2"
+                                    className="flex flex-row justify-between rounded g-white h-auto p-4 md:w-1/2 md:mr-2"
                                     style={{ ...BreadcrumbShadow }}
                                 >
                                     <View className="flex flex-col gap-6 w-full">
-                                        <View className="flex flex-row w-full justify-between items-center">
+                                        <View className="flex flex-col md:flex-row w-full justify-between items-center">
                                             <View className="flex flex-row gap-2 items-center">
                                                 <Text
                                                     selectable
@@ -351,24 +349,24 @@ export default function ClientARNDetail() {
                                     </View>
                                 </View>
                                 <View
-                                    className="flex flex-row justify-between rounded g-white h-auto p-4 w-1/2 "
+                                    className="flex flex-col md:flex-row justify-between rounded g-white h-auto p-4 md:w-1/2 "
                                     style={{ ...BreadcrumbShadow }}
                                 >
-                                    <View className="flex flex-row justify-between items-start w-full">
-                                        <View className="w-3/12 flex flex-col">
+                                    <View className="flex flex-row justify-between items-start w-full md:w-6/12">
+                                        <View className="w-6/12 md:w-1/2 flex flex-col">
                                             <View className="w-full flex flex-col justify-between items-start p-2">
-                                                <View className="">
+                                                <View className="w-full">
                                                     <Text
                                                         className="text-bold font-medium text-gray-500"
                                                         selectable
                                                     >
-                                                        Current holding
+                                                        Current Holding
                                                     </Text>
                                                 </View>
                                                 <View className="">
                                                     <Text
                                                         selectable
-                                                        className="font-medium text-start text-[#114EA8]"
+                                                        className="font-medium text-start text-blue-900"
                                                     >
                                                         {RupeeSymbol +
                                                             "38,98,348"}
@@ -376,7 +374,7 @@ export default function ClientARNDetail() {
                                                 </View>
                                             </View>
                                             <View className="w-full flex flex-col justify-between items-start p-2">
-                                                <View className="">
+                                                <View className="w-full">
                                                     <Text
                                                         className="text-bold font-medium text-gray-500"
                                                         selectable
@@ -389,12 +387,12 @@ export default function ClientARNDetail() {
                                                         selectable
                                                         className="font-medium text-start text-black"
                                                     >
-                                                        21.11 %
+                                                        31.11 %
                                                     </Text>
                                                 </View>
                                             </View>
                                         </View>
-                                        <View className="w-3/12 flex-flex-col gap-4 px-2">
+                                        <View className="w-6/12 md:w-1/2 flex-flex-col gap-4 px-2">
                                             <View className="w-full flex flex-col justify-between items-start p-2">
                                                 <View className="w-full">
                                                     <Text
@@ -407,7 +405,7 @@ export default function ClientARNDetail() {
                                                 <View className="">
                                                     <Text
                                                         selectable
-                                                        className="font-medium text-start text-gray-500"
+                                                        className="font-medium text-start text-black"
                                                     >
                                                         {RupeeSymbol +
                                                             "38,98,348"}
@@ -434,24 +432,23 @@ export default function ClientARNDetail() {
                                                 </View>
                                             </View>
                                         </View>
-                                        <View className="w-6/12">
-                                            <DonutPieChart
-                                                pieData={[
-                                                    {
-                                                        x: "Debt",
-                                                        y: 54.2,
-                                                    },
-                                                    {
-                                                        x: "Equity",
-                                                        y: 45.8,
-                                                    },
-                                                ]}
-                                            />
-                                        </View>
+                                    </View>
+                                    <View className="w-full md:w-6/12">
+                                        <DonutPieChart
+                                            pieData={[
+                                                {
+                                                    x: "Debt",
+                                                    y: 54.2,
+                                                },
+                                                {
+                                                    x: "Equity",
+                                                    y: 45.8,
+                                                },
+                                            ]}
+                                        />
                                     </View>
                                 </View>
                             </View>
-
                             <View className="flex flex-row justify-between rounded bg-white">
                                 <View
                                     className="w-full rounded"
@@ -472,10 +469,9 @@ export default function ClientARNDetail() {
                 <Modal
                     isOpen={showImport}
                     onClose={handleCloseModal}
-                    p="10"
-                    className=""
+                    className="md:p-10"
                 >
-                    <Modal.Content className="bg-white p-8">
+                    <Modal.Content className="bg-white md:p-8">
                         <Modal.CloseButton />
                         <Modal.Body>
                             <View className="flex flex-row  justify-center">
@@ -494,7 +490,7 @@ export default function ClientARNDetail() {
                                 />
                             </View>
                             <View className="flex flex-row justify-center pt-8">
-                                <Text className="text-center font-semibold text-lg">
+                                <Text className="text-center font-semibold md:text-lg">
                                     Portfolio request has been successfully sent
                                     to {data?.name}
                                 </Text>
@@ -508,10 +504,9 @@ export default function ClientARNDetail() {
                 <Modal
                     isOpen={refreshImport}
                     onClose={handleCloseModal}
-                    p="10"
-                    className=""
+                    className="md:p-10"
                 >
-                    <Modal.Content className="bg-white p-8">
+                    <Modal.Content className="bg-white md:p-8">
                         <Modal.CloseButton />
                         <Modal.Body>
                             <>
@@ -531,7 +526,7 @@ export default function ClientARNDetail() {
                                     />
                                 </View>
                                 <View className="flex flex-col justify-center pt-8 gap-4">
-                                    <Text className="text-center font-semibold text-lg">
+                                    <Text className="text-center font-semibold md:text-lg">
                                         You can resend the request only after 7
                                         days of last request sent
                                     </Text>
@@ -558,115 +553,11 @@ const PortfolioCard = ({
     data: ClientDetailedDataResponse;
     showModal: (key: string, card?: number, selectedFund?: any) => () => void;
 }) => {
-    const [selectedTab, setSelectedTab] = useState(1);
-
-    const handleTabPress = (tab) => {
-        setSelectedTab(tab);
-    };
-
-    const assetBifurcation = generateAssetBifurcation(data?.holdings);
-
-    const assetBifurcationColors = ["#715CFA", "#69E1AB", "#39C3E2", "#FA8B5C"];
-
     return (
         <>
             <View className="p-2 w-full">
-                <View className="p-2 border-b border-gray-200 mb-4">
-                    <Text className="font-bold text-lg">External Holdings</Text>
-                </View>
-                <View className="flex flex-col bg-gray-100 rounded p-2">
-                    <View className="flex flex-row justify-between items-center p-2">
-                        <DataGrid
-                            key="current"
-                            title="Current Holdings"
-                            value={
-                                <Text className="text-blue-700">
-                                    {RupeeSymbol}{" "}
-                                    {data?.holdings
-                                        ?.reduce(
-                                            (accumulator, currentValue) =>
-                                                accumulator +
-                                                currentValue.currentValue,
-                                            0
-                                        )
-                                        .toFixed(2)}
-                                </Text>
-                            }
-                            reverse
-                        />
-                        <DataGrid
-                            key="invested"
-                            title="Invested"
-                            value={
-                                <Text className="text-blue-700">
-                                    {RupeeSymbol}{" "}
-                                    {data?.holdings?.reduce(
-                                        (accumulator, currentValue) =>
-                                            accumulator +
-                                            currentValue.investedValue,
-                                        0
-                                    )}
-                                </Text>
-                            }
-                            reverse
-                        />
-                        <DataGrid
-                            key="xirr"
-                            title="XIRR"
-                            value={<Text className="">00.00 %</Text>}
-                            reverse
-                        />
-                        <DataGrid
-                            key="totalReturns"
-                            title="Total Returns"
-                            value={
-                                <Text className="text-green-700">00.00 %</Text>
-                            }
-                            reverse
-                        />
-                    </View>
-                    <View className="p-2">
-                        <HorizontalStackedBarChart
-                            data={assetBifurcation}
-                            colors={assetBifurcationColors}
-                        />
-                    </View>
-                </View>
-
                 <ARNHoldingDataTable />
             </View>
         </>
     );
-};
-
-const generateAssetBifurcation = (holdings: Holding[]) => {
-    const getTotalCount = (arr: Holding[]) =>
-        arr.reduce((total, { currentValue }) => total + currentValue, 0);
-    const calculatePercentage = (count, total) =>
-        ((count / total) * 100).toFixed(2);
-
-    const total = getTotalCount(holdings);
-
-    const category = ["Equity", "Hybrid", "Debt"];
-    const assetBifurcation = category.map((label) => ({
-        label,
-        value: 0,
-    }));
-    assetBifurcation.push({ label: "Others", value: 0 });
-    holdings.forEach((holding) => {
-        const { mutualfund, currentValue } = holding;
-        const index = category.indexOf(mutualfund?.category);
-        if (index !== -1) {
-            assetBifurcation[index].value += currentValue;
-        } else {
-            assetBifurcation[assetBifurcation.length - 1].value += currentValue; // Others
-        }
-    });
-
-    const result = assetBifurcation.map(({ label, value }) => {
-        const percentage = calculatePercentage(value, total);
-        return { label, value: percentage };
-    });
-
-    return result;
 };
