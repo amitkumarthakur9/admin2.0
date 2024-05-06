@@ -50,15 +50,7 @@ const ARNRequest = () => {
     });
     const { width } = useWindowDimensions();
     const [receivedData1, setReceivedData1] = useState(null);
-    const mobileData = data.map((item) => ({
-        // id: item.id,
-        // Name: item?.name,
-        // ClientId: item?.clientId,
-        // PanNumber: item?.panNumber,
-        CurrentValue: RupeeSymbol + item.currentValue,
-        InvestedValue: RupeeSymbol + item.investedValue,
-        XIRR: item?.xirr,
-    }));
+
     const toast = useToast();
     const [toasts, setToasts] = useState([]);
 
@@ -216,6 +208,37 @@ const ARNRequest = () => {
             raisedDate: "Jul 26, 2023, 1:38 PM",
         },
     ];
+
+    const mobileData = dummyData.map((item) => ({
+        // id: item.id,
+        Name: item?.name,
+        FolioNumber: item?.folio,
+        ClientId: item?.clientId,
+        RaisedBy: item.raisedBy,
+        RaisedDate: item.raisedDate,
+        action: <View className="flex flex-row justify-start text-blue-400  w-11/12 ">
+        <Text className="text-base ">Status: </Text>
+        <DynamicMenu
+            onDataReceived={handleDataReceived1}
+            options={[
+                {
+                    option: "Status 1",
+                    value: "4322",
+                },
+                {
+                    option: "Status 2",
+                    value: "4321",
+                },
+                {
+                    option: "Status 3",
+                    value: "4320",
+                },
+            ]}
+            apiUrl="sip"
+        />
+        
+    </View>
+    }));
 
     const transformedData = dummyData?.map((item) => {
         const itemStructure = [

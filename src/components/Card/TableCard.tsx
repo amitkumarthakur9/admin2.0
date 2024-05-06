@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import { View, Text, StyleSheet, Pressable } from "react-native";
 import { router } from "expo-router";
 import Icon from "react-native-vector-icons/FontAwesome";
@@ -115,52 +115,67 @@ const TableCard = ({ data }) => {
         return key.replace(/([a-z])([A-Z])/g, "$1 $2");
     };
 
-    const DataValue = ({ data }) => {
+    const DataValue = ({ data }: { data: any[] }) => {
         return (
             <View>
                 {data.map((item, index) => (
                     <View
                         key={index}
-                        className="flex flex-row flex-wrap gap-4 justify-between"
+                        className="flex flex-row flex-wrap gap-2 justify-between"
                     >
-                        {Object.entries(item).map(([key, value]) => (
-                            <View className="w-5/12">
-                                <View
-                                    key={key}
-                                    className={tailwindclass.databox}
-                                >
-                                    <Text className={tailwindclass.textValue}>
-                                        {String(value)}
-                                    </Text>
-                                    <Text className={tailwindclass.textTitle}>
-                                        {formatKey(key)}
-                                    </Text>
-                                </View>
-                            </View>
-                        ))}
+                        {Object.entries(item).map(([key, value]) => {
+                            if (key === "action") {
+                                return (
+                                    <React.Fragment key={key}>
+                                        {value as ReactNode} {/* Cast value to ReactNode */}
+                                    </React.Fragment>
+                                );
+                            } else {
+                                return (
+                                    <React.Fragment key={key}>
+                                        <View className="w-6/12 pb-4">
+                                            <View
+                                                key={key}
+                                                className="flex flex-col"
+                                            >
+                                                <Text className={tailwindclass.textValue}>
+                                                    {String(value)}
+                                                </Text>
+                                                <Text className={tailwindclass.textTitle}>
+                                                    {formatKey(key)}
+                                                </Text>
+                                            </View>
+                                        </View>
+                                    </React.Fragment>
+                                );
+                            }
+                        })}
                     </View>
                 ))}
             </View>
         );
     };
+    
 
-    return data.map((item) => (
-        <View key={item.id} style={styles.card}>
-            <View className="">
-                <View>
-                    <DataValue data={[item]} />
-                    <View className="flex flex-row w-10/12 justify-center">
-                    <Pressable
-                        onPress={() => router.push("clients/${client.id}")}
-                    >
-                        <Icon name="ellipsis-v" size={18} color="grey" />
-                    </Pressable>
+    return (
+<View className="flex flex-col">
+
+
+        {data.map((item) => (
+            <View key={item.id} style={styles.card} >
+                <View className="">
+                    <View>
+                        <DataValue data={[item]} />
+                        
+                    </View>
+                    
                 </View>
-                </View>
-                
             </View>
+        ))}
         </View>
-    ));
+    )
+    
+   
 };
 
 const styles = StyleSheet.create({

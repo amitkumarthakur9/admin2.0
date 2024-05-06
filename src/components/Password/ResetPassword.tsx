@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, StyleSheet } from "react-native";
 import {
     Modal,
@@ -10,11 +10,13 @@ import {
 } from "native-base";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { router } from "expo-router";
+import RemoteApi from "../../../src/services/RemoteApi";
 
-const ResetPassword = () => {
+const ResetPassword = ({authToken}) => {
     const [formData, setFormData] = useState({
         newPassword: "",
         confirmPassword: "",
+        token: authToken,
     });
     const [passwordVisible, setPasswordVisible] = useState({
         newPassword: false,
@@ -26,7 +28,7 @@ const ResetPassword = () => {
         number: false,
         specialChar: false,
     });
-    const [showModal, setShowModal] = useState(false);
+    const [showModal, setShowModal] = useState(true);
     const [confirmButtonDisabled, setConfirmButtonDisabled] = useState(true);
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [errors, setErrors] = useState({
@@ -40,23 +42,21 @@ const ResetPassword = () => {
     }; // Initialize empty error object
 
     const handleChange = (field, value) => {
-        setFormData((prevData) => {
-            const updatedData = {
-                ...prevData,
-                [field]: value,
-            };
-    
-            return updatedData;
-        });
-        validatePassword(field === "confirmPassword" ? formData.newPassword : value);
-        console.log(formData.confirmPassword)
-        console.log(formData.newPassword)
-        if (field === "confirmPassword") {
-            console.log(value)
-            validate();
-        }
+        setFormData((prevData) => ({
+            ...prevData,
+            [field]: value,
+        }));
     };
-    
+
+    useEffect(() => {
+        console.log(formData);
+        validatePassword("new", formData.newPassword);
+
+        if (formData.confirmPassword !== "") {
+            validatePassword("confirm", formData.confirmPassword);
+        }
+    }, [formData]);
+
     const togglePasswordVisibility = (field) => {
         setPasswordVisible((prev) => ({
             ...prev,
@@ -64,33 +64,13 @@ const ResetPassword = () => {
         }));
     };
 
-    const validate = () => {
-        const newErrors = { ...errors }; // Copy current errors object
-
-        if (
-            !formData.confirmPassword ||
-            formData.newPassword !== formData.confirmPassword
-        ) {
-            newErrors.confirmPassword = !formData.confirmPassword
-                ? "Confirm the Password"
-                : "Password is mismatched";
-        } else {
-            newErrors.confirmPassword = null; // Clear error message if validation passes
-        }
-
-        setErrors(newErrors);
-
-        // Return validation result
-        return Object.values(newErrors).every((error) => error === null); // Return true if there are no errors
-    };
-
-    const validatePassword = (password) => {
+    const validatePassword = (key, password) => {
         const lengthRegex = /.{8,20}/;
         const upperCaseRegex = /[A-Z]/;
         const numberRegex = /[0-9]/;
         const specialCharRegex = /[^A-Za-z0-9]/;
-        console.log(formData.confirmPassword)
-        console.log(formData.newPassword)
+        console.log(formData.confirmPassword);
+        console.log(formData.newPassword);
 
         setValidation({
             length: lengthRegex.test(password),
@@ -99,18 +79,78 @@ const ResetPassword = () => {
             specialChar: specialCharRegex.test(password),
         });
 
+        if (key == "confirm") {
+            const newErrors = { ...errors }; // Copy current errors object
+
+            if (
+                !formData.confirmPassword ||
+                formData.newPassword !== formData.confirmPassword
+            ) {
+                newErrors.confirmPassword = !formData.confirmPassword
+                    ? "Confirm the Password"
+                    : "Password is mismatched";
+            } else {
+                newErrors.confirmPassword = null; // Clear error message if validation passes
+            }
+
+            setErrors(newErrors);
+
+            // Return validation result
+            return Object.values(newErrors).every((error) => error === null); // Return true if there are no errors
+        }
+
         if (
             lengthRegex.test(password) &&
             upperCaseRegex.test(password) &&
             numberRegex.test(password) &&
             specialCharRegex.test(password) &&
-            (formData.newPassword === formData.confirmPassword) // Check if passwords match
+            formData.newPassword === formData.confirmPassword // Check if passwords match
         ) {
             setConfirmButtonDisabled(false);
         } else {
             setConfirmButtonDisabled(true);
         }
     };
+
+    const makePatchRequest = async (endpoint, data, token) => {
+        // Construct the request headers
+        const headers = {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        };
+
+        // Construct the request body
+        const body = JSON.stringify(data);
+
+        // Construct the complete URL
+        const url = `https://vision-be.kcp.com.in/${endpoint}`;
+        // const url = `https://vision-connect.azurewebsites.net/${endpoint}`;
+
+        try {
+            const response = await fetch(url, {
+                method: "PATCH", // or "GET", "PUT", "DELETE", etc.
+                headers,
+                body,
+            });
+
+            // Check if the response is successful
+            if (!response.ok) {
+                // Handle the error response
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            // Parse the JSON response
+            const responseData = await response.json();
+
+            return responseData;
+        } catch (error) {
+            // Handle any errors that occurred during the fetch request
+            console.error("Error:", error.message);
+            throw error;
+        }
+    };
+    
+
 
     const handleSubmit = async () => {
         // Perform API request to submit old and new password
@@ -124,14 +164,22 @@ const ResetPassword = () => {
             try {
                 console.log("SubmitFormdata");
 
-                // const response: any = await RemoteApi.post(
-                //     "/onboard/distributor",
-                //     formData.email
-                // );
-
-                const response = {
-                    message: "Success",
+                const data = {
+                    
+                    newPassword: formData.newPassword,
                 };
+
+                const response = await makePatchRequest(
+                    "user/reset-password",
+                    data,
+                    authToken
+                );
+
+                // const response = {
+                //     message: "Success",
+                // };
+
+     
 
                 if (response?.message == "Success") {
                     setIsSubmitted(true);
@@ -141,6 +189,7 @@ const ResetPassword = () => {
                     setFormData({
                         newPassword: "",
                         confirmPassword: "",
+                        token: "",
                     });
                     setValidation({
                         length: false,
@@ -158,6 +207,12 @@ const ResetPassword = () => {
         setShowModal(false);
     };
 
+    const handleSignIn = () => {
+        window.location.reload();
+    };
+
+    
+
     const renderValidationCircle = (isValid) => {
         return isValid ? (
             <View
@@ -173,17 +228,14 @@ const ResetPassword = () => {
 
     return (
         <>
-            <Pressable onPress={() => setShowModal(true)}>
-                {<Text>Reset Password</Text>}
-            </Pressable>
             <View>
                 <Modal
-                    isOpen={true}
+                    isOpen={showModal}
                     onClose={handleCloseModal}
-                    p="10"
-                    className=""
+               
+                    className="md:p-10"
                 >
-                    <Modal.Content className="bg-white p-8">
+                    <Modal.Content className="bg-white md:p-8">
                         <Modal.Body>
                             {isSubmitted == false ? (
                                 <View>
@@ -201,7 +253,6 @@ const ResetPassword = () => {
                                     </View>
                                     <FormControl
                                         isRequired
-                                        
                                         w="100%"
                                         maxW="300px"
                                         style={{ marginTop: 10 }}
@@ -348,7 +399,7 @@ const ResetPassword = () => {
                                             disabled={confirmButtonDisabled}
                                             className={`bg-[#114EA8] rounded w-full p-1.5 ${
                                                 confirmButtonDisabled
-                                                    ? "opacity-50"
+                                                    ? "bg-gray-300"
                                                     : ""
                                             }`}
                                             onPress={() => handleSubmit()}
@@ -362,12 +413,12 @@ const ResetPassword = () => {
                                     </View>
                                 </View>
                             ) : (
-                                <View className="flex flex-col justify-center items-center pt-8">
-                                    <Text className="text-sm text-semibold text-[#898989]">
+                                <View className="flex flex-col justify-center items-center pt-8 gap-4">
+                                    <Text className="text-center text-bold">
                                         Password Changed Successfully
                                     </Text>
                                     <Pressable
-                                        onPress={() => router.push(`sign-in`)}
+                                        onPress={handleSignIn}
                                         className=""
                                         aria-describedby="forgotPassword"
                                     >

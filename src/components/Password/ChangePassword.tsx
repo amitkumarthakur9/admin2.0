@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Linking, Platform } from "react-native";
 import {
     Modal,
     Pressable,
@@ -9,6 +9,8 @@ import {
     Input,
 } from "native-base";
 import Icon from "react-native-vector-icons/FontAwesome";
+import RemoteApi from "../../../src/services/RemoteApi";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ChangePassword = () => {
     const [formData, setFormData] = useState({
@@ -29,17 +31,28 @@ const ChangePassword = () => {
     });
     const [showModal, setShowModal] = useState(false);
     const [errors, setErrors] = useState({
+        oldPassword: null,
         confirmPassword: null,
     });
     const newErrors = {
         confirmPassword: null,
+        oldPassword: null,
     };
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [apiError, setApiError] = useState({
+        valid: false,
+        message: "",
+    });
+    const [token, setToken] = useState(null);
 
 
     const handleChange = (field, value) => {
         setFormData({ ...formData, [field]: value });
         validatePassword(value);
+        const isValid = validate();
+        setErrors(errors.oldPassword = null);
+        setErrors(errors.confirmPassword = null);
+
     };
 
     const togglePasswordVisibility = (field) => {
@@ -82,7 +95,86 @@ const ChangePassword = () => {
 
     };
 
-    const handleSubmit = () => {
+    const ApiError = async (valid, message) => {
+        console.log(valid, message);
+        await setApiError((prevFormData) => ({
+            ...prevFormData,
+            valid: valid,
+            message: message,
+        }));
+    };
+
+    const makePatchRequest = async (endpoint, data, token) => {
+
+
+    
+        // Construct the request headers
+        const headers = {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        };
+    
+        // Construct the request body
+        const body = JSON.stringify(data);
+    
+        // Construct the complete URL
+        const url = `https://vision-be.kcp.com.in/${endpoint}`;
+        // const url = `https://vision-connect.azurewebsites.net/${endpoint}`;
+        
+        try {
+            const response = await fetch(url, {
+                method: "PATCH", // or "GET", "PUT", "DELETE", etc.
+                headers,
+                body,
+            });
+    
+            // Check if the response is successful
+            if (!response.ok) {
+                // Handle the error response
+                
+                await ApiError(true,"incorrect old Password")
+
+
+                newErrors.oldPassword = "incorrect old password",
+                setErrors(newErrors);
+
+        // Return validation result
+        return Object.values(newErrors).every((error) => error === null); // Return true if there are no errors
+                throw new Error(`HTTP error! Status: ${response.status}`);
+                
+                
+            }
+    
+            // Parse the JSON response
+            const responseData = await response.json();
+    
+            return responseData;
+        } catch (error) {
+            // Handle any errors that occurred during the fetch request
+            console.error("Error:", error.message);
+            throw error;
+        }
+    };
+
+    // const checkUrl = async () => {
+    //     try {
+    //         const pageURL = await Linking.getInitialURL();
+    //         console.log("Current URL:", pageURL);
+    
+    //         if (pageURL && pageURL.includes("/dashboard")) {
+    //             alert("Unauthorized Request: Enter Correct Password");
+    //         }
+    //     } catch (error) {
+    //         console.error("Failed to get the current URL:", error);
+    //     }
+    // };
+
+    // checkUrl();
+
+    const handleSubmit = async () => {
+
+
+
         const isValid = validate();
         if (isValid) {
             
@@ -90,7 +182,7 @@ const ChangePassword = () => {
             const data = {
                 oldPassword: formData.oldPassword,
                 newPassword: formData.newPassword,
-                confirmPassword: formData.confirmPassword,
+                // confirmPassword: formData.confirmPassword,
                 
             };
 
@@ -98,86 +190,91 @@ const ChangePassword = () => {
                 console.log("SubmitFormdata");
                 console.log(data);
 
-                // const response: any = await RemoteApi.post(
-                //     "/onboard/distributor",
+                // const response: any = await RemoteApi.patch(
+                //     "/user/change-password",
                 //     data
                 // );
 
-                // const response = {
-                //     message: "Error in Adding User.",
-                //     code: 425,
-                //     errors: [{ message: "dfdemail" }],
-                // };
+                let token = null;
 
-                // const response = {
-                //     message: "Success",
-                //     code: 200,
-                //     errors: [{ message: "dfdemail" }],
-                // };
+                if (Platform.OS == "web") {
+                    token = await localStorage.getItem("token");
+                    
+                } else {
+                    token = await AsyncStorage.getItem("token");
+                    
+                }
 
-                // if (response?.message == "Success") {
-                //     const uniqueId = uuidv4();
-                //     // alert("IFA added succesfully");
-                //     // Add the success toast to the toasts array in the component's state
-                //     setToasts([
-                //         ...toasts,
-                //         {
-                //             id: uniqueId,
-                //             variant: "solid",
-                //             title: `IFA addedd successfully`,
-                //             status: "success",
-                //         },
-                //     ]);
-                // } else if (
-                //     response?.message == "Error in Adding User." ||
-                //     response?.code == 425
-                // ) {
-                //     const uniqueId = uuidv4();
+                const response = await makePatchRequest("user/change-password",data, token);
 
-                //     const errorMessage = response?.errors[0]?.message;
+                console.log(response);
 
-                //     const fieldsToCheck = [
-                //         "email",
-                //         "mobileNumber",
-                //         "arn",
-                //         "euin",
-                //         "panNumber",
-                //     ];
 
-                //     let message;
+                if (response?.message == "Success") {
+                    // const uniqueId = uuidv4();
 
-                //     if (errorMessage) {
-                //         // Check if any of the fields are mentioned in the error message
-                //         const mentionedField = fieldsToCheck.find((field) =>
-                //             errorMessage.includes(field)
-                //         );
+                    console.log(response);
+                    // alert("IFA added succesfully");
+                    // Add the success toast to the toasts array in the component's state
+                    // setToasts([
+                    //     ...toasts,
+                    //     {
+                    //         id: uniqueId,
+                    //         variant: "solid",
+                    //         title: `IFA addedd successfully`,
+                    //         status: "success",
+                    //     },
+                    // ]);
+                } else if (
+                    response?.message == "Error in Adding User." ||
+                    response?.code == 425
+                ) {
+                    // const uniqueId = uuidv4();
 
-                //         // If a mentioned field is found, assign it to the message variable
-                //         if (mentionedField) {
-                //             message = mentionedField;
-                //         } else {
-                //             // Handle the case where none of the fields are mentioned in the error message
-                //             message = "Unknown error"; // Or whatever you want to assign in this case
-                //         }
-                //     } else {
-                //         // Handle the case where there is no error message
-                //         message = "No error message";
-                //     }
+                    const errorMessage = response?.errors[0]?.message;
 
-                //     // Now you can use the `message` variable as needed
-                //     console.log(message);
-                //     // alert("IFA added Succesfully");
+                    const fieldsToCheck = [
+                        "email",
+                        "mobileNumber",
+                        "arn",
+                        "euin",
+                        "panNumber",
+                    ];
 
-                //     setToasts([
-                //         ...toasts,
-                //         {
-                //             id: uniqueId,
-                //             variant: "solid",
-                //             title: `${message} alreay in Database`,
-                //             status: "error",
-                //         },
-                //     ]);
-                // }
+                    let message;
+
+                    if (errorMessage) {
+                        // Check if any of the fields are mentioned in the error message
+                        const mentionedField = fieldsToCheck.find((field) =>
+                            errorMessage.includes(field)
+                        );
+
+                        // If a mentioned field is found, assign it to the message variable
+                        if (mentionedField) {
+                            message = mentionedField;
+                        } else {
+                            // Handle the case where none of the fields are mentioned in the error message
+                            message = "Unknown error"; // Or whatever you want to assign in this case
+                        }
+                    } else {
+                        // Handle the case where there is no error message
+                        message = "No error message";
+                    }
+
+                    // Now you can use the `message` variable as needed
+                    console.log(message);
+                    // alert("IFA added Succesfully");
+
+                    // setToasts([
+                    //     ...toasts,
+                    //     {
+                    //         id: uniqueId,
+                    //         variant: "solid",
+                    //         title: `${message} alreay in Database`,
+                    //         status: "error",
+                    //     },
+                    // ]);
+                }
             } catch (error) {
                 // const uniqueId = uuidv4();
                 // setToasts([
@@ -219,6 +316,7 @@ const ChangePassword = () => {
     };
 
     const handleCloseModal = () => {
+        ApiError(false,null)
         setShowModal(false);
     };
 
@@ -313,6 +411,14 @@ const ChangePassword = () => {
                                         </Pressable>
                                     }
                                 />
+                                {
+                                apiError.valid && <Text className="text-red-400">{apiError.message}</Text>
+                            }
+                                {"oldPassword" in errors && (
+                                <FormControl.ErrorMessage>
+                                    {errors.oldPassword}
+                                </FormControl.ErrorMessage>
+                            )}
                             </FormControl>
                             <FormControl
                                 isRequired
@@ -445,6 +551,7 @@ const ChangePassword = () => {
                                     </Text>
                                 </Pressable>
                             </View>
+                            
                         </Modal.Body>
                     </Modal.Content>
                 </Modal>
@@ -473,3 +580,5 @@ const styles = StyleSheet.create({
 });
 
 export default ChangePassword;
+
+
