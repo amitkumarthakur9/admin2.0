@@ -415,7 +415,7 @@ const ResetPassword = ({authToken}) => {
                             ) : (
                                 <View className="flex flex-col justify-center items-center pt-8 gap-4">
                                     <Text className="text-center text-bold">
-                                        Password Changed Successfully
+                                        Password Reset Successfully
                                     </Text>
                                     <Pressable
                                         onPress={handleSignIn}

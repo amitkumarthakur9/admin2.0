@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Linking, Platform } from "react-native";
 import {
     Modal,
@@ -7,10 +7,14 @@ import {
     Button,
     Text,
     Input,
+    useToast,
 } from "native-base";
 import Icon from "react-native-vector-icons/FontAwesome";
 import RemoteApi from "../../../src/services/RemoteApi";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ToastAlert } from "../../../src/helper/CustomToaster";
+import { v4 as uuidv4 } from "uuid";
+import { router } from "expo-router";
 
 const ChangePassword = () => {
     const [formData, setFormData] = useState({
@@ -43,16 +47,102 @@ const ChangePassword = () => {
         valid: false,
         message: "",
     });
-    const [token, setToken] = useState(null);
+    const toast = useToast();
+    const [toasts, setToasts] = useState([]);
 
+    useEffect(() => {
+        // Clear existing toasts
+        toast.closeAll();
+
+        // Show the latest toast
+        if (toasts.length > 0) {
+            const latestToast = toasts[toasts.length - 1];
+            toast.show({
+                render: () => (
+                    <ToastAlert
+                        id={latestToast.id}
+                        variant={latestToast.variant}
+                        title={latestToast.title}
+                        description=""
+                        isClosable={false}
+                        toast={toast}
+                        status={latestToast.status}
+                        onClose={() => removeToast(latestToast.id)} // Remove the toast from the 'toasts' array when closed
+                    />
+                ),
+                placement: "top",
+            });
+        }
+    }, [toasts]);
+
+    const removeToast = (id) => {
+        setToasts(toasts.filter((toast) => toast.id !== id));
+    };
 
     const handleChange = (field, value) => {
-        setFormData({ ...formData, [field]: value });
-        validatePassword(value);
-        const isValid = validate();
-        setErrors(errors.oldPassword = null);
-        setErrors(errors.confirmPassword = null);
+        // Update the state
+        setFormData((prevState) => {
+            const updatedFormData = { ...prevState, [field]: value };
+            console.log(updatedFormData);
 
+            // If the field is 'confirmPassword' and it's not empty, or if it's 'newPassword', validate the form
+            if (
+                (field === "confirmPassword" &&
+                    updatedFormData.confirmPassword !== "" &&
+                    updatedFormData.newPassword !== "") ||
+                (field === "newPassword" &&
+                    updatedFormData.confirmPassword !== "" &&
+                    updatedFormData.newPassword !== "")
+            ) {
+                validate(value);
+            }
+
+            if (
+                (field === "confirmPassword" &&
+                    updatedFormData.confirmPassword === "" &&
+                    updatedFormData.newPassword !== "") ||
+                (field === "newPassword" && updatedFormData.newPassword === "")
+            ) {
+                // Remove the error messages for both fields if either of them is empty
+                newErrors.confirmPassword = null;
+                // newErrors.newPassword = null;
+            }
+
+            // Check if oldPassword is empty and show error message
+            if (field === "oldPassword" && updatedFormData.oldPassword === "") {
+                newErrors.oldPassword = "Old password is required";
+            } else {
+                newErrors.oldPassword = null; // Clear error message if old password is not empty
+            }
+
+            // Check if the new password and confirm password fields match
+            if (
+                field === "confirmPassword" &&
+                updatedFormData.newPassword === updatedFormData.confirmPassword
+            ) {
+                // If both new password and confirm password are same, check if old password is also provided
+                if (updatedFormData.oldPassword !== "") {
+                    // If old password is provided, check if old password and confirm password are same
+                    if (
+                        updatedFormData.oldPassword ===
+                        updatedFormData.confirmPassword
+                    ) {
+                        newErrors.confirmPassword =
+                            "Old and new passwords cannot be the same";
+                    } else {
+                        newErrors.confirmPassword = null; // Clear error message if old and new passwords are not same
+                    }
+                }
+            }
+
+            // Set the newErrors state to update the error messages
+            setErrors(newErrors);
+
+            // Validate other fields if necessary
+            validatePassword(value);
+
+            return updatedFormData; // Return the updated state
+        });
     };
 
     const togglePasswordVisibility = (field) => {
@@ -76,12 +166,9 @@ const ChangePassword = () => {
         });
     };
 
-    const validate = () => {
-        if (
-            !formData.confirmPassword ||
-            formData.newPassword !== formData.confirmPassword
-        ) {
-            newErrors.confirmPassword = !formData.confirmPassword
+    const validate = (value) => {
+        if (!value || formData.newPassword !== value) {
+            newErrors.confirmPassword = !value
                 ? "Confirm the Password"
                 : "Password is mismatched";
         } else {
@@ -92,7 +179,6 @@ const ChangePassword = () => {
 
         // Return validation result
         return Object.values(newErrors).every((error) => error === null); // Return true if there are no errors
-
     };
 
     const ApiError = async (valid, message) => {
@@ -105,49 +191,45 @@ const ChangePassword = () => {
     };
 
     const makePatchRequest = async (endpoint, data, token) => {
-
-
-    
         // Construct the request headers
         const headers = {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
         };
-    
+
         // Construct the request body
         const body = JSON.stringify(data);
-    
+
         // Construct the complete URL
         const url = `https://vision-be.kcp.com.in/${endpoint}`;
         // const url = `https://vision-connect.azurewebsites.net/${endpoint}`;
-        
+
         try {
             const response = await fetch(url, {
                 method: "PATCH", // or "GET", "PUT", "DELETE", etc.
                 headers,
                 body,
             });
-    
+
             // Check if the response is successful
             if (!response.ok) {
                 // Handle the error response
-                
-                await ApiError(true,"incorrect old Password")
 
+                await ApiError(true, "incorrect old Password");
 
-                newErrors.oldPassword = "incorrect old password",
-                setErrors(newErrors);
+                (newErrors.oldPassword = "Wrong old password"),
+                    setErrors(newErrors);
 
-        // Return validation result
-        return Object.values(newErrors).every((error) => error === null); // Return true if there are no errors
+                // Return validation result
+                return Object.values(newErrors).every(
+                    (error) => error === null
+                ); // Return true if there are no errors
                 throw new Error(`HTTP error! Status: ${response.status}`);
-                
-                
             }
-    
+
             // Parse the JSON response
             const responseData = await response.json();
-    
+
             return responseData;
         } catch (error) {
             // Handle any errors that occurred during the fetch request
@@ -156,174 +238,111 @@ const ChangePassword = () => {
         }
     };
 
-    // const checkUrl = async () => {
-    //     try {
-    //         const pageURL = await Linking.getInitialURL();
-    //         console.log("Current URL:", pageURL);
-    
-    //         if (pageURL && pageURL.includes("/dashboard")) {
-    //             alert("Unauthorized Request: Enter Correct Password");
-    //         }
-    //     } catch (error) {
-    //         console.error("Failed to get the current URL:", error);
-    //     }
-    // };
-
-    // checkUrl();
-
     const handleSubmit = async () => {
+        // if (isValid) {
+        const data = {
+            oldPassword: formData.oldPassword,
+            newPassword: formData.newPassword,
+            // confirmPassword: formData.confirmPassword,
+        };
 
+        try {
+            console.log("SubmitFormdata");
+            console.log(data);
 
+            let token = null;
 
-        const isValid = validate();
-        if (isValid) {
-            
+            if (Platform.OS == "web") {
+                token = await localStorage.getItem("token");
+            } else {
+                token = await AsyncStorage.getItem("token");
+            }
 
-            const data = {
-                oldPassword: formData.oldPassword,
-                newPassword: formData.newPassword,
-                // confirmPassword: formData.confirmPassword,
-                
-            };
+            const response = await makePatchRequest(
+                "user/change-password",
+                data,
+                token
+            );
 
-            try {
-                console.log("SubmitFormdata");
-                console.log(data);
+            // const response = {
+            //     message: "Success",
+            // }
 
-                // const response: any = await RemoteApi.patch(
-                //     "/user/change-password",
-                //     data
-                // );
-
-                let token = null;
-
-                if (Platform.OS == "web") {
-                    token = await localStorage.getItem("token");
-                    
-                } else {
-                    token = await AsyncStorage.getItem("token");
-                    
-                }
-
-                const response = await makePatchRequest("user/change-password",data, token);
-
-                console.log(response);
-
-
-                if (response?.message == "Success") {
-                    // const uniqueId = uuidv4();
-
-                    console.log(response);
-                    // alert("IFA added succesfully");
-                    // Add the success toast to the toasts array in the component's state
-                    // setToasts([
-                    //     ...toasts,
-                    //     {
-                    //         id: uniqueId,
-                    //         variant: "solid",
-                    //         title: `IFA addedd successfully`,
-                    //         status: "success",
-                    //     },
-                    // ]);
-                } else if (
-                    response?.message == "Error in Adding User." ||
-                    response?.code == 425
-                ) {
-                    // const uniqueId = uuidv4();
-
-                    const errorMessage = response?.errors[0]?.message;
-
-                    const fieldsToCheck = [
-                        "email",
-                        "mobileNumber",
-                        "arn",
-                        "euin",
-                        "panNumber",
-                    ];
-
-                    let message;
-
-                    if (errorMessage) {
-                        // Check if any of the fields are mentioned in the error message
-                        const mentionedField = fieldsToCheck.find((field) =>
-                            errorMessage.includes(field)
-                        );
-
-                        // If a mentioned field is found, assign it to the message variable
-                        if (mentionedField) {
-                            message = mentionedField;
-                        } else {
-                            // Handle the case where none of the fields are mentioned in the error message
-                            message = "Unknown error"; // Or whatever you want to assign in this case
-                        }
-                    } else {
-                        // Handle the case where there is no error message
-                        message = "No error message";
-                    }
-
-                    // Now you can use the `message` variable as needed
-                    console.log(message);
-                    // alert("IFA added Succesfully");
-
-                    // setToasts([
-                    //     ...toasts,
-                    //     {
-                    //         id: uniqueId,
-                    //         variant: "solid",
-                    //         title: `${message} alreay in Database`,
-                    //         status: "error",
-                    //     },
-                    // ]);
-                }
-            } catch (error) {
+            if (response?.message == "Success") {
                 // const uniqueId = uuidv4();
-                // setToasts([
-                //     ...toasts,
+                setIsSubmitted(true);
+                console.log("success" + response);
+                // alert("IFA added succesfully");
+                // Add the success toast to the toasts array in the component's state
+                // setToasts((prevToasts) => [
+                //     ...prevToasts,
                 //     {
                 //         id: uniqueId,
                 //         variant: "solid",
-                //         title: "error",
-                //         status: "error",
+                //         title: `Password Changed successfully`,
+                //         status: "success",
                 //     },
                 // ]);
+
+                setFormData({
+                    oldPassword: "",
+                    newPassword: "",
+                    confirmPassword: "",
+                });
+                setValidation({
+                    length: false,
+                    upperCase: false,
+                    number: false,
+                    specialChar: false,
+                });
+
+                setShowModal(true);
+            } else {
+                const uniqueId = uuidv4();
+
+                console.log("else" + response);
+                // alert("IFA added succesfully");
+                // Add the success toast to the toasts array in the component's state
+                setToasts([
+                    ...toasts,
+                    {
+                        id: uniqueId,
+                        variant: "solid",
+                        title: `Server Error`,
+                        status: "error",
+                    },
+                ]);
             }
-
-            // console.log("Submitted successfully");
-            // console.log(formData);
-            // Reset submitted state and clear form data
-            setIsSubmitted(false);
-            setFormData({
-                oldPassword: "",
-                newPassword: "",
-                confirmPassword: "",
-            });
-            setValidation({
-                length: false,
-                upperCase: false,
-                number: false,
-                specialChar: false,
-            });
-
-           
-        } else {
-            console.log("Validation failed");
+        } catch (error) {
+            const uniqueId = uuidv4();
+            setToasts([
+                ...toasts,
+                {
+                    id: uniqueId,
+                    variant: "solid",
+                    title: "Server error",
+                    status: "error",
+                },
+            ]);
         }
-        // Perform API request to submit old and new password
-        console.log("Submitting old and new password...");
-        setShowModal(true);
-        // Reset form data and validation after submission
-        
     };
 
     const handleCloseModal = () => {
-        ApiError(false,null)
+        ApiError(false, null);
         setShowModal(false);
+    };
+
+    const handleSignIn = () => {
+        router.push("sign-in");
     };
 
     const renderValidationCircle = (isValid) => {
         return isValid ? (
             <View
-                style={[styles.validationCircle, { backgroundColor: "#2ECC71" }]}
+                style={[
+                    styles.validationCircle,
+                    { backgroundColor: "#2ECC71" },
+                ]}
             />
         ) : (
             <View style={styles.validationCircle} />
@@ -344,214 +363,277 @@ const ChangePassword = () => {
                 >
                     <Modal.Content className="bg-white p-8">
                         <Modal.Body>
-                            <View className="flex flex-row w-11/12">
-                                <View className="w-full">
-                                    <Text className="text-lg text-bold">
-                                        Change password
-                                    </Text>
-                                    <Text className="text-sm text-semibold text-[#898989]">
-                                        In order to keep your account safe you
-                                        need to create a strong password.
-                                    </Text>
-                                </View>
+                            {isSubmitted == false ? (
+                                <>
+                                    <View className="flex flex-row w-11/12">
+                                        <View className="w-full">
+                                            <Text className="text-lg text-bold">
+                                                Change password
+                                            </Text>
+                                            <Text className="text-sm text-semibold text-[#898989]">
+                                                In order to keep your account
+                                                safe you need to create a strong
+                                                password.
+                                            </Text>
+                                        </View>
 
-                                <Pressable
-                                    onPress={handleCloseModal}
-                                    className={
-                                        "flex flex-row justify-center items-center border-[1px] rounded px-2 h-[20px] border-slate-200"
-                                    }
-                                    aria-describedby="addNewClient"
-                                >
-                                    <Icon
-                                        name="close"
-                                        size={14}
-                                        color="#484848"
-                                    />
-                                </Pressable>
-                            </View>
-                            <FormControl
-                                isRequired
-                                isInvalid={false}
-                                w="100%"
-                                maxW="300px"
-                                style={{ marginTop: 10 }}
-                            >
-                                <FormControl.Label>
-                                    Old Password
-                                </FormControl.Label>
-                                <Input
-                                    size="lg"
-                                    variant="outline"
-                                    placeholder="Password"
-                                    value={formData.oldPassword}
-                                    onChangeText={(value) =>
-                                        handleChange("oldPassword", value)
-                                    }
-                                    secureTextEntry={
-                                        !passwordVisible.oldPassword
-                                    }
-                                    InputRightElement={
                                         <Pressable
-                                            onPress={() =>
-                                                togglePasswordVisibility(
-                                                    "oldPassword"
-                                                )
+                                            onPress={handleCloseModal}
+                                            className={
+                                                "flex flex-row justify-center items-center border-[1px] rounded px-2 h-[20px] border-slate-200"
                                             }
-                                            style={{ paddingRight: 4 }}
+                                            aria-describedby="addNewClient"
                                         >
                                             <Icon
-                                                name={
-                                                    passwordVisible.oldPassword
-                                                        ? "eye"
-                                                        : "eye-slash"
-                                                }
-                                                size={20}
+                                                name="close"
+                                                size={14}
                                                 color="#484848"
                                             />
                                         </Pressable>
-                                    }
-                                />
-                                {
-                                apiError.valid && <Text className="text-red-400">{apiError.message}</Text>
-                            }
-                                {"oldPassword" in errors && (
-                                <FormControl.ErrorMessage>
-                                    {errors.oldPassword}
-                                </FormControl.ErrorMessage>
-                            )}
-                            </FormControl>
-                            <FormControl
-                                isRequired
-                                isInvalid={false}
-                                w="100%"
-                                maxW="300px"
-                                style={{ marginTop: 10 }}
-                            >
-                                <FormControl.Label>
-                                    New Password
-                                </FormControl.Label>
-                                <Input
-                                    size="lg"
-                                    variant="outline"
-                                    placeholder="New Password"
-                                    value={formData.newPassword}
-                                    onChangeText={(value) =>
-                                        handleChange("newPassword", value)
-                                    }
-                                    secureTextEntry={
-                                        !passwordVisible.newPassword
-                                    }
-                                    InputRightElement={
-                                        <Pressable
-                                            onPress={() =>
-                                                togglePasswordVisibility(
-                                                    "newPassword"
+                                    </View>
+                                    <FormControl
+                                        isRequired
+                                        isInvalid={errors.oldPassword !== null}
+                                        w="100%"
+                                        maxW="300px"
+                                        style={{ marginTop: 10 }}
+                                    >
+                                        <FormControl.Label>
+                                            Old Password
+                                        </FormControl.Label>
+                                        <Input
+                                            size="lg"
+                                            variant="outline"
+                                            placeholder="Password"
+                                            value={formData.oldPassword}
+                                            onChangeText={(value) =>
+                                                handleChange(
+                                                    "oldPassword",
+                                                    value
                                                 )
                                             }
-                                            style={{ paddingRight: 4 }}
-                                        >
-                                            <Icon
-                                                name={
-                                                    passwordVisible.newPassword
-                                                        ? "eye"
-                                                        : "eye-slash"
-                                                }
-                                                size={20}
-                                                color="#484848"
-                                            />
-                                        </Pressable>
-                                    }
-                                />
-                            </FormControl>
-                            <FormControl
-                                isRequired
-                                isInvalid={errors.confirmPassword !== null}
-                                w="100%"
-                                maxW="300px"
-                                style={{ marginTop: 10 }}
-                            >
-                                <FormControl.Label>
-                                    Confirm Password
-                                </FormControl.Label>
-                                <Input
-                                    size="lg"
-                                    variant="outline"
-                                    placeholder="Confirm Password"
-                                    value={formData.confirmPassword}
-                                    onChangeText={(value) =>
-                                        handleChange("confirmPassword", value)
-                                    }
-                                    secureTextEntry={
-                                        !passwordVisible.confirmPassword
-                                    }
-                                    InputRightElement={
-                                        <Pressable
-                                            onPress={() =>
-                                                togglePasswordVisibility(
-                                                    "confirmPassword"
-                                                )
+                                            secureTextEntry={
+                                                !passwordVisible.oldPassword
                                             }
-                                            style={{ paddingRight: 4 }}
-                                        >
-                                            <Icon
-                                                name={
-                                                    passwordVisible.confirmPassword
-                                                        ? "eye"
-                                                        : "eye-slash"
-                                                }
-                                                size={20}
-                                                color="#484848"
-                                            />
-                                        </Pressable>
-                                    }
-                                />
-                                  {"confirmPassword" in errors && (
-                                <FormControl.ErrorMessage>
-                                    {errors.confirmPassword}
-                                </FormControl.ErrorMessage>
-                            )}
-                            </FormControl>
-                            <View className="flex flex-col justify-start items-start pt-8">
-                                <Text
-                                    className="text-xs text-bold text-gray-500"
-                                >
-                                    YOUR PASSWORD MUST CONTAIN
-                                </Text>
-                                <View style={styles.validationContainer}>
-                                    {renderValidationCircle(validation.length)}
-                                    <Text className="text-sm text-gray-500 pl-2">Between 8 and 20 characters</Text>
-                                </View>
-                                <View style={styles.validationContainer}>
-                                    {renderValidationCircle(
-                                        validation.upperCase
-                                    )}
-                                    <Text className="text-sm text-gray-500 pl-2">1 upper case letter</Text>
-                                </View>
-                                <View style={styles.validationContainer}>
-                                    {renderValidationCircle(validation.number)}
-                                    <Text className="text-sm text-gray-500 pl-2">1 or more numbers</Text>
-                                </View>
-                                <View style={styles.validationContainer}>
-                                    {renderValidationCircle(
-                                        validation.specialChar
-                                    )}
-                                    <Text className="text-sm text-gray-500 pl-2">1 or more special characters</Text>
-                                </View>
-                            </View>
-                            <View className="flex flex-row justify-center pt-4">
-                                <Pressable
-                                    className={`bg-[#114EA8] rounded w-8/12 ${(!validation.length || !validation.upperCase || !validation.number || !validation.specialChar) && 'bg-gray-400 pointer-events-none'}`}
-                                    onPress={() => handleSubmit()}
-                                    style={{ padding: 4 }}
-                                    disabled={!validation.length || !validation.upperCase || !validation.number || !validation.specialChar}
-                                >
-                                    <Text className="text-white text-center">
-                                        {" "}
-                                        Change Password
+                                            InputRightElement={
+                                                <Pressable
+                                                    onPress={() =>
+                                                        togglePasswordVisibility(
+                                                            "oldPassword"
+                                                        )
+                                                    }
+                                                    style={{ paddingRight: 4 }}
+                                                >
+                                                    <Icon
+                                                        name={
+                                                            passwordVisible.oldPassword
+                                                                ? "eye"
+                                                                : "eye-slash"
+                                                        }
+                                                        size={20}
+                                                        color="#484848"
+                                                    />
+                                                </Pressable>
+                                            }
+                                        />
+                                        {/* {apiError.valid && (
+                                    <Text className="text-red-400">
+                                        {apiError.message}
                                     </Text>
-                                </Pressable>
-                            </View>
-                            
+                                )} */}
+                                        {"oldPassword" in errors && (
+                                            <FormControl.ErrorMessage>
+                                                {errors.oldPassword}
+                                            </FormControl.ErrorMessage>
+                                        )}
+                                    </FormControl>
+                                    <FormControl
+                                        isRequired
+                                        isInvalid={false}
+                                        w="100%"
+                                        maxW="300px"
+                                        style={{ marginTop: 10 }}
+                                    >
+                                        <FormControl.Label>
+                                            New Password
+                                        </FormControl.Label>
+                                        <Input
+                                            size="lg"
+                                            variant="outline"
+                                            placeholder="New Password"
+                                            value={formData.newPassword}
+                                            onChangeText={(value) =>
+                                                handleChange(
+                                                    "newPassword",
+                                                    value
+                                                )
+                                            }
+                                            secureTextEntry={
+                                                !passwordVisible.newPassword
+                                            }
+                                            InputRightElement={
+                                                <Pressable
+                                                    onPress={() =>
+                                                        togglePasswordVisibility(
+                                                            "newPassword"
+                                                        )
+                                                    }
+                                                    style={{ paddingRight: 4 }}
+                                                >
+                                                    <Icon
+                                                        name={
+                                                            passwordVisible.newPassword
+                                                                ? "eye"
+                                                                : "eye-slash"
+                                                        }
+                                                        size={20}
+                                                        color="#484848"
+                                                    />
+                                                </Pressable>
+                                            }
+                                        />
+                                    </FormControl>
+                                    <FormControl
+                                        isRequired
+                                        isInvalid={
+                                            errors.confirmPassword !== null
+                                        }
+                                        w="100%"
+                                        maxW="300px"
+                                        style={{ marginTop: 10 }}
+                                    >
+                                        <FormControl.Label>
+                                            Confirm Password
+                                        </FormControl.Label>
+                                        <Input
+                                            size="lg"
+                                            variant="outline"
+                                            placeholder="Confirm Password"
+                                            value={formData.confirmPassword}
+                                            onChangeText={(value) =>
+                                                handleChange(
+                                                    "confirmPassword",
+                                                    value
+                                                )
+                                            }
+                                            secureTextEntry={
+                                                !passwordVisible.confirmPassword
+                                            }
+                                            InputRightElement={
+                                                <Pressable
+                                                    onPress={() =>
+                                                        togglePasswordVisibility(
+                                                            "confirmPassword"
+                                                        )
+                                                    }
+                                                    style={{ paddingRight: 4 }}
+                                                >
+                                                    <Icon
+                                                        name={
+                                                            passwordVisible.confirmPassword
+                                                                ? "eye"
+                                                                : "eye-slash"
+                                                        }
+                                                        size={20}
+                                                        color="#484848"
+                                                    />
+                                                </Pressable>
+                                            }
+                                        />
+                                        {"confirmPassword" in errors && (
+                                            <FormControl.ErrorMessage>
+                                                {errors.confirmPassword}
+                                            </FormControl.ErrorMessage>
+                                        )}
+                                    </FormControl>
+                                    <View className="flex flex-col justify-start items-start pt-8">
+                                        <Text className="text-xs text-bold text-gray-500">
+                                            YOUR PASSWORD MUST CONTAIN
+                                        </Text>
+                                        <View
+                                            style={styles.validationContainer}
+                                        >
+                                            {renderValidationCircle(
+                                                validation.length
+                                            )}
+                                            <Text className="text-sm text-gray-500 pl-2">
+                                                Between 8 and 20 characters
+                                            </Text>
+                                        </View>
+                                        <View
+                                            style={styles.validationContainer}
+                                        >
+                                            {renderValidationCircle(
+                                                validation.upperCase
+                                            )}
+                                            <Text className="text-sm text-gray-500 pl-2">
+                                                1 upper case letter
+                                            </Text>
+                                        </View>
+                                        <View
+                                            style={styles.validationContainer}
+                                        >
+                                            {renderValidationCircle(
+                                                validation.number
+                                            )}
+                                            <Text className="text-sm text-gray-500 pl-2">
+                                                1 or more numbers
+                                            </Text>
+                                        </View>
+                                        <View
+                                            style={styles.validationContainer}
+                                        >
+                                            {renderValidationCircle(
+                                                validation.specialChar
+                                            )}
+                                            <Text className="text-sm text-gray-500 pl-2">
+                                                1 or more special characters
+                                            </Text>
+                                        </View>
+                                    </View>
+                                    <View className="flex flex-row justify-center pt-4">
+                                        <Pressable
+                                            className={`bg-[#114EA8] rounded w-8/12 ${
+                                                (!validation.length ||
+                                                    !validation.upperCase ||
+                                                    !validation.number ||
+                                                    !validation.specialChar ||
+                                                    errors.oldPassword) &&
+                                                "bg-gray-400 pointer-events-none"
+                                            }`}
+                                            onPress={() => handleSubmit()}
+                                            style={{ padding: 4 }}
+                                            disabled={
+                                                !validation.length ||
+                                                !validation.upperCase ||
+                                                !validation.number ||
+                                                !validation.specialChar ||
+                                                errors.oldPassword
+                                            }
+                                        >
+                                            <Text className="text-white text-center">
+                                                {" "}
+                                                Change Password
+                                            </Text>
+                                        </Pressable>
+                                    </View>
+                                </>
+                            ) : (
+                                <View className="flex flex-col justify-center items-center pt-8 gap-4">
+                                    <Text className="text-center text-bold">
+                                        Password Changed Successfully
+                                    </Text>
+                                    <Pressable
+                                        onPress={handleSignIn}
+                                        className=""
+                                        aria-describedby="forgotPassword"
+                                    >
+                                        <Text className="underline decoration-solid pl-2 text-blue-400">
+                                            Click to Sign-in
+                                        </Text>
+                                    </Pressable>
+                                </View>
+                            )}
                         </Modal.Body>
                     </Modal.Content>
                 </Modal>
@@ -580,5 +662,3 @@ const styles = StyleSheet.create({
 });
 
 export default ChangePassword;
-
-
