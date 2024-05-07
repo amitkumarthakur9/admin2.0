@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { View } from "react-native";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { router, useLocalSearchParams, useRouter } from "expo-router";
 import {
     Box,
     Button,
@@ -342,7 +342,7 @@ export default function ClientDetail() {
                             </View> */}
                         </View>
                     </View>
-                    <Modal visible={visible} hideDialog={closeModal}>
+                    <Modal visible={visible} hideDialog={closeModal} modalKey={modalKey} >
                         {modalValues[modalKey]}
                     </Modal>
                 </ScrollView>
@@ -392,9 +392,9 @@ const PortfolioCard = ({
                             _text={{ color: "#013974" }}
                             variant="outline"
                             width="48"
-                            // onPress={() =>
-                            //     router.push(`dashboard`)
-                            // }
+                            onPress={() =>
+                                router.push(`arn-transfer/${data?.id}`)
+                            }
                         >
                             Transfer Portfolio
                         </Button>
@@ -2371,9 +2371,9 @@ const ExternalPortfolioModalCard = ({
     return (
         <>
             {apisuccess ? (
-                <View className="flex flex-col">
-                    <View className="h-16 flex flex-row justify-between items-center p-12">
-                        <View className="flex flex-row items-center gap-x-2"></View>
+                <View className="flex flex-col p-4">
+                    <View className="h-16 flex flex-row justify-between items-center p-2">
+                        <View className="flex flex-row items-center "></View>
                         <IonIcon
                             name="close-outline"
                             size={24}

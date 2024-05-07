@@ -1,6 +1,22 @@
 import { Dialog, Portal } from "react-native-paper";
 
-const Modal = ({ visible, hideDialog, children, }) => {
+const modalWidths = {
+    modalKey1: 800,
+    externalPortfolio: 300,
+    // Add more modal keys and widths as needed
+};
+
+const modalHeight = {
+    modalKey1: 800,
+    externalPortfolio: "auto",
+    // Add more modal keys and widths as needed
+};
+
+const Modal = ({ visible, hideDialog, children, modalKey }) => {
+
+    const width = modalWidths[modalKey] || 800; 
+    const height = modalHeight[modalKey] || "65%"; 
+
     return (
         <Portal>
             <Dialog
@@ -11,8 +27,8 @@ const Modal = ({ visible, hideDialog, children, }) => {
                     display: "flex",
                     justifyContent: "flex-start",
                     alignSelf: "center",
-                    width: 800,
-                    height: "65%",
+                    width: width,
+                    height: height,
                     overflow: "scroll",
                     backgroundColor: "white",
                 }}
