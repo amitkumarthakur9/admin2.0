@@ -342,7 +342,11 @@ export default function ClientDetail() {
                             </View> */}
                         </View>
                     </View>
-                    <Modal visible={visible} hideDialog={closeModal} modalKey={modalKey} >
+                    <Modal
+                        visible={visible}
+                        hideDialog={closeModal}
+                        modalKey={modalKey}
+                    >
                         {modalValues[modalKey]}
                     </Modal>
                 </ScrollView>
@@ -2349,13 +2353,17 @@ const ExternalPortfolioModalCard = ({
     const inputDate = new Date("2024-04-20T12:00:00");
 
     async function sendRequest() {
-        const response: ArnImport = await RemoteApi.get(
-            `client/${clientInfo.id}/request-import-folio`
-        );
+        // const response: ArnImport = await RemoteApi.get(
+        //     `client/${clientInfo.id}/request-import-folio`
+        // );
 
         const refreshDate = await checkDate(clientInfo.lastDate);
         // const refreshDate = await checkDate(inputDate);
-        console.log(refreshDate);
+        // console.log(refreshDate);
+
+        const response = {
+            message: "fail"
+        }
         if (response.message == "Success") {
             setApisuccess(true);
             if (refreshDate == "false") {
@@ -2366,7 +2374,12 @@ const ExternalPortfolioModalCard = ({
         }
     }
 
+    console.log(apisuccess);
+    console.log("api called")
+if(apisuccess === false){
     sendRequest();
+}
+    
 
     return (
         <>
@@ -2437,7 +2450,15 @@ const ExternalPortfolioModalCard = ({
                 </View>
             ) : (
                 <>
-                    <View className="flex flex-col justify-center items-center pt-8 gap-4">
+                <View className=" flex flex-row justify-between items-center p-4">
+                        <View className="flex flex-row items-center "></View>
+                        <IonIcon
+                            name="close-outline"
+                            size={24}
+                            onPress={hideDialog}
+                        />
+                    </View>
+                    <View className="flex flex-col justify-center items-center p-8 gap-4">
                         <Text className="text-center font-semibold text-lg">
                             Server Error! Request Failed!
                         </Text>

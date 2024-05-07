@@ -461,13 +461,13 @@ const GoogleContactInvite = () => {
                     >
                         {userInfo || dbContact ? (
                             <>
-                                <View className="flex flex-row justify-center items-center  p-4 h-[42px]">
+                                {/* <View className="flex flex-row justify-center items-center  p-4 h-[42px]">
                                     <Button
                                         title="Import Contacts from Google"
                                         onPress={signInWithGoogle}
                                         style={{ width: "100%" }}
                                     />
-                                </View>
+                                </View> */}
 
                                 <ContactDataTable />
                             </>

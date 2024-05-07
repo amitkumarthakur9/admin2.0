@@ -486,7 +486,7 @@ const ARNHoldingDataTable = () => {
                                                                                         <View className="flex flex-col justify-start w-8/12 ">
                                                                                             <Text
                                                                                                 selectable
-                                                                                                className="text-base"
+                                                                                                className="text-xs"
                                                                                             >
                                                                                                 {
                                                                                                     item
@@ -497,7 +497,7 @@ const ARNHoldingDataTable = () => {
                                                                                             <View className="flex flex-row">
                                                                                                 <Text
                                                                                                     selectable
-                                                                                                    className="text-slate-500 text-base"
+                                                                                                    className="text-slate-500 text-xs"
                                                                                                 >
                                                                                                     {
                                                                                                         item
@@ -511,7 +511,7 @@ const ARNHoldingDataTable = () => {
                                                                                                 </Text>
                                                                                                 <Text
                                                                                                     selectable
-                                                                                                    className="text-slate-500 text-base"
+                                                                                                    className="text-slate-500 text-xs"
                                                                                                 >
                                                                                                     {
                                                                                                         item
@@ -557,7 +557,7 @@ const ARNHoldingDataTable = () => {
                                                                                         <View className="flex flex-col items-start justify-start w-4/12">
                                                                                             <Text
                                                                                                 selectable
-                                                                                                className="text-slate-500 text-base"
+                                                                                                className="text-slate-500 text-xs"
                                                                                             >
                                                                                                 {
                                                                                                     item.folio
@@ -565,7 +565,7 @@ const ARNHoldingDataTable = () => {
                                                                                             </Text>
                                                                                             <Text
                                                                                                 selectable
-                                                                                                className=" text-base"
+                                                                                                className=" text-xs"
                                                                                             >
                                                                                                 Folio
                                                                                                 No.
@@ -574,7 +574,7 @@ const ARNHoldingDataTable = () => {
                                                                                         <View className="flex flex-col items-start justify-start w-4/12">
                                                                                             <Text
                                                                                                 selectable
-                                                                                                className="text-slate-500 text-base"
+                                                                                                className="text-slate-500 text-xs"
                                                                                             >
                                                                                                 {
                                                                                                     item.current
@@ -582,7 +582,7 @@ const ARNHoldingDataTable = () => {
                                                                                             </Text>
                                                                                             <Text
                                                                                                 selectable
-                                                                                                className=" text-base"
+                                                                                                className=" text-xs"
                                                                                             >
                                                                                                 Current
                                                                                                 Value
@@ -591,7 +591,7 @@ const ARNHoldingDataTable = () => {
                                                                                         <View className="flex flex-col items-start justify-start w-4/12">
                                                                                             <Text
                                                                                                 selectable
-                                                                                                className="text-slate-500 text-base"
+                                                                                                className="text-slate-500 text-xs"
                                                                                             >
                                                                                                 {
                                                                                                     item.invested
@@ -599,7 +599,7 @@ const ARNHoldingDataTable = () => {
                                                                                             </Text>
                                                                                             <Text
                                                                                                 selectable
-                                                                                                className="text-base"
+                                                                                                className="text-xs"
                                                                                             >
                                                                                                 Invested
                                                                                             </Text>
@@ -628,7 +628,7 @@ const ARNHoldingDataTable = () => {
                                                                                                 <View className="flex flex-col justify-start w-8/12 ">
                                                                                                     <Text
                                                                                                         selectable
-                                                                                                        className="text-base"
+                                                                                                        className="text-xs"
                                                                                                     >
                                                                                                         {
                                                                                                             item
@@ -639,7 +639,7 @@ const ARNHoldingDataTable = () => {
                                                                                                     <View className="flex flex-row">
                                                                                                         <Text
                                                                                                             selectable
-                                                                                                            className="text-slate-500 text-base"
+                                                                                                            className="text-slate-500 text-xs"
                                                                                                         >
                                                                                                             {
                                                                                                                 item
@@ -653,7 +653,7 @@ const ARNHoldingDataTable = () => {
                                                                                                         </Text>
                                                                                                         <Text
                                                                                                             selectable
-                                                                                                            className="text-slate-500 text-base"
+                                                                                                            className="text-slate-500 text-xs"
                                                                                                         >
                                                                                                             {
                                                                                                                 item
@@ -691,7 +691,7 @@ const ARNHoldingDataTable = () => {
                                                                                                 <View className="flex flex-col items-start justify-start w-4/12">
                                                                                                     <Text
                                                                                                         selectable
-                                                                                                        className="text-slate-500 text-base"
+                                                                                                        className="text-slate-500 text-xs"
                                                                                                     >
                                                                                                         {
                                                                                                             item.folio
@@ -699,7 +699,7 @@ const ARNHoldingDataTable = () => {
                                                                                                     </Text>
                                                                                                     <Text
                                                                                                         selectable
-                                                                                                        className=" text-base"
+                                                                                                        className=" text-xs"
                                                                                                     >
                                                                                                         Folio
                                                                                                         No.
@@ -708,7 +708,7 @@ const ARNHoldingDataTable = () => {
                                                                                                 <View className="flex flex-col items-start justify-start w-4/12">
                                                                                                     <Text
                                                                                                         selectable
-                                                                                                        className="text-slate-500 text-base"
+                                                                                                        className="text-slate-500 text-xs"
                                                                                                     >
                                                                                                         {
                                                                                                             item.current
@@ -716,7 +716,7 @@ const ARNHoldingDataTable = () => {
                                                                                                     </Text>
                                                                                                     <Text
                                                                                                         selectable
-                                                                                                        className=" text-base"
+                                                                                                        className=" text-xs"
                                                                                                     >
                                                                                                         Current
                                                                                                         Value
@@ -725,7 +725,7 @@ const ARNHoldingDataTable = () => {
                                                                                                 <View className="flex flex-col items-start justify-start w-4/12">
                                                                                                     <Text
                                                                                                         selectable
-                                                                                                        className="text-slate-500 text-base"
+                                                                                                        className="text-slate-500 text-xs"
                                                                                                     >
                                                                                                         {
                                                                                                             item.invested
@@ -733,7 +733,7 @@ const ARNHoldingDataTable = () => {
                                                                                                     </Text>
                                                                                                     <Text
                                                                                                         selectable
-                                                                                                        className="text-base"
+                                                                                                        className="text-xs"
                                                                                                     >
                                                                                                         Invested
                                                                                                     </Text>
@@ -760,7 +760,7 @@ const ARNHoldingDataTable = () => {
                                                                                                         <View className="flex flex-col justify-start w-8/12 ">
                                                                                                             <Text
                                                                                                                 selectable
-                                                                                                                className="text-base"
+                                                                                                                className="text-xs"
                                                                                                             >
                                                                                                                 {
                                                                                                                     item
@@ -771,7 +771,7 @@ const ARNHoldingDataTable = () => {
                                                                                                             <View className="flex flex-row">
                                                                                                                 <Text
                                                                                                                     selectable
-                                                                                                                    className="text-slate-500 text-base"
+                                                                                                                    className="text-slate-500 text-xs"
                                                                                                                 >
                                                                                                                     {
                                                                                                                         item
@@ -785,7 +785,7 @@ const ARNHoldingDataTable = () => {
                                                                                                                 </Text>
                                                                                                                 <Text
                                                                                                                     selectable
-                                                                                                                    className="text-slate-500 text-base"
+                                                                                                                    className="text-slate-500 text-xs"
                                                                                                                 >
                                                                                                                     {
                                                                                                                         item
@@ -818,7 +818,7 @@ const ARNHoldingDataTable = () => {
                                                                                                         <View className="flex flex-col items-start justify-start w-4/12">
                                                                                                             <Text
                                                                                                                 selectable
-                                                                                                                className="text-slate-500 text-base"
+                                                                                                                className="text-slate-500 text-xs"
                                                                                                             >
                                                                                                                 {
                                                                                                                     item.folio
@@ -826,7 +826,7 @@ const ARNHoldingDataTable = () => {
                                                                                                             </Text>
                                                                                                             <Text
                                                                                                                 selectable
-                                                                                                                className=" text-base"
+                                                                                                                className=" text-xs"
                                                                                                             >
                                                                                                                 Folio
                                                                                                                 No.
@@ -835,7 +835,7 @@ const ARNHoldingDataTable = () => {
                                                                                                         <View className="flex flex-col items-start justify-start w-4/12">
                                                                                                             <Text
                                                                                                                 selectable
-                                                                                                                className="text-slate-500 text-base"
+                                                                                                                className="text-slate-500 text-xs"
                                                                                                             >
                                                                                                                 {
                                                                                                                     item.current
@@ -843,7 +843,7 @@ const ARNHoldingDataTable = () => {
                                                                                                             </Text>
                                                                                                             <Text
                                                                                                                 selectable
-                                                                                                                className=" text-base"
+                                                                                                                className=" text-xs"
                                                                                                             >
                                                                                                                 Current
                                                                                                                 Value
@@ -852,7 +852,7 @@ const ARNHoldingDataTable = () => {
                                                                                                         <View className="flex flex-col items-start justify-start w-4/12">
                                                                                                             <Text
                                                                                                                 selectable
-                                                                                                                className="text-slate-500 text-base"
+                                                                                                                className="text-slate-500 text-xs"
                                                                                                             >
                                                                                                                 {
                                                                                                                     item.invested
@@ -860,7 +860,7 @@ const ARNHoldingDataTable = () => {
                                                                                                             </Text>
                                                                                                             <Text
                                                                                                                 selectable
-                                                                                                                className="text-base"
+                                                                                                                className="text-xs"
                                                                                                             >
                                                                                                                 Invested
                                                                                                             </Text>
@@ -1081,7 +1081,7 @@ const ARNHoldingDataTable = () => {
                                                                                             <View className="flex flex-row items-start justify-start w-8/12">
                                                                                                 <Text
                                                                                                     selectable
-                                                                                                    className="text-slate-500 text-base"
+                                                                                                    className="text-slate-500"
                                                                                                 >
                                                                                                     {
                                                                                                         item.folio
@@ -1093,7 +1093,7 @@ const ARNHoldingDataTable = () => {
                                                                                         <View className="flex flex-col items-start justify-start w-4/12">
                                                                                             <Text
                                                                                                 selectable
-                                                                                                className="text-slate-500 text-base font-bold"
+                                                                                                className="text-slate-500 "
                                                                                             >
                                                                                                 {
                                                                                                     item
@@ -1103,7 +1103,7 @@ const ARNHoldingDataTable = () => {
                                                                                             </Text>
                                                                                             <Text
                                                                                                 selectable
-                                                                                                className="text-slate-500 text-base"
+                                                                                                className="text-slate-500"
                                                                                             >
                                                                                                 {
                                                                                                     item
@@ -1113,7 +1113,7 @@ const ARNHoldingDataTable = () => {
                                                                                             </Text>
                                                                                             <Text
                                                                                                 selectable
-                                                                                                className="text-slate-500 text-base"
+                                                                                                className="text-slate-500"
                                                                                             >
                                                                                                 {
                                                                                                     item
@@ -1125,7 +1125,7 @@ const ARNHoldingDataTable = () => {
                                                                                         <View className="flex flex-row items-start justify-start w-2/12">
                                                                                             <Text
                                                                                                 selectable
-                                                                                                className="text-slate-500 text-base"
+                                                                                                className="text-slate-500"
                                                                                             >
                                                                                                 {
                                                                                                     item.current
@@ -1135,7 +1135,7 @@ const ARNHoldingDataTable = () => {
                                                                                         <View className="flex flex-row items-start justify-start w-2/12">
                                                                                             <Text
                                                                                                 selectable
-                                                                                                className="text-slate-500 text-base"
+                                                                                                className="text-slate-500"
                                                                                             >
                                                                                                 {
                                                                                                     item.invested
@@ -1187,7 +1187,7 @@ const ARNHoldingDataTable = () => {
                                                                                                     <View className="flex flex-row items-start justify-start w-8/12">
                                                                                                         <Text
                                                                                                             selectable
-                                                                                                            className="text-slate-500 text-base font-bold"
+                                                                                                            className="text-slate-500 font-bold"
                                                                                                         >
                                                                                                             {
                                                                                                                 item.folio
@@ -1199,7 +1199,7 @@ const ARNHoldingDataTable = () => {
                                                                                                 <View className="flex flex-col items-start justify-start w-4/12">
                                                                                                     <Text
                                                                                                         selectable
-                                                                                                        className="text-slate-500 text-base"
+                                                                                                        className="text-slate-500"
                                                                                                     >
                                                                                                         {
                                                                                                             item
@@ -1209,7 +1209,7 @@ const ARNHoldingDataTable = () => {
                                                                                                     </Text>
                                                                                                     <Text
                                                                                                         selectable
-                                                                                                        className="text-slate-500 text-base"
+                                                                                                        className="text-slate-500"
                                                                                                     >
                                                                                                         {
                                                                                                             item
@@ -1219,7 +1219,7 @@ const ARNHoldingDataTable = () => {
                                                                                                     </Text>
                                                                                                     <Text
                                                                                                         selectable
-                                                                                                        className="text-slate-500 text-base"
+                                                                                                        className="text-slate-500"
                                                                                                     >
                                                                                                         {
                                                                                                             item
@@ -1231,7 +1231,7 @@ const ARNHoldingDataTable = () => {
                                                                                                 <View className="flex flex-row items-start justify-start w-2/12">
                                                                                                     <Text
                                                                                                         selectable
-                                                                                                        className="text-slate-500 text-base"
+                                                                                                        className="text-slate-500"
                                                                                                     >
                                                                                                         {
                                                                                                             item.current
@@ -1241,7 +1241,7 @@ const ARNHoldingDataTable = () => {
                                                                                                 <View className="flex flex-row items-start justify-start w-2/12">
                                                                                                     <Text
                                                                                                         selectable
-                                                                                                        className="text-slate-500 text-base"
+                                                                                                        className="text-slate-500"
                                                                                                     >
                                                                                                         {
                                                                                                             item.invested
@@ -1286,7 +1286,7 @@ const ARNHoldingDataTable = () => {
                                                                                                             <View className="flex flex-row items-start justify-start w-8/12">
                                                                                                                 <Text
                                                                                                                     selectable
-                                                                                                                    className="text-slate-500 text-base"
+                                                                                                                    className="text-slate-500"
                                                                                                                 >
                                                                                                                     {
                                                                                                                         item.folio
@@ -1298,7 +1298,7 @@ const ARNHoldingDataTable = () => {
                                                                                                         <View className="flex flex-col items-start justify-start w-4/12">
                                                                                                             <Text
                                                                                                                 selectable
-                                                                                                                className="text-slate-500 text-base"
+                                                                                                                className="text-slate-500"
                                                                                                             >
                                                                                                                 {
                                                                                                                     item
@@ -1308,7 +1308,7 @@ const ARNHoldingDataTable = () => {
                                                                                                             </Text>
                                                                                                             <Text
                                                                                                                 selectable
-                                                                                                                className="text-slate-500 text-base"
+                                                                                                                className="text-slate-500"
                                                                                                             >
                                                                                                                 {
                                                                                                                     item
@@ -1318,7 +1318,7 @@ const ARNHoldingDataTable = () => {
                                                                                                             </Text>
                                                                                                             <Text
                                                                                                                 selectable
-                                                                                                                className="text-slate-500 text-base"
+                                                                                                                className="text-slate-500"
                                                                                                             >
                                                                                                                 {
                                                                                                                     item
@@ -1330,7 +1330,7 @@ const ARNHoldingDataTable = () => {
                                                                                                         <View className="flex flex-row items-start justify-start w-2/12">
                                                                                                             <Text
                                                                                                                 selectable
-                                                                                                                className="text-slate-500 text-base"
+                                                                                                                className="text-slate-500"
                                                                                                             >
                                                                                                                 {
                                                                                                                     item.current
@@ -1340,7 +1340,7 @@ const ARNHoldingDataTable = () => {
                                                                                                         <View className="flex flex-row items-start justify-start w-2/12">
                                                                                                             <Text
                                                                                                                 selectable
-                                                                                                                className="text-slate-500 text-base"
+                                                                                                                className="text-slate-500"
                                                                                                             >
                                                                                                                 {
                                                                                                                     item.invested
