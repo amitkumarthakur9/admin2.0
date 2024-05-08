@@ -390,15 +390,14 @@ export default function ClientARNDetail() {
                                                 <View className="flex flex-col md:flex-row justify-between items-start md:items-center w-full">
                                                     <View className="flex flex-row gap-2 justify-between items-start md:items-center w-full">
                                                         <View className="flex flex-row items-center justify-start w-6/12">
-                                                            <View className="w-8/12 lg:w-fit">
+                                                            <View className="flex flex-row items-center w-8/12 md:w-fit">
                                                                 <Text
                                                                     selectable
                                                                     className="text-sm md:text-lg flex flex-row text-start md:text-center font-semibold"
                                                                 >
                                                                     {data?.name}
                                                                 </Text>
-                                                            </View>
-                                                            <View className="pl-2 w-2/12">
+                                                                <View className="pl-2 w-2/12">
                                                                 {data?.isActive ? (
                                                                     <CheckCircleIcon
                                                                         color="emerald.500"
@@ -411,6 +410,8 @@ export default function ClientARNDetail() {
                                                                     />
                                                                 )}
                                                             </View>
+                                                            </View>
+                                                            
                                                         </View>
                                                         <View className="w-5/12">
                                                             <Pressable

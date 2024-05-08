@@ -2324,6 +2324,8 @@ const ExternalPortfolioModalCard = ({
 }) => {
     const [apisuccess, setApisuccess] = useState(false);
     const [importDate, setImportDate] = useState(false);
+    console.log(clientInfo);
+    console.log(dateTimeFormat(clientInfo.lastDate));
     const checkDate = (date: Date): string => {
         const currentDate = new Date();
         const inputDate = new Date(date);
@@ -2353,17 +2355,17 @@ const ExternalPortfolioModalCard = ({
     const inputDate = new Date("2024-04-20T12:00:00");
 
     async function sendRequest() {
-        // const response: ArnImport = await RemoteApi.get(
-        //     `client/${clientInfo.id}/request-import-folio`
-        // );
+        const response: ArnImport = await RemoteApi.get(
+            `client/${clientInfo.id}/request-import-folio`
+        );
 
         const refreshDate = await checkDate(clientInfo.lastDate);
         // const refreshDate = await checkDate(inputDate);
-        // console.log(refreshDate);
+        console.log(refreshDate);
 
-        const response = {
-            message: "fail"
-        }
+        // const response = {
+        //     message: "fail"
+        // }
         if (response.message == "Success") {
             setApisuccess(true);
             if (refreshDate == "false") {
@@ -2376,9 +2378,13 @@ const ExternalPortfolioModalCard = ({
 
     console.log(apisuccess);
     console.log("api called")
+
 if(apisuccess === false){
+
     sendRequest();
 }
+    
+
     
 
     return (
