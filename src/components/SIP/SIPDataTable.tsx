@@ -92,12 +92,10 @@ const SIPDataTable = () => {
             </View>
             <View className="h-screen">
 
-        { data.length === 0
-            ? (
-                <NoDataAvailable />
-            ) : (
+        
                 <>
             <View className="border-[0.2px]  border-[#e4e4e4]">
+            {data.length !== 0 &&
                 <DynamicFilters
                     appliedSorting={appliedSorting}
                     setAppliedSorting={setAppliedSorting}
@@ -110,8 +108,12 @@ const SIPDataTable = () => {
                     appliedFilers={appliedFilers}
                     setAppliedFilers={setAppliedFilers}
                 />
-
+            }
                 {!isLoading ? (
+                     data.length === 0
+                        ? (
+                            <NoDataAvailable />
+                        ) : (
                     <ScrollView className="mt-4 z-[-1]">
                         {width < 830 ? (
                             <MobileSIPRows data={data} schema={null} />
@@ -119,6 +121,8 @@ const SIPDataTable = () => {
                             <SIPRows data={data} schema={null} />
                         )}
                     </ScrollView>
+                    )
+                
                 ) : (
                     <HStack
                         space={2}
@@ -136,7 +140,7 @@ const SIPDataTable = () => {
                     </HStack>
                 )}
             </View>
-
+            {data.length !== 0 &&
             <Pagination
                 itemsPerPage={itemsPerPage}
                 setItemsPerPage={setItemsPerPage}
@@ -145,9 +149,9 @@ const SIPDataTable = () => {
                 totalPages={totalPages}
                 setCurrentPageNumber={setCurrentPageNumber}
             />
-            </>
-            )
         }
+            </>
+   
         </View>
         </View>
     );

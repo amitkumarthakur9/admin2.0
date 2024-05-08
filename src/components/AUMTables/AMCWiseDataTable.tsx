@@ -180,10 +180,7 @@ const AMCWiseDataTable = () => {
     return (
         <View className="h-screen">
 
-        { data.length === 0
-            ? (
-                <NoDataAvailable />
-            ) : (
+       
         <View className="bg-white">
             {/* <View className="">
                 <TableBreadCrumb name={"Scheme Wise"} />
@@ -224,6 +221,9 @@ const AMCWiseDataTable = () => {
                 
 
                 {!isLoading ? (
+                    data.length === 0 ? (
+                        <NoDataAvailable />
+                    ) : (
                     <ScrollView className={"mt-4 z-[-1] "}>
                         
                         <DataTable
@@ -238,6 +238,7 @@ const AMCWiseDataTable = () => {
                         />
                         
                     </ScrollView>
+                    )
                 ) : (
                     <HStack
                         space={"md"}
@@ -265,8 +266,7 @@ const AMCWiseDataTable = () => {
                 setCurrentPageNumber={setCurrentPageNumber}
             /> */}
         </View>
-         )
-        }
+         
         </View>
     );
 };

@@ -158,6 +158,7 @@ const RMWiseDataTable = () => {
                 <TableBreadCrumb name={"Scheme Wise"} />
             </View> */}
             <View className="border-[0.2px]  border-[#e4e4e4]">
+            {data.length !== 0 &&
                 <DynamicFilters
                     appliedSorting={appliedSorting}
                     setAppliedSorting={setAppliedSorting}
@@ -170,8 +171,13 @@ const RMWiseDataTable = () => {
                     appliedFilers={appliedFilers}
                     setAppliedFilers={setAppliedFilers}
                 />
+            }
 
                 {!isLoading ? (
+                    data.length === 0 ? (
+                        <NoDataAvailable />
+                    ) : (
+
                     <ScrollView className={"mt-4 z-[-1] "}>
                         <DataTable
                             headers={[
@@ -184,6 +190,7 @@ const RMWiseDataTable = () => {
                             rows={transformedData}
                         />
                     </ScrollView>
+                    )
                 ) : (
                     <HStack
                         space={"md"}
@@ -201,7 +208,7 @@ const RMWiseDataTable = () => {
                     </HStack>
                 )}
             </View>
-
+            {data.length !== 0 &&
             <Pagination
                 itemsPerPage={itemsPerPage}
                 setItemsPerPage={setItemsPerPage}
@@ -210,6 +217,7 @@ const RMWiseDataTable = () => {
                 totalPages={totalPages}
                 setCurrentPageNumber={setCurrentPageNumber}
             />
+}
         </View>
         )
     }

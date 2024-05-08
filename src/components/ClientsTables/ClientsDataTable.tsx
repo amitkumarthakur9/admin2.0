@@ -223,26 +223,31 @@ const ClientsDataTable = () => {
             </View>
 
             <View className="h-screen">
-                {data.length === 0 ? (
-                    <NoDataAvailable />
-                ) : (
-                    <>
-                        <View className="border-[0.2px]  border-[#e4e4e4]">
-                            <DynamicFilters
-                                appliedSorting={appliedSorting}
-                                setAppliedSorting={setAppliedSorting}
-                                sorting={sorting}
-                                fileName="Clients"
-                                downloadApi={"client/download-report"}
-                                schemaResponse={filtersSchema}
-                                setCurrentPageNumber={setCurrentPageNumber}
-                                getList={getDataList}
-                                appliedFilers={appliedFilers}
-                                setAppliedFilers={setAppliedFilers}
-                                // newComponent={<AddNewClient />}
-                            />
+                <>
+                    <View className="border-[0.2px] border-[#e4e4e4]">
+                    {data.length !== 0 &&
+                        <DynamicFilters
+                            appliedSorting={appliedSorting}
+                            setAppliedSorting={setAppliedSorting}
+                            sorting={sorting}
+                            fileName="Clients"
+                            downloadApi={"client/download-report"}
+                            schemaResponse={filtersSchema}
+                            setCurrentPageNumber={setCurrentPageNumber}
+                            getList={getDataList}
+                            appliedFilers={appliedFilers}
+                            setAppliedFilers={setAppliedFilers}
+                            // newComponent={<AddNewClient />}
+                        />
+                    }
+                        {!isLoading ? (
+                            data.length === 0 ? (
+                                <NoDataAvailable />
+                            ) : (
 
-                            {!isLoading ? (
+                                <>
+                                
+                                
                                 <ScrollView className={"mt-4 z-[-1] "}>
                                     {width < 830 ? (
                                         <MobileClientsRows
@@ -278,34 +283,37 @@ const ClientsDataTable = () => {
                                         />
                                     )}
                                 </ScrollView>
-                            ) : (
-                                <HStack
-                                    space={"md"}
-                                    marginTop={20}
-                                    marginBottom={20}
-                                    justifyContent="center"
-                                >
-                                    <Spinner
-                                        color={"black"}
-                                        accessibilityLabel="Loading order"
-                                    />
-                                    <Heading color="black" fontSize="md">
-                                        Loading
-                                    </Heading>
-                                </HStack>
-                            )}
-                        </View>
 
-                        <Pagination
-                            itemsPerPage={itemsPerPage}
-                            setItemsPerPage={setItemsPerPage}
-                            getDataList={getDataList}
-                            currentPageNumber={currentPageNumber}
-                            totalPages={totalPages}
-                            setCurrentPageNumber={setCurrentPageNumber}
-                        />
-                    </>
-                )}
+                                </>
+                            )
+                        ) : (
+                            <HStack
+                                space={"md"}
+                                marginTop={20}
+                                marginBottom={20}
+                                justifyContent="center"
+                            >
+                                <Spinner
+                                    color={"black"}
+                                    accessibilityLabel="Loading order"
+                                />
+                                <Heading color="black" fontSize="md">
+                                    Loading
+                                </Heading>
+                            </HStack>
+                        )}
+                    </View>
+                    {data.length !== 0 &&
+                    <Pagination
+                        itemsPerPage={itemsPerPage}
+                        setItemsPerPage={setItemsPerPage}
+                        getDataList={getDataList}
+                        currentPageNumber={currentPageNumber}
+                        totalPages={totalPages}
+                        setCurrentPageNumber={setCurrentPageNumber}
+                    />
+}
+                </>
             </View>
         </View>
     );

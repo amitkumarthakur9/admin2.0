@@ -3,7 +3,8 @@ import { View, Image, Text } from 'react-native';
 
 const NoDataAvailable = () => {
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <View className='h-[500px]'>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Image
         // style={{ width: 100, height: 100 }} // adjust width and height as needed
         source={require("../../../assets/images/noDataAvailable.png")}
@@ -11,6 +12,9 @@ const NoDataAvailable = () => {
       />
       <Text style={{ paddingTop: 10, fontSize: 16, fontWeight: 'bold' }}>No Data Available</Text>
     </View>
+
+    </View>
+    
   );
 };
 

@@ -130,7 +130,7 @@ const HoldingWiseDataTable = () => {
                                 >
                                     <Text
                                         selectable
-                                        className="flex flex-row text-black font-semibold break-all"
+                                        className="flex flex-row text-black font-semibold break-all text-wrap w-[70%]"
                                     >
                                         {item?.account?.name}&nbsp;{" "}
                                     </Text>
@@ -210,35 +210,42 @@ const HoldingWiseDataTable = () => {
             {
                 key: "totalInvested",
                 content: (
-                    <Text selectable className="text-[#686868] font-semibold">
+                    <View className="w-[99%]">
+                    <Text selectable className="text-[#686868] font-semibold text-wrap">
                         {item?.investedValue
-                            ? RupeeSymbol + item?.investedValue
+                            ? RupeeSymbol + item?.investedValue.toFixed(2)
                             : RupeeSymbol + "0"}
                     </Text>
+                    </View>
                 ),
             },
             {
                 key: "currentValue",
                 content: (
-                    <Text selectable className="text-[#686868] font-semibold">
+                    <View className="w-[99%]">
+                    <Text selectable className="text-[#686868] font-semibold text-wrap">
                         {item?.currentValue
-                            ? RupeeSymbol + item?.currentValue
+                            ? RupeeSymbol + item?.currentValue.toFixed(2)
                             : RupeeSymbol + "0"}
                     </Text>
+                </View>
                 ),
             },
             {
                 key: "XIRR",
                 content: (
-                    <Text selectable className="text-[#686868] font-semibold">
+                    <View className="w-[99%]">
+                    <Text selectable className="text-[#686868] font-semibold text-wrap">
                         {item?.xirr ? item?.xirr : "-"}
                     </Text>
+               </View>
                 ),
             },
             {
                 key: "returns",
                 content: (
-                    <Text selectable className="text-[#686868] font-semibold">
+                    <View className="w-[99%]">
+<Text selectable className="text-[#686868] font-semibold text-wrap">
                         {item?.investedValue && item?.currentValue
                             ? RupeeSymbol +
                               (
@@ -246,6 +253,9 @@ const HoldingWiseDataTable = () => {
                               ).toFixed(2)
                             : RupeeSymbol + "0"}
                     </Text>
+
+                    </View>
+                    
                 ),
             },
             // {
@@ -284,16 +294,14 @@ const HoldingWiseDataTable = () => {
     return (
         <View className="h-screen">
 
-        { data.length === 0
-            ? (
-                <NoDataAvailable />
-            ) : (
+        
 
                 <View className="bg-white">
             {/* <View className="">
                 <TableBreadCrumb name={"Folio Wise"} />
             </View> */}
             <View className="border-[0.2px]  border-[#e4e4e4]">
+            {data.length !== 0 &&
                 <DynamicFilters
                     appliedSorting={appliedSorting}
                     setAppliedSorting={setAppliedSorting}
@@ -306,8 +314,12 @@ const HoldingWiseDataTable = () => {
                     appliedFilers={appliedFilers}
                     setAppliedFilers={setAppliedFilers}
                 />
+            }
 
                 {!isLoading ? (
+                      data.length === 0 ? (
+                        <NoDataAvailable />
+                    ) : (
                     <ScrollView className={"mt-4 z-[-1] "}>
                         {width < 830 ? (
                             <TableCard data={mobileData} />
@@ -342,6 +354,7 @@ const HoldingWiseDataTable = () => {
                         />
                         )}
                     </ScrollView>
+                    )
                 ) : (
                     <HStack
                         space={"md"}
@@ -359,7 +372,7 @@ const HoldingWiseDataTable = () => {
                     </HStack>
                 )}
             </View>
-
+            {data.length !== 0 &&
             <Pagination
                 itemsPerPage={itemsPerPage}
                 setItemsPerPage={setItemsPerPage}
@@ -368,9 +381,9 @@ const HoldingWiseDataTable = () => {
                 totalPages={totalPages}
                 setCurrentPageNumber={setCurrentPageNumber}
             />
+}
         </View>
-            )
-        }
+           
         </View>
     );
 };

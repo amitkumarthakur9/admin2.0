@@ -125,12 +125,10 @@ const RTAReconciliation = () => {
             </View>
             <View className="h-screen">
 
-        { data.length === 0
-            ? (
-                <NoDataAvailable />
-            ) : (
+        
                 <>
             <View className="border-[0.2px]  border-[#e4e4e4]">
+            {data.length !== 0 &&
                 <DynamicFilters
                     appliedSorting={appliedSorting}
                     setAppliedSorting={setAppliedSorting}
@@ -143,8 +141,12 @@ const RTAReconciliation = () => {
                     appliedFilers={appliedFilers}
                     setAppliedFilers={setAppliedFilers}
                 />
-
+}
                 {!isLoading ? (
+                     data.length === 0
+                        ? (
+                            <NoDataAvailable />
+                        ) : (
                     <View className={"mt-4 z-[-1] "}>
                         {width < 830 ? (
                             <Cards
@@ -160,6 +162,7 @@ const RTAReconciliation = () => {
                             />
                         )}
                     </View>
+                        )
                 ) : (
                     <HStack
                         space={2}
@@ -177,7 +180,7 @@ const RTAReconciliation = () => {
                     </HStack>
                 )}
             </View>
-
+            {data.length !== 0 &&
             <Pagination
                 itemsPerPage={itemsPerPage}
                 setItemsPerPage={setItemsPerPage}
@@ -186,9 +189,9 @@ const RTAReconciliation = () => {
                 totalPages={totalPages}
                 setCurrentPageNumber={setCurrentPageNumber}
             />
-            </>
-            )
         }
+            </>
+            
         </View>
         </View>
     );

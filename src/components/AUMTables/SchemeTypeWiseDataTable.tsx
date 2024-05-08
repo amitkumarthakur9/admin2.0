@@ -147,16 +147,15 @@ const SchemeTypeWiseDataTable = () => {
     return (
         <View className="h-screen">
 
-        { data.length === 0
-            ? (
-                <NoDataAvailable />
-            ) : (
+        
 
         <View className="bg-white">
             {/* <View className="">
                 <TableBreadCrumb name={"Scheme Wise"} />
             </View> */}
             <View className="border-[0.2px]  border-[#e4e4e4]">
+                
+            {data.length !== 0 &&
                 <DynamicFilters
                     appliedSorting={appliedSorting}
                     setAppliedSorting={setAppliedSorting}
@@ -169,8 +168,12 @@ const SchemeTypeWiseDataTable = () => {
                     appliedFilers={appliedFilers}
                     setAppliedFilers={setAppliedFilers}
                 />
+            }
 
                 {!isLoading ? (
+                    data.length === 0 ? (
+                        <NoDataAvailable />
+                    ) : (
                     <ScrollView className={"mt-4 z-[-1] "}>
                         <DataTable
                             headers={[
@@ -183,6 +186,7 @@ const SchemeTypeWiseDataTable = () => {
                             rows={transformedData}
                         />
                     </ScrollView>
+                    )
                 ) : (
                     <HStack
                         space={"md"}
@@ -210,8 +214,7 @@ const SchemeTypeWiseDataTable = () => {
                 setCurrentPageNumber={setCurrentPageNumber}
             /> */}
         </View>
-         )
-        }
+        
         </View>
     );
 };

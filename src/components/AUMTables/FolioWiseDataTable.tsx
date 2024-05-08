@@ -127,7 +127,8 @@ const FolioWiseDataTable = () => {
                             </Text>
                         </View>
                         <View className="flex flex-col flex-wrap w-[99%]">
-                            <View className="flex flex-row items-center text-black font-semibold flex-wrap mb-2">
+                            <View className="flex flex-row items-center text-black font-semibold flex-wrap mb-2 w-[99%]">
+                                <View className="w-11/12">
                                 <Pressable
                                     onPress={() =>
                                         router.push(`clients/${item?.id}`)
@@ -135,13 +136,14 @@ const FolioWiseDataTable = () => {
                                 >
                                     <Text
                                         selectable
-                                        className="flex flex-row text-black font-semibold break-all"
+                                        className="flex flex-row text-black font-semibold break-all "
                                     >
                                         {item?.account.name ? item?.account.name : "-"}&nbsp;{" "}
                                     </Text>
                                 </Pressable>
+                                </View>
 
-                                <View className="flex flex-row items-center">
+                                <View className="flex flex-row items-center w-[1/12]">
                                     {/* {item?.isActive ? (
                                         <CheckCircleIcon
                                             color="emerald.500"
@@ -318,15 +320,13 @@ const FolioWiseDataTable = () => {
 
         <View className="h-screen">
 
-        { data.length === 0
-            ? (
-                <NoDataAvailable />
-            ) : (
+      
         <View className="bg-white">
             {/* <View className="">
                 <TableBreadCrumb name={"Folio Wise"} />
             </View> */}
             <View className="border-[0.2px]  border-[#e4e4e4]">
+            {data.length !== 0 &&
                 <DynamicFilters
                     appliedSorting={appliedSorting}
                     setAppliedSorting={setAppliedSorting}
@@ -339,8 +339,13 @@ const FolioWiseDataTable = () => {
                     appliedFilers={appliedFilers}
                     setAppliedFilers={setAppliedFilers}
                 />
+            }
 
                 {!isLoading ? (
+                    data.length === 0
+                    ? (
+                        <NoDataAvailable />
+                    ) : (
                     <ScrollView className={"mt-4 z-[-1] "}>
                         {width < 830 ? (
                             <TableCard data={mobileData} />
@@ -379,6 +384,7 @@ const FolioWiseDataTable = () => {
                         />
                         )}
                     </ScrollView>
+                    )
                 ) : (
                     <HStack
                         space={"md"}
@@ -396,7 +402,7 @@ const FolioWiseDataTable = () => {
                     </HStack>
                 )}
             </View>
-
+            {data.length !== 0 &&
             <Pagination
                 itemsPerPage={itemsPerPage}
                 setItemsPerPage={setItemsPerPage}
@@ -405,9 +411,9 @@ const FolioWiseDataTable = () => {
                 totalPages={totalPages}
                 setCurrentPageNumber={setCurrentPageNumber}
             />
+}
         </View>
-        )
-    }
+
     </View>
     );
 };

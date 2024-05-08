@@ -360,14 +360,13 @@ const ARNRequest = () => {
 
     return (
         <View className="h-screen">
-            {data.length === 0 ? (
-                <NoDataAvailable />
-            ) : (
+
                 <View className="bg-white">
                     <View className="">
                         <TableBreadCrumb name={"Requests"} />
                     </View>
                     <View className="border-[0.2px]  border-[#e4e4e4]">
+                    {data.length !== 0 &&
                         <DynamicFilters
                             appliedSorting={appliedSorting}
                             setAppliedSorting={setAppliedSorting}
@@ -380,8 +379,12 @@ const ARNRequest = () => {
                             appliedFilers={appliedFilers}
                             setAppliedFilers={setAppliedFilers}
                         />
+                    }
 
                         {!isLoading ? (
+                             data.length === 0 ? (
+                                <NoDataAvailable />
+                            ) : (
                             <ScrollView className={"mt-4 z-[-1] "}>
                                 {width < 830 ? (
                                     <TableCard data={mobileData} />
@@ -400,6 +403,7 @@ const ARNRequest = () => {
                                     />
                                 )}
                             </ScrollView>
+                            )
                         ) : (
                             <HStack
                                 space={"md"}
@@ -417,7 +421,7 @@ const ARNRequest = () => {
                             </HStack>
                         )}
                     </View>
-
+                    {data.length !== 0 &&
                     <Pagination
                         itemsPerPage={itemsPerPage}
                         setItemsPerPage={setItemsPerPage}
@@ -426,8 +430,9 @@ const ARNRequest = () => {
                         totalPages={totalPages}
                         setCurrentPageNumber={setCurrentPageNumber}
                     />
+}
                 </View>
-            )}
+
         </View>
     );
 };

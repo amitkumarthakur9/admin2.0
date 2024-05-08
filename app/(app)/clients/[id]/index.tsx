@@ -39,7 +39,7 @@ import RadioButton from "../../../../src/components/Radio/Radio";
 import DataValue from "../../../../src/components/DataValue/DataValue";
 import useDebouncedSearch from "../../../../src/hooks/useDebounceSearch";
 import ApiRequest from "../../../../src/services/RemoteApi";
-import { dateTimeFormat } from "../../../../src/helper/DateUtils";
+import { dateFormat, dateTimeFormat } from "../../../../src/helper/DateUtils";
 
 const isMutualFundSearchResult = (
     data: MutualFundSearchResult | Holding
@@ -2087,9 +2087,18 @@ const AccountDetailsCard = ({ data }: { data: ClientDetailedDataResponse }) => {
             key: "nomineeDetails",
             name: "Nominee Details",
             content: (
-                <View className="w-full p-2 flex flex-col justify-items items-center">
-                    <Text>Nominee NA</Text>
-                </View>
+                <View className="w-full p-2 flex flex-col ">
+  {data?.nominee?.map((nominee) => (
+    <View key={nominee.index} > {/* Adding key prop for each child */}
+      <Text>Name: {nominee?.name}</Text>
+      <Text>PAN Number: {nominee?.panNumber ? nominee?.panNumber:"-"}</Text>
+      <Text>DOB: {dateFormat(nominee?.dob)}</Text>
+      <Text>Relationship: {nominee?.relationship?.name}</Text>
+      <Text>Nominee Percentage: {nominee?.nomineePercentage + "%"}</Text>
+    </View>
+  ))}
+</View>
+
             ),
         },
     ];
