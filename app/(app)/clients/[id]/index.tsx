@@ -6,6 +6,7 @@ import {
     Button,
     Center,
     CheckCircleIcon,
+    Divider,
     HStack,
     Heading,
     Image,
@@ -2087,18 +2088,42 @@ const AccountDetailsCard = ({ data }: { data: ClientDetailedDataResponse }) => {
             key: "nomineeDetails",
             name: "Nominee Details",
             content: (
-                <View className="w-full p-2 flex flex-col ">
-  {data?.nominee?.map((nominee) => (
-    <View key={nominee.index} > {/* Adding key prop for each child */}
-      <Text>Name: {nominee?.name}</Text>
-      <Text>PAN Number: {nominee?.panNumber ? nominee?.panNumber:"-"}</Text>
-      <Text>DOB: {dateFormat(nominee?.dob)}</Text>
-      <Text>Relationship: {nominee?.relationship?.name}</Text>
-      <Text>Nominee Percentage: {nominee?.nomineePercentage + "%"}</Text>
-    </View>
-  ))}
-</View>
-
+                <View className="w-full p-2 flex flex-col justify-item items-center">
+                    {data?.nominee?.map((nominee, index) => (
+                        <View key={index} className="w-full p-2">
+                            <Text className="py-2 font-bold">
+                                Nominee {index + 1}
+                            </Text>
+                            <View className="w-full flex flex-row justify-between items-center">
+                                <Text selectable className="font-medium">
+                                    {nominee?.name}
+                                </Text>
+                                <Text selectable className="font-medium">
+                                    {nominee?.relationship?.name}
+                                </Text>
+                            </View>
+                            <View className="w-full flex flex-row justify-between items-center">
+                                <Text
+                                    selectable
+                                    className="text-sm text-slate-500"
+                                >
+                                    {nominee?.dob
+                                        ? DateTime.fromISO(
+                                              nominee?.dob
+                                          ).toFormat("LLL dd, yyyy")
+                                        : "-"}
+                                </Text>
+                                <Text selectable className="font-medium">
+                                    {nominee?.nomineePercentage + "%"}
+                                </Text>
+                            </View>
+                            <Divider
+                                orientation="horizontal"
+                                className="my-4"
+                            />
+                        </View>
+                    ))}
+                </View>
             ),
         },
     ];
@@ -2385,16 +2410,9 @@ const ExternalPortfolioModalCard = ({
         }
     }
 
-    console.log(apisuccess);
-    console.log("api called")
-
-if(apisuccess === false){
-
-    sendRequest();
-}
-    
-
-    
+    if (apisuccess === false) {
+        sendRequest();
+    }
 
     return (
         <>
@@ -2465,7 +2483,7 @@ if(apisuccess === false){
                 </View>
             ) : (
                 <>
-                <View className=" flex flex-row justify-between items-center p-4">
+                    <View className=" flex flex-row justify-between items-center p-4">
                         <View className="flex flex-row items-center "></View>
                         <IonIcon
                             name="close-outline"
