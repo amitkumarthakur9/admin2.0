@@ -266,6 +266,17 @@ const ClientWiseDataTable = () => {
             });
         }
 
+        if (roleId > 3) {
+            itemStructure.splice(3, 0, {
+                key: "Manager",
+                content: (
+                    <Text selectable className="text-[#686868] font-semibold">
+                        {item?.distributor?.managementUsers?.[0].name}
+                    </Text>
+                ),
+            });
+        }
+
         return itemStructure;
     });
 
@@ -301,6 +312,23 @@ const ClientWiseDataTable = () => {
                     <ScrollView className={"mt-4 z-[-1] "}>
                         {width < 830 ? (
                             <TableCard data={mobileData} />
+                        ) : roleId > 3 ? (
+                            <DataTable
+                                headers={[
+                                    "Client Name",
+                                    "Client Code",
+                                    "Distributor",
+                                    "Manager",
+                                    "PAN",
+                                    "Total Invested",
+                                    "Current Value",
+                                    "XIRR",
+                                    "Returns",
+                                    // "",
+                                ]}
+                                cellSize={[2,1, 1,1, 1, 1, 1, 1, 1]}
+                                rows={transformedData}
+                            />
                         ) : roleId > 2 ? (
                             <DataTable
                                 headers={[

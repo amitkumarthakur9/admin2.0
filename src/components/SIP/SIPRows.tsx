@@ -217,7 +217,15 @@ export const SIPRows = ({
                                                         )
                                                     }
                                                 >
-                                                    <View className="pl-12 lg:pl-0 hidden lg:flex flex-row justify-start w-2/12">
+                                                    <View
+                                                        className={`pl-12 lg:pl-0 hidden lg:flex flex-row justify-start w-${
+                                                            roleId > 3
+                                                                ? "2/12"
+                                                                : roleId > 2
+                                                                ? "2/12"
+                                                                : "5/12"
+                                                        }`}
+                                                    >
                                                         <Text
                                                             selectable
                                                             className="text-black font-semibold max-w-[240px] lg:max-w-[300px] break-all"
