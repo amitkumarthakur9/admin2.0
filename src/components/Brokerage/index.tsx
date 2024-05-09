@@ -22,6 +22,7 @@ import { BarChart } from "../Chart/BarChart";
 import IconCard from "../Card/IconCard";
 import DropdownComponent from "../Dropdowns/NewDropDown";
 import RemoteApi from "../../../src/services/RemoteApi";
+import ComingSoon from "../Others/ComingSoon";
 
 export const Brokerage = () => {
     const now = DateTime.now();
@@ -254,41 +255,51 @@ export const Brokerage = () => {
                                                                 ]}
                                                             />
                                                         ) : (
-                                                            <View className="h-full flex flex-col items-center justify-center gap-8">
-                                                                <Image
-                                                                    width="72px"
-                                                                    height="72px"
-                                                                    source={require("../../../assets/images/noData.png")}
-                                                                />
-                                                                <Text className="text-md font-bold">
-                                                                    No Data
-                                                                    Available
-                                                                </Text>
-                                                            </View>
+                                                            <ComingSoon />
                                                         )}
                                                     </View>
                                                     <Divider orientation="vertical" />
                                                 </View>
                                                 <View className="w-1/3 flex-row justify-between rounded-3xl bg-white p-4">
                                                     <View className="w-[99%] flex">
-                                                        <BarChart
-                                                            title={
-                                                                "By Top AMCs"
-                                                            }
-                                                            data={brokerage?.data?.topFundhouse?.map(
-                                                                (el) => {
-                                                                    return {
-                                                                        label: el.fundhouse,
-                                                                        value: el.subBrokerAmount,
-                                                                    };
-                                                                }
-                                                            )}
-                                                        />
+                                                        {brokerage?.data
+                                                            ?.topFundhouse
+                                                            ?.length ? (
+                                                            <View className="h-full flex flex-col items-center justify-center gap-8">
+                                                                <BarChart
+                                                                    title={
+                                                                        "By Top AMCs"
+                                                                    }
+                                                                    data={brokerage?.data?.topFundhouse?.map(
+                                                                        (
+                                                                            el
+                                                                        ) => {
+                                                                            return {
+                                                                                label: el.fundhouse,
+                                                                                value: el.subBrokerAmount,
+                                                                            };
+                                                                        }
+                                                                    )}
+                                                                />
+                                                            </View>
+                                                        ) : (
+                                                            <>
+                                                                <View className="flex flex-row justify-start items-start ">
+                                                                    <Text className="text-md font-bold text-start">
+                                                                        By Top
+                                                                        AMCs
+                                                                    </Text>
+                                                                </View>
+
+                                                                <ComingSoon />
+                                                            </>
+                                                        )}
                                                     </View>
                                                     <Divider orientation="vertical" />
                                                 </View>
                                                 <View className="w-1/3 flex-row justify-between rounded-3xl bg-white p-4">
                                                     <View className="w-[99%] flex">
+                                                    {brokerageTopClients?.data.length ? (
                                                         <BarChart
                                                             title={
                                                                 "By Top 3 Clients (All time)"
@@ -307,11 +318,25 @@ export const Brokerage = () => {
                                                                 topClientsLoading
                                                             }
                                                         />
+                                                    ) : (
+                                                        <>
+                                                            <View className="flex flex-row justify-start items-start ">
+                                                                <Text className="text-md font-bold text-start">
+                                                                By Top 3 Clients (All time)
+                                                                </Text>
+                                                            </View>
+
+                                                            <ComingSoon />
+                                                        </>
+                                                    )}
                                                     </View>
                                                 </View>
                                             </View>
                                         </View>
                                         <View className="p-2 rounded bg-white w-full mt-4">
+
+                                        {brokerageTransactions?.data?.length 
+                                                         ? (
                                             <DataTable
                                                 rows={brokerageTransactions?.data?.map(
                                                     (transaction) => {
@@ -482,6 +507,17 @@ export const Brokerage = () => {
                                                     2, 2, 2, 2, 1, 1, 1, 1,
                                                 ]}
                                             />
+                                        ) : (
+                                            <>
+                                                 <View className="flex flex-row justify-start items-start ">
+                                                                <Text className="text-md font-bold text-start">
+                                                                Brokerage Table
+                                                                </Text>
+                                                            </View>
+
+                                                <ComingSoon />
+                                            </>
+                                        )}
                                         </View>
                                     </View>
                                 </View>

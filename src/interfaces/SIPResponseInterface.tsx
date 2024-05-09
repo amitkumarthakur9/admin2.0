@@ -65,6 +65,19 @@ interface MutualFund {
     category: string;
 }
 
+interface ManagementUsers{
+    id: string;
+    name: string;
+
+}
+interface Distributor {
+    id: string;
+    name: string;
+    managementUsers: ManagementUser[];
+}
+
+
+
 interface SIPReportItems {
     id: string;
     account: Account;
@@ -81,6 +94,8 @@ interface SIPReportItems {
     clientId: string;
     client: Client;
     bankAccount: BankAccount;
+    distributor: Distributor;
+
 }
 
 interface SIPResponseInterface {

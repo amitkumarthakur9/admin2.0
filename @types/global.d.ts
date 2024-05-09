@@ -12,6 +12,11 @@ declare global {
         totalCount: number;
     }
 
+    interface ManagementUsers{
+        id: string;
+            name: string;
+
+    }
     interface ClientDataResponse {
         id: string;
         name: string;
@@ -22,6 +27,7 @@ declare global {
         distributor: {
             id: string;
             name: string;
+            managementUsers: ManagementUsers;
         };
         lastInvestment: string;
         activeSip: number;

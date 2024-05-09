@@ -196,18 +196,20 @@ export default function UploadCsv() {
                     >
                         <Text
                             selectable
-                            className={"text-base md:text-lg font-bold mt-[10px] text-center"}
+                            className={
+                                "text-base md:text-lg font-bold mt-[10px] text-center"
+                            }
                         >
                             {"Upload Contacts from a CSV File"}
                         </Text>
-                        <View className="mt-[20px] w-[80%]">
+                        <View className="mt-[20px] w-[45%]">
                             <Stack mx="4" w={"100%"} my={3}>
                                 <FormControl.Label>
                                     Select File
                                 </FormControl.Label>
 
                                 <TouchableOpacity
-                                    className="flex flex-row border-[#e2e1e1] border-[1px] rounded-[5px] px-3 py-2 items-center"
+                                    className="flex flex-row border-[#e2e1e1] border-[1px] rounded-[5px] px-3 py-3 items-center"
                                     onPress={pickDocument}
                                 >
                                     <View className="mr-[10px]">
@@ -238,20 +240,21 @@ export default function UploadCsv() {
                             <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
                             Atleast 6 characters are required.
                             </FormControl.ErrorMessage> */}
+
+                                <View className="flex items-center my-[10px] ">
+                                    <Button
+                                        isDisabled={pickedDocument == null}
+                                        w={"full"}
+                                        isLoading={isLoading}
+                                        isLoadingText="Uploading..."
+                                        // marginTop={1}
+                                        bgColor={"#013974"}
+                                        onPress={uploadDocument}
+                                    >
+                                        Upload Contacts
+                                    </Button>
+                                </View>
                             </Stack>
-                            <View className="flex items-center my-[10px]">
-                                <Button
-                                    isDisabled={pickedDocument == null}
-                                    w={40}
-                                    isLoading={isLoading}
-                                    isLoadingText="Uploading..."
-                                    // marginTop={1}
-                                    bgColor={"#013974"}
-                                    onPress={uploadDocument}
-                                >
-                                    Upload Contacts
-                                </Button>
-                            </View>
                         </View>
                     </View>
                 </View>

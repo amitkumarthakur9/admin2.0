@@ -15,6 +15,7 @@ import moment from "moment";
 import { Popover } from "native-base";
 import { Link, router } from "expo-router";
 import { getOrderMessage } from "../../helper/StatusInfo";
+import { useUserRole } from "../../context/useRoleContext";
 
 export const SIPRows = ({
     data,
@@ -37,23 +38,51 @@ export const SIPRows = ({
         }
     };
 
+    const { roleId } = useUserRole();
+
     return (
         <>
             <View
                 className={`hidden md:hidden lg:flex flex-row py-4 px-2 justify-between flex-wrap`}
             >
                 <View className="flex flex-row w-6/12">
-                    <View className="flex flex-row items-center w-5/12 justify-start">
+                    <View
+                        className={`marker:flex flex-row items-center w-${
+                            roleId > 3 ? "3/12" : roleId > 2 ? "4/12" : "5/12"
+                        } justify-start`}
+                    >
                         <Text selectable className="font-semibold">
                             Customer Name
                         </Text>
                     </View>
 
-                    <View className="flex flex-row items-center w-3/12 justify-start">
+                    <View
+                        className={`flex flex-row items-center w-${
+                            roleId > 3 ? "1/12" : roleId > 2 ? "2/12" : "3/12"
+                        } justify-start`}
+                    >
                         <Text selectable className="font-semibold">
                             Folio No
                         </Text>
                     </View>
+                    {roleId > 2 && (
+                        <View className="flex flex-row w-2/12">
+                            <View className="flex flex-row items-center w-full justify-start">
+                                <Text selectable className="font-semibold">
+                                    Distributor
+                                </Text>
+                            </View>
+                        </View>
+                    )}
+                    {roleId > 3 && (
+                        <View className="flex flex-row w-2/12">
+                            <View className="flex flex-row items-center w-full justify-start">
+                                <Text selectable className="font-semibold">
+                                    Manager
+                                </Text>
+                            </View>
+                        </View>
+                    )}
 
                     <View className="flex flex-row items-center w-4/12 justify-start">
                         <Text selectable className="font-semibold">
@@ -154,8 +183,16 @@ export const SIPRows = ({
                             className={`flex flex-row p-2 justify-between flex-wrap`}
                         >
                             <View className="flex sm:flex-col md:flex-col lg:flex-row w-full md:w-8/12 lg:w-6/12">
-                                <View className="flex flex-row md:flex-row lg:flex-row items-center w-full lg:w-5/12 justify-between">
-                                    <View className="flex flex-row items-center justify-start w-10/12 lg:w-full">
+                                <View
+                                    className={`flex flex-row md:flex-row lg:flex-row items-center w-full lg:w-${
+                                        roleId > 3
+                                            ? "3/12"
+                                            : roleId > 2
+                                            ? "4/12"
+                                            : "5/12"
+                                    } justify-between`}
+                                >
+                                    <View className="flex flex-row items-center justify-start w-10/12 lg:w-full max-w-[300px]">
                                         <Pressable
                                             onPress={() =>
                                                 router.push(
@@ -168,13 +205,11 @@ export const SIPRows = ({
                                                 selectable
                                                 className="text-white"
                                             >
-                                                {getInitials(
-                                                    order.client.name
-                                                )}
+                                                {getInitials(order.client.name)}
                                             </Text>
                                         </Pressable>
                                         <View className="flex flex-col">
-                                            <View className="flex flex-row items-center text-black font-semibold max-w-[240px] lg:max-w-[300px] break-all">
+                                            <View className="flex flex-row items-center text-black font-semibold max-w-[240px] lg:max-w-[300px] break-all ">
                                                 <Pressable
                                                     onPress={() =>
                                                         router.push(
@@ -182,13 +217,15 @@ export const SIPRows = ({
                                                         )
                                                     }
                                                 >
-                                                    <Text
-                                                        selectable
-                                                        className="text-black font-semibold max-w-[240px] lg:max-w-[300px] break-all"
-                                                    >
-                                                        {order.client.name}
-                                                        &nbsp;
-                                                    </Text>
+                                                    <View className="pl-12 lg:pl-0 hidden lg:flex flex-row justify-start w-2/12">
+                                                        <Text
+                                                            selectable
+                                                            className="text-black font-semibold max-w-[240px] lg:max-w-[300px] break-all"
+                                                        >
+                                                            {order.client.name}
+                                                            &nbsp;
+                                                        </Text>
+                                                    </View>
                                                 </Pressable>
                                                 {/* <Popover
                                                     trigger={(triggerProps) => {
@@ -319,14 +356,44 @@ export const SIPRows = ({
                                     </View>
                                 </View>
 
-                                <View className="pl-12 lg:pl-0 hidden lg:flex flex-row justify-start w-3/12">
+                                <View
+                                    className={`pl-12 lg:pl-0 hidden lg:flex flex-row justify-start w-${
+                                        roleId > 3
+                                            ? "1/12"
+                                            : roleId > 2
+                                            ? "2/12"
+                                            : "3/12"
+                                    }`}
+                                >
                                     <Text>
                                         {/* {order?.transactions[0]?.folio
                                             ?.folioNumber ? order?.transactions[0]?.folio
                                             ?.folioNumber : "-"} */}
-                                            -
+                                        -
                                     </Text>
                                 </View>
+
+                                {roleId > 2 && (
+                                    <View className="pl-12 lg:px-1 hidden lg:flex flex-row justify-start w-2/12">
+                                        <Text className="">
+                                            {order?.distributor?.name
+                                                ? order?.distributor?.name
+                                                : "-"}
+                                        </Text>
+                                    </View>
+                                )}
+
+                                {roleId > 3 && (
+                                    <View className="pl-12 lg:px-1 hidden lg:flex flex-row justify-start w-2/12">
+                                        <Text>
+                                            {order?.distributor
+                                                ?.managementUsers[0].name
+                                                ? order?.distributor
+                                                      ?.managementUsers[0].name
+                                                : "-"}
+                                        </Text>
+                                    </View>
+                                )}
 
                                 <View className="pl-12 lg:pl-0 flex flex-row items-center w-full lg:w-4/12 justify-between md:justify-between lg:justify-start mt-2 md:mt-2 lg:mt-0">
                                     <View

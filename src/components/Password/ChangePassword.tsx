@@ -94,7 +94,10 @@ const ChangePassword = () => {
                     updatedFormData.confirmPassword !== "" &&
                     updatedFormData.newPassword !== "")
             ) {
-                validate(value);
+                validateConfirmPassword(
+                    updatedFormData.newPassword,
+                    updatedFormData.confirmPassword
+                );
             }
 
             if (
@@ -139,7 +142,9 @@ const ChangePassword = () => {
             setErrors(newErrors);
 
             // Validate other fields if necessary
-            validatePassword(value);
+            if (field === "confirmPassword" || field === "newPassword") {
+                validatePassword(value);
+            }
 
             return updatedFormData; // Return the updated state
         });
@@ -166,9 +171,9 @@ const ChangePassword = () => {
         });
     };
 
-    const validate = (value) => {
-        if (!value || formData.newPassword !== value) {
-            newErrors.confirmPassword = !value
+    const validateConfirmPassword = (newPassword, confirmPassword) => {
+        if (!confirmPassword || newPassword !== confirmPassword) {
+            newErrors.confirmPassword = !confirmPassword
                 ? "Confirm the Password"
                 : "Password is mismatched";
         } else {

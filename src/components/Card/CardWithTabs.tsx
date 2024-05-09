@@ -10,7 +10,7 @@ const CardWithTabs = ({
     tabsCount = 3,
 }) => {
     return (
-        <View className="flex-1 bg-white rounded shadow h-full overflow-scroll">
+        <View className="flex-1 bg-white rounded shadow h-full">
             <View className="w-full flex flex-row">
                 {tabContent?.map((tab, index) => {
                     return (

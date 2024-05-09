@@ -60,23 +60,33 @@ const ClientWiseDataTable = () => {
             data.orderBy = appliedSorting;
         }
 
-        const response: ClientWiseResponse = await RemoteApi.post(
-            "aum/client/list",
-            data
-        );
-
-        if (response.code == 200) {
-            setData(response.data);
-            // setItemsPerPage(response.count)
-            setTotalItems(response.filterCount);
-            setIsLoading(false);
-            setTotalPages(
-                Math.ceil(
-                    (response.filterCount || response.data.length) /
-                        itemsPerPage
-                )
+        try{
+            const response: ClientWiseResponse = await RemoteApi.post(
+                "aum/client/list",
+                data
             );
+    
+            if (response.code == 200) {
+                setData(response.data);
+                // setItemsPerPage(response.count)
+                setTotalItems(response.filterCount);
+                setIsLoading(false);
+                setTotalPages(
+                    Math.ceil(
+                        (response.filterCount || response.data.length) /
+                            itemsPerPage
+                    )
+                );
+            }else{
+                setIsLoading(false);
+                // alert(response.error)
+            }
+
+        }catch(error){
+            alert(error)
+
         }
+        
     }
 
     React.useEffect(() => {

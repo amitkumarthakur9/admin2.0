@@ -29,8 +29,10 @@ import {
     Investor,
 } from "../../interfaces/IfaResponseInterface";
 import NoDataAvailable from "../Others/NoDataAvailable";
+import { useUserRole } from "../../context/useRoleContext";
 
 const IFADataTable = () => {
+    const { roleId } = useUserRole();
     const [isLoading, setIsLoading] = React.useState(false);
 
     const [currentPageNumber, setCurrentPageNumber] = useState(1);
@@ -79,11 +81,11 @@ const IFADataTable = () => {
             data
         );
 
-        if (response.code == 200 ||response.message == "Success" ) {
+        if (response.code == 200 || response.message == "Success") {
             setData(response?.data);
-            console.log("ifadatalist")
+            console.log("ifadatalist");
 
-            console.log(response?.data)
+            console.log(response?.data);
 
             // setItemsPerPage(response.count)
             setTotalItems(response.filterCount);
@@ -119,7 +121,7 @@ const IFADataTable = () => {
     }, [appliedSorting]);
 
     const transformedData = data?.map((item) => {
-        return [
+        const itemStructure = [
             {
                 key: "ifaName",
                 content: (
@@ -189,84 +191,112 @@ const IFADataTable = () => {
                 ),
             },
         ];
+
+        // if (roleId > 2) {
+        //     itemStructure.splice(2, 0, {
+        //         key: "distributor",
+        //         content: (
+        //             <Text selectable className="text-[#686868] font-semibold">
+        //                 {item?.distributor?.name}
+        //             </Text>
+        //         ),
+        //     });
+        // }
+
+        // if (roleId > 3) {
+        //     itemStructure.splice(3, 0, {
+        //         key: "Manager",
+        //         content: (
+        //             <Text selectable className="text-[#686868] font-semibold">
+        //                 {item?.distributor?.managementUsers?.[0].name}
+        //             </Text>
+        //         ),
+        //     });
+        // }
+
+        return itemStructure;
     });
 
     return (
         <View className="bg-white">
             <View className="">
-                <TableBreadCrumb name={"IFA Report"} />
+                <TableBreadCrumb name={"Distributor Report"} />
             </View>
             <View className="h-screen">
-
-            { data.length === 0
-            ? (
-                <NoDataAvailable />
-            ) : (
                 <>
-            <View className="border-[0.2px]  border-[#e4e4e4]">
-                <DynamicFilters
-                    appliedSorting={appliedSorting}
-                    setAppliedSorting={setAppliedSorting}
-                    sorting={sorting}
-                    fileName="IFA"
-                    downloadApi={"ifa/download-report"}
-                    schemaResponse={filtersSchema}
-                    setCurrentPageNumber={setCurrentPageNumber}
-                    getList={getDataList}
-                    appliedFilers={appliedFilers}
-                    setAppliedFilers={setAppliedFilers}
-                    // newComponent={<AddNewClient />}
-                />
-
-                {!isLoading ? (
-                    <ScrollView className={"mt-4 z-[-1] "}>
-                        {width < 830 ? (
-                            <MobileClientsRows data={data} schema={null} />
-                        ) : (
-                            <DataTable
-                                headers={[
-                                    "Name",
-                                    "PAN No.",
-                                    "ARN No.",
-                                    "EUIN No.",
-                                    "No. of Clients",
-                                    "Active SIP Count",
-                                ]}
-                                cellSize={[2, 2, 2, 2, 2, 2]}
-                                rows={transformedData}
+                    <View className="border-[0.2px]  border-[#e4e4e4]">
+                        {data.length !== 0 && (
+                            <DynamicFilters
+                                appliedSorting={appliedSorting}
+                                setAppliedSorting={setAppliedSorting}
+                                sorting={sorting}
+                                fileName="IFA"
+                                downloadApi={"ifa/download-report"}
+                                schemaResponse={filtersSchema}
+                                setCurrentPageNumber={setCurrentPageNumber}
+                                getList={getDataList}
+                                appliedFilers={appliedFilers}
+                                setAppliedFilers={setAppliedFilers}
+                                // newComponent={<AddNewClient />}
                             />
                         )}
-                    </ScrollView>
-                ) : (
-                    <HStack
-                        space={"md"}
-                        marginTop={20}
-                        marginBottom={20}
-                        justifyContent="center"
-                    >
-                        <Spinner
-                            color={"black"}
-                            accessibilityLabel="Loading order"
+                        {!isLoading ? (
+                            data.length === 0 ? (
+                                <NoDataAvailable />
+                            ) : (
+                                <>
+                                    <ScrollView className={"mt-4 z-[-1] "}>
+                                        {width < 830 ? (
+                                            <MobileClientsRows
+                                                data={data}
+                                                schema={null}
+                                            />
+                                        ) : (
+                                            <DataTable
+                                                headers={[
+                                                    "Name",
+                                                    "PAN No.",
+                                                    "ARN No.",
+                                                    "EUIN No.",
+                                                    "No. of Clients",
+                                                    "Active SIP Count",
+                                                ]}
+                                                cellSize={[2, 2, 2, 2, 2, 2]}
+                                                rows={transformedData}
+                                            />
+                                        )}
+                                    </ScrollView>
+                                </>
+                            )
+                        ) : (
+                            <HStack
+                                space={"md"}
+                                marginTop={20}
+                                marginBottom={20}
+                                justifyContent="center"
+                            >
+                                <Spinner
+                                    color={"black"}
+                                    accessibilityLabel="Loading order"
+                                />
+                                <Heading color="black" fontSize="md">
+                                    Loading
+                                </Heading>
+                            </HStack>
+                        )}
+                    </View>
+                    {data.length !== 0 && (
+                        <Pagination
+                            itemsPerPage={itemsPerPage}
+                            setItemsPerPage={setItemsPerPage}
+                            getDataList={getDataList}
+                            currentPageNumber={currentPageNumber}
+                            totalPages={totalPages}
+                            setCurrentPageNumber={setCurrentPageNumber}
                         />
-                        <Heading color="black" fontSize="md">
-                            Loading
-                        </Heading>
-                    </HStack>
-                )}
+                    )}
+                </>
             </View>
-
-            <Pagination
-                itemsPerPage={itemsPerPage}
-                setItemsPerPage={setItemsPerPage}
-                getDataList={getDataList}
-                currentPageNumber={currentPageNumber}
-                totalPages={totalPages}
-                setCurrentPageNumber={setCurrentPageNumber}
-            />
-            </>
-            )
-        }
-        </View>
         </View>
     );
 };

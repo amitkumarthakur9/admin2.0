@@ -88,17 +88,16 @@ const ARNRequest = () => {
         setReceivedData1(data);
         console.log("Data received from notification:", data);
         const uniqueId = uuidv4();
-                // Add the success toast to the toasts array in the component's state
-                setToasts([
-                    ...toasts,
-                    {
-                        id: uniqueId,
-                        variant: "solid",
-                        title: "status changed succesfully",
-                        status: "success",
-                    },
-                ]);
-        
+        // Add the success toast to the toasts array in the component's state
+        setToasts([
+            ...toasts,
+            {
+                id: uniqueId,
+                variant: "solid",
+                title: "status changed succesfully",
+                status: "success",
+            },
+        ]);
     };
 
     async function getDataList(
@@ -146,7 +145,7 @@ const ARNRequest = () => {
             setFiltersSchema(response?.data);
             setSorting(response?.data?.sort);
         }
-        getSchema();
+        // getSchema();
     }, []);
 
     React.useEffect(() => {
@@ -154,7 +153,7 @@ const ARNRequest = () => {
             (appliedSorting.direction != "" && appliedSorting.key != "") ||
             (appliedSorting.direction == "" && appliedSorting.key == "")
         ) {
-            getDataList();
+            // getDataList();
         }
     }, [appliedSorting]);
 
@@ -216,28 +215,29 @@ const ARNRequest = () => {
         ClientId: item?.clientId,
         RaisedBy: item.raisedBy,
         RaisedDate: item.raisedDate,
-        action: <View className="flex flex-row justify-start text-blue-400  w-11/12 ">
-        <Text className="text-base ">Status: </Text>
-        <DynamicMenu
-            onDataReceived={handleDataReceived1}
-            options={[
-                {
-                    option: "Status 1",
-                    value: "4322",
-                },
-                {
-                    option: "Status 2",
-                    value: "4321",
-                },
-                {
-                    option: "Status 3",
-                    value: "4320",
-                },
-            ]}
-            apiUrl="sip"
-        />
-        
-    </View>
+        action: (
+            <View className="flex flex-row justify-start text-blue-400  w-11/12 ">
+                <Text className="text-base ">Status: </Text>
+                <DynamicMenu
+                    onDataReceived={handleDataReceived1}
+                    options={[
+                        {
+                            option: "Status 1",
+                            value: "4322",
+                        },
+                        {
+                            option: "Status 2",
+                            value: "4321",
+                        },
+                        {
+                            option: "Status 3",
+                            value: "4320",
+                        },
+                    ]}
+                    apiUrl="sip"
+                />
+            </View>
+        ),
     }));
 
     const transformedData = dummyData?.map((item) => {
@@ -360,13 +360,12 @@ const ARNRequest = () => {
 
     return (
         <View className="h-screen">
-
-                <View className="bg-white">
-                    <View className="">
-                        <TableBreadCrumb name={"Requests"} />
-                    </View>
-                    <View className="border-[0.2px]  border-[#e4e4e4]">
-                    {data.length !== 0 &&
+            <View className="bg-white">
+                <View className="">
+                    <TableBreadCrumb name={"Requests"} />
+                </View>
+                <View className="border-[0.2px]  border-[#e4e4e4]">
+                    {transformedData.length !== 0 && (
                         <DynamicFilters
                             appliedSorting={appliedSorting}
                             setAppliedSorting={setAppliedSorting}
@@ -379,12 +378,12 @@ const ARNRequest = () => {
                             appliedFilers={appliedFilers}
                             setAppliedFilers={setAppliedFilers}
                         />
-                    }
+                    )}
 
-                        {!isLoading ? (
-                             data.length === 0 ? (
-                                <NoDataAvailable />
-                            ) : (
+                    {isLoading ? (
+                        transformedData.length === 0 ? (
+                            <NoDataAvailable />
+                        ) : (
                             <ScrollView className={"mt-4 z-[-1] "}>
                                 {width < 830 ? (
                                     <TableCard data={mobileData} />
@@ -403,25 +402,25 @@ const ARNRequest = () => {
                                     />
                                 )}
                             </ScrollView>
-                            )
-                        ) : (
-                            <HStack
-                                space={"md"}
-                                marginTop={20}
-                                marginBottom={20}
-                                justifyContent="center"
-                            >
-                                <Spinner
-                                    color={"black"}
-                                    accessibilityLabel="Loading order"
-                                />
-                                <Heading color="black" fontSize="md">
-                                    Loading
-                                </Heading>
-                            </HStack>
-                        )}
-                    </View>
-                    {data.length !== 0 &&
+                        )
+                    ) : (
+                        <HStack
+                            space={"md"}
+                            marginTop={20}
+                            marginBottom={20}
+                            justifyContent="center"
+                        >
+                            <Spinner
+                                color={"black"}
+                                accessibilityLabel="Loading order"
+                            />
+                            <Heading color="black" fontSize="md">
+                                Loading
+                            </Heading>
+                        </HStack>
+                    )}
+                </View>
+                {transformedData.length !== 0 && (
                     <Pagination
                         itemsPerPage={itemsPerPage}
                         setItemsPerPage={setItemsPerPage}
@@ -430,9 +429,8 @@ const ARNRequest = () => {
                         totalPages={totalPages}
                         setCurrentPageNumber={setCurrentPageNumber}
                     />
-}
-                </View>
-
+                )}
+            </View>
         </View>
     );
 };

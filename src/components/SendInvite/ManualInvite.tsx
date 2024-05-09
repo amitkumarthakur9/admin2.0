@@ -23,6 +23,7 @@ import { Dialog, Portal } from "react-native-paper";
 import RemoteApi from "../../../src/services/RemoteApi";
 import { ToastAlert } from "../../../src/helper/CustomToaster";
 import UploadCsv from "./UploadCSV";
+import GoogleSignInButton from "./GoogleSignInButton";
 
 export default function ManualInvite({ getlist = () => {} }) {
     const [modalVisible, setModalVisible] = useState(false);
@@ -65,12 +66,12 @@ export default function ManualInvite({ getlist = () => {} }) {
         }
 
         // Email validation
-        // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        // if (!emailRegex.test(formData.email)) {
-        //     newErrors.email =  "Please enter a valid email address";
-        // } else {
-        //     newErrors.email = null; // Clear error message if validation passes
-        // }
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(formData.email)) {
+            newErrors.email =  "Please enter a valid email address";
+        } else {
+            newErrors.email = null; // Clear error message if validation passes
+        }
 
         // Update the error state
         setErrors(newErrors);
@@ -236,7 +237,8 @@ export default function ManualInvite({ getlist = () => {} }) {
                                     />
                                 </Pressable>
                             </View>
-                            <UploadCsv />
+                            {/* <GoogleSignInButton /> */}
+                            
 
                             <View className="bg-white">
                                 <View className="w-full flex items-center">
@@ -285,6 +287,7 @@ export default function ManualInvite({ getlist = () => {} }) {
                                                     )}
                                                 </FormControl>
                                                 <FormControl
+                                                isRequired
                                                     isInvalid={
                                                         errors.email !== null
                                                     }
@@ -359,6 +362,8 @@ export default function ManualInvite({ getlist = () => {} }) {
                                     </View>
                                 </View>
                             </View>
+
+                            <UploadCsv />
                         </View>
                     </Dialog>
                 </Portal>

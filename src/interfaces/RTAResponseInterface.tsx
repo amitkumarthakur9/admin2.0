@@ -31,6 +31,16 @@ interface Account {
     user: User[];
 }
 
+interface ManagementUsers{
+    id: string;
+    name: string;
+
+}
+interface Distributor {
+    id: string;
+    name: string;
+    managementUsers: ManagementUser[];
+}
 export interface RTAReconcilation {
     id: string;
     orderReferenceNumber: string | null;
@@ -44,6 +54,7 @@ export interface RTAReconcilation {
     createdAt: string;
     units: null | number;
     nav: null | number;
+    distributor: Distributor;
 }
 
 export interface RTAResponseResponseInterface {

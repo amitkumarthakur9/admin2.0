@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { View } from "react-native";
+import { View, useWindowDimensions } from "react-native";
 import { router, useLocalSearchParams, useRouter } from "expo-router";
 import {
     Box,
@@ -67,6 +67,16 @@ export default function ClientDetail() {
         MutualFundSearchResult | Holding | null
     >(null);
     const [allowModalCardChange, setAllowModalCardChange] = useState(true);
+    const [viewDetails, setViewDetails] = useState(true);
+    const { width } = useWindowDimensions();
+
+    useEffect(() => {
+        if (width < 830) {
+            setViewDetails(false);
+        } else {
+            setViewDetails(true);
+        }
+    }, [width]);
 
     const closeModal = () => {
         setVisible(false);
@@ -209,13 +219,146 @@ export default function ClientDetail() {
                                                 />
                                             )}
                                         </View>
-                                        <View className="flex flex-row gap-4">
+                                        {width < 830 ? (
+                                            <View className="w-3/12">
+                                                <Pressable
+                                                    onPress={() =>
+                                                        setViewDetails(
+                                                            !viewDetails
+                                                        )
+                                                    }
+                                                >
+                                                    <Text className="text-[#114EA8] font-bold text-[14px] text-center">
+                                                        {viewDetails
+                                                            ? "Hide Details"
+                                                            : "View Details"}
+                                                    </Text>
+                                                </Pressable>
+                                            </View>
+                                        ) : (
+                                            <>
+                                                <View className="flex flex-row gap-4">
+                                                    <Button
+                                                        borderColor={"#013974"}
+                                                        bgColor={"#fff"}
+                                                        _text={{
+                                                            color: "#013974",
+                                                        }}
+                                                        variant="outline"
+                                                        width="48"
+                                                        onPress={showModal(
+                                                            "externalPortfolio"
+                                                        )}
+                                                    >
+                                                        {data?.externalFundLastUpdatedOn ==
+                                                        null
+                                                            ? "Import Portfolio"
+                                                            : "Refresh Portfolio"}
+                                                    </Button>
+                                                    <Button
+                                                        width="48"
+                                                        bgColor={"#013974"}
+                                                        onPress={showModal(
+                                                            "invest"
+                                                        )}
+                                                    >
+                                                        Invest
+                                                    </Button>
+                                                </View>
+                                            </>
+                                        )}
+                                    </View>
+
+                                    {viewDetails && (
+                                        <View className="flex flex-row justify-between items-start w-full">
+                                            <View className="w-4/12 flex-flex-col gap-4 px-2">
+                                                <DataValue
+                                                    key="pan"
+                                                    title="Pan No."
+                                                    value={
+                                                        data?.users[0]
+                                                            ?.panNumber
+                                                    }
+                                                />
+                                                <DataValue
+                                                    key="clientCode"
+                                                    title="Client Code"
+                                                    value={data?.clientId}
+                                                />
+                                                <DataValue
+                                                    key="dob"
+                                                    title="DOB"
+                                                    value={moment(
+                                                        data.users[0]
+                                                            ?.dateOfBirth
+                                                    ).format("MMM DD, YYYY")}
+                                                />
+                                                <DataValue
+                                                    key="doi"
+                                                    title="DOI"
+                                                    value="-"
+                                                />
+                                            </View>
+                                            <View className="w-4/12 flex-flex-col gap-4 px-2">
+                                                <DataValue
+                                                    key="totalInvestment"
+                                                    title="Total Investment"
+                                                    value="-"
+                                                />
+                                                <DataValue
+                                                    key="runningSip"
+                                                    title="Running SIPs"
+                                                    value={
+                                                        data?.sipOrders?.length
+                                                    }
+                                                />
+                                                <DataValue
+                                                    key="lastInvestment"
+                                                    title="Last Lumpsum"
+                                                    value={`-`}
+                                                />
+                                                <DataValue
+                                                    key="lastInvestmentDate"
+                                                    title="Last Investment Date"
+                                                    value="-"
+                                                />
+                                            </View>
+                                            <View className="w-4/12 flex-flex-col gap-4 px-2">
+                                                <DataValue
+                                                    key="autopay"
+                                                    title="Autopay"
+                                                    value={
+                                                        data?.isActive
+                                                            ? "Active"
+                                                            : "Not Active"
+                                                    }
+                                                />
+                                                <DataValue
+                                                    key="kycStatus"
+                                                    title="KYC Status"
+                                                    value={
+                                                        data?.users[0]
+                                                            ?.kycStatus?.name
+                                                    }
+                                                />
+                                                <DataValue
+                                                    key="riskProfile"
+                                                    title="Risk Profile"
+                                                    value={"-"}
+                                                />
+                                            </View>
+                                        </View>
+                                    )}
+                                    {width < 830 && (
+                                        <View className="flex flex-row gap-2 flex-wrap justify-center">
                                             <Button
                                                 borderColor={"#013974"}
                                                 bgColor={"#fff"}
-                                                _text={{ color: "#013974" }}
+                                                _text={{
+                                                    color: "#013974",
+                                                }}
                                                 variant="outline"
-                                                width="48"
+                                                width="40"
                                                 onPress={showModal(
                                                     "externalPortfolio"
                                                 )}
@@ -226,93 +369,19 @@ export default function ClientDetail() {
                                                     : "Refresh Portfolio"}
                                             </Button>
                                             <Button
-                                                width="48"
+                                                width="40"
                                                 bgColor={"#013974"}
                                                 onPress={showModal("invest")}
                                             >
                                                 Invest
                                             </Button>
                                         </View>
-                                    </View>
-                                    <View className="flex flex-row justify-between items-start w-full">
-                                        <View className="w-4/12 flex-flex-col gap-4 px-2">
-                                            <DataValue
-                                                key="pan"
-                                                title="Pan No."
-                                                value={
-                                                    data?.users[0]?.panNumber
-                                                }
-                                            />
-                                            <DataValue
-                                                key="clientCode"
-                                                title="Client Code"
-                                                value={data?.clientId}
-                                            />
-                                            <DataValue
-                                                key="dob"
-                                                title="DOB"
-                                                value={moment(
-                                                    data.users[0]?.dateOfBirth
-                                                ).format("MMM DD, YYYY")}
-                                            />
-                                            <DataValue
-                                                key="doi"
-                                                title="DOI"
-                                                value="-"
-                                            />
-                                        </View>
-                                        <View className="w-4/12 flex-flex-col gap-4 px-2">
-                                            <DataValue
-                                                key="totalInvestment"
-                                                title="Total Investment"
-                                                value="-"
-                                            />
-                                            <DataValue
-                                                key="runningSip"
-                                                title="Running SIPs"
-                                                value={data?.sipOrders?.length}
-                                            />
-                                            <DataValue
-                                                key="lastInvestment"
-                                                title="Last Lumpsum"
-                                                value={`-`}
-                                            />
-                                            <DataValue
-                                                key="lastInvestmentDate"
-                                                title="Last Investment Date"
-                                                value="-"
-                                            />
-                                        </View>
-                                        <View className="w-4/12 flex-flex-col gap-4 px-2">
-                                            <DataValue
-                                                key="autopay"
-                                                title="Autopay"
-                                                value={
-                                                    data?.isActive
-                                                        ? "Active"
-                                                        : "Not Active"
-                                                }
-                                            />
-                                            <DataValue
-                                                key="kycStatus"
-                                                title="KYC Status"
-                                                value={
-                                                    data?.users[0]?.kycStatus
-                                                        ?.name
-                                                }
-                                            />
-                                            <DataValue
-                                                key="riskProfile"
-                                                title="Risk Profile"
-                                                value={"-"}
-                                            />
-                                        </View>
-                                    </View>
+                                    )}
                                 </View>
                             </View>
-                            <View className="flex flex-row justify-between rounded bg-white h-[512px]">
+                            <View className="flex flex-col md:flex-row justify-between rounded bg-white md:h-[512px]">
                                 <View
-                                    className="w-[60%] rounded"
+                                    className="md:w-[60%] rounded"
                                     style={{ ...BreadcrumbShadow }}
                                 >
                                     <PortfolioCard
@@ -321,7 +390,7 @@ export default function ClientDetail() {
                                     />
                                 </View>
                                 <View
-                                    className="w-[39%] rounded"
+                                    className="md:w-[39%] rounded"
                                     style={{ ...BreadcrumbShadow }}
                                 >
                                     <AccountDetailsCard data={data} />
@@ -380,7 +449,7 @@ const PortfolioCard = ({
             name: "Holdings",
             content: (
                 <View className="p-2 w-full">
-                    <View className="flex flex-row items-center justify-between py-2">
+                    <View className="flex flex-row items-center justify-center md:justify-between py-2 gap-2 md:gap-0 flex-wrap">
                         <DropdownComponent
                             label="Folio Number"
                             data={holdingDropper}
@@ -404,172 +473,187 @@ const PortfolioCard = ({
                             Transfer Portfolio
                         </Button>
                     </View>
-                    <View className="flex flex-col bg-gray-100 rounded p-2">
-                        <View className="flex flex-row justify-between items-center p-2">
-                            <DataGrid
-                                key="current"
-                                title="Current Holdings"
-                                value={
-                                    <Text className="text-blue-700">
-                                        {RupeeSymbol}{" "}
-                                        {data?.holdings
-                                            ?.reduce(
-                                                (accumulator, currentValue) =>
-                                                    accumulator +
-                                                    currentValue.currentValue,
-                                                0
-                                            )
-                                            .toFixed(2)}
-                                    </Text>
-                                }
-                                reverse
-                            />
-                            <DataGrid
-                                key="invested"
-                                title="Invested"
-                                value={
-                                    <Text className="text-blue-700">
-                                        {RupeeSymbol}{" "}
-                                        {data?.holdings
-                                            ?.reduce(
-                                                (accumulator, currentValue) =>
-                                                    accumulator +
-                                                    currentValue.investedValue,
-                                                0
-                                            )
-                                            .toFixed(2)}
-                                    </Text>
-                                }
-                                reverse
-                            />
-                            <DataGrid
-                                key="xirr"
-                                title="XIRR"
-                                value={<Text className="">00.00 %</Text>}
-                                reverse
-                            />
-                            <DataGrid
-                                key="totalReturns"
-                                title="Total Returns"
-                                value={
-                                    <Text className="text-green-700">
-                                        00.00 %
-                                    </Text>
-                                }
-                                reverse
-                            />
+                    <View className="h-96 overflow-scroll">
+                        <View className="flex flex-col bg-gray-100 rounded p-2">
+                            <View className="flex flex-row justify-between items-center p-2">
+                                <DataGrid
+                                    key="current"
+                                    title="Current Holdings"
+                                    value={
+                                        <Text className="text-blue-700">
+                                            {RupeeSymbol}{" "}
+                                            {data?.holdings
+                                                ?.reduce(
+                                                    (
+                                                        accumulator,
+                                                        currentValue
+                                                    ) =>
+                                                        accumulator +
+                                                        currentValue.currentValue,
+                                                    0
+                                                )
+                                                .toFixed(2)}
+                                        </Text>
+                                    }
+                                    reverse
+                                />
+                                <DataGrid
+                                    key="invested"
+                                    title="Invested"
+                                    value={
+                                        <Text className="text-blue-700">
+                                            {RupeeSymbol}{" "}
+                                            {data?.holdings
+                                                ?.reduce(
+                                                    (
+                                                        accumulator,
+                                                        currentValue
+                                                    ) =>
+                                                        accumulator +
+                                                        currentValue.investedValue,
+                                                    0
+                                                )
+                                                .toFixed(2)}
+                                        </Text>
+                                    }
+                                    reverse
+                                />
+                                <DataGrid
+                                    key="xirr"
+                                    title="XIRR"
+                                    value={<Text className="">00.00 %</Text>}
+                                    reverse
+                                />
+                                <DataGrid
+                                    key="totalReturns"
+                                    title="Total Returns"
+                                    value={
+                                        <Text className="text-green-700">
+                                            00.00 %
+                                        </Text>
+                                    }
+                                    reverse
+                                />
+                            </View>
+                            <View className="p-2">
+                                <HorizontalStackedBarChart
+                                    data={assetBifurcation}
+                                    colors={assetBifurcationColors}
+                                />
+                            </View>
                         </View>
-                        <View className="p-2">
-                            <HorizontalStackedBarChart
-                                data={assetBifurcation}
-                                colors={assetBifurcationColors}
-                            />
-                        </View>
-                    </View>
-                    <DataTable
-                        key="holdings"
-                        headers={["Scheme", "Current", "Invested", "XIRR"]}
-                        cellSize={[5, 3, 2, 2]}
-                        rows={data?.holdings?.map((holding) => {
-                            return [
-                                {
-                                    key: "scheme",
-                                    data: holding,
-                                    content: (
-                                        <View className="flex flex-row items-center gap-2">
-                                            <Image
-                                                alt="fundHouse"
-                                                className="mr-2"
-                                                style={{
-                                                    width: 32,
-                                                    height: 32,
-                                                    objectFit: "contain",
-                                                }}
-                                                source={{
-                                                    uri: holding?.mutualfund
-                                                        ?.logoUrl,
-                                                }}
-                                            />
+
+                        <DataTable
+                            key="holdings"
+                            headers={["Scheme", "Current", "Invested", "XIRR"]}
+                            cellSize={[5, 3, 2, 2]}
+                            rows={data?.holdings?.map((holding) => {
+                                return [
+                                    {
+                                        key: "scheme",
+                                        data: holding,
+                                        content: (
+                                            <View className="flex flex-row items-center gap-2">
+                                                <Image
+                                                    alt="fundHouse"
+                                                    className="mr-2"
+                                                    style={{
+                                                        width: 32,
+                                                        height: 32,
+                                                        objectFit: "contain",
+                                                    }}
+                                                    source={{
+                                                        uri: holding?.mutualfund
+                                                            ?.logoUrl,
+                                                    }}
+                                                />
+                                                <View>
+                                                    <Text className="text-xs">
+                                                        {
+                                                            holding?.mutualfund
+                                                                ?.name
+                                                        }
+                                                    </Text>
+                                                    <Text className="text-xs text-gray-400">
+                                                        {
+                                                            holding?.mutualfund
+                                                                ?.category
+                                                        }{" "}
+                                                        |{" "}
+                                                        {
+                                                            holding?.mutualfund
+                                                                ?.subCategory
+                                                        }
+                                                    </Text>
+                                                </View>
+                                            </View>
+                                        ),
+                                    },
+                                    {
+                                        key: "current",
+                                        content: (
                                             <View>
-                                                <Text className="text-xs">
-                                                    {holding?.mutualfund?.name}
-                                                </Text>
-                                                <Text className="text-xs text-gray-400">
-                                                    {
-                                                        holding?.mutualfund
-                                                            ?.category
-                                                    }{" "}
-                                                    |{" "}
-                                                    {
-                                                        holding?.mutualfund
-                                                            ?.subCategory
-                                                    }
+                                                <Text
+                                                    selectable
+                                                    className="text-xs text-black"
+                                                >
+                                                    {RupeeSymbol}{" "}
+                                                    {holding?.currentValue?.toFixed(
+                                                        2
+                                                    )}
                                                 </Text>
                                             </View>
-                                        </View>
-                                    ),
+                                        ),
+                                    },
+                                    {
+                                        key: "invested",
+                                        content: (
+                                            <View>
+                                                <Text
+                                                    selectable
+                                                    className="text-xs text-gray-500"
+                                                >
+                                                    {RupeeSymbol}{" "}
+                                                    {holding?.investedValue?.toFixed(
+                                                        2
+                                                    )}
+                                                </Text>
+                                            </View>
+                                        ),
+                                    },
+                                    {
+                                        key: "xirr",
+                                        content: (
+                                            <View>
+                                                <Text
+                                                    selectable
+                                                    className="text-xs text-gray-500"
+                                                >
+                                                    {holding?.xirr?.toFixed(2)}{" "}
+                                                    %
+                                                </Text>
+                                            </View>
+                                        ),
+                                    },
+                                ];
+                            })}
+                            hasActions
+                            options={[
+                                {
+                                    key: "invest",
+                                    name: "Invest",
+                                    onClick: (data) =>
+                                        showModal("invest", 2, data),
                                 },
                                 {
-                                    key: "current",
-                                    content: (
-                                        <View>
-                                            <Text
-                                                selectable
-                                                className="text-xs text-black"
-                                            >
-                                                {RupeeSymbol}{" "}
-                                                {holding?.currentValue?.toFixed(
-                                                    2
-                                                )}
-                                            </Text>
-                                        </View>
-                                    ),
+                                    key: "redeem",
+                                    name: "Redeem",
+                                    onClick: (data) =>
+                                        showModal("redeem", 2, data),
                                 },
-                                {
-                                    key: "invested",
-                                    content: (
-                                        <View>
-                                            <Text
-                                                selectable
-                                                className="text-xs text-gray-500"
-                                            >
-                                                {RupeeSymbol}{" "}
-                                                {holding?.investedValue?.toFixed(
-                                                    2
-                                                )}
-                                            </Text>
-                                        </View>
-                                    ),
-                                },
-                                {
-                                    key: "xirr",
-                                    content: (
-                                        <View>
-                                            <Text
-                                                selectable
-                                                className="text-xs text-gray-500"
-                                            >
-                                                {holding?.xirr?.toFixed(2)} %
-                                            </Text>
-                                        </View>
-                                    ),
-                                },
-                            ];
-                        })}
-                        hasActions
-                        options={[
-                            {
-                                key: "invest",
-                                name: "Invest",
-                                onClick: (data) => showModal("invest", 2, data),
-                            },
-                            {
-                                key: "redeem",
-                                name: "Redeem",
-                                onClick: (data) => showModal("redeem", 2, data),
-                            },
-                        ]}
-                    />
+                            ]}
+                        />
+                    </View>
                 </View>
             ),
         },
@@ -577,7 +661,7 @@ const PortfolioCard = ({
             key: "sips",
             name: "SIPs",
             content: (
-                <View className="p-2 flex flex-col w-full">
+                <View className="p-2 flex flex-col w-full h-[460px] overflow-scroll">
                     <View className="w-full px-4 py-4 mb-2 bg-[#eaf3fe] flex flex-row items-center justify-between rounded">
                         <Text className="font-bold">Total SIP Amount</Text>
                         <Text className="font-bold">
@@ -669,7 +753,7 @@ const PortfolioCard = ({
             key: "transactions",
             name: "Transactions",
             content: (
-                <View className="p-2 flex flex-col w-full">
+                <View className="p-2 flex flex-col w-full h-[460px] overflow-scroll">
                     <DataTable
                         key="sips"
                         headers={["Schemes", "Amount", "Date", "Status"]}
@@ -2063,10 +2147,21 @@ const AccountDetailsCard = ({ data }: { data: ClientDetailedDataResponse }) => {
             name: "Bank Accounts",
             content: (
                 <View className="w-full p-2 flex flex-col justify-items items-center">
+                    {data?.bankAccounts.length === 0 ? (
+                        <View className="flex flex-col items-center gap-8">
+                        <Text className="text-black font-bold">
+                            No Data Available
+                        </Text>
+                        <Image
+                            source={require("../../../../assets/images/noData.png")}
+                        />
+                    </View>
+                    ) : (
                     <Accordion
                         accordionData={accordionData}
                         renderItem={renderItem}
                     />
+                    )}
                 </View>
             ),
         },
@@ -2075,12 +2170,26 @@ const AccountDetailsCard = ({ data }: { data: ClientDetailedDataResponse }) => {
             name: "Contact Details",
             content: (
                 <View className="w-full p-2 flex flex-col justify-items items-center">
+                    {!data?.users[0]?.email ? (
+                        <View className="flex flex-col items-center gap-8">
+                        <Text className="text-black font-bold">
+                            No Data Available
+                        </Text>
+                        <Image
+                            source={require("../../../../assets/images/noData.png")}
+                        />
+                    </View>
+                    ) : (
+                        <>
                     <DataValue
                         key="email"
                         title="Email"
                         value={data?.users[0]?.email}
                     />
                     <DataValue key="address" title="Address" value={"-"} />
+                    </>
+                    )
+                }
                 </View>
             ),
         },
@@ -2089,40 +2198,51 @@ const AccountDetailsCard = ({ data }: { data: ClientDetailedDataResponse }) => {
             name: "Nominee Details",
             content: (
                 <View className="w-full p-2 flex flex-col justify-item items-center">
-                    {data?.nominee?.map((nominee, index) => (
-                        <View key={index} className="w-full p-2">
-                            <Text className="py-2 font-bold">
-                                Nominee {index + 1}
-                            </Text>
-                            <View className="w-full flex flex-row justify-between items-center">
-                                <Text selectable className="font-medium">
-                                    {nominee?.name}
+                    {data?.nominee.length === 0 ? (
+                        <View className="flex flex-col items-center gap-8">
+                        <Text className="text-black font-bold">
+                            No Data Available
+                        </Text>
+                        <Image
+                            source={require("../../../../assets/images/noData.png")}
+                        />
+                    </View>
+                    ) : (
+                        data?.nominee?.map((nominee, index) => (
+                            <View key={index} className="w-full p-2">
+                                <Text className="py-2 font-bold">
+                                    Nominee {index + 1}
                                 </Text>
-                                <Text selectable className="font-medium">
-                                    {nominee?.relationship?.name}
-                                </Text>
+                                <View className="w-full flex flex-row justify-between items-center">
+                                    <Text selectable className="font-medium">
+                                        {nominee?.name}
+                                    </Text>
+                                    <Text selectable className="font-medium">
+                                        {nominee?.relationship?.name}
+                                    </Text>
+                                </View>
+                                <View className="w-full flex flex-row justify-between items-center">
+                                    <Text
+                                        selectable
+                                        className="text-sm text-slate-500"
+                                    >
+                                        {nominee?.dob
+                                            ? DateTime.fromISO(
+                                                  nominee?.dob
+                                              ).toFormat("LLL dd, yyyy")
+                                            : "-"}
+                                    </Text>
+                                    <Text selectable className="font-medium">
+                                        {nominee?.nomineePercentage + "%"}
+                                    </Text>
+                                </View>
+                                <Divider
+                                    orientation="horizontal"
+                                    className="my-4"
+                                />
                             </View>
-                            <View className="w-full flex flex-row justify-between items-center">
-                                <Text
-                                    selectable
-                                    className="text-sm text-slate-500"
-                                >
-                                    {nominee?.dob
-                                        ? DateTime.fromISO(
-                                              nominee?.dob
-                                          ).toFormat("LLL dd, yyyy")
-                                        : "-"}
-                                </Text>
-                                <Text selectable className="font-medium">
-                                    {nominee?.nomineePercentage + "%"}
-                                </Text>
-                            </View>
-                            <Divider
-                                orientation="horizontal"
-                                className="my-4"
-                            />
-                        </View>
-                    ))}
+                        ))
+                    )}
                 </View>
             ),
         },

@@ -288,6 +288,17 @@ const HoldingWiseDataTable = () => {
             });
         }
 
+        if (roleId > 3) {
+            itemStructure.splice(3, 0, {
+                key: "Manager",
+                content: (
+                    <Text selectable className="text-[#686868] font-semibold">
+                        {item?.distributor?.managementUsers?.[0].name}
+                    </Text>
+                ),
+            });
+        }
+
         return itemStructure;
     });
 
@@ -323,7 +334,23 @@ const HoldingWiseDataTable = () => {
                     <ScrollView className={"mt-4 z-[-1] "}>
                         {width < 830 ? (
                             <TableCard data={mobileData} />
-                        ) : roleId > 2 ? (
+                        ) : roleId > 3 ? (
+                        <DataTable
+                            headers={[
+                                "Client Name",
+                                "Scheme Name",
+                                "Distributor",
+                                "Manager",
+                                "Total invested",
+                                "Current Value",
+                                "XIRR",
+                                "Returns",
+                                // "",
+                            ]}
+                            cellSize={[2, 2,1,1, 1, 1, 1, 1]}
+                            rows={transformedData}
+                        />
+                    ) : roleId > 2 ? (
                         <DataTable
                             headers={[
                                 "Client Name",

@@ -56,7 +56,13 @@ export const RTAReconciliationRows = ({ data, schema, getDataList }) => {
     return (
         <>
             <View className={`flex flex-row py-4 px-2 justify-between `}>
-                <View className="flex flex-row w-2/12">
+                <View className={`flex flex-row w-${
+                                        roleId > 3
+                                            ? "1/12"
+                                            : roleId > 2
+                                            ? "2/12"
+                                            : "3/12"
+                                    }`}>
                     <View className="flex flex-row items-center w-full justify-start">
                         <Text selectable className="font-semibold">
                             Client Name
@@ -65,9 +71,7 @@ export const RTAReconciliationRows = ({ data, schema, getDataList }) => {
                 </View>
 
                 <View
-                    className={`flex flex-row w-${
-                        roleId > 2 ? "1/12" : "2/12"
-                    }`}
+                    className={`flex flex-row w-1/12`}
                 >
                     <View className="flex flex-row items-center w-full justify-start">
                         <Text selectable className="font-semibold">
@@ -80,6 +84,15 @@ export const RTAReconciliationRows = ({ data, schema, getDataList }) => {
                         <View className="flex flex-row items-center w-full justify-start">
                             <Text selectable className="font-semibold">
                                 Distributor
+                            </Text>
+                        </View>
+                    </View>
+                )}
+                {roleId > 3 && (
+                    <View className="flex flex-row w-1/12">
+                        <View className="flex flex-row items-center w-full justify-start">
+                            <Text selectable className="font-semibold">
+                                Manager
                             </Text>
                         </View>
                     </View>
@@ -215,7 +228,13 @@ export const RTAReconciliationRows = ({ data, schema, getDataList }) => {
                                 backgroundColor: id == rta.id ? "#e1e1e1" : "",
                             }}
                         >
-                            <View className="flex flex-row w-2/12 flex-wrap">
+                            <View className={`flex flex-row w-${
+                                        roleId > 3
+                                            ? "1/12"
+                                            : roleId > 2
+                                            ? "2/12"
+                                            : "3/12"
+                                    } flex-wrap`}>
                                 <View className="flex flex-row items-center justify-start flex-wrap w-full">
                                     <Pressable
                                         onPress={() =>
@@ -305,9 +324,7 @@ export const RTAReconciliationRows = ({ data, schema, getDataList }) => {
                                 </View>
                             </View>
                             <View
-                                className={`flex flex-row w-${
-                                    roleId > 2 ? "1/12" : "2/12"
-                                }`}
+                                className={`flex flex-row w-1/12`}
                             >
                                 <View className="flex flex-col w-9/12">
                                     <Text
@@ -327,8 +344,20 @@ export const RTAReconciliationRows = ({ data, schema, getDataList }) => {
                             {roleId > 2 && (
                                 <View className="flex flex-row w-1/12">
                                     <Text className="w-10/12" selectable>
-                                        {rta.mutualfund.fundhouse?.rta?.name ||
-                                            "-"}
+                                    {rta?.distributor?.name
+                                                ? rta?.distributor?.name
+                                                : "-"}
+                                    </Text>
+                                </View>
+                            )}
+                            {roleId > 3 && (
+                                <View className="flex flex-row w-1/12">
+                                    <Text className="w-10/12" selectable>
+                                    {rta?.distributor
+                                                ?.managementUsers[0].name
+                                                ? rta?.distributor
+                                                      ?.managementUsers[0].name
+                                                : "-"}
                                     </Text>
                                 </View>
                             )}

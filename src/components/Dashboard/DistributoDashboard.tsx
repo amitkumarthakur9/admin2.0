@@ -59,6 +59,8 @@ const DistributorDashboard = () => {
 
     const role = roldID();
 
+
+
     useEffect(() => {
         setIsLoading(true);
         async function getDetails() {
@@ -67,6 +69,9 @@ const DistributorDashboard = () => {
             );
             if (response) {
                 setData(response?.data);
+                console.log(data?.aum?.breakDown
+                    .length)
+                    console.log("aum?.breakDown")
                 setAumPercentage(
                     aumChartPercentage(response?.data?.aum?.breakDown)
                 );
@@ -200,30 +205,40 @@ const DistributorDashboard = () => {
         },
     ];
 
-    const sipBreakdownChart = data?.order?.sip?.breakDown.map((item) => ({
-        x: item.category,
-        y: item.count,
-    }));
+    const sipBreakdownChart = (sip) => {
+        const totalValue = sip?.reduce(
+            (accumulator, count) => accumulator + count.count,
+            0
+        );
 
-    // console.log(sipBreakdownChart);
+        console.log(totalValue);
 
-    // const aumBreakdownChart = data?.aum?.breakDown.map((item) => ({
-    //     x: item.category,
-    //     y: item.currentValue,
-    // }));
+        // If totalValue is 0, return an array with 0% for all items to avoid division by zero
+        if (totalValue === 0) {
+            return sip?.map((item) => ({
+                x: item.category,
+                y: 0, // Set percentage to 0 because there's no value to calculate percentage from
+            }));
+        }
 
-    // console.log("aumBreakdownChart: ", JSON.stringify(aumBreakdownChart));
+        return sip?.map((item) => ({
+            x: item.category,
+            y: (item.count / totalValue) * 100, // Calculate the percentage as normal
+        }));
+    };
 
-    // const breakDown = [
-    //     {
-    //         "category": "Debt",
-    //         "currentValue": 2154.6
-    //     },
-    //     {
-    //         "category": "Equity",
-    //         "currentValue": 1814.1522999999997
-    //     }
-    // ];
+    const aumBreakdownChart = (aum) => {
+        const totalValue = aum?.reduce(
+            (accumulator, currentValue) =>
+                accumulator + currentValue.currentValue,
+            0
+        );
+
+        return aum?.map((item) => ({
+            x: item.category,
+            y: (item.currentValue / totalValue) * 100,
+        }));
+    };
 
     return (
         <>
@@ -271,7 +286,6 @@ const DistributorDashboard = () => {
                                     Distributor Details
                                 </Text>
                             </View>
-
 
                             <View className="flex flex-row justify-between rounded bg-[#eaf3fe] pr-2 ">
                                 <View className=" flex flex-row w-full gap-2">
@@ -341,7 +355,8 @@ const DistributorDashboard = () => {
                                                         title="Total SIP Amount"
                                                         description={
                                                             RupeeSymbol +
-                                                            "25,00,000"
+                                                            data?.order?.sip
+                                                                ?.monthlySipAmount
                                                         }
                                                     />
                                                 </View>
@@ -384,33 +399,24 @@ const DistributorDashboard = () => {
                                                 </View>
 
                                                 <View>
-                                                    <DonutPieChart
-                                                        // pieData={[
-                                                        //     {
-                                                        //         x: data?.aum?.breakDown[0].category,
-                                                        //         y: data?.aum?.breakDown[0].currentValue.toFixed(2),
-                                                        //     },
-                                                        //     {
-                                                        //         x: data?.aum?.breakDown[1].category,
-                                                        //         y: data?.aum?.breakDown[1].currentValue.toFixed(2),
-                                                        //     },
-
-                                                        // ]}
-
-                                                        // pieData={[
-                                                        //     {
-                                                        //         x: "Debt",
-                                                        //         y: 54.2,
-                                                        //     },
-                                                        //     {
-                                                        //         x: "Equity",
-                                                        //         y: 45.8,
-                                                        //     },
-
-                                                        // ]}
-
-                                                        pieData={aumPercentage}
-                                                    />
+                                    
+                                                    {data?.aum?.breakDown
+                                                        .length === 0 ? (
+                                                        <>
+                                                            <View>
+                                                                No data
+                                                                available
+                                                            </View>
+                                                        </>
+                                                    ) : (
+                                                        <DonutPieChart
+                                                            pieData={aumBreakdownChart(
+                                                                data?.aum
+                                                                    ?.breakDown
+                                                            )}
+                                                        />
+                                                        
+                                                    )}
                                                 </View>
                                             </View>
                                             <View className="w-[50%] rounded bg-white p-4">
@@ -441,27 +447,40 @@ const DistributorDashboard = () => {
                                                 </View>
 
                                                 <View>
-                                                    <DonutPieChart
-                                                        // pieData={[
-                                                        //     {
-                                                        //         x: "Equity",
-                                                        //         y: 20,
-                                                        //     },
-                                                        //     {
-                                                        //         x: "Hybrid",
-                                                        //         y: 29,
-                                                        //     },
-                                                        //     {
-                                                        //         x: "Debt",
-                                                        //         y: 35,
-                                                        //     },
-                                                        //     {
-                                                        //         x: "Others",
-                                                        //         y: 25,
-                                                        //     },
-                                                        // ]}
-                                                        pieData={sipPercentage}
-                                                    />
+                                                    {data?.order?.sip?.breakDown
+                                                        .length === 0 ? (
+                                                        <>
+                                                            <View>
+                                                                No data
+                                                                available
+                                                            </View>
+                                                        </>
+                                                    ) : (
+                                                        <DonutPieChart
+                                                            // pieData={[
+                                                            //     {
+                                                            //         x: "Equity",
+                                                            //         y: 20,
+                                                            //     },
+                                                            //     {
+                                                            //         x: "Hybrid",
+                                                            //         y: 29,
+                                                            //     },
+                                                            //     {
+                                                            //         x: "Debt",
+                                                            //         y: 35,
+                                                            //     },
+                                                            //     {
+                                                            //         x: "Others",
+                                                            //         y: 25,
+                                                            //     },
+                                                            // ]}
+                                                            pieData={sipBreakdownChart(
+                                                                data?.order?.sip
+                                                                    ?.breakDown
+                                                            )}
+                                                        />
+                                                    )}
                                                 </View>
                                             </View>
                                         </View>
@@ -473,117 +492,112 @@ const DistributorDashboard = () => {
                                                     Personal details
                                                 </Text>
                                             </View>
-
-                                            
                                         </View>
                                         <View className="">
-                                        <View
-                                className="flex flex-row justify-between rounded  h-auto p-4 bg-white"
-                                
-                            >
-                                <View className="flex flex-col gap-2 w-full">
-                                    <View
-                                        className={`flex flex-row items-center w-full justify-start`}
-                                    >
-                                        <Text
-                                            className="text-bold font-medium text-gray-500 w-1/2"
-                                            selectable
-                                        >
-                                            Distributor Name:
-                                        </Text>
-                                        <Text
-                                            selectable
-                                            className="text-base font-bold text-start"
-                                        >
-                                            {data?.name || "EESHAN SHUKLAA"}
-                                        </Text>
-                                    </View>
-                                    <View
-                                        className={`flex flex-row items-center w-full justify-start`}
-                                    >
-                                        <Text
-                                            className="text-bold font-medium text-gray-500 w-1/2"
-                                            selectable
-                                        >
-                                             ARN:
-                                        </Text>
-                                        <Text
-                                            selectable
-                                            className="text-base font-bold text-start"
-                                        >
-                                            {data?.arn || "ARN23456"}
-                                        </Text>
-                                    </View>
-                                    <View
-                                        className={`flex flex-row items-center w-full justify-start`}
-                                    >
-                                        <Text
-                                            className="text-bold font-medium text-gray-500 w-1/2"
-                                            selectable
-                                        >
-                                             EUIN:
-                                        </Text>
-                                        <Text
-                                            selectable
-                                            className="text-base font-bold text-start"
-                                        >
-                                             {data?.euin || "EUIN23456"}
-                                        </Text>
-                                    </View>
-                                    <View
-                                        className={`flex flex-row items-center w-full justify-start`}
-                                    >
-                                        <Text
-                                            className="text-bold font-medium text-gray-500 w-1/2"
-                                            selectable
-                                        >
-                                              PAN:
-                                        </Text>
-                                        <Text
-                                            selectable
-                                            className="text-base font-bold text-start"
-                                        >
-                                            {data?.panNumber ||
-                                                        "PAN23456"}
-                                        </Text>
-                                    </View>
-                                    <View
-                                        className={`flex flex-row items-center w-full justify-start`}
-                                    >
-                                        <Text
-                                            className="text-bold font-medium text-gray-500 w-1/2"
-                                            selectable
-                                        >
-                                              Phone:
-                                        </Text>
-                                        <Text
-                                            selectable
-                                            className="text-base font-bold text-start"
-                                        >
-                                            {data?.phone ||
-                                                        "-"}
-                                        </Text>
-                                    </View>
-                                    <View
-                                        className={`flex flex-row items-center w-full justify-start`}
-                                    >
-                                        <Text
-                                            className="text-bold font-medium text-gray-500 w-1/2"
-                                            selectable
-                                        >
-                                              Email:
-                                        </Text>
-                                        <Text
-                                            selectable
-                                            className="text-base font-bold text-start"
-                                        >
-                                            {data?.email ||
-                                                        "-"}
-                                        </Text>
-                                    </View>
-                                   
-                                </View>
-                            </View>
+                                            <View className="flex flex-row justify-between rounded  h-auto p-4 bg-white">
+                                                <View className="flex flex-col gap-2 w-full">
+                                                    <View
+                                                        className={`flex flex-row items-center w-full justify-start`}
+                                                    >
+                                                        <Text
+                                                            className="text-bold font-medium text-gray-500 w-1/2"
+                                                            selectable
+                                                        >
+                                                            Distributor Name:
+                                                        </Text>
+                                                        <Text
+                                                            selectable
+                                                            className="text-base font-bold text-start"
+                                                        >
+                                                            {data?.name ||
+                                                                "EESHAN SHUKLAA"}
+                                                        </Text>
+                                                    </View>
+                                                    <View
+                                                        className={`flex flex-row items-center w-full justify-start`}
+                                                    >
+                                                        <Text
+                                                            className="text-bold font-medium text-gray-500 w-1/2"
+                                                            selectable
+                                                        >
+                                                            ARN:
+                                                        </Text>
+                                                        <Text
+                                                            selectable
+                                                            className="text-base font-bold text-start"
+                                                        >
+                                                            {data?.arn ||
+                                                                "ARN23456"}
+                                                        </Text>
+                                                    </View>
+                                                    <View
+                                                        className={`flex flex-row items-center w-full justify-start`}
+                                                    >
+                                                        <Text
+                                                            className="text-bold font-medium text-gray-500 w-1/2"
+                                                            selectable
+                                                        >
+                                                            EUIN:
+                                                        </Text>
+                                                        <Text
+                                                            selectable
+                                                            className="text-base font-bold text-start"
+                                                        >
+                                                            {data?.euin ||
+                                                                "EUIN23456"}
+                                                        </Text>
+                                                    </View>
+                                                    <View
+                                                        className={`flex flex-row items-center w-full justify-start`}
+                                                    >
+                                                        <Text
+                                                            className="text-bold font-medium text-gray-500 w-1/2"
+                                                            selectable
+                                                        >
+                                                            PAN:
+                                                        </Text>
+                                                        <Text
+                                                            selectable
+                                                            className="text-base font-bold text-start"
+                                                        >
+                                                            {data?.panNumber ||
+                                                                "PAN23456"}
+                                                        </Text>
+                                                    </View>
+                                                    <View
+                                                        className={`flex flex-row items-center w-full justify-start`}
+                                                    >
+                                                        <Text
+                                                            className="text-bold font-medium text-gray-500 w-1/2"
+                                                            selectable
+                                                        >
+                                                            Phone:
+                                                        </Text>
+                                                        <Text
+                                                            selectable
+                                                            className="text-base font-bold text-start"
+                                                        >
+                                                            {data?.phone || "-"}
+                                                        </Text>
+                                                    </View>
+                                                    <View
+                                                        className={`flex flex-row items-center w-full justify-start`}
+                                                    >
+                                                        <Text
+                                                            className="text-bold font-medium text-gray-500 w-1/2"
+                                                            selectable
+                                                        >
+                                                            Email:
+                                                        </Text>
+                                                        <Text
+                                                            selectable
+                                                            className="text-base font-bold text-start"
+                                                        >
+                                                            {data?.email || "-"}
+                                                        </Text>
+                                                    </View>
+                                                </View>
+                                            </View>
                                         </View>
                                     </View>
                                 </View>
@@ -785,7 +799,11 @@ const DistributorDashboard = () => {
                                         <BorderCard
                                             title="Investment"
                                             description={
-                                                RupeeSymbol + "10,87,899"
+                                                data?.transaction?.purchase
+                                                    ? RupeeSymbol +
+                                                      data?.transaction
+                                                          ?.purchase
+                                                    : RupeeSymbol + "0"
                                             }
                                         />
                                         <BorderCard

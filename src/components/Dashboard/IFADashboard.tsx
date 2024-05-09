@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View,  } from "react-native";
+import { StyleSheet, View } from "react-native";
 import {
     Center,
     HStack,
@@ -27,6 +27,7 @@ import {
 import RemoteApi from "../../../src/services/RemoteApi";
 import { useUserRole } from "../../../src/context/useRoleContext";
 import AvatarCard from "../Card/AvatarCard";
+import NoDataAvailable from "../Others/NoDataAvailable";
 
 const IFADashboard = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -86,10 +87,32 @@ const IFADashboard = () => {
         console.log("Data received from YourComponent2:", data);
     };
 
-    const sipBreakdownChart = data?.order?.sip?.breakDown.map((item) => ({
-        x: item.category,
-        y: item.count,
-    }));
+    // const sipBreakdownChart = data?.order?.sip?.breakDown.map((item) => ({
+    //     x: item.category,
+    //     y: item.count,
+    // }));
+
+    const sipBreakdownChart = (sip) => {
+        const totalValue = sip?.reduce(
+            (accumulator, count) => accumulator + count.count,
+            0
+        );
+
+        console.log(totalValue);
+
+        // If totalValue is 0, return an array with 0% for all items to avoid division by zero
+        if (totalValue === 0) {
+            return sip?.map((item) => ({
+                x: item.category,
+                y: 0, // Set percentage to 0 because there's no value to calculate percentage from
+            }));
+        }
+
+        return sip?.map((item) => ({
+            x: item.category,
+            y: (item.count / totalValue) * 100, // Calculate the percentage as normal
+        }));
+    };
 
     const aumBreakdownChart = (aum) => {
         const totalValue = aum?.reduce(
@@ -203,9 +226,14 @@ const IFADashboard = () => {
                                                         icon="wallet-outline"
                                                         title="Total Lumpsum Investment"
                                                         description={
-                                                            RupeeSymbol +
                                                             data?.order?.lumpsum
                                                                 ?.total
+                                                                ? RupeeSymbol +
+                                                                  data?.order?.lumpsum?.total.toFixed(
+                                                                      2
+                                                                  )
+                                                                : RupeeSymbol +
+                                                                  "0"
                                                         }
                                                     />
                                                     <IconCard
@@ -237,11 +265,48 @@ const IFADashboard = () => {
                                                 </View>
 
                                                 <View>
-                                                    <DonutPieChart
-                                                        pieData={aumBreakdownChart(
-                                                            data?.aum?.breakDown
-                                                        )}
-                                                    />
+                                                    {data?.aum?.breakDown
+                                                        .length === 0 ? (
+                                                        <>
+                                                            <View className="">
+                                                                <View
+                                                                    style={{
+                                                                        flex: 1,
+                                                                        justifyContent:
+                                                                            "center",
+                                                                        alignItems:
+                                                                            "center",
+                                                                    }}
+                                                                >
+                                                                    <Image
+                                                                        // style={{ width: 100, height: 100 }} // adjust width and height as needed
+                                                                        source={require("../../../assets/images/noDataAvailable.png")}
+                                                                        alt="No Data Available"
+                                                                        width={20}
+                                                                        height={20}
+                                                                    />
+                                                                    <Text
+                                                                        style={{
+                                                                            paddingTop: 10,
+                                                                            fontSize: 16,
+                                                                            fontWeight:
+                                                                                "bold",
+                                                                        }}
+                                                                    >
+                                                                        No Data
+                                                                        Available
+                                                                    </Text>
+                                                                </View>
+                                                            </View>
+                                                        </>
+                                                    ) : (
+                                                        <DonutPieChart
+                                                            pieData={aumBreakdownChart(
+                                                                data?.aum
+                                                                    ?.breakDown
+                                                            )}
+                                                        />
+                                                    )}
                                                 </View>
                                             </View>
                                             <View className="md:w-[50%] rounded bg-white p-4">
@@ -250,10 +315,48 @@ const IFADashboard = () => {
                                                         SIP Breakdown
                                                     </Text>
                                                 </View>
-
-                                                <DonutPieChart
-                                                    pieData={sipBreakdownChart}
-                                                />
+                                                {data?.order?.sip?.breakDown
+                                                    .length === 0 ? (
+                                                    <>
+                                                         <View className="">
+                                                                <View
+                                                                    style={{
+                                                                        flex: 1,
+                                                                        justifyContent:
+                                                                            "center",
+                                                                        alignItems:
+                                                                            "center",
+                                                                    }}
+                                                                >
+                                                                    <Image
+                                                                        // style={{ width: 100, height: 100 }} // adjust width and height as needed
+                                                                        source={require("../../../assets/images/noDataAvailable.png")}
+                                                                        alt="No Data Available"
+                                                                        width={20}
+                                                                        height={20}
+                                                                    />
+                                                                    <Text
+                                                                        style={{
+                                                                            paddingTop: 10,
+                                                                            fontSize: 16,
+                                                                            fontWeight:
+                                                                                "bold",
+                                                                        }}
+                                                                    >
+                                                                        No Data
+                                                                        Available
+                                                                    </Text>
+                                                                </View>
+                                                            </View>
+                                                    </>
+                                                ) : (
+                                                    <DonutPieChart
+                                                        pieData={sipBreakdownChart(
+                                                            data?.order?.sip
+                                                                ?.breakDown
+                                                        )}
+                                                    />
+                                                )}
                                             </View>
                                         </View>
                                     </View>
@@ -371,7 +474,11 @@ const IFADashboard = () => {
                                             <BorderCard
                                                 title="Investment"
                                                 description={
-                                                    RupeeSymbol + "10,87,899"
+                                                    data?.transaction?.purchase
+                                                        ? RupeeSymbol +
+                                                          data?.transaction
+                                                              ?.purchase
+                                                        : RupeeSymbol + "0"
                                                 }
                                             />
                                             <BorderCard
@@ -387,13 +494,7 @@ const IFADashboard = () => {
                                             />
                                             <BorderCard
                                                 title="Inactive/Cancelled SIPs"
-                                                description={
-                                                    data?.transaction
-                                                        ?.totalSipTransactionsFailed
-                                                        ? data?.transaction
-                                                              ?.totalSipTransactionsFailed
-                                                        : "0"
-                                                }
+                                                description="0" // Data Not available in API
                                             />
                                         </View>
                                         <View className="flex flex-col md:w-[49%]">
@@ -406,23 +507,26 @@ const IFADashboard = () => {
                                                         : "0"
                                                 }
                                             />
+
                                             <BorderCard
                                                 title="No. of successful SIPs"
                                                 description={
                                                     data?.transaction
-                                                        ?.totalSipTransactionsFailed &&
-                                                    data?.transaction
                                                         ?.totalSipTransactions
                                                         ? data?.transaction
-                                                              ?.totalSipTransactions -
-                                                          data?.transaction
-                                                              ?.totalSipTransactionsFailed
+                                                              ?.totalSipTransactions
                                                         : "0"
                                                 }
                                             />
                                             <BorderCard
                                                 title="No. of SIP Bounce"
-                                                description="08"
+                                                description={
+                                                    data?.transaction
+                                                        ?.totalSipTransactionsFailed
+                                                        ? data?.transaction
+                                                              ?.totalSipTransactionsFailed
+                                                        : "0"
+                                                }
                                             />
                                         </View>
                                     </View>
@@ -435,7 +539,7 @@ const IFADashboard = () => {
                                                 StyleSheet.hairlineWidth, // Hairline right border width
                                         }}
                                     >
-                                        <Text className="font-bold text-center md:text-start">
+                                        <Text className="font-bold text-start">
                                             Top 5 Clients
                                         </Text>
                                         <View className="flex flex-col h-auto justify-center items-center pt-4">
@@ -508,7 +612,7 @@ const IFADashboard = () => {
                                         </View> */}
                                     </View>
                                     <View className="md:w-[16%] rounded pl-1">
-                                        <Text className="font-bold text-center md:text-start ">
+                                        <Text className="font-bold text-start ">
                                             Inactive Client
                                         </Text>
                                         <View className="flex flex-col h-full md:h-auto justify-center items-center pt-5">
@@ -561,7 +665,11 @@ const IFADashboard = () => {
                                             <BorderCard
                                                 title="Investment"
                                                 description={
-                                                    RupeeSymbol + "10,87,899"
+                                                    data?.transaction?.purchase
+                                                        ? RupeeSymbol +
+                                                          data?.transaction
+                                                              ?.purchase
+                                                        : RupeeSymbol + "0"
                                                 }
                                             />
                                             <BorderCard
@@ -577,13 +685,7 @@ const IFADashboard = () => {
                                             />
                                             <BorderCard
                                                 title="Inactive/Cancelled SIPs"
-                                                description={
-                                                    data?.transaction
-                                                        ?.totalSipTransactionsFailed
-                                                        ? data?.transaction
-                                                              ?.totalSipTransactionsFailed
-                                                        : "0"
-                                                }
+                                                description="0" // Data Not available in API
                                             />
                                         </View>
                                         <View className="flex flex-col w-[49%]">
@@ -600,19 +702,21 @@ const IFADashboard = () => {
                                                 title="No. of successful SIPs"
                                                 description={
                                                     data?.transaction
-                                                        ?.totalSipTransactionsFailed &&
-                                                    data?.transaction
                                                         ?.totalSipTransactions
                                                         ? data?.transaction
-                                                              ?.totalSipTransactions -
-                                                          data?.transaction
-                                                              ?.totalSipTransactionsFailed
+                                                              ?.totalSipTransactions
                                                         : "0"
                                                 }
                                             />
                                             <BorderCard
                                                 title="No. of SIP Bounce"
-                                                description="08"
+                                                description={
+                                                    data?.transaction
+                                                        ?.totalSipTransactionsFailed
+                                                        ? data?.transaction
+                                                              ?.totalSipTransactionsFailed
+                                                        : "0"
+                                                }
                                             />
                                         </View>
                                     </View>

@@ -92,6 +92,10 @@ const FolioWiseDataTable = () => {
                         itemsPerPage
                 )
             );
+        }else{
+        setIsLoading(false);
+
+            // alert("Server Error  " + response.message)
         }
     }
 

@@ -14,10 +14,11 @@ import { HStack, Heading, Spinner } from "native-base";
 import { TableBreadCrumb } from "../BreadCrumbs/TableBreadCrumb";
 import { MobileSIPRows } from "./MobileSIPRows";
 import NoDataAvailable from "../Others/NoDataAvailable";
+import { useUserRole } from "../..//context/useRoleContext";
 
 const SIPDataTable = () => {
     const [isLoading, setIsLoading] = React.useState(false);
-
+    const { roleId } = useUserRole();
     const [currentPageNumber, setCurrentPageNumber] = useState(1);
     const [totalItems, setTotalItems] = useState(0);
     const [itemsPerPage, setItemsPerPage] = useState(10);
