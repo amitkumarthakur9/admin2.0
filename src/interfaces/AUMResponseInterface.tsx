@@ -47,7 +47,7 @@ interface AUMDataItem {
     account: Account;
     mutualfund?: MutualFund;
     xirr: number;
-    distributor: Distributor;
+    distrubutor: Distributor;
 
 }
 
@@ -152,6 +152,7 @@ interface IFAwiseData {
     name: string;
     currentValue: number;
     investedValue: number;
+    managementUsers: ManagementUser[];
 }
 
 interface ClientWiseData {

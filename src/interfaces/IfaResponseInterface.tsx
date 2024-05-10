@@ -1,3 +1,8 @@
+export interface ManagementUsers{
+    name: string;
+
+}
+
 export interface Investor {
     id: string;
     name: string;
@@ -6,6 +11,7 @@ export interface Investor {
     euin: string;
     activeAccountCount: number;
     activeSipCount: number;
+    managementUsers: ManagementUsers[];
 }
 
 export interface IfaListResponse {

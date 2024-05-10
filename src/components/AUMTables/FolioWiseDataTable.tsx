@@ -28,7 +28,6 @@ import { useUserRole } from "../../context/useRoleContext";
 import TableCard from "../Card/TableCard";
 import NoDataAvailable from "../Others/NoDataAvailable";
 
-
 const FolioWiseDataTable = () => {
     const [isLoading, setIsLoading] = React.useState(false);
     const { roleId } = useUserRole();
@@ -45,7 +44,7 @@ const FolioWiseDataTable = () => {
         direction: "",
     });
     const { width } = useWindowDimensions();
-    const mobileData = data.map(item => ({
+    const mobileData = data.map((item) => ({
         // id: item.id,
         // Name: item?.name,
         // ClientId: item?.clientId,
@@ -53,8 +52,7 @@ const FolioWiseDataTable = () => {
         CurrentValue: RupeeSymbol + item.currentValue,
         InvestedValue: RupeeSymbol + item.investedValue,
         XIRR: item?.xirr,
-
-      }));
+    }));
 
     async function getDataList(
         updatedFilterValues = [],
@@ -92,8 +90,8 @@ const FolioWiseDataTable = () => {
                         itemsPerPage
                 )
             );
-        }else{
-        setIsLoading(false);
+        } else {
+            setIsLoading(false);
 
             // alert("Server Error  " + response.message)
         }
@@ -117,11 +115,6 @@ const FolioWiseDataTable = () => {
         }
     }, [appliedSorting]);
 
-
-    
-
-    
-
     const transformedData = data?.map((item) => {
         const itemStructure = [
             {
@@ -130,24 +123,31 @@ const FolioWiseDataTable = () => {
                     <View className="flex flex-row items-center justify-start w-11/12">
                         <View className="flex flex-col rounded-full bg-[#e60202] mr-2 h-10 w-10 mb-1 items-center justify-center flex-wrap">
                             <Text selectable className="text-white">
-                                {getInitials(item?.account.name ? item?.account.name : "-")}
+                                {getInitials(
+                                    item?.account.name
+                                        ? item?.account.name
+                                        : "-"
+                                )}
                             </Text>
                         </View>
                         <View className="flex flex-col flex-wrap w-[99%]">
                             <View className="flex flex-row items-center text-black font-semibold flex-wrap mb-2 w-[99%]">
                                 <View className="w-11/12">
-                                <Pressable
-                                    onPress={() =>
-                                        router.push(`clients/${item?.id}`)
-                                    }
-                                >
-                                    <Text
-                                        selectable
-                                        className="flex flex-row text-black font-semibold break-all "
+                                    <Pressable
+                                        onPress={() =>
+                                            router.push(`clients/${item?.id}`)
+                                        }
                                     >
-                                        {item?.account.name ? item?.account.name : "-"}&nbsp;{" "}
-                                    </Text>
-                                </Pressable>
+                                        <Text
+                                            selectable
+                                            className="flex flex-row text-black font-semibold break-all "
+                                        >
+                                            {item?.account.name
+                                                ? item?.account.name
+                                                : "-"}
+                                            &nbsp;{" "}
+                                        </Text>
+                                    </Pressable>
                                 </View>
 
                                 <View className="flex flex-row items-center w-[1/12]">
@@ -171,7 +171,7 @@ const FolioWiseDataTable = () => {
                             <View className="flex flex-row flex-wrap items-center mt-0 w-11/12">
                                 {/* <Tag>
                                     KYC{" "} */}
-                                    {/* {item?.users[0]?.kycStatus
+                                {/* {item?.users[0]?.kycStatus
                                         ?.isAllowedToTransact
                                         ? "Done"
                                         : "Not Done"} */}
@@ -203,15 +203,24 @@ const FolioWiseDataTable = () => {
                         </Pressable> */}
 
                         <Text selectable className="text-black font-semibold">
-                            {item?.mutualfund?.name ? item?.mutualfund?.name : "-"}
+                            {item?.mutualfund?.name
+                                ? item?.mutualfund?.name
+                                : "-"}
                         </Text>
                         <Text
                             selectable
                             className="text-[#686868] font-semibold text-xs"
                         >
-                            {item?.mutualfund?.deliveryType?.name ? item?.mutualfund?.deliveryType?.name : "-" }
-                            {item?.mutualfund?.optionType?.name ? " - " + item?.mutualfund?.optionType?.name : "-" }
-                            {item?.mutualfund?.dividendType?.name && item?.mutualfund?.dividendType?.name!=="NA" ? " - " + item?.mutualfund?.dividendType?.name : "" }
+                            {item?.mutualfund?.deliveryType?.name
+                                ? item?.mutualfund?.deliveryType?.name
+                                : "-"}
+                            {item?.mutualfund?.optionType?.name
+                                ? " - " + item?.mutualfund?.optionType?.name
+                                : "-"}
+                            {item?.mutualfund?.dividendType?.name &&
+                            item?.mutualfund?.dividendType?.name !== "NA"
+                                ? " - " + item?.mutualfund?.dividendType?.name
+                                : ""}
                         </Text>
                         {/* <Text selectable className="text-[#686868] font-semibold text-xs">
                         {item?.mutualfund?.category ? item?.mutualfund?.category : "" }
@@ -223,14 +232,12 @@ const FolioWiseDataTable = () => {
             {
                 key: "FolioNumber",
                 content: (
-                    <Pressable
-                        onPress={() => router.push(`folio/${item?.id}`)}
-                    >
+                    <Pressable onPress={() => router.push(`folio/${item?.id}`)}>
                         <Text
                             selectable
                             className="text-[#686868] font-semibold w-11/12"
                         >
-                            {item?.folioNumber ? item?.folioNumber  : "-"}&nbsp;
+                            {item?.folioNumber ? item?.folioNumber : "-"}&nbsp;
                         </Text>
                     </Pressable>
                 ),
@@ -288,8 +295,12 @@ const FolioWiseDataTable = () => {
                 content: (
                     <View className="flex justify-start text-[#686868] font-semibold w-full">
                         <Text selectable className="">
-                        {item?.investedValue && item?.currentValue ? RupeeSymbol + (item?.currentValue - item?.investedValue).toFixed(2) : RupeeSymbol +"0"
-                            }
+                            {item?.investedValue && item?.currentValue
+                                ? RupeeSymbol +
+                                  (
+                                      item?.currentValue - item?.investedValue
+                                  ).toFixed(2)
+                                : RupeeSymbol + "0"}
                         </Text>
                     </View>
                 ),
@@ -308,13 +319,13 @@ const FolioWiseDataTable = () => {
             // },
         ];
 
-         // Conditionally add an additional object based on roleId to index 2
-         if (roleId > 2) {
+        // Conditionally add an additional object based on roleId to index 2
+        if (roleId > 2) {
             itemStructure.splice(2, 0, {
                 key: "distributor",
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
-                        {item?.distributor?.name}
+                        {item?.distrubutor?.name}
                     </Text>
                 ),
             });
@@ -325,7 +336,7 @@ const FolioWiseDataTable = () => {
                 key: "Manager",
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
-                        {item?.distributor?.managementUsers?.[0].name}
+                        {item?.distrubutor?.managementUsers?.[0].name}
                     </Text>
                 ),
             });
@@ -335,122 +346,119 @@ const FolioWiseDataTable = () => {
     });
 
     return (
-
         <View className="h-screen">
-
-      
-        <View className="bg-white">
-            {/* <View className="">
+            <View className="bg-white">
+                {/* <View className="">
                 <TableBreadCrumb name={"Folio Wise"} />
             </View> */}
-            <View className="border-[0.2px]  border-[#e4e4e4]">
-            {data.length !== 0 &&
-                <DynamicFilters
-                    appliedSorting={appliedSorting}
-                    setAppliedSorting={setAppliedSorting}
-                    sorting={sorting}
-                    fileName="Folio"
-                    downloadApi={"folio/download-report"}
-                    schemaResponse={filtersSchema}
-                    setCurrentPageNumber={setCurrentPageNumber}
-                    getList={getDataList}
-                    appliedFilers={appliedFilers}
-                    setAppliedFilers={setAppliedFilers}
-                />
-            }
+                <View className="border-[0.2px]  border-[#e4e4e4]">
+                    {data.length !== 0 && (
+                        <DynamicFilters
+                            appliedSorting={appliedSorting}
+                            setAppliedSorting={setAppliedSorting}
+                            sorting={sorting}
+                            fileName="Folio"
+                            downloadApi={"folio/download-report"}
+                            schemaResponse={filtersSchema}
+                            setCurrentPageNumber={setCurrentPageNumber}
+                            getList={getDataList}
+                            appliedFilers={appliedFilers}
+                            setAppliedFilers={setAppliedFilers}
+                        />
+                    )}
 
-                {!isLoading ? (
-                    data.length === 0
-                    ? (
-                        <NoDataAvailable />
-                    ) : (
-                    <ScrollView className={"mt-4 z-[-1] "}>
-                        {width < 830 ? (
-                            <TableCard data={mobileData} />
-                        ) : roleId > 3 ? (
-                        <DataTable
-                            headers={[
-                                "Client Name",
-                                "Scheme Name",
-                                "Distributor",
-                                "Manager",
-                                "Folio Number",
-                                "Balance Units",
-                                "Invested Amount",
-                                "Current Value",
-                                "XIRR",
-                                "Returns",
-                                // "",
-                            ]}
-                            cellSize={[2, 1,1, 1, 1, 1, 1, 1, 1, 1,]}
-                            rows={transformedData}
-                        />
-                    ) : roleId > 2 ? (
-                        <DataTable
-                            headers={[
-                                "Client Name",
-                                "Scheme Name",
-                                "Distributor",
-                                "Folio Number",
-                                "Balance Units",
-                                "Invested Amount",
-                                "Current Value",
-                                "XIRR",
-                                "Returns",
-                                // "",
-                            ]}
-                            cellSize={[2, 1,1, 1, 1, 1, 1, 1, 1,]}
-                            rows={transformedData}
-                        />
+                    {!isLoading ? (
+                        data.length === 0 ? (
+                            <NoDataAvailable />
                         ) : (
-                            <DataTable
-                            headers={[
-                                "Client Name",
-                                "Scheme Name",
-                                "Folio Number",
-                                "Balance Units",
-                                "Invested Amount",
-                                "Current Value",
-                                "XIRR",
-                                "Returns",
-                                // "",
-                            ]}
-                            cellSize={[2, 2, 1, 1, 1, 1, 1, 1,]}
-                            rows={transformedData}
-                        />
-                        )}
-                    </ScrollView>
-                    )
-                ) : (
-                    <HStack
-                        space={"md"}
-                        marginTop={20}
-                        marginBottom={20}
-                        justifyContent="center"
-                    >
-                        <Spinner
-                            color={"black"}
-                            accessibilityLabel="Loading order"
-                        />
-                        <Heading color="black" fontSize="md">
-                            Loading
-                        </Heading>
-                    </HStack>
+                            <ScrollView className={"mt-4 z-[-1] "}>
+                                {width < 830 ? (
+                                    <TableCard data={mobileData} />
+                                ) : roleId > 3 ? (
+                                    <DataTable
+                                        headers={[
+                                            "Client Name",
+                                            "Scheme Name",
+                                            "Distributor",
+                                            "Manager",
+                                            "Folio Number",
+                                            "Balance Units",
+                                            "Invested Amount",
+                                            "Current Value",
+                                            "XIRR",
+                                            "Returns",
+                                            // "",
+                                        ]}
+                                        cellSize={[
+                                            2, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                                        ]}
+                                        rows={transformedData}
+                                    />
+                                ) : roleId > 2 ? (
+                                    <DataTable
+                                        headers={[
+                                            "Client Name",
+                                            "Scheme Name",
+                                            "Distributor",
+                                            "Folio Number",
+                                            "Balance Units",
+                                            "Invested Amount",
+                                            "Current Value",
+                                            "XIRR",
+                                            "Returns",
+                                            // "",
+                                        ]}
+                                        cellSize={[2, 1, 1, 1, 1, 1, 1, 1, 1]}
+                                        rows={transformedData}
+                                    />
+                                ) : (
+                                    <DataTable
+                                        headers={[
+                                            "Client Name",
+                                            "Scheme Name",
+                                            "Folio Number",
+                                            "Balance Units",
+                                            "Invested Amount",
+                                            "Current Value",
+                                            "XIRR",
+                                            "Returns",
+                                            // "",
+                                        ]}
+                                        cellSize={[2, 2, 1, 1, 1, 1, 1, 1]}
+                                        rows={transformedData}
+                                    />
+                                )}
+                            </ScrollView>
+                        )
+                    ) : (
+                        <HStack
+                            space={"md"}
+                            marginTop={20}
+                            marginBottom={20}
+                            justifyContent="center"
+                        >
+                            <Spinner
+                                color={"black"}
+                                accessibilityLabel="Loading order"
+                            />
+                            <Heading color="black" fontSize="md">
+                                Loading
+                            </Heading>
+                        </HStack>
+                    )}
+                </View>
+                {data.length !== 0 && (
+                    <Pagination
+                        itemsPerPage={itemsPerPage}
+                        setItemsPerPage={setItemsPerPage}
+                        getDataList={getDataList}
+                        currentPageNumber={currentPageNumber}
+                        totalPages={totalPages}
+                        setCurrentPageNumber={setCurrentPageNumber}
+                    />
                 )}
             </View>
-            {data.length !== 0 &&
-            <Pagination
-                itemsPerPage={itemsPerPage}
-                setItemsPerPage={setItemsPerPage}
-                getDataList={getDataList}
-                currentPageNumber={currentPageNumber}
-                totalPages={totalPages}
-                setCurrentPageNumber={setCurrentPageNumber}
-            />
-}
         </View>
-
-    </View>
     );
 };
 

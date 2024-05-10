@@ -203,16 +203,16 @@ const IFADataTable = () => {
         //     });
         // }
 
-        // if (roleId > 3) {
-        //     itemStructure.splice(3, 0, {
-        //         key: "Manager",
-        //         content: (
-        //             <Text selectable className="text-[#686868] font-semibold">
-        //                 {item?.distributor?.managementUsers?.[0].name}
-        //             </Text>
-        //         ),
-        //     });
-        // }
+        if (roleId > 3) {
+            itemStructure.splice(2, 0, {
+                key: "Manager",
+                content: (
+                    <Text selectable className="text-[#686868] font-semibold">
+                        {item?.managementUsers?.[0].name}
+                    </Text>
+                ),
+            });
+        }
 
         return itemStructure;
     });
@@ -251,7 +251,22 @@ const IFADataTable = () => {
                                                 data={data}
                                                 schema={null}
                                             />
-                                        ) : (
+                                        ) : roleId > 3 ? <DataTable
+                                        headers={[
+                                            "Name",
+                                            "PAN No.",
+                                            "Manager",
+                                            "ARN No.",
+                                            "EUIN No.",
+                                            "No. of Clients",
+                                            "Active SIP Count",
+                                        ]}
+                                        cellSize={[2, 2, 2, 2, 2, 1, 1]}
+                                        rows={transformedData}
+                                    />
+                                        
+                                        
+                                        : (
                                             <DataTable
                                                 headers={[
                                                     "Name",

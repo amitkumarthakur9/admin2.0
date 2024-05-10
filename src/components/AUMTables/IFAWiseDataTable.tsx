@@ -27,10 +27,11 @@ import DataTable from "../DataTable/DataTable";
 import Tag from "../Tag/Tag";
 import Icon from "react-native-vector-icons/FontAwesome";
 import NoDataAvailable from "../Others/NoDataAvailable";
+import { useUserRole } from "../../context/useRoleContext";
 
 const IFAWiseDataTable = () => {
     const [isLoading, setIsLoading] = React.useState(false);
-
+    const { roleId } = useUserRole();
     const [currentPageNumber, setCurrentPageNumber] = useState(1);
     const [totalItems, setTotalItems] = useState(0);
     const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -98,7 +99,7 @@ const IFAWiseDataTable = () => {
     }, [appliedSorting]);
 
     const transformedData = data?.map((item) => {
-        return [
+        const itemStructure =  [
             {
                 key: "ifa",
                 content: (
@@ -158,6 +159,19 @@ const IFAWiseDataTable = () => {
             //     ),
             // },
         ];
+
+        if (roleId > 3) {
+            itemStructure.splice(2, 0, {
+                key: "Manager",
+                content: (
+                    <Text selectable className="text-[#686868] font-semibold">
+                        {item?.managementUsers?.[0].name}
+                    </Text>
+                ),
+            });
+        }
+
+        return itemStructure;
     });
 
     return (
@@ -188,17 +202,35 @@ const IFAWiseDataTable = () => {
                         <NoDataAvailable />
                     ) : (
 
-                    <ScrollView className={"mt-4 z-[-1] "}>
-                        <DataTable
+                        <ScrollView className={"mt-4 z-[-1] "}>
+                            {roleId > 3 
+                                ? 
+
+                                <DataTable
                             headers={[
                                 "IFA Name",
+                                "Manager",
                                 "Total Invested",
                                 "Current Value",
                                 // "",
                             ]}
-                            cellSize={[3, 3, 3,]}
+                            cellSize={[3, 2,3, 3,]}
                             rows={transformedData}
                         />
+                                 
+                                
+                                :<DataTable
+                                headers={[
+                                    "IFA Name",
+                                    "Total Invested",
+                                    "Current Value",
+                                    // "",
+                                ]}
+                                cellSize={[3, 3, 3,]}
+                                rows={transformedData}
+                            />
+                            }
+                        
                     </ScrollView>
                     )
                 ) : (

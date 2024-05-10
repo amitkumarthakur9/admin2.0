@@ -7,6 +7,7 @@ import {
     ViewStyle,
 } from "react-native";
 import SIPDataTable from "../../../src/components/SIP/SIPDataTable";
+import SIPReportTable from "../../../src/components/SIP/SIPReportTable";
 
 export default function SIPReportsScreen() {
     return (
@@ -18,7 +19,7 @@ export default function SIPReportsScreen() {
                 overflow: "scroll",
             }}
         >
-            <SIPDataTable />
+            <SIPReportTable />
         </ScrollView>
     );
 }
