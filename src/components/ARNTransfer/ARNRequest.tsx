@@ -145,7 +145,7 @@ const ARNRequest = () => {
             setFiltersSchema(response?.data);
             setSorting(response?.data?.sort);
         }
-        // getSchema();
+        getSchema();
     }, []);
 
     React.useEffect(() => {
@@ -153,7 +153,7 @@ const ARNRequest = () => {
             (appliedSorting.direction != "" && appliedSorting.key != "") ||
             (appliedSorting.direction == "" && appliedSorting.key == "")
         ) {
-            // getDataList();
+            getDataList();
         }
     }, [appliedSorting]);
 
@@ -380,7 +380,7 @@ const ARNRequest = () => {
                         />
                     )}
 
-                    {isLoading ? (
+                    {true ? (
                         transformedData.length === 0 ? (
                             <NoDataAvailable />
                         ) : (

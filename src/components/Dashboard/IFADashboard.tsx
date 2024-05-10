@@ -40,13 +40,142 @@ const IFADashboard = () => {
     const [data, setData] = useState<DashboardData>();
 
     const { roleId } = useUserRole();
+    const DummyDate = {
+        aum: {
+            total: 12500,
+            breakDown: [
+                {
+                    category: "Equity",
+                    currentValue: 5000,
+                },
+                {
+                    category: "Debt",
+                    currentValue: 4000,
+                },
+                {
+                    category: "Other",
+                    currentValue: 1500,
+                },
+                {
+                    category: "Hybrid",
+                    currentValue: 3000,
+                },
+            ],
+        },
+        clientCount: 3,
+        transaction: {
+            purchase: 1000,
+            redemption: 100,
+            totalSipTransactions: 2,
+            totalSipTransactionsFailed: 1,
+        },
+        order: {
+            lumpsum: {
+                total: 2000,
+            },
+            sip: {
+                monthlySipAmount: 7500,
+                sipCount: 5,
+                breakDown: [
+                    {
+                        category: "Debt",
+                        count: 1000,
+                    },
+                    {
+                        category: "Equity",
+                        count: 2000,
+                    },
+                    {
+                        category: "Hybrid",
+                        count: 1500,
+                    },
+                    {
+                        category: "Other",
+                        count: 500,
+                    },
+                    {
+                        category: "Solution Oriented",
+                        count: 2500,
+                    },
+                ],
+                newSip: 1,
+            },
+        },
+    };
+
+    const topClientData = [
+        {
+            name: "Anand Gupta",
+            sip: "2",
+            investment: 3000,
+        },
+        {
+            name: "Deepti Shasil Namoshi",
+            sip: "5",
+            investment: 4000,
+        },
+        {
+            name: "AnandRaj Sangappa Malagi  ",
+            sip: "1",
+            investment: 4500,
+        },
+        {
+            name: "Rashmi Ranjan Sahoo",
+            sip: "8",
+            investment: 1500,
+        },
+        {
+            name: "Priyanshu Jain",
+            sip: "4",
+            investment: 5000,
+        },
+    ];
+    const sipBreakdownChart = (sip) => {
+        const totalValue = sip?.reduce(
+            (accumulator, count) => accumulator + count.count,
+            0
+        );
+
+        console.log(totalValue);
+
+        // If totalValue is 0, return an array with 0% for all items to avoid division by zero
+        if (totalValue === 0) {
+            return sip?.map((item) => ({
+                x: item.category,
+                y: 0, // Set percentage to 0 because there's no value to calculate percentage from
+            }));
+        }
+
+        return sip?.map((item) => ({
+            x: item.category,
+            y: (item.count / totalValue) * 100, // Calculate the percentage as normal
+        }));
+    };
+
+    const aumBreakdownChart = (aum) => {
+        const totalValue = aum?.reduce(
+            (accumulator, currentValue) =>
+                accumulator + currentValue.currentValue,
+            0
+        );
+
+        return aum?.map((item) => ({
+            x: item.category,
+            y: (item.currentValue / totalValue) * 100,
+        }));
+    };
 
     useEffect(() => {
         setIsLoading(true);
         async function getDetails() {
-            const response: DashboardResponse = await RemoteApi.get(
-                `dashboard/?d=2`
-            );
+            // const response: DashboardResponse = await RemoteApi.get(
+            //     `dashboard/?d=2`
+            // );
+
+            const response: any = {
+                data: DummyDate,
+            };
+
             if (response) {
                 setData(response?.data);
                 setAumPercentage(
@@ -85,46 +214,6 @@ const IFADashboard = () => {
         // Handle the received data here, such as updating state in the parent component
         setReceivedData2(data);
         console.log("Data received from YourComponent2:", data);
-    };
-
-    // const sipBreakdownChart = data?.order?.sip?.breakDown.map((item) => ({
-    //     x: item.category,
-    //     y: item.count,
-    // }));
-
-    const sipBreakdownChart = (sip) => {
-        const totalValue = sip?.reduce(
-            (accumulator, count) => accumulator + count.count,
-            0
-        );
-
-        console.log(totalValue);
-
-        // If totalValue is 0, return an array with 0% for all items to avoid division by zero
-        if (totalValue === 0) {
-            return sip?.map((item) => ({
-                x: item.category,
-                y: 0, // Set percentage to 0 because there's no value to calculate percentage from
-            }));
-        }
-
-        return sip?.map((item) => ({
-            x: item.category,
-            y: (item.count / totalValue) * 100, // Calculate the percentage as normal
-        }));
-    };
-
-    const aumBreakdownChart = (aum) => {
-        const totalValue = aum?.reduce(
-            (accumulator, currentValue) =>
-                accumulator + currentValue.currentValue,
-            0
-        );
-
-        return aum?.map((item) => ({
-            x: item.category,
-            y: (item.currentValue / totalValue) * 100,
-        }));
     };
 
     return (
@@ -173,13 +262,12 @@ const IFADashboard = () => {
                                     Go to Brokerage Dashboard
                                 </Button>
                             </View>
-                            <View className="flex flex-col md:flex-row  justify-between rounded bg-[#eaf3fe] md:pr-2 ">
+                            <View className="flex flex-col md:flex-row  justify-between rounded bg-[#eaf3fe]  ">
                                 <View className=" flex flex-col md:flex-row  w-full gap-2">
-                                    {" "}
                                     {/* outer Card */}
-                                    <View className="flex flex-col md:w-8/12 rounded bg-[#eaf3fe] h-auto ">
-                                        <View className="flex flex-col md:flex-row rounded  bg-[#eaf3fe] flex-wrap md:w-[99.5%] gap-1 justify-between pb-2">
-                                            <View className="flex flex-col md:w-[32%]  rounded bg-[#0769D0] h-auto items-between gap-2">
+                                    <View className="flex flex-col md:w-full rounded bg-[#eaf3fe] h-auto ">
+                                        <View className="flex flex-col md:flex-row rounded  bg-[#eaf3fe] flex-wrap md:w-[99.9%] gap-1 justify-between pb-2">
+                                            <View className="flex flex-col md:w-[20%]  rounded bg-[#0769D0] h-auto items-between gap-2">
                                                 <Text className="text-[#D2CFCF]  ">
                                                     Total Aum
                                                 </Text>
@@ -203,7 +291,8 @@ const IFADashboard = () => {
                                                     </Text>{" "}
                                                 </Text> */}
                                             </View>
-                                            <View className="flex flex-col md:flex-row md:w-[66%] rounded bg-white h-auto gap-2">
+                                            
+                                            <View className="flex flex-col md:flex-row md:w-[39%] rounded bg-white h-auto gap-2">
                                                 <View className="flex flex-col md:w-6/12  rounded bg-white h-auto gap-1">
                                                     <IconCard
                                                         icon="account-outline"
@@ -242,15 +331,44 @@ const IFADashboard = () => {
                                                         description={
                                                             RupeeSymbol +
                                                             data?.order?.sip
-                                                                ?.monthlySipAmount
+                                                                ?.monthlySipAmount.toFixed(
+                                                                    2
+                                                                )
                                                         }
                                                     />
                                                 </View>
                                             </View>
+                                            <View className="flex flex-col md:flex-row md:w-[39%] rounded bg-white h-auto gap-2">
+                                                <View className="flex flex-col md:w-6/12  rounded bg-white h-auto gap-1">
+                                                    <IconCard
+                                                        icon="account-group-outline"
+                                                        title="Transacted user"
+                                                        description="2"
+                                                    />
+                                                    <IconCard
+                                                        icon="account-check-outline"
+                                                        title="Empanelled IFA"
+                                                        description="10"
+                                                    />
+                                                </View>
+                                                <View className="flex flex-col md:w-5/12  rounded bg-white h-auto gap-1">
+                                                    <IconCard
+                                                        icon="account-cash-outline"
+                                                        title="Ready to Invest"
+                                                        description="7"
+                                                    />
+                                                    <IconCard
+                                                        icon="account-box-multiple-outline"
+                                                        title="IFA Activated"
+                                                        description="4"
+                                                    />
+                                                </View>
+                                            </View>
                                         </View>
-                                        <View className="flex flex-col md:flex-row rounded bg-white w-[99%]">
+                                        <View className="flex flex-col md:flex-row rounded w-[99.9%] ">
+                                            
                                             <View
-                                                className="md:w-[50%]  rounded bg-white p-4"
+                                                className="md:w-[33%]  rounded bg-white p-4"
                                                 style={{
                                                     borderColor: "#e4e4e4",
 
@@ -282,8 +400,12 @@ const IFADashboard = () => {
                                                                         // style={{ width: 100, height: 100 }} // adjust width and height as needed
                                                                         source={require("../../../assets/images/noDataAvailable.png")}
                                                                         alt="No Data Available"
-                                                                        width={20}
-                                                                        height={20}
+                                                                        width={
+                                                                            20
+                                                                        }
+                                                                        height={
+                                                                            20
+                                                                        }
                                                                     />
                                                                     <Text
                                                                         style={{
@@ -309,7 +431,7 @@ const IFADashboard = () => {
                                                     )}
                                                 </View>
                                             </View>
-                                            <View className="md:w-[50%] rounded bg-white p-4">
+                                            <View className="md:w-[33%] rounded bg-white p-4">
                                                 <View className="flex flex-col justify-between">
                                                     <Text className="text-black font-bold text-lg">
                                                         SIP Breakdown
@@ -318,36 +440,36 @@ const IFADashboard = () => {
                                                 {data?.order?.sip?.breakDown
                                                     .length === 0 ? (
                                                     <>
-                                                         <View className="">
-                                                                <View
+                                                        <View className="">
+                                                            <View
+                                                                style={{
+                                                                    flex: 1,
+                                                                    justifyContent:
+                                                                        "center",
+                                                                    alignItems:
+                                                                        "center",
+                                                                }}
+                                                            >
+                                                                <Image
+                                                                    // style={{ width: 100, height: 100 }} // adjust width and height as needed
+                                                                    source={require("../../../assets/images/noDataAvailable.png")}
+                                                                    alt="No Data Available"
+                                                                    width={20}
+                                                                    height={20}
+                                                                />
+                                                                <Text
                                                                     style={{
-                                                                        flex: 1,
-                                                                        justifyContent:
-                                                                            "center",
-                                                                        alignItems:
-                                                                            "center",
+                                                                        paddingTop: 10,
+                                                                        fontSize: 16,
+                                                                        fontWeight:
+                                                                            "bold",
                                                                     }}
                                                                 >
-                                                                    <Image
-                                                                        // style={{ width: 100, height: 100 }} // adjust width and height as needed
-                                                                        source={require("../../../assets/images/noDataAvailable.png")}
-                                                                        alt="No Data Available"
-                                                                        width={20}
-                                                                        height={20}
-                                                                    />
-                                                                    <Text
-                                                                        style={{
-                                                                            paddingTop: 10,
-                                                                            fontSize: 16,
-                                                                            fontWeight:
-                                                                                "bold",
-                                                                        }}
-                                                                    >
-                                                                        No Data
-                                                                        Available
-                                                                    </Text>
-                                                                </View>
+                                                                    No Data
+                                                                    Available
+                                                                </Text>
                                                             </View>
+                                                        </View>
                                                     </>
                                                 ) : (
                                                     <DonutPieChart
@@ -358,9 +480,95 @@ const IFADashboard = () => {
                                                     />
                                                 )}
                                             </View>
+                                            <View className="md:w-[33%] rounded bg-white p-4 ml-3">
+                                                <View className="flex flex-row justify-between items-center gap-4">
+                                                    <View className="flex flex-col justify-between">
+                                                        <Text className="text-black font-bold text-lg">
+                                                            External Portfolio
+                                                        </Text>
+                                                    </View>
+                                                    <View className="w-full flex flex-col justify-between items-start p-2">
+                                                        <View className="w-full">
+                                                            <Text
+                                                                className="text-bold text-xs font-medium text-gray-500"
+                                                                selectable
+                                                            >
+                                                                Current Holding
+                                                            </Text>
+                                                        </View>
+                                                        <View className="">
+                                                            <Text
+                                                                selectable
+                                                                className="font-medium text-xs text-start text-blue-900"
+                                                            >
+                                                                {RupeeSymbol +
+                                                                    "38,98,348.00"}
+                                                            </Text>
+                                                        </View>
+                                                    </View>
+                                                </View>
+
+                                                {data?.aum?.breakDown
+                                                    .length === 0 ? (
+                                                    <>
+                                                        <View className="">
+                                                            <View
+                                                                style={{
+                                                                    flex: 1,
+                                                                    justifyContent:
+                                                                        "center",
+                                                                    alignItems:
+                                                                        "center",
+                                                                }}
+                                                            >
+                                                                <Image
+                                                                    // style={{ width: 100, height: 100 }} // adjust width and height as needed
+                                                                    source={require("../../../assets/images/noDataAvailable.png")}
+                                                                    alt="No Data Available"
+                                                                    width={20}
+                                                                    height={20}
+                                                                />
+                                                                <Text
+                                                                    style={{
+                                                                        paddingTop: 10,
+                                                                        fontSize: 16,
+                                                                        fontWeight:
+                                                                            "bold",
+                                                                    }}
+                                                                >
+                                                                    No Data
+                                                                    Available
+                                                                </Text>
+                                                            </View>
+                                                        </View>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <DonutPieChart
+                                                            pieData={aumBreakdownChart(
+                                                                data?.aum
+                                                                    ?.breakDown
+                                                            )}
+                                                            width={600}
+                                                        />
+                                                        <Button
+                                                            width="100%"
+                                                            bgColor={"#013974"}
+                                                            marginBottom={2}
+                                                            onPress={() =>
+                                                                router.push(
+                                                                    `clients`
+                                                                )
+                                                            }
+                                                        >
+                                                            Transfer Portfolio
+                                                        </Button>
+                                                    </>
+                                                )}
+                                            </View>
                                         </View>
                                     </View>
-                                    <View className="md:w-4/12 rounded bg-white p-4">
+                                    {/* <View className="md:w-4/12 rounded bg-white p-4">
                                         <View className="flex flex-row justify-between">
                                             <View className="">
                                                 <Text className="text-black font-bold">
@@ -390,11 +598,11 @@ const IFADashboard = () => {
                                             />
                                         </View>
                                         <View className="flex flex-col justify-center items-center h-full">
-                                            {/* <View className="h-[350px] overflow-scroll">
+                                            <View className="h-[350px] overflow-scroll">
                                                 {notificationData.map(
                                                     (item, index) => (
                                                         <AvatarCard
-                                                            key={index} // Make sure to provide a unique key for each item
+                                                            key={index} 
                                                             imageUrl={
                                                                 item.imageUrl
                                                             }
@@ -405,15 +613,15 @@ const IFADashboard = () => {
                                                         />
                                                     )
                                                 )}
-                                            </View> */}
+                                            </View> 
                                             <Image
                                                 className=""
                                                 alt="ico"
                                                 source={require("../../../assets/images/comingsoon.png")}
                                                 style={
                                                     {
-                                                        // flex: 1,
-                                                        // justifyContent: 'end',
+                                                        flex: 1,
+                                                        justifyContent: 'end',
                                                     }
                                                 }
                                             />
@@ -422,11 +630,11 @@ const IFADashboard = () => {
                                                 Coming Soon
                                             </Text>
                                         </View>
-                                    </View>
+                                    </View> */}
                                 </View>
                             </View>
                             <View className="bg-[#eaf3fe]">
-                                {/* <View className="flex flex-row items-center">
+                                <View className="flex flex-row items-center">
                                     <Text className="text-base text-slate-500 font-bold text-medium pr-4">
                                         Time Period:
                                     </Text>
@@ -455,9 +663,10 @@ const IFADashboard = () => {
                                             flex: 1,
                                             alignSelf: "center",
                                             width: "100%",
+                                            marginLeft: 10,
                                         }}
                                     />
-                                </View> */}
+                                </View>
                             </View>
                             {roleId == 2 && (
                                 <View className="flex flex-col md:flex-row justify-between rounded bg-white h-auto gap-2 pb-4">
@@ -477,7 +686,9 @@ const IFADashboard = () => {
                                                     data?.transaction?.purchase
                                                         ? RupeeSymbol +
                                                           data?.transaction
-                                                              ?.purchase
+                                                              ?.purchase.toFixed(
+                                                                2
+                                                            )
                                                         : RupeeSymbol + "0"
                                                 }
                                             />
@@ -488,7 +699,9 @@ const IFADashboard = () => {
                                                         ?.redemption
                                                         ? RupeeSymbol +
                                                           data?.transaction
-                                                              ?.redemption
+                                                              ?.redemption.toFixed(
+                                                                2
+                                                            )
                                                         : RupeeSymbol + "0"
                                                 }
                                             />
@@ -531,7 +744,7 @@ const IFADashboard = () => {
                                         </View>
                                     </View>
                                     <View
-                                        className="md:w-[35%] md:h-128 rounded px-4"
+                                        className="md:w-[65%] md:h-128 rounded px-4"
                                         style={{
                                             borderColor: "#e4e4e4", // Grey border color
 
@@ -542,7 +755,7 @@ const IFADashboard = () => {
                                         <Text className="font-bold text-start">
                                             Top 5 Clients
                                         </Text>
-                                        <View className="flex flex-col h-auto justify-center items-center pt-4">
+                                        {/* <View className="flex flex-col h-auto justify-center items-center pt-4">
                                             <Image
                                                 className=""
                                                 alt="ico"
@@ -557,8 +770,8 @@ const IFADashboard = () => {
                                             <Text className="py-4 text-lg font-bold text-center">
                                                 Coming Soon
                                             </Text>
-                                        </View>
-                                        {/* <View className="flex flex-row py-2">
+                                        </View> */}
+                                        <View className="flex flex-row py-2">
                                             <View className="w-6/12">
                                                 <Text className="text-black text-center">
                                                     Name
@@ -583,7 +796,7 @@ const IFADashboard = () => {
                                                                 imageUrl={
                                                                     item.imageUrl
                                                                 }
-                                                                title="Natali Craig"
+                                                                title={item.name}
                                                                 description=""
                                                             />
                                                         </View>
@@ -609,9 +822,9 @@ const IFADashboard = () => {
                                                     </View>
                                                 )
                                             )}
-                                        </View> */}
+                                        </View>
                                     </View>
-                                    <View className="md:w-[16%] rounded pl-1">
+                                    {/* <View className="md:w-[16%] rounded pl-1">
                                         <Text className="font-bold text-start ">
                                             Inactive Client
                                         </Text>
@@ -631,7 +844,7 @@ const IFADashboard = () => {
                                                 Coming Soon
                                             </Text>
                                         </View>
-                                        {/* <View className="">
+                                        <View className="">
                                             <View className=" h-56 overflow-scroll">
                                                 {topClientData.map(
                                                     (item, index) => (
@@ -644,8 +857,8 @@ const IFADashboard = () => {
                                                     )
                                                 )}
                                             </View>
-                                        </View> */}
-                                    </View>
+                                        </View>
+                                    </View> */}
                                 </View>
                             )}
 
@@ -668,7 +881,9 @@ const IFADashboard = () => {
                                                     data?.transaction?.purchase
                                                         ? RupeeSymbol +
                                                           data?.transaction
-                                                              ?.purchase
+                                                              ?.purchase.toFixed(
+                                                                2
+                                                            )
                                                         : RupeeSymbol + "0"
                                                 }
                                             />
@@ -679,7 +894,9 @@ const IFADashboard = () => {
                                                         ?.redemption
                                                         ? RupeeSymbol +
                                                           data?.transaction
-                                                              ?.redemption
+                                                              ?.redemption.toFixed(
+                                                                2
+                                                            )
                                                         : RupeeSymbol + "0"
                                                 }
                                             />
@@ -721,7 +938,7 @@ const IFADashboard = () => {
                                         </View>
                                     </View>
                                     <View
-                                        className="w-[35%] h-128 rounded px-4"
+                                        className="w-[65%] h-128 rounded px-4"
                                         style={{
                                             borderColor: "#e4e4e4", // Grey border color
 
@@ -732,7 +949,7 @@ const IFADashboard = () => {
                                         <Text className="font-bold ">
                                             Top 5 distributor
                                         </Text>
-                                        <View className="flex flex-col h-auto justify-center items-center pt-4">
+                                        {/* <View className="flex flex-col h-auto justify-center items-center pt-4">
                                             <Image
                                                 className=""
                                                 alt="ico"
@@ -747,8 +964,8 @@ const IFADashboard = () => {
                                             <Text className="py-4 text-lg font-bold text-center">
                                                 Coming Soon
                                             </Text>
-                                        </View>
-                                        {/* <View className="flex flex-row py-2">
+                                        </View> */}
+                                        <View className="flex flex-row py-2">
                                             <View className="w-6/12">
                                                 <Text className="text-black">
                                                     Name
@@ -773,7 +990,9 @@ const IFADashboard = () => {
                                                                 imageUrl={
                                                                     item.imageUrl
                                                                 }
-                                                                title="Natali Craig"
+                                                                title={
+                                                                    item.name
+                                                                }
                                                                 description=""
                                                             />
                                                         </View>
@@ -799,9 +1018,9 @@ const IFADashboard = () => {
                                                     </View>
                                                 )
                                             )}
-                                        </View> */}
+                                        </View>
                                     </View>
-                                    <View className="w-[16%] rounded pl-1">
+                                    {/* <View className="w-[16%] rounded pl-1">
                                         <Text className="font-bold ">
                                             Inactive distributor
                                         </Text>
@@ -821,7 +1040,7 @@ const IFADashboard = () => {
                                                 Coming Soon
                                             </Text>
                                         </View>
-                                        {/* <View className=" h-56 overflow-scroll">
+                                     <View className=" h-56 overflow-scroll">
                                             {topClientData.map(
                                                 (item, index) => (
                                                     <AvatarCard
@@ -832,8 +1051,8 @@ const IFADashboard = () => {
                                                     />
                                                 )
                                             )}
-                                        </View> */}
-                                    </View>
+                                        </View>
+                                    </View> */}
                                 </View>
                             )}
 

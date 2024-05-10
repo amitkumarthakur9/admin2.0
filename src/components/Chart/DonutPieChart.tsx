@@ -2,7 +2,7 @@ import React from "react";
 import { View } from "react-native";
 import { VictoryPie, VictoryLegend, VictoryTooltip } from "victory";
 
-const DonutPieChart = ({pieData}) => {
+const DonutPieChart = ({pieData , width=500}) => {
 
     const colorScale = ["#715CFA", "#B0ED8B", "#FE9090", "#FFE456"];
 
@@ -37,7 +37,7 @@ const DonutPieChart = ({pieData}) => {
                         `${datum.x}: ${datum.y.toFixed(1)}${"%"}`
                     }
                     style={{ labels: { fill: "black" } }}
-                    width={500}
+                    width={width}
                     labelComponent={
                         <VictoryTooltip
                             dy={0}
