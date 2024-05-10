@@ -46,7 +46,7 @@ export const SIPRows = ({
                 className={`hidden md:hidden lg:flex flex-row py-4 px-2 justify-between flex-wrap`}
             >
                 <View className="flex flex-row w-6/12">
-                    <View
+                    {/* <View
                         className={`marker:flex flex-row items-center w-${
                             roleId > 3 ? "3/12" : roleId > 2 ? "4/12" : "5/12"
                         } justify-start`}
@@ -54,9 +54,15 @@ export const SIPRows = ({
                         <Text selectable className="font-semibold">
                             Customer Name
                         </Text>
+                    </View> */}
+                    <View className="flex flex-row items-center w-5/12 justify-start"
+                    >
+                        <Text selectable className="font-semibold">
+                            Customer Name
+                        </Text>
                     </View>
 
-                    <View
+                    {/* <View
                         className={`flex flex-row items-center w-${
                             roleId > 3 ? "1/12" : roleId > 2 ? "2/12" : "3/12"
                         } justify-start`}
@@ -64,8 +70,16 @@ export const SIPRows = ({
                         <Text selectable className="font-semibold">
                             Folio No
                         </Text>
+                    </View> */}
+                    <View
+                        className={`flex flex-row items-center w-3/12
+                         justify-start`}
+                    >
+                        <Text selectable className="font-semibold">
+                            Folio No
+                        </Text>
                     </View>
-                    {roleId > 2 && (
+                    {/* {roleId > 2 && (
                         <View className="flex flex-row w-2/12">
                             <View className="flex flex-row items-center w-full justify-start">
                                 <Text selectable className="font-semibold">
@@ -82,7 +96,7 @@ export const SIPRows = ({
                                 </Text>
                             </View>
                         </View>
-                    )}
+                    )} */}
 
                     <View className="flex flex-row items-center w-4/12 justify-start">
                         <Text selectable className="font-semibold">
@@ -183,7 +197,7 @@ export const SIPRows = ({
                             className={`flex flex-row p-2 justify-between flex-wrap`}
                         >
                             <View className="flex sm:flex-col md:flex-col lg:flex-row w-full md:w-8/12 lg:w-6/12">
-                                <View
+                                {/* <View
                                     className={`flex flex-row md:flex-row lg:flex-row items-center w-full lg:w-${
                                         roleId > 3
                                             ? "3/12"
@@ -191,6 +205,10 @@ export const SIPRows = ({
                                             ? "4/12"
                                             : "5/12"
                                     } justify-between`}
+                                > */}
+                                <View
+                                    className={`flex flex-row md:flex-row lg:flex-row items-center w-full lg:w-5/12
+                                     justify-between`}
                                 >
                                     <View className="flex flex-row items-center justify-start w-10/12 lg:w-full max-w-[300px]">
                                         <Pressable
@@ -217,7 +235,7 @@ export const SIPRows = ({
                                                         )
                                                     }
                                                 >
-                                                    <View
+                                                    {/* <View
                                                         className={`pl-12 lg:pl-0 hidden lg:flex flex-row justify-start w-${
                                                             roleId > 3
                                                                 ? "2/12"
@@ -225,6 +243,10 @@ export const SIPRows = ({
                                                                 ? "2/12"
                                                                 : "5/12"
                                                         }`}
+                                                    > */}
+                                                    <View
+                                                        className={`pl-12 lg:pl-0 hidden lg:flex flex-row justify-start w-5/12
+                                                        `}
                                                     >
                                                         <Text
                                                             selectable
@@ -364,7 +386,7 @@ export const SIPRows = ({
                                     </View>
                                 </View>
 
-                                <View
+                                {/* <View
                                     className={`pl-12 lg:pl-0 hidden lg:flex flex-row justify-start w-${
                                         roleId > 3
                                             ? "1/12"
@@ -372,6 +394,10 @@ export const SIPRows = ({
                                             ? "2/12"
                                             : "3/12"
                                     }`}
+                                > */}
+                                <View
+                                    className={`pl-12 lg:pl-0 hidden lg:flex flex-row justify-start w-3/12
+                                    `}
                                 >
                                     <Text>
                                         {/* {order?.transactions[0]?.folio
@@ -381,7 +407,7 @@ export const SIPRows = ({
                                     </Text>
                                 </View>
 
-                                {roleId > 2 && (
+                                {/* {roleId > 2 && (
                                     <View className="pl-12 lg:px-1 hidden lg:flex flex-row justify-start w-2/12">
                                         <Text className="">
                                             {order?.distributor?.name
@@ -389,9 +415,9 @@ export const SIPRows = ({
                                                 : "-"}
                                         </Text>
                                     </View>
-                                )}
+                                )} */}
 
-                                {roleId > 3 && (
+                                {/* {roleId > 3 && (
                                     <View className="pl-12 lg:px-1 hidden lg:flex flex-row justify-start w-2/12">
                                         <Text>
                                             {order?.distributor
@@ -401,7 +427,7 @@ export const SIPRows = ({
                                                 : "-"}
                                         </Text>
                                     </View>
-                                )}
+                                )} */}
 
                                 <View className="pl-12 lg:pl-0 flex flex-row items-center w-full lg:w-4/12 justify-between md:justify-between lg:justify-start mt-2 md:mt-2 lg:mt-0">
                                     <View
