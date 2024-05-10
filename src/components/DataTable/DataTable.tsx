@@ -161,6 +161,7 @@ interface IDataTable {
         name: string;
         onClick: (data: any) => void;
     }[];
+    noDataText?: string;
 }
 
 const DataTable = ({
@@ -170,6 +171,7 @@ const DataTable = ({
     className,
     hasActions,
     options,
+    noDataText,
 }: IDataTable) => {
     return (
         <View className={className}>
@@ -191,7 +193,7 @@ const DataTable = ({
             ) : (
                 <View className="flex flex-col items-center gap-8">
                     <Text className="text-black font-bold">
-                        No Data Available
+                        {noDataText ? noDataText : "No Data Available"}
                     </Text>
                     <Image
                         source={require("../../../assets/images/noData.png")}

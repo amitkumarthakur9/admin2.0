@@ -997,7 +997,7 @@ const LumpSumOrderTab = ({
     hideDialog: () => void;
 }) => {
     const [folioID, setFolioID] = useState(null);
-    const [investmentAmount, setInvestmentAmount] = useState("5000");
+    const [investmentAmount, setInvestmentAmount] = useState("500");
 
     const { id } = useLocalSearchParams();
 
@@ -1147,7 +1147,7 @@ const SipOrderTab = ({
     hideDialog: () => void;
 }) => {
     const [folioID, setFolioID] = useState(null);
-    const [investmentAmount, setInvestmentAmount] = useState("5000");
+    const [investmentAmount, setInvestmentAmount] = useState("500");
     const [sipDate, setSipDate] = useState();
     const toast = useToast();
 
@@ -1375,6 +1375,11 @@ const InvestModalSearch = ({ changeSelectedFund }) => {
                         key="searchMutualFund"
                         headers={[]}
                         cellSize={[10, 2]}
+                        noDataText={
+                            query.length > 3
+                                ? "No Data Available"
+                                : "Start your investment"
+                        }
                         rows={searchResults?.data?.map((fund) => {
                             return [
                                 {
