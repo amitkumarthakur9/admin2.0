@@ -161,11 +161,12 @@ const IFAWiseDataTable = () => {
         ];
 
         if (roleId > 3) {
-            itemStructure.splice(2, 0, {
+            itemStructure.splice(1, 0, {
                 key: "Manager",
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
-                        {item?.managementUsers?.[0].name}
+                        {item?.managementUserName}
+                       
                     </Text>
                 ),
             });

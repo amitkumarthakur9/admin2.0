@@ -153,6 +153,7 @@ interface IFAwiseData {
     currentValue: number;
     investedValue: number;
     managementUsers: ManagementUser[];
+    managementUserName: string;
 }
 
 interface ClientWiseData {

@@ -101,7 +101,7 @@ const ClientsDataTable = () => {
                 key: "clientName",
                 content: (
                     <View className="flex flex-row items-center justify-start w-[99%]">
-                        <View className="flex flex-col rounded-full bg-[#e60202] mr-2 h-10 w-2/12 mb-1 items-center justify-center flex-wrap ">
+                        <View className="flex flex-col rounded-full bg-[#e60202] mr-2 h-[40px] w-[40px]  items-center justify-center flex-wrap ">
                             <Text selectable className="text-white">
                                 {getInitials(item?.name)}
                             </Text>

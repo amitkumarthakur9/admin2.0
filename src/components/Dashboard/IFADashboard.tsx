@@ -93,10 +93,10 @@ const IFADashboard = () => {
                         category: "Other",
                         count: 500,
                     },
-                    {
-                        category: "Solution Oriented",
-                        count: 2500,
-                    },
+                    // {
+                    //     category: "Solution Oriented",
+                    //     count: 2500,
+                    // },
                 ],
                 newSip: 1,
             },
@@ -291,7 +291,7 @@ const IFADashboard = () => {
                                                     </Text>{" "}
                                                 </Text> */}
                                             </View>
-                                            
+
                                             <View className="flex flex-col md:flex-row md:w-[39%] rounded bg-white h-auto gap-2">
                                                 <View className="flex flex-col md:w-6/12  rounded bg-white h-auto gap-1">
                                                     <IconCard
@@ -330,10 +330,9 @@ const IFADashboard = () => {
                                                         title="Total SIP Amount"
                                                         description={
                                                             RupeeSymbol +
-                                                            data?.order?.sip
-                                                                ?.monthlySipAmount.toFixed(
-                                                                    2
-                                                                )
+                                                            data?.order?.sip?.monthlySipAmount.toFixed(
+                                                                2
+                                                            )
                                                         }
                                                     />
                                                 </View>
@@ -366,7 +365,6 @@ const IFADashboard = () => {
                                             </View>
                                         </View>
                                         <View className="flex flex-col md:flex-row rounded w-[99.9%] ">
-                                            
                                             <View
                                                 className="md:w-[33%]  rounded bg-white p-4"
                                                 style={{
@@ -487,29 +485,11 @@ const IFADashboard = () => {
                                                             External Portfolio
                                                         </Text>
                                                     </View>
-                                                    <View className="w-full flex flex-col justify-between items-start p-2">
-                                                        <View className="w-full">
-                                                            <Text
-                                                                className="text-bold text-xs font-medium text-gray-500"
-                                                                selectable
-                                                            >
-                                                                Current Holding
-                                                            </Text>
-                                                        </View>
-                                                        <View className="">
-                                                            <Text
-                                                                selectable
-                                                                className="font-medium text-xs text-start text-blue-900"
-                                                            >
-                                                                {RupeeSymbol +
-                                                                    "38,98,348.00"}
-                                                            </Text>
-                                                        </View>
-                                                    </View>
+                                                    <View className="w-full flex flex-col justify-between items-start p-2"></View>
                                                 </View>
 
-                                                {data?.aum?.breakDown
-                                                    .length === 0 ? (
+                                                {data?.aum?.breakDown.length ===
+                                                0 ? (
                                                     <>
                                                         <View className="">
                                                             <View
@@ -549,12 +529,35 @@ const IFADashboard = () => {
                                                                 data?.aum
                                                                     ?.breakDown
                                                             )}
-                                                            width={600}
+                                                            width={500}
+                                                            children={
+                                                                <>
+                                                                    <View className="w-full">
+                                                                        <Text
+                                                                            className="text-bold text-xs font-medium text-gray-500"
+                                                                            selectable
+                                                                        >
+                                                                            Current
+                                                                            Holding
+                                                                        </Text>
+                                                                    </View>
+                                                                    <View className="">
+                                                                        <Text
+                                                                            selectable
+                                                                            className="font-medium text-xs text-start text-blue-900"
+                                                                        >
+                                                                            {RupeeSymbol +
+                                                                                "19,348.00"}
+                                                                        </Text>
+                                                                    </View>
+                                                                </>
+                                                            }
                                                         />
                                                         <Button
                                                             width="100%"
                                                             bgColor={"#013974"}
-                                                            marginBottom={2}
+                                                            // marginBottom={1}
+                                                            marginTop={2}
                                                             onPress={() =>
                                                                 router.push(
                                                                     `clients`
@@ -685,10 +688,9 @@ const IFADashboard = () => {
                                                 description={
                                                     data?.transaction?.purchase
                                                         ? RupeeSymbol +
-                                                          data?.transaction
-                                                              ?.purchase.toFixed(
-                                                                2
-                                                            )
+                                                          data?.transaction?.purchase.toFixed(
+                                                              2
+                                                          )
                                                         : RupeeSymbol + "0"
                                                 }
                                             />
@@ -698,10 +700,9 @@ const IFADashboard = () => {
                                                     data?.transaction
                                                         ?.redemption
                                                         ? RupeeSymbol +
-                                                          data?.transaction
-                                                              ?.redemption.toFixed(
-                                                                2
-                                                            )
+                                                          data?.transaction?.redemption.toFixed(
+                                                              2
+                                                          )
                                                         : RupeeSymbol + "0"
                                                 }
                                             />
@@ -778,7 +779,9 @@ const IFADashboard = () => {
                                                 </Text>
                                             </View>
                                             <View className="w-2/12">
-                                                <Text className="text-center">SIPs</Text>
+                                                <Text className="text-center">
+                                                    SIPs
+                                                </Text>
                                             </View>
                                             <View className="w-4/12">
                                                 <Text>Investment</Text>
@@ -796,7 +799,9 @@ const IFADashboard = () => {
                                                                 imageUrl={
                                                                     item.imageUrl
                                                                 }
-                                                                title={item.name}
+                                                                title={
+                                                                    item.name
+                                                                }
                                                                 description=""
                                                             />
                                                         </View>
@@ -880,10 +885,9 @@ const IFADashboard = () => {
                                                 description={
                                                     data?.transaction?.purchase
                                                         ? RupeeSymbol +
-                                                          data?.transaction
-                                                              ?.purchase.toFixed(
-                                                                2
-                                                            )
+                                                          data?.transaction?.purchase.toFixed(
+                                                              2
+                                                          )
                                                         : RupeeSymbol + "0"
                                                 }
                                             />
@@ -893,10 +897,9 @@ const IFADashboard = () => {
                                                     data?.transaction
                                                         ?.redemption
                                                         ? RupeeSymbol +
-                                                          data?.transaction
-                                                              ?.redemption.toFixed(
-                                                                2
-                                                            )
+                                                          data?.transaction?.redemption.toFixed(
+                                                              2
+                                                          )
                                                         : RupeeSymbol + "0"
                                                 }
                                             />
