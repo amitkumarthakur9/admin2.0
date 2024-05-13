@@ -196,7 +196,7 @@ const ClientWiseDataTable = () => {
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
                         {item?.investedValue
-                            ? RupeeSymbol + item?.investedValue
+                            ? RupeeSymbol + item?.investedValue.toFixed(2)
                             : RupeeSymbol + "0"}
                     </Text>
                 ),
@@ -206,7 +206,7 @@ const ClientWiseDataTable = () => {
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
                         {item?.currentValue
-                            ? RupeeSymbol + item?.currentValue
+                            ? RupeeSymbol + item?.currentValue.toFixed(2)
                             : RupeeSymbol + "0"}
                     </Text>
                 ),

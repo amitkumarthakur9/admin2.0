@@ -371,7 +371,7 @@ export default function OrderDetail() {
                                                         selectable
                                                         className="font-medium"
                                                     >
-                                                        {data.startDate || "-"}
+                                                        {data.startDate || "NA"}
                                                     </Text>
                                                     <Text
                                                         className="text-[10px] text-slate-500"
@@ -392,7 +392,7 @@ export default function OrderDetail() {
                                                     selectable
                                                     className="font-medium"
                                                 >
-                                                    {data.units || "-"}
+                                                    {data.units || "NA"}
                                                 </Text>
                                                 <Text
                                                     className="text-[10px] text-slate-500"
@@ -412,7 +412,7 @@ export default function OrderDetail() {
                                                     selectable
                                                     className="font-medium"
                                                 >
-                                                    {"10" || "-"}
+                                                    {"10" || "NA"}
                                                 </Text>
                                                 <Text
                                                     className="text-[10px] text-slate-500"
@@ -433,7 +433,7 @@ export default function OrderDetail() {
                                                     className="font-medium"
                                                 >
                                                     {data.orderStatus.name ||
-                                                        "-"}
+                                                        "NA"}
                                                 </Text>
                                                 <Text
                                                     className="text-[10px] text-slate-500"
@@ -456,7 +456,7 @@ export default function OrderDetail() {
                                                     {data.amount
                                                         ? RupeeSymbol +
                                                           data.amount.toString()
-                                                        : "-"}
+                                                        : "NA"}
                                                 </Text>
                                                 <Text
                                                     className="text-[10px] text-slate-500"
@@ -477,7 +477,7 @@ export default function OrderDetail() {
                                                     selectable
                                                     className="font-medium"
                                                 >
-                                                    {data.orderType.name || "-"}
+                                                    {data.orderType.name || "NA"}
                                                 </Text>
                                                 <Text
                                                     className="text-[10px] text-slate-500"
@@ -502,7 +502,7 @@ export default function OrderDetail() {
                                                         data?.transactions[0]
                                                             .folio
                                                             ?.folioNumber) ||
-                                                        "-"}
+                                                        "NA"}
                                                 </Text>
                                                 <Text
                                                     className="text-[10px] text-slate-500"
@@ -575,7 +575,7 @@ export default function OrderDetail() {
                                                                             {transaction
                                                                                 .folio
                                                                                 ?.folioNumber ||
-                                                                                "-"}{" "}
+                                                                                "NA"}{" "}
                                                                         </Text>
                                                                     </View>
                                                                     <View className="flex flex-col items-center w-4/12 justify-center">
@@ -591,7 +591,7 @@ export default function OrderDetail() {
                                                                             className="text-black font-bold text-[13px]"
                                                                         >
                                                                             {transaction.amount ||
-                                                                                "-"}{" "}
+                                                                                "NA"}{" "}
                                                                         </Text>
                                                                     </View>
                                                                     <View className="flex flex-col items-center w-4/12 justify-center">
@@ -607,7 +607,7 @@ export default function OrderDetail() {
                                                                             className="text-black font-bold text-[13px]"
                                                                         >
                                                                             {transaction.units ||
-                                                                                "-"}{" "}
+                                                                                "NA"}{" "}
                                                                         </Text>
                                                                     </View>
                                                                 </View>
@@ -634,7 +634,7 @@ export default function OrderDetail() {
                                                                                 ).format(
                                                                                     "DD-MM-YYYY hh:mm:ss A"
                                                                                 )) ||
-                                                                                "-"}{" "}
+                                                                                "NA"}{" "}
                                                                         </Text>
                                                                     </View>
                                                                     <View className="flex flex-col items-center w-4/12 justify-center">
@@ -658,7 +658,7 @@ export default function OrderDetail() {
                                                                                 ).format(
                                                                                     "DD-MM-YYYY hh:mm:ss A"
                                                                                 )) ||
-                                                                                "-"}{" "}
+                                                                                "NA"}{" "}
                                                                         </Text>
                                                                     </View>
                                                                     <View className="flex flex-col items-center w-4/12 justify-center">
@@ -682,7 +682,7 @@ export default function OrderDetail() {
                                                                                 ).format(
                                                                                     "DD-MM-YYYY hh:mm:ss A"
                                                                                 )) ||
-                                                                                "-"}{" "}
+                                                                                "NA"}{" "}
                                                                         </Text>
                                                                     </View>
                                                                 </View>
@@ -701,7 +701,7 @@ export default function OrderDetail() {
                                                                             className="text-black font-bold text-[13px]"
                                                                         >
                                                                             {transaction.nav ||
-                                                                                "-"}{" "}
+                                                                                "NA"}{" "}
                                                                         </Text>
                                                                     </View>
                                                                     <View className="flex flex-col items-center w-4/12 justify-center">
@@ -720,7 +720,7 @@ export default function OrderDetail() {
                                                                             {transaction
                                                                                 .transactionStatus
                                                                                 .name ||
-                                                                                "-"}{" "}
+                                                                                "NA"}{" "}
                                                                         </Text>
                                                                     </View>
                                                                     <View className="flex flex-col items-center w-4/12 justify-center">
@@ -738,7 +738,7 @@ export default function OrderDetail() {
                                                                             {transaction
                                                                                 .transactionType
                                                                                 .name ||
-                                                                                "-"}{" "}
+                                                                                "NA"}{" "}
                                                                         </Text>
                                                                     </View>
                                                                 </View>
@@ -819,7 +819,7 @@ export default function OrderDetail() {
                                                                     selectable
                                                                 >
                                                                     {transaction.paymentDate ||
-                                                                        "-"}
+                                                                        "NA"}
                                                                 </Text>
                                                             </View>
                                                             <View className="w-2/12 p-3">
@@ -829,7 +829,7 @@ export default function OrderDetail() {
                                                                     {transaction
                                                                         .transactionType
                                                                         .name ||
-                                                                        "-"}
+                                                                        "NA"}
                                                                 </Text>
                                                             </View>
                                                             <View className="w-2/12 p-3">
@@ -837,7 +837,7 @@ export default function OrderDetail() {
                                                                     selectable
                                                                 >
                                                                     {transaction.units ||
-                                                                        "-"}
+                                                                        "NA"}
                                                                 </Text>
                                                             </View>
                                                             <View className="w-2/12 p-3">
@@ -845,7 +845,7 @@ export default function OrderDetail() {
                                                                     selectable
                                                                 >
                                                                     {transaction.nav ||
-                                                                        "-"}
+                                                                        "NA"}
                                                                 </Text>
                                                             </View>
                                                             <View className="w-2/12 p-3">
@@ -855,7 +855,7 @@ export default function OrderDetail() {
                                                                     {transaction.amount
                                                                         ? RupeeSymbol +
                                                                           transaction.amount
-                                                                        : "-"}
+                                                                        : "NA"}
                                                                 </Text>
                                                             </View>
                                                             <View className="w-2/12 p-3">
@@ -865,7 +865,7 @@ export default function OrderDetail() {
                                                                     {transaction
                                                                         .transactionStatus
                                                                         .name ||
-                                                                        "-"}
+                                                                        "NA"}
                                                                 </Text>
                                                             </View>
                                                         </View>

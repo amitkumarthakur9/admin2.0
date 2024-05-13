@@ -346,7 +346,7 @@ export const RTAReconciliationRows = ({ data, schema, getDataList }) => {
                                     <Text className="w-10/12" selectable>
                                     {rta?.distributor?.name
                                                 ? rta?.distributor?.name
-                                                : "-"}
+                                                : "NA"}
                                     </Text>
                                 </View>
                             )}
@@ -357,13 +357,13 @@ export const RTAReconciliationRows = ({ data, schema, getDataList }) => {
                                                 ?.managementUsers[0].name
                                                 ? rta?.distributor
                                                       ?.managementUsers[0].name
-                                                : "-"}
+                                                : "NA"}
                                     </Text>
                                 </View>
                             )}
                             <View className="flex flex-row w-1/12">
                                 <Text className="w-10/12" selectable>
-                                    {rta.orderReferenceNumber || "-"}
+                                    {rta.orderReferenceNumber || "NA"}
                                 </Text>
                             </View>
                             <View className="flex flex-row w-1/12">
@@ -372,12 +372,12 @@ export const RTAReconciliationRows = ({ data, schema, getDataList }) => {
                                         ? moment(rta.paymentDate).format(
                                               "DD-MM-YYYY hh:mm:ss A"
                                           )
-                                        : "-"}
+                                        : "NA"}
                                 </Text>
                             </View>
                             <View className="flex flex-row w-1/12">
                                 <Text className="w-10/12" selectable>
-                                    {rta.folioNumber || "-"}
+                                    {rta.folioNumber || "NA"}
                                 </Text>
                             </View>
                             <View className="flex flex-row w-1/12">
@@ -385,7 +385,7 @@ export const RTAReconciliationRows = ({ data, schema, getDataList }) => {
                                     <Text selectable>
                                         {rta.amount
                                             ? RupeeSymbol + rta.amount
-                                            : "-"}
+                                            : "NA"}
                                     </Text>
                                     {rta.units ? (
                                         <Text
@@ -416,12 +416,12 @@ export const RTAReconciliationRows = ({ data, schema, getDataList }) => {
                                         ? moment(
                                               new Date(rta.createdAt)
                                           ).format("DD-MM-YYYY hh:mm:ss A")
-                                        : "-"}
+                                        : "NA"}
                                 </Text>
                             </View>
                             <View className="flex flex-row w-1/12">
                                 <Text className="w-10/12" selectable>
-                                    {rta.transactionType || "-"}
+                                    {rta.transactionType || "NA"}
                                 </Text>
                             </View>
                             <View className="flex flex-row w-1/12 justify-start items-start">
@@ -432,7 +432,7 @@ export const RTAReconciliationRows = ({ data, schema, getDataList }) => {
                                                 selectable
                                                 className="text-black text-md w-[99%]"
                                             >
-                                                {rta.transactionStatus || "-"}
+                                                {rta.transactionStatus || "NA"}
                                             </Text>
                                         </View>
                                         <View className="flex flex-row h-full justify-start items-start pt-1">

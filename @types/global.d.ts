@@ -30,6 +30,7 @@ declare global {
             managementUsers: ManagementUsers;
         };
         lastInvestment: string;
+        externalFundLastUpdatedOn: string;
         activeSip: number;
     }
 

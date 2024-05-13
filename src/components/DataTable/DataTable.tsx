@@ -22,15 +22,41 @@ const TableHeader = ({ headers, cellSize }) => {
     return (
         <View
             className={
-                `flex flex-row py-4 px-2 justify-between ` +
+                `flex flex-row py-4 px-2  justify-between` +
                 (Dimensions.get("screen").width < 770 ? "w-[1728px]" : "")
             }
         >
             {headers?.map((head, index) => {
+                // Check if the variable is a string
+                if (typeof cellSize[index] === "string") {
+                    console.log("header");
+                    console.log(
+                        `w-${
+                            typeof cellSize[index] === "string"
+                                ? "[" + cellSize[index] + "]"
+                                : cellSize[index] + "/12"
+                        }`
+                    );
+                } else {
+                    console.log("elseheader");
+                    console.log(
+                        `w-${
+                            typeof cellSize[index] === "string"
+                                ? "[" + cellSize[index] + "]"
+                                : cellSize[index] + "/12"
+                        }`
+                    );
+                }
+
                 return (
                     <View
-                        key={index}
-                        className={`flex flex-row w-${cellSize[index]}/12 justify-start`}
+                        key={index + 1}
+                        // className={`flex flex-row w-${cellSize[index]}/12 justify-start`}
+                        className={`flex flex-row w-${
+                            typeof cellSize[index] === "string"
+                                ? "[" + cellSize[index] + "]"
+                                : cellSize[index] + "/12"
+                        } justify-start`}
                     >
                         <View
                             className={`flex flex-row items-center w-full justify-start`}
@@ -100,10 +126,19 @@ const RowItem = ({ width, content, isLast, hasActions, options, data }) => {
     const toggleDropdown = () => setShowDropdown(!showDropdown);
     const closeDropdown = () => setShowDropdown(false);
 
+    // Check if the variable is a string
+    // if (typeof width === 'string') {
+    //     console.log(`w-${typeof width === 'string'? `[${width}]` : `${width}/12`}`);
+    // } else {
+    //     console.log(`w-${typeof width === 'string'? `[${width}]` : `${width}/12`}`);
+    // }
+
     return (
         <TouchableWithoutFeedback onPress={closeDropdown}>
             <View
-                className={`flex flex-row relative items-center w-${width}/12`}
+                className={`flex flex-row relative items-center w-${
+                    typeof width === "string" ? `[${width}]` : `${width}/12`
+                }`}
             >
                 <View
                     className={`flex flex-row items-center -z-9999 ${

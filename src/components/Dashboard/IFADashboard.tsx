@@ -271,7 +271,7 @@ const IFADashboard = () => {
                                                 <Text className="text-[#D2CFCF]  ">
                                                     Total Aum
                                                 </Text>
-                                                <Text className="text-white font-bold text-lg ">
+                                                <Text className="text-white font-bold text-3xl ">
                                                     {data?.aum?.total
                                                         ? RupeeSymbol +
                                                           data?.aum?.total.toFixed(
@@ -425,6 +425,27 @@ const IFADashboard = () => {
                                                                 data?.aum
                                                                     ?.breakDown
                                                             )}
+                                                            children={
+                                                                <>
+                                                                    <View className="w-full">
+                                                                        <Text
+                                                                            className="text-bold text-xs font-medium text-gray-500"
+                                                                            selectable
+                                                                        >
+                                                                            Total AUM
+                                                                        </Text>
+                                                                    </View>
+                                                                    <View className="">
+                                                                        <Text
+                                                                            selectable
+                                                                            className="font-medium text-xs text-start text-blue-900"
+                                                                        >
+                                                                            {RupeeSymbol +
+                                                                                "12500.00"}
+                                                                        </Text>
+                                                                    </View>
+                                                                </>
+                                                            }
                                                         />
                                                     )}
                                                 </View>
@@ -475,6 +496,28 @@ const IFADashboard = () => {
                                                             data?.order?.sip
                                                                 ?.breakDown
                                                         )}
+                                                        children={
+                                                            <>
+                                                                <View className="w-full">
+                                                                    <Text
+                                                                        className="text-bold text-xs font-medium text-gray-500"
+                                                                        selectable
+                                                                    >
+                                                                        Total SIP
+                                                                        
+                                                                    </Text>
+                                                                </View>
+                                                                <View className="">
+                                                                    <Text
+                                                                        selectable
+                                                                        className="font-medium text-xs text-start text-blue-900"
+                                                                    >
+                                                                        {RupeeSymbol +
+                                                                            "7500.00"}
+                                                                    </Text>
+                                                                </View>
+                                                            </>
+                                                        }
                                                     />
                                                 )}
                                             </View>
@@ -547,7 +590,7 @@ const IFADashboard = () => {
                                                                             className="font-medium text-xs text-start text-blue-900"
                                                                         >
                                                                             {RupeeSymbol +
-                                                                                "19,348.00"}
+                                                                                "19348.00"}
                                                                         </Text>
                                                                     </View>
                                                                 </>
@@ -774,12 +817,12 @@ const IFADashboard = () => {
                                         </View> */}
                                         <View className="flex flex-row py-2">
                                             <View className="w-6/12">
-                                                <Text className="text-black text-center">
+                                                <Text className="text-black text-start">
                                                     Name
                                                 </Text>
                                             </View>
                                             <View className="w-2/12">
-                                                <Text className="text-center">
+                                                <Text className="text-start">
                                                     SIPs
                                                 </Text>
                                             </View>

@@ -100,10 +100,102 @@ export const Brokerage = () => {
         mutationFn: postBrokerageTransactions,
         mutationKey: ["brokerage-transactions"],
     });
+    
 
     useEffect(() => {
         mutate();
     }, []);
+
+    const DummyDate = {
+        aum: {
+            total: 12500,
+            breakDown: [
+                {
+                    category: "Equity",
+                    currentValue: 5000,
+                },
+                {
+                    category: "Debt",
+                    currentValue: 4000,
+                },
+                {
+                    category: "Other",
+                    currentValue: 1500,
+                },
+                {
+                    category: "Hybrid",
+                    currentValue: 3000,
+                },
+            ],
+        },
+        clientCount: 3,
+        transaction: {
+            purchase: 1000,
+            redemption: 100,
+            totalSipTransactions: 2,
+            totalSipTransactionsFailed: 1,
+        },
+        order: {
+            lumpsum: {
+                total: 2000,
+            },
+            sip: {
+                monthlySipAmount: 7500,
+                sipCount: 5,
+                breakDown: [
+                    {
+                        category: "Debt",
+                        count: 1000,
+                    },
+                    {
+                        category: "Equity",
+                        count: 2000,
+                    },
+                    {
+                        category: "Hybrid",
+                        count: 1500,
+                    },
+                    {
+                        category: "Other",
+                        count: 500,
+                    },
+                    // {
+                    //     category: "Solution Oriented",
+                    //     count: 2500,
+                    // },
+                ],
+                newSip: 1,
+            },
+        },
+    };
+
+    const topClientData = [
+        {
+            name: "Anand Gupta",
+            sip: "2",
+            investment: 3000,
+        },
+        {
+            name: "Deepti Shasil Namoshi",
+            sip: "5",
+            investment: 4000,
+        },
+        {
+            name: "AnandRaj Sangappa Malagi  ",
+            sip: "1",
+            investment: 4500,
+        },
+        {
+            name: "Rashmi Ranjan Sahoo",
+            sip: "8",
+            investment: 1500,
+        },
+        {
+            name: "Priyanshu Jain",
+            sip: "4",
+            investment: 5000,
+        },
+    ];
 
     return (
         <>
@@ -182,8 +274,8 @@ export const Brokerage = () => {
                                                                 ?.totalAmount
                                                                 ? brokerage
                                                                       ?.data
-                                                                      ?.totalAmount
-                                                                : "0"
+                                                                      ?.totalAmount.toFixed(2)
+                                                                : "10000.00"
                                                         }`
                                                     }
                                                 />
@@ -200,8 +292,8 @@ export const Brokerage = () => {
                                                                 ?.subBrokerAmount
                                                                 ? brokerage
                                                                       ?.data
-                                                                      ?.subBrokerAmount
-                                                                : "0"
+                                                                      ?.subBrokerAmount.toFixed(2)
+                                                                : "8000.00"
                                                         }`
                                                     }
                                                 />
@@ -253,10 +345,23 @@ export const Brokerage = () => {
                                                                                 ?.totalAmount,
                                                                     },
                                                                 ]}
+
+                                                                // pieData={[
+                                                                //     {
+                                                                //         x: "SIP",
+                                                                //         y:
+                                                                //             65
+                                                                //     },
+                                                                //     {
+                                                                //         x: "One Time",
+                                                                //         y:
+                                                                //             35
+                                                                //     },
+                                                                // ]}
                                                             />
                                                         ) : (
                                                             <ComingSoon />
-                                                        )}
+                                                        )} 
                                                     </View>
                                                     <Divider orientation="vertical" />
                                                 </View>

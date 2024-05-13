@@ -104,9 +104,9 @@ const IFADataTable = () => {
 
     React.useEffect(() => {
         async function getSchema() {
-            const response: any = await RemoteApi.get("client/schema");
-            setFiltersSchema(response);
-            setSorting(response.sort);
+            const response: any = await RemoteApi.get("aum/distributor/schema");
+            setFiltersSchema(response.data);
+            setSorting(response.data.sort);
         }
         getSchema();
     }, []);
@@ -154,7 +154,7 @@ const IFADataTable = () => {
                 key: "panNumber",
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
-                        {item?.panNumber || "-"}
+                        {item?.panNumber || "NA"}
                     </Text>
                 ),
             },
@@ -162,7 +162,7 @@ const IFADataTable = () => {
                 key: "ARN",
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
-                        {item?.arn || "-"}
+                        {item?.arn || "NA"}
                     </Text>
                 ),
             },
@@ -170,7 +170,7 @@ const IFADataTable = () => {
                 key: "euin",
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
-                        {item?.euin || "-"}
+                        {item?.euin || "NA"}
                     </Text>
                 ),
             },
@@ -178,7 +178,7 @@ const IFADataTable = () => {
                 key: "activeAccountCount",
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
-                        {item?.activeAccountCount || "-"}
+                        {item?.activeAccountCount || "NA"}
                     </Text>
                 ),
             },
@@ -186,7 +186,7 @@ const IFADataTable = () => {
                 key: "activeSipCount",
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
-                        {item?.activeSipCount || "-"}
+                        {item?.activeSipCount || "NA"}
                     </Text>
                 ),
             },

@@ -296,14 +296,14 @@ export default function ClientDetail() {
                                                 <DataValue
                                                     key="doi"
                                                     title="DOI"
-                                                    value="-"
+                                                    value="NA"
                                                 />
                                             </View>
                                             <View className="w-4/12 flex-flex-col gap-4 px-2">
                                                 <DataValue
                                                     key="totalInvestment"
                                                     title="Total Investment"
-                                                    value="-"
+                                                    value="NA"
                                                 />
                                                 <DataValue
                                                     key="runningSip"
@@ -320,7 +320,7 @@ export default function ClientDetail() {
                                                 <DataValue
                                                     key="lastInvestmentDate"
                                                     title="Last Investment Date"
-                                                    value="-"
+                                                    value="NA"
                                                 />
                                             </View>
                                             <View className="w-4/12 flex-flex-col gap-4 px-2">
@@ -344,7 +344,7 @@ export default function ClientDetail() {
                                                 <DataValue
                                                     key="riskProfile"
                                                     title="Risk Profile"
-                                                    value={"-"}
+                                                    value={"NA"}
                                                 />
                                             </View>
                                         </View>
@@ -829,7 +829,7 @@ const PortfolioCard = ({
                                                       ).toFormat(
                                                           "dd LLL yyyy, t"
                                                       )
-                                                    : "-"}
+                                                    : "NA"}
                                             </Text>
                                         </View>
                                     ),
@@ -2083,7 +2083,7 @@ const AccountDetailsCard = ({ data }: { data: ClientDetailedDataResponse }) => {
                                                         />
                                                     </View>
                                                 ) : (
-                                                    "-"
+                                                    "NA"
                                                 )
                                             }
                                         />
@@ -2191,7 +2191,7 @@ const AccountDetailsCard = ({ data }: { data: ClientDetailedDataResponse }) => {
                         title="Email"
                         value={data?.users[0]?.email}
                     />
-                    <DataValue key="address" title="Address" value={"-"} />
+                    <DataValue key="address" title="Address" value={"NA"} />
                     </>
                     )
                 }
@@ -2235,7 +2235,7 @@ const AccountDetailsCard = ({ data }: { data: ClientDetailedDataResponse }) => {
                                             ? DateTime.fromISO(
                                                   nominee?.dob
                                               ).toFormat("LLL dd, yyyy")
-                                            : "-"}
+                                            : "NA"}
                                     </Text>
                                     <Text selectable className="font-medium">
                                         {nominee?.nomineePercentage + "%"}

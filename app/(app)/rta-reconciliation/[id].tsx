@@ -218,7 +218,7 @@ export default function RTAConciliationDetail() {
                                                         ? dateFormat(
                                                               data?.paymentDate
                                                           )
-                                                        : "-"
+                                                        : "NA"
                                                 }
                                             />
                                             <DataValue

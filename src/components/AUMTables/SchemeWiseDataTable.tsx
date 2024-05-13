@@ -87,8 +87,8 @@ const SchemeWiseDataTable = () => {
     React.useEffect(() => {
         async function getSchema() {
             const response: any = await RemoteApi.get("aum/scheme/schema");
-            setFiltersSchema(response);
-            setSorting(response.sort);
+            setFiltersSchema(response.data);
+            setSorting(response.data.sort);
         }
         getSchema();
     }, []);
@@ -119,11 +119,11 @@ const SchemeWiseDataTable = () => {
                             >
                                 {item?.mutualfund?.name
                                     ? item?.mutualfund?.name
-                                    : "-"}
+                                    : "NA"}
                             </Text>
                         </Pressable> */}
                     <Text selectable className="text-[#686868] font-semibold">
-                        {item?.name ? item?.name : "-"}
+                        {item?.name ? item?.name : "NA"}
                     </Text>
                     </View>
                 ),
@@ -132,7 +132,7 @@ const SchemeWiseDataTable = () => {
                 key: "optiontype",
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
-                         {item?.optionType ? item?.optionType : "-"}
+                         {item?.optionType ? item?.optionType : "NA"}
                     </Text>
                 ),
             },
@@ -140,7 +140,7 @@ const SchemeWiseDataTable = () => {
                 key: "dividendtype",
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
-                        {item?.dividendType ? item?.dividendType : "-"}
+                        {item?.dividendType ? item?.dividendType : "NA"}
                     </Text>
                 ),
             },
@@ -150,7 +150,7 @@ const SchemeWiseDataTable = () => {
                     <Text selectable className="text-[#686868] font-semibold">
                        {item?.investedValue
                             ? RupeeSymbol + item?.investedValue.toFixed(2)
-                            : "-"}
+                            : "NA"}
                     </Text>
                 ),
             },
@@ -160,7 +160,7 @@ const SchemeWiseDataTable = () => {
                     <Text selectable className="text-[#686868] font-semibold">
                         {item?.currentValue
                             ? RupeeSymbol + item?.currentValue.toFixed(2)
-                            : "-"}
+                            : "NA"}
                     </Text>
                 ),
             },

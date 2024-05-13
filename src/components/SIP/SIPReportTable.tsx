@@ -106,9 +106,7 @@ const SIPReportTable = () => {
                         <View className="flex flex-col rounded-full bg-[#e60202] mr-2 h-10 w-10 mb-1 items-center justify-center flex-wrap">
                             <Text selectable className="text-white">
                                 {getInitials(
-                                    item?.client.name
-                                        ? item?.client.name
-                                        : "-"
+                                    item?.client.name ? item?.client.name : "-"
                                 )}
                             </Text>
                         </View>
@@ -173,7 +171,7 @@ const SIPReportTable = () => {
                             selectable
                             className="text-[#686868] font-semibold w-11/12 text-center"
                         >
-                            {item?.folioNumber ? item?.folioNumber : "-"}&nbsp;
+                            {item?.folioNumber ? item?.folioNumber : "NA"}&nbsp;
                         </Text>
                     </Pressable>
                 ),
@@ -216,10 +214,13 @@ const SIPReportTable = () => {
                             item?.mutualfund?.dividendType?.name !== "NA"
                                 ? " - " + item?.mutualfund?.dividendType?.name
                                 : ""}
-                            
                         </Text>
-                        <Text selectable
-                            className="text-[#686868] font-semibold text-xs">{"SIPRegnNo: " + item.sipReferenceNumber}</Text>
+                        <Text
+                            selectable
+                            className="text-[#686868] font-semibold text-xs"
+                        >
+                            {"SIPRegnNo: " + item.sipReferenceNumber}
+                        </Text>
                         {/* <Text selectable className="text-[#686868] font-semibold text-xs">
                         {item?.mutualfund?.category ? item?.mutualfund?.category : "" }
                         {item?.mutualfund?.subCategory ? " - " + item?.mutualfund?.subCategory : "" }
@@ -318,13 +319,13 @@ const SIPReportTable = () => {
                 key: "action",
                 content: (
                     <View className="flex flex-row items-center w-[99%]  justify-start ">
-                       
                         <Pressable
                             onPress={() =>
                                 router.push(`sip-reports/${item.id}`)
                             }
                             className="rounded-full border-[0.4px] flex flex-row items-center justify-center bg-black w-11/12 h-6"
                         >
+                            {/* <Icon name="ellipsis-v" size={18} color="grey" /> */}
                             <Text
                                 selectable
                                 className="text-white text-center text-xs"
@@ -424,6 +425,18 @@ const SIPReportTable = () => {
                                             cellSize={[
                                                 2, 1, 1, 1, 2, 1, 1, 1, 1, 1,
                                             ]}
+                                            // cellSize={[
+                                            //     "20%",
+                                            //     "10%",
+                                            //     "10%",
+                                            //     "10%",
+                                            //     "10%",
+                                            //     "10%",
+                                            //     "10%",
+                                            //     "5%",
+                                            //     "10%",
+                                            //     "5%",
+                                            // ]}
                                             rows={transformedData}
                                         />
                                     ) : roleId > 2 ? (
@@ -456,7 +469,7 @@ const SIPReportTable = () => {
                                                 "Status",
                                                 "Action",
                                             ]}
-                                            cellSize={[2, 2, 2, 1, 1, 1, 1, 1]}
+                                            cellSize={[2, 1, 2, 1, 1, 1, 1, 1]}
                                             rows={transformedData}
                                         />
                                     )}

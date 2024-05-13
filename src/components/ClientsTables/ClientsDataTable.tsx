@@ -27,6 +27,7 @@ import Tag from "../Tag/Tag";
 import AddNewClient from "./AddNewClient";
 import { useUserRole } from "../../../src/context/useRoleContext";
 import NoDataAvailable from "../Others/NoDataAvailable";
+import { dateTimeFormat } from "../../../src/helper/DateUtils";
 
 const ClientsDataTable = () => {
     const { roleId } = useUserRole();
@@ -169,7 +170,7 @@ const ClientsDataTable = () => {
                 key: "doi",
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
-                        -
+                        NA
                     </Text>
                 ),
             },
@@ -182,17 +183,17 @@ const ClientsDataTable = () => {
                                 selectable
                                 className="text-[#686868] font-semibold"
                             >
-                                -
+                                {item?.lastInvestment ? dateTimeFormat(item?.lastInvestment) : "NA"}
                             </Text>
                         </View>
-                        <View className="flex flex-row items-center mt-0">
+                        {/* <View className="flex flex-row items-center mt-0">
                             <Text
                                 selectable
                                 className="text-[#686868] font-semibold"
                             >
                                 -
                             </Text>
-                        </View>
+                        </View> */}
                     </View>
                 ),
             },
@@ -200,7 +201,7 @@ const ClientsDataTable = () => {
                 key: "externalFundDate",
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
-                        Jul 26, 2023, 1:38 PM
+                        {item?.externalFundLastUpdatedOn ? dateTimeFormat(item?.externalFundLastUpdatedOn) : "NA"}
                     </Text>
                 ),
             },

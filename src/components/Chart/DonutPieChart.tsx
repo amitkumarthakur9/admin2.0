@@ -2,7 +2,6 @@ import React from "react";
 import { View, Text } from "react-native";
 import { VictoryPie, VictoryLegend, VictoryTooltip } from "victory";
 
-
 const DonutPieChart = ({ pieData, width = 400, children=<></> }) => {
     const colorScale = [
         "#715CFA",
@@ -13,7 +12,6 @@ const DonutPieChart = ({ pieData, width = 400, children=<></> }) => {
         "#FFA726",
         "#26A69A",
     ];
-
 
     // const chartData = pieData.map((item, index) => ({
     //     name: `${item.x}: ${item.y.toFixed(1)}%`,
@@ -71,7 +69,6 @@ const DonutPieChart = ({ pieData, width = 400, children=<></> }) => {
                     ))}
                 </View>
             </View>
-
             <div style={{ display: "flex", flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
                 <View className="w-8/12 flex justify-center">
                     <VictoryPie
@@ -94,7 +91,6 @@ const DonutPieChart = ({ pieData, width = 400, children=<></> }) => {
                     />
                 </View>
             </div>
-
             </View>
         </>
     );

@@ -93,8 +93,8 @@ const HoldingWiseDataTable = () => {
     React.useEffect(() => {
         async function getSchema() {
             const response: any = await RemoteApi.get("aum/holding/schema");
-            setFiltersSchema(response);
-            setSorting(response.sort);
+            setFiltersSchema(response.data);
+            setSorting(response.data.sort);
         }
         getSchema();
     }, []);
@@ -174,7 +174,7 @@ const HoldingWiseDataTable = () => {
                             >
                                 {item?.mutualfund?.name
                                     ? item?.mutualfund?.name
-                                    : "-"}
+                                    : "NA"}
                             </Text>
                         </Pressable>
 
@@ -236,7 +236,7 @@ const HoldingWiseDataTable = () => {
                 content: (
                     <View className="w-[99%]">
                     <Text selectable className="text-[#686868] font-semibold text-wrap">
-                        {item?.xirr ? item?.xirr : "-"}
+                        {item?.xirr ? item?.xirr + "%" : "NA"}
                     </Text>
                </View>
                 ),

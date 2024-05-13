@@ -45,12 +45,12 @@ const DataValue = ({ title, value }) => {
                     className="text-bold font-medium text-gray-500"
                     selectable
                 >
-                    {title ? title : "-"}
+                    {title ? title : "NA"}
                 </Text>
             </View>
             <View className="w-1/2 flex">
                 <Text selectable className="font-medium text-start text-black">
-                    {value ? value : "-"}
+                    {value ? value : "NA"}
                 </Text>
             </View>
         </View>
@@ -160,7 +160,7 @@ export default function MutualFundDetail() {
                                                 >
                                                     {data?.name
                                                         ? data?.name
-                                                        : "-"}
+                                                        : "NA"}
                                                 </Text>
 
                                                 <View className="flex flex-row items-center flex-wrap">
@@ -170,7 +170,7 @@ export default function MutualFundDetail() {
                                                     >
                                                         {data?.category
                                                             ? data?.category
-                                                            : "-"}
+                                                            : "NA"}
                                                     </Text>
                                                     <View className="mx-2">
                                                         <Icon
@@ -189,7 +189,7 @@ export default function MutualFundDetail() {
                                                     >
                                                         {data?.mutualfundSubcategory
                                                             ? data?.mutualfundSubcategory
-                                                            : "-"}
+                                                            : "NA"}
                                                     </Text>
                                                 </View>
                                             </View>
@@ -212,7 +212,7 @@ export default function MutualFundDetail() {
                                                     data?.nav
                                                         ? RupeeSymbol +
                                                           data?.nav.toFixed(2)
-                                                        : "-"
+                                                        : "NA"
                                                 }
                                             />
                                             <DataValue
@@ -223,7 +223,7 @@ export default function MutualFundDetail() {
                                                         ? data?.annualReturns.toFixed(
                                                               2
                                                           ) + "%"
-                                                        : "-"
+                                                        : "NA"
                                                 }
                                             />
                                             <DataValue
@@ -233,7 +233,7 @@ export default function MutualFundDetail() {
                                                     data?.minSIPAmount
                                                         ? RupeeSymbol +
                                                           data?.minSIPAmount
-                                                        : "-"
+                                                        : "NA"
                                                 }
                                             />
                                             <DataValue
@@ -242,7 +242,7 @@ export default function MutualFundDetail() {
                                                 value={
                                                     data?.fundhouse?.name
                                                         ? data?.fundhouse?.name
-                                                        : "-"
+                                                        : "NA"
                                                 }
                                             />
                                         </View>
@@ -254,7 +254,7 @@ export default function MutualFundDetail() {
                                                     data?.aum
                                                         ? RupeeSymbol +
                                                           data?.aum.toFixed(2)
-                                                        : "-"
+                                                        : "NA"
                                                 }
                                             />
                                             <DataValue
@@ -265,7 +265,7 @@ export default function MutualFundDetail() {
                                                         ? data?.threeYearAnnualReturns.toFixed(
                                                               2
                                                           ) + "%"
-                                                        : "-"
+                                                        : "NA"
                                                 }
                                             />
                                             <DataValue
@@ -275,7 +275,7 @@ export default function MutualFundDetail() {
                                                     data?.minInvestment
                                                         ? RupeeSymbol +
                                                           data?.minInvestment
-                                                        : "-"
+                                                        : "NA"
                                                 }
                                             />
                                             <DataValue
@@ -287,7 +287,7 @@ export default function MutualFundDetail() {
                                                           data?.fundhouse?.aum.toFixed(
                                                               2
                                                           )
-                                                        : "-"
+                                                        : "NA"
                                                 }
                                             />
                                         </View>
@@ -305,7 +305,7 @@ export default function MutualFundDetail() {
                                                         ? data?.fiveYearAnnualReturns.toFixed(
                                                               2
                                                           ) + "%"
-                                                        : "-"
+                                                        : "NA"
                                                 }
                                             />
                                             <DataValue
@@ -315,7 +315,7 @@ export default function MutualFundDetail() {
                                                     data?.minAdditionalInvestment
                                                         ? RupeeSymbol +
                                                           data?.minAdditionalInvestment
-                                                        : "-"
+                                                        : "NA"
                                                 }
                                             />
                                             <DataValue
@@ -324,7 +324,7 @@ export default function MutualFundDetail() {
                                                 value={
                                                     data?.expenseRatio
                                                         ? data?.expenseRatio
-                                                        : "-"
+                                                        : "NA"
                                                 }
                                             />
                                         </View>
@@ -402,7 +402,7 @@ const PortfolioCard = ({ data }) => {
                                 <Text className="text-xs">
                                     {item?.account?.name
                                         ? item?.account?.name
-                                        : "-"}
+                                        : "NA"}
                                 </Text>
                             </Pressable>
                         </View>
@@ -417,7 +417,7 @@ const PortfolioCard = ({ data }) => {
                             <Text className="text-xs">
                                 {item?.account?.clientId
                                     ? item?.account?.clientId
-                                    : "-"}
+                                    : "NA"}
                             </Text>
                         </View>
                     </View>
@@ -431,7 +431,7 @@ const PortfolioCard = ({ data }) => {
                             <Text className="text-xs">
                                 {item?.account?.panNumber
                                     ? item?.account?.panNumber
-                                    : "-"}
+                                    : "NA"}
                             </Text>
                         </View>
                     </View>
@@ -445,7 +445,7 @@ const PortfolioCard = ({ data }) => {
                             <Text className="text-xs">
                                 {item?.account?.amount
                                     ? RupeeSymbol + item?.account?.amount
-                                    : "-"}
+                                    : "NA"}
                             </Text>
                         </View>
                     </View>
@@ -459,7 +459,7 @@ const PortfolioCard = ({ data }) => {
                             <Text className="text-xs">
                                 {item?.createdAt
                                     ? dateTimeFormat(item?.createdAt)
-                                    : "-"}
+                                    : "NA"}
                             </Text>
                         </View>
                     </View>
@@ -473,7 +473,7 @@ const PortfolioCard = ({ data }) => {
                             <Text className="text-xs">
                                 {item?.transactionStatus?.name
                                     ? item?.transactionStatus?.name
-                                    : "-"}
+                                    : "NA"}
                             </Text>
                         </View>
                     </View>
@@ -487,7 +487,7 @@ const PortfolioCard = ({ data }) => {
                             <Text className="text-xs">
                                 {item?.transactionStatus?.name
                                     ? item?.transactionStatus?.name
-                                    : "-"}
+                                    : "NA"}
                             </Text>
                         </View>
                     </View>
@@ -511,7 +511,7 @@ const PortfolioCard = ({ data }) => {
                                 <Text className="text-xs">
                                     {item?.account?.name
                                         ? item?.account?.name
-                                        : "-"}
+                                        : "NA"}
                                 </Text>
                             </Pressable>
                         </View>
@@ -525,7 +525,7 @@ const PortfolioCard = ({ data }) => {
                         <Text selectable className="text-xs text-black">
                             {item?.account?.clientId
                                 ? item?.account?.clientId
-                                : "-"}
+                                : "NA"}
                         </Text>
                     </View>
                 ),
@@ -537,7 +537,7 @@ const PortfolioCard = ({ data }) => {
                         <Text selectable className="text-xs text-gray-500">
                             {item?.account?.panNumber
                                 ? item?.account?.panNumber
-                                : "-"}
+                                : "NA"}
                         </Text>
                     </View>
                 ),
@@ -549,7 +549,7 @@ const PortfolioCard = ({ data }) => {
                         <Text selectable className="text-xs text-gray-500">
                             {item?.amount
                                 ? RupeeSymbol + item?.amount.toFixed(2)
-                                : "-"}
+                                : "NA"}
                         </Text>
                     </View>
                 ),
@@ -561,7 +561,7 @@ const PortfolioCard = ({ data }) => {
                         <Text selectable className="text-xs text-gray-500">
                             {item?.startDate
                                 ? dateFormat(item?.startDate)
-                                : "-"}
+                                : "NA"}
                         </Text>
                     </View>
                 ),

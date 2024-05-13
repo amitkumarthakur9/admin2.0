@@ -286,7 +286,7 @@ const FolioWiseDataTable = () => {
                         selectable
                         className="text-[#686868] font-semibold w-11/12 "
                     >
-                        {item?.xirr ? item?.xirr : "-"}
+                        {item?.xirr ? item?.xirr : "0"}{"%"}
                     </Text>
                 ),
             },

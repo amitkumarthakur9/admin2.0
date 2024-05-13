@@ -95,6 +95,7 @@ interface SIPReportItems {
     client: Client;
     bankAccount: BankAccount;
     distributor: Distributor;
+    folioNumber: string;
 
 }
 

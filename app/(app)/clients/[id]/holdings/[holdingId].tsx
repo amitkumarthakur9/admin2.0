@@ -230,7 +230,7 @@ export default function HoldingDetail() {
                                             <DataValue
                                                 key="currentValue"
                                                 title="Current Value:"
-                                                value={data?.currentValue ? RupeeSymbol + data?.currentValue : "-"
+                                                value={data?.currentValue ? RupeeSymbol + data?.currentValue : "NA"
             }
                                             />
                                         </View>
@@ -245,12 +245,12 @@ export default function HoldingDetail() {
                                                 key="xirr"
                                                 title="XIRR:"
                                                 value={data?.xirr
-                                                    || "-"}
+                                                    || "NA"}
                                             />
                                             <DataValue
                                                 key="investedAmount"
                                                 title="Invested Amount:"
-                                                value={data?.investedValue ? RupeeSymbol + data?.investedValue : "-"
+                                                value={data?.investedValue ? RupeeSymbol + data?.investedValue : "NA"
                                             }
                                             />
                                         </View>
@@ -259,12 +259,12 @@ export default function HoldingDetail() {
                                                 key="rta"
                                                 title="RTA"
                                                 value={data?.mutualfund?.rta
-                                                    || "-"}
+                                                    || "NA"}
                                             />
                                             <DataValue
                                                 key="return"
                                                 title="Return"
-                                                value={data?.investedValue && data?.currentValue ? (data?.currentValue - data?.investedValue).toFixed(2) : "-"
+                                                value={data?.investedValue && data?.currentValue ? (data?.currentValue - data?.investedValue).toFixed(2) : "NA"
                                             }
                                             />
                                         </View>
@@ -319,11 +319,11 @@ const PortfolioCard = ({ data }) => {
             },
             {
                 key: "dividendType",
-                content: <DataText value={item?.dividendType || "-"} />,
+                content: <DataText value={item?.dividendType || "NA"} />,
             },
             {
                 key: "nav",
-                content: <DataText value={item?.nav ? RupeeSymbol + item?.nav : "-"} />,
+                content: <DataText value={item?.nav ? RupeeSymbol + item?.nav : "NA"} />,
             },
             {
                 key: "status",
@@ -358,7 +358,7 @@ const PortfolioCard = ({ data }) => {
             },
             {
                 key: "returns",
-                content: <DataText value={item?.investedValue && item?.currentValue ? (item?.currentValue - item?.investedValue).toFixed(2) : "-"} />,
+                content: <DataText value={item?.investedValue && item?.currentValue ? (item?.currentValue - item?.investedValue).toFixed(2) : "NA"} />,
             },
         ];
     });

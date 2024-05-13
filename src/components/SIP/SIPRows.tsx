@@ -400,10 +400,9 @@ export const SIPRows = ({
                                     `}
                                 >
                                     <Text>
-                                        {/* {order?.transactions[0]?.folio
-                                            ?.folioNumber ? order?.transactions[0]?.folio
-                                            ?.folioNumber : "-"} */}
-                                        -
+                                        {order?.folioNumber
+                                             ? order?.folioNumber : "NA"}
+                                  
                                     </Text>
                                 </View>
 

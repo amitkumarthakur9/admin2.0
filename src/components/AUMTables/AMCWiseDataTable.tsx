@@ -131,7 +131,7 @@ const AMCWiseDataTable = () => {
                             selectable
                             className="text-[#686868] font-semibold"
                         >
-                            {item?.name ? item?.name : "-"}
+                            {item?.name ? item?.name : "NA"}
                         </Text>
                     </View>
                 ),
@@ -142,7 +142,7 @@ const AMCWiseDataTable = () => {
                     <Text selectable className="text-[#686868] font-semibold">
                         {item?.investedValue
                             ? RupeeSymbol + item?.investedValue.toFixed(2)
-                            : "-"}
+                            : "NA"}
                     </Text>
                 ),
             },
@@ -152,7 +152,7 @@ const AMCWiseDataTable = () => {
                     <Text selectable className="text-[#686868] font-semibold">
                         {item?.currentValue
                             ? RupeeSymbol + item?.currentValue.toFixed(2)
-                            : "-"}
+                            : "NA"}
                     </Text>
                 ),
             },

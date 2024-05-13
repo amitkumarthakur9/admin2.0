@@ -330,7 +330,7 @@ export default function ClientARNDetail() {
                                                                 <DataValue
                                                                     key="doi"
                                                                     title="DOI"
-                                                                    value="-"
+                                                                    value="NA"
                                                                 />
                                                             </View>
 
@@ -356,7 +356,7 @@ export default function ClientARNDetail() {
                                                                 <DataValue
                                                                     key="riskProfile"
                                                                     title="Risk Profile"
-                                                                    value={"-"}
+                                                                    value={"NA"}
                                                                 />
                                                             </View>
                                                         </View>
@@ -467,7 +467,7 @@ export default function ClientARNDetail() {
                                                         <DataValue
                                                             key="doi"
                                                             title="DOI"
-                                                            value="-"
+                                                            value="NA"
                                                         />
                                                     </View>
 
@@ -492,7 +492,7 @@ export default function ClientARNDetail() {
                                                         <DataValue
                                                             key="riskProfile"
                                                             title="Risk Profile"
-                                                            value={"-"}
+                                                            value={"NA"}
                                                         />
                                                     </View>
                                                 </View>

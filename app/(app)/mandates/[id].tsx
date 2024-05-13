@@ -52,12 +52,12 @@ const DataValue = ({ title, value }) => {
                     className="text-bold font-mediumk text-gray-500"
                     selectable
                 >
-                    {title ? title : "-"}
+                    {title ? title : "NA"}
                 </Text>
             </View>
             <View className="w-1/2 flex">
                 <Text selectable className="font-medium text-start text-blac">
-                    {value ? value : "-"}
+                    {value ? value : "NA"}
                 </Text>
             </View>
         </View>
@@ -221,7 +221,7 @@ export default function MandateDetail() {
                                                                   data.startDate
                                                               )
                                                           ).format("DD-MM-YYYY")
-                                                        : "-"
+                                                        : "NA"
                                                 }
                                             />
                                         </View>
@@ -241,7 +241,7 @@ export default function MandateDetail() {
                                                                   data?.createdAt
                                                               )
                                                           ).format("DD-MM-YYYY")
-                                                        : "-"
+                                                        : "NA"
                                                 }
                                             />
                                         </View>
@@ -301,7 +301,7 @@ export default function MandateDetail() {
                                                     className="text-black font-semibold break-all text-sm flex-wrap"
                                                 >
                                                     {data.bankAccount
-                                                        .bankName || "-"}
+                                                        .bankName || "NA"}
                                                 </Text>
                                             </View>
                                         </View>
@@ -311,7 +311,7 @@ export default function MandateDetail() {
                                                 title="Account No:"
                                                 value={
                                                     data.bankAccount
-                                                        .accountNumber || "-"
+                                                        .accountNumber || "NA"
                                                 }
                                             />
                                             <DataValue
@@ -319,7 +319,7 @@ export default function MandateDetail() {
                                                 title="Branch Name"
                                                 value={
                                                     data.bankAccount
-                                                        .branchName || "-"
+                                                        .branchName || "NA"
                                                 }
                                             />
                                         </View>
@@ -330,7 +330,7 @@ export default function MandateDetail() {
                                                 value={
                                                     data.bankAccount
                                                         .bankAccountType.name ||
-                                                    "-"
+                                                    "NA"
                                                 }
                                             />
                                             <DataValue
@@ -338,7 +338,7 @@ export default function MandateDetail() {
                                                 title="IFSC Code"
                                                 value={
                                                     data.bankAccount.ifscCode ||
-                                                    "-"
+                                                    "NA"
                                                 }
                                             />
                                         </View>

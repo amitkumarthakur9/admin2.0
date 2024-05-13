@@ -216,7 +216,7 @@ export default function AUMDetail() {
                                                     className="text-black font-semibold break-all text-sm flex-wrap"
                                                 >
                                                     {data?.mutualfund?.name ||
-                                                        "-"}
+                                                        "NA"}
                                                 </Text>
 
                                                 <View className="flex flex-row items-center flex-wrap">
@@ -227,7 +227,7 @@ export default function AUMDetail() {
                                                         {data?.mutualfund
                                                             ?.category
                                                             
-                                                             || "-"}
+                                                             || "NA"}
                                                     </Text>
                                                     <View className="mx-2">
                                                         <Icon
@@ -246,7 +246,7 @@ export default function AUMDetail() {
                                                     >
                                                         {data?.mutualfund
                                                             ?.Subcategory
-                                                            || "-"}
+                                                            || "NA"}
                                                     </Text>
                                                 </View>
                                             </View>
@@ -267,7 +267,7 @@ export default function AUMDetail() {
                                                     data.currentValue
                                                         ? RupeeSymbol +
                                                           data.currentValue
-                                                        : "-"
+                                                        : "NA"
                                                 }
                                             />
                                             <DataValue
@@ -290,7 +290,7 @@ export default function AUMDetail() {
                                                     data.investedValue
                                                         ? RupeeSymbol +
                                                           data.investedValue
-                                                        : "-"
+                                                        : "NA"
                                                 }
                                             />
                                             <DataValue
@@ -308,7 +308,7 @@ export default function AUMDetail() {
                                             <DataValue
                                                 key="returns"
                                                 title="Returns"
-                                                value={data?.investedValue && data?.currentValue ? (data?.currentValue - data?.investedValue) : "-"
+                                                value={data?.investedValue && data?.currentValue ? (data?.currentValue - data?.investedValue) : "NA"
                             }
                                             />
                                         </View>
@@ -353,7 +353,7 @@ const TransactionsList = ({ data }: { data: AUMDetailInterface }) => {
             },
             {
                 key: "nav",
-                content: <DataText value={item?.nav ? RupeeSymbol + item?.nav : "-"} />,
+                content: <DataText value={item?.nav ? RupeeSymbol + item?.nav : "NA"} />,
             },
             {
                 key: "status",

@@ -62,12 +62,12 @@ const DataValue = ({ title, value }) => {
                     className="text-bold font-mediumk text-gray-500"
                     selectable
                 >
-                    {title ? title : "-"}
+                    {title ? title : "NA"}
                 </Text>
             </View>
             <View className="w-1/2 flex">
                 <Text selectable className="font-medium text-start text-blac">
-                    {value ? value : "-"}
+                    {value ? value : "NA"}
                 </Text>
             </View>
         </View>
@@ -172,7 +172,7 @@ export default function SIPReportsDetail() {
                                                 >
                                                     {data?.account?.name
                                                         ? data?.account?.name
-                                                        : "-"}
+                                                        : "NA"}
                                                 </Text>
                                             </View>
                                             <View className="flex flex-row items-center">
@@ -189,7 +189,7 @@ export default function SIPReportsDetail() {
                                                     {data?.account?.clientId
                                                         ? data?.account
                                                               ?.clientId
-                                                        : "-"}
+                                                        : "NA"}
                                                 </Text>
                                             </View>
                                             <View className="flex flex-row items-center">
@@ -206,7 +206,7 @@ export default function SIPReportsDetail() {
                                                     {data?.account?.panNumber
                                                         ? data?.account
                                                               ?.panNumber
-                                                        : "-"}
+                                                        : "NA"}
                                                 </Text>
                                             </View>
                                         </View>
@@ -287,7 +287,7 @@ export default function SIPReportsDetail() {
                                             <DataValue
                                                 key="Amount"
                                                 title="Amount"
-                                                value={data?.transactions[0].amount ? RupeeSymbol + data?.transactions[0].amount : "-"}
+                                                value={data?.transactions[0].amount ? RupeeSymbol + data?.transactions[0].amount : "NA"}
                                                 
                                             />
                                             <DataValue
@@ -297,14 +297,14 @@ export default function SIPReportsDetail() {
                                                     data?.mutualfund?.optionType?.name
                                                         ? data?.mutualfund
                                                               ?.optionType?.name
-                                                        : "-"
+                                                        : "NA"
                                                 }
                                                 
                                             />
                                             <DataValue
                                                 key="amountInvestment"
                                                 title="Amount Investment"
-                                                value={data?.amount ? RupeeSymbol + data?.amount : "-"}
+                                                value={data?.amount ? RupeeSymbol + data?.amount : "NA"}
                                             />
                                         </View>
                                         <View className="w-3/12 flex-flex-col gap-4 px-2">
@@ -323,7 +323,7 @@ export default function SIPReportsDetail() {
                                                         ?.dividendType?.name
                                                         ? data?.mutualfund
                                                               ?.dividendType?.name
-                                                        : "-"
+                                                        : "NA"
                                                 }
                                             />
                                             <DataValue

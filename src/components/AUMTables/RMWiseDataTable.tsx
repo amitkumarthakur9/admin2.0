@@ -82,8 +82,8 @@ const RMWiseDataTable = () => {
     React.useEffect(() => {
         async function getSchema() {
             const response: any = await RemoteApi.get("aum/management-user/schema");
-            setFiltersSchema(response);
-            setSorting(response.sort);
+            setFiltersSchema(response.data);
+            setSorting(response.data.sort);
         }
         getSchema();
     }, []);
