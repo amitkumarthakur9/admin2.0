@@ -1039,7 +1039,7 @@ const LumpSumOrderTab = ({
     } = useMutation(postData, {
         onSuccess: (res: any) => {
             setFolioID(null);
-            setInvestmentAmount("5000");
+            setInvestmentAmount("500");
             if (res && res.code > 299) {
                 // error
                 toast.show({
