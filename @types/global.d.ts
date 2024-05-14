@@ -10,12 +10,27 @@ declare global {
         count: number;
         filterCount: number;
         totalCount: number;
+        errors: []
+    }
+
+    interface ErrorResponse {
+        code: number;
+        success: boolean;
+        message: string;
+        data: any[]; // Depending on the response, this might be an array of specific types
+        errors: {
+            message: string;
+        }[];
     }
 
     interface ManagementUsers{
         id: string;
             name: string;
 
+    }
+
+    interface errors {
+        message: string;
     }
     interface ClientDataResponse {
         id: string;
@@ -32,6 +47,7 @@ declare global {
         lastInvestment: string;
         externalFundLastUpdatedOn: string;
         activeSip: number;
+        errors: [];
     }
 
     interface ClientDetailedDataResponse {

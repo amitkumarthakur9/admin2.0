@@ -75,57 +75,61 @@ const AUMDataTable = (role) => {
     });
     const { width } = useWindowDimensions();
 
-    async function getDataList(
-        updatedFilterValues = [],
-        applyDirectly = false
-    ) {
-        setIsLoading(true);
-        let data: any = {
-            page: currentPageNumber,
-            limit: itemsPerPage,
-            filters: applyDirectly ? updatedFilterValues : appliedFilers,
-        };
+    // async function getDataList(
+    //     updatedFilterValues = [],
+    //     applyDirectly = false
+    // ) {
+    //     setIsLoading(true);
+    //     let data: any = {
+    //         page: currentPageNumber,
+    //         limit: itemsPerPage,
+    //         filters: applyDirectly ? updatedFilterValues : appliedFilers,
+    //     };
 
-        if (appliedSorting.key != "") {
-            data.orderBy = appliedSorting;
-        }
+    //     if (appliedSorting.key != "") {
+    //         data.orderBy = appliedSorting;
+    //     }
 
-        const response: AccountsResponse = await RemoteApi.post(
-            "client/list",
-            data
-        );
+    //     const response: AccountsResponse = await RemoteApi.post(
+    //         "client/list",
+    //         data
+    //     );
 
-        if (response.code == 200) {
-            setData(response.data);
-            // setItemsPerPage(response.count)
-            setTotalItems(response.filterCount);
-            setIsLoading(false);
-            setTotalPages(
-                Math.ceil(
-                    (response.filterCount || response.data.length) /
-                        itemsPerPage
-                )
-            );
-        }
-    }
+    //     if (response.code == 200) {
+    //         setData(response.data);
+    //         // setItemsPerPage(response.count)
+    //         setTotalItems(response.filterCount);
+    //         setIsLoading(false);
+    //         setTotalPages(
+    //             Math.ceil(
+    //                 (response.filterCount || response.data.length) /
+    //                     itemsPerPage
+    //             )
+    //         );
+    //     }else{
+    //         setIsLoading(false);
 
-    React.useEffect(() => {
-        async function getSchema() {
-            const response: any = await RemoteApi.get("client/schema");
-            setFiltersSchema(response);
-            setSorting(response.sort);
-        }
-        getSchema();
-    }, []);
+    //         alert("Internal Server Error");
+    //     }
+    // }
 
-    React.useEffect(() => {
-        if (
-            (appliedSorting.direction != "" && appliedSorting.key != "") ||
-            (appliedSorting.direction == "" && appliedSorting.key == "")
-        ) {
-            getDataList();
-        }
-    }, [appliedSorting]);
+    // React.useEffect(() => {
+    //     async function getSchema() {
+    //         const response: any = await RemoteApi.get("client/schema");
+    //         setFiltersSchema(response);
+    //         setSorting(response.sort);
+    //     }
+    //     getSchema();
+    // }, []);
+
+    // React.useEffect(() => {
+    //     if (
+    //         (appliedSorting.direction != "" && appliedSorting.key != "") ||
+    //         (appliedSorting.direction == "" && appliedSorting.key == "")
+    //     ) {
+    //         getDataList();
+    //     }
+    // }, [appliedSorting]);
 
     const AUMCard = ({ data }) => {
         const [selectedTab, setSelectedTab] = useState(1);

@@ -34,18 +34,19 @@ import { v4 as uuidv4 } from "uuid";
 import CalendarPicker from "../CustomDatePicker/CalendarPicker";
 import CalendarSinglePicker from "../CustomDatePicker/CalendarSinglePicker";
 import { RMid } from "../../helper/helper";
-// import DatePicker from "react-native-datepicker";
-// import DatePicker from 'react-datepicker';
-// import 'react-datepicker/dist/react-datepicker.css';
 
 export default function AddIFAUser() {
-    const options = [
-        { label: "Relationship Manager", value: "238" },
-        // { label: "RM 2", value: "230" },
-        // { label: "RM 3", value: "249" },
-        // { label: "RM 4", value: "259" },
-        // { label: "RM 5", value: "245" },
-    ];
+    const [options, setOptions] = useState([
+        // { name: "Self", id: "238" },
+    ]);
+
+    // const options = [
+    //     { label: "Relationship Manager", value: "238" },
+    //     // { label: "RM 2", value: "230" },
+    //     // { label: "RM 3", value: "249" },
+    //     // { label: "RM 4", value: "259" },
+    //     // { label: "RM 5", value: "245" },
+    // ];
     const [modalVisible, setModalVisible] = useState(false);
     const showDialog = () => setModalVisible(true);
     const hideDialog = () => setModalVisible(false);
@@ -67,8 +68,8 @@ export default function AddIFAUser() {
         confirmPassword: null,
     });
     const [isSubmitted, setIsSubmitted] = useState(false);
-//    const [role, setRole] = useState("");
-   const role = RMid();
+    //    const [role, setRole] = useState("");
+    const role = RMid();
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -116,18 +117,37 @@ export default function AddIFAUser() {
     const isSelectionValid =
         selectedValue !== undefined && selectedValue !== "";
 
-        // useEffect(() => {
+    // useEffect(() => {
 
-            
+    //     setSelectedValue(role.rmID);
+    //     // setFormData((prevData) => ({
+    //     //     ...prevData,
+    //     //     [rm]: role.rmID,
+    //     // }));
 
-        //     setSelectedValue(role.rmID);
-        //     // setFormData((prevData) => ({
-        //     //     ...prevData,
-        //     //     [rm]: role.rmID,
-        //     // }));
+    // }, []);
 
-        // }, []);
+    useEffect(() => {
+        async function getRM() {
+            // let data: any = {
+            //     page: currentPageNumber,
+            //     limit: itemsPerPage,
+            //     filters: applyDirectly ? updatedFilterValues : appliedFilers,
+            // };
 
+            // if (appliedSorting.key != "") {
+            //     data.orderBy = appliedSorting;
+            // }
+
+            const response: any = await RemoteApi.post(
+                "aum/management-user/list"
+                // data
+            );
+
+            setOptions(response.data);
+        }
+        getRM();
+    }, []);
 
     useEffect(() => {
         // Clear existing toasts
@@ -303,9 +323,9 @@ export default function AddIFAUser() {
         }));
     };
 
-    const filteredOptions = options.filter((option) =>
-        option.label.toLowerCase().includes(searchValue.toLowerCase())
-    );
+    // const filteredOptions = options.filter((option) =>
+    //     option.label.toLowerCase().includes(searchValue.toLowerCase())
+    // );
 
     const handleSubmit = async () => {
         // Set the form as submitted
@@ -460,15 +480,12 @@ export default function AddIFAUser() {
                 password: "",
                 confirmPassword: "",
             });
-
-           
         } else {
             console.log("Validation failed");
         }
     };
     return (
         <>
-            
             <View
                 className={
                     "mt-4 z-[-1] w-[90%] flex items-center border-[#c8c8c8] border-[0.2px] rounded-[5px]"
@@ -562,24 +579,20 @@ export default function AddIFAUser() {
                             maxW="300px"
                         >
                             <FormControl.Label>Date of Birth</FormControl.Label>
-                            
+
                             <CalendarSinglePicker
                                 value={formData.dateOfBirth}
                                 handleFilterChange={(value) =>
                                     handleChange("dateOfBirth", value)
                                 }
-                               
                             />
                             {errors.dateOfBirth ? (
                                 <FormControl.ErrorMessage>
                                     {errors.dateOfBirth}
                                 </FormControl.ErrorMessage>
                             ) : (
-                                <FormControl.HelperText>
-                                    
-                                </FormControl.HelperText>
+                                <FormControl.HelperText></FormControl.HelperText>
                             )}
-                            
                         </FormControl>
 
                         <FormControl
@@ -709,8 +722,8 @@ export default function AddIFAUser() {
                             <FormControl.Label>ARN</FormControl.Label>
                             <InputGroup
                                 w={{
-                                    base: "70%",
-                                    md: "287",
+                                    base: "100%",
+                                    md: "100%",
                                 }}
                                 justifyContent=""
                             >
@@ -746,8 +759,8 @@ export default function AddIFAUser() {
                             <FormControl.Label>EUIN Number</FormControl.Label>
                             <InputGroup
                                 w={{
-                                    base: "70%",
-                                    md: "287",
+                                    base: "100%",
+                                    md: "300",
                                 }}
                                 justifyContent=""
                             >
@@ -776,7 +789,7 @@ export default function AddIFAUser() {
                             )}
                         </FormControl>
                         <FormControl
-                            w="3/4"
+                            w="100%"
                             maxW="300"
                             isRequired
                             isInvalid={isSubmitted == true}
@@ -797,25 +810,21 @@ export default function AddIFAUser() {
                                 mt={1}
                                 onValueChange={handleSelectChange}
                             >
-                                {role?.roldeID == 3
-                                    ?
+                                {role?.roldeID == 3 ? (
                                     <Select.Item
                                         key={role?.roldeID}
                                         label="Self"
                                         value={role?.rmID}
                                     />
-                                    
-                                    : 
-
-                                    filteredOptions.map((option) => (
+                                ) : (
+                                    options.map((option) => (
                                         <Select.Item
-                                            key={option.value}
-                                            label={option.label}
-                                            value={option.value}
+                                            key={option.id}
+                                            label={option.name}
+                                            value={option.id}
                                         />
                                     ))
-                                }
-                                
+                                )}
                             </Select>
                             <FormControl.ErrorMessage
                                 leftIcon={<WarningOutlineIcon size="xs" />}
@@ -823,8 +832,7 @@ export default function AddIFAUser() {
                                 "Please make a selection!"
                             </FormControl.ErrorMessage>
                             <FormControl.HelperText>
-                                {filteredOptions.length === 0 &&
-                                    "No options found"}
+                                {/* {options.length === 0 && "No options found"} */}
                             </FormControl.HelperText>
                         </FormControl>
                         <Button

@@ -79,7 +79,9 @@ const ClientWiseDataTable = () => {
                 );
             }else{
                 setIsLoading(false);
-                // alert(response.error)
+                
+
+            alert("Internal Server Error");
             }
 
         }catch(error){

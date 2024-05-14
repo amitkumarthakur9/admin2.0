@@ -100,30 +100,38 @@ export const Brokerage = () => {
         mutationFn: postBrokerageTransactions,
         mutationKey: ["brokerage-transactions"],
     });
-    
 
     useEffect(() => {
         mutate();
     }, []);
 
+    // brokerageTopClients?.data?.map(
+    //     (el) => {
+    //         return {
+    //             label: el
+    //                 ?.account
+    //                 ?.name,
+    //             value: el?.subBrokerAmount,
+    //         };
+
     const DummyDate = {
-        aum: {
+        amc: {
             total: 12500,
             breakDown: [
                 {
-                    category: "Equity",
+                    category: "ICICI mutual fund",
                     currentValue: 5000,
                 },
                 {
-                    category: "Debt",
+                    category: "SBI mutual fund",
                     currentValue: 4000,
                 },
                 {
-                    category: "Other",
-                    currentValue: 1500,
+                    category: "Axis mutual fund",
+                    currentValue: 3500,
                 },
                 {
-                    category: "Hybrid",
+                    category: "Tata mutual fund",
                     currentValue: 3000,
                 },
             ],
@@ -135,7 +143,7 @@ export const Brokerage = () => {
             totalSipTransactions: 2,
             totalSipTransactionsFailed: 1,
         },
-        order: {
+        client: {
             lumpsum: {
                 total: 2000,
             },
@@ -144,19 +152,19 @@ export const Brokerage = () => {
                 sipCount: 5,
                 breakDown: [
                     {
-                        category: "Debt",
+                        category: "Anand Raj",
                         count: 1000,
                     },
                     {
-                        category: "Equity",
+                        category: "Deepti ",
                         count: 2000,
                     },
                     {
-                        category: "Hybrid",
+                        category: "Ashish",
                         count: 1500,
                     },
                     {
-                        category: "Other",
+                        category: "Sourabh",
                         count: 500,
                     },
                     // {
@@ -272,9 +280,9 @@ export const Brokerage = () => {
                                                         `${
                                                             brokerage?.data
                                                                 ?.totalAmount
-                                                                ? brokerage
-                                                                      ?.data
-                                                                      ?.totalAmount.toFixed(2)
+                                                                ? brokerage?.data?.totalAmount.toFixed(
+                                                                      2
+                                                                  )
                                                                 : "10000.00"
                                                         }`
                                                     }
@@ -290,9 +298,9 @@ export const Brokerage = () => {
                                                         `${
                                                             brokerage?.data
                                                                 ?.subBrokerAmount
-                                                                ? brokerage
-                                                                      ?.data
-                                                                      ?.subBrokerAmount.toFixed(2)
+                                                                ? brokerage?.data?.subBrokerAmount.toFixed(
+                                                                      2
+                                                                  )
                                                                 : "8000.00"
                                                         }`
                                                     }
@@ -319,75 +327,83 @@ export const Brokerage = () => {
                                                             By Investment Type
                                                         </Text>
 
-                                                        {brokerage?.data
+                                                        {/* {brokerage?.data
                                                             ?.totalAmount >
-                                                        0 ? (
-                                                            <DonutPieChart
-                                                                pieData={[
-                                                                    {
-                                                                        x: "SIP",
-                                                                        y:
-                                                                            brokerage
-                                                                                ?.data
-                                                                                ?.sipTotal /
-                                                                            brokerage
-                                                                                ?.data
-                                                                                ?.totalAmount,
-                                                                    },
-                                                                    {
-                                                                        x: "One Time",
-                                                                        y:
-                                                                            brokerage
-                                                                                ?.data
-                                                                                ?.oneTimeTotal /
-                                                                            brokerage
-                                                                                ?.data
-                                                                                ?.totalAmount,
-                                                                    },
-                                                                ]}
+                                                        0 ? ( */}
 
-                                                                // pieData={[
-                                                                //     {
-                                                                //         x: "SIP",
-                                                                //         y:
-                                                                //             65
-                                                                //     },
-                                                                //     {
-                                                                //         x: "One Time",
-                                                                //         y:
-                                                                //             35
-                                                                //     },
-                                                                // ]}
-                                                            />
-                                                        ) : (
+                                                        <DonutPieChart
+                                                            // pieData={[
+                                                            //     {
+                                                            //         x: "SIP",
+                                                            //         y:
+                                                            //             brokerage
+                                                            //                 ?.data
+                                                            //                 ?.sipTotal /
+                                                            //             brokerage
+                                                            //                 ?.data
+                                                            //                 ?.totalAmount,
+                                                            //     },
+                                                            //     {
+                                                            //         x: "One Time",
+                                                            //         y:
+                                                            //             brokerage
+                                                            //                 ?.data
+                                                            //                 ?.oneTimeTotal /
+                                                            //             brokerage
+                                                            //                 ?.data
+                                                            //                 ?.totalAmount,
+                                                            //     },
+                                                            // ]}
+
+                                                            pieData={[
+                                                                {
+                                                                    x: "SIP",
+                                                                    y: 65,
+                                                                },
+                                                                {
+                                                                    x: "One Time",
+                                                                    y: 35,
+                                                                },
+                                                            ]}
+                                                        />
+                                                        {/* ) : (
                                                             <ComingSoon />
-                                                        )} 
+                                                        )}  */}
                                                     </View>
                                                     <Divider orientation="vertical" />
                                                 </View>
                                                 <View className="w-1/3 flex-row justify-between rounded-3xl bg-white p-4">
                                                     <View className="w-[99%] flex">
-                                                        {brokerage?.data
+                                                        {/* {brokerage?.data
                                                             ?.topFundhouse
-                                                            ?.length ? (
-                                                            <View className="h-full flex flex-col items-center justify-center gap-8">
-                                                                <BarChart
-                                                                    title={
-                                                                        "By Top AMCs"
-                                                                    }
-                                                                    data={brokerage?.data?.topFundhouse?.map(
-                                                                        (
-                                                                            el
-                                                                        ) => {
-                                                                            return {
-                                                                                label: el.fundhouse,
-                                                                                value: el.subBrokerAmount,
-                                                                            };
-                                                                        }
-                                                                    )}
-                                                                />
-                                                            </View>
-                                                        ) : (
+                                                            ?.length ? ( */}
+                                                        {/* <View className="h-full flex flex-col items-center justify-center gap-8"> */}
+                                                        <BarChart
+                                                            title={
+                                                                "By Top AMCs"
+                                                            }
+                                                            // data={brokerage?.data?.topFundhouse?.map(
+                                                            //     (
+                                                            //         el
+                                                            //     ) => {
+                                                            //         return {
+                                                            //             label: el.fundhouse,
+                                                            //             value: el.subBrokerAmount,
+                                                            //         };
+                                                            //     }
+                                                            // )}
+
+                                                            data={DummyDate?.amc?.breakDown?.map(
+                                                                (el) => {
+                                                                    return {
+                                                                        label: el.category,
+                                                                        value: el.currentValue,
+                                                                    };
+                                                                }
+                                                            )}
+                                                        />
+                                                        {/* </View> */}
+                                                        {/* ) : (
                                                             <>
                                                                 <View className="flex flex-row justify-start items-start ">
                                                                     <Text className="text-md font-bold text-start">
@@ -398,231 +414,240 @@ export const Brokerage = () => {
 
                                                                 <ComingSoon />
                                                             </>
-                                                        )}
+                                                        )} */}
                                                     </View>
                                                     <Divider orientation="vertical" />
                                                 </View>
                                                 <View className="w-1/3 flex-row justify-between rounded-3xl bg-white p-4">
                                                     <View className="w-[99%] flex">
-                                                    {brokerageTopClients?.data.length ? (
+                                                        {/* {brokerageTopClients?.data.length ? ( */}
                                                         <BarChart
                                                             title={
                                                                 "By Top 3 Clients (All time)"
                                                             }
-                                                            data={brokerageTopClients?.data?.map(
+                                                            // data={brokerageTopClients?.data?.map(
+                                                            //     (el) => {
+                                                            //         return {
+                                                            //             label: el
+                                                            //                 ?.account
+                                                            //                 ?.name,
+                                                            //             value: el?.subBrokerAmount,
+                                                            //         };
+                                                            //     }
+                                                            // )}
+
+                                                            data={DummyDate?.client?.sip?.breakDown.map(
                                                                 (el) => {
                                                                     return {
-                                                                        label: el
-                                                                            ?.account
-                                                                            ?.name,
-                                                                        value: el?.subBrokerAmount,
+                                                                        label: el?.category,
+                                                                        value: el?.count,
                                                                     };
                                                                 }
                                                             )}
-                                                            loading={
-                                                                topClientsLoading
-                                                            }
-                                                        />
-                                                    ) : (
-                                                        <>
-                                                            <View className="flex flex-row justify-start items-start ">
-                                                                <Text className="text-md font-bold text-start">
-                                                                By Top 3 Clients (All time)
-                                                                </Text>
-                                                            </View>
 
-                                                            <ComingSoon />
-                                                        </>
-                                                    )}
+                                                            // loading={
+                                                            //     topClientsLoading
+                                                            // }
+                                                        />
+                                                        {/* // ) : (
+                                                    //     <>
+                                                    //         <View className="flex flex-row justify-start items-start ">
+                                                    //             <Text className="text-md font-bold text-start">
+                                                    //             By Top 3 Clients (All time)
+                                                    //             </Text>
+                                                    //         </View>
+
+                                                    //         <ComingSoon />
+                                                    //     </>
+                                                    // )} */}
                                                     </View>
                                                 </View>
                                             </View>
                                         </View>
                                         <View className="p-2 rounded bg-white w-full mt-4">
-
-                                        {brokerageTransactions?.data?.length 
-                                                         ? (
-                                            <DataTable
-                                                rows={brokerageTransactions?.data?.map(
-                                                    (transaction) => {
-                                                        return [
-                                                            {
-                                                                key: "client",
-                                                                content: (
-                                                                    <View>
-                                                                        <Text
-                                                                            selectable
-                                                                            className="text-xs text-gray-500"
-                                                                        >
-                                                                            {
-                                                                                transaction
-                                                                                    ?.account
-                                                                                    ?.name
-                                                                            }
-                                                                        </Text>
-                                                                    </View>
-                                                                ),
-                                                            },
-                                                            {
-                                                                key: "scheme",
-                                                                content: (
-                                                                    <View className="flex flex-row items-center gap-2">
-                                                                        <Image
-                                                                            alt="fundHouse"
-                                                                            className="mr-2"
-                                                                            style={{
-                                                                                width: 32,
-                                                                                height: 32,
-                                                                                objectFit:
-                                                                                    "contain",
-                                                                            }}
-                                                                            source={{
-                                                                                uri: transaction
-                                                                                    ?.mutualfund
-                                                                                    ?.logoUrl,
-                                                                            }}
-                                                                        />
+                                            {brokerageTransactions?.data
+                                                ?.length ? (
+                                                <DataTable
+                                                    rows={brokerageTransactions?.data?.map(
+                                                        (transaction) => {
+                                                            return [
+                                                                {
+                                                                    key: "client",
+                                                                    content: (
                                                                         <View>
-                                                                            <Text className="text-xs">
+                                                                            <Text
+                                                                                selectable
+                                                                                className="text-xs text-gray-500"
+                                                                            >
                                                                                 {
                                                                                     transaction
-                                                                                        ?.mutualfund
+                                                                                        ?.account
                                                                                         ?.name
                                                                                 }
                                                                             </Text>
-                                                                            <Text className="text-xs text-gray-400">
-                                                                                {
-                                                                                    transaction
+                                                                        </View>
+                                                                    ),
+                                                                },
+                                                                {
+                                                                    key: "scheme",
+                                                                    content: (
+                                                                        <View className="flex flex-row items-center gap-2">
+                                                                            <Image
+                                                                                alt="fundHouse"
+                                                                                className="mr-2"
+                                                                                style={{
+                                                                                    width: 32,
+                                                                                    height: 32,
+                                                                                    objectFit:
+                                                                                        "contain",
+                                                                                }}
+                                                                                source={{
+                                                                                    uri: transaction
                                                                                         ?.mutualfund
-                                                                                        ?.category
+                                                                                        ?.logoUrl,
+                                                                                }}
+                                                                            />
+                                                                            <View>
+                                                                                <Text className="text-xs">
+                                                                                    {
+                                                                                        transaction
+                                                                                            ?.mutualfund
+                                                                                            ?.name
+                                                                                    }
+                                                                                </Text>
+                                                                                <Text className="text-xs text-gray-400">
+                                                                                    {
+                                                                                        transaction
+                                                                                            ?.mutualfund
+                                                                                            ?.category
+                                                                                    }{" "}
+                                                                                    |{" "}
+                                                                                    {
+                                                                                        transaction
+                                                                                            ?.mutualfund
+                                                                                            ?.subCategory
+                                                                                    }
+                                                                                </Text>
+                                                                            </View>
+                                                                        </View>
+                                                                    ),
+                                                                },
+                                                                {
+                                                                    key: "folio",
+                                                                    content: (
+                                                                        <View>
+                                                                            <Text
+                                                                                selectable
+                                                                                className="text-xs text-black"
+                                                                            >
+                                                                                -
+                                                                            </Text>
+                                                                        </View>
+                                                                    ),
+                                                                },
+                                                                {
+                                                                    key: "transactionDate",
+                                                                    content: (
+                                                                        <View>
+                                                                            <Text
+                                                                                selectable
+                                                                                className="text-xs text-gray-500"
+                                                                            >
+                                                                                -
+                                                                            </Text>
+                                                                        </View>
+                                                                    ),
+                                                                },
+                                                                {
+                                                                    key: "brokerageAmount",
+                                                                    content: (
+                                                                        <View>
+                                                                            <Text
+                                                                                selectable
+                                                                                className="text-xs text-gray-500"
+                                                                            >
+                                                                                {
+                                                                                    RupeeSymbol
                                                                                 }{" "}
-                                                                                |{" "}
                                                                                 {
-                                                                                    transaction
-                                                                                        ?.mutualfund
-                                                                                        ?.subCategory
+                                                                                    transaction?.subBrokerAmount
                                                                                 }
                                                                             </Text>
                                                                         </View>
-                                                                    </View>
-                                                                ),
-                                                            },
-                                                            {
-                                                                key: "folio",
-                                                                content: (
-                                                                    <View>
-                                                                        <Text
-                                                                            selectable
-                                                                            className="text-xs text-black"
-                                                                        >
-                                                                            -
-                                                                        </Text>
-                                                                    </View>
-                                                                ),
-                                                            },
-                                                            {
-                                                                key: "transactionDate",
-                                                                content: (
-                                                                    <View>
-                                                                        <Text
-                                                                            selectable
-                                                                            className="text-xs text-gray-500"
-                                                                        >
-                                                                            -
-                                                                        </Text>
-                                                                    </View>
-                                                                ),
-                                                            },
-                                                            {
-                                                                key: "brokerageAmount",
-                                                                content: (
-                                                                    <View>
-                                                                        <Text
-                                                                            selectable
-                                                                            className="text-xs text-gray-500"
-                                                                        >
-                                                                            {
-                                                                                RupeeSymbol
-                                                                            }{" "}
-                                                                            {
-                                                                                transaction?.subBrokerAmount
-                                                                            }
-                                                                        </Text>
-                                                                    </View>
-                                                                ),
-                                                            },
-                                                            {
-                                                                key: "TransactionType",
-                                                                content: (
-                                                                    <View>
-                                                                        <Text
-                                                                            selectable
-                                                                            className="text-xs text-gray-500"
-                                                                        >
-                                                                            -
-                                                                        </Text>
-                                                                    </View>
-                                                                ),
-                                                            },
-                                                            {
-                                                                key: "units",
-                                                                content: (
-                                                                    <View>
-                                                                        <Text
-                                                                            selectable
-                                                                            className="text-xs text-gray-500"
-                                                                        >
-                                                                            -
-                                                                        </Text>
-                                                                    </View>
-                                                                ),
-                                                            },
-                                                            {
-                                                                key: "amount",
-                                                                content: (
-                                                                    <View>
-                                                                        <Text
-                                                                            selectable
-                                                                            className="text-xs text-gray-500"
-                                                                        >
-                                                                            {
-                                                                                RupeeSymbol
-                                                                            }{" "}
-                                                                            {
-                                                                                transaction?.amount
-                                                                            }
-                                                                        </Text>
-                                                                    </View>
-                                                                ),
-                                                            },
-                                                        ];
-                                                    }
-                                                )}
-                                                headers={[
-                                                    "Client",
-                                                    "Scheme",
-                                                    "Folio Number",
-                                                    "Transaction Date",
-                                                    "Brokerage Amount",
-                                                    "Transaction Type",
-                                                    "Units",
-                                                    "Amount",
-                                                ]}
-                                                cellSize={[
-                                                    2, 2, 2, 2, 1, 1, 1, 1,
-                                                ]}
-                                            />
-                                        ) : (
-                                            <>
-                                                 <View className="flex flex-row justify-start items-start ">
-                                                                <Text className="text-md font-bold text-start">
-                                                                Brokerage Table
-                                                                </Text>
-                                                            </View>
+                                                                    ),
+                                                                },
+                                                                {
+                                                                    key: "TransactionType",
+                                                                    content: (
+                                                                        <View>
+                                                                            <Text
+                                                                                selectable
+                                                                                className="text-xs text-gray-500"
+                                                                            >
+                                                                                -
+                                                                            </Text>
+                                                                        </View>
+                                                                    ),
+                                                                },
+                                                                {
+                                                                    key: "units",
+                                                                    content: (
+                                                                        <View>
+                                                                            <Text
+                                                                                selectable
+                                                                                className="text-xs text-gray-500"
+                                                                            >
+                                                                                -
+                                                                            </Text>
+                                                                        </View>
+                                                                    ),
+                                                                },
+                                                                {
+                                                                    key: "amount",
+                                                                    content: (
+                                                                        <View>
+                                                                            <Text
+                                                                                selectable
+                                                                                className="text-xs text-gray-500"
+                                                                            >
+                                                                                {
+                                                                                    RupeeSymbol
+                                                                                }{" "}
+                                                                                {
+                                                                                    transaction?.amount
+                                                                                }
+                                                                            </Text>
+                                                                        </View>
+                                                                    ),
+                                                                },
+                                                            ];
+                                                        }
+                                                    )}
+                                                    headers={[
+                                                        "Client",
+                                                        "Scheme",
+                                                        "Folio Number",
+                                                        "Transaction Date",
+                                                        "Brokerage Amount",
+                                                        "Transaction Type",
+                                                        "Units",
+                                                        "Amount",
+                                                    ]}
+                                                    cellSize={[
+                                                        2, 2, 2, 2, 1, 1, 1, 1,
+                                                    ]}
+                                                />
+                                            ) : (
+                                                <>
+                                                    <View className="flex flex-row justify-start items-start ">
+                                                        <Text className="text-md font-bold text-start">
+                                                            Brokerage Table
+                                                        </Text>
+                                                    </View>
 
-                                                <ComingSoon />
-                                            </>
-                                        )}
+                                                    <ComingSoon />
+                                                </>
+                                            )}
                                         </View>
                                     </View>
                                 </View>

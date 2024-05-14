@@ -75,6 +75,10 @@ const ClientsDataTable = () => {
                         itemsPerPage
                 )
             );
+        } else {
+            setIsLoading(false);
+
+            alert("Internal Server Error");
         }
     }
 
@@ -183,7 +187,11 @@ const ClientsDataTable = () => {
                                 selectable
                                 className="text-[#686868] font-semibold"
                             >
-                                {item?.lastInvestment ? dateTimeFormat(item?.lastInvestment) : "NA"}
+
+                                {item?.lastInvestment
+                                    ? dateTimeFormat(item?.lastInvestment)
+                                    : "NA"}
+
                             </Text>
                         </View>
                         {/* <View className="flex flex-row items-center mt-0">
@@ -201,7 +209,11 @@ const ClientsDataTable = () => {
                 key: "externalFundDate",
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
-                        {item?.externalFundLastUpdatedOn ? dateTimeFormat(item?.externalFundLastUpdatedOn) : "NA"}
+
+                        {item?.externalFundLastUpdatedOn
+                            ? dateTimeFormat(item?.externalFundLastUpdatedOn)
+                            : "NA"}
+
                     </Text>
                 ),
             },
