@@ -77,6 +77,7 @@ interface AumSchemeWiseData {
     dividendType: string;
     currentValue: number;
     investedValue: number;
+    category: string;
 }
 
 interface FundhouseWise {

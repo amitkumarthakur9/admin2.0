@@ -129,6 +129,14 @@ const SchemeWiseDataTable = () => {
                 ),
             },
             {
+                key: "category",
+                content: (
+                    <Text selectable className="text-[#686868] font-semibold">
+                         {item?.category ? item?.category : "NA"}
+                    </Text>
+                ),
+            },
+            {
                 key: "optiontype",
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
@@ -215,13 +223,14 @@ const SchemeWiseDataTable = () => {
                         <DataTable
                             headers={[
                                 "Scheme Name",
+                                "Category",
                                 "Option Type",
                                 "Dividend Type",
                                 "Total Invested",
                                 "Current Value",
                                 // "",
                             ]}
-                            cellSize={[2, 2, 2, 2, 2,]}
+                            cellSize={[2, 2, 2, 2, 2, 2,]}
                             rows={transformedData}
                         />
                     </ScrollView>

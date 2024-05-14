@@ -663,8 +663,8 @@ const ContactDataTable = () => {
                                                                                             selectable
                                                                                             className="text-slate-500 text-lg font-bold md:font-normal md:text-base"
                                                                                         >
-                                                                                            {item.name +
-                                                                                                "f"}
+                                                                                            {item.name
+                                                                                                }
                                                                                         </Text>
                                                                                     </View>
                                                                                 </View>

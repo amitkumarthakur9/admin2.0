@@ -260,7 +260,15 @@ export const DynamicFilters = ({
             )
             .map((obj) => obj.title);
 
-        const resultString = keysToInclude?.join("/");
+            // const resultString = keysToInclude?.join("/");
+
+            let resultString;
+
+            if (!keysToInclude || keysToInclude.length === 0) {
+                resultString = "Search...";
+            } else {
+                resultString = keysToInclude.join("/");
+            }
 
         return resultString?.length > maxPlaceholderLength &&
             maxPlaceholderLength > 0
