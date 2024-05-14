@@ -120,19 +120,19 @@ export const Brokerage = () => {
             breakDown: [
                 {
                     category: "ICICI mutual fund",
-                    currentValue: 5000,
+                    currentValue: 3000,
                 },
                 {
                     category: "SBI mutual fund",
-                    currentValue: 4000,
+                    currentValue: 2000,
                 },
                 {
                     category: "Axis mutual fund",
-                    currentValue: 3500,
+                    currentValue: 2500,
                 },
                 {
                     category: "Tata mutual fund",
-                    currentValue: 3000,
+                    currentValue: 2100,
                 },
             ],
         },
@@ -153,11 +153,11 @@ export const Brokerage = () => {
                 breakDown: [
                     {
                         category: "Anand Raj",
-                        count: 1000,
+                        count: 2000,
                     },
                     {
                         category: "Deepti ",
-                        count: 2000,
+                        count: 1800,
                     },
                     {
                         category: "Ashish",
@@ -165,7 +165,7 @@ export const Brokerage = () => {
                     },
                     {
                         category: "Sourabh",
-                        count: 500,
+                        count: 1000,
                     },
                     // {
                     //     category: "Solution Oriented",
@@ -423,7 +423,7 @@ export const Brokerage = () => {
                                                         {/* {brokerageTopClients?.data.length ? ( */}
                                                         <BarChart
                                                             title={
-                                                                "By Top 3 Clients (All time)"
+                                                                "By Top Clients (All time)"
                                                             }
                                                             // data={brokerageTopClients?.data?.map(
                                                             //     (el) => {
