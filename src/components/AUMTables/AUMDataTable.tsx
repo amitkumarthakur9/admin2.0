@@ -306,11 +306,11 @@ const AUMDataTable = (role) => {
                 /> */}
 
                 {!isLoading ? (
-                    <ScrollView className={"mt-0 z-[-1] "}>
+                    // <ScrollView className={"mt-0 z-[-1] "}>
                         <View className="w-12/12 h-full rounded">
                             <AUMCard data={data} />
                         </View>
-                    </ScrollView>
+                    // </ScrollView>
                 ) : (
                     <HStack
                         space={"md"}

@@ -311,7 +311,8 @@ const ClientWiseDataTable = () => {
                       data.length === 0 ? (
                         <NoDataAvailable />
                     ) : (
-                    <ScrollView className={"mt-4 z-[-1] "}>
+                    // <ScrollView className={"mt-4 z-[-1] "}>
+                    <View className={"mt-4 z-[-1] "}>
                         {width < 830 ? (
                             <TableCard data={mobileData} />
                         ) : roleId > 3 ? (
@@ -363,7 +364,8 @@ const ClientWiseDataTable = () => {
                                 rows={transformedData}
                             />
                             )}
-                    </ScrollView>
+                     {/* </ScrollView> */}
+                     </View>
                     )
                 ) : (
                     <HStack
