@@ -60,12 +60,12 @@ const ClientWiseDataTable = () => {
             data.orderBy = appliedSorting;
         }
 
-        try{
+        try {
             const response: ClientWiseResponse = await RemoteApi.post(
                 "aum/client/list",
                 data
             );
-    
+
             if (response.code == 200) {
                 setData(response.data);
                 // setItemsPerPage(response.count)
@@ -77,25 +77,21 @@ const ClientWiseDataTable = () => {
                             itemsPerPage
                     )
                 );
-            }else{
+            } else {
                 setIsLoading(false);
-                
 
-            alert("Internal Server Error");
+                alert("Internal Server Error");
             }
-
-        }catch(error){
-            alert(error)
-
+        } catch (error) {
+            alert(error);
         }
-        
     }
 
     React.useEffect(() => {
         async function getSchema() {
             const response: any = await RemoteApi.get("aum/client/schema");
-            setFiltersSchema(response.data);
-            setSorting(response.data.sort);
+            setFiltersSchema(response);
+            setSorting(response.sort);
         }
         getSchema();
     }, []);
@@ -109,8 +105,7 @@ const ClientWiseDataTable = () => {
         }
     }, [appliedSorting]);
 
-
-    const mobileData = data.map(item => ({
+    const mobileData = data.map((item) => ({
         // id: item.id,
         Name: item?.name,
         ClientId: item?.clientId,
@@ -118,11 +113,10 @@ const ClientWiseDataTable = () => {
         CurrentValue: RupeeSymbol + item.currentValue,
         InvestedValue: RupeeSymbol + item.investedValue,
         XIRR: item?.xirr,
-
-      }));
+    }));
 
     const transformedData = data?.map((item) => {
-        const itemStructure =  [
+        const itemStructure = [
             {
                 key: "clientName",
                 content: (
@@ -216,9 +210,14 @@ const ClientWiseDataTable = () => {
             {
                 key: "XIRR",
                 content: (
-                    <Text selectable className="text-[#686868] font-semibold">
-                        {item?.xirr ? item?.xirr + "%" : "0%"}
-                    </Text>
+                    <View className="w-[99%]">
+                        <Text
+                            selectable
+                            className="text-[#686868] font-semibold"
+                        >
+                            {item?.xirr ? item?.xirr.toFixed(2) + "%" : "0%"}
+                        </Text>
+                    </View>
                 ),
             },
             {
@@ -256,8 +255,8 @@ const ClientWiseDataTable = () => {
             // },
         ];
 
-         // Conditionally add an additional object based on roleId to index 2
-         if (roleId > 2) {
+        // Conditionally add an additional object based on roleId to index 2
+        if (roleId > 2) {
             itemStructure.splice(2, 0, {
                 key: "distributor",
                 content: (
@@ -283,120 +282,116 @@ const ClientWiseDataTable = () => {
     });
 
     return (
-
         <View className="h-screen">
-
-        
-        <View className="bg-white">
-            {/* <View className="">
+            <View className="bg-white">
+                {/* <View className="">
                 <TableBreadCrumb name={"Client Wise"} />
             </View> */}
-            <View className="border-[0.2px]  border-[#e4e4e4]">
-            {data.length !== 0 &&
-                <DynamicFilters
-                    appliedSorting={appliedSorting}
-                    setAppliedSorting={setAppliedSorting}
-                    sorting={sorting}
-                    fileName="Clients"
-                    downloadApi={"client/download-report"}
-                    schemaResponse={filtersSchema}
-                    setCurrentPageNumber={setCurrentPageNumber}
-                    getList={getDataList}
-                    appliedFilers={appliedFilers}
-                    setAppliedFilers={setAppliedFilers}
-                />
-            }
-
-                {!isLoading ? (
-                      data.length === 0 ? (
-                        <NoDataAvailable />
-                    ) : (
-                    // <ScrollView className={"mt-4 z-[-1] "}>
-                    <View className={"mt-4 z-[-1] "}>
-                        {width < 830 ? (
-                            <TableCard data={mobileData} />
-                        ) : roleId > 3 ? (
-                            <DataTable
-                                headers={[
-                                    "Client Name",
-                                    "Client Code",
-                                    "Distributor",
-                                    "Manager",
-                                    "PAN",
-                                    "Total Invested",
-                                    "Current Value",
-                                    "XIRR",
-                                    "Returns",
-                                    // "",
-                                ]}
-                                cellSize={[2,1, 1,1, 1, 1, 1, 1, 1]}
-                                rows={transformedData}
-                            />
-                        ) : roleId > 2 ? (
-                            <DataTable
-                                headers={[
-                                    "Client Name",
-                                    "Client Code",
-                                    "Distributor",
-                                    "PAN",
-                                    "Total Invested",
-                                    "Current Value",
-                                    "XIRR",
-                                    "Returns",
-                                    // "",
-                                ]}
-                                cellSize={[3, 1,1, 1, 1, 1, 1, 1]}
-                                rows={transformedData}
-                            />
-                            ) : (
-                                <DataTable
-                                headers={[
-                                    "Client Name",
-                                    "Client Code",
-                                    "PAN",
-                                    "Total Invested",
-                                    "Current Value",
-                                    "XIRR",
-                                    "Returns",
-                                    // "",
-                                ]}
-                                cellSize={[3, 2, 1, 1, 1, 1, 1]}
-                                rows={transformedData}
-                            />
-                            )}
-                     {/* </ScrollView> */}
-                     </View>
-                    )
-                ) : (
-                    <HStack
-                        space={"md"}
-                        marginTop={20}
-                        marginBottom={20}
-                        justifyContent="center"
-                    >
-                        <Spinner
-                            color={"black"}
-                            accessibilityLabel="Loading order"
+                <View className="border-[0.2px]  border-[#e4e4e4]">
+                    {/* {data.length !== 0 && ( */}
+                        <DynamicFilters
+                            appliedSorting={appliedSorting}
+                            setAppliedSorting={setAppliedSorting}
+                            sorting={sorting}
+                            fileName="Clients"
+                            downloadApi={"client/download-report"}
+                            schemaResponse={filtersSchema}
+                            setCurrentPageNumber={setCurrentPageNumber}
+                            getList={getDataList}
+                            appliedFilers={appliedFilers}
+                            setAppliedFilers={setAppliedFilers}
                         />
-                        <Heading color="black" fontSize="md">
-                            Loading
-                        </Heading>
-                    </HStack>
-                )}
-            </View>
-            {data.length !== 0 &&
-            <Pagination
-                itemsPerPage={itemsPerPage}
-                setItemsPerPage={setItemsPerPage}
-                getDataList={getDataList}
-                currentPageNumber={currentPageNumber}
-                totalPages={totalPages}
-                setCurrentPageNumber={setCurrentPageNumber}
-            />
-            }
-        </View>
+                    {/* )} */}
 
-    </View>
+                    {!isLoading ? (
+                        // data.length === 0 ? (
+                        //     <NoDataAvailable />
+                        // ) : (
+                            // <ScrollView className={"mt-4 z-[-1] "}>
+                            <View className={"mt-4 z-[-1] "}>
+                                {width < 830 ? (
+                                    <TableCard data={mobileData} />
+                                ) : roleId > 3 ? (
+                                    <DataTable
+                                        headers={[
+                                            "Client Name",
+                                            "Client Code",
+                                            "Distributor",
+                                            "Manager",
+                                            "PAN",
+                                            "Total Invested",
+                                            "Current Value",
+                                            "XIRR",
+                                            "Returns",
+                                            // "",
+                                        ]}
+                                        cellSize={[2, 1, 1, 1, 1, 1, 1, 1, 1]}
+                                        rows={transformedData}
+                                    />
+                                ) : roleId > 2 ? (
+                                    <DataTable
+                                        headers={[
+                                            "Client Name",
+                                            "Client Code",
+                                            "Distributor",
+                                            "PAN",
+                                            "Total Invested",
+                                            "Current Value",
+                                            "XIRR",
+                                            "Returns",
+                                            // "",
+                                        ]}
+                                        cellSize={[3, 1, 1, 1, 1, 1, 1, 1]}
+                                        rows={transformedData}
+                                    />
+                                ) : (
+                                    <DataTable
+                                        headers={[
+                                            "Client Name",
+                                            "Client Code",
+                                            "PAN",
+                                            "Total Invested",
+                                            "Current Value",
+                                            "XIRR",
+                                            "Returns",
+                                            // "",
+                                        ]}
+                                        cellSize={[3, 2, 1, 1, 1, 1, 1]}
+                                        rows={transformedData}
+                                    />
+                                )}
+                                {/* </ScrollView> */}
+                            </View>
+                        // )
+                    ) : (
+                        <HStack
+                            space={"md"}
+                            marginTop={20}
+                            marginBottom={20}
+                            justifyContent="center"
+                        >
+                            <Spinner
+                                color={"black"}
+                                accessibilityLabel="Loading order"
+                            />
+                            <Heading color="black" fontSize="md">
+                                Loading
+                            </Heading>
+                        </HStack>
+                    )}
+                </View>
+                {/* {data.length !== 0 && ( */}
+                    <Pagination
+                        itemsPerPage={itemsPerPage}
+                        setItemsPerPage={setItemsPerPage}
+                        getDataList={getDataList}
+                        currentPageNumber={currentPageNumber}
+                        totalPages={totalPages}
+                        setCurrentPageNumber={setCurrentPageNumber}
+                    />
+                {/* )} */}
+            </View>
+        </View>
     );
 };
 

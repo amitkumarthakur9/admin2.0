@@ -12,7 +12,7 @@ interface BankAccount {
 
 interface Account {
     name: string;
-    clientId: string;
+    clientCode: string;
 }
 
 export interface MandateDataInterface {

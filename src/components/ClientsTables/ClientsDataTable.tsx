@@ -254,7 +254,7 @@ const ClientsDataTable = () => {
             <View className="h-screen">
                 <>
                     <View className="border-[0.2px] border-[#e4e4e4]">
-                        {data.length !== 0 && (
+                        {/* {data.length !== 0 && ( */}
                             <DynamicFilters
                                 appliedSorting={appliedSorting}
                                 setAppliedSorting={setAppliedSorting}
@@ -268,11 +268,11 @@ const ClientsDataTable = () => {
                                 setAppliedFilers={setAppliedFilers}
                                 // newComponent={<AddNewClient />}
                             />
-                        )}
+                        {/* )} */}
                         {!isLoading ? (
-                            data.length === 0 ? (
-                                <NoDataAvailable />
-                            ) : (
+                            // data.length === 0 ? (
+                            //     <NoDataAvailable />
+                            // ) : (
                                 <>
                                     <ScrollView className={"mt-4 z-[-1] "}>
                                         {width < 830 ? (
@@ -327,7 +327,7 @@ const ClientsDataTable = () => {
                                         )}
                                     </ScrollView>
                                 </>
-                            )
+                            // )
                         ) : (
                             <HStack
                                 space={"md"}
@@ -345,7 +345,7 @@ const ClientsDataTable = () => {
                             </HStack>
                         )}
                     </View>
-                    {data.length !== 0 && (
+                    {/* {data.length !== 0 && ( */}
                         <Pagination
                             itemsPerPage={itemsPerPage}
                             setItemsPerPage={setItemsPerPage}
@@ -354,7 +354,7 @@ const ClientsDataTable = () => {
                             totalPages={totalPages}
                             setCurrentPageNumber={setCurrentPageNumber}
                         />
-                    )}
+                    {/* )} */}
                 </>
             </View>
         </View>

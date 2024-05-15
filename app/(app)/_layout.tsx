@@ -140,7 +140,7 @@ export default function AppLayout() {
                         title: "AUM",
                         unmountOnBlur: true,
                     }}
-                    initialParams={{ roleID: roleId }}
+                    initialParams={{}}
                     component={AUMTabScreen}
                 />
             ),

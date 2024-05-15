@@ -25,7 +25,7 @@ import { TableBreadCrumb } from "../BreadCrumbs/TableBreadCrumb";
 import { RupeeSymbol, getInitials } from "../../helper/helper";
 import DataTable from "../DataTable/DataTable";
 import Tag from "../Tag/Tag";
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from "react-native-vector-icons/FontAwesome";
 import NoDataAvailable from "../Others/NoDataAvailable";
 
 const RMWiseDataTable = () => {
@@ -73,7 +73,7 @@ const RMWiseDataTable = () => {
             setTotalPages(
                 Math.ceil(
                     (response.filterCount || response.data.length) /
-                    itemsPerPage
+                        itemsPerPage
                 )
             );
         }
@@ -81,9 +81,11 @@ const RMWiseDataTable = () => {
 
     React.useEffect(() => {
         async function getSchema() {
-            const response: any = await RemoteApi.get("aum/management-user/schema");
-            setFiltersSchema(response.data);
-            setSorting(response.data.sort);
+            const response: any = await RemoteApi.get(
+                "aum/management-user/schema"
+            );
+            setFiltersSchema(response);
+            setSorting(response.sort);
         }
         getSchema();
     }, []);
@@ -140,7 +142,7 @@ const RMWiseDataTable = () => {
             //         </Pressable>
 
             //         </View>
-                    
+
             //     ),
             // },
         ];
@@ -148,80 +150,73 @@ const RMWiseDataTable = () => {
 
     return (
         <View className="h-screen">
-
-        { data.length === 0
-            ? (
-                <NoDataAvailable />
-            ) : (
-        <View className="bg-white">
-            {/* <View className="">
+            <View className="bg-white">
+                {/* <View className="">
                 <TableBreadCrumb name={"Scheme Wise"} />
             </View> */}
-            <View className="border-[0.2px]  border-[#e4e4e4]">
-            {data.length !== 0 &&
-                <DynamicFilters
-                    appliedSorting={appliedSorting}
-                    setAppliedSorting={setAppliedSorting}
-                    sorting={sorting}
-                    fileName="Clients"
-                    downloadApi={"client/download-report"}
-                    schemaResponse={filtersSchema}
-                    setCurrentPageNumber={setCurrentPageNumber}
-                    getList={getDataList}
-                    appliedFilers={appliedFilers}
-                    setAppliedFilers={setAppliedFilers}
-                />
-            }
+                <View className="border-[0.2px]  border-[#e4e4e4]">
+                    {/* {data.length !== 0 && */}
+                    <DynamicFilters
+                        appliedSorting={appliedSorting}
+                        setAppliedSorting={setAppliedSorting}
+                        sorting={sorting}
+                        fileName="Clients"
+                        downloadApi={"client/download-report"}
+                        schemaResponse={filtersSchema}
+                        setCurrentPageNumber={setCurrentPageNumber}
+                        getList={getDataList}
+                        appliedFilers={appliedFilers}
+                        setAppliedFilers={setAppliedFilers}
+                    />
+                    {/* } */}
 
-                {!isLoading ? (
-                    data.length === 0 ? (
-                        <NoDataAvailable />
+                    {!isLoading ? (
+                        // data.length === 0 ? (
+                        //     <NoDataAvailable />
+                        // ) : (
+
+                        <ScrollView className={"mt-4 z-[-1] "}>
+                            <DataTable
+                                headers={[
+                                    "RM Name",
+                                    "Invested Amount",
+                                    "Current Amount",
+                                    // "",
+                                ]}
+                                cellSize={[3, 3, 3]}
+                                rows={transformedData}
+                            />
+                        </ScrollView>
                     ) : (
-
-                    <ScrollView className={"mt-4 z-[-1] "}>
-                        <DataTable
-                            headers={[
-                                "RM Name",
-                                "Invested Amount",
-                                "Current Amount",
-                                // "",
-                            ]}
-                            cellSize={[3, 3, 3,]}
-                            rows={transformedData}
-                        />
-                    </ScrollView>
-                    )
-                ) : (
-                    <HStack
-                        space={"md"}
-                        marginTop={20}
-                        marginBottom={20}
-                        justifyContent="center"
-                    >
-                        <Spinner
-                            color={"black"}
-                            accessibilityLabel="Loading order"
-                        />
-                        <Heading color="black" fontSize="md">
-                            Loading
-                        </Heading>
-                    </HStack>
-                )}
+                        // )
+                        <HStack
+                            space={"md"}
+                            marginTop={20}
+                            marginBottom={20}
+                            justifyContent="center"
+                        >
+                            <Spinner
+                                color={"black"}
+                                accessibilityLabel="Loading order"
+                            />
+                            <Heading color="black" fontSize="md">
+                                Loading
+                            </Heading>
+                        </HStack>
+                    )}
+                </View>
+                {/* {data.length !== 0 && */}
+                <Pagination
+                    itemsPerPage={itemsPerPage}
+                    setItemsPerPage={setItemsPerPage}
+                    getDataList={getDataList}
+                    currentPageNumber={currentPageNumber}
+                    totalPages={totalPages}
+                    setCurrentPageNumber={setCurrentPageNumber}
+                />
+                {/* } */}
             </View>
-            {data.length !== 0 &&
-            <Pagination
-                itemsPerPage={itemsPerPage}
-                setItemsPerPage={setItemsPerPage}
-                getDataList={getDataList}
-                currentPageNumber={currentPageNumber}
-                totalPages={totalPages}
-                setCurrentPageNumber={setCurrentPageNumber}
-            />
-}
         </View>
-        )
-    }
-    </View>
     );
 };
 

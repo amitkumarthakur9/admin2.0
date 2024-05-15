@@ -96,7 +96,7 @@ const SIPDataTable = () => {
         
                 <>
             <View className="border-[0.2px]  border-[#e4e4e4]">
-            {data.length !== 0 &&
+            {/* {data.length !== 0 && */}
                 <DynamicFilters
                     appliedSorting={appliedSorting}
                     setAppliedSorting={setAppliedSorting}
@@ -109,12 +109,12 @@ const SIPDataTable = () => {
                     appliedFilers={appliedFilers}
                     setAppliedFilers={setAppliedFilers}
                 />
-            }
+            {/* } */}
                 {!isLoading ? (
-                     data.length === 0
-                        ? (
-                            <NoDataAvailable />
-                        ) : (
+                    //  data.length === 0
+                    //     ? (
+                    //         <NoDataAvailable />
+                    //     ) : (
                     <ScrollView className="mt-4 z-[-1]">
                         {width < 830 ? (
                             <MobileSIPRows data={data} schema={null} />
@@ -122,7 +122,7 @@ const SIPDataTable = () => {
                             <SIPRows data={data} schema={null} />
                         )}
                     </ScrollView>
-                    )
+                    // )
                 
                 ) : (
                     <HStack

@@ -45,7 +45,7 @@ const HoldingWiseDataTable = () => {
         direction: "",
     });
     const { width } = useWindowDimensions();
-    const mobileData = data.map(item => ({
+    const mobileData = data.map((item) => ({
         // id: item.id,
         // Name: item?.name,
         // ClientId: item?.clientId,
@@ -53,8 +53,7 @@ const HoldingWiseDataTable = () => {
         CurrentValue: RupeeSymbol + item.currentValue,
         InvestedValue: RupeeSymbol + item.investedValue,
         XIRR: item?.xirr,
-
-      }));
+    }));
 
     async function getDataList(
         updatedFilterValues = [],
@@ -93,8 +92,8 @@ const HoldingWiseDataTable = () => {
     React.useEffect(() => {
         async function getSchema() {
             const response: any = await RemoteApi.get("aum/holding/schema");
-            setFiltersSchema(response.data);
-            setSorting(response.data.sort);
+            setFiltersSchema(response);
+            setSorting(response.sort);
         }
         getSchema();
     }, []);
@@ -109,7 +108,7 @@ const HoldingWiseDataTable = () => {
     }, [appliedSorting]);
 
     const transformedData = data?.map((item) => {
-        const itemStructure =  [
+        const itemStructure = [
             {
                 key: "clientName",
                 content: (
@@ -211,11 +210,14 @@ const HoldingWiseDataTable = () => {
                 key: "totalInvested",
                 content: (
                     <View className="w-[99%]">
-                    <Text selectable className="text-[#686868] font-semibold text-wrap">
-                        {item?.investedValue
-                            ? RupeeSymbol + item?.investedValue.toFixed(2)
-                            : RupeeSymbol + "0"}
-                    </Text>
+                        <Text
+                            selectable
+                            className="text-[#686868] font-semibold text-wrap"
+                        >
+                            {item?.investedValue
+                                ? RupeeSymbol + item?.investedValue.toFixed(2)
+                                : RupeeSymbol + "0"}
+                        </Text>
                     </View>
                 ),
             },
@@ -223,39 +225,46 @@ const HoldingWiseDataTable = () => {
                 key: "currentValue",
                 content: (
                     <View className="w-[99%]">
-                    <Text selectable className="text-[#686868] font-semibold text-wrap">
-                        {item?.currentValue
-                            ? RupeeSymbol + item?.currentValue.toFixed(2)
-                            : RupeeSymbol + "0"}
-                    </Text>
-                </View>
+                        <Text
+                            selectable
+                            className="text-[#686868] font-semibold text-wrap"
+                        >
+                            {item?.currentValue
+                                ? RupeeSymbol + item?.currentValue.toFixed(2)
+                                : RupeeSymbol + "0"}
+                        </Text>
+                    </View>
                 ),
             },
             {
                 key: "XIRR",
                 content: (
                     <View className="w-[99%]">
-                    <Text selectable className="text-[#686868] font-semibold text-wrap">
-                        {item?.xirr ? item?.xirr + "%" : "NA"}
-                    </Text>
-               </View>
+                        <Text
+                            selectable
+                            className="text-[#686868] font-semibold text-wrap"
+                        >
+                            {item?.xirr ? item?.xirr + "%" : "NA"}
+                        </Text>
+                    </View>
                 ),
             },
             {
                 key: "returns",
                 content: (
                     <View className="w-[99%]">
-<Text selectable className="text-[#686868] font-semibold text-wrap">
-                        {item?.investedValue && item?.currentValue
-                            ? RupeeSymbol +
-                              (
-                                  item?.currentValue - item?.investedValue
-                              ).toFixed(2)
-                            : RupeeSymbol + "0"}
-                    </Text>
-
+                        <Text
+                            selectable
+                            className="text-[#686868] font-semibold text-wrap"
+                        >
+                            {item?.investedValue && item?.currentValue
+                                ? RupeeSymbol +
+                                  (
+                                      item?.currentValue - item?.investedValue
+                                  ).toFixed(2)
+                                : RupeeSymbol + "0"}
+                        </Text>
                     </View>
-                    
                 ),
             },
             // {
@@ -276,8 +285,8 @@ const HoldingWiseDataTable = () => {
             // },
         ];
 
-         // Conditionally add an additional object based on roleId to index 2
-         if (roleId > 2) {
+        // Conditionally add an additional object based on roleId to index 2
+        if (roleId > 2) {
             itemStructure.splice(2, 0, {
                 key: "distributor",
                 content: (
@@ -304,113 +313,109 @@ const HoldingWiseDataTable = () => {
 
     return (
         <View className="h-screen">
-
-        
-
-                <View className="bg-white">
-            {/* <View className="">
+            <View className="bg-white">
+                {/* <View className="">
                 <TableBreadCrumb name={"Folio Wise"} />
             </View> */}
-            <View className="border-[0.2px]  border-[#e4e4e4]">
-            {data.length !== 0 &&
-                <DynamicFilters
-                    appliedSorting={appliedSorting}
-                    setAppliedSorting={setAppliedSorting}
-                    sorting={sorting}
-                    fileName="Clients"
-                    downloadApi={"client/download-report"}
-                    schemaResponse={filtersSchema}
-                    setCurrentPageNumber={setCurrentPageNumber}
-                    getList={getDataList}
-                    appliedFilers={appliedFilers}
-                    setAppliedFilers={setAppliedFilers}
-                />
-            }
+                <View className="border-[0.2px]  border-[#e4e4e4]">
+                    {/* {data.length !== 0 && */}
+                    <DynamicFilters
+                        appliedSorting={appliedSorting}
+                        setAppliedSorting={setAppliedSorting}
+                        sorting={sorting}
+                        fileName="Clients"
+                        downloadApi={"client/download-report"}
+                        schemaResponse={filtersSchema}
+                        setCurrentPageNumber={setCurrentPageNumber}
+                        getList={getDataList}
+                        appliedFilers={appliedFilers}
+                        setAppliedFilers={setAppliedFilers}
+                    />
+                    {/* } */}
 
-                {!isLoading ? (
-                      data.length === 0 ? (
-                        <NoDataAvailable />
+                    {!isLoading ? (
+                        //   data.length === 0 ? (
+                        //     <NoDataAvailable />
+                        // ) : (
+                        <ScrollView className={"mt-4 z-[-1] "}>
+                            {width < 830 ? (
+                                <TableCard data={mobileData} />
+                            ) : roleId > 3 ? (
+                                <DataTable
+                                    headers={[
+                                        "Client Name",
+                                        "Scheme Name",
+                                        "Distributor",
+                                        "Manager",
+                                        "Total invested",
+                                        "Current Value",
+                                        "XIRR",
+                                        "Returns",
+                                        // "",
+                                    ]}
+                                    cellSize={[2, 2, 1, 1, 1, 1, 1, 1]}
+                                    rows={transformedData}
+                                />
+                            ) : roleId > 2 ? (
+                                <DataTable
+                                    headers={[
+                                        "Client Name",
+                                        "Scheme Name",
+                                        "Distributor",
+                                        "Total invested",
+                                        "Current Value",
+                                        "XIRR",
+                                        "Returns",
+                                        // "",
+                                    ]}
+                                    cellSize={[3, 2, 1, 1, 1, 1, 1]}
+                                    rows={transformedData}
+                                />
+                            ) : (
+                                <DataTable
+                                    headers={[
+                                        "Client Name",
+                                        "Scheme Name",
+                                        "Total invested",
+                                        "Current Value",
+                                        "XIRR",
+                                        "Returns",
+                                        // "",
+                                    ]}
+                                    cellSize={[3, 3, 1, 1, 1, 1]}
+                                    rows={transformedData}
+                                />
+                            )}
+                        </ScrollView>
                     ) : (
-                    <ScrollView className={"mt-4 z-[-1] "}>
-                        {width < 830 ? (
-                            <TableCard data={mobileData} />
-                        ) : roleId > 3 ? (
-                        <DataTable
-                            headers={[
-                                "Client Name",
-                                "Scheme Name",
-                                "Distributor",
-                                "Manager",
-                                "Total invested",
-                                "Current Value",
-                                "XIRR",
-                                "Returns",
-                                // "",
-                            ]}
-                            cellSize={[2, 2,1,1, 1, 1, 1, 1]}
-                            rows={transformedData}
-                        />
-                    ) : roleId > 2 ? (
-                        <DataTable
-                            headers={[
-                                "Client Name",
-                                "Scheme Name",
-                                "Distributor",
-                                "Total invested",
-                                "Current Value",
-                                "XIRR",
-                                "Returns",
-                                // "",
-                            ]}
-                            cellSize={[3, 2,1, 1, 1, 1, 1]}
-                            rows={transformedData}
-                        />
-                        ) : (
-                            <DataTable
-                            headers={[
-                                "Client Name",
-                                "Scheme Name",
-                                "Total invested",
-                                "Current Value",
-                                "XIRR",
-                                "Returns",
-                                // "",
-                            ]}
-                            cellSize={[3, 3, 1, 1, 1, 1]}
-                            rows={transformedData}
-                        />
-                        )}
-                    </ScrollView>
-                    )
-                ) : (
-                    <HStack
-                        space={"md"}
-                        marginTop={20}
-                        marginBottom={20}
-                        justifyContent="center"
-                    >
-                        <Spinner
-                            color={"black"}
-                            accessibilityLabel="Loading order"
-                        />
-                        <Heading color="black" fontSize="md">
-                            Loading
-                        </Heading>
-                    </HStack>
-                )}
+                        // )
+                        <HStack
+                            space={"md"}
+                            marginTop={20}
+                            marginBottom={20}
+                            justifyContent="center"
+                        >
+                            <Spinner
+                                color={"black"}
+                                accessibilityLabel="Loading order"
+                            />
+                            <Heading color="black" fontSize="md">
+                                Loading
+                            </Heading>
+                        </HStack>
+                    )}
+                </View>
+                {/* {data.length !== 0 && */}
+                <Pagination
+                    itemsPerPage={itemsPerPage}
+                    setItemsPerPage={setItemsPerPage}
+                    getDataList={getDataList}
+                    currentPageNumber={currentPageNumber}
+                    totalPages={totalPages}
+                    setCurrentPageNumber={setCurrentPageNumber}
+                />
+                {/* } */}
             </View>
-            {data.length !== 0 &&
-            <Pagination
-                itemsPerPage={itemsPerPage}
-                setItemsPerPage={setItemsPerPage}
-                getDataList={getDataList}
-                currentPageNumber={currentPageNumber}
-                totalPages={totalPages}
-                setCurrentPageNumber={setCurrentPageNumber}
-            />
-}
-        </View>
-           
         </View>
     );
 };

@@ -100,8 +100,8 @@ const FolioWiseDataTable = () => {
     React.useEffect(() => {
         async function getSchema() {
             const response: any = await RemoteApi.get("aum/folio/schema");
-            setFiltersSchema(response?.data);
-            setSorting(response?.data?.sort);
+            setFiltersSchema(response);
+            setSorting(response?.sort);
         }
         getSchema();
     }, []);
@@ -352,7 +352,7 @@ const FolioWiseDataTable = () => {
                 <TableBreadCrumb name={"Folio Wise"} />
             </View> */}
                 <View className="border-[0.2px]  border-[#e4e4e4]">
-                    {data.length !== 0 && (
+                    {/* {data.length !== 0 && ( */}
                         <DynamicFilters
                             appliedSorting={appliedSorting}
                             setAppliedSorting={setAppliedSorting}
@@ -365,12 +365,12 @@ const FolioWiseDataTable = () => {
                             appliedFilers={appliedFilers}
                             setAppliedFilers={setAppliedFilers}
                         />
-                    )}
+                    {/* )} */}
 
                     {!isLoading ? (
-                        data.length === 0 ? (
-                            <NoDataAvailable />
-                        ) : (
+                        // data.length === 0 ? (
+                        //     <NoDataAvailable />
+                        // ) : (
                             <ScrollView className={"mt-4 z-[-1] "}>
                                 {width < 830 ? (
                                     <TableCard data={mobileData} />
@@ -429,7 +429,7 @@ const FolioWiseDataTable = () => {
                                     />
                                 )}
                             </ScrollView>
-                        )
+                        // )
                     ) : (
                         <HStack
                             space={"md"}
@@ -447,7 +447,7 @@ const FolioWiseDataTable = () => {
                         </HStack>
                     )}
                 </View>
-                {data.length !== 0 && (
+                {/* {data.length !== 0 && ( */}
                     <Pagination
                         itemsPerPage={itemsPerPage}
                         setItemsPerPage={setItemsPerPage}
@@ -456,7 +456,7 @@ const FolioWiseDataTable = () => {
                         totalPages={totalPages}
                         setCurrentPageNumber={setCurrentPageNumber}
                     />
-                )}
+                {/* )} */}
             </View>
         </View>
     );

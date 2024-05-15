@@ -10,7 +10,7 @@ import ClientDataTable from "../../../src/components/ClientsTables/ClientsDataTa
 import { useNavigation } from "expo-router";
 import AUMDataTable from "../../../src/components/AUMTables/AUMDataTable";
 
-export default function AUMTabScreen({ roleID }) {
+export default function AUMTabScreen() {
     return (
         <ScrollView
             className=""
@@ -20,7 +20,7 @@ export default function AUMTabScreen({ roleID }) {
                 overflow: "scroll",
             }}
         >
-            <AUMDataTable role={roleID} />
+            <AUMDataTable />
         </ScrollView>
     );
 }

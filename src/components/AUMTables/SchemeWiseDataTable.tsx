@@ -87,8 +87,8 @@ const SchemeWiseDataTable = () => {
     React.useEffect(() => {
         async function getSchema() {
             const response: any = await RemoteApi.get("aum/scheme/schema");
-            setFiltersSchema(response.data);
-            setSorting(response.data.sort);
+            setFiltersSchema(response);
+            setSorting(response.sort);
         }
         getSchema();
     }, []);
@@ -200,7 +200,7 @@ const SchemeWiseDataTable = () => {
                 <TableBreadCrumb name={"Scheme Wise"} />
             </View> */}
             <View className="border-[0.2px]  border-[#e4e4e4]">
-            {data.length !== 0 &&
+            {/* {data.length !== 0 && */}
                 <DynamicFilters
                     appliedSorting={appliedSorting}
                     setAppliedSorting={setAppliedSorting}
@@ -213,12 +213,12 @@ const SchemeWiseDataTable = () => {
                     appliedFilers={appliedFilers}
                     setAppliedFilers={setAppliedFilers}
                 />
-            }
+            {/* } */}
 
                 {!isLoading ? (
-                     data.length === 0 ? (
-                        <NoDataAvailable />
-                    ) : (
+                    //  data.length === 0 ? (
+                    //     <NoDataAvailable />
+                    // ) : (
                     <ScrollView className={"mt-4 z-[-1] "}>
                         <DataTable
                             headers={[
@@ -234,7 +234,7 @@ const SchemeWiseDataTable = () => {
                             rows={transformedData}
                         />
                     </ScrollView>
-                    )
+                    // )
                 ) : (
                     <HStack
                         space={"md"}
@@ -252,7 +252,7 @@ const SchemeWiseDataTable = () => {
                     </HStack>
                 )}
             </View>
-            {data.length !== 0 &&
+            {/* {data.length !== 0 && */}
             <Pagination
                 itemsPerPage={itemsPerPage}
                 setItemsPerPage={setItemsPerPage}
@@ -261,7 +261,7 @@ const SchemeWiseDataTable = () => {
                 totalPages={totalPages}
                 setCurrentPageNumber={setCurrentPageNumber}
             />
-}
+{/* } */}
         </View>
 
     </View>

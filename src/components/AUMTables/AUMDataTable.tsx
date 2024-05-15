@@ -52,7 +52,7 @@ const roldID = () => {
     }
 };
 
-const AUMDataTable = (role) => {
+const AUMDataTable = () => {
     // console.log("role");
     // console.log(role);
     // const [[isLoading, token], setToken] = useStorageState("token");

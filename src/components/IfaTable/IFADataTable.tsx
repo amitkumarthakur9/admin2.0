@@ -83,11 +83,6 @@ const IFADataTable = () => {
 
         if (response.code == 200 || response.message == "Success") {
             setData(response?.data);
-            console.log("ifadatalist");
-
-            console.log(response?.data);
-
-            // setItemsPerPage(response.count)
             setTotalItems(response.filterCount);
             setIsLoading(false);
             setTotalPages(
@@ -104,9 +99,9 @@ const IFADataTable = () => {
 
     React.useEffect(() => {
         async function getSchema() {
-            const response: any = await RemoteApi.get("aum/distributor/schema");
-            setFiltersSchema(response.data);
-            setSorting(response.data.sort);
+            const response: any = await RemoteApi.get("distributor/schema");
+            setFiltersSchema(response);
+            setSorting(response.sort);
         }
         getSchema();
     }, []);
@@ -225,7 +220,7 @@ const IFADataTable = () => {
             <View className="h-screen">
                 <>
                     <View className="border-[0.2px]  border-[#e4e4e4]">
-                        {data.length !== 0 && (
+                        {/* {data.length !== 0 && ( */}
                             <DynamicFilters
                                 appliedSorting={appliedSorting}
                                 setAppliedSorting={setAppliedSorting}
@@ -239,11 +234,11 @@ const IFADataTable = () => {
                                 setAppliedFilers={setAppliedFilers}
                                 // newComponent={<AddNewClient />}
                             />
-                        )}
+                        {/* )} */}
                         {!isLoading ? (
-                            data.length === 0 ? (
-                                <NoDataAvailable />
-                            ) : (
+                            // data.length === 0 ? (
+                            //     <NoDataAvailable />
+                            // ) : (
                                 <>
                                     <ScrollView className={"mt-4 z-[-1] "}>
                                         {width < 830 ? (
@@ -251,22 +246,21 @@ const IFADataTable = () => {
                                                 data={data}
                                                 schema={null}
                                             />
-                                        ) : roleId > 3 ? <DataTable
-                                        headers={[
-                                            "Name",
-                                            "PAN No.",
-                                            "Manager",
-                                            "ARN No.",
-                                            "EUIN No.",
-                                            "No. of Clients",
-                                            "Active SIP Count",
-                                        ]}
-                                        cellSize={[2, 2, 2, 2, 2, 1, 1]}
-                                        rows={transformedData}
-                                    />
-                                        
-                                        
-                                        : (
+                                        ) : roleId > 3 ? (
+                                            <DataTable
+                                                headers={[
+                                                    "Name",
+                                                    "PAN No.",
+                                                    "Manager",
+                                                    "ARN No.",
+                                                    "EUIN No.",
+                                                    "No. of Clients",
+                                                    "Active SIP Count",
+                                                ]}
+                                                cellSize={[2, 2, 2, 2, 2, 1, 1]}
+                                                rows={transformedData}
+                                            />
+                                        ) : (
                                             <DataTable
                                                 headers={[
                                                     "Name",
@@ -282,7 +276,7 @@ const IFADataTable = () => {
                                         )}
                                     </ScrollView>
                                 </>
-                            )
+                            // )
                         ) : (
                             <HStack
                                 space={"md"}
@@ -300,7 +294,7 @@ const IFADataTable = () => {
                             </HStack>
                         )}
                     </View>
-                    {data.length !== 0 && (
+                    {/* {data.length !== 0 && ( */}
                         <Pagination
                             itemsPerPage={itemsPerPage}
                             setItemsPerPage={setItemsPerPage}
@@ -309,7 +303,7 @@ const IFADataTable = () => {
                             totalPages={totalPages}
                             setCurrentPageNumber={setCurrentPageNumber}
                         />
-                    )}
+                    {/* )} */}
                 </>
             </View>
         </View>

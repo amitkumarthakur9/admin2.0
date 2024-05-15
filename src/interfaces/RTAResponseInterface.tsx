@@ -22,6 +22,18 @@ interface MutualFund {
     id: string;
     name: string;
     fundhouse: FundHouse;
+    dividendType: {
+        id: string;
+    name: string;
+    }
+    optionType: {
+        id: string;
+    name: string;
+    }
+    deliveryType: {
+        id: string;
+    name: string;
+    }
 }
 
 interface Account {
