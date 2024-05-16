@@ -274,7 +274,7 @@ export default function ClientDetail() {
                                             <View className="w-4/12 flex-flex-col gap-4 px-2">
                                                 <DataValue
                                                     key="pan"
-                                                    title="Pan No."
+                                                    title="PAN Id"
                                                     value={
                                                         data?.users[0]
                                                             ?.panNumber

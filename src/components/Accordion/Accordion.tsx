@@ -1,7 +1,7 @@
 import { Image } from "native-base";
 import React, { useState } from "react";
 import { View, Text, Pressable } from "react-native";
-import AntdIcon from "react-native-vector-icons/AntDesign";
+import AntDesign from "@expo/vector-icons/AntDesign";
 
 const Accordion = ({ accordionData, renderItem }) => {
     const [openIndex, setOpenIndex] = useState(null);
@@ -43,11 +43,17 @@ const Accordion = ({ accordionData, renderItem }) => {
                                     {item.subcontent}
                                 </View>
                             </View>
-                            <AntdIcon
-                                name={openIndex === index ? "up" : "down"}
-                                style={{ fontWeight: "100" }}
-                                size={12}
-                                color="grey"
+                            <AntDesign
+                                style={{
+                                    marginRight: 5,
+                                }}
+                                color={"black"}
+                                name={
+                                    openIndex === index
+                                        ? "caretup"
+                                        : "caretdown"
+                                }
+                                size={15}
                             />
                         </View>
                     </Pressable>

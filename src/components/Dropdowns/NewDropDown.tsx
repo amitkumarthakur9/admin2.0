@@ -96,7 +96,8 @@ const styles = StyleSheet.create({
         borderColor: "gray",
         borderWidth: 0.5,
         borderRadius: 3,
-        paddingHorizontal: 20,
+        paddingLeft: 16,
+        paddingRight: 12,
         fontSize: 12,
     },
     icon: {

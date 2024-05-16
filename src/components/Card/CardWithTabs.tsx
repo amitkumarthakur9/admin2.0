@@ -10,7 +10,7 @@ const CardWithTabs = ({
     tabsCount = 3,
 }) => {
     return (
-        <View className="flex-1 bg-white rounded shadow h-full">
+        <View className="flex-1 bg-white rounded h-full">
             <View className="w-full flex flex-row">
                 {tabContent?.map((tab, index) => {
                     return (
@@ -19,14 +19,14 @@ const CardWithTabs = ({
                             onPress={() => handleTabPress(index + 1)}
                             className={`w-1/${tabsCount} py-4 px-6 flex h-12 flex-row justify-center items-center border-b-2 ${
                                 selectedTab === index + 1
-                                    ? "border-black bg-gray-800"
-                                    : "border-b-gray-400"
+                                    ? "border-[#114EA8]"
+                                    : "border-b-gray-100"
                             }`}
                         >
                             <Text
                                 className={`font-bold ${
                                     selectedTab === index + 1
-                                        ? "text-white"
+                                        ? "text-[#114EA8]"
                                         : "text-gray-600"
                                 }`}
                             >

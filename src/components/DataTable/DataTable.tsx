@@ -27,27 +27,6 @@ const TableHeader = ({ headers, cellSize }) => {
             }
         >
             {headers?.map((head, index) => {
-                // Check if the variable is a string
-                if (typeof cellSize[index] === "string") {
-                    // console.log("header");
-                    // console.log(
-                    //     `w-${
-                    //         typeof cellSize[index] === "string"
-                    //             ? "[" + cellSize[index] + "]"
-                    //             : cellSize[index] + "/12"
-                    //     }`
-                    // );
-                } else {
-                    // console.log("elseheader");
-                    // console.log(
-                    //     `w-${
-                    //         typeof cellSize[index] === "string"
-                    //             ? "[" + cellSize[index] + "]"
-                    //             : cellSize[index] + "/12"
-                    //     }`
-                    // );
-                }
-
                 return (
                     <View
                         key={index + 1}
@@ -208,11 +187,6 @@ const DataTable = ({
     options,
     noDataText,
 }: IDataTable) => {
-
-    // console.log("rows")
-    // console.log(rows)
-    // console.log(rows?.length)
-    // console.log(!!rows?.length)
     return (
         <View className={className}>
             <TableHeader headers={headers} cellSize={cellSize} />
@@ -232,7 +206,6 @@ const DataTable = ({
                 />
             ) : (
                 <View className="flex flex-col items-center gap-8 p-16">
-                    
                     <Image
                         source={require("../../../assets/images/noDataAvailable.png")}
                     />
