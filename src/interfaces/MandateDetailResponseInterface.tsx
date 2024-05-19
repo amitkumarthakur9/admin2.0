@@ -55,3 +55,49 @@ export interface MandateDetailInterface {
     error: any[]; // You may need to adjust the type based on your actual data structure
     data: FundDetail;
 }
+
+interface BankAccountType {
+    id: number;
+    name: string;
+    bseCode: string;
+}
+
+interface BankAccount {
+    micrCode: string | null;
+    bankName: string;
+    branchName: string;
+    ifscCode: string;
+    bankAccountType: BankAccountType;
+    accountNumber: string;
+    isActive: boolean;
+    createdAt: string;
+}
+
+interface MandateStatus {
+    id: number;
+    name: string;
+}
+
+interface Account {
+    id: string;
+    clientCode: string;
+    name: string;
+    panNumber: string;
+}
+
+export interface MandateDetailInterfaceResponse {
+    message: string;
+    error: any[]; // Assuming error can be any type of array
+    data: {
+        id: string;
+        mandateId: string;
+        amount: number;
+        startDate: string;
+        endDate: string;
+        bankAccount: BankAccount;
+        mandateStatus: MandateStatus;
+        account: Account;
+        orders: any[]; // Assuming orders can be any type of array
+        createdAt: string;
+    };
+}

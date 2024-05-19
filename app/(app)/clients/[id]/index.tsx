@@ -41,6 +41,7 @@ import DataValue from "../../../../src/components/DataValue/DataValue";
 import useDebouncedSearch from "../../../../src/hooks/useDebounceSearch";
 import ApiRequest from "../../../../src/services/RemoteApi";
 import { dateFormat, dateTimeFormat } from "../../../../src/helper/DateUtils";
+import TableCard from "../../../../src/components/Card/TableCard";
 
 const isMutualFundSearchResult = (
     data: MutualFundSearchResult | Holding
@@ -443,6 +444,16 @@ const PortfolioCard = ({
 
     const assetBifurcationColors = ["#715CFA", "#69E1AB", "#39C3E2", "#FA8B5C"];
 
+    const mobileData = data?.holdings.map((item) => ({
+        // scheme: item.id,
+        Scheme: item?.mutualfund?.name,
+        // ClientId: item?.clientId,
+        // PanNumber: item?.panNumber,
+        CurrentValue: RupeeSymbol + item.currentValue.toFixed(2),
+        InvestedValue: RupeeSymbol + item.investedValue.toFixed(2),
+        XIRR: item?.xirr.toFixed(2),
+    }));
+
     const tabContent = [
         {
             key: "holdings",
@@ -450,6 +461,7 @@ const PortfolioCard = ({
             content: (
                 <View className="p-2 w-full">
                     <View className="flex flex-row items-center justify-center md:justify-between py-2 gap-2 md:gap-0 flex-wrap">
+                        <View>
                         <DropdownComponent
                             label="Folio Number"
                             data={holdingDropper}
@@ -460,22 +472,27 @@ const PortfolioCard = ({
                             value={typeHolding}
                             setValue={setTypeHolding}
                         />
+                        </View>
+                        <View>
                         <Button
                             borderColor={"#013974"}
                             bgColor={"#fff"}
                             _text={{ color: "#013974" }}
                             variant="outline"
-                            width="48"
+                            style={{ width: 198, height: 39 }}
                             onPress={() =>
                                 router.push(`arn-transfer/${data?.id}`)
                             }
                         >
                             Transfer Portfolio
                         </Button>
+
+                        </View>
+                        
                     </View>
                     <View className="h-96 overflow-scroll">
                         <View className="flex flex-col bg-gray-100 rounded p-2">
-                            <View className="flex flex-row justify-between items-center p-2">
+                            <View className="flex flex-row flex-wrap justify-between items-between md:items-center p-2 gap-2">
                                 <DataGrid
                                     key="current"
                                     title="Current Holdings"
@@ -518,6 +535,7 @@ const PortfolioCard = ({
                                     }
                                     reverse
                                 />
+
                                 <DataGrid
                                     key="xirr"
                                     title="XIRR"
@@ -535,6 +553,7 @@ const PortfolioCard = ({
                                     reverse
                                 />
                             </View>
+
                             <View className="p-2">
                                 <HorizontalStackedBarChart
                                     data={assetBifurcation}
@@ -543,17 +562,19 @@ const PortfolioCard = ({
                             </View>
                         </View>
 
+                        {/* <TableCard data={mobileData} /> */}
+
                         <DataTable
                             key="holdings"
                             headers={["Scheme", "Current", "Invested", "XIRR"]}
-                            cellSize={[5, 3, 2, 2]}
+                            cellSize={[5, 2, 2, 3]}
                             rows={data?.holdings?.map((holding) => {
                                 return [
                                     {
                                         key: "scheme",
                                         data: holding,
                                         content: (
-                                            <View className="flex flex-row items-center gap-2">
+                                            <View className="flex flex-col md:flex-row items-start md:items-center gap-2 w-11/12">
                                                 <Image
                                                     alt="fundHouse"
                                                     className="mr-2"
@@ -567,8 +588,8 @@ const PortfolioCard = ({
                                                             ?.logoUrl,
                                                     }}
                                                 />
-                                                <View>
-                                                    <Text className="text-xs">
+                                                <View className="w-[99%]">
+                                                    <Text className="text-xs text-wrap ">
                                                         {
                                                             holding?.mutualfund
                                                                 ?.name
@@ -595,7 +616,7 @@ const PortfolioCard = ({
                                             <View>
                                                 <Text
                                                     selectable
-                                                    className="text-xs text-black"
+                                                    className="text-xs text-black text-start"
                                                 >
                                                     {RupeeSymbol}{" "}
                                                     {holding?.currentValue?.toFixed(
@@ -611,7 +632,7 @@ const PortfolioCard = ({
                                             <View>
                                                 <Text
                                                     selectable
-                                                    className="text-xs text-gray-500"
+                                                    className="text-xs text-gray-500 text-start"
                                                 >
                                                     {RupeeSymbol}{" "}
                                                     {holding?.investedValue?.toFixed(
@@ -684,7 +705,7 @@ const PortfolioCard = ({
                                 {
                                     key: "scheme",
                                     content: (
-                                        <View className="flex flex-row items-center gap-2">
+                                        <View className="flex flex-col md:flex-row items-start md:items-center gap-2 w-11/12">
                                             <Image
                                                 alt="fundHouse"
                                                 className="mr-2"
@@ -698,7 +719,7 @@ const PortfolioCard = ({
                                                         ?.logoUrl,
                                                 }}
                                             />
-                                            <View>
+                                            <View className="w-11/12">
                                                 <Text className="text-xs">
                                                     {sip?.mutualfund?.name}
                                                 </Text>
@@ -763,7 +784,7 @@ const PortfolioCard = ({
                                 {
                                     key: "scheme",
                                     content: (
-                                        <View className="flex flex-row items-center gap-2">
+                                        <View className="flex flex-col md:flex-row items-start md:items-center gap-2 w-11/12">
                                             <Image
                                                 alt="fundHouse"
                                                 className="mr-2"
@@ -777,14 +798,14 @@ const PortfolioCard = ({
                                                         ?.logoUrl,
                                                 }}
                                             />
-                                            <View>
-                                                <Text className="text-xs">
+                                            <View className="w-11/12">
+                                                <Text className="text-xs text-wrap">
                                                     {
                                                         transaction?.mutualfund
                                                             ?.name
                                                     }
                                                 </Text>
-                                                <Text className="text-xs text-gray-400">
+                                                <Text className="text-xs text-gray-400 text-wrap">
                                                     {
                                                         transaction?.mutualfund
                                                             ?.category
@@ -802,7 +823,7 @@ const PortfolioCard = ({
                                 {
                                     key: "amount",
                                     content: (
-                                        <View>
+                                        <View className="w-11/12">
                                             <Text
                                                 selectable
                                                 className="text-xs text-black"
@@ -818,7 +839,7 @@ const PortfolioCard = ({
                                 {
                                     key: "date",
                                     content: (
-                                        <View>
+                                        <View className="w-11/12">
                                             <Text
                                                 selectable
                                                 className="text-xs text-gray-500"
@@ -837,7 +858,7 @@ const PortfolioCard = ({
                                 {
                                     key: "status",
                                     content: (
-                                        <View>
+                                        <View className="w-11/12">
                                             <Text
                                                 selectable
                                                 className="text-xs text-gray-500"
@@ -1504,7 +1525,7 @@ const InvestModalAction = ({
 
     return (
         <View className="flex flex-col">
-            <View className="flex flex-row items-center justify-between py-4 px-12">
+            <View className="flex md:flex-row items-center justify-between py-4 px-12 gap-4">
                 <View className="flex flex-row items-center gap-2">
                     <Image
                         alt="fundHouse"
@@ -1823,7 +1844,7 @@ const RedeemModalCard = ({
                                                 className="text-xs"
                                             >
                                                 {RupeeSymbol}{" "}
-                                                {folio?.currentValue}
+                                                {folio?.currentValue.toFixed(2)}
                                             </Text>
                                         }
                                         reverse
@@ -1844,7 +1865,7 @@ const RedeemModalCard = ({
                                                 className="text-xs"
                                             >
                                                 {RupeeSymbol}{" "}
-                                                {folio?.redeemableAmount}
+                                                {folio?.redeemableAmount.toFixed(2)}
                                             </Text>
                                         }
                                         reverse
@@ -1866,7 +1887,7 @@ const RedeemModalCard = ({
                                                 selectable
                                                 className="text-xs"
                                             >
-                                                {selectedFund?.units}
+                                                {selectedFund?.units.toFixed(2)}
                                             </Text>
                                         }
                                         reverse
@@ -1886,7 +1907,7 @@ const RedeemModalCard = ({
                                                 selectable
                                                 className="text-xs"
                                             >
-                                                {folio?.redeemableUnits}
+                                                {folio?.redeemableUnits.toFixed(2)}
                                             </Text>
                                         }
                                         reverse
@@ -2154,18 +2175,18 @@ const AccountDetailsCard = ({ data }: { data: ClientDetailedDataResponse }) => {
                 <View className="w-full p-2 flex flex-col justify-items items-center">
                     {data?.bankAccounts.length === 0 ? (
                         <View className="flex flex-col items-center gap-8">
-                        <Text className="text-black font-bold">
-                            No Data Available
-                        </Text>
-                        <Image
-                            source={require("../../../../assets/images/noData.png")}
-                        />
-                    </View>
+                            <Text className="text-black font-bold">
+                                No Data Available
+                            </Text>
+                            <Image
+                                source={require("../../../../assets/images/noData.png")}
+                            />
+                        </View>
                     ) : (
-                    <Accordion
-                        accordionData={accordionData}
-                        renderItem={renderItem}
-                    />
+                        <Accordion
+                            accordionData={accordionData}
+                            renderItem={renderItem}
+                        />
                     )}
                 </View>
             ),
@@ -2177,24 +2198,27 @@ const AccountDetailsCard = ({ data }: { data: ClientDetailedDataResponse }) => {
                 <View className="w-full p-2 flex flex-col justify-items items-center">
                     {!data?.users[0]?.email ? (
                         <View className="flex flex-col items-center gap-8">
-                        <Text className="text-black font-bold">
-                            No Data Available
-                        </Text>
-                        <Image
-                            source={require("../../../../assets/images/noData.png")}
-                        />
-                    </View>
+                            <Text className="text-black font-bold">
+                                No Data Available
+                            </Text>
+                            <Image
+                                source={require("../../../../assets/images/noData.png")}
+                            />
+                        </View>
                     ) : (
                         <>
-                    <DataValue
-                        key="email"
-                        title="Email"
-                        value={data?.users[0]?.email}
-                    />
-                    <DataValue key="address" title="Address" value={"NA"} />
-                    </>
-                    )
-                }
+                            <DataValue
+                                key="email"
+                                title="Email"
+                                value={data?.users[0]?.email}
+                            />
+                            <DataValue
+                                key="address"
+                                title="Address"
+                                value={"NA"}
+                            />
+                        </>
+                    )}
                 </View>
             ),
         },
@@ -2205,13 +2229,13 @@ const AccountDetailsCard = ({ data }: { data: ClientDetailedDataResponse }) => {
                 <View className="w-full p-2 flex flex-col justify-item items-center">
                     {data?.nominee.length === 0 ? (
                         <View className="flex flex-col items-center gap-8">
-                        <Text className="text-black font-bold">
-                            No Data Available
-                        </Text>
-                        <Image
-                            source={require("../../../../assets/images/noData.png")}
-                        />
-                    </View>
+                            <Text className="text-black font-bold">
+                                No Data Available
+                            </Text>
+                            <Image
+                                source={require("../../../../assets/images/noData.png")}
+                            />
+                        </View>
                     ) : (
                         data?.nominee?.map((nominee, index) => (
                             <View key={index} className="w-full p-2">

@@ -1,4 +1,5 @@
 import { Dialog, Portal } from "react-native-paper";
+import { Dimensions, useWindowDimensions } from "react-native";
 
 const modalWidths = {
     modalKey1: 800,
@@ -6,16 +7,23 @@ const modalWidths = {
     // Add more modal keys and widths as needed
 };
 
-const modalHeight = {
+const modalHeights = {
     modalKey1: 800,
     externalPortfolio: "auto",
-    // Add more modal keys and widths as needed
+    // Add more modal keys and heights as needed
 };
 
 const Modal = ({ visible, hideDialog, children, modalKey }) => {
+    const { width: windowWidth } = useWindowDimensions();
 
-    const width = modalWidths[modalKey] || 800; 
-    const height = modalHeight[modalKey] || "65%"; 
+    console.log("height screen" + Dimensions.get("screen").height);
+
+    const width =
+        windowWidth < 830 ? windowWidth - 10 : modalWidths[modalKey] || 800;
+    const height =
+        windowWidth < 830
+            ? Dimensions.get("screen").height - 25
+            : modalHeights[modalKey] || "65%";
 
     return (
         <Portal>

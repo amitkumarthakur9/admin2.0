@@ -225,8 +225,8 @@ const IFADataTable = () => {
                                 appliedSorting={appliedSorting}
                                 setAppliedSorting={setAppliedSorting}
                                 sorting={sorting}
-                                fileName="IFA"
-                                downloadApi={"ifa/download-report"}
+                                fileName="distributor"
+                                downloadApi={"distributor/download-report"}
                                 schemaResponse={filtersSchema}
                                 setCurrentPageNumber={setCurrentPageNumber}
                                 getList={getDataList}

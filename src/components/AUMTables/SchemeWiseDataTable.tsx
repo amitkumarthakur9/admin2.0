@@ -205,8 +205,8 @@ const SchemeWiseDataTable = () => {
                     appliedSorting={appliedSorting}
                     setAppliedSorting={setAppliedSorting}
                     sorting={sorting}
-                    fileName="Clients"
-                    downloadApi={"client/download-report"}
+                    fileName="aum-scheme"
+                    downloadApi={"aum/scheme/download-report"}
                     schemaResponse={filtersSchema}
                     setCurrentPageNumber={setCurrentPageNumber}
                     getList={getDataList}

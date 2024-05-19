@@ -13,10 +13,10 @@ const DataGrid = ({ title, value, reverse }: IDataGrid) => {
     return (
         <View
             className={
-                "flex flex-row items-center w-4/12 lg:w-3/12 justify-center lg:justify-start mb-[30px]"
+                "flex flex-row items-center w-1/2 md:w-4/12 lg:w-3/12 justify-start md:justify-center lg:justify-start mb-[30px]"
             }
         >
-            <View className={`flex flex-col${reverse && "-reverse"}`}>
+            <View className={`flex flex-col${reverse && "-reverse"} w-[99%]`}>
                 <Text selectable className="text-base font-medium">
                     {value ? value : "-"}
                 </Text>

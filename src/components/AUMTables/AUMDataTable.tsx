@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
     View,
     Text,
@@ -225,45 +225,80 @@ const AUMDataTable = () => {
             tabContent,
             tabscount = 3,
         }) => {
+            const scrollViewRef = useRef(null);
+            const { width: windowWidth } = useWindowDimensions();
+
+            useEffect(() => {
+                if (scrollViewRef.current) {
+                    const tabWidth = windowWidth / 5; // Adjust based on the number of tabs
+                    const xOffset =
+                        (selectedTab - 1) * tabWidth -
+                        (windowWidth - tabWidth) / 2;
+                    scrollViewRef.current.scrollTo({
+                        x: xOffset,
+                        animated: true,
+                    });
+                }
+            }, [selectedTab]);
+
             return (
                 <View className="flex-1 bg-white rounded shadow h-full overflow-auto w-full">
-                    <View>
-                        {/* <View className="w-full flex flex-row mb-2 overflow-scroll ">
-                         */}
-                        <ScrollView
-                            horizontal={true} // Set horizontal to true for horizontal scrolling
-                            showsHorizontalScrollIndicator={true} // Hide the horizontal scrollbar
-                            //   invertStickyHeaders={true}
-                            className="flex flex-row"
-                        >
-                            {tabContent?.map((tab, index) => {
-                                return (
-                                    <TouchableOpacity
-                                        key={index}
-                                        onPress={() =>
-                                            handleTabPress(index + 1)
-                                        }
-                                        className={`w-[20%] py-4 px-6 flex flex-row justify-center items-center border-b-2 ${
-                                            selectedTab === index + 1
-                                                ? "border-black bg-gray-800"
-                                                : "border-b-gray-100 bg-white"
-                                        }`}
-                                    >
-                                        <Text
-                                            className={`font-bold ${
+                    <View className="">
+                        <View className="">
+                            <ScrollView
+                                ref={scrollViewRef}
+                                horizontal={true} // Set horizontal to true for horizontal scrolling
+                                showsHorizontalScrollIndicator={true} // Show the horizontal scrollbar
+                                className="flex flex-row pb-2"
+                            >
+                                {tabContent?.map((tab, index) => {
+                                    return (
+                                        <Pressable
+                                            key={index}
+                                            onPress={() =>
+                                                handleTabPress(index + 1)
+                                            }
+                                            className={`w-[22%] py-4 px-6 flex h-12 flex-row justify-center items-center border-b-2 ${
                                                 selectedTab === index + 1
-                                                    ? "text-white"
-                                                    : "text-gray-600"
+                                                    ? "border-[#114EA8]"
+                                                    : "border-b-gray-100"
                                             }`}
                                         >
-                                            {tab?.name}
-                                        </Text>
-                                    </TouchableOpacity>
-                                );
-                            })}
-                            {/* </View>
-                             */}
-                        </ScrollView>
+                                            <Text
+                                                className={`font-bold ${
+                                                    selectedTab === index + 1
+                                                        ? "text-[#114EA8]"
+                                                        : "text-gray-600"
+                                                }`}
+                                            >
+                                                {tab?.name}
+                                            </Text>
+                                        </Pressable>
+                                        // <TouchableOpacity
+                                        //     key={index}
+                                        //     onPress={() =>
+                                        //         handleTabPress(index + 1)
+                                        //     }
+                                        //     className={`w-[20%] py-4 px-6 flex flex-row justify-center items-center border-b-2 ${
+                                        //         selectedTab === index + 1
+                                        //             ? "border-black bg-gray-800"
+                                        //             : "border-b-gray-100 bg-white"
+                                        //     }`}
+                                        // >
+                                        //     <Text
+                                        //         className={`font-bold ${
+                                        //             selectedTab === index + 1
+                                        //                 ? "text-white"
+                                        //                 : "text-gray-600"
+                                        //         }`}
+                                        //     >
+                                        //         {tab?.name}
+                                        //     </Text>
+                                        // </TouchableOpacity>
+                                    );
+                                })}
+                            </ScrollView>
+                        </View>
 
                         {tabContent[selectedTab - 1]?.content}
                     </View>
@@ -307,11 +342,11 @@ const AUMDataTable = () => {
 
                 {!isLoading ? (
                     // <ScrollView className={"mt-0 z-[-1] "}>
-                        <View className="w-12/12 h-full rounded">
-                            <AUMCard data={data} />
-                        </View>
-                    // </ScrollView>
+                    <View className="w-12/12 h-full rounded">
+                        <AUMCard data={data} />
+                    </View>
                 ) : (
+                    // </ScrollView>
                     <HStack
                         space={"md"}
                         marginTop={20}

@@ -1,5 +1,5 @@
 import { Image } from "native-base";
-import { useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 import {
     Dimensions,
     StyleSheet,
@@ -27,6 +27,29 @@ const TableHeader = ({ headers, cellSize }) => {
             }
         >
             {headers?.map((head, index) => {
+
+                // Check if the variable is a string
+                if (typeof cellSize[index] === "string") {
+                    // console.log("header");
+                    // console.log(
+                    //     `w-${
+                    //         typeof cellSize[index] === "string"
+                    //             ? "[" + cellSize[index] + "]"
+                    //             : cellSize[index] + "/12"
+                    //     }`
+                    // );
+                } else {
+                    // console.log("elseheader");
+                    // console.log(
+                    //     `w-${
+                    //         typeof cellSize[index] === "string"
+                    //             ? "[" + cellSize[index] + "]"
+                    //             : cellSize[index] + "/12"
+                    //     }`
+                    // );
+                }
+
+
                 return (
                     <View
                         key={index + 1}
@@ -60,12 +83,21 @@ const TableHeader = ({ headers, cellSize }) => {
 //  * @returns {Array.<JSX.Element>} - Array of JSX elements representing table rows
 //  */
 const TableRows = ({ rows, cellSize, hasActions, options }) => {
+    // console.log("cellsize" + cellSize);
+    // console.log("dimension" + Dimensions.get("screen").width)
     return rows?.map((row, index) => {
         return (
-            <View key={index}>
+            <View
+                key={index}
+                className={` ${
+                    Dimensions.get("screen").width < 830
+                        ? `w-[${Dimensions.get("screen").width - 20}]`
+                        : ""
+                }`}
+            >
                 <View
                     className={
-                        `flex flex-row py-4 px-2 justify-between ` +
+                        `flex flex-row py-4 px-2 justify-between` +
                         (Dimensions.get("screen").width < 770
                             ? "w-[1728px]"
                             : "")
@@ -73,15 +105,18 @@ const TableRows = ({ rows, cellSize, hasActions, options }) => {
                 >
                     {row?.map((rowItem, itemIndex) => {
                         return (
-                            <RowItem
-                                key={rowItem.key || itemIndex}
-                                width={cellSize[itemIndex]}
-                                content={rowItem.content}
-                                isLast={row.length - 1 === itemIndex}
-                                options={options}
-                                hasActions={hasActions}
-                                data={row[0]?.data}
-                            />
+                            <React.Fragment key={rowItem.key || itemIndex}>
+                                {/* <Text>{cellSize[itemIndex]}</Text> */}
+                                <RowItem
+                                    key={rowItem.key || itemIndex}
+                                    width={cellSize[itemIndex]}
+                                    content={rowItem.content}
+                                    isLast={row.length - 1 === itemIndex}
+                                    options={options}
+                                    hasActions={hasActions}
+                                    data={row[0]?.data}
+                                />
+                            </React.Fragment>
                         );
                     })}
                 </View>
@@ -106,11 +141,17 @@ const RowItem = ({ width, content, isLast, hasActions, options, data }) => {
     const closeDropdown = () => setShowDropdown(false);
 
     // Check if the variable is a string
-    // if (typeof width === 'string') {
-    //     console.log(`w-${typeof width === 'string'? `[${width}]` : `${width}/12`}`);
+    // if (typeof width === "string") {
+    //     console.log(
+    //         `w-${typeof width === "string" ? `[${width}]` : `${width}/12`}`
+    //     );
     // } else {
-    //     console.log(`w-${typeof width === 'string'? `[${width}]` : `${width}/12`}`);
+    //     console.log(
+    //         `w-${typeof width === "string" ? `[${width}]` : `${width}/12`}`
+    //     );
     // }
+
+    // console.log(width);
 
     return (
         <TouchableWithoutFeedback onPress={closeDropdown}>
@@ -128,7 +169,7 @@ const RowItem = ({ width, content, isLast, hasActions, options, data }) => {
                 </View>
                 {hasActions && isLast && (
                     <Pressable
-                        className="absolute right-8 w-fit"
+                        className={`pl-6 md:pl-0md:absolute md:right-8 `}
                         onPress={toggleDropdown}
                     >
                         <Icon name="dots-three-vertical" size={16} />
@@ -187,6 +228,10 @@ const DataTable = ({
     options,
     noDataText,
 }: IDataTable) => {
+    // console.log("rows")
+    // console.log(rows)
+    // console.log(rows?.length)
+    // console.log(!!rows?.length)
     return (
         <View className={className}>
             <TableHeader headers={headers} cellSize={cellSize} />

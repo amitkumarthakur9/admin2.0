@@ -13,7 +13,7 @@ const DataValue = ({ title, value }) => {
                     selectable
                     className="font-medium text-start text-gray-500"
                 >
-                    {value ? value : "-"}
+                    {value ? value : "NA"}
                 </Text>
             </View>
         </View>

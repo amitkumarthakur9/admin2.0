@@ -101,7 +101,7 @@ export default function RTAConciliationDetail() {
                                             selectable
                                             className="text-lg font-bold text-start"
                                         >
-                                            Transaction ID: {data.id}
+                                            Transaction ID: {data?.id}
                                         </Text>
                                     </View>
                                     <View className="w-full flex flex-row items-start justify-between">
@@ -245,9 +245,13 @@ export default function RTAConciliationDetail() {
                                             <DataValue
                                                 key="settlementDate"
                                                 title="Settlement Date"
-                                                value={dateFormat(
-                                                    data?.settlementDate
-                                                )}
+                                                value={
+                                                    data?.paymentDate
+                                                        ? dateFormat(
+                                                              data?.settlementDate
+                                                          )
+                                                        : "NA"
+                                                }
                                             />
                                             <DataValue
                                                 key="bseOrderNumber"
@@ -279,7 +283,7 @@ export default function RTAConciliationDetail() {
                                             <DataValue
                                                 key="folioNo"
                                                 title="Folio Number"
-                                                value={data?.folio}
+                                                value={data?.folio?.folioNumber}
                                             />
                                             <DataValue
                                                 key="stampDuty"
@@ -307,7 +311,7 @@ export default function RTAConciliationDetail() {
                                                     data?.nav
                                                         ? RupeeSymbol +
                                                           data?.nav
-                                                        : "0"
+                                                        : "NA"
                                                 }
                                             />
                                             <DataValue
@@ -471,7 +475,10 @@ export default function RTAConciliationDetail() {
                                                     <DataValue
                                                         key="autopay"
                                                         title="Autopay"
-                                                        value="Enabled"
+                                                        value={
+                                                            data?.autopay
+                                                                
+                                                        }
                                                     />
                                                 </View>
                                             </View>

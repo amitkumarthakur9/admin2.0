@@ -44,6 +44,7 @@ interface MutualFund {
     optionType: optionType;
     deliveryType: deliveryType;
     dividendType: dividendType;
+    subCategory: string;
 }
 
 interface User {

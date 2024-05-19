@@ -120,18 +120,19 @@ const ClientWiseDataTable = () => {
             {
                 key: "clientName",
                 content: (
-                    <View className="flex flex-row items-center justify-center w-11/12">
+                    <View className="flex flex-row items-center justify-center w-[99%]">
                         <View className="flex flex-col rounded-full bg-[#e60202] mr-2 h-10 w-10 mb-1 items-center justify-center flex-wrap">
                             <Text selectable className="text-white">
                                 {getInitials(item?.name)}
                             </Text>
                         </View>
-                        <View className="flex flex-col flex-wrap w-9/12">
-                            <View className="flex flex-row items-center text-black font-semibold flex-wrap w-11/12 mb-2">
+                        <View className="flex flex-col  w-9/12">
+                            <View className="flex flex-row items-center text-black font-semibold mb-2">
                                 <Pressable
                                     onPress={() =>
                                         router.push(`clients/${item?.id}`)
                                     }
+                                    className="flex flex-row w-[99%]"
                                 >
                                     <Text
                                         selectable
@@ -139,21 +140,21 @@ const ClientWiseDataTable = () => {
                                     >
                                         {item?.name}&nbsp;{" "}
                                     </Text>
-                                </Pressable>
 
-                                <View className="flex flex-row items-center">
-                                    {item?.isActive == true ? (
-                                        <CheckCircleIcon
-                                            color="emerald.500"
-                                            size="xs"
-                                        />
-                                    ) : (
-                                        <WarningIcon
-                                            size="xs"
-                                            color="orange.500"
-                                        />
-                                    )}
-                                </View>
+                                    <View className="flex flex-row items-center">
+                                        {item?.isActive == true ? (
+                                            <CheckCircleIcon
+                                                color="emerald.500"
+                                                size="xs"
+                                            />
+                                        ) : (
+                                            <WarningIcon
+                                                size="xs"
+                                                color="orange.500"
+                                            />
+                                        )}
+                                    </View>
+                                </Pressable>
                             </View>
                             <View className="flex flex-row items-center mt-0">
                                 {item?.kycStatus?.name == "Verified" ? (
@@ -289,81 +290,81 @@ const ClientWiseDataTable = () => {
             </View> */}
                 <View className="border-[0.2px]  border-[#e4e4e4]">
                     {/* {data.length !== 0 && ( */}
-                        <DynamicFilters
-                            appliedSorting={appliedSorting}
-                            setAppliedSorting={setAppliedSorting}
-                            sorting={sorting}
-                            fileName="Clients"
-                            downloadApi={"client/download-report"}
-                            schemaResponse={filtersSchema}
-                            setCurrentPageNumber={setCurrentPageNumber}
-                            getList={getDataList}
-                            appliedFilers={appliedFilers}
-                            setAppliedFilers={setAppliedFilers}
-                        />
+                    <DynamicFilters
+                        appliedSorting={appliedSorting}
+                        setAppliedSorting={setAppliedSorting}
+                        sorting={sorting}
+                        fileName="Clients"
+                        downloadApi={"client/download-report"}
+                        schemaResponse={filtersSchema}
+                        setCurrentPageNumber={setCurrentPageNumber}
+                        getList={getDataList}
+                        appliedFilers={appliedFilers}
+                        setAppliedFilers={setAppliedFilers}
+                    />
                     {/* )} */}
 
                     {!isLoading ? (
                         // data.length === 0 ? (
                         //     <NoDataAvailable />
                         // ) : (
-                            // <ScrollView className={"mt-4 z-[-1] "}>
-                            <View className={"mt-4 z-[-1] "}>
-                                {width < 830 ? (
-                                    <TableCard data={mobileData} />
-                                ) : roleId > 3 ? (
-                                    <DataTable
-                                        headers={[
-                                            "Client Name",
-                                            "Client Code",
-                                            "Distributor",
-                                            "Manager",
-                                            "PAN",
-                                            "Total Invested",
-                                            "Current Value",
-                                            "XIRR",
-                                            "Returns",
-                                            // "",
-                                        ]}
-                                        cellSize={[2, 1, 1, 1, 1, 1, 1, 1, 1]}
-                                        rows={transformedData}
-                                    />
-                                ) : roleId > 2 ? (
-                                    <DataTable
-                                        headers={[
-                                            "Client Name",
-                                            "Client Code",
-                                            "Distributor",
-                                            "PAN",
-                                            "Total Invested",
-                                            "Current Value",
-                                            "XIRR",
-                                            "Returns",
-                                            // "",
-                                        ]}
-                                        cellSize={[3, 1, 1, 1, 1, 1, 1, 1]}
-                                        rows={transformedData}
-                                    />
-                                ) : (
-                                    <DataTable
-                                        headers={[
-                                            "Client Name",
-                                            "Client Code",
-                                            "PAN",
-                                            "Total Invested",
-                                            "Current Value",
-                                            "XIRR",
-                                            "Returns",
-                                            // "",
-                                        ]}
-                                        cellSize={[3, 2, 1, 1, 1, 1, 1]}
-                                        rows={transformedData}
-                                    />
-                                )}
-                                {/* </ScrollView> */}
-                            </View>
-                        // )
+                        // <ScrollView className={"mt-4 z-[-1] "}>
+                        <View className={"mt-4 z-[-1] "}>
+                            {width < 830 ? (
+                                <TableCard data={mobileData} />
+                            ) : roleId > 3 ? (
+                                <DataTable
+                                    headers={[
+                                        "Client Name",
+                                        "Client Code",
+                                        "Distributor",
+                                        "Manager",
+                                        "PAN",
+                                        "Total Invested",
+                                        "Current Value",
+                                        "XIRR",
+                                        "Returns",
+                                        // "",
+                                    ]}
+                                    cellSize={[2, 1, 1, 1, 1, 1, 1, 1, 1]}
+                                    rows={transformedData}
+                                />
+                            ) : roleId > 2 ? (
+                                <DataTable
+                                    headers={[
+                                        "Client Name",
+                                        "Client Code",
+                                        "Distributor",
+                                        "PAN",
+                                        "Total Invested",
+                                        "Current Value",
+                                        "XIRR",
+                                        "Returns",
+                                        // "",
+                                    ]}
+                                    cellSize={[3, 1, 1, 1, 1, 1, 1, 1]}
+                                    rows={transformedData}
+                                />
+                            ) : (
+                                <DataTable
+                                    headers={[
+                                        "Client Name",
+                                        "Client Code",
+                                        "PAN",
+                                        "Total Invested",
+                                        "Current Value",
+                                        "XIRR",
+                                        "Returns",
+                                        // "",
+                                    ]}
+                                    cellSize={[3, 2, 1, 1, 1, 1, 1]}
+                                    rows={transformedData}
+                                />
+                            )}
+                            {/* </ScrollView> */}
+                        </View>
                     ) : (
+                        // )
                         <HStack
                             space={"md"}
                             marginTop={20}
@@ -381,14 +382,14 @@ const ClientWiseDataTable = () => {
                     )}
                 </View>
                 {/* {data.length !== 0 && ( */}
-                    <Pagination
-                        itemsPerPage={itemsPerPage}
-                        setItemsPerPage={setItemsPerPage}
-                        getDataList={getDataList}
-                        currentPageNumber={currentPageNumber}
-                        totalPages={totalPages}
-                        setCurrentPageNumber={setCurrentPageNumber}
-                    />
+                <Pagination
+                    itemsPerPage={itemsPerPage}
+                    setItemsPerPage={setItemsPerPage}
+                    getDataList={getDataList}
+                    currentPageNumber={currentPageNumber}
+                    totalPages={totalPages}
+                    setCurrentPageNumber={setCurrentPageNumber}
+                />
                 {/* )} */}
             </View>
         </View>

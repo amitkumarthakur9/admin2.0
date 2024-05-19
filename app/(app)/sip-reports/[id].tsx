@@ -56,7 +56,7 @@ import { getTransactionMessage } from "../../../src/helper/StatusInfo";
 
 const DataValue = ({ title, value }) => {
     return (
-        <View  className="w-full flex flex-row justify-between items-center p-2">
+        <View className="w-full flex flex-row justify-between items-center p-2">
             <View className="w-1/2 flex ">
                 <Text
                     className="text-bold font-mediumk text-gray-500"
@@ -256,7 +256,10 @@ export default function SIPReportsDetail() {
                                                         selectable
                                                         className=" text-blacktext-xs"
                                                     >
-                                                        {data?.mutualfund?.name}
+                                                        {
+                                                            data?.mutualfund
+                                                                ?.subCategory
+                                                        }
                                                     </Text>
                                                     <View className="mx-2">
                                                         <Icon
@@ -274,8 +277,8 @@ export default function SIPReportsDetail() {
                                                         className="text-black text-xs"
                                                     >
                                                         {
-                                                            data.mutualfund
-                                                                .category
+                                                            data?.mutualfund
+                                                                ?.category
                                                         }
                                                     </Text>
                                                 </View>
@@ -287,24 +290,33 @@ export default function SIPReportsDetail() {
                                             <DataValue
                                                 key="Amount"
                                                 title="Amount"
-                                                value={data?.transactions[0].amount ? RupeeSymbol + data?.transactions[0].amount : "NA"}
-                                                
+                                                value={
+                                                    data?.amount
+                                                        ? RupeeSymbol +
+                                                          data?.amount
+                                                        : "NA"
+                                                }
                                             />
                                             <DataValue
                                                 key="OptionType"
                                                 title="Option Type"
                                                 value={
-                                                    data?.mutualfund?.optionType?.name
+                                                    data?.mutualfund?.optionType
+                                                        ?.name
                                                         ? data?.mutualfund
                                                               ?.optionType?.name
                                                         : "NA"
                                                 }
-                                                
                                             />
                                             <DataValue
                                                 key="amountInvestment"
                                                 title="Amount Investment"
-                                                value={data?.amount ? RupeeSymbol + data?.amount : "NA"}
+                                                value={
+                                                    data?.amount
+                                                        ? RupeeSymbol +
+                                                          data?.amount
+                                                        : "NA"
+                                                }
                                             />
                                         </View>
                                         <View className="w-3/12 flex-flex-col gap-4 px-2">
@@ -322,7 +334,8 @@ export default function SIPReportsDetail() {
                                                     data?.mutualfund
                                                         ?.dividendType?.name
                                                         ? data?.mutualfund
-                                                              ?.dividendType?.name
+                                                              ?.dividendType
+                                                              ?.name
                                                         : "NA"
                                                 }
                                             />
@@ -369,7 +382,6 @@ export default function SIPReportsDetail() {
                                                 title="Status"
                                                 value="Active"
                                             />
-                                            
                                         </View>
                                     </View>
                                 </View>
@@ -405,7 +417,6 @@ const AccountDetailsCard = ({ data }: { data: SIPReportDetail }) => {
 
     console.log(data?.bankAccount?.logoUrl);
     console.log("data?.bankAccount?.logoUrl");
-    
 
     const accordionData = [
         {
@@ -413,18 +424,17 @@ const AccountDetailsCard = ({ data }: { data: SIPReportDetail }) => {
             subcontent: (
                 <View className="flex flex-row items-center gap-2">
                     <Image
-                            alt=""
-                            className="mr-2"
-                            style={{
-                                width: 40,
-                                height: 40,
-                                objectFit: "contain",
-                            }}
-                            source={{
-                                uri: data?.bankAccount?.logoUrl,
-                            }}
-                            
-                        /> 
+                        alt=""
+                        className="mr-2"
+                        style={{
+                            width: 40,
+                            height: 40,
+                            objectFit: "contain",
+                        }}
+                        source={{
+                            uri: data?.bankAccount?.logoUrl,
+                        }}
+                    />
                     <Text className="text-xs text-gray-400">
                         A/C no. {data?.bankAccount?.accountNumber}
                     </Text>
@@ -450,7 +460,11 @@ const AccountDetailsCard = ({ data }: { data: SIPReportDetail }) => {
                         title="Account Type"
                         value={data?.bankAccount?.accountType?.name}
                     />
-                    <DataValue key="autopay" title="Autopay" value="Enabled" />
+                    <DataValue
+                        key="autopay"
+                        title="Autopay"
+                        value={data?.autopay}
+                    />
                     <View className="p-2">
                         <Text className="text-md font-semibold py-4">
                             Autopay Details
@@ -462,9 +476,7 @@ const AccountDetailsCard = ({ data }: { data: SIPReportDetail }) => {
                                 title="Autopay ID"
                                 value={
                                     <View className="flex flex-row items-center gap-2">
-                                        <Text className="text-sm">
-                                            73478236874789
-                                        </Text>
+                                        <Text className="text-sm">NA</Text>
                                         <Icon
                                             name="copy"
                                             style={{ fontWeight: "100" }}
@@ -480,7 +492,7 @@ const AccountDetailsCard = ({ data }: { data: SIPReportDetail }) => {
                                 title="Status"
                                 value={
                                     <Text className="text-green-500 text-sm">
-                                        Approved
+                                        NA
                                     </Text>
                                 }
                             />
@@ -490,11 +502,7 @@ const AccountDetailsCard = ({ data }: { data: SIPReportDetail }) => {
                                 key="endDate"
                                 reverse
                                 title="End Date"
-                                value={
-                                    <Text className="text-sm">
-                                        Jan 22, 2024
-                                    </Text>
-                                }
+                                value={<Text className="text-sm">NA</Text>}
                             />
                             <DataGrid
                                 key="autopayAmount"
@@ -502,7 +510,7 @@ const AccountDetailsCard = ({ data }: { data: SIPReportDetail }) => {
                                 title="Autopay Amount"
                                 value={
                                     <Text className="text-sm">
-                                        {RupeeSymbol} 2,00,000
+                                        {RupeeSymbol} NA
                                     </Text>
                                 }
                             />

@@ -66,7 +66,7 @@ const DataValue = ({ title, value }) => {
 
 export default function MandateDetail() {
     const { id } = useLocalSearchParams();
-    const [data, setData] = useState<MandateDetailInterface>();
+    const [data, setData] = useState<MandateDetailInterfaceResponse['data'] | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const { height, width } = useWindowDimensions();
 
@@ -173,7 +173,7 @@ export default function MandateDetail() {
                                                     selectable
                                                     className="font-medium text-start text-black"
                                                 >
-                                                    {data?.account?.clientId}
+                                                    {data?.account?.clientCode}
                                                 </Text>
                                             </View>
                                             <View className="flex flex-row items-center">
@@ -188,7 +188,7 @@ export default function MandateDetail() {
                                                     className="font-medium text-start text-black"
                                                 >
                                                     {
-                                                        data?.account?.user[0]
+                                                        data?.account
                                                             ?.panNumber
                                                     }
                                                 </Text>
