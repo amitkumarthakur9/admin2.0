@@ -22,7 +22,7 @@ COPY . .
 
 # Install the project dependencies
 RUN rm -rf .git/hooks
-RUN npm install
+RUN npm install --legacy-peer-dep
 
 # Run the Expo export command to build the web app
 RUN npx expo export -p web
