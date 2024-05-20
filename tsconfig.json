@@ -1,6 +1,11 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
+    "lib": [
+      "dom",
+      "es2015",
+      "es2017" // you can add higher versions as needed
+    ],
     "paths": {
       "*": ["*", "src/*", "app/*", "@types/*"]
     },

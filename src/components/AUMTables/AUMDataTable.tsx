@@ -13,8 +13,11 @@ import {
     CheckCircleIcon,
     HStack,
     Heading,
+    Icon,
     Spinner,
     WarningIcon,
+    Button,
+    ArrowForwardIcon,
 } from "native-base";
 
 import RemoteApi from "../../services/RemoteApi";
@@ -244,7 +247,7 @@ const AUMDataTable = () => {
             return (
                 <View className="flex-1 bg-white rounded shadow h-full overflow-auto w-full">
                     <View className="">
-                        <View className="">
+                        <View className="w-[99%]">
                             <ScrollView
                                 ref={scrollViewRef}
                                 horizontal={true} // Set horizontal to true for horizontal scrolling
@@ -258,7 +261,7 @@ const AUMDataTable = () => {
                                             onPress={() =>
                                                 handleTabPress(index + 1)
                                             }
-                                            className={`w-[22%] py-4 px-6 flex h-12 flex-row justify-center items-center border-b-2 ${
+                                            className={`w-3/12 py-4 px-6 flex h-12 flex-row justify-center items-center border-b-2 ${
                                                 selectedTab === index + 1
                                                     ? "border-[#114EA8]"
                                                     : "border-b-gray-100"
@@ -274,29 +277,8 @@ const AUMDataTable = () => {
                                                 {tab?.name}
                                             </Text>
                                         </Pressable>
-                                        // <TouchableOpacity
-                                        //     key={index}
-                                        //     onPress={() =>
-                                        //         handleTabPress(index + 1)
-                                        //     }
-                                        //     className={`w-[20%] py-4 px-6 flex flex-row justify-center items-center border-b-2 ${
-                                        //         selectedTab === index + 1
-                                        //             ? "border-black bg-gray-800"
-                                        //             : "border-b-gray-100 bg-white"
-                                        //     }`}
-                                        // >
-                                        //     <Text
-                                        //         className={`font-bold ${
-                                        //             selectedTab === index + 1
-                                        //                 ? "text-white"
-                                        //                 : "text-gray-600"
-                                        //         }`}
-                                        //     >
-                                        //         {tab?.name}
-                                        //     </Text>
-                                        // </TouchableOpacity>
                                     );
-                                })}
+                                })}                              
                             </ScrollView>
                         </View>
 
