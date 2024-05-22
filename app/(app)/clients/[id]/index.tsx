@@ -462,33 +462,34 @@ const PortfolioCard = ({
                 <View className="p-2 w-full">
                     <View className="flex flex-row items-center justify-center md:justify-between py-2 gap-2 md:gap-0 flex-wrap">
                         <View>
-                        <DropdownComponent
-                            label="Folio Number"
-                            data={holdingDropper}
-                            containerStyle={{
-                                width: "200px",
-                            }}
-                            noIcon
-                            value={typeHolding}
-                            setValue={setTypeHolding}
-                        />
+                            <DropdownComponent
+                                label="Folio Number"
+                                data={holdingDropper}
+                                containerStyle={{
+                                    width: "200px",
+                                }}
+                                noIcon
+                                value={typeHolding}
+                                setValue={setTypeHolding}
+                            />
                         </View>
                         <View>
-                        <Button
-                            borderColor={"#013974"}
-                            bgColor={"#fff"}
-                            _text={{ color: "#013974" }}
-                            variant="outline"
-                            style={{ width: 198, height: 39 }}
-                            onPress={() =>
-                                router.push(`arn-transfer/${data?.id}`)
-                            }
-                        >
-                            Transfer Portfolio
-                        </Button>
-
+                            {(typeHolding === "external" ||
+                                typeHolding === "all") && (
+                                <Button
+                                    borderColor={"#013974"}
+                                    bgColor={"#fff"}
+                                    _text={{ color: "#013974" }}
+                                    variant="outline"
+                                    style={{ width: 198, height: 39 }}
+                                    onPress={() =>
+                                        router.push(`arn-transfer/${data?.id}`)
+                                    }
+                                >
+                                    Transfer Portfolio
+                                </Button>
+                            )}
                         </View>
-                        
                     </View>
                     <View className="h-96 overflow-scroll">
                         <View className="flex flex-col bg-gray-100 rounded p-2">
@@ -567,14 +568,15 @@ const PortfolioCard = ({
                         <DataTable
                             key="holdings"
                             headers={["Scheme", "Current", "Invested", "XIRR"]}
-                            cellSize={[5, 2, 2, 3]}
+                            cellSize={[5, 2, 2, 3,]}
+                            mobileCellSize={[5, 2, 2, 3,]}
                             rows={data?.holdings?.map((holding) => {
                                 return [
                                     {
                                         key: "scheme",
                                         data: holding,
                                         content: (
-                                            <View className="flex flex-col md:flex-row items-start md:items-center gap-2 w-11/12">
+                                            <View className="flex flex-col md:flex-row items-start md:items-center gap-2 md:w-[95%]">
                                                 <Image
                                                     alt="fundHouse"
                                                     className="mr-2"
@@ -613,12 +615,12 @@ const PortfolioCard = ({
                                     {
                                         key: "current",
                                         content: (
-                                            <View>
+                                            <View className="w-[95%]">
                                                 <Text
                                                     selectable
                                                     className="text-xs text-black text-start"
                                                 >
-                                                    {RupeeSymbol}{" "}
+                                                    {RupeeSymbol}
                                                     {holding?.currentValue?.toFixed(
                                                         2
                                                     )}
@@ -1865,7 +1867,9 @@ const RedeemModalCard = ({
                                                 className="text-xs"
                                             >
                                                 {RupeeSymbol}{" "}
-                                                {folio?.redeemableAmount.toFixed(2)}
+                                                {folio?.redeemableAmount.toFixed(
+                                                    2
+                                                )}
                                             </Text>
                                         }
                                         reverse
@@ -1907,7 +1911,9 @@ const RedeemModalCard = ({
                                                 selectable
                                                 className="text-xs"
                                             >
-                                                {folio?.redeemableUnits.toFixed(2)}
+                                                {folio?.redeemableUnits.toFixed(
+                                                    2
+                                                )}
                                             </Text>
                                         }
                                         reverse
@@ -2566,9 +2572,8 @@ const ExternalPortfolioModalCard = ({
     return (
         <>
             {apisuccess ? (
-                <View className="flex flex-col p-4">
-                    <View className="h-16 flex flex-row justify-between items-center p-2">
-                        <View className="flex flex-row items-center "></View>
+                <View className="flex flex-col">
+                    <View className="flex flex-row justify-end items-center">
                         <IonIcon
                             name="close-outline"
                             size={24}
@@ -2582,7 +2587,7 @@ const ExternalPortfolioModalCard = ({
                                 <Image
                                     className=""
                                     alt="ico"
-                                    source={require("../../../../assets/images/Tick.png")}
+                                    source={require("../../../../assets/images/successTick.svg")}
                                     style={
                                         {
                                             // flex: 1,
@@ -2632,7 +2637,7 @@ const ExternalPortfolioModalCard = ({
                 </View>
             ) : (
                 <>
-                    <View className=" flex flex-row justify-between items-center p-4">
+                    <View className=" flex flex-row justify-between items-center">
                         <View className="flex flex-row items-center "></View>
                         <IonIcon
                             name="close-outline"

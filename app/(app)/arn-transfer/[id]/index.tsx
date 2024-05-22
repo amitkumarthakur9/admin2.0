@@ -15,6 +15,7 @@ import {
     Text,
     WarningIcon,
     Modal,
+    Divider,
 } from "native-base";
 import moment from "moment";
 import { useMutation, useQuery } from "react-query";
@@ -189,6 +190,7 @@ export default function ClientARNDetail() {
                 setIsLoading(false);
                 if (refreshDate == "false") {
                     setShowImport(true);
+             
                 } else {
                     setRefreshImport(true);
                 }
@@ -257,8 +259,8 @@ export default function ClientARNDetail() {
                                             <View className="flex flex-col gap-6 w-full">
                                                 <View className="flex flex-col md:flex-row w-full justify-between items-start md:items-center">
                                                     <View className="flex flex-row gap-2 justify-between items-start md:items-center w-full">
-                                                        <View className="flex flex-row items-center w-9/12">
-                                                            <View>
+                                                        <View className="flex flex-row flex-wrap items-center w-9/12">
+                                                            <View className="w-fit pr-2">
                                                                 <Text
                                                                     selectable
                                                                     className="text-sm md:text-lg flex flex-row text-start md:text-center font-semibold"
@@ -266,7 +268,7 @@ export default function ClientARNDetail() {
                                                                     {data?.name}
                                                                 </Text>
                                                             </View>
-                                                            <View className="pl-2">
+                                                            <View className="w-1/12">
                                                                 {data?.isActive ? (
                                                                     <CheckCircleIcon
                                                                         color="emerald.500"
@@ -390,28 +392,27 @@ export default function ClientARNDetail() {
                                                 <View className="flex flex-col md:flex-row justify-between items-start md:items-center w-full">
                                                     <View className="flex flex-row gap-2 justify-between items-start md:items-center w-full">
                                                         <View className="flex flex-row items-center justify-start w-6/12">
-                                                            <View className="flex flex-row items-center w-8/12 md:w-fit">
+                                                            <View className="flex flex-row items-center w-[99%] md:w-fit">
                                                                 <Text
                                                                     selectable
                                                                     className="text-sm md:text-lg flex flex-row text-start md:text-center font-semibold"
                                                                 >
                                                                     {data?.name}
                                                                 </Text>
-                                                                <View className="pl-2 w-2/12">
-                                                                {data?.isActive ? (
-                                                                    <CheckCircleIcon
-                                                                        color="emerald.500"
-                                                                        size="md"
-                                                                    />
-                                                                ) : (
-                                                                    <WarningIcon
-                                                                        size="md"
-                                                                        color="orange.500"
-                                                                    />
-                                                                )}
+                                                                <View className="pl-2 w-1/12">
+                                                                    {data?.isActive ? (
+                                                                        <CheckCircleIcon
+                                                                            color="emerald.500"
+                                                                            size="md"
+                                                                        />
+                                                                    ) : (
+                                                                        <WarningIcon
+                                                                            size="md"
+                                                                            color="orange.500"
+                                                                        />
+                                                                    )}
+                                                                </View>
                                                             </View>
-                                                            </View>
-                                                            
                                                         </View>
                                                         <View className="w-5/12">
                                                             <Pressable
@@ -585,6 +586,13 @@ export default function ClientARNDetail() {
                                             </View>
                                         </View>
                                     </View>
+                                    <View>
+                                        <Divider
+                                            orientation="vertical"
+                                            mx="3"
+                                        />
+                                    </View>
+
                                     <View className="w-full md:w-6/12">
                                         <DonutPieChart
                                             pieData={[

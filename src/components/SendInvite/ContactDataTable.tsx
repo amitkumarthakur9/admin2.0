@@ -11,6 +11,7 @@ import {
     FlatList,
     StyleSheet,
     TouchableWithoutFeedback,
+    Image,
 } from "react-native";
 import { router } from "expo-router";
 import {
@@ -35,6 +36,7 @@ import ManualInvite from "./ManualInvite";
 import { Dialog, Portal } from "react-native-paper";
 import CustomButton from "../Buttons/CustomButton";
 import HoverEffectComponent from "./Hover";
+import IonIcon from "react-native-vector-icons/Ionicons";
 
 const ContactDataTable = () => {
     const dummyData = {
@@ -344,6 +346,10 @@ const ContactDataTable = () => {
                 "onboard/client/invite",
                 contactID
             );
+
+            // const response = {
+            //     message: "Success",
+            // };
 
             if (response?.message == "Success") {
                 showDialog("invite");
@@ -663,8 +669,9 @@ const ContactDataTable = () => {
                                                                                             selectable
                                                                                             className="text-slate-500 text-lg font-bold md:font-normal md:text-base"
                                                                                         >
-                                                                                            {item.name
-                                                                                                }
+                                                                                            {
+                                                                                                item.name
+                                                                                            }
                                                                                         </Text>
                                                                                     </View>
                                                                                 </View>
@@ -913,38 +920,35 @@ const ContactDataTable = () => {
                             display: "flex",
                             justifyContent: "flex-start",
                             alignSelf: "center",
-                            width: 400,
-                            height: "50%",
+                            width: 346,
+                            // height: "50%",
                             overflow: "scroll",
                             backgroundColor: "white",
+                            padding: 40,
                         }}
                     >
-                        <View className="flex flex-row justify-end p-4">
+                        <View className="flex flex-row justify-end items-start">
                             <Pressable
                                 onPress={() => hideDialog("invite")}
-                                className={
-                                    "flex flex-row justify-center items-center border-[1px] rounded px-4 h-[42px] border-slate-200"
-                                }
+                                // className={
+                                //     "flex flex-row justify-start items-start"
+                                // }
                                 aria-describedby="InviteClient"
                             >
-                                <Icon name="close" size={20} color="black" />
+                                <IonIcon
+                                    name="close-outline"
+                                    size={24}
+                                    color="black"
+                                />
                             </Pressable>
                         </View>
-                        <View className="flex flex-row justify-center">
+                        <View className="flex flex-col justify-center items-center">
                             <View className="flex flex-col w-1/2 justify-center items-center">
-                                <View
-                                    style={{
-                                        backgroundColor: "#114EA8",
-                                        padding: 10,
-                                        borderRadius: 10,
-                                    }}
-                                >
-                                    <Icon
-                                        name="check"
-                                        size={100}
-                                        color="white"
-                                    />
-                                </View>
+                                <Image
+                                    source={require("../../../assets/images/successTick.svg")}
+                                />
+                            </View>
+                            <View>
                                 <Text className="pt-8 text-lg font-bold color-[#114EA8]">
                                     Invite succesfully sent
                                 </Text>
@@ -957,20 +961,20 @@ const ContactDataTable = () => {
     );
 };
 
-const styles = StyleSheet.create({
-    container: {
-        padding: 10,
-        backgroundColor: "#eee",
-        borderRadius: 5,
-        alignItems: "center",
-    },
-    hovered: {
-        backgroundColor: "#ddd", // Change background color on hover
-    },
-    text: {
-        fontSize: 16,
-        fontWeight: "bold",
-    },
-});
+// const styles = StyleSheet.create({
+//     container: {
+//         padding: 10,
+//         backgroundColor: "#eee",
+//         borderRadius: 5,
+//         alignItems: "center",
+//     },
+//     hovered: {
+//         backgroundColor: "#ddd", // Change background color on hover
+//     },
+//     text: {
+//         fontSize: 16,
+//         fontWeight: "bold",
+//     },
+// });
 
 export default ContactDataTable;

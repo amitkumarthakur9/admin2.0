@@ -28,6 +28,7 @@ import {
     CheckIcon,
 } from "native-base";
 import ContactDataTable from "./ContactDataTable";
+import IonIcon from "react-native-vector-icons/Ionicons";
 
 const GoogleContactInvite = () => {
     const [userInfo, setUserInfo] = useState(null);
@@ -800,11 +801,12 @@ const GoogleContactInvite = () => {
                                             borderRadius: 10,
                                         }}
                                     >
-                                        <Icon
+                                         <IonIcon name="close-outline" size={24}  color="white"  />
+                                        {/* <Icon
                                             name="check"
                                             size={100}
                                             color="white"
-                                        />
+                                        /> */}
                                     </View>
                                     <Text className="pt-8 text-lg font-bold color-[#114EA8]">
                                         Invite succesfully sent

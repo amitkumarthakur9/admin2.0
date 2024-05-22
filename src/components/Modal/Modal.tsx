@@ -39,6 +39,7 @@ const Modal = ({ visible, hideDialog, children, modalKey }) => {
                     height: height,
                     overflow: "scroll",
                     backgroundColor: "white",
+                    padding:32
                 }}
             >
                 {children}

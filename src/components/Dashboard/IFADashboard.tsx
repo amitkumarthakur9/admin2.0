@@ -851,7 +851,7 @@ const IFADashboard = () => {
                                                         <View className="w-2/12">
                                                             <Text
                                                                 selectable
-                                                                className="text-[#686868] font-semibold text-center"
+                                                                className="text-[#686868] font-semibold text-start"
                                                             >
                                                                 {item.sip}
                                                             </Text>

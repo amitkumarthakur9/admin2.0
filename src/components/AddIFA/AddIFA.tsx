@@ -26,7 +26,7 @@ import {
 } from "native-base";
 import Modal from "../Modal/Modal";
 import Icon from "react-native-vector-icons/FontAwesome";
-import { Dialog, Portal } from "react-native-paper";
+import { Dialog, Portal, RadioButton } from "react-native-paper";
 import { TableBreadCrumb } from "../BreadCrumbs/TableBreadCrumb";
 import RemoteApi from "../../services/RemoteApi";
 import { ToastAlert } from "../../helper/CustomToaster";
@@ -201,6 +201,12 @@ export default function AddIFAUser() {
             newErrors.arn = "ARN is required";
         } else {
             newErrors.arn = null; // Clear error message if validation passes
+        }
+
+        if (!formData.rm) {
+            newErrors.rm = "RM is required";
+        } else {
+            newErrors.rm = null; // Clear error message if validation passes
         }
 
         const panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]$/;
@@ -481,7 +487,21 @@ export default function AddIFAUser() {
                 confirmPassword: "",
             });
         } else {
+            const data = {
+                name: formData.name,
+                panNumber: formData.panNumber,
+                dateOfBirth: formData.dateOfBirth,
+                sexId: parseInt(formData.sexId),
+                email: formData.email,
+                password: formData.password,
+                mobileNumber: formData.mobileNumber,
+                arn: "arn-" + formData.arn,
+                euin: formData.euin,
+                assignedTo: parseInt(formData.rm),
+            };
+
             console.log("Validation failed");
+            console.log(data);
         }
     };
     return (
@@ -552,7 +572,7 @@ export default function AddIFAUser() {
                         >
                             <FormControl.Label>Gender</FormControl.Label>
                             <HStack space={4}>
-                                <Radio.Group
+                                {/* <Radio.Group
                                     name="gender"
                                     value={formData.sexId}
                                     aria-label="Gender"
@@ -564,7 +584,39 @@ export default function AddIFAUser() {
                                         <Radio value="1">Male</Radio>
                                         <Radio value="2">Female</Radio>
                                     </HStack>
-                                </Radio.Group>
+                                </Radio.Group> */}
+                                <RadioButton.Group
+                                    onValueChange={(value) =>
+                                        handleChange("sexId", value)
+                                    }
+                                    value={formData.sexId}
+                                >
+                                    <View
+                                        style={{
+                                            flexDirection: "row",
+                                            justifyContent: "space-around",
+                                        }}
+                                    >
+                                        <View
+                                            style={{
+                                                flexDirection: "row",
+                                                alignItems: "center",
+                                            }}
+                                        >
+                                            <RadioButton value="1" />
+                                            <Text>Male</Text>
+                                        </View>
+                                        <View
+                                            style={{
+                                                flexDirection: "row",
+                                                alignItems: "center",
+                                            }}
+                                        >
+                                            <RadioButton value="2" />
+                                            <Text>Female</Text>
+                                        </View>
+                                    </View>
+                                </RadioButton.Group>
                             </HStack>
                             {"sexId" in errors && (
                                 <FormControl.ErrorMessage>
@@ -792,7 +844,7 @@ export default function AddIFAUser() {
                             w="100%"
                             maxW="300"
                             isRequired
-                            isInvalid={isSubmitted == true}
+                            isInvalid={errors.rm !== null}
                         >
                             <FormControl.Label>
                                 Choose Relationship Manager
@@ -826,14 +878,15 @@ export default function AddIFAUser() {
                                     ))
                                 )}
                             </Select>
-                            <FormControl.ErrorMessage
-                                leftIcon={<WarningOutlineIcon size="xs" />}
-                            >
-                                "Please make a selection!"
-                            </FormControl.ErrorMessage>
-                            <FormControl.HelperText>
-                                {/* {options.length === 0 && "No options found"} */}
-                            </FormControl.HelperText>
+                            {errors.rm ? (
+                                <FormControl.ErrorMessage>
+                                    {errors.rm}
+                                </FormControl.ErrorMessage>
+                            ) : (
+                                <FormControl.HelperText>
+                                     {options.length === 0 && "No options found"}
+                                </FormControl.HelperText>
+                            )}
                         </FormControl>
                         <Button
                             width="100%"
