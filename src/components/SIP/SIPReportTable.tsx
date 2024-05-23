@@ -379,7 +379,7 @@ const SIPReportTable = () => {
     return (
         <View className="bg-white">
             <View className="">
-                <TableBreadCrumb name={"SIP Reports"} />
+                <TableBreadCrumb name={"SIP Reports"} icon={require("../../../assets/sipReport.png")}/>
             </View>
             <View className="h-screen">
                 <>

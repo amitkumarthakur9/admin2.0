@@ -159,11 +159,49 @@ const IFADashboard = () => {
             0
         );
 
+        if (totalValue === 0) {
+            return aum?.map((item) => ({
+                x: item.category,
+                y: 0, // Set percentage to 0 because there's no value to calculate percentage from
+            }));
+        }
+
         return aum?.map((item) => ({
             x: item.category,
             y: (item.currentValue / totalValue) * 100,
         }));
     };
+
+    function pieTotalValue(totalValue) {
+        // let totalValue = 0;
+
+        // if (!value.currentValue) {
+        //     totalValue = total?.reduce(
+        //         (accumulator, currentValue) =>
+        //             accumulator + currentValue.currentValue,
+        //         0
+        //     );
+        // } else {
+        //     totalValue = breakdown?.reduce(
+        //         (accumulator, count) => accumulator + count.count,
+        //         0
+        //     );
+        // }
+
+        if (totalValue >= 10000000) {
+            // If the total value is in crores (10,000,000 or more)
+            return (totalValue / 10000000).toFixed(1) + "cr";
+        } else if (totalValue >= 100000) {
+            // If the total value is in lakhs (100,000 or more)
+            return (totalValue / 100000).toFixed(1) + "lac";
+        } else if (totalValue >= 1000) {
+            // If the total value is in thousands (1,000 or more)
+            return (totalValue / 1000).toFixed(1) + "k";
+        } else {
+            // If the total value is less than 1,000
+            return totalValue;
+        }
+    }
 
     useEffect(() => {
         setIsLoading(true);
@@ -425,6 +463,9 @@ const IFADashboard = () => {
                                                                 data?.aum
                                                                     ?.breakDown
                                                             )}
+                                                            
+                                                            totalValue= {pieTotalValue(data?.aum
+                                                                ?.total)}
                                                             children={
                                                                 <>
                                                                     <View className="w-full">
@@ -432,7 +473,8 @@ const IFADashboard = () => {
                                                                             className="text-bold text-xs font-medium text-gray-500"
                                                                             selectable
                                                                         >
-                                                                            Total AUM
+                                                                            Total
+                                                                            AUM
                                                                         </Text>
                                                                     </View>
                                                                     <View className="">
@@ -496,6 +538,8 @@ const IFADashboard = () => {
                                                             data?.order?.sip
                                                                 ?.breakDown
                                                         )}
+                                                        totalValue= {pieTotalValue(data?.order?.sip
+                                                            ?.sipCount)}
                                                         children={
                                                             <>
                                                                 <View className="w-full">
@@ -503,8 +547,8 @@ const IFADashboard = () => {
                                                                         className="text-bold text-xs font-medium text-gray-500"
                                                                         selectable
                                                                     >
-                                                                        Total SIP
-                                                                        
+                                                                        Total
+                                                                        SIP
                                                                     </Text>
                                                                 </View>
                                                                 <View className="">
@@ -572,6 +616,7 @@ const IFADashboard = () => {
                                                                 data?.aum
                                                                     ?.breakDown
                                                             )}
+                                                            totalValue= {pieTotalValue(19348)}
                                                             width={500}
                                                             children={
                                                                 <>

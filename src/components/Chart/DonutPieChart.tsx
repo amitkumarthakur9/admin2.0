@@ -1,8 +1,9 @@
 import React from "react";
-import { View, Text } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
+import { RupeeSymbol } from "src/helper/helper";
 import { VictoryPie, VictoryLegend, VictoryTooltip } from "victory";
 
-const DonutPieChart = ({ pieData, width = 400, children=<></> }) => {
+const DonutPieChart = ({ pieData, totalValue="", width = 400, children=<></> }) => {
     const colorScale = [
         "#715CFA",
         "#B0ED8B",
@@ -70,11 +71,12 @@ const DonutPieChart = ({ pieData, width = 400, children=<></> }) => {
                 </View>
             </View>
             <div style={{ display: "flex", flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                <View className="w-8/12 flex justify-center">
+                <View className="w-8/12 flex justify-center items-center">
                     <VictoryPie
                         data={pieData}
                         colorScale={colorScale}
                         innerRadius={100}
+                        labelRadius={120}
                         labels={({ datum }) =>
                             `${datum.x}: ${datum.y.toFixed(1)}${"%"}`
                         }
@@ -84,11 +86,12 @@ const DonutPieChart = ({ pieData, width = 400, children=<></> }) => {
                             <VictoryTooltip
                                 dy={0}
                                 centerOffset={{ x: 25 }}
-                                flyoutHeight={40}
-                                style={{ fontSize: 16 }}
+                                flyoutHeight={48}
+                                style={{ fontSize: 20 }}
                             />
                         }
                     />
+                    <Text className="absolute text-xs">{totalValue}</Text>
                 </View>
             </div>
             </View>

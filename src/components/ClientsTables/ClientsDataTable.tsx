@@ -248,7 +248,7 @@ const ClientsDataTable = () => {
     return (
         <View className="bg-white">
             <View className="">
-                <TableBreadCrumb name={"Clients"} />
+                <TableBreadCrumb name={"Clients"} icon={require("../../../assets/clientReport.png")} />
             </View>
 
             <View className="h-screen">

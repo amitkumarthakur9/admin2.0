@@ -9,12 +9,14 @@ export const TableBreadCrumb = ({
     url = "",
     getDataList = null,
     params = null,
+    icon=require("../../../assets/reconcile.png")
 }: {
     name: string;
     showViewAll?: boolean;
     url?: any;
     getDataList?: any;
     params?: any;
+    icon?: any;
 }) => {
     const handleShowAll = () => {
         if (url && getDataList) {
@@ -51,7 +53,7 @@ export const TableBreadCrumb = ({
                 <Image
                     className=""
                     alt="ico"
-                    source={require("../../../assets/images/ChatBc.png")}
+                    source={icon}
                     style={
                         {
                             // flex: 1,

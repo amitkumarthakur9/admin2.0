@@ -123,16 +123,17 @@ export const Brokerage = () => {
                     currentValue: 3000,
                 },
                 {
-                    category: "SBI mutual fund",
-                    currentValue: 2000,
-                },
-                {
                     category: "Axis mutual fund",
                     currentValue: 2500,
                 },
                 {
+                    category: "SBI mutual fund",
+                    currentValue: 2200,
+                },
+                
+                {
                     category: "Tata mutual fund",
-                    currentValue: 2100,
+                    currentValue: 1900,
                 },
             ],
         },
@@ -365,6 +366,7 @@ export const Brokerage = () => {
                                                                     y: 35,
                                                                 },
                                                             ]}
+                                                            totalValue = {"19.3k"}
                                                         />
                                                         {/* ) : (
                                                             <ComingSoon />

@@ -477,7 +477,7 @@ const TransactionDataTable = () => {
     return (
         <View className="bg-white">
             <View className="">
-                <TableBreadCrumb name={"Transactions"} />
+                <TableBreadCrumb name={"Transactions"} icon={require("../../../assets/transactionReport.png")} />
             </View>
             <View className="h-screen">
                 <>

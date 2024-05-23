@@ -479,8 +479,7 @@ const ContactDataTable = () => {
                                                 <View>
                                                     <View className="flex flex-row items-center p-4 w-[99%] border-y-2 border-slate-200">
                                                         <View className="flex flex-row items-start justify-center w-2/12">
-                                                            {selectedContacts.length >
-                                                            0 ? (
+                                                            
                                                                 <TouchableOpacity
                                                                     onPress={
                                                                         toggleSelectAll
@@ -516,8 +515,7 @@ const ContactDataTable = () => {
                                                                                     </View>
                                                                                     <View className="pl-2">
                                                                                         <Text className="">
-                                                                                            Deselect
-                                                                                            All
+                                                                                            Mark All
                                                                                         </Text>
                                                                                     </View>
                                                                                 </View>
@@ -541,8 +539,7 @@ const ContactDataTable = () => {
                                                                                         </View>
                                                                                         <View className="pl-2">
                                                                                             <Text className="text-xs">
-                                                                                                Select
-                                                                                                All
+                                                                                                Mark All
                                                                                             </Text>
                                                                                         </View>
                                                                                     </View>
@@ -551,34 +548,7 @@ const ContactDataTable = () => {
                                                                         )}
                                                                     </Text>
                                                                 </TouchableOpacity>
-                                                            ) : (
-                                                                <>
-                                                                    <View></View>
-                                                                    {/* <View className="flex flex-row justify-center">
-                                                                        <View className="flex flex-col pr-3 items-center justify-center">
-                                                                            <View className="flex flex-row justify-center">
-                                                                                <View
-                                                                                    style={{
-                                                                                        backgroundColor:
-                                                                                            "#CCCCCC",
-                                                                                        padding: 8,
-                                                                                        borderRadius: 4,
-                                                                                        borderWidth: 2,
-                                                                                        borderColor:
-                                                                                            "#CCCCCC",
-                                                                                    }}
-                                                                                ></View>
-                                                                            </View>
-                                                                            <View className="pl-2">
-                                                                                <Text className="text-xs text-slate-400">
-                                                                                    Select
-                                                                                    All
-                                                                                </Text>
-                                                                            </View>
-                                                                        </View>
-                                                                    </View> */}
-                                                                </>
-                                                            )}
+                                                            
                                                         </View>
                                                         {width < 830 ? (
                                                             <View className="pl-8">

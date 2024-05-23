@@ -282,6 +282,7 @@ const MandateDataTable = () => {
                     name={"Mandate"}
                     url={"/Mandates"}
                     getDataList={getDataList}
+                    icon={require("../../../assets/mandateReport.png")}
                 />
             </View>
             <View className="h-screen">

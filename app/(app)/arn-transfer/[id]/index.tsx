@@ -100,16 +100,17 @@ export default function ClientARNDetail() {
         }
     }, [id]);
 
-    const DonutPieChart = ({ pieData }) => {
+    const DonutPieChart = ({ pieData, totalValue="", }) => {
         const colorScale = ["#715CFA", "#B0ED8B", "#FE9090", "#FFE456"];
 
         return (
             <div style={{ display: "flex" }}>
-                <View className="w-8/12">
+                <View className="w-7/12 flex justify-center items-center">
                     <VictoryPie
                         data={pieData}
                         colorScale={colorScale}
                         innerRadius={100}
+                        labelRadius={120}
                         labels={({ datum }) =>
                             `${datum.x}: ${datum.y.toFixed(1)}${"%"}`
                         }
@@ -124,6 +125,7 @@ export default function ClientARNDetail() {
                             />
                         }
                     />
+                     <Text className="absolute text-xs">{totalValue}</Text>
                 </View>
                 <View className="w-4/12">
                     <VictoryLegend
@@ -605,6 +607,8 @@ export default function ClientARNDetail() {
                                                     y: 45.8,
                                                 },
                                             ]}
+
+                                            totalValue={"19348"}
                                         />
                                     </View>
                                 </View>

@@ -306,7 +306,7 @@ const AUMDataTable = () => {
     return (
         <View className="bg-white">
             <View className="">
-                <TableBreadCrumb name={"AUM Reports"} />
+                <TableBreadCrumb name={"AUM Reports"} icon={require("../../../assets/aumReport.png")}/>
             </View>
             <View className="border-[0.2px]  border-[#e4e4e4]">
                 {/* <DynamicFilters

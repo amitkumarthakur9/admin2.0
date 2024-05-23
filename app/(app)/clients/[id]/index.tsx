@@ -1112,7 +1112,7 @@ const LumpSumOrderTab = ({
                 </Text>
                 <DropdownComponent
                     label="Folio Number"
-                    data={folios?.map((el) => {
+                    data={folios.length===0 ? [{label: "NA", value: "0"}] : folios?.map((el) => {
                         return {
                             label: el.folioNumber,
                             value: el.id,
@@ -1259,7 +1259,7 @@ const SipOrderTab = ({
                 </Text>
                 <DropdownComponent
                     label="Folio Number"
-                    data={folios?.map((el) => {
+                    data={folios.length===0 ? [{label: "NA", value: "0"}] : folios?.map((el) => {
                         return {
                             label: el.folioNumber,
                             value: el.id,
