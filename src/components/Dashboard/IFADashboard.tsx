@@ -384,7 +384,7 @@ const IFADashboard = () => {
                                                     />
                                                     <IconCard
                                                         icon="account-check-outline"
-                                                        title="Empanelled IFA"
+                                                        title="Empanelled Distributors"
                                                         description="10"
                                                     />
                                                 </View>
@@ -396,7 +396,7 @@ const IFADashboard = () => {
                                                     />
                                                     <IconCard
                                                         icon="account-box-multiple-outline"
-                                                        title="IFA Activated"
+                                                        title="Distributors Activated"
                                                         description="4"
                                                     />
                                                 </View>
@@ -463,9 +463,9 @@ const IFADashboard = () => {
                                                                 data?.aum
                                                                     ?.breakDown
                                                             )}
-                                                            
-                                                            totalValue= {pieTotalValue(data?.aum
-                                                                ?.total)}
+                                                            totalValue={pieTotalValue(
+                                                                data?.aum?.total
+                                                            )}
                                                             children={
                                                                 <>
                                                                     <View className="w-full">
@@ -538,8 +538,10 @@ const IFADashboard = () => {
                                                             data?.order?.sip
                                                                 ?.breakDown
                                                         )}
-                                                        totalValue= {pieTotalValue(data?.order?.sip
-                                                            ?.sipCount)}
+                                                        totalValue={pieTotalValue(
+                                                            data?.order?.sip
+                                                                ?.sipCount
+                                                        )}
                                                         children={
                                                             <>
                                                                 <View className="w-full">
@@ -616,7 +618,9 @@ const IFADashboard = () => {
                                                                 data?.aum
                                                                     ?.breakDown
                                                             )}
-                                                            totalValue= {pieTotalValue(19348)}
+                                                            totalValue={pieTotalValue(
+                                                                19348
+                                                            )}
                                                             width={500}
                                                             children={
                                                                 <>

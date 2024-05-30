@@ -99,7 +99,7 @@ export default function AddIFA() {
         >
             <View className="bg-white">
                 <View className="">
-                    <TableBreadCrumb name={"Add IFA"} />
+                    <TableBreadCrumb name={"Add Distributor"} />
                 </View>
                 <View
                     style={{
