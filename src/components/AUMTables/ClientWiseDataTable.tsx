@@ -80,7 +80,7 @@ const ClientWiseDataTable = () => {
             } else {
                 setIsLoading(false);
 
-                alert("Internal Server Error");
+                // alert("Internal Server Error");
             }
         } catch (error) {
             alert(error);
