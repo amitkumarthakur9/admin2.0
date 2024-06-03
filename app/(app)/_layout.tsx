@@ -1,6 +1,12 @@
 import React, { useEffect, useState, Suspense, lazy } from "react";
 import { Link, Redirect, Stack } from "expo-router";
-import { Dimensions, Platform, Text, View, useWindowDimensions } from "react-native";
+import {
+    Dimensions,
+    Platform,
+    Text,
+    View,
+    useWindowDimensions,
+} from "react-native";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { useSession } from "../../src/services/ctx";
 import { PaperProvider } from "react-native-paper";
@@ -50,6 +56,7 @@ const Calculators = lazy(() => import("./calculators"));
 const Sip = lazy(() => import("./calculators/sip"));
 const SIPDelay = lazy(() => import("./calculators/sip-delay"));
 const RiskProfile = lazy(() => import("./calculators/risk-profile"));
+const AssitantScreen = lazy(() => import("./ai-assitant"));
 
 const queryClient = new QueryClient();
 
@@ -160,14 +167,24 @@ export default function AppLayout() {
             <QueryClientProvider client={queryClient}>
                 <PaperProvider theme={PaperTheme}>
                     <UserRoleProvider>
-                        <Suspense fallback={<Center><Spinner color="black" accessibilityLabel="Loading" /></Center>}>
+                        <Suspense
+                            fallback={
+                                <Center>
+                                    <Spinner
+                                        color="black"
+                                        accessibilityLabel="Loading"
+                                    />
+                                </Center>
+                            }
+                        >
                             <Drawer.Navigator
                                 screenOptions={({ navigation }) => ({
                                     drawerActiveTintColor: "#000000",
                                     drawerStyle: {
                                         width: width < 830 ? "60%" : "15%",
                                     },
-                                    drawerType: width <= 768 ? "back" : "permanent",
+                                    drawerType:
+                                        width <= 768 ? "back" : "permanent",
                                     header: (props) => (
                                         <TopHeader navigation={navigation} />
                                     ),
@@ -176,7 +193,9 @@ export default function AppLayout() {
                                             <Icon
                                                 size={18}
                                                 name={"bars"}
-                                                onPress={navigation.toggleDrawer}
+                                                onPress={
+                                                    navigation.toggleDrawer
+                                                }
                                             />
                                         </View>
                                     ),
@@ -363,7 +382,9 @@ export default function AppLayout() {
                                                 unmountOnBlur: true,
                                             }}
                                             initialParams={{}}
-                                            component={DistributorDashboardScreen}
+                                            component={
+                                                DistributorDashboardScreen
+                                            }
                                         />
                                     </>
                                 )}
@@ -372,7 +393,9 @@ export default function AppLayout() {
                                     options={{
                                         drawerLabel: "Invite Client",
                                         title: "Invite Client",
-                                        drawerItemStyle: { display: inviteDisplay },
+                                        drawerItemStyle: {
+                                            display: inviteDisplay,
+                                        },
                                         unmountOnBlur: true,
                                     }}
                                     initialParams={{}}
@@ -454,6 +477,17 @@ export default function AppLayout() {
                                     }}
                                     initialParams={{}}
                                     component={RiskProfile}
+                                />
+
+                                <Drawer.Screen
+                                    name="ai-assitant/index"
+                                    options={{
+                                        drawerLabel: "AI Assitant",
+                                        title: "AI Assitant",
+                                        unmountOnBlur: true,
+                                    }}
+                                    initialParams={{}}
+                                    component={AssitantScreen}
                                 />
                             </Drawer.Navigator>
                         </Suspense>
