@@ -57,6 +57,9 @@ const Sip = lazy(() => import("./calculators/sip"));
 const SIPDelay = lazy(() => import("./calculators/sip-delay"));
 const RiskProfile = lazy(() => import("./calculators/risk-profile"));
 const AssitantScreen = lazy(() => import("./ai-assitant"));
+const MutualSipAnalyticsScreen = lazy(() => import("./analytics/mutual-sip"));
+const AnalyticsScreen = lazy(() => import("./analytics"));
+
 
 const queryClient = new QueryClient();
 
@@ -488,6 +491,26 @@ export default function AppLayout() {
                                     }}
                                     initialParams={{}}
                                     component={AssitantScreen}
+                                />
+                                {/* <Drawer.Screen
+                                    name="analytics/mutual-sip/index"
+                                    options={{
+                                        drawerLabel: "Analytics",
+                                        title: "Analytics",
+                                        unmountOnBlur: true,
+                                    }}
+                                    initialParams={{}}
+                                    component={MutualSipAnalyticsScreen}
+                                /> */}
+                                 <Drawer.Screen
+                                    name="analytics/index"
+                                    options={{
+                                        drawerLabel: "Analytics",
+                                        title: "Analytics",
+                                        unmountOnBlur: true,
+                                    }}
+                                    initialParams={{}}
+                                    component={AnalyticsScreen}
                                 />
                             </Drawer.Navigator>
                         </Suspense>
