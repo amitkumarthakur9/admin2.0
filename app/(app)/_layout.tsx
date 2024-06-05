@@ -22,6 +22,7 @@ import { Center, HStack, HamburgerIcon, Heading, Spinner } from "native-base";
 import { useStorageState } from "../../src/services/useStorageState";
 import { jwtDecode } from "jwt-decode";
 import { UserRoleProvider } from "../../src/context/useRoleContext";
+import MarketingScreen from "./marketing";
 
 NativeWindStyleSheet.setOutput({
     default: "native",
@@ -511,6 +512,16 @@ export default function AppLayout() {
                                     }}
                                     initialParams={{}}
                                     component={AnalyticsScreen}
+                                />
+                                <Drawer.Screen
+                                    name="marketing/index"
+                                    options={{
+                                        drawerLabel: "Marketing",
+                                        title: "Marketing",
+                                        unmountOnBlur: true,
+                                    }}
+                                    initialParams={{}}
+                                    component={MarketingScreen}
                                 />
                             </Drawer.Navigator>
                         </Suspense>

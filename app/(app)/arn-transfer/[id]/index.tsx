@@ -618,10 +618,8 @@ export default function ClientARNDetail() {
                                     className="w-full rounded"
                                     style={{ ...BreadcrumbShadow }}
                                 >
-                                    <PortfolioCard
-                                        data={data}
-                                        showModal={showModal}
-                                    />
+                                   
+                                    <ARNHoldingDataTable id={id}/>
                                 </View>
                             </View>
                         </View>
@@ -710,18 +708,3 @@ export default function ClientARNDetail() {
     );
 }
 
-const PortfolioCard = ({
-    data,
-    showModal,
-}: {
-    data: ClientDetailedDataResponse;
-    showModal: (key: string, card?: number, selectedFund?: any) => () => void;
-}) => {
-    return (
-        <>
-            <View className="p-2 w-full">
-                <ARNHoldingDataTable />
-            </View>
-        </>
-    );
-};

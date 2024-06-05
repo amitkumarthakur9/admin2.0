@@ -18,9 +18,9 @@ const MutualLumpsumAccordion = ({ data }) => {
                     <DataTable.Header
                         style={{
                             backgroundColor: "#CDF0FF",
-                            // borderBottomColor: "grey",
-                            // height:16,
-                            paddingVertical: 16,
+                            // borderBottomColor: "#CDF0FF",
+                            borderWidth: 0,
+                            paddingVertical: 14,
                         }}
                     >
                         <View className="w-[30%] justify-center">
@@ -46,7 +46,8 @@ const MutualLumpsumAccordion = ({ data }) => {
                         style={{
                             backgroundColor: "#bae1ff",
                             // borderBottomColor: "grey",
-                            paddingVertical: 16,
+                            borderWidth: 0,
+                            paddingVertical: 14,
                         }}
                     >
                         {/* <DataTable.Title className="font-bold" >Total</DataTable.Title> */}
@@ -83,6 +84,7 @@ const RMRow = ({ rm }) => {
                 style={{
                     backgroundColor: "#ECF9FF",
                     // borderBottomColor: "grey",
+                    // borderWidth: 0,
                 }}
                 onPress={() => setExpanded(!expanded)}
             >
@@ -125,9 +127,9 @@ const RMAccordion = ({ ifalist, ifaTotal }) => {
                 <DataTable.Header
                     style={{
                         backgroundColor: "#D4FCF9",
-                        // borderBottomColor: "grey",
-                        // height:16,
-                        paddingVertical: 16,
+                        // borderBottomColor: "#D4FCF9",
+                        borderWidth: 0,
+                    paddingVertical: 14,
                     }}
                 >
                     <View className="w-[30%] justify-center">
@@ -200,7 +202,9 @@ const ClientTable = ({ clients }) => {
             <DataTable.Header
                 style={{
                     backgroundColor: "#D5F1DB",
-                    // borderBottomColor: "grey",
+                    // borderBottomColor: "#D5F1DB",
+                    borderWidth: 0,
+                    paddingVertical: 14,
                 }}
             >
                 <View className="w-[10%] justify-center">

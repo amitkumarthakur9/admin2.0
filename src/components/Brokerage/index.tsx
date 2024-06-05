@@ -257,6 +257,17 @@ export const Brokerage = () => {
                                         setValue={changeDuration}
                                     />
                                 </View>
+                                <View className="flex flex-row gap-2">
+                                <Button
+                                    borderColor={"#013974"}
+                                    bgColor={"#fff"}
+                                    _text={{ color: "#013974" }}
+                                    variant="outline"
+                                    className="rounded-lg"
+                                    onPress={() => router.push(`brokerage`)}
+                                >
+                                    Brokerage Reconcilation
+                                </Button>
                                 <Button
                                     borderColor={"#013974"}
                                     bgColor={"#fff"}
@@ -267,6 +278,9 @@ export const Brokerage = () => {
                                 >
                                     Go to Overall Dashboard
                                 </Button>
+
+                                </View>
+                                
                             </View>
                             <View className="flex flex-row justify-between rounded bg-[#eaf3fe] pr-2 ">
                                 <View className="flex flex-row w-full gap-2">

@@ -129,15 +129,20 @@ const AnalyticsTabs = () => {
                 }
             }, [selectedTab]);
 
+            const tabWidth = windowWidth/tabscount;
+            console.log("tabWidth");
+            console.log(tabWidth);
+
             return (
                 <View className="flex-1 bg-white rounded h-full">
                     <View className="w-full flex flex-row">
                         {tabContent?.map((tab, index) => {
                             return (
-                                <Pressable
+                                <View className="w-1/2"> 
+ <Pressable
                                     key={index}
                                     onPress={() => handleTabPress(index + 1)}
-                                    className={`w-1/${tabscount} py-4 px-6 flex h-12 flex-row justify-center items-center border-b-2 ${
+                                    className={`py-4 px-6 flex h-12 flex-row justify-center items-center border-b-2 ${
                                         selectedTab === index + 1
                                             ? "border-[#114EA8]"
                                             : "border-b-gray-100"
@@ -153,6 +158,9 @@ const AnalyticsTabs = () => {
                                         {tab?.name}
                                     </Text>
                                 </Pressable>
+
+                                </View>
+                               
                             );
                         })}
                     </View>

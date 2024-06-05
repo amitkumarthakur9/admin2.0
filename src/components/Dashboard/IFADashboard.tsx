@@ -203,6 +203,57 @@ const IFADashboard = () => {
         }
     }
 
+    function pieTotalAum(value) {
+        const totalValue = value?.reduce(
+            (accumulator, currentValue) =>
+                accumulator + currentValue.currentValue,
+            0
+        );
+
+        if (totalValue == 0) {
+            return "";
+        }
+
+        if (totalValue >= 10000000) {
+            // If the total value is in crores (10,000,000 or more)
+            return (totalValue / 10000000).toFixed(1) + " cr";
+        } else if (totalValue >= 100000) {
+            // If the total value is in lakhs (100,000 or more)
+            return (totalValue / 100000).toFixed(1) + " lac";
+        } else if (totalValue >= 1000) {
+            // If the total value is in thousands (1,000 or more)
+            return (totalValue / 1000).toFixed(1) + " k";
+        } else {
+            // If the total value is less than 1,000
+            return totalValue;
+        }
+    }
+
+    function pieTotalSip(value) {
+        const totalValue = value?.reduce(
+            (accumulator, count) => accumulator + count.count,
+            0
+        );
+
+        if (totalValue == 0) {
+            return "";
+        }
+
+        if (totalValue >= 10000000) {
+            // If the total value is in crores (10,000,000 or more)
+            return (totalValue / 10000000).toFixed(1) + " cr";
+        } else if (totalValue >= 100000) {
+            // If the total value is in lakhs (100,000 or more)
+            return (totalValue / 100000).toFixed(1) + " lac";
+        } else if (totalValue >= 1000) {
+            // If the total value is in thousands (1,000 or more)
+            return (totalValue / 1000).toFixed(1) + " k";
+        } else {
+            // If the total value is less than 1,000
+            return totalValue;
+        }
+    }
+
     function convertToWord(totalValue) {
         if (totalValue >= 10000000) {
             // If the total value is in crores (10,000,000 or more)
@@ -304,7 +355,7 @@ const IFADashboard = () => {
                                     >
                                         Dashboard
                                     </Text>
-                                </View>
+                                </View>        
                                 <Button
                                     borderColor={"#013974"}
                                     bgColor={"#fff"}
@@ -328,10 +379,10 @@ const IFADashboard = () => {
                                                 <Text className="text-white font-bold text-3xl ">
                                                     {data?.aum?.total
                                                         ? RupeeSymbol +
-                                                        convertToWord(data?.aum?.total)
+                                                          convertToWord(
+                                                              data?.aum?.total
+                                                          )
                                                         : RupeeSymbol + "0"}
-
-
                                                 </Text>
                                                 {/* <Text className="text-[#00AC4F] text-xs inline-block align-text-bottom text-right">
                                                     <MaterialCommunityIcons
@@ -479,8 +530,9 @@ const IFADashboard = () => {
                                                                 data?.aum
                                                                     ?.breakDown
                                                             )}
-                                                            totalValue={pieTotalValue(
-                                                                data?.aum?.total
+                                                            totalValue={pieTotalAum(
+                                                                data?.aum
+                                                                    ?.breakDown
                                                             )}
                                                             children={
                                                                 <>
@@ -499,7 +551,11 @@ const IFADashboard = () => {
                                                                             className="font-medium text-xs text-start text-blue-900"
                                                                         >
                                                                             {RupeeSymbol +
-                                                                                "12500.00"}
+                                                                                pieTotalAum(
+                                                                                    data
+                                                                                        ?.aum
+                                                                                        ?.breakDown
+                                                                                )}
                                                                         </Text>
                                                                     </View>
                                                                 </>
@@ -554,9 +610,9 @@ const IFADashboard = () => {
                                                             data?.order?.sip
                                                                 ?.breakDown
                                                         )}
-                                                        totalValue={pieTotalValue(
+                                                        totalValue={pieTotalSip(
                                                             data?.order?.sip
-                                                                ?.sipCount
+                                                                ?.breakDown
                                                         )}
                                                         children={
                                                             <>
@@ -574,8 +630,18 @@ const IFADashboard = () => {
                                                                         selectable
                                                                         className="font-medium text-xs text-start text-blue-900"
                                                                     >
-                                                                        {RupeeSymbol +
-                                                                            "7500.00"}
+                                                                        {
+                                                                            (pieTotalSip(
+                                                                                data
+                                                                                    ?.order
+                                                                                    ?.sip
+                                                                                    ?.breakDown
+                                                                            ) == "" ) ? RupeeSymbol + "0": RupeeSymbol + pieTotalSip(
+                                                                                data
+                                                                                    ?.order
+                                                                                    ?.sip
+                                                                                    ?.breakDown
+                                                                            ) }
                                                                     </Text>
                                                                 </View>
                                                             </>

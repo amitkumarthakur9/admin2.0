@@ -20,7 +20,8 @@ const MutualSipAccordion = ({ data }) => {
                             backgroundColor: "#CDF0FF",
                             // borderBottomColor: "grey",
                             // height:16,
-                            paddingVertical: 16,
+                            borderWidth: 0,
+                            paddingVertical: 14,
                         }}
                     >
                         <View className="w-[19%] justify-center">
@@ -67,7 +68,8 @@ const MutualSipAccordion = ({ data }) => {
                         style={{
                             backgroundColor: "#bae1ff",
                             // borderBottomColor: "grey",
-                            paddingVertical: 16,
+                            borderWidth: 0,
+                            paddingVertical: 14,
                         }}
                     >
                         {/* <DataTable.Title className="font-bold" >Total</DataTable.Title> */}
@@ -180,7 +182,8 @@ const RMAccordion = ({ ifalist, ifaTotal }) => {
                         backgroundColor: "#D4FCF9",
                         // borderBottomColor: "grey",
                         // height:16,
-                        paddingVertical: 16,
+                        borderWidth: 0,
+                            paddingVertical: 14,
                     }}
                 >
                     <View className="w-[19%] justify-center">
@@ -283,6 +286,8 @@ const ClientTable = ({ clients }) => {
                 style={{
                     backgroundColor: "#D5F1DB",
                     // borderBottomColor: "grey",
+                    borderWidth: 0,
+                    paddingVertical: 14,
                 }}
             >
                 <View className="w-[10%] justify-center">

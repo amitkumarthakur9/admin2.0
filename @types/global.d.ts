@@ -67,6 +67,21 @@ declare global {
         externalFundLastUpdatedOn: string | null;
     }
 
+    interface ClientExternalFolioData {
+        id: string;
+        folioNumber: string;
+        investedValue: number;
+        currentValue: number;
+        units: number;
+        redeemableAmount: number;
+        redeemableUnits: number;
+    }     
+      interface ClientExternalApiResponse {
+        message: string;
+        error: any[];
+        data: ClientExternalFolioData[];
+      }
+
     interface BankAccount {
         accountNumber: string;
         accountType: string;

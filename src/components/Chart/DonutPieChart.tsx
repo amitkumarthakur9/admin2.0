@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from "react-native";
 import { RupeeSymbol } from "src/helper/helper";
 import { VictoryPie, VictoryLegend, VictoryTooltip } from "victory";
 
-const DonutPieChart = ({ pieData, totalValue="", width = 400, children=<></> }) => {
+const DonutPieChart = ({ pieData, totalValue="NA", width = 400, children=<></> }) => {
     const colorScale = [
         "#715CFA",
         "#B0ED8B",

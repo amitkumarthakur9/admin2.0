@@ -217,6 +217,50 @@ class ApiRequest {
             throw new Error("Failed to download file");
         }
     }
+
+    static async downloadPdf({
+        endpoint,
+        fileName = "file",
+        data,
+    }): Promise<void> {
+        try {
+            const config: AxiosRequestConfig = {
+                method: "POST",
+                url: endpoint,
+                data: data,
+                responseType: "blob", // Set the response type to 'blob' for file download
+                headers: {
+                    Authorization: `Bearer ${await AsyncStorage.getItem(
+                        "token"
+                    )}`,
+                },
+            };
+
+            const response = await axiosInstance(config);
+
+            // Create a temporary URL to download the file
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+
+            // Create a link element
+            const link = document.createElement("a");
+            link.href = url;
+            link.setAttribute(
+                "download",
+                `${fileName}-${moment(new Date()).valueOf()}.pdf`
+            ); // Set the file name here
+
+            // Simulate a click to trigger the download
+            document.body.appendChild(link);
+            link.click();
+
+            // Clean up: remove the link and revoke the URL object
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+        } catch (error) {
+            console.error("Download Error:", error);
+            throw new Error("Failed to download file");
+        }
+    }
 }
 
 export default ApiRequest;
