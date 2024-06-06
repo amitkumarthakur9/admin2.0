@@ -100,7 +100,7 @@ export default function ClientARNDetail() {
         }
     }, [id]);
 
-    const DonutPieChart = ({ pieData, totalValue="", }) => {
+    const DonutPieChart = ({ pieData, totalValue = "" }) => {
         const colorScale = ["#715CFA", "#B0ED8B", "#FE9090", "#FFE456"];
 
         return (
@@ -125,7 +125,7 @@ export default function ClientARNDetail() {
                             />
                         }
                     />
-                     <Text className="absolute text-xs">{totalValue}</Text>
+                    <Text className="absolute text-xs">{totalValue}</Text>
                 </View>
                 <View className="w-4/12">
                     <VictoryLegend
@@ -192,7 +192,6 @@ export default function ClientARNDetail() {
                 setIsLoading(false);
                 if (refreshDate == "false") {
                     setShowImport(true);
-             
                 } else {
                     setRefreshImport(true);
                 }
@@ -206,6 +205,32 @@ export default function ClientARNDetail() {
         setShowImport(false);
         setRefreshImport(false);
     };
+
+    function pieTotalExternal(external) {
+        const totalValue = external?.reduce(
+            (accumulator, investedValue) =>
+                accumulator + investedValue.investedValue,
+            0
+        );
+
+        if (totalValue == 0) {
+            return "0";
+        }
+
+        if (totalValue >= 10000000) {
+            // If the total value is in crores (10,000,000 or more)
+            return (totalValue / 10000000).toFixed(1) + " cr";
+        } else if (totalValue >= 100000) {
+            // If the total value is in lakhs (100,000 or more)
+            return (totalValue / 100000).toFixed(1) + " lac";
+        } else if (totalValue >= 1000) {
+            // If the total value is in thousands (1,000 or more)
+            return (totalValue / 1000).toFixed(1) + " k";
+        } else {
+            // If the total value is less than 1,000
+            return totalValue;
+        }
+    }
 
     return (
         <>
@@ -480,7 +505,18 @@ export default function ClientARNDetail() {
                                                             title="Total Investment"
                                                             value={
                                                                 RupeeSymbol +
-                                                                "6,500"
+                                                                " " +
+                                                                data?.holdings
+                                                                    ?.reduce(
+                                                                        (
+                                                                            accumulator,
+                                                                            currentValue
+                                                                        ) =>
+                                                                            accumulator +
+                                                                            currentValue.investedValue,
+                                                                        0
+                                                                    )
+                                                                    .toFixed(2)
                                                             }
                                                         />
                                                         <DataValue
@@ -523,8 +559,18 @@ export default function ClientARNDetail() {
                                                         selectable
                                                         className="font-medium text-start text-blue-900"
                                                     >
-                                                        {RupeeSymbol +
-                                                            "3,500"}
+                                                        {RupeeSymbol}{" "}
+                                                        {data?.holdings
+                                                            ?.reduce(
+                                                                (
+                                                                    accumulator,
+                                                                    currentValue
+                                                                ) =>
+                                                                    accumulator +
+                                                                    currentValue.currentValue,
+                                                                0
+                                                            )
+                                                            .toFixed(2)}
                                                     </Text>
                                                 </View>
                                             </View>
@@ -542,7 +588,7 @@ export default function ClientARNDetail() {
                                                         selectable
                                                         className="font-medium text-start text-black"
                                                     >
-                                                        1.11 %
+                                                        NA
                                                     </Text>
                                                 </View>
                                             </View>
@@ -562,8 +608,18 @@ export default function ClientARNDetail() {
                                                         selectable
                                                         className="font-medium text-start text-black"
                                                     >
-                                                        {RupeeSymbol +
-                                                            "4500"}
+                                                        {RupeeSymbol}{" "}
+                                                        {data?.holdings
+                                                            ?.reduce(
+                                                                (
+                                                                    accumulator,
+                                                                    currentValue
+                                                                ) =>
+                                                                    accumulator +
+                                                                    currentValue.investedValue,
+                                                                0
+                                                            )
+                                                            .toFixed(2)}
                                                     </Text>
                                                 </View>
                                             </View>
@@ -581,8 +637,27 @@ export default function ClientARNDetail() {
                                                         selectable
                                                         className="font-medium text-start text-[#539D39]"
                                                     >
-                                                        {RupeeSymbol +
-                                                            "200"}
+                                                        {RupeeSymbol}{" "}
+                                                        {(
+                                                            data?.holdings?.reduce(
+                                                                (
+                                                                    accumulator,
+                                                                    currentValue
+                                                                ) =>
+                                                                    accumulator +
+                                                                    currentValue.currentValue,
+                                                                0
+                                                            ) -
+                                                            data?.holdings?.reduce(
+                                                                (
+                                                                    accumulator,
+                                                                    investedValue
+                                                                ) =>
+                                                                    accumulator +
+                                                                    investedValue.investedValue,
+                                                                0
+                                                            )
+                                                        ).toFixed(2)}
                                                     </Text>
                                                 </View>
                                             </View>
@@ -607,8 +682,9 @@ export default function ClientARNDetail() {
                                                     y: 100,
                                                 },
                                             ]}
-
-                                            totalValue={"6500"}
+                                            totalValue={pieTotalExternal(
+                                                data?.holdings
+                                            )}
                                         />
                                     </View>
                                 </View>
@@ -618,8 +694,7 @@ export default function ClientARNDetail() {
                                     className="w-full rounded"
                                     style={{ ...BreadcrumbShadow }}
                                 >
-                                   
-                                    <ARNHoldingDataTable id={id}/>
+                                    <ARNHoldingDataTable id={id} />
                                 </View>
                             </View>
                         </View>
@@ -707,4 +782,3 @@ export default function ClientARNDetail() {
         </>
     );
 }
-

@@ -162,7 +162,7 @@ const RowItem = ({ width, content, isLast, hasActions, options, data }) => {
             >
                 <View
                     className={`flex flex-row items-center -z-9999 ${
-                        hasActions && isLast ? "w-fit" : "w-full"
+                        hasActions && isLast ? "w-8/12" : "w-8/12"
                     } justify-start`}
                 >
                     {content}

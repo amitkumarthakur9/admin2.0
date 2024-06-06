@@ -14,25 +14,27 @@ const CardWithTabs = ({
             <View className="w-full flex flex-row">
                 {tabContent?.map((tab, index) => {
                     return (
-                        <Pressable
-                            key={index}
-                            onPress={() => handleTabPress(index + 1)}
-                            className={`w-1/${tabsCount} py-4 px-6 flex h-12 flex-row justify-center items-center border-b-2 ${
-                                selectedTab === index + 1
-                                    ? "border-[#114EA8]"
-                                    : "border-b-gray-100"
-                            }`}
-                        >
-                            <Text
-                                className={`font-bold ${
+                        <View className={`w-1/${tabsCount}`}>
+                            <Pressable
+                                key={index}
+                                onPress={() => handleTabPress(index + 1)}
+                                className={` py-4 px-6 flex h-12 flex-row justify-center items-center border-b-2 ${
                                     selectedTab === index + 1
-                                        ? "text-[#114EA8]"
-                                        : "text-gray-600"
+                                        ? "border-[#114EA8]"
+                                        : "border-b-gray-100"
                                 }`}
                             >
-                                {tab?.name}
-                            </Text>
-                        </Pressable>
+                                <Text
+                                    className={`font-bold ${
+                                        selectedTab === index + 1
+                                            ? "text-[#114EA8]"
+                                            : "text-gray-600"
+                                    }`}
+                                >
+                                    {tab?.name}
+                                </Text>
+                            </Pressable>
+                        </View>
                     );
                 })}
             </View>
