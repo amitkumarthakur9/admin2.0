@@ -29,7 +29,7 @@ const LearningManagement = () => {
         <View className="h-full">
             <View className="bg-[#f7f7f7]">
                 <Text className="px-[20px] pt-[40px] mb-[10px] text-[#6e6e6e] text-xl">
-                    Good Morning ✌️,{" "}
+                    Welcome to Learning Center ✌️
                     {/* <Text className="font-bold">Sourabh Bajaj ✌️</Text> */}
                 </Text>
                 <View className="flex flex-row justify-start px-[20px] mb-[30px]">
@@ -41,7 +41,7 @@ const LearningManagement = () => {
                                 color="#ffc700"
                             />
                         }
-                        count={20}
+                        count={1}
                         label={"Ongoing Lessons"}
                     />
                     <DashboardCard
@@ -52,7 +52,7 @@ const LearningManagement = () => {
                                 color="#00AC4F"
                             />
                         }
-                        count={20}
+                        count={0}
                         label={"Completed Lessons"}
                     />
                 </View>
