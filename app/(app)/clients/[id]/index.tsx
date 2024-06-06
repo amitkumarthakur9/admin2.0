@@ -40,8 +40,7 @@ import RadioButton from "../../../../src/components/Radio/Radio";
 import DataValue from "../../../../src/components/DataValue/DataValue";
 import useDebouncedSearch from "../../../../src/hooks/useDebounceSearch";
 import ApiRequest from "../../../../src/services/RemoteApi";
-import { dateFormat, dateTimeFormat } from "../../../../src/helper/DateUtils";
-import TableCard from "../../../../src/components/Card/TableCard";
+import { dateTimeFormat } from "../../../../src/helper/DateUtils";
 
 const isMutualFundSearchResult = (
     data: MutualFundSearchResult | Holding
@@ -435,10 +434,21 @@ const PortfolioCard = ({
 }) => {
     const [selectedTab, setSelectedTab] = useState(1);
     const [typeHolding, setTypeHolding] = useState("internal");
+    const [holdings, setHoldings] = useState<Holding[]>([]);
 
     const handleTabPress = (tab) => {
         setSelectedTab(tab);
     };
+
+    useEffect(() => {
+        if (typeHolding === "internal") {
+            setHoldings(data?.holdings.filter((el) => !el.isExternal));
+        } else if (typeHolding === "external") {
+            setHoldings(data?.holdings.filter((el) => el.isExternal));
+        } else {
+            setHoldings(data?.holdings);
+        }
+    }, [typeHolding]);
 
     const assetBifurcation = generateAssetBifurcation(data?.holdings);
 
@@ -463,7 +473,7 @@ const PortfolioCard = ({
                     <View className="flex flex-row items-center justify-center md:justify-between py-2 gap-2 md:gap-0 flex-wrap">
                         <View>
                             <DropdownComponent
-                                label="Folio Number"
+                                label="Holding Type"
                                 data={holdingDropper}
                                 containerStyle={{
                                     width: "200px",
@@ -474,8 +484,7 @@ const PortfolioCard = ({
                             />
                         </View>
                         <View>
-                            {(typeHolding === "external" ||
-                                typeHolding === "all") && (
+                            {!(typeHolding === "internal") && (
                                 <Button
                                     borderColor={"#013974"}
                                     bgColor={"#fff"}
@@ -500,7 +509,7 @@ const PortfolioCard = ({
                                     value={
                                         <Text className="text-blue-700">
                                             {RupeeSymbol}{" "}
-                                            {data?.holdings
+                                            {holdings
                                                 ?.reduce(
                                                     (
                                                         accumulator,
@@ -521,7 +530,7 @@ const PortfolioCard = ({
                                     value={
                                         <Text className="text-blue-700">
                                             {RupeeSymbol}{" "}
-                                            {data?.holdings
+                                            {holdings
                                                 ?.reduce(
                                                     (
                                                         accumulator,
@@ -568,9 +577,9 @@ const PortfolioCard = ({
                         <DataTable
                             key="holdings"
                             headers={["Scheme", "Current", "Invested", "XIRR"]}
-                            cellSize={[5, 2, 2, 3,]}
-                            mobileCellSize={[5, 2, 2, 3,]}
-                            rows={data?.holdings?.map((holding) => {
+                            cellSize={[5, 2, 2, 3]}
+                            mobileCellSize={[5, 2, 2, 3]}
+                            rows={holdings?.map((holding) => {
                                 return [
                                     {
                                         key: "scheme",

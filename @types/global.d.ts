@@ -125,6 +125,7 @@ declare global {
         xirr: number;
         units: number;
         mutualfund: HoldingMutualfund;
+        isExternal: boolean;
     }
 
     interface HoldingMutualfund {

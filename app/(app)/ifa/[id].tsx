@@ -383,8 +383,6 @@ const AUMBreakDown = (data) => {
         ];
     });
 
-    console.log("transactionData" + JSON.stringify(transactionData));
-
     return (
         <View className="flex-1 bg-white rounded shadow h-full overflow-auto p-2">
             <View

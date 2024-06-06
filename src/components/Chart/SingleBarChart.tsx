@@ -16,7 +16,7 @@ const GradientBar = ({ labels, value }) => {
             }}
         >
             <LinearGradient
-                colors={["#013974", "#398c06"]}
+                colors={["#7188ff", "#84fecb"]}
                 start={{ x: 0, y: 1 }}
                 end={{ x: 0, y: 0 }}
                 style={{ flex: 1, borderRadius: 10 }}

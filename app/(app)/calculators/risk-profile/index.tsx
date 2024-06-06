@@ -1,10 +1,20 @@
 import React, { useState } from "react";
 import { router } from "expo-router";
-import { Button, Divider, Pressable, Text, VStack, View } from "native-base";
+import {
+    Button,
+    Divider,
+    HStack,
+    Pressable,
+    Text,
+    VStack,
+    View,
+} from "native-base";
 
 import Icon from "react-native-vector-icons/FontAwesome";
 
 import { SingleBarChart } from "../../../../src/components/Chart/SingleBarChart";
+import { calculators } from "../../../../src/constants";
+import CalculatorCard from "../../../../src/components/CalculatorCard";
 
 const questions = [
     {
@@ -513,6 +523,22 @@ const RiskProfile = () => {
                 </View>
                 <Divider my="2" color="black.700" orientation="horizontal" />
             </VStack>
+
+            <HStack className="w-[100%] mt-2">
+                {calculators
+                    .filter((el) => el.key !== "risk-profile")
+                    .map((calc) => {
+                        return (
+                            <View className="w-1/2">
+                                <CalculatorCard
+                                    title={calc.title}
+                                    description={calc.description}
+                                    onPress={() => router.push(calc.link)}
+                                />
+                            </View>
+                        );
+                    })}
+            </HStack>
         </View>
     );
 };

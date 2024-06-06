@@ -7,6 +7,7 @@ import {
     Pressable,
     Button,
     Image,
+    HStack,
 } from "native-base";
 import { jsPDF } from "jspdf";
 import Icon from "react-native-vector-icons/FontAwesome";
@@ -19,6 +20,8 @@ import {
 } from "../../../../src/helper/helper";
 import SliderInput from "../../../../src/components/Slider";
 import { router } from "expo-router";
+import { calculators } from "../../../../src/constants";
+import CalculatorCard from "../../../../src/components/CalculatorCard";
 
 const SIPDelay = () => {
     const [monthlyInvestment, setMonthlyInvestment] = useState(5000);
@@ -283,6 +286,22 @@ const SIPDelay = () => {
                     leading to variations in returns.
                 </Text>
             </VStack>
+
+            <HStack className="w-[100%] mt-2">
+                {calculators
+                    .filter((el) => el.key !== "sip-delay")
+                    .map((calc) => {
+                        return (
+                            <View className="w-1/2">
+                                <CalculatorCard
+                                    title={calc.title}
+                                    description={calc.description}
+                                    onPress={() => router.push(calc.link)}
+                                />
+                            </View>
+                        );
+                    })}
+            </HStack>
         </View>
     );
 };

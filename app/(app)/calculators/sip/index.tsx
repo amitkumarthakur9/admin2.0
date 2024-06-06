@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { VStack, Text, Divider, View, Pressable } from "native-base";
+import { router } from "expo-router";
+import { VStack, Text, Divider, View, Pressable, HStack } from "native-base";
 import Icon from "react-native-vector-icons/FontAwesome";
 
 import DonutPieChart from "../../../../src/components/Chart/DonutPieChart";
@@ -9,7 +10,8 @@ import {
     rupeeCurrencyFormatter,
 } from "../../../../src/helper/helper";
 import SliderInput from "../../../../src/components/Slider";
-import { router } from "expo-router";
+import CalculatorCard from "../../../../src/components/CalculatorCard";
+import { calculators } from "../../../../src/constants";
 
 const Sip = () => {
     const [monthlyInvestment, setMonthlyInvestment] = useState(5000);
@@ -131,6 +133,7 @@ const Sip = () => {
                             futureValue
                         )} (${formatAmountInWords(futureValue)})`}</Text>
                         <DonutPieChart
+                            totalValue={`₹ ${formatAmountInWords(futureValue)}`}
                             pieData={[
                                 {
                                     x: "Total Deposits",
@@ -151,6 +154,22 @@ const Sip = () => {
                     leading to variations in returns.
                 </Text>
             </VStack>
+
+            <HStack className="w-[100%] mt-2">
+                {calculators
+                    .filter((el) => el.key !== "sip")
+                    .map((calc) => {
+                        return (
+                            <View className="w-1/2">
+                                <CalculatorCard
+                                    title={calc.title}
+                                    description={calc.description}
+                                    onPress={() => router.push(calc.link)}
+                                />
+                            </View>
+                        );
+                    })}
+            </HStack>
         </View>
     );
 };
