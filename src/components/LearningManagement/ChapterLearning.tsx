@@ -36,7 +36,7 @@ const ChapterLearning = ({ name }) => {
         <View className="h-full">
             {chapter != null ? (
                 <View className="bg-[#f7f7f7]">
-                    <View className="bg-[#d3e8cc] p-[35px] md:p-[20px]">
+                    <View className="bg-[#ecf6e9] p-[35px] md:p-[20px]">
                         <Pressable className="" onPress={() => router.back()}>
                             <ArrowBackIcon size={3} />
                         </Pressable>

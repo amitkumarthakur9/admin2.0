@@ -10,6 +10,7 @@ import { useState } from "react";
 import stockMarketBasicsChapters from "../../../assets/data/nsme_chapters.json";
 
 const ModuleLearningManagement = () => {
+    const [showMore, setShowMore] = useState(false);
     const ifaModules = [
         { name: "NISM Certifications Program", color: "#FFDAB9" }, // PeachPuff
         // { name: "Types of Mutual Funds", color: "#dec398" }, // PapayaWhip
@@ -47,7 +48,7 @@ const ModuleLearningManagement = () => {
     return (
         <View className="h-full">
             <View className="">
-                <View className="bg-[#d3e8cc] p-[35px] md:p-[20px]">
+                <View className="bg-[#ecf6e9] p-[35px] md:p-[20px]">
                     <Pressable
                         className=""
                         onPress={() => router.push(`/learning-center`)}
@@ -66,9 +67,13 @@ const ModuleLearningManagement = () => {
                                 {ifaModules[0].name}
                             </Text>
                         </View>
-                        <View>
+
+                        <View className="flex flex-col">
                             <Text
-                                style={{ marginVertical: 10, marginBottom: 10 }}
+                                style={{
+                                    marginVertical: 10,
+                                    marginBottom: 10,
+                                }}
                             >
                                 Welcome to the School for Certification of
                                 Intermediaries (SCI) at NISM! NISM is dedicated
@@ -82,142 +87,178 @@ const ModuleLearningManagement = () => {
                                 (Certification of Associated Persons in the
                                 Securities Markets) Regulations, 2007.
                             </Text>
-                            <Text
-                                style={{
-                                    fontSize: 20,
-                                    fontWeight: "bold",
-                                    marginVertical: 10,
-                                }}
-                            >
-                                Why are these certifications important?
-                            </Text>
-                            <Text style={{ marginVertical: 10 }}>
-                                The skills, expertise, and ethics of
-                                professionals in the securities markets play a
-                                vital role in providing effective intermediation
-                                to investors and increasing confidence in market
-                                systems and processes. Through our Certification
-                                Examinations and CPE Programs, we aim to ensure
-                                that market intermediaries meet defined minimum
-                                common benchmarks of required functional
-                                knowledge.
-                            </Text>
-                            <Text style={{ marginVertical: 10 }}>
-                                Our certification programs cover various topics
-                                including Mutual Funds, Equities, Derivatives
-                                Securities Operations, Compliance, Research
-                                Analysis, Investment Advice, and more.
-                            </Text>
-                            <Text style={{ marginVertical: 10 }}>
-                                Certification enhances the quality of market
-                                professionals and encourages greater investor
-                                participation in the markets. It provides
-                                structured career paths for students and job
-                                aspirants in the securities markets.
-                            </Text>
-
-                            <Text
-                                style={{
-                                    fontSize: 20,
-                                    fontWeight: "bold",
-                                    marginVertical: 10,
-                                }}
-                            >
-                                About the Certification Examination for Mutual
-                                Fund Distributors
-                            </Text>
-                            <Text style={{ marginVertical: 10 }}>
-                                Are you involved in selling and distributing
-                                mutual funds? If so, our Certification
-                                Examination for Mutual Fund Distributors is
-                                designed for you! This examination establishes a
-                                common minimum knowledge benchmark for:
-                            </Text>
-                            <Text style={{ marginVertical: 10 }}>
-                                - Individual Mutual Fund Distributors{"\n"}-
-                                Employees of organizations engaged in sales and
-                                distribution of Mutual Funds{"\n"}- Employees of
-                                Asset Management Companies, especially those
-                                involved in sales and distribution
-                            </Text>
-
-                            <Text
-                                style={{
-                                    fontSize: 20,
-                                    fontWeight: "bold",
-                                    marginVertical: 10,
-                                }}
-                            >
-                                Examination Objectives
-                            </Text>
-                            <Text style={{ marginVertical: 10 }}>
-                                Upon successful completion of the examination,
-                                you will:
-                            </Text>
-                            <Text style={{ marginVertical: 10 }}>
-                                - Understand the basics of mutual funds, their
-                                role, structure, and different types of schemes.
-                                {"\n"}- Gain insights into mutual fund
-                                distribution in the market, how to evaluate
-                                schemes, and recommend suitable products and
-                                services to investors.{"\n"}- Familiarize
-                                yourself with the legal, accounting, valuation,
-                                and taxation aspects of mutual funds and their
-                                distribution.
-                            </Text>
-
-                            <Text
-                                style={{
-                                    fontSize: 20,
-                                    fontWeight: "bold",
-                                    marginVertical: 10,
-                                }}
-                            >
-                                Assessment Structure
-                            </Text>
-                            <Text style={{ marginVertical: 10 }}>
-                                The examination comprises 100 questions, each
-                                carrying 1 mark. You have 2 hours to complete
-                                it, with a passing score of 50 percent. There's
-                                no negative marking, so feel free to answer
-                                every question!
-                            </Text>
-
-                            <Text
-                                style={{
-                                    fontSize: 20,
-                                    fontWeight: "bold",
-                                    marginVertical: 10,
-                                }}
-                            >
-                                How to Register and Take the Examination
-                            </Text>
-                            <Text style={{ marginVertical: 10 }}>
-                                Ready to take the next step in your career?
-                            </Text>
-                            <Text style={{ marginVertical: 10 }}>
-                                Follow the steps below to become an ARN holder
-                                and start Mutual Fund Distribution.
-                            </Text>
-
-                            <View
-                                className="flex flex-row"
-                                style={{ marginVertical: 10 }}
-                            >
-                                <Text>Steps to register for the exam - </Text>
+                            {!showMore && (
                                 <Text
-                                    className="ml-2 underline"
-                                    onPress={handlePress}
+                                    className="underline"
+                                    onPress={() => setShowMore(!showMore)}
                                 >
-                                    View
+                                    Read More
                                 </Text>
-                            </View>
-
-                            <Text style={{ marginVertical: 10 }}>
-                                Get certified and unlock new opportunities in
-                                the mutual fund industry with NISM!
-                            </Text>
+                            )}
                         </View>
+                        {showMore && (
+                            <View>
+                                <View>
+                                    <Text
+                                        style={{
+                                            fontSize: 20,
+                                            fontWeight: "bold",
+                                            marginVertical: 10,
+                                        }}
+                                    >
+                                        Why are these certifications important?
+                                    </Text>
+                                    <Text style={{ marginVertical: 10 }}>
+                                        The skills, expertise, and ethics of
+                                        professionals in the securities markets
+                                        play a vital role in providing effective
+                                        intermediation to investors and
+                                        increasing confidence in market systems
+                                        and processes. Through our Certification
+                                        Examinations and CPE Programs, we aim to
+                                        ensure that market intermediaries meet
+                                        defined minimum common benchmarks of
+                                        required functional knowledge.
+                                    </Text>
+                                    <Text style={{ marginVertical: 10 }}>
+                                        Our certification programs cover various
+                                        topics including Mutual Funds, Equities,
+                                        Derivatives Securities Operations,
+                                        Compliance, Research Analysis,
+                                        Investment Advice, and more.
+                                    </Text>
+                                    <Text style={{ marginVertical: 10 }}>
+                                        Certification enhances the quality of
+                                        market professionals and encourages
+                                        greater investor participation in the
+                                        markets. It provides structured career
+                                        paths for students and job aspirants in
+                                        the securities markets.
+                                    </Text>
+
+                                    <Text
+                                        style={{
+                                            fontSize: 20,
+                                            fontWeight: "bold",
+                                            marginVertical: 10,
+                                        }}
+                                    >
+                                        About the Certification Examination for
+                                        Mutual Fund Distributors
+                                    </Text>
+                                    <Text style={{ marginVertical: 10 }}>
+                                        Are you involved in selling and
+                                        distributing mutual funds? If so, our
+                                        Certification Examination for Mutual
+                                        Fund Distributors is designed for you!
+                                        This examination establishes a common
+                                        minimum knowledge benchmark for:
+                                    </Text>
+                                    <Text style={{ marginVertical: 10 }}>
+                                        - Individual Mutual Fund Distributors
+                                        {"\n"}- Employees of organizations
+                                        engaged in sales and distribution of
+                                        Mutual Funds{"\n"}- Employees of Asset
+                                        Management Companies, especially those
+                                        involved in sales and distribution
+                                    </Text>
+
+                                    <Text
+                                        style={{
+                                            fontSize: 20,
+                                            fontWeight: "bold",
+                                            marginVertical: 10,
+                                        }}
+                                    >
+                                        Examination Objectives
+                                    </Text>
+                                    <Text style={{ marginVertical: 10 }}>
+                                        Upon successful completion of the
+                                        examination, you will:
+                                    </Text>
+                                    <Text style={{ marginVertical: 10 }}>
+                                        - Understand the basics of mutual funds,
+                                        their role, structure, and different
+                                        types of schemes.
+                                        {"\n"}- Gain insights into mutual fund
+                                        distribution in the market, how to
+                                        evaluate schemes, and recommend suitable
+                                        products and services to investors.
+                                        {"\n"}- Familiarize yourself with the
+                                        legal, accounting, valuation, and
+                                        taxation aspects of mutual funds and
+                                        their distribution.
+                                    </Text>
+
+                                    <Text
+                                        style={{
+                                            fontSize: 20,
+                                            fontWeight: "bold",
+                                            marginVertical: 10,
+                                        }}
+                                    >
+                                        Assessment Structure
+                                    </Text>
+                                    <Text style={{ marginVertical: 10 }}>
+                                        The examination comprises 100 questions,
+                                        each carrying 1 mark. You have 2 hours
+                                        to complete it, with a passing score of
+                                        50 percent. There's no negative marking,
+                                        so feel free to answer every question!
+                                    </Text>
+
+                                    <Text
+                                        style={{
+                                            fontSize: 20,
+                                            fontWeight: "bold",
+                                            marginVertical: 10,
+                                        }}
+                                    >
+                                        How to Register and Take the Examination
+                                    </Text>
+                                    <Text style={{ marginVertical: 10 }}>
+                                        Ready to take the next step in your
+                                        career?
+                                    </Text>
+                                    <Text style={{ marginVertical: 10 }}>
+                                        Follow the steps below to become an ARN
+                                        holder and start Mutual Fund
+                                        Distribution.
+                                    </Text>
+
+                                    <View
+                                        className="flex flex-row"
+                                        style={{ marginVertical: 10 }}
+                                    >
+                                        <Text>
+                                            Steps to register for the exam -{" "}
+                                        </Text>
+                                        <Text
+                                            className="ml-2 underline"
+                                            onPress={handlePress}
+                                        >
+                                            View
+                                        </Text>
+                                    </View>
+
+                                    <Text style={{ marginVertical: 10 }}>
+                                        Get certified and unlock new
+                                        opportunities in the mutual fund
+                                        industry with NISM!
+                                    </Text>
+                                    {showMore && (
+                                        <Text
+                                            className="underline"
+                                            onPress={() =>
+                                                setShowMore(!showMore)
+                                            }
+                                        >
+                                            Read Less
+                                        </Text>
+                                    )}
+                                </View>
+                            </View>
+                        )}
                     </View>
                 </View>
                 <View className="mt-[30px]"></View>
@@ -264,8 +305,8 @@ const ModuleLearningManagement = () => {
                                                             currentModule.includes(
                                                                 i
                                                             )
-                                                                ? "chevron-up"
-                                                                : "chevron-down"
+                                                                ? "minus"
+                                                                : "plus"
                                                         }
                                                         size={18}
                                                         // color={"black"}
