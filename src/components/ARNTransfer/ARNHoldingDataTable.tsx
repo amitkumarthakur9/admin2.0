@@ -308,13 +308,13 @@ const ARNHoldingDataTable = ({ id }) => {
         //     data["orderBy"] = appliedSorting;
         // }
 
-        // const folioData = {
-        //     folios: selectedContacts.map((obj) => parseInt(obj.id, 10)),
-        // };
-
         const folioData = {
-            folios: [6, 9, 1123334],
+            folios: selectedContacts.map((obj) => parseInt(obj.id, 10)),
         };
+
+        // const folioData = {
+        //     folios: [6, 9, 1123334],
+        // };
 
         console.log(JSON.stringify(folioData));
 

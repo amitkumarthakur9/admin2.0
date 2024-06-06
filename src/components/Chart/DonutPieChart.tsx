@@ -14,10 +14,13 @@ const DonutPieChart = ({ pieData, totalValue="NA", width = 400, children=<></> }
         "#26A69A",
     ];
 
-    // const chartData = pieData.map((item, index) => ({
-    //     name: `${item.x}: ${item.y.toFixed(1)}%`,
-    //     symbol: { fill: colorScale[index] }
-    // }));
+    const isZeroValue = totalValue === "NA" || totalValue === "0";
+
+    const zeroData = [{ x: "No Data", y: 100 }];
+    const zeroColorScale = ["#d3d3d3"];
+
+    const displayData = isZeroValue ? zeroData : pieData;
+    const displayColorScale = isZeroValue ? zeroColorScale : colorScale;
 
     console.log("pieData" + JSON.stringify(pieData));
     return (
@@ -73,8 +76,8 @@ const DonutPieChart = ({ pieData, totalValue="NA", width = 400, children=<></> }
             <div style={{ display: "flex", flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
                 <View className="w-8/12 flex justify-center items-center">
                     <VictoryPie
-                        data={pieData}
-                        colorScale={colorScale}
+                        data={displayData}
+                        colorScale={displayColorScale}
                         innerRadius={100}
                         labelRadius={120}
                         labels={({ datum }) =>

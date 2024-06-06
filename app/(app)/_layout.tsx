@@ -529,6 +529,7 @@ export default function AppLayout() {
                                     initialParams={{}}
                                     component={MarketingScreen}
                                 />
+
                                 <Drawer.Screen
                                     name="learning-center/index"
                                     options={{

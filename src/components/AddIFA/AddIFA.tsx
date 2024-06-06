@@ -36,8 +36,9 @@ import CalendarSinglePicker from "../CustomDatePicker/CalendarSinglePicker";
 import { RMid } from "../../helper/helper";
 
 export default function AddIFAUser() {
+    const role = RMid();
     const [options, setOptions] = useState([
-        // { name: "Self", id: "238" },
+        { name: "Self", id: role },
     ]);
 
     // const options = [
@@ -69,7 +70,7 @@ export default function AddIFAUser() {
     });
     const [isSubmitted, setIsSubmitted] = useState(false);
     //    const [role, setRole] = useState("");
-    const role = RMid();
+  
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -884,7 +885,7 @@ export default function AddIFAUser() {
                                 </FormControl.ErrorMessage>
                             ) : (
                                 <FormControl.HelperText>
-                                     {options.length === 0 && "No options found"}
+                                     {/* {options.length === 0 && "No options found"} */}
                                 </FormControl.HelperText>
                             )}
                         </FormControl>

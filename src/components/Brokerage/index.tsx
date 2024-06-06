@@ -23,6 +23,7 @@ import IconCard from "../Card/IconCard";
 import DropdownComponent from "../Dropdowns/NewDropDown";
 import RemoteApi from "../../../src/services/RemoteApi";
 import ComingSoon from "../Others/ComingSoon";
+import NoDataAvailable from "../Others/NoDataAvailable";
 
 export const Brokerage = () => {
     const now = DateTime.now();
@@ -130,7 +131,7 @@ export const Brokerage = () => {
                     category: "SBI mutual fund",
                     currentValue: 2200,
                 },
-                
+
                 {
                     category: "Tata mutual fund",
                     currentValue: 1900,
@@ -258,7 +259,7 @@ export const Brokerage = () => {
                                     />
                                 </View>
                                 <View className="flex flex-row gap-2">
-                                <Button
+                                    {/* <Button
                                     borderColor={"#013974"}
                                     bgColor={"#fff"}
                                     _text={{ color: "#013974" }}
@@ -267,26 +268,24 @@ export const Brokerage = () => {
                                     onPress={() => router.push(`brokerage`)}
                                 >
                                     Brokerage Reconcilation
-                                </Button>
-                                <Button
-                                    borderColor={"#013974"}
-                                    bgColor={"#fff"}
-                                    _text={{ color: "#013974" }}
-                                    variant="outline"
-                                    className="rounded-lg"
-                                    onPress={() => router.push(`dashboard`)}
-                                >
-                                    Go to Overall Dashboard
-                                </Button>
-
+                                </Button> */}
+                                    <Button
+                                        borderColor={"#013974"}
+                                        bgColor={"#fff"}
+                                        _text={{ color: "#013974" }}
+                                        variant="outline"
+                                        className="rounded-lg"
+                                        onPress={() => router.push(`dashboard`)}
+                                    >
+                                        Go to Overall Dashboard
+                                    </Button>
                                 </View>
-                                
                             </View>
                             <View className="flex flex-row justify-between rounded bg-[#eaf3fe] pr-2 ">
                                 <View className="flex flex-row w-full gap-2">
                                     <View className="flex flex-col w-full rounded bg-[#eaf3fe] h-auto ">
-                                        <View className="flex flex-row rounded-full bg-white w-full">
-                                            <View className="w-1/3 flex-row justify-between rounded-3xl bg-white p-4">
+                                        <View className="flex flex-row rounded bg-white w-full">
+                                            <View className="w-1/3 flex-row justify-between rounded bg-white p-4">
                                                 <IconCard
                                                     icon="credit-card-outline"
                                                     title="Actual Commission"
@@ -330,7 +329,7 @@ export const Brokerage = () => {
                                                 />
                                             </View> */}
                                         </View>
-                                        <View className="flex flex-col rounded-3xl bg-white w-full mt-4">
+                                        <View className="flex flex-col rounded bg-white w-full mt-4">
                                             <Text className="p-4 text-lg font-bold">
                                                 Brokerage Split
                                             </Text>
@@ -380,7 +379,7 @@ export const Brokerage = () => {
                                                                     y: 35,
                                                                 },
                                                             ]}
-                                                            totalValue = {"19.3k"}
+                                                            totalValue={"19.3k"}
                                                         />
                                                         {/* ) : (
                                                             <ComingSoon />
@@ -480,7 +479,8 @@ export const Brokerage = () => {
                                                 </View>
                                             </View>
                                         </View>
-                                        <View className="p-2 rounded bg-white w-full mt-4">
+                                        <View className="flex flex-row w-full ">
+                                        <View className="p-2 rounded bg-white w-[49%] mt-4 pl-4">
                                             {brokerageTransactions?.data
                                                 ?.length ? (
                                                 <DataTable
@@ -661,10 +661,23 @@ export const Brokerage = () => {
                                                         </Text>
                                                     </View>
 
-                                                    <ComingSoon />
+                                                    <NoDataAvailable />
                                                 </>
                                             )}
                                         </View>
+                                        <View className="w-[1%] p-2"></View>
+                                        <View className="p-2 rounded bg-white w-[50%] mt-4 ">
+                                            <View className="flex flex-row justify-start items-start ">
+                                                <Text className="text-md font-bold text-start">
+                                                    Brokerage Reconcilation
+                                                </Text>
+                                            </View>
+
+                                            <NoDataAvailable />
+                                        </View>
+
+                                        </View>
+                                        
                                     </View>
                                 </View>
                             </View>

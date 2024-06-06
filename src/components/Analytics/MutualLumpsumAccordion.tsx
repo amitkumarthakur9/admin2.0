@@ -28,11 +28,11 @@ const MutualLumpsumAccordion = ({ data }) => {
                         </View>
                         <View className="w-[30%] justify-center">
                             <Text className="font-semibold">
-                                Lumpsum Amount
+                                Lumpsum Count
                             </Text>
                         </View>
                         <View className="w-[30%] justify-center">
-                            <Text className="font-semibold">Lumpsum Count</Text>
+                            <Text className="font-semibold">Lumpsum Amount</Text>
                         </View>
 
                         <View className="w-[10%] justify-center items-center"></View>
@@ -136,11 +136,11 @@ const RMAccordion = ({ ifalist, ifaTotal }) => {
                         <Text className="font-semibold">RM Name</Text>
                     </View>
                     <View className="w-[30%] justify-center">
-                        <Text className="font-semibold">Lumpsum Amount</Text>
+                        <Text className="font-semibold">Lumpsum Count</Text>
                     </View>
 
                     <View className="w-[30%] justify-center">
-                        <Text className="font-semibold">Lumpsum Count</Text>
+                        <Text className="font-semibold">Lumpsum Amount</Text>
                     </View>
 
                     <View className="w-[10%] justify-center items-center"></View>

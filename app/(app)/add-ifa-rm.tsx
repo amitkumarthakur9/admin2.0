@@ -7,6 +7,7 @@ import {
     ViewStyle,
 } from "react-native";
 import AddUser from "../../src/components/AddIFA/AddUser";
+import AddIFA from "../../src/components/AddIFA/AddUser";
 
 export default function AddIfaRm() {
     return (
@@ -19,6 +20,7 @@ export default function AddIfaRm() {
             }}
         >
             <AddUser />
+            {/* <AddIFA /> */}
         </ScrollView>
     );
 }

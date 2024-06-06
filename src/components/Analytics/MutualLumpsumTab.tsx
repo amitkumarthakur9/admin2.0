@@ -49,10 +49,10 @@ const nestedData = {
                           id: "149645",
                           name: "Varsha Pramod",
                           scheme: "KOTAK FLEXICAP FUND - GROWTH",
-                          amount: "1000",
+                          amount: "60000",
                        
                           transactionDate: "02/05/2024",
-                          startDate: "03/05/2024",
+                          startDate: "03/04/2024",
                       },
                   ],
                   clientTotal: {
@@ -74,20 +74,21 @@ const nestedData = {
                           id: "134629",
                           name: "SUKUMAR MAITY",
                           scheme: "ICICI PRUDENTIAL LARGE AND MID CAP FUND - GROWTH",
-                          amount: "1000",
+                          amount: "20000",
                     
-                          transactionDate: "24/01/23",
-                          startDate: "24/01/22",
+                          transactionDate: "24/02/23",
+                          startDate: "24/01/23",
                      
                       },
                       {
                           id: "150574",
                           name: "SANJOY RAY",
                           scheme: "SBI INFRASTRUCTURE FUND REGULAR PLAN - GROWTH",
-                          amount: "1000",
+                          amount: "20000",
                      
-                          transactionDate: "24/01/23",
-                          startDate: "24/01/22",
+                          transactionDate: "24/02/23",
+                          startDate: "24/01/23",
+                    
                       
                       },
                   ],
@@ -125,10 +126,10 @@ const nestedData = {
                         id: "149645",
                         name: "Varsha Bharatiya",
                         scheme: "KOTAK FLEXICAP FUND - GROWTH",
-                        amount: "1000",
+                        amount: "60000",
                      
                         transactionDate: "02/05/2024",
-                        startDate: "03/05/2024",
+                        startDate: "03/04/2024",
                     },
                 ],
                 clientTotal: {
@@ -150,20 +151,20 @@ const nestedData = {
                         id: "134629",
                         name: "SUKUMAR MAITY",
                         scheme: "ICICI PRUDENTIAL LARGE AND MID CAP FUND - GROWTH",
-                        amount: "1000",
+                        amount: "20000",
                   
-                        transactionDate: "24/01/23",
-                        startDate: "24/01/22",
+                        transactionDate: "24/02/23",
+                        startDate: "24/01/23",
                    
                     },
                     {
                         id: "150574",
                         name: "SANJOY RAY",
                         scheme: "SBI INFRASTRUCTURE FUND REGULAR PLAN - GROWTH",
-                        amount: "1000",
+                        amount: "20000",
                    
-                        transactionDate: "24/01/23",
-                        startDate: "24/01/22",
+                        transactionDate: "24/02/23",
+                        startDate: "24/01/23",
                     
                     },
                 ],
@@ -190,7 +191,7 @@ const nestedData = {
   ],
   rmTotal: {
     lumpCount: "205",
-    lumpAmount: "2,05,000",
+    lumpAmount: "2,00,000",
       
   },
 };
