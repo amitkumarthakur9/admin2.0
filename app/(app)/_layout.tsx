@@ -1,8 +1,10 @@
-import React, { useEffect, useState, Suspense, lazy } from "react";
+import React, { useEffect, useState, Suspense, lazy, useRef } from "react";
 import { Link, Redirect, Stack } from "expo-router";
 import {
+    Animated,
     Dimensions,
     Platform,
+    Pressable,
     Text,
     View,
     useWindowDimensions,
@@ -18,11 +20,22 @@ import TopHeader from "../../src/components/Header/TopHeader";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { NavigationContainer } from "@react-navigation/native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import { Center, HStack, HamburgerIcon, Heading, Spinner } from "native-base";
+import {
+    Button,
+    Center,
+    Fab,
+    HStack,
+    HamburgerIcon,
+    Heading,
+    Image,
+    PresenceTransition,
+    Spinner,
+} from "native-base";
 import { useStorageState } from "../../src/services/useStorageState";
 import { jwtDecode } from "jwt-decode";
 import { UserRoleProvider } from "../../src/context/useRoleContext";
 import MarketingScreen from "./marketing";
+import AntDesign from "react-native-vector-icons/AntDesign";
 
 NativeWindStyleSheet.setOutput({
     default: "native",
@@ -67,15 +80,20 @@ const ModuleLearningManagement = lazy(
 const ChapterLearningCenter = lazy(
     () => import("./learning-center/[id]/[chapterId]/index")
 );
+import IonIcon from "react-native-vector-icons/Ionicons";
 
 const queryClient = new QueryClient();
 
 export default function AppLayout() {
+    const [isOpen, setIsOpen] = useState(false);
+    const [showLoader, setShowLoader] = useState(false);
     const [[isLoading, token], setToken] = useStorageState("token");
     const { height, width } = useWindowDimensions();
     const [roleId, setroleID] = useState(null);
     const [inviteDisplay, setinviteDisplay] = useState("");
-
+    const CoRoverURL =
+        "https://builder.corover.ai/params/?appid=f525521d-c54f-4723-8d41-592f5497b460&partnerKey=c65ed7c2-a07f-4a46-a161-3ed104d7ab57&token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik5FUCIsImNvbXBhbnlOYW1lIjoiQ29Sb3ZlciIsImVtYWlsSWQiOiJuZXAuc3VwcG9ydEBjb3JvdmVyLmFpIiwiaWF0IjoxNzE1MTcwMDcyLCJleHAiOjE3MTUyNTY0NzJ9.KSBawWk-TC0ykqBMZOY4mIuQjm-xHeSGmkLfnd5cYnE#/";
+    const ViewHeight = height * 0.6;
     useEffect(() => {
         if (token) {
             const decoded: any = jwtDecode(token);
@@ -85,6 +103,58 @@ export default function AppLayout() {
             }
         }
     }, [token]);
+
+    const shakeAnimation = useRef(new Animated.Value(0)).current;
+
+    const startShake = () => {
+        Animated.sequence([
+            Animated.timing(shakeAnimation, {
+                toValue: 10,
+                duration: 50,
+                useNativeDriver: true,
+            }),
+            Animated.timing(shakeAnimation, {
+                toValue: -10,
+                duration: 50,
+                useNativeDriver: true,
+            }),
+            Animated.timing(shakeAnimation, {
+                toValue: 10,
+                duration: 50,
+                useNativeDriver: true,
+            }),
+            Animated.timing(shakeAnimation, {
+                toValue: -10,
+                duration: 50,
+                useNativeDriver: true,
+            }),
+            Animated.timing(shakeAnimation, {
+                toValue: 0,
+                duration: 50,
+                useNativeDriver: true,
+            }),
+        ]).start();
+    };
+
+    const animatedStyle = {
+        transform: [{ translateX: shakeAnimation }],
+    };
+
+    const handleClick = () => {
+        if (!isOpen) {
+            startShake();
+            setShowLoader(true);
+            setIsOpen(false);
+
+            setTimeout(() => {
+                setShowLoader(false);
+                setIsOpen(true);
+            }, 2000);
+        } else {
+            setIsOpen(false);
+            setShowLoader(false);
+        }
+    };
 
     if (isLoading) {
         return (
@@ -565,6 +635,131 @@ export default function AppLayout() {
                                     component={ChapterLearningCenter}
                                 />
                             </Drawer.Navigator>
+                            {/* <Fab
+                                renderInPortal={false}
+                                shadow={2}
+                                size="sm"
+                                onPress={() => setIsOpen(!isOpen)}
+                                placement="bottom-right"
+                                marginRight={30}
+                                marginBottom={30}
+                                icon={
+                                    <Image
+                                        source={require("../../assets/chatbot.png")}
+                                    />
+                                }
+                            >
+                                <PresenceTransition
+                                    visible={isOpen}
+                                    initial={{
+                                        opacity: 0,
+                                        scale: 0,
+                                    }}
+                                    animate={{
+                                        opacity: 1,
+                                        scale: 1,
+                                        transition: {
+                                            duration: 250,
+                                        },
+                                    }}
+                                >
+                                    <Center
+                                        w="200"
+                                        h="100"
+                                        mt="7"
+                                        bg="teal.500"
+                                        rounded="md"
+                                    >
+                                        ScaleFade
+                                    </Center>
+                                </PresenceTransition>
+                            </Fab> */}
+                            <View
+                                style={{
+                                    position: "absolute",
+                                    right: 20,
+                                    bottom: 60,
+                                }}
+                            >
+                                <Pressable onPress={handleClick}>
+                                    <Animated.View style={[animatedStyle]}>
+                                        <Image
+                                            height={100}
+                                            width={100}
+                                            source={require("../../assets/chatbot.png")}
+                                        />
+                                    </Animated.View>
+                                </Pressable>
+                            </View>
+                            {(isOpen || showLoader) && (
+                                <View
+                                    style={{
+                                        position: "absolute",
+                                        right: "2%",
+                                        bottom: "21%",
+                                    }}
+                                >
+                                    <PresenceTransition
+                                        visible={isOpen || showLoader}
+                                        initial={{
+                                            opacity: 0,
+                                            scale: 0,
+                                        }}
+                                        animate={{
+                                            opacity: 1,
+                                            scale: 1,
+                                            transition: {
+                                                duration: 250,
+                                            },
+                                        }}
+                                    >
+                                        <View>
+                                            {Platform.OS === "web" ? (
+                                                <View>
+                                                    <Pressable
+                                                        onPress={() => {
+                                                            setIsOpen(false);
+                                                            setShowLoader(
+                                                                false
+                                                            );
+                                                        }}
+                                                        className="flex flex-row items-center"
+                                                    >
+                                                        <Text>Close</Text>
+                                                        <IonIcon
+                                                            name="close-outline"
+                                                            size={20}
+                                                            color="black"
+                                                        />
+                                                    </Pressable>
+                                                    <iframe
+                                                        src={CoRoverURL}
+                                                        style={{
+                                                            width: width * 0.23,
+                                                            height: ViewHeight,
+                                                        }}
+                                                        title="Embedded Web Content"
+                                                    />
+                                                </View>
+                                            ) : (
+                                                <Center
+                                                    style={{
+                                                        backgroundColor:
+                                                            "white",
+                                                        width: width * 0.23,
+                                                        height: ViewHeight,
+                                                    }}
+                                                >
+                                                    <Spinner
+                                                        color={"blue"}
+                                                        accessibilityLabel="Loading.."
+                                                    />
+                                                </Center>
+                                            )}
+                                        </View>
+                                    </PresenceTransition>
+                                </View>
+                            )}
                         </Suspense>
                     </UserRoleProvider>
                 </PaperProvider>
