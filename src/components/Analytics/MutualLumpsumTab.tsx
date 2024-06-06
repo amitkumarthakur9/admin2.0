@@ -190,7 +190,7 @@ const nestedData = {
 
   ],
   rmTotal: {
-    lumpCount: "205",
+    lumpCount: "200",
     lumpAmount: "2,00,000",
       
   },

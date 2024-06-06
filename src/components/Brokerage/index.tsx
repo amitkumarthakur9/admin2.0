@@ -480,204 +480,216 @@ export const Brokerage = () => {
                                             </View>
                                         </View>
                                         <View className="flex flex-row w-full ">
-                                        <View className="p-2 rounded bg-white w-[49%] mt-4 pl-4">
-                                            {brokerageTransactions?.data
-                                                ?.length ? (
-                                                <DataTable
-                                                    rows={brokerageTransactions?.data?.map(
-                                                        (transaction) => {
-                                                            return [
-                                                                {
-                                                                    key: "client",
-                                                                    content: (
-                                                                        <View>
-                                                                            <Text
-                                                                                selectable
-                                                                                className="text-xs text-gray-500"
-                                                                            >
-                                                                                {
-                                                                                    transaction
-                                                                                        ?.account
-                                                                                        ?.name
-                                                                                }
-                                                                            </Text>
-                                                                        </View>
-                                                                    ),
-                                                                },
-                                                                {
-                                                                    key: "scheme",
-                                                                    content: (
-                                                                        <View className="flex flex-row items-center gap-2">
-                                                                            <Image
-                                                                                alt="fundHouse"
-                                                                                className="mr-2"
-                                                                                style={{
-                                                                                    width: 32,
-                                                                                    height: 32,
-                                                                                    objectFit:
-                                                                                        "contain",
-                                                                                }}
-                                                                                source={{
-                                                                                    uri: transaction
-                                                                                        ?.mutualfund
-                                                                                        ?.logoUrl,
-                                                                                }}
-                                                                            />
-                                                                            <View>
-                                                                                <Text className="text-xs">
-                                                                                    {
-                                                                                        transaction
-                                                                                            ?.mutualfund
-                                                                                            ?.name
-                                                                                    }
-                                                                                </Text>
-                                                                                <Text className="text-xs text-gray-400">
-                                                                                    {
-                                                                                        transaction
-                                                                                            ?.mutualfund
-                                                                                            ?.category
-                                                                                    }{" "}
-                                                                                    |{" "}
-                                                                                    {
-                                                                                        transaction
-                                                                                            ?.mutualfund
-                                                                                            ?.subCategory
-                                                                                    }
-                                                                                </Text>
-                                                                            </View>
-                                                                        </View>
-                                                                    ),
-                                                                },
-                                                                {
-                                                                    key: "folio",
-                                                                    content: (
-                                                                        <View>
-                                                                            <Text
-                                                                                selectable
-                                                                                className="text-xs text-black"
-                                                                            >
-                                                                                -
-                                                                            </Text>
-                                                                        </View>
-                                                                    ),
-                                                                },
-                                                                {
-                                                                    key: "transactionDate",
-                                                                    content: (
-                                                                        <View>
-                                                                            <Text
-                                                                                selectable
-                                                                                className="text-xs text-gray-500"
-                                                                            >
-                                                                                -
-                                                                            </Text>
-                                                                        </View>
-                                                                    ),
-                                                                },
-                                                                {
-                                                                    key: "brokerageAmount",
-                                                                    content: (
-                                                                        <View>
-                                                                            <Text
-                                                                                selectable
-                                                                                className="text-xs text-gray-500"
-                                                                            >
-                                                                                {
-                                                                                    RupeeSymbol
-                                                                                }{" "}
-                                                                                {
-                                                                                    transaction?.subBrokerAmount
-                                                                                }
-                                                                            </Text>
-                                                                        </View>
-                                                                    ),
-                                                                },
-                                                                {
-                                                                    key: "TransactionType",
-                                                                    content: (
-                                                                        <View>
-                                                                            <Text
-                                                                                selectable
-                                                                                className="text-xs text-gray-500"
-                                                                            >
-                                                                                -
-                                                                            </Text>
-                                                                        </View>
-                                                                    ),
-                                                                },
-                                                                {
-                                                                    key: "units",
-                                                                    content: (
-                                                                        <View>
-                                                                            <Text
-                                                                                selectable
-                                                                                className="text-xs text-gray-500"
-                                                                            >
-                                                                                -
-                                                                            </Text>
-                                                                        </View>
-                                                                    ),
-                                                                },
-                                                                {
-                                                                    key: "amount",
-                                                                    content: (
-                                                                        <View>
-                                                                            <Text
-                                                                                selectable
-                                                                                className="text-xs text-gray-500"
-                                                                            >
-                                                                                {
-                                                                                    RupeeSymbol
-                                                                                }{" "}
-                                                                                {
-                                                                                    transaction?.amount
-                                                                                }
-                                                                            </Text>
-                                                                        </View>
-                                                                    ),
-                                                                },
-                                                            ];
-                                                        }
-                                                    )}
-                                                    headers={[
-                                                        "Client",
-                                                        "Scheme",
-                                                        "Folio Number",
-                                                        "Transaction Date",
-                                                        "Brokerage Amount",
-                                                        "Transaction Type",
-                                                        "Units",
-                                                        "Amount",
-                                                    ]}
-                                                    cellSize={[
-                                                        2, 2, 2, 2, 1, 1, 1, 1,
-                                                    ]}
-                                                />
-                                            ) : (
-                                                <>
-                                                    <View className="flex flex-row justify-start items-start ">
-                                                        <Text className="text-md font-bold text-start">
-                                                            Brokerage Table
-                                                        </Text>
-                                                    </View>
+                                            
+                                            <View className="p-2 rounded bg-white w-[49%] mt-4 pl-4">
+                                                
+                                                {brokerageTransactions?.data
+                                                    ?.length ? (
+                                                    <DataTable
+                                                        rows={brokerageTransactions?.data?.map(
+                                                            (transaction) => {
+                                                                return [
+                                                                    {
+                                                                        key: "client",
+                                                                        content:
+                                                                            (
+                                                                                <View>
+                                                                                    <Text
+                                                                                        selectable
+                                                                                        className="text-xs text-gray-500"
+                                                                                    >
+                                                                                        {
+                                                                                            transaction
+                                                                                                ?.account
+                                                                                                ?.name
+                                                                                        }
+                                                                                    </Text>
+                                                                                </View>
+                                                                            ),
+                                                                    },
+                                                                    {
+                                                                        key: "scheme",
+                                                                        content:
+                                                                            (
+                                                                                <View className="flex flex-row items-center gap-2">
+                                                                                    <Image
+                                                                                        alt="fundHouse"
+                                                                                        className="mr-2"
+                                                                                        style={{
+                                                                                            width: 32,
+                                                                                            height: 32,
+                                                                                            objectFit:
+                                                                                                "contain",
+                                                                                        }}
+                                                                                        source={{
+                                                                                            uri: transaction
+                                                                                                ?.mutualfund
+                                                                                                ?.logoUrl,
+                                                                                        }}
+                                                                                    />
+                                                                                    <View>
+                                                                                        <Text className="text-xs">
+                                                                                            {
+                                                                                                transaction
+                                                                                                    ?.mutualfund
+                                                                                                    ?.name
+                                                                                            }
+                                                                                        </Text>
+                                                                                        <Text className="text-xs text-gray-400">
+                                                                                            {
+                                                                                                transaction
+                                                                                                    ?.mutualfund
+                                                                                                    ?.category
+                                                                                            }{" "}
+                                                                                            |{" "}
+                                                                                            {
+                                                                                                transaction
+                                                                                                    ?.mutualfund
+                                                                                                    ?.subCategory
+                                                                                            }
+                                                                                        </Text>
+                                                                                    </View>
+                                                                                </View>
+                                                                            ),
+                                                                    },
+                                                                    {
+                                                                        key: "folio",
+                                                                        content:
+                                                                            (
+                                                                                <View>
+                                                                                    <Text
+                                                                                        selectable
+                                                                                        className="text-xs text-black"
+                                                                                    >
+                                                                                        -
+                                                                                    </Text>
+                                                                                </View>
+                                                                            ),
+                                                                    },
+                                                                    {
+                                                                        key: "transactionDate",
+                                                                        content:
+                                                                            (
+                                                                                <View>
+                                                                                    <Text
+                                                                                        selectable
+                                                                                        className="text-xs text-gray-500"
+                                                                                    >
+                                                                                        -
+                                                                                    </Text>
+                                                                                </View>
+                                                                            ),
+                                                                    },
+                                                                    {
+                                                                        key: "brokerageAmount",
+                                                                        content:
+                                                                            (
+                                                                                <View>
+                                                                                    <Text
+                                                                                        selectable
+                                                                                        className="text-xs text-gray-500"
+                                                                                    >
+                                                                                        {
+                                                                                            RupeeSymbol
+                                                                                        }{" "}
+                                                                                        {
+                                                                                            transaction?.subBrokerAmount
+                                                                                        }
+                                                                                    </Text>
+                                                                                </View>
+                                                                            ),
+                                                                    },
+                                                                    {
+                                                                        key: "TransactionType",
+                                                                        content:
+                                                                            (
+                                                                                <View>
+                                                                                    <Text
+                                                                                        selectable
+                                                                                        className="text-xs text-gray-500"
+                                                                                    >
+                                                                                        -
+                                                                                    </Text>
+                                                                                </View>
+                                                                            ),
+                                                                    },
+                                                                    {
+                                                                        key: "units",
+                                                                        content:
+                                                                            (
+                                                                                <View>
+                                                                                    <Text
+                                                                                        selectable
+                                                                                        className="text-xs text-gray-500"
+                                                                                    >
+                                                                                        -
+                                                                                    </Text>
+                                                                                </View>
+                                                                            ),
+                                                                    },
+                                                                    {
+                                                                        key: "amount",
+                                                                        content:
+                                                                            (
+                                                                                <View>
+                                                                                    <Text
+                                                                                        selectable
+                                                                                        className="text-xs text-gray-500"
+                                                                                    >
+                                                                                        {
+                                                                                            RupeeSymbol
+                                                                                        }{" "}
+                                                                                        {
+                                                                                            transaction?.amount
+                                                                                        }
+                                                                                    </Text>
+                                                                                </View>
+                                                                            ),
+                                                                    },
+                                                                ];
+                                                            }
+                                                        )}
+                                                        headers={[
+                                                            "Client",
+                                                            "Scheme",
+                                                            "Folio Number",
+                                                            "Transaction Date",
+                                                            "Brokerage Amount",
+                                                            "Transaction Type",
+                                                            "Units",
+                                                            "Amount",
+                                                        ]}
+                                                        cellSize={[
+                                                            2, 2, 2, 2, 1, 1, 1,
+                                                            1,
+                                                        ]}
+                                                    />
+                                                ) : (
+                                                    <>
+                                                        <View className="flex flex-col justify-start items-start ">
+                                                            <Text className="py-4 text-lg font-bold">
+                                                                Brokerage Table
+                                                            </Text>
+                                                            <Divider />
+                                                        </View>
 
-                                                    <NoDataAvailable />
-                                                </>
-                                            )}
-                                        </View>
-                                        <View className="w-[1%] p-2"></View>
-                                        <View className="p-2 rounded bg-white w-[50%] mt-4 ">
-                                            <View className="flex flex-row justify-start items-start ">
-                                                <Text className="text-md font-bold text-start">
-                                                    Brokerage Reconcilation
-                                                </Text>
+                                                        <NoDataAvailable />
+                                                    </>
+                                                )}
                                             </View>
+                                            <View className="w-[1%] p-2"></View>
+                                            <View className="p-2 rounded bg-white w-[50%] mt-4 ">
+                                            <View className="flex flex-col justify-start items-start ">
+                                                            <Text className="py-4 px-2 text-lg font-bold">
+                                                                Brokerage Reconcilation
+                                                            </Text>
+                                                            <Divider />
+                                                        </View>
+                                                
 
-                                            <NoDataAvailable />
+                                                <NoDataAvailable />
+                                            </View>
                                         </View>
-
-                                        </View>
-                                        
                                     </View>
                                 </View>
                             </View>

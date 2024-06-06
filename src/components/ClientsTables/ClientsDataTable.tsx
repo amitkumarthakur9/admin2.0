@@ -143,7 +143,7 @@ const ClientsDataTable = () => {
                             <View className="flex flex-row items-center mt-0 w-1/12">
                                 {!item?.kycStatus && <Tag>KYC Not Done</Tag>}
                                 <Tag>SIP({item?.activeSip})</Tag>
-                                <Tag>Autopay active</Tag>
+                                {/* <Tag>Autopay active</Tag> */}
                             </View>
                         </View>
                     </View>

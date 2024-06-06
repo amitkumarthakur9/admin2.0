@@ -344,7 +344,7 @@ export default function ClientARNDetail() {
                                                                     title="Total Investment"
                                                                     value={
                                                                         RupeeSymbol +
-                                                                        "6,32,83,345"
+                                                                        "6,500"
                                                                     }
                                                                 />
                                                                 <DataValue
@@ -480,7 +480,7 @@ export default function ClientARNDetail() {
                                                             title="Total Investment"
                                                             value={
                                                                 RupeeSymbol +
-                                                                "6,32,83,345"
+                                                                "6,500"
                                                             }
                                                         />
                                                         <DataValue
@@ -524,7 +524,7 @@ export default function ClientARNDetail() {
                                                         className="font-medium text-start text-blue-900"
                                                     >
                                                         {RupeeSymbol +
-                                                            "38,98,348"}
+                                                            "3,500"}
                                                     </Text>
                                                 </View>
                                             </View>
@@ -542,7 +542,7 @@ export default function ClientARNDetail() {
                                                         selectable
                                                         className="font-medium text-start text-black"
                                                     >
-                                                        31.11 %
+                                                        1.11 %
                                                     </Text>
                                                 </View>
                                             </View>
@@ -563,7 +563,7 @@ export default function ClientARNDetail() {
                                                         className="font-medium text-start text-black"
                                                     >
                                                         {RupeeSymbol +
-                                                            "38,98,348"}
+                                                            "4500"}
                                                     </Text>
                                                 </View>
                                             </View>
@@ -582,7 +582,7 @@ export default function ClientARNDetail() {
                                                         className="font-medium text-start text-[#539D39]"
                                                     >
                                                         {RupeeSymbol +
-                                                            "2,98,348"}
+                                                            "200"}
                                                     </Text>
                                                 </View>
                                             </View>
@@ -600,15 +600,15 @@ export default function ClientARNDetail() {
                                             pieData={[
                                                 {
                                                     x: "Debt",
-                                                    y: 54.2,
+                                                    y: 0,
                                                 },
                                                 {
                                                     x: "Equity",
-                                                    y: 45.8,
+                                                    y: 100,
                                                 },
                                             ]}
 
-                                            totalValue={"19348"}
+                                            totalValue={"6500"}
                                         />
                                     </View>
                                 </View>

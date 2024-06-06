@@ -51,3 +51,38 @@ export interface DashboardResponse {
     error: any[]; // Assuming the error array can contain any type of error data
     data: DashboardData;
 }
+
+interface Analytics {
+    totalClient: number;
+    totalActiveClient: number;
+    totalTransactedClient: number;
+    totalSipAmount: number;
+    totalLumpsumAmount: number;
+  }
+  
+  interface Category {
+    id: number;
+    name: string;
+    valueResearchId: string;
+  }
+  
+  interface AmountBreakdown {
+    category: Category;
+    amount: number;
+  }
+  
+  export interface StaticDashboard {
+    analytics: Analytics;
+    breakdown: {
+      aum: AmountBreakdown[];
+      external: AmountBreakdown[];
+      sip: any[]; // Assuming SIP can be an array of objects, further details needed for exact type
+    };
+  }
+  
+  export interface StaticDashboardApiResponse {
+    message: string;
+    error: any[];
+    data: StaticDashboard;
+  }
+  

@@ -24,6 +24,8 @@ import DynamicMenu from "./DynamicMenu";
 import {
     DashboardData,
     DashboardResponse,
+    StaticDashboardApiResponse,
+    StaticDashboard,
 } from "../../../src/interfaces/DashboardInterface";
 import RemoteApi from "../../../src/services/RemoteApi";
 import { useUserRole } from "../../../src/context/useRoleContext";
@@ -39,6 +41,7 @@ const IFADashboard = () => {
     const [aumPercentage, setAumPercentage] = useState([]);
     const [sipPercentage, setSipPercentage] = useState([]);
     const [data, setData] = useState<DashboardData>();
+    const [staticData, setStaticData] = useState<StaticDashboard>();
 
     const { roleId } = useUserRole();
     const DummyDate = {
@@ -105,31 +108,31 @@ const IFADashboard = () => {
     };
 
     const topClientData = [
-        {
-            name: "Anand Gupta",
-            sip: "5",
-            investment: 8000,
-        },
-        {
-            name: "Deepti Shasil Namoshi",
-            sip: "3",
-            investment: 6000,
-        },
-        {
-            name: "AnandRaj Sangappa Malagi  ",
-            sip: "2",
-            investment: 5500,
-        },
-        {
-            name: "Rashmi Ranjan Sahoo",
-            sip: "2",
-            investment: 4500,
-        },
-        {
-            name: "Priyanshu Jain",
-            sip: "1",
-            investment: 2000,
-        },
+        // {
+        //     name: "Anand Gupta",
+        //     sip: "5",
+        //     investment: 8000,
+        // },
+        // {
+        //     name: "Deepti Shasil Namoshi",
+        //     sip: "3",
+        //     investment: 6000,
+        // },
+        // {
+        //     name: "AnandRaj Sangappa Malagi  ",
+        //     sip: "2",
+        //     investment: 5500,
+        // },
+        // {
+        //     name: "Rashmi Ranjan Sahoo",
+        //     sip: "2",
+        //     investment: 4500,
+        // },
+        // {
+        //     name: "Priyanshu Jain",
+        //     sip: "1",
+        //     investment: 2000,
+        // },
     ];
     const sipBreakdownChart = (sip) => {
         const totalValue = sip?.reduce(
@@ -170,6 +173,25 @@ const IFADashboard = () => {
         return aum?.map((item) => ({
             x: item.category,
             y: (item.currentValue / totalValue) * 100,
+        }));
+    };
+
+    const externalBreakdownChart = (external) => {
+        const totalValue = external?.reduce(
+            (accumulator, amount) => accumulator + amount.amount,
+            0
+        );
+
+        if (totalValue === 0) {
+            return external?.map((item) => ({
+                x: item.category.name,
+                y: 0, // Set percentage to 0 because there's no value to calculate percentage from
+            }));
+        }
+
+        return external?.map((item) => ({
+            x: item.category.name,
+            y: (item.amount / totalValue) * 100,
         }));
     };
 
@@ -255,6 +277,31 @@ const IFADashboard = () => {
         }
     }
 
+    function pieTotalExternal(external) {
+        const totalValue = external?.reduce(
+            (accumulator, amount) => accumulator + amount.amount,
+            0
+        );
+
+        if (totalValue == 0) {
+            return "0";
+        }
+
+        if (totalValue >= 10000000) {
+            // If the total value is in crores (10,000,000 or more)
+            return (totalValue / 10000000).toFixed(1) + " cr";
+        } else if (totalValue >= 100000) {
+            // If the total value is in lakhs (100,000 or more)
+            return (totalValue / 100000).toFixed(1) + " lac";
+        } else if (totalValue >= 1000) {
+            // If the total value is in thousands (1,000 or more)
+            return (totalValue / 1000).toFixed(1) + " k";
+        } else {
+            // If the total value is less than 1,000
+            return totalValue;
+        }
+    }
+
     function convertToWord(totalValue) {
         if (totalValue >= 10000000) {
             // If the total value is in crores (10,000,000 or more)
@@ -292,9 +339,28 @@ const IFADashboard = () => {
                 );
                 setIsLoading(false);
             }
+
+            console.log(JSON.stringify(staticData) + "staticData");
         }
 
         getDetails();
+    }, []);
+
+    useEffect(() => {
+        setIsLoading(true);
+        async function getStaticDetails() {
+            const response: StaticDashboardApiResponse = await RemoteApi.get(
+                `dashboard/static`
+            );
+
+            if (response) {
+                setStaticData(response?.data);
+
+                setIsLoading(false);
+            }
+        }
+
+        getStaticDetails();
     }, []);
 
     const handleOptionSelect = (option) => {
@@ -406,26 +472,44 @@ const IFADashboard = () => {
                                         <IconCard
                                             icon="account-cash-outline"
                                             title="Ready to Invest"
-                                            description="7"
+                                            description={
+                                                staticData?.analytics
+                                                    ?.totalActiveClient
+                                                    ? staticData?.analytics
+                                                          ?.totalActiveClient
+                                                    : "0"
+                                            }
                                         />
                                     </View>
                                     <View className="flex flex-col md:w-5/12  rounded bg-white h-auto gap-1">
                                         <IconCard
                                             icon="account-group-outline"
                                             title="Transacted user"
-                                            description="2"
+                                            description={
+                                                staticData?.analytics
+                                                    ?.totalTransactedClient
+                                                    ? staticData?.analytics
+                                                          ?.totalTransactedClient
+                                                    : "0"
+                                            }
                                         />
                                         {roleId == 2 && (
                                             <IconCard
                                                 icon="account-box-multiple-outline"
-                                                title="Clients Activated"
-                                                description="4"
+                                                title="Active Clients"
+                                                description={
+                                                    staticData?.analytics
+                                                        ?.totalActiveClient
+                                                        ? staticData?.analytics
+                                                              ?.totalActiveClient
+                                                        : "0"
+                                                }
                                             />
                                         )}
                                         {roleId > 2 && (
                                             <IconCard
                                                 icon="account-box-multiple-outline"
-                                                title="Distributors Activated"
+                                                title="Active Distributors"
                                                 description="4"
                                             />
                                         )}
@@ -445,8 +529,29 @@ const IFADashboard = () => {
                                                     : RupeeSymbol + "0"
                                             }
                                         />
-
-                                        {roleId == 2 && (
+                                        <IconCard
+                                            icon="shopping-outline"
+                                            title="Total SIP Amount"
+                                            description={
+                                                data?.order?.sip
+                                                    ?.monthlySipAmount == null
+                                                    ? 0
+                                                    : RupeeSymbol +
+                                                      data?.order?.sip?.monthlySipAmount.toFixed(
+                                                          0
+                                                      )
+                                            }
+                                        />
+                                    </View>
+                                    <View className="flex flex-col md:w-5/12  rounded bg-white h-auto gap-1">
+                                        <IconCard
+                                            icon="chart-timeline-variant"
+                                            title="Total Running SIPs"
+                                            description={
+                                                data?.order?.sip?.sipCount
+                                            }
+                                        />
+                                        {/* {roleId == 2 && (
                                             <IconCard
                                                 icon="account-check-outline"
                                                 title="Empanelled Clients"
@@ -459,28 +564,11 @@ const IFADashboard = () => {
                                                 title="Empanelled Distributors"
                                                 description="10"
                                             />
-                                        )}
-                                    </View>
-                                    <View className="flex flex-col md:w-5/12  rounded bg-white h-auto gap-1">
-                                        <IconCard
-                                            icon="chart-timeline-variant"
-                                            title="Total Running SIPs"
-                                            description={
-                                                data?.order?.sip?.sipCount
-                                            }
-                                        />
-                                        <IconCard
-                                            icon="shopping-outline"
-                                            title="Total SIP Amount"
-                                            description={
-                                                
-                                                data?.order?.sip?.monthlySipAmount == null ? 0 : RupeeSymbol + data?.order?.sip?.monthlySipAmount.toFixed(1)
-                                            }
-                                        />
+                                        )} */}
                                     </View>
                                 </View>
                             </View>
-                             {/* Breakdown card starts here */}
+                            {/* Breakdown card starts here */}
                             <View className="flex flex-col md:flex-row rounded w-full">
                                 <View
                                     className="md:w-[33%]  rounded bg-white p-4"
@@ -661,7 +749,58 @@ const IFADashboard = () => {
                                         <View className="w-full flex flex-col justify-between items-start p-2"></View>
                                     </View>
 
-                                    {data?.aum?.breakDown.length === 0 ? (
+                                    {staticData?.breakdown?.external?.length >
+                                    0 ? (
+                                        <>
+                                            <DonutPieChart
+                                                pieData={externalBreakdownChart(
+                                                    staticData?.breakdown
+                                                        ?.external
+                                                )}
+                                                totalValue={pieTotalExternal(
+                                                    staticData?.breakdown
+                                                        ?.external
+                                                )}
+                                                width={500}
+                                                children={
+                                                    <>
+                                                        <View className="w-full">
+                                                            <Text
+                                                                className="text-bold text-xs font-medium text-gray-500"
+                                                                selectable
+                                                            >
+                                                                Current Holding
+                                                            </Text>
+                                                        </View>
+                                                        <View className="">
+                                                            <Text
+                                                                selectable
+                                                                className="font-medium text-xs text-start text-blue-900"
+                                                            >
+                                                                {RupeeSymbol +
+                                                                    pieTotalExternal(
+                                                                        staticData
+                                                                            ?.breakdown
+                                                                            ?.external
+                                                                    )}
+                                                            </Text>
+                                                        </View>
+                                                    </>
+                                                }
+                                            />
+                                            <Button
+                                                width="100%"
+                                                bgColor={"#013974"}
+                                                // marginBottom={1}
+                                                marginTop={2}
+                                                onPress={() =>
+                                                    router.push(`clients`)
+                                                }
+                                            >
+                                                Transfer Portfolio
+                                            </Button>
+                                        </>
+                                    ) : (
                                         <>
                                             <View className="">
                                                 <View
@@ -690,50 +829,6 @@ const IFADashboard = () => {
                                                     </Text>
                                                 </View>
                                             </View>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <DonutPieChart
-                                                pieData={aumBreakdownChart(
-                                                    data?.aum?.breakDown
-                                                )}
-                                                totalValue={pieTotalValue(
-                                                    19348
-                                                )}
-                                                width={500}
-                                                children={
-                                                    <>
-                                                        <View className="w-full">
-                                                            <Text
-                                                                className="text-bold text-xs font-medium text-gray-500"
-                                                                selectable
-                                                            >
-                                                                Current Holding
-                                                            </Text>
-                                                        </View>
-                                                        <View className="">
-                                                            <Text
-                                                                selectable
-                                                                className="font-medium text-xs text-start text-blue-900"
-                                                            >
-                                                                {RupeeSymbol +
-                                                                    "19348.00"}
-                                                            </Text>
-                                                        </View>
-                                                    </>
-                                                }
-                                            />
-                                            <Button
-                                                width="100%"
-                                                bgColor={"#013974"}
-                                                // marginBottom={1}
-                                                marginTop={2}
-                                                onPress={() =>
-                                                    router.push(`clients`)
-                                                }
-                                            >
-                                                Transfer Portfolio
-                                            </Button>
                                         </>
                                     )}
                                 </View>
@@ -936,52 +1031,95 @@ const IFADashboard = () => {
                                                 Coming Soon
                                             </Text>
                                         </View> */}
-                                <View className="flex flex-row py-2">
-                                    <View className="w-6/12">
-                                        <Text className="text-black text-start">
-                                            Name
-                                        </Text>
-                                    </View>
-                                    <View className="w-2/12">
-                                        <Text className="text-start">SIPs</Text>
-                                    </View>
-                                    <View className="w-4/12">
-                                        <Text>Investment</Text>
-                                    </View>
-                                </View>
-                                <View className=" h-48 overflow-scroll">
-                                    {topClientData.map((item, index) => (
-                                        <View
-                                            key={index}
-                                            className="flex flex-row items-center"
-                                        >
+
+                                {topClientData.length > 0 ? (
+                                    <>
+                                        <View className="flex flex-row py-2">
                                             <View className="w-6/12">
-                                                <AvatarCard
-                                                    imageUrl={item.imageUrl}
-                                                    title={item.name}
-                                                    description=""
-                                                />
+                                                <Text className="text-black text-start">
+                                                    Name
+                                                </Text>
                                             </View>
                                             <View className="w-2/12">
-                                                <Text
-                                                    selectable
-                                                    className="text-[#686868] font-semibold text-start"
-                                                >
-                                                    {item.sip}
+                                                <Text className="text-start">
+                                                    SIPs
                                                 </Text>
                                             </View>
                                             <View className="w-4/12">
-                                                <Text
-                                                    selectable
-                                                    className="text-[#686868] font-semibold"
-                                                >
-                                                    {RupeeSymbol}{" "}
-                                                    {item.investment}
-                                                </Text>
+                                                <Text>Investment</Text>
                                             </View>
                                         </View>
-                                    ))}
-                                </View>
+                                        <View className=" h-48 overflow-scroll">
+                                            {topClientData.map(
+                                                (item, index) => (
+                                                    <View
+                                                        key={index}
+                                                        className="flex flex-row items-center"
+                                                    >
+                                                        <View className="w-6/12">
+                                                            <AvatarCard
+                                                                imageUrl={
+                                                                    item.imageUrl
+                                                                }
+                                                                title={
+                                                                    item.name
+                                                                }
+                                                                description=""
+                                                            />
+                                                        </View>
+                                                        <View className="w-2/12">
+                                                            <Text
+                                                                selectable
+                                                                className="text-[#686868] font-semibold text-start"
+                                                            >
+                                                                {item.sip}
+                                                            </Text>
+                                                        </View>
+                                                        <View className="w-4/12">
+                                                            <Text
+                                                                selectable
+                                                                className="text-[#686868] font-semibold"
+                                                            >
+                                                                {RupeeSymbol}{" "}
+                                                                {
+                                                                    item.investment
+                                                                }
+                                                            </Text>
+                                                        </View>
+                                                    </View>
+                                                )
+                                            )}
+                                        </View>
+                                    </>
+                                ) : (
+                                    <View className="flex flex-row justify-center items-center">
+                                        <View
+                                            style={{
+                                                flex: 1,
+                                                justifyContent: "center",
+                                                alignItems: "center",
+                                            }}
+                                            className="flex justify-center items-center pt-10"
+                                        >
+                                            <Image
+                                                // style={{ width: 100, height: 100 }} // adjust width and height as needed
+                                                source={require("../../../assets/images/noDataAvailable.png")}
+                                                alt="No Data Available"
+                                                width={20}
+                                                height={20}
+                                            />
+                                            <Text
+                                                style={{
+                                                    paddingTop: 10,
+                                                    fontSize: 16,
+                                                    fontWeight: "bold",
+                                                }}
+                                            >
+                                                No Data Available
+                                            </Text>
+                                        </View>
+                                    </View>
+                                )}
                             </View>
                             {/* <View className="md:w-[16%] rounded pl-1">
                                         <Text className="font-bold text-start ">
@@ -1102,6 +1240,8 @@ const IFADashboard = () => {
                                 <Text className="font-bold ">
                                     Top 5 distributor
                                 </Text>
+
+                                {}
                                 {/* <View className="flex flex-col h-auto justify-center items-center pt-4">
                                             <Image
                                                 className=""
@@ -1118,50 +1258,93 @@ const IFADashboard = () => {
                                                 Coming Soon
                                             </Text>
                                         </View> */}
-                                <View className="flex flex-row py-2">
-                                    <View className="w-6/12">
-                                        <Text className="text-black">Name</Text>
-                                    </View>
-                                    <View className="w-2/12">
-                                        <Text>SIPs</Text>
-                                    </View>
-                                    <View className="w-4/12">
-                                        <Text>Investment</Text>
-                                    </View>
-                                </View>
-                                <View className=" h-48 overflow-scroll">
-                                    {topClientData.map((item, index) => (
-                                        <View
-                                            key={index}
-                                            className="flex flex-row items-center"
-                                        >
+
+                                {topClientData.length > 0 ? (
+                                    <>
+                                        <View className="flex flex-row py-2">
                                             <View className="w-6/12">
-                                                <AvatarCard
-                                                    imageUrl={item.imageUrl}
-                                                    title={item.name}
-                                                    description=""
-                                                />
+                                                <Text className="text-black">
+                                                    Name
+                                                </Text>
                                             </View>
                                             <View className="w-2/12">
-                                                <Text
-                                                    selectable
-                                                    className="text-[#686868] font-semibold"
-                                                >
-                                                    {item.sip}
-                                                </Text>
+                                                <Text>SIPs</Text>
                                             </View>
                                             <View className="w-4/12">
-                                                <Text
-                                                    selectable
-                                                    className="text-[#686868] font-semibold"
-                                                >
-                                                    {RupeeSymbol}{" "}
-                                                    {item.investment}
-                                                </Text>
+                                                <Text>Investment</Text>
                                             </View>
                                         </View>
-                                    ))}
-                                </View>
+                                        <View className=" h-48 overflow-scroll">
+                                            {topClientData.map(
+                                                (item, index) => (
+                                                    <View
+                                                        key={index}
+                                                        className="flex flex-row items-center"
+                                                    >
+                                                        <View className="w-6/12">
+                                                            <AvatarCard
+                                                                imageUrl={
+                                                                    item.imageUrl
+                                                                }
+                                                                title={
+                                                                    item.name
+                                                                }
+                                                                description=""
+                                                            />
+                                                        </View>
+                                                        <View className="w-2/12">
+                                                            <Text
+                                                                selectable
+                                                                className="text-[#686868] font-semibold"
+                                                            >
+                                                                {item.sip}
+                                                            </Text>
+                                                        </View>
+                                                        <View className="w-4/12">
+                                                            <Text
+                                                                selectable
+                                                                className="text-[#686868] font-semibold"
+                                                            >
+                                                                {RupeeSymbol}{" "}
+                                                                {
+                                                                    item.investment
+                                                                }
+                                                            </Text>
+                                                        </View>
+                                                    </View>
+                                                )
+                                            )}
+                                        </View>
+                                    </>
+                                ) : (
+                                    <View className="flex flex-row justify-center items-center">
+                                        <View
+                                            style={{
+                                                flex: 1,
+                                                justifyContent: "center",
+                                                alignItems: "center",
+                                            }}
+                                            className="flex justify-center items-center pt-10"
+                                        >
+                                            <Image
+                                                // style={{ width: 100, height: 100 }} // adjust width and height as needed
+                                                source={require("../../../assets/images/noDataAvailable.png")}
+                                                alt="No Data Available"
+                                                width={20}
+                                                height={20}
+                                            />
+                                            <Text
+                                                style={{
+                                                    paddingTop: 10,
+                                                    fontSize: 16,
+                                                    fontWeight: "bold",
+                                                }}
+                                            >
+                                                No Data Available
+                                            </Text>
+                                        </View>
+                                    </View>
+                                )}
                             </View>
                             {/* <View className="w-[16%] rounded pl-1">
                                         <Text className="font-bold ">

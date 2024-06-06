@@ -316,7 +316,7 @@ export default function ClientDetail() {
                                                 <DataValue
                                                     key="lastInvestment"
                                                     title="Last Lumpsum"
-                                                    value={`-`}
+                                                    value={`NA`}
                                                 />
                                                 <DataValue
                                                     key="lastInvestmentDate"
@@ -328,11 +328,12 @@ export default function ClientDetail() {
                                                 <DataValue
                                                     key="autopay"
                                                     title="Autopay"
-                                                    value={
-                                                        data?.isActive
-                                                            ? "Active"
-                                                            : "Not Active"
-                                                    }
+                                                    // value={
+                                                    //     data?.isActive
+                                                    //         ? "Active"
+                                                    //         : "Not Active"
+                                                    // }
+                                                    value="NA"
                                                 />
                                                 <DataValue
                                                     key="kycStatus"

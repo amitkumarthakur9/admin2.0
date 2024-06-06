@@ -420,7 +420,7 @@ export default function AppLayout() {
                                 />
                                 {(roleId === 3 || roleId === 4) && (
                                     <>
-                                        <Drawer.Screen
+                                        {/* <Drawer.Screen
                                             name="rta-sync"
                                             options={{
                                                 drawerLabel: "RTA Sync",
@@ -429,8 +429,8 @@ export default function AppLayout() {
                                             }}
                                             initialParams={{}}
                                             component={RTASync}
-                                        />
-                                        <Drawer.Screen
+                                        /> */}
+                                        {/* <Drawer.Screen
                                             name="aum-reconcile"
                                             component={AumReconcile}
                                             options={{
@@ -439,7 +439,7 @@ export default function AppLayout() {
                                                 unmountOnBlur: true,
                                             }}
                                             initialParams={{}}
-                                        />
+                                        /> */}
                                         <Drawer.Screen
                                             name="add-ifa"
                                             options={{
@@ -493,7 +493,7 @@ export default function AppLayout() {
                                     initialParams={{}}
                                     component={DistributorDashboardScreen}
                                 />
-                                <Drawer.Screen
+                                {/* <Drawer.Screen
                                     name="arn-transfer/index"
                                     options={{
                                         drawerLabel: "Requests",
@@ -502,7 +502,7 @@ export default function AppLayout() {
                                     }}
                                     initialParams={{}}
                                     component={ARNTabScreen}
-                                />
+                                /> */}
                                 <Drawer.Screen
                                     name="arn-transfer/[id]/index"
                                     options={{
