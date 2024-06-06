@@ -138,6 +138,9 @@ declare global {
         deliveryType: DeliveryType;
         category: string;
         subCategory: string;
+        maxInvestment: number;
+        minAdditionalInvestment: number;
+        minInvestment: number;
     }
 
     enum Type {
@@ -222,6 +225,9 @@ declare global {
             name: string;
             mutualfundCategory: {};
         };
+        maxInvestment: number;
+        minAdditionalInvestment: number;
+        minInvestment: number;
     }
 
     interface FolioSchema {

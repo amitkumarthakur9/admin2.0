@@ -25,6 +25,7 @@ import { useToast } from "native-base";
 import { Checkbox } from "react-native-paper";
 import { TextInput } from "react-native";
 import { DateTime } from "luxon";
+import { z } from "zod";
 
 import RemoteApi from "../../../../src/services/RemoteApi";
 import { BreadcrumbShadow } from "../../../../src/components/Styles/Shadow";
@@ -1028,12 +1029,18 @@ const LumpSumOrderTab = ({
     mutualFund: MutualFundSearchResult | Holding;
     hideDialog: () => void;
 }) => {
+    const IsMFSearch = isMutualFundSearchResult(mutualFund);
     const [folioID, setFolioID] = useState(null);
-    const [investmentAmount, setInvestmentAmount] = useState("500");
+    const investValue = IsMFSearch
+        ? mutualFund.minInvestment
+        : mutualFund.mutualfund.minAdditionalInvestment;
+
+    const [investmentAmount, setInvestmentAmount] = useState(
+        investValue.toString()
+    );
 
     const { id } = useLocalSearchParams();
 
-    const IsMFSearch = isMutualFundSearchResult(mutualFund);
     const toast = useToast();
 
     const postData = async () => {
@@ -1063,6 +1070,23 @@ const LumpSumOrderTab = ({
         });
     };
 
+    const textInputSchema = z.object({
+        input: z
+            .number()
+            .min(
+                IsMFSearch
+                    ? mutualFund.minInvestment
+                    : mutualFund.mutualfund.minAdditionalInvestment,
+                "Should be more than minimum investment required"
+            )
+            .max(
+                IsMFSearch
+                    ? mutualFund.maxInvestment
+                    : mutualFund.mutualfund.maxInvestment,
+                "Cannot be more than maximum investment allowed"
+            ),
+    });
+
     const {
         mutate: invest,
         isLoading: mutateLoading,
@@ -1071,18 +1095,12 @@ const LumpSumOrderTab = ({
     } = useMutation(postData, {
         onSuccess: (res: any) => {
             setFolioID(null);
-            setInvestmentAmount("500");
+            setInvestmentAmount(investValue.toString());
             if (res && res.code > 299) {
                 // error
                 toast.show({
                     placement: "top",
-                    render: () => {
-                        return (
-                            <Box bg="red.400" p="2" rounded="sm" mb={5}>
-                                {res.message}
-                            </Box>
-                        );
-                    },
+                    render: () => <ErrorToaster message={res.message} />,
                 });
             } else {
                 // success
@@ -1091,7 +1109,13 @@ const LumpSumOrderTab = ({
                     placement: "top",
                     render: () => {
                         return (
-                            <Box bg="green.400" p="2" rounded="sm" mb={5}>
+                            <Box
+                                bg="red.400"
+                                p="2"
+                                color="white"
+                                rounded="sm"
+                                mb={5}
+                            >
                                 {res.message}
                             </Box>
                         );
@@ -1102,16 +1126,29 @@ const LumpSumOrderTab = ({
         onError: () => {
             toast.show({
                 placement: "top",
-                render: () => {
-                    return (
-                        <Box bg="red.400" p="2" rounded="sm" mb={5}>
-                            Error while creating order
-                        </Box>
-                    );
-                },
+                render: () => (
+                    <ErrorToaster message="Error while creating order" />
+                ),
             });
         },
     });
+
+    const handleSubmit = () => {
+        try {
+            textInputSchema.parse({ input: Number(investmentAmount) });
+            // If validation passes, execute the mutation
+            invest();
+        } catch (err) {
+            if (err instanceof z.ZodError) {
+                toast.show({
+                    placement: "top",
+                    render: () => (
+                        <ErrorToaster message={err.errors[0].message} />
+                    ),
+                });
+            }
+        }
+    };
 
     return (
         <View className="w-full flex flex-col justify-items items-center py-2 gap-y-4">
@@ -1121,12 +1158,16 @@ const LumpSumOrderTab = ({
                 </Text>
                 <DropdownComponent
                     label="Folio Number"
-                    data={folios.length===0 ? [{label: "NA", value: "0"}] : folios?.map((el) => {
-                        return {
-                            label: el.folioNumber,
-                            value: el.id,
-                        };
-                    })}
+                    data={
+                        folios.length === 0
+                            ? [{ label: "NA", value: "0" }]
+                            : folios?.map((el) => {
+                                  return {
+                                      label: el.folioNumber,
+                                      value: el.id,
+                                  };
+                              })
+                    }
                     containerStyle={{ width: "100%" }}
                     noIcon
                     value={folioID}
@@ -1147,15 +1188,12 @@ const LumpSumOrderTab = ({
                     value={investmentAmount}
                     onChangeText={setInvestmentAmount}
                 />
-                <Text className="w-full flex flex-row items-start justify-start text-xs text-gray-500">
-                    In multiples of {RupeeSymbol}1000
-                </Text>
             </View>
             <Button
                 width="50%"
                 bgColor={"#013974"}
                 opacity={mutateLoading ? "50" : "100"}
-                onPress={() => invest()}
+                onPress={() => handleSubmit()}
                 className="rounded-lg"
                 disabled={mutateLoading}
             >
@@ -1178,14 +1216,18 @@ const SipOrderTab = ({
     mutualFund: MutualFundSearchResult | Holding;
     hideDialog: () => void;
 }) => {
+    const IsMFSearch = isMutualFundSearchResult(mutualFund);
     const [folioID, setFolioID] = useState(null);
-    const [investmentAmount, setInvestmentAmount] = useState("500");
+    const investValue = IsMFSearch
+        ? mutualFund.minInvestment
+        : mutualFund.mutualfund.minAdditionalInvestment;
+    const [investmentAmount, setInvestmentAmount] = useState(
+        investValue.toString()
+    );
     const [sipDate, setSipDate] = useState();
     const toast = useToast();
 
     const { id } = useLocalSearchParams();
-
-    const IsMFSearch = isMutualFundSearchResult(mutualFund);
 
     const postData = async () => {
         return await ApiRequest.post("/order/sip", {
@@ -1215,6 +1257,39 @@ const SipOrderTab = ({
         });
     };
 
+    const textInputSchema = z.object({
+        input: z
+            .number()
+            .min(
+                IsMFSearch
+                    ? mutualFund.minInvestment
+                    : mutualFund.mutualfund.minAdditionalInvestment,
+                "Should be more than minimum investment required"
+            )
+            .max(
+                IsMFSearch
+                    ? mutualFund.maxInvestment
+                    : mutualFund.mutualfund.maxInvestment,
+                "Cannot be more than maximum investment allowed"
+            ),
+    });
+    const handleSubmit = () => {
+        try {
+            textInputSchema.parse({ input: Number(investmentAmount) });
+            // If validation passes, execute the mutation
+            invest();
+        } catch (err) {
+            if (err instanceof z.ZodError) {
+                toast.show({
+                    placement: "top",
+                    render: () => (
+                        <ErrorToaster message={err.errors[0].message} />
+                    ),
+                });
+            }
+        }
+    };
+
     const {
         mutate: invest,
         isLoading: mutateLoading,
@@ -1225,13 +1300,7 @@ const SipOrderTab = ({
             if (res && res.code > 299) {
                 toast.show({
                     placement: "top",
-                    render: () => {
-                        return (
-                            <Box bg="red.400" p="2" rounded="sm" mb={5}>
-                                {res.message}
-                            </Box>
-                        );
-                    },
+                    render: () => <ErrorToaster message={res.message} />,
                 });
             } else {
                 hideDialog();
@@ -1250,13 +1319,9 @@ const SipOrderTab = ({
         onError: () => {
             toast.show({
                 placement: "top",
-                render: () => {
-                    return (
-                        <Box bg="red.400" p="2" rounded="sm" mb={5}>
-                            Error while creating order
-                        </Box>
-                    );
-                },
+                render: () => (
+                    <ErrorToaster message="Error while creating order" />
+                ),
             });
         },
     });
@@ -1268,12 +1333,16 @@ const SipOrderTab = ({
                 </Text>
                 <DropdownComponent
                     label="Folio Number"
-                    data={folios.length===0 ? [{label: "NA", value: "0"}] : folios?.map((el) => {
-                        return {
-                            label: el.folioNumber,
-                            value: el.id,
-                        };
-                    })}
+                    data={
+                        folios.length === 0
+                            ? [{ label: "NA", value: "0" }]
+                            : folios?.map((el) => {
+                                  return {
+                                      label: el.folioNumber,
+                                      value: el.id,
+                                  };
+                              })
+                    }
                     containerStyle={{ width: "100%" }}
                     noIcon
                     value={folioID}
@@ -1344,7 +1413,7 @@ const SipOrderTab = ({
                 width="50%"
                 bgColor={"#013974"}
                 opacity={mutateLoading ? "50" : "100"}
-                onPress={() => invest()}
+                onPress={() => handleSubmit()}
                 className="rounded-lg"
                 disabled={mutateLoading}
             >
@@ -1522,7 +1591,7 @@ const InvestModalAction = ({
         }
     };
 
-    const { isLoading, isError, error, isStale } = useQuery({
+    const { isLoading } = useQuery({
         queryKey: ["folio", optionType, dividendType],
         queryFn: fetchFolios,
         enabled: IsMFSearch
@@ -2662,5 +2731,13 @@ const ExternalPortfolioModalCard = ({
                 </>
             )}
         </>
+    );
+};
+
+const ErrorToaster = ({ message }) => {
+    return (
+        <Box bg="red.400" p="2" color="white" rounded="sm" mb={5}>
+            <Text className="text-white">{message}</Text>
+        </Box>
     );
 };

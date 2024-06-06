@@ -36,6 +36,9 @@ interface MutualFund {
     bseDematSchemeCode?: any; // You can replace 'any' with the actual type if available
     rtaCode?: string;
     nav?: number;
+    maxInvestment: number;
+    minAdditionalInvestment: number;
+    minInvestment: number;
 }
 
 interface AUMDataItem {
