@@ -1081,8 +1081,12 @@ const LumpSumOrderTab = ({
             )
             .max(
                 IsMFSearch
-                    ? mutualFund.maxInvestment
-                    : mutualFund.mutualfund.maxInvestment,
+                    ? !!mutualFund.maxInvestment
+                        ? mutualFund.maxInvestment
+                        : 9999999
+                    : !!mutualFund.mutualfund.maxInvestment
+                    ? mutualFund.mutualfund.maxInvestment
+                    : 9999999,
                 "Cannot be more than maximum investment allowed"
             ),
     });
@@ -1262,8 +1266,12 @@ const SipOrderTab = ({
             )
             .max(
                 IsMFSearch
-                    ? mutualFund.maxInvestment
-                    : mutualFund.mutualfund.maxInvestment,
+                    ? !!mutualFund.maxInvestment
+                        ? mutualFund.maxInvestment
+                        : 9999999
+                    : !!mutualFund.mutualfund.maxInvestment
+                    ? mutualFund.mutualfund.maxInvestment
+                    : 9999999,
                 "Cannot be more than maximum investment allowed"
             ),
     });
