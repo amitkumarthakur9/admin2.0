@@ -1109,13 +1109,7 @@ const LumpSumOrderTab = ({
                     placement: "top",
                     render: () => {
                         return (
-                            <Box
-                                bg="red.400"
-                                p="2"
-                                color="white"
-                                rounded="sm"
-                                mb={5}
-                            >
+                            <Box bg="green.400" p="2" rounded="sm" mb={5}>
                                 {res.message}
                             </Box>
                         );
