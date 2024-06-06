@@ -66,7 +66,7 @@ const ChapterLearning = ({ name }) => {
                     <View className="px-[5px] md:px-[20px] flex flex-row justify-center ">
                         {Platform.OS === "web" ? (
                             <iframe
-                                src={`../../../assets/data/pdf-view.html?file=${chapter.file}`}
+                                src={`/../../../assets/data/pdf-view.html?file=${chapter.file}`}
                                 style={{
                                     border: "none",
                                     height: "100vh",
@@ -77,7 +77,7 @@ const ChapterLearning = ({ name }) => {
                         ) : (
                             <WebView
                                 source={
-                                    "../../../assets/data/pdf-view.html?file=${chapter.file}"
+                                    "/../../../assets/data/pdf-view.html?file=${chapter.file}"
                                 }
                             />
                         )}
