@@ -65,7 +65,7 @@ const ModuleLearningManagement = lazy(
     () => import("./learning-center/[id]/index")
 );
 const ChapterLearningCenter = lazy(
-    () => import("./learning-center/[id]/[id]/index")
+    () => import("./learning-center/[id]/[chapterId]/index")
 );
 
 const queryClient = new QueryClient();
@@ -554,7 +554,7 @@ export default function AppLayout() {
                                 />
 
                                 <Drawer.Screen
-                                    name="learning-center/[id]/[id]/index"
+                                    name="learning-center/[id]/[chapterId]/index"
                                     options={{
                                         drawerLabel: "Chapter Learning Center",
                                         title: "Module Learning Center",

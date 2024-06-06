@@ -182,13 +182,13 @@
             }
 
             function onZoomIn() {
-                scale += 0.25;
+                scale += 0.1;
                 queueRenderPage(pageNum);
             }
 
             function onZoomOut() {
                 if (scale > 0.5) {
-                    scale -= 0.25;
+                    scale -= 0.1;
                     queueRenderPage(pageNum);
                 }
             }

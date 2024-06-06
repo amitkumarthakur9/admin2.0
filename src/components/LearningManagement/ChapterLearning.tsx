@@ -37,7 +37,18 @@ const ChapterLearning = ({ name }) => {
             {chapter != null ? (
                 <View className="bg-[#f7f7f7]">
                     <View className="bg-[#ecf6e9] p-[35px] md:p-[20px]">
-                        <Pressable className="" onPress={() => router.back()}>
+                        <Pressable
+                            className=""
+                            onPress={() => {
+                                if (router.canGoBack()) {
+                                    router.back();
+                                } else {
+                                    router.push(
+                                        `/learning-center/NISM Certifications Program`
+                                    );
+                                }
+                            }}
+                        >
                             <ArrowBackIcon size={3} />
                         </Pressable>
                         <View className="flex flex-col items-start mt-[20px]">

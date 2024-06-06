@@ -3,7 +3,7 @@ import ChapterLearning from "src/components/LearningManagement/ChapterLearning";
 import { useLocalSearchParams } from "expo-router";
 
 export default function ChapterLearningCenter() {
-    const { id } = useLocalSearchParams();
+    const { chapterId } = useLocalSearchParams();
     return (
         <ScrollView
             className=""
@@ -13,7 +13,7 @@ export default function ChapterLearningCenter() {
                 overflow: "scroll",
             }}
         >
-            <ChapterLearning name={id} />
+            <ChapterLearning name={chapterId} />
         </ScrollView>
     );
 }

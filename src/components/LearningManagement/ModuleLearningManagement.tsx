@@ -389,7 +389,7 @@ const ModuleLearningManagement = () => {
                                                                             }
                                                                             onPress={() =>
                                                                                 router.push(
-                                                                                    `/learning-center/${stockMarketBasicsChapter.level}/${chapter.name}`
+                                                                                    `/learning-center/NISM Certifications Program/${chapter.name}`
                                                                                 )
                                                                             }
                                                                         >
