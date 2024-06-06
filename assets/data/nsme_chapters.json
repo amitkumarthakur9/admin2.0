@@ -1,0 +1,77 @@
+[
+    {
+        "level": "Beginner",
+        "chapters": [
+            {
+                "no":1,
+                "name": "Investment Landscape",
+                "file": "Chapter1.pdf"
+            },
+            {
+                "no":2,
+                "name": "Concept And Role Of A Mutual Fund",
+                "file": "Chapter2.pdf"
+            },
+            {
+                "no":3,
+                "name": "Legal Structure Of Mutual Funds In India",
+                "file": "Chapter3.pdf"
+            }
+        ]
+    },
+    {
+        "level": "Intermediate",
+        "chapters": [
+            {
+                "no":4,
+                "name": "Legal And Regulatory Framework",
+                "file": "Chapter4.pdf"
+            },
+            {
+                "no":5,
+                "name": "Scheme Related Information",
+                "file": "Chapter5.pdf"
+            },
+            {
+                "no":6,
+                "name": "Fund Distribution And Channel Management Practices",
+                "file": "Chapter6.pdf"
+            },
+            {
+                "no":7,
+                "name": "Net Asset Value, Total Expense Ratio And Pricing Of Units",
+                "file": "Chapter7.pdf"
+            }
+        ]
+    },
+    {
+        "level": "Advanced",
+        "chapters": [
+            {
+                "no":8,
+                "name": "Taxation",
+                "file": "Chapter8.pdf"
+            },
+            {
+                "no":9,
+                "name": "Investor Services",
+                "file": "Chapter9.pdf"
+            },
+            {
+                "no":10,
+                "name": "Risk, Return, and Performance of Funds",
+                "file": "Chapter10.pdf"
+            },
+            {
+                "no":11,
+                "name": "Mutual Fund Scheme Performance",
+                "file": "Chapter11.pdf"
+            },
+            {
+                "no":12,
+                "name": "Mutual Fund Scheme Selection",
+                "file": "Chapter12.pdf"
+            }
+        ]
+    }
+]

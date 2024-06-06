@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>PDF.js Viewer</title>
+        <style>
+            #pdf-viewer {
+                width: 100%;
+                height: 640px;
+                /* border: 1px solid #000; */
+                overflow-y: auto;
+                position: relative;
+                text-align: center;
+            }
+            .pdf-page {
+                margin-bottom: 20px;
+            }
+            ::-webkit-scrollbar {
+                -webkit-appearance: none;
+                width: 7px;
+            }
+            ::-webkit-scrollbar-thumb {
+                border-radius: 4px;
+                background-color: rgba(0, 0, 0, 0.5);
+                box-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
+            }
+            #controls {
+                text-align: center;
+                margin-bottom: 10px;
+            }
+            #controls button {
+                margin: 0 5px;
+            }
+            #page-slider {
+                width: 100%;
+            }
+            #fullscreen {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+            }
+
+            #page-indicator {
+                /* position: absolute;
+                            bottom: 80px;
+                            left: 50%;
+                            transform: translateX(-50%);
+                            background-color: rgb(194 194 194 / 50%);
+                            padding: 5px 10px;
+                            border-radius: 5px;
+                            z-index: 9; */
+                /* position: absolute; */
+                /* bottom: 80px; */
+                /* left: 50%; */
+                /* transform: translateX(-50%); */
+                background-color: rgb(194 194 194 / 50%);
+                padding: 5px 10px;
+                border-radius: 5px;
+                z-index: 9;
+                display: flex;
+                justify-content: center;
+                width: 120px;
+            }
+            .page-i {
+                display: flex;
+                justify-content: center;
+            }
+            .button-secondary {
+                background-color: #dbdbdb;
+                color: #000;
+                border: 1px solid #afafaf;
+                padding: 5px 10px;
+                font-size: 10px;
+                border-radius: 5px;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+            }
+
+            .button-secondary:hover {
+                background-color: #5a6268; /* Darken background color on hover */
+            }
+        </style>
+    </head>
+    <body>
+        <div id="controls">
+            <button id="prev-page" class="button-secondary">Previous</button>
+            <button id="next-page" class="button-secondary">Next</button>
+            <button id="zoom-out" class="button-secondary">Zoom In</button>
+            <button id="zoom-in" class="button-secondary">Zoom Out</button>
+            <button id="fullscreen" class="button-secondary">Fullscreen</button>
+        </div>
+        <!-- add this div for page indicator -->
+        <div class="page-i">
+            <div id="page-indicator"></div>
+        </div>
+        <div id="pdf-viewer"></div>
+        <input type="range" id="page-slider" min="1" value="1" />
+
+        <script src="./pdf.min.js"></script>
+        <script>
+            var resultParams = {};
+            // Function to get URL parameters
+            function getUrlParams() {
+                const params = new URLSearchParams(window.location.search);
+                for (let [key, value] of params.entries()) {
+                    resultParams[key] = value;
+                }
+            }
+
+            getUrlParams();
+
+            var url = `./${resultParams.file}`;
+
+            var pdfDoc = null;
+            var pageNum = 1;
+            var scale = 1;
+            var canvas = document.createElement("canvas");
+            var ctx = canvas.getContext("2d");
+            var renderTask = null;
+
+            document.getElementById("pdf-viewer").appendChild(canvas);
+
+            function renderPage(num) {
+                if (renderTask) {
+                    renderTask.cancel();
+                }
+
+                pdfDoc.getPage(num).then(function (page) {
+                    var viewport = page.getViewport({ scale: scale });
+                    var container = document.getElementById("pdf-viewer");
+                    var containerHeight = container.clientHeight;
+                    var containerWidth = container.clientWidth;
+
+                    var adjustedScale = containerHeight / viewport.height;
+                    var adjustedViewport = page.getViewport({
+                        scale: adjustedScale,
+                    });
+
+                    if (adjustedViewport.width > containerWidth) {
+                        adjustedScale = containerWidth / viewport.width;
+                        adjustedViewport = page.getViewport({
+                            scale: adjustedScale,
+                        });
+                    }
+
+                    canvas.height = adjustedViewport.height;
+                    canvas.width = adjustedViewport.width;
+
+                    var renderContext = {
+                        canvasContext: ctx,
+                        viewport: adjustedViewport,
+                    };
+
+                    renderTask = page.render(renderContext);
+                    renderTask.promise.then(function () {
+                        document.getElementById("page-slider").value = num;
+                    });
+                });
+            }
+
+            // Update page number indicator on page change
+            function queueRenderPage(num) {
+                renderPage(num);
+                updatePageIndicator(num, pdfDoc.numPages);
+            }
+
+            function onPrevPage() {
+                if (pageNum <= 1) {
+                    return;
+                }
+                pageNum--;
+                queueRenderPage(pageNum);
+            }
+
+            function onNextPage() {
+                if (pageNum >= pdfDoc.numPages) {
+                    return;
+                }
+                pageNum++;
+                queueRenderPage(pageNum);
+            }
+
+            function onZoomIn() {
+                scale += 0.25;
+                queueRenderPage(pageNum);
+            }
+
+            function onZoomOut() {
+                if (scale > 0.5) {
+                    scale -= 0.25;
+                    queueRenderPage(pageNum);
+                }
+            }
+
+            function onSliderChange(event) {
+                pageNum = parseInt(event.target.value);
+                queueRenderPage(pageNum);
+                // Update page number indicator on initial load
+                updatePageIndicator(pageNum, pdfDoc.numPages);
+            }
+
+            function debounce(func, wait) {
+                let timeout;
+                return function (...args) {
+                    const context = this;
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => func.apply(context, args), wait);
+                };
+            }
+
+            let initialPinchDistance = null;
+
+            function getPinchDistance(touches) {
+                const dx = touches[0].pageX - touches[1].pageX;
+                const dy = touches[0].pageY - touches[1].pageY;
+                return Math.sqrt(dx * dx + dy * dy);
+            }
+
+            function handleTouchStart(event) {
+                if (event.touches.length === 2) {
+                    initialPinchDistance = getPinchDistance(event.touches);
+                }
+            }
+
+            function handleTouchMove(event) {
+                if (event.touches.length === 2 && initialPinchDistance) {
+                    const currentPinchDistance = getPinchDistance(
+                        event.touches
+                    );
+                    const scaleChange =
+                        currentPinchDistance / initialPinchDistance;
+                    if (scaleChange > 1) {
+                        scale += 0.05;
+                    } else {
+                        scale -= 0.05;
+                    }
+                    queueRenderPage(pageNum);
+                    initialPinchDistance = currentPinchDistance;
+                }
+            }
+
+            function handleWheel(event) {
+                if (Math.abs(event.deltaY) < Math.abs(event.deltaX)) {
+                    return;
+                }
+                event.preventDefault();
+                if (event.deltaY < 0) {
+                    scale += 0.1;
+                } else {
+                    scale -= 0.1;
+                }
+                queueRenderPage(pageNum);
+            }
+
+            // const debouncedHandleWheel = debounce(handleWheel, 50);
+
+            function handleFullscreen() {
+                const body = document.getElementsByTagName("body")[0];
+                const pdfElement = document.getElementById("pdf-viewer");
+
+                const fullscreenButton = document.getElementById("fullscreen");
+                if (!document.fullscreenElement) {
+                    if (body.requestFullscreen) {
+                        body.requestFullscreen();
+                    } else if (body.mozRequestFullScreen) {
+                        // Firefox
+                        body.mozRequestFullScreen();
+                    } else if (body.webkitRequestFullscreen) {
+                        // Chrome, Safari and Opera
+                        body.webkitRequestFullscreen();
+                    } else if (body.msRequestFullscreen) {
+                        // IE/Edge
+                        body.msRequestFullscreen();
+                    }
+                    pdfElement.style.height = "calc(100vh - 100px)";
+                    onNextPage();
+                    onPrevPage();
+
+                    const canvas = document.getElementsByTagName("canvas")[0];
+                    canvas.style.height = "calc(100vh - 100px)";
+
+                    fullscreenButton.textContent = "Exit Fullscreen";
+                } else {
+                    if (document.exitFullscreen) {
+                        document.exitFullscreen();
+                    } else if (document.mozCancelFullScreen) {
+                        // Firefox
+                        document.mozCancelFullScreen();
+                    } else if (document.webkitExitFullscreen) {
+                        // Chrome, Safari and Opera
+                        document.webkitExitFullscreen();
+                    } else if (document.msExitFullscreen) {
+                        // IE/Edge
+                        document.msExitFullscreen();
+                    }
+                    pdfElement.style.height = "640px";
+                    fullscreenButton.textContent = "Fullscreen";
+                    const canvas = document.getElementsByTagName("canvas")[0];
+                    canvas.style.height = "640px";
+                    onNextPage();
+                    onPrevPage();
+                }
+            }
+
+            // Update page number indicator
+            function updatePageIndicator(pageNum, total) {
+                const pageIndicator = document.getElementById("page-indicator");
+                pageIndicator.textContent = pageNum + "/" + total + " pages";
+            }
+
+            document
+                .getElementById("prev-page")
+                .addEventListener("click", onPrevPage);
+            document
+                .getElementById("next-page")
+                .addEventListener("click", onNextPage);
+            document
+                .getElementById("zoom-in")
+                .addEventListener("click", onZoomIn);
+            document
+                .getElementById("zoom-out")
+                .addEventListener("click", onZoomOut);
+            document
+                .getElementById("fullscreen")
+                .addEventListener("click", handleFullscreen);
+            document
+                .getElementById("page-slider")
+                .addEventListener("input", onSliderChange);
+
+            document.addEventListener("fullscreenchange", () => {
+                const pdfViewer = document.getElementById("pdf-viewer");
+                const fullscreenButton = document.getElementById("fullscreen");
+                if (!document.fullscreenElement) {
+                    pdfViewer.style.height = "640px";
+                    fullscreenButton.textContent = "Fullscreen";
+                }
+            });
+
+            pdfjsLib.getDocument(url).promise.then(function (pdfDoc_) {
+                pdfDoc = pdfDoc_;
+                updatePageIndicator(1, pdfDoc.numPages);
+                document.getElementById("page-slider").max = pdfDoc.numPages;
+                renderPage(pageNum);
+            });
+        </script>
+    </body>
+</html>

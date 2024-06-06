@@ -60,7 +60,13 @@ const RiskProfile = lazy(() => import("./calculators/risk-profile"));
 const AssitantScreen = lazy(() => import("./ai-assitant"));
 const MutualSipAnalyticsScreen = lazy(() => import("./analytics/mutual-sip"));
 const AnalyticsScreen = lazy(() => import("./analytics"));
-
+const LearningManagement = lazy(() => import("./learning-center"));
+const ModuleLearningManagement = lazy(
+    () => import("./learning-center/[id]/index")
+);
+const ChapterLearningCenter = lazy(
+    () => import("./learning-center/[id]/[id]/index")
+);
 
 const queryClient = new QueryClient();
 
@@ -503,7 +509,7 @@ export default function AppLayout() {
                                     initialParams={{}}
                                     component={MutualSipAnalyticsScreen}
                                 /> */}
-                                 <Drawer.Screen
+                                <Drawer.Screen
                                     name="analytics/index"
                                     options={{
                                         drawerLabel: "Analytics",
@@ -522,6 +528,40 @@ export default function AppLayout() {
                                     }}
                                     initialParams={{}}
                                     component={MarketingScreen}
+                                />
+                                <Drawer.Screen
+                                    name="learning-center/index"
+                                    options={{
+                                        drawerLabel: "Learning Center",
+                                        title: "Learning Center",
+                                        unmountOnBlur: true,
+                                    }}
+                                    initialParams={{}}
+                                    component={LearningManagement}
+                                />
+
+                                <Drawer.Screen
+                                    name="learning-center/[id]/index"
+                                    options={{
+                                        drawerLabel: "Module Learning Center",
+                                        title: "Module Learning Center",
+                                        drawerItemStyle: { display: "none" },
+                                        unmountOnBlur: true,
+                                    }}
+                                    initialParams={{}}
+                                    component={ModuleLearningManagement}
+                                />
+
+                                <Drawer.Screen
+                                    name="learning-center/[id]/[id]/index"
+                                    options={{
+                                        drawerLabel: "Chapter Learning Center",
+                                        title: "Module Learning Center",
+                                        drawerItemStyle: { display: "none" },
+                                        unmountOnBlur: true,
+                                    }}
+                                    initialParams={{}}
+                                    component={ChapterLearningCenter}
                                 />
                             </Drawer.Navigator>
                         </Suspense>
