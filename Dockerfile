@@ -27,7 +27,7 @@ RUN npm install --legacy-peer-dep
 # Run the Expo export command to build the web app
 RUN npx expo export -p web
 
-cp -r ./assets/data ./dist/assets/
+RUN cp -r ./assets/data ./dist/assets/
 
 # Install PM2 globally
 RUN npm install -g pm2
