@@ -9,6 +9,15 @@ RUN apt-get update && apt-get install -y nginx && apt-get install -y nginx-extra
 RUN rm /etc/nginx/sites-enabled/default
 RUN rm /etc/nginx/nginx.conf
 
+
+COPY example.crt /etc/ssl/certs/example.crt
+COPY example.key /etc/ssl/private/example.key
+
+#Permsissions on the key file
+RUN chmod 600 /etc/ssl/private/example.key
+RUN chmod 644 /etc/ssl/certs/example.crt
+
+
 COPY site.conf /etc/nginx/sites-enabled/
 COPY nginx.conf /etc/nginx/
 COPY server-errors/custom40x.html /usr/share/nginx/html/
