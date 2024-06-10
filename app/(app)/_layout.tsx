@@ -36,6 +36,8 @@ import { jwtDecode } from "jwt-decode";
 import { UserRoleProvider } from "../../src/context/useRoleContext";
 import MarketingScreen from "./marketing";
 import AntDesign from "react-native-vector-icons/AntDesign";
+import ClientARNDetail from "./arn-transfer/[id]";
+import ClientDetail from "./clients/[id]/index";
 
 NativeWindStyleSheet.setOutput({
     default: "native",
@@ -51,7 +53,7 @@ const RTAReconciliationScreen = lazy(() => import("./rta-reconciliation"));
 const RTAReconciliationDetail = lazy(() => import("./rta-reconciliation/[id]"));
 const SIPReportsDetail = lazy(() => import("./sip-reports/[id]"));
 const AUMDetail = lazy(() => import("./folio/[id]"));
-const ClientDetail = lazy(() => import("./clients/[id]/index"));
+// const ClientDetail = lazy(() => import("./clients/[id]/index"));
 const HoldingDetail = lazy(() => import("./clients/[id]/holdings/[holdingId]"));
 const MandatesScreen = lazy(() => import("./mandates"));
 const MandateDetail = lazy(() => import("./mandates/[id]"));
@@ -64,7 +66,7 @@ const AddIfaRm = lazy(() => import("./add-ifa-rm"));
 const DistributorDashboardScreen = lazy(() => import("./dashboard/[id]"));
 const IFAReportsScreen = lazy(() => import("./ifa"));
 const ARNTabScreen = lazy(() => import("./arn-transfer"));
-const ClientARNDetail = lazy(() => import("./arn-transfer/[id]"));
+// const ClientARNDetail = lazy(() => import("./arn-transfer/[id]"));
 const BrokerageScreen = lazy(() => import("./brokerage"));
 const Calculators = lazy(() => import("./calculators"));
 const Sip = lazy(() => import("./calculators/sip"));
@@ -81,6 +83,7 @@ const ChapterLearningCenter = lazy(
     () => import("./learning-center/[id]/[chapterId]/index")
 );
 import IonIcon from "react-native-vector-icons/Ionicons";
+import DsaFormScreen from "./dsa-form";
 
 const queryClient = new QueryClient();
 
@@ -231,8 +234,8 @@ export default function AppLayout() {
                 <Drawer.Screen
                     name="ifa/index"
                     options={{
-                        drawerLabel: "Distributor Report",
-                        title: "Distributor Report",
+                        drawerLabel: "Distributor",
+                        title: "Distributor",
                         unmountOnBlur: true,
                     }}
                     initialParams={{}}
@@ -579,7 +582,7 @@ export default function AppLayout() {
                                     initialParams={{}}
                                     component={MutualSipAnalyticsScreen}
                                 /> */}
-                                <Drawer.Screen
+                                {/* <Drawer.Screen
                                     name="analytics/index"
                                     options={{
                                         drawerLabel: "Analytics",
@@ -588,8 +591,8 @@ export default function AppLayout() {
                                     }}
                                     initialParams={{}}
                                     component={AnalyticsScreen}
-                                />
-                                <Drawer.Screen
+                                /> */}
+                                {/* <Drawer.Screen
                                     name="marketing/index"
                                     options={{
                                         drawerLabel: "Marketing",
@@ -598,9 +601,9 @@ export default function AppLayout() {
                                     }}
                                     initialParams={{}}
                                     component={MarketingScreen}
-                                />
+                                /> */}
 
-                                <Drawer.Screen
+                                {/* <Drawer.Screen
                                     name="learning-center/index"
                                     options={{
                                         drawerLabel: "Learning Center",
@@ -609,7 +612,7 @@ export default function AppLayout() {
                                     }}
                                     initialParams={{}}
                                     component={LearningManagement}
-                                />
+                                /> */}
 
                                 <Drawer.Screen
                                     name="learning-center/[id]/index"
@@ -634,6 +637,21 @@ export default function AppLayout() {
                                     initialParams={{}}
                                     component={ChapterLearningCenter}
                                 />
+                                <Drawer.Screen
+                                            name="dsa-form/index"
+                                            options={{
+                                                drawerLabel: "DSA form",
+                                                title: "DSA form",
+                                                drawerItemStyle: {
+                                                    display: "none",
+                                                },
+                                                unmountOnBlur: true,
+                                            }}
+                                            initialParams={{}}
+                                            component={
+                                                DsaFormScreen
+                                            }
+                                        />
                             </Drawer.Navigator>
                             {/* <Fab
                                 renderInPortal={false}

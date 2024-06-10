@@ -519,7 +519,7 @@ const IFADashboard = () => {
                                     <View className="flex flex-col md:w-6/12  rounded bg-white h-auto gap-1">
                                         <IconCard
                                             icon="wallet-outline"
-                                            title="Total Lumpsum Investment"
+                                            title="Lumpsum Investment"
                                             description={
                                                 data?.order?.lumpsum?.total
                                                     ? RupeeSymbol +
@@ -531,7 +531,7 @@ const IFADashboard = () => {
                                         />
                                         <IconCard
                                             icon="shopping-outline"
-                                            title="Total SIP Amount"
+                                            title="SIP Amount"
                                             description={
                                                 data?.order?.sip
                                                     ?.monthlySipAmount == null
@@ -546,7 +546,7 @@ const IFADashboard = () => {
                                     <View className="flex flex-col md:w-5/12  rounded bg-white h-auto gap-1">
                                         <IconCard
                                             icon="chart-timeline-variant"
-                                            title="Total Running SIPs"
+                                            title="Running SIPs"
                                             description={
                                                 data?.order?.sip?.sipCount
                                             }

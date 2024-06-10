@@ -1,6 +1,6 @@
 // CardWithTabs.js
 import React from "react";
-import { View, Pressable } from "react-native";
+import { View, Pressable, Dimensions } from "react-native";
 import { Text } from "native-base";
 
 const CardWithTabs = ({
@@ -13,8 +13,9 @@ const CardWithTabs = ({
         <View className="flex-1 bg-white rounded h-full">
             <View className="w-full flex flex-row">
                 {tabContent?.map((tab, index) => {
+                    let width = 100/tabsCount;
                     return (
-                        <View className={`w-1/${tabsCount}`}>
+                        <View className={``} style={{width: width+'%'}}>
                             <Pressable
                                 key={index}
                                 onPress={() => handleTabPress(index + 1)}
