@@ -115,7 +115,7 @@ export default function MandateDetail() {
                                 <Pressable
                                     className="mr-3"
                                     onPress={() =>
-                                        console.log("This will go back ")
+                                        router.push('/mandates')
                                     }
                                 >
                                     <Icon

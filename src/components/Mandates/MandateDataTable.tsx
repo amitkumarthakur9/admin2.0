@@ -243,7 +243,7 @@ const MandateDataTable = () => {
                                     onPress={() =>
                                         router.push(`mandates/${mandate.id}`)
                                     }
-                                    className="rounded-full border-[0.4px] flex flex-row items-center justify-center bg-black w-6/12 h-6"
+                                    className="rounded-full border-[0.4px] flex flex-row items-center justify-center bg-black w-11/12 h-6"
                                 >
                                     <Text
                                         selectable

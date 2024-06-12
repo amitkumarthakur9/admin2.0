@@ -84,6 +84,8 @@ const ChapterLearningCenter = lazy(
 );
 import IonIcon from "react-native-vector-icons/Ionicons";
 import DsaFormScreen from "./dsa-form";
+import DsaRequestScreen from "./dsa-form/request";
+
 
 const queryClient = new QueryClient();
 
@@ -652,6 +654,23 @@ export default function AppLayout() {
                                                 DsaFormScreen
                                             }
                                         />
+
+                                        <Drawer.Screen
+                                            name="dsa-form/request/index"
+                                            options={{
+                                                drawerLabel: "DSA form",
+                                                title: "DSA form",
+                                                drawerItemStyle: {
+                                                    display: "none",
+                                                },
+                                                unmountOnBlur: true,
+                                            }}
+                                            initialParams={{}}
+                                            component={
+                                                DsaRequestScreen
+                                            }
+                                        />
+
                             </Drawer.Navigator>
                             {/* <Fab
                                 renderInPortal={false}

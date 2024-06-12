@@ -27,23 +27,43 @@ const StepOneForm = ({ onNext }) => {
   return (
     <Formik
       initialValues={{
-        fullName: '',
-        email: '',
-        mobileNumber: '',
-        panNumber: '',
-        pincode: '',
-        country: '',
-        arn: '',
-        maritalStatus: '',
-        incomeRange: '',
-        education: '',
-        occupation: '',
-        addressLine1: '',
-        addressLine2: '',
-        addressLine3: '',
-        city: '',
-        state: '',
+        fullName: 'Saffi',
+        email: 'saffi@test.com',
+        mobileNumber: '9876543210',
+        panNumber: 'ASBV0897',
+        pincode: '756110',
+        country: 'India',
+        arn: 'dafbldlbf',
+        maritalStatus: 'Married',
+        incomeRange: '0-10 Lacs',
+        education: 'Graduation',
+        occupation: 'Service',
+        addressLine1: 'dkfd',
+        addressLine2: 'dfas',
+        addressLine3: 'dsaf',
+        city: 'fdsf',
+        state: 'Odisha',
       }}
+
+      // initialValues={{
+      //   fullName: '',
+      //   email: '',
+      //   mobileNumber: '',
+      //   panNumber: '',
+      //   pincode: '',
+      //   country: '',
+      //   arn: '',
+      //   maritalStatus: '',
+      //   incomeRange: '',
+      //   education: '',
+      //   occupation: '',
+      //   addressLine1: '',
+      //   addressLine2: '',
+      //   addressLine3: '',
+      //   city: '',
+      //   state: '',
+      // }}
+
       validationSchema={validationSchema}
       onSubmit={async (values) => {
         
@@ -55,7 +75,12 @@ const StepOneForm = ({ onNext }) => {
         } catch (error) {
           console.error(error);
         }
+
+        onNext();
+
       }}
+
+      
     >
       {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
         <ScrollView contentContainerStyle={styles.container}>

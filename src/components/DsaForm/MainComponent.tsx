@@ -71,47 +71,59 @@ const MainComponent = () => {
                     </View>
                 )}
                 <View style={styles.steps}>
-                    <View style={[styles.step, step >= 1 && styles.stepActive]}>
-                        <Text
-                            style={[
-                                styles.stepNumber,
-                                step >= 1 && styles.stepNumberActive,
-                            ]}
-                        >
-                            01
-                        </Text>
+                    <View style={[styles.step, step >= 1 && styles.stepActive, step > 1 && styles.stepCompleted]}>
+                        {step > 1 ? (
+                            <FontAwesome name="check" size={18} color="#fff" />
+                        ) : (
+                            <Text
+                                style={[
+                                    styles.stepNumber,
+                                    step >= 1 && styles.stepNumberActive,
+                                ]}
+                            >
+                                01
+                            </Text>
+                        )}
                     </View>
                     <View
                         style={[styles.line, step >= 2 && styles.lineActive]}
                     />
-                    <View style={[styles.step, step >= 2 && styles.stepActive]}>
-                        <Text
-                            style={[
-                                styles.stepNumber,
-                                step >= 2 && styles.stepNumberActive,
-                            ]}
-                        >
-                            02
-                        </Text>
+                    <View style={[styles.step, step >= 2 && styles.stepActive, step > 2 && styles.stepCompleted]}>
+                        {step > 2 ? (
+                            <FontAwesome name="check" size={18} color="#fff" />
+                        ) : (
+                            <Text
+                                style={[
+                                    styles.stepNumber,
+                                    step >= 2 && styles.stepNumberActive,
+                                ]}
+                            >
+                                02
+                            </Text>
+                        )}
                     </View>
                     <View
                         style={[styles.line, step >= 3 && styles.lineActive]}
                     />
-                    <View style={[styles.step, step >= 3 && styles.stepActive]}>
-                        <Text
-                            style={[
-                                styles.stepNumber,
-                                step >= 3 && styles.stepNumberActive,
-                            ]}
-                        >
-                            03
-                        </Text>
+                    <View style={[styles.step, step >= 3 && styles.stepActive, step > 3 && styles.stepCompleted]}>
+                        {step > 3 ? (
+                            <FontAwesome name="check" size={18} color="#fff" />
+                        ) : (
+                            <Text
+                                style={[
+                                    styles.stepNumber,
+                                    step >= 3 && styles.stepNumberActive,
+                                ]}          
+                            >
+                                03
+                            </Text>
+                        )}
                     </View>
                 </View>
             </View>
 
             <View style={{ flex: 1, padding: 20 }}>
-                {step === 1 && <StepThreeUpload onNext={handleNext} />}
+                {step === 1 && <StepOneForm onNext={handleNext} />}
                 {step === 2 && <StepTwoPDF onNext={handleNext} />}
                 {step === 3 && <StepThreeUpload onSuccess={handleSuccess} />}
                 {step === 4 && <Success />}
@@ -186,6 +198,9 @@ const styles = StyleSheet.create({
     },
     stepActive: {
         borderColor: "#0066cc",
+    },
+    stepCompleted: {
+        backgroundColor: "#0066cc",
     },
     stepNumber: {
         color: "#d3d3d3",
