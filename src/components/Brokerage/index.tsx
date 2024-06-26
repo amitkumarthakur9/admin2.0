@@ -297,7 +297,7 @@ export const Brokerage = () => {
                                                                 ? brokerage?.data?.totalAmount.toFixed(
                                                                       2
                                                                   )
-                                                                : "10000.00"
+                                                                : "0.00"
                                                         }`
                                                     }
                                                 />
@@ -315,7 +315,7 @@ export const Brokerage = () => {
                                                                 ? brokerage?.data?.subBrokerAmount.toFixed(
                                                                       2
                                                                   )
-                                                                : "8000.00"
+                                                                : "0.00"
                                                         }`
                                                     }
                                                 />
@@ -341,148 +341,241 @@ export const Brokerage = () => {
                                                             By Investment Type
                                                         </Text>
 
-                                                        {/* {brokerage?.data
+                                                        {brokerage?.data
                                                             ?.totalAmount >
-                                                        0 ? ( */}
+                                                        0 ? (
+                                                            <DonutPieChart
+                                                                pieData={[
+                                                                    {
+                                                                        x: "SIP",
+                                                                        y:
+                                                                            brokerage
+                                                                                ?.data
+                                                                                ?.sipTotal /
+                                                                            brokerage
+                                                                                ?.data
+                                                                                ?.totalAmount,
+                                                                    },
+                                                                    {
+                                                                        x: "One Time",
+                                                                        y:
+                                                                            brokerage
+                                                                                ?.data
+                                                                                ?.oneTimeTotal /
+                                                                            brokerage
+                                                                                ?.data
+                                                                                ?.totalAmount,
+                                                                    },
+                                                                ]}
 
-                                                        <DonutPieChart
-                                                            // pieData={[
-                                                            //     {
-                                                            //         x: "SIP",
-                                                            //         y:
-                                                            //             brokerage
-                                                            //                 ?.data
-                                                            //                 ?.sipTotal /
-                                                            //             brokerage
-                                                            //                 ?.data
-                                                            //                 ?.totalAmount,
-                                                            //     },
-                                                            //     {
-                                                            //         x: "One Time",
-                                                            //         y:
-                                                            //             brokerage
-                                                            //                 ?.data
-                                                            //                 ?.oneTimeTotal /
-                                                            //             brokerage
-                                                            //                 ?.data
-                                                            //                 ?.totalAmount,
-                                                            //     },
-                                                            // ]}
-
-                                                            pieData={[
-                                                                {
-                                                                    x: "SIP",
-                                                                    y: 65,
-                                                                },
-                                                                {
-                                                                    x: "One Time",
-                                                                    y: 35,
-                                                                },
-                                                            ]}
-                                                            totalValue={"19.3k"}
-                                                        />
-                                                        {/* ) : (
-                                                            <ComingSoon />
-                                                        )}  */}
+                                                                //     pieData={[
+                                                                //         {
+                                                                //             x: "SIP",
+                                                                //             y: 65,
+                                                                //         },
+                                                                //         {
+                                                                //             x: "One Time",
+                                                                //             y: 35,
+                                                                //         },
+                                                                //     ]}
+                                                                //     totalValue={"19.3k"}
+                                                            />
+                                                        ) : (
+                                                            <View className="">
+                                                                <View className="h-[300px] z-[-4] w-11/12">
+                                                                    <View
+                                                                        style={{
+                                                                            flex: 1,
+                                                                            justifyContent:
+                                                                                "center",
+                                                                            alignItems:
+                                                                                "center",
+                                                                        }}
+                                                                    >
+                                                                        <Image
+                                                                            // style={{ width: 100, height: 100 }} // adjust width and height as needed
+                                                                            source={require("../../../assets/images/noDataAvailable.png")}
+                                                                            alt="No Data Available"
+                                                                        />
+                                                                        <Text
+                                                                            style={{
+                                                                                paddingTop: 10,
+                                                                                fontSize: 16,
+                                                                                fontWeight:
+                                                                                    "bold",
+                                                                            }}
+                                                                        >
+                                                                            No
+                                                                            Data
+                                                                            Available
+                                                                        </Text>
+                                                                    </View>
+                                                                </View>
+                                                            </View>
+                                                        )}
                                                     </View>
                                                     <Divider orientation="vertical" />
                                                 </View>
                                                 <View className="w-1/3 flex-row justify-between rounded-3xl bg-white p-4">
                                                     <View className="w-[99%] flex">
-                                                        {/* {brokerage?.data
+                                                        {brokerage?.data
                                                             ?.topFundhouse
-                                                            ?.length ? ( */}
-                                                        {/* <View className="h-full flex flex-col items-center justify-center gap-8"> */}
-                                                        <BarChart
-                                                            title={
-                                                                "By Top AMCs"
-                                                            }
-                                                            // data={brokerage?.data?.topFundhouse?.map(
-                                                            //     (
-                                                            //         el
-                                                            //     ) => {
-                                                            //         return {
-                                                            //             label: el.fundhouse,
-                                                            //             value: el.subBrokerAmount,
-                                                            //         };
-                                                            //     }
-                                                            // )}
+                                                            ?.length > 0 ? (
+                                                            <View className="h-full flex flex-col items-center justify-center gap-8">
+                                                                <BarChart
+                                                                    title={
+                                                                        "By Top AMCs"
+                                                                    }
+                                                                    data={brokerage?.data?.topFundhouse?.map(
+                                                                        (
+                                                                            el
+                                                                        ) => {
+                                                                            return {
+                                                                                label: el.fundhouse,
+                                                                                value: el.subBrokerAmount,
+                                                                            };
+                                                                        }
+                                                                    )}
 
-                                                            data={DummyDate?.amc?.breakDown?.map(
-                                                                (el) => {
-                                                                    return {
-                                                                        label: el.category,
-                                                                        value: el.currentValue,
-                                                                    };
+                                                                    // data={DummyDate?.amc?.breakDown?.map(
+                                                                    //     (el) => {
+                                                                    //         return {
+                                                                    //             label: el.category,
+                                                                    //             value: el.currentValue,
+                                                                    //         };
+                                                                    //     }
+                                                                    // )}
+                                                                />
+                                                                {/* <NoDataAvailable /> */}
+                                                            </View>
+                                                        ) : (
+                                                            <>
+                                                                <View className="">
+                                                                    <View className="flex flex-row justify-start items-start ">
+                                                                        <Text className="text-md font-bold text-start">
+                                                                            By
+                                                                            Top
+                                                                            AMCs
+                                                                        </Text>
+                                                                    </View>
+                                                                    <View className="">
+                                                                        <View className="h-[300px] z-[-4] w-11/12">
+                                                                            <View
+                                                                                style={{
+                                                                                    flex: 1,
+                                                                                    justifyContent:
+                                                                                        "center",
+                                                                                    alignItems:
+                                                                                        "center",
+                                                                                }}
+                                                                            >
+                                                                                <Image
+                                                                                    // style={{ width: 100, height: 100 }} // adjust width and height as needed
+                                                                                    source={require("../../../assets/images/noDataAvailable.png")}
+                                                                                    alt="No Data Available"
+                                                                                />
+                                                                                <Text
+                                                                                    style={{
+                                                                                        paddingTop: 10,
+                                                                                        fontSize: 16,
+                                                                                        fontWeight:
+                                                                                            "bold",
+                                                                                    }}
+                                                                                >
+                                                                                    No
+                                                                                    Data
+                                                                                    Available
+                                                                                </Text>
+                                                                            </View>
+                                                                        </View>
+                                                                    </View>
+                                                                </View>
+                                                            </>
+                                                        )}
+                                                    </View>
+                                                    <Divider orientation="vertical" />
+                                                </View>
+                                                <View className="w-1/3 flex-row justify-between rounded-3xl bg-white p-4">
+                                                    <View className="w-[99%] flex">
+                                                        {brokerageTopClients
+                                                            ?.data.length ? (
+                                                            <BarChart
+                                                                title={
+                                                                    "By Top Clients (All time)"
                                                                 }
-                                                            )}
-                                                        />
-                                                        {/* </View> */}
-                                                        {/* ) : (
+                                                                data={brokerageTopClients?.data?.map(
+                                                                    (el) => {
+                                                                        return {
+                                                                            label: el
+                                                                                ?.account
+                                                                                ?.name,
+                                                                            value: el?.subBrokerAmount,
+                                                                        };
+                                                                    }
+                                                                )}
+                                                                // data={DummyDate?.client?.sip?.breakDown.map(
+                                                                //     (el) => {
+                                                                //         return {
+                                                                //             label: el?.category,
+                                                                //             value: el?.count,
+                                                                //         };
+                                                                //     }
+                                                                // )}
+
+                                                                loading={
+                                                                    topClientsLoading
+                                                                }
+                                                            />
+                                                        ) : (
                                                             <>
                                                                 <View className="flex flex-row justify-start items-start ">
                                                                     <Text className="text-md font-bold text-start">
-                                                                        By Top
-                                                                        AMCs
+                                                                        By Top 3
+                                                                        Clients
+                                                                        (All
+                                                                        time)
                                                                     </Text>
                                                                 </View>
 
-                                                                <ComingSoon />
+                                                                <View className="">
+                                                                    <View className="h-[300px] z-[-4] w-11/12">
+                                                                        <View
+                                                                            style={{
+                                                                                flex: 1,
+                                                                                justifyContent:
+                                                                                    "center",
+                                                                                alignItems:
+                                                                                    "center",
+                                                                            }}
+                                                                        >
+                                                                            <Image
+                                                                                // style={{ width: 100, height: 100 }} // adjust width and height as needed
+                                                                                source={require("../../../assets/images/noDataAvailable.png")}
+                                                                                alt="No Data Available"
+                                                                            />
+                                                                            <Text
+                                                                                style={{
+                                                                                    paddingTop: 10,
+                                                                                    fontSize: 16,
+                                                                                    fontWeight:
+                                                                                        "bold",
+                                                                                }}
+                                                                            >
+                                                                                No
+                                                                                Data
+                                                                                Available
+                                                                            </Text>
+                                                                        </View>
+                                                                    </View>
+                                                                </View>
                                                             </>
-                                                        )} */}
-                                                    </View>
-                                                    <Divider orientation="vertical" />
-                                                </View>
-                                                <View className="w-1/3 flex-row justify-between rounded-3xl bg-white p-4">
-                                                    <View className="w-[99%] flex">
-                                                        {/* {brokerageTopClients?.data.length ? ( */}
-                                                        <BarChart
-                                                            title={
-                                                                "By Top Clients (All time)"
-                                                            }
-                                                            // data={brokerageTopClients?.data?.map(
-                                                            //     (el) => {
-                                                            //         return {
-                                                            //             label: el
-                                                            //                 ?.account
-                                                            //                 ?.name,
-                                                            //             value: el?.subBrokerAmount,
-                                                            //         };
-                                                            //     }
-                                                            // )}
-
-                                                            data={DummyDate?.client?.sip?.breakDown.map(
-                                                                (el) => {
-                                                                    return {
-                                                                        label: el?.category,
-                                                                        value: el?.count,
-                                                                    };
-                                                                }
-                                                            )}
-
-                                                            // loading={
-                                                            //     topClientsLoading
-                                                            // }
-                                                        />
-                                                        {/* // ) : (
-                                                    //     <>
-                                                    //         <View className="flex flex-row justify-start items-start ">
-                                                    //             <Text className="text-md font-bold text-start">
-                                                    //             By Top 3 Clients (All time)
-                                                    //             </Text>
-                                                    //         </View>
-
-                                                    //         <ComingSoon />
-                                                    //     </>
-                                                    // )} */}
+                                                        )}
                                                     </View>
                                                 </View>
                                             </View>
                                         </View>
                                         <View className="flex flex-row w-full ">
-                                            
                                             <View className="p-2 rounded bg-white w-[49%] mt-4 pl-4">
-                                                
                                                 {brokerageTransactions?.data
                                                     ?.length ? (
                                                     <DataTable
@@ -679,13 +772,12 @@ export const Brokerage = () => {
                                             </View>
                                             <View className="w-[1%] p-2"></View>
                                             <View className="p-2 rounded bg-white w-[50%] mt-4 ">
-                                            <View className="flex flex-col justify-start items-start ">
-                                                            <Text className="py-4 px-2 text-lg font-bold">
-                                                                Brokerage Reconcilation
-                                                            </Text>
-                                                            <Divider />
-                                                        </View>
-                                                
+                                                <View className="flex flex-col justify-start items-start ">
+                                                    <Text className="py-4 px-2 text-lg font-bold">
+                                                        Brokerage Reconcilation
+                                                    </Text>
+                                                    <Divider />
+                                                </View>
 
                                                 <NoDataAvailable />
                                             </View>

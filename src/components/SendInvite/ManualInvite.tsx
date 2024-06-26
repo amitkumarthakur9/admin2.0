@@ -363,7 +363,7 @@ export default function ManualInvite({ getlist = () => {} }) {
                                 </View>
                             </View>
 
-                            <UploadCsv />
+                            {/* <UploadCsv /> */}
                         </View>
                     </Dialog>
                 </Portal>
