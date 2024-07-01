@@ -42,6 +42,7 @@ import DataValue from "../../../../src/components/DataValue/DataValue";
 import useDebouncedSearch from "../../../../src/hooks/useDebounceSearch";
 import ApiRequest from "../../../../src/services/RemoteApi";
 import { dateTimeFormat } from "../../../../src/helper/DateUtils";
+import Tag from "src/components/Tag/Tag";
 
 const isMutualFundSearchResult = (
     data: MutualFundSearchResult | Holding
@@ -131,6 +132,15 @@ export default function ClientDetail() {
                     clientName: data?.name,
                     id: data?.id,
                 }}
+            />
+        ),
+        switch: (
+            <SwitchModalAction
+                hideDialog={closeModal}
+                card={cardPage}
+                selectedFund={selectedFund}
+                changeSelectedFund={changeSelectedFund}
+                allowModalCardChange={allowModalCardChange}
             />
         ),
     };
@@ -678,6 +688,12 @@ const PortfolioCard = ({
                                     name: "Invest",
                                     onClick: (data) =>
                                         showModal("invest", 2, data),
+                                },
+                                {
+                                    key: "switch",
+                                    name: "Switch",
+                                    onClick: (data) =>
+                                        showModal("switch", 2, data),
                                 },
                                 {
                                     key: "redeem",
@@ -2734,6 +2750,544 @@ const ExternalPortfolioModalCard = ({
                 </>
             )}
         </>
+    );
+};
+
+const SwitchModalAction = ({
+    hideDialog,
+    card,
+    selectedFund,
+    changeSelectedFund,
+    allowModalCardChange,
+}: {
+    hideDialog: () => void;
+    card: number;
+    selectedFund: MutualFundSearchResult | Holding | null;
+    changeSelectedFund: (data: any, card: number, from?: string) => void;
+    allowModalCardChange: boolean;
+}) => {
+    const { id } = useLocalSearchParams();
+    const [folios, setFolios] = useState<FolioSchema[]>([]);
+    const [optionType, setOptionType] = useState<number | null>(null);
+    const [dividendType, setDividendType] = useState<string | number | null>(
+        null
+    );
+    const [selectedFolio, setSelectedFolio] = useState();
+    const [showTab, setShowTab] = useState(1);
+    const [query, setQuery] = useState("");
+    const [targetMutualfund, setTargetMutualfund] =
+        useState<MutualFundSearchResult | null>(null);
+
+    const [switchValue, setSwitchValue] = useState("0");
+
+    const [allUnits, setAllUnits] = useState(false);
+
+    useEffect(() => {
+        setOptionType(
+            isMutualFundSearchResult(targetMutualfund)
+                ? targetMutualfund?.optionType?.find(
+                      (el) => el?.name === "Growth"
+                  )?.id
+                : null
+        );
+        setDividendType(
+            isMutualFundSearchResult(targetMutualfund)
+                ? targetMutualfund?.optionType
+                      ?.find((el) => el?.name === "Growth")
+                      ?.mutualfundDividendType?.find(
+                          (el) => el.dividendType.name === "NA"
+                      )?.id
+                : null
+        );
+    }, [targetMutualfund]);
+
+    const changeFolios = (folioArray: FolioSchema[]) => {
+        setFolios(folioArray);
+    };
+
+    const IsMFSearch = isMutualFundSearchResult(selectedFund);
+
+    const fetchFolios = async () => {
+        try {
+            const response: ApiResponse<FolioSchema[]> = await RemoteApi.get(
+                `client/${id}/folioSchema?q=H&f=${selectedFund?.id}`
+            );
+            changeFolios(response?.data);
+            return response;
+        } catch (error) {
+            // Handle errors, e.g., throw an error or return a default value
+            throw error;
+        }
+    };
+
+    const fetchMutualFunds = async () => {
+        try {
+            const fundhouseId = folios.find((el) => el.id == selectedFolio)
+                ?.mutualfundDividendType?.mutualfundOptionType
+                ?.mutualfundDeliveryType?.mutualfund?.fundhouseId;
+
+            if (!!fundhouseId) {
+                const response: ApiResponse<[]> = await RemoteApi.post(
+                    `mutualfund/list`,
+                    {
+                        page: 1,
+                        limit: 20,
+                        filters: [
+                            {
+                                key: "fundhouseId",
+                                operator: "eq",
+                                value: fundhouseId,
+                            },
+                            {
+                                key: "mutualfundName",
+                                operator: "contains",
+                                value: query,
+                            },
+                        ],
+                    }
+                );
+                return response;
+            } else {
+                return [];
+            }
+        } catch (error) {
+            throw error;
+        }
+    };
+
+    const { data: mutualFundData, mutate } = useMutation({
+        mutationFn: fetchMutualFunds,
+        mutationKey: ["mf-data"],
+    });
+
+    const postSwitchData = async () => {
+        return await ApiRequest.post("/order/switch", {
+            sourceFolioId: selectedFolio,
+            targetMutualfundDividendTypeId: targetMutualfund?.optionType
+                ?.find((el) => el.id === optionType)
+                .mutualfundDividendType.find((e) => e.id == dividendType).id,
+            transactionMode: "P",
+            allUnits,
+            accountId: id,
+        });
+    };
+
+    console.log("select", selectedFund);
+
+    const toast = useToast();
+    const {
+        mutate: switchInvest,
+        isLoading: mutateLoading,
+        isError,
+        error,
+    } = useMutation(postSwitchData, {
+        onSuccess: (res: any) => {
+            if (res && res.code > 299) {
+                // error
+                toast.show({
+                    placement: "top",
+                    render: () => <ErrorToaster message={res.message} />,
+                });
+            } else {
+                // success
+                hideDialog();
+                toast.show({
+                    placement: "top",
+                    render: () => {
+                        return (
+                            <Box bg="green.400" p="2" rounded="sm" mb={5}>
+                                {res.message}
+                            </Box>
+                        );
+                    },
+                });
+            }
+        },
+        onError: () => {
+            toast.show({
+                placement: "top",
+                render: () => (
+                    <ErrorToaster message="Error while creating switch order" />
+                ),
+            });
+        },
+    });
+
+    useEffect(() => {
+        mutate();
+    }, [query, selectedFolio]);
+
+    const { isLoading } = useQuery({
+        queryKey: ["folio", optionType, dividendType],
+        queryFn: fetchFolios,
+        enabled: true,
+    });
+
+    const tabContent = {
+        1: (
+            <View>
+                <View className="flex md:flex-row items-center justify-between py-4 px-12 gap-4">
+                    <View className="w-full flex flex-col items-center gap-y-2">
+                        <Text className="w-full flex flex-row items-start justify-start text-xs text-gray-400 mb-2">
+                            Choose Folio Number to switch from
+                        </Text>
+                        <DropdownComponent
+                            label="Folio Number"
+                            data={folios?.map((el) => {
+                                return {
+                                    label: el.folioNumber,
+                                    value: el.id,
+                                };
+                            })}
+                            containerStyle={{ width: "100%" }}
+                            noIcon
+                            value={selectedFolio}
+                            setValue={setSelectedFolio}
+                        />
+                        <View className="w-full flex flex-col">
+                            <View>
+                                <Text className="w-full flex flex-row items-start justify-start text-xs text-gray-400 mb-2">
+                                    Choose Folio Number to switch from
+                                </Text>
+                                <TextInput
+                                    className={`outline-none w-full border border-gray-300 p-2 rounded ${
+                                        allUnits &&
+                                        "bg-gray-200 cursor-not-allowed"
+                                    }`}
+                                    editable={!allUnits || !!selectedFolio}
+                                    placeholder={`Enter Units`}
+                                    underlineColorAndroid="transparent"
+                                    selectionColor="transparent"
+                                    placeholderTextColor={"rgb(156, 163, 175)"}
+                                    cursorColor={"transparent"}
+                                    style={{ outline: "none" }}
+                                    value={switchValue}
+                                    onChangeText={setSwitchValue}
+                                />
+                            </View>
+                            <View className="w-full flex flex-row">
+                                <Checkbox
+                                    color="#013974"
+                                    disabled={!selectedFolio}
+                                    status={allUnits ? "checked" : "unchecked"}
+                                    onPress={() => {
+                                        if (!allUnits && selectedFolio) {
+                                            setSwitchValue(
+                                                folios
+                                                    .find(
+                                                        (el) =>
+                                                            el?.id ===
+                                                            selectedFolio
+                                                    )
+                                                    .redeemableUnits.toString()
+                                            );
+                                        }
+                                        setAllUnits((prev) => !prev);
+                                    }}
+                                />
+                                <Text selectable className="mt-2 text-sm">
+                                    Redeem all
+                                </Text>
+                            </View>
+                        </View>
+                    </View>
+                </View>
+                <View className="w-full flex flex-col items-center py-4 px-12 gap-4">
+                    <Button
+                        disabled={!selectedFolio && !switchValue}
+                        width="100%"
+                        bgColor={
+                            !selectedFolio || switchValue == "0"
+                                ? "#ddd"
+                                : "#013974"
+                        }
+                        onPress={() => setShowTab(2)}
+                        className={`rounded-lg mt-4 ${
+                            !selectedFolio || !switchValue
+                                ? "cursor-not-allowed"
+                                : "cursor-pointer"
+                        }`}
+                    >
+                        Continue
+                    </Button>
+                </View>
+            </View>
+        ),
+        2: (
+            <View className="px-8">
+                <Text className="px-4 py-2">To</Text>
+                <View className="p-2">
+                    <Pressable className="flex flex-row justify-start items-center w-full p-4 bg-[#E8F1FF] rounded-full">
+                        <TextInput
+                            className="outline-none w-[100%]"
+                            placeholder="Search for Mutual Funds to Switch"
+                            underlineColorAndroid="transparent"
+                            selectionColor="transparent"
+                            placeholderTextColor={"rgb(100, 116, 139)"}
+                            cursorColor={"transparent"}
+                            style={{ outline: "none" }}
+                            value={query}
+                            onChangeText={setQuery}
+                        />
+                    </Pressable>
+                    <View className="">
+                        {isLoading ? (
+                            <HStack
+                                space={2}
+                                justifyContent="center"
+                                alignItems="center"
+                            >
+                                <Spinner
+                                    color={"black"}
+                                    accessibilityLabel="Loading"
+                                />
+                                <Heading color="black" fontSize="md">
+                                    Loading
+                                </Heading>
+                            </HStack>
+                        ) : (
+                            <DataTable
+                                key="searchMutualFund"
+                                headers={[]}
+                                cellSize={[10, 2]}
+                                noDataText={
+                                    query.length > 3
+                                        ? "No Data Available"
+                                        : "Lets switch"
+                                }
+                                rows={mutualFundData?.data?.map((fund: any) => {
+                                    return [
+                                        {
+                                            key: "name",
+                                            content: (
+                                                <View className="flex flex-row items-center gap-2">
+                                                    <Image
+                                                        alt="fundHouse"
+                                                        className="mr-2"
+                                                        style={{
+                                                            width: 32,
+                                                            height: 32,
+                                                            objectFit:
+                                                                "contain",
+                                                        }}
+                                                        source={{
+                                                            uri: fund?.logoUrl,
+                                                        }}
+                                                    />
+                                                    <View>
+                                                        <Text className="text-xs">
+                                                            {/* {fund?.mutualfund?.name} */}
+                                                            {fund?.name}
+                                                        </Text>
+                                                        <Text className="text-xs text-gray-400">
+                                                            {
+                                                                fund?.category
+                                                                    ?.name
+                                                            }{" "}
+                                                            |{" "}
+                                                            {
+                                                                fund
+                                                                    ?.subCategory
+                                                                    ?.name
+                                                            }
+                                                        </Text>
+                                                    </View>
+                                                </View>
+                                            ),
+                                        },
+                                        {
+                                            key: "return",
+                                            content: (
+                                                <View className="flex flex-col w-full items-center py-2 rounded-full">
+                                                    <Button
+                                                        width="100%"
+                                                        bgColor={"#013974"}
+                                                        onPress={() => {
+                                                            setTargetMutualfund(
+                                                                fund
+                                                            );
+                                                            setShowTab(3);
+                                                        }}
+                                                        className="rounded-full"
+                                                    >
+                                                        Choose
+                                                    </Button>
+                                                </View>
+                                            ),
+                                        },
+                                    ];
+                                })}
+                            />
+                        )}
+                    </View>
+                </View>
+            </View>
+        ),
+        3: (
+            <View className="">
+                <View className="flex flex-row items-center justify-between gap-2 px-12">
+                    <View className="flex flex-row items-center">
+                        <Image
+                            alt="fundHouse"
+                            className="mr-2"
+                            style={{
+                                width: 32,
+                                height: 32,
+                                objectFit: "contain",
+                            }}
+                            source={{
+                                uri: targetMutualfund?.logoUrl,
+                            }}
+                        />
+                        <View>
+                            <Text className="text-xs">
+                                {targetMutualfund?.name}
+                            </Text>
+                            <Text className="text-xs text-gray-400">
+                                {targetMutualfund?.category?.name} |{" "}
+                                {targetMutualfund?.subCategory?.name}
+                            </Text>
+                        </View>
+                    </View>
+                    <View className="flex flex-row items-center">
+                        <Tag>Switching to</Tag>
+                    </View>
+                </View>
+                <View className="flex flex-col justify-between gap-x-2 px-12 py-4">
+                    <View className="w-1/2 flex flex-col items-center gap-y-2">
+                        <Text className="w-full flex flex-row items-start justify-start text-xs text-gray-400 mb-2">
+                            Option Type
+                        </Text>
+                        <DropdownComponent
+                            label="Option Type"
+                            data={targetMutualfund?.optionType?.map((o) => {
+                                return {
+                                    value: o.id as any as string,
+                                    label: o.name,
+                                };
+                            })}
+                            containerStyle={{ width: "100%" }}
+                            noIcon
+                            value={optionType}
+                            setValue={setOptionType}
+                        />
+                    </View>
+                    <View className="w-1/2 flex flex-col items-center gap-y-2">
+                        <Text className="w-full flex flex-row items-start justify-start text-xs text-gray-400 mb-2">
+                            Dividend Type
+                        </Text>
+                        <DropdownComponent
+                            label="Dividend Type"
+                            data={targetMutualfund?.optionType
+                                ?.find((el) => el.id === optionType)
+                                ?.mutualfundDividendType?.map((e) => {
+                                    return {
+                                        key: e.id,
+                                        label: e.dividendType.name,
+                                        value: e.id,
+                                    };
+                                })}
+                            containerStyle={{ width: "100%" }}
+                            noIcon
+                            value={dividendType}
+                            setValue={setDividendType}
+                        />
+                    </View>
+                </View>
+                <View className="w-full flex flex-col items-center py-4 px-12 gap-4">
+                    <Button
+                        width="100%"
+                        bgColor={"#013974"}
+                        onPress={() => switchInvest()}
+                        className="rounded-lg mt-4"
+                    >
+                        Switch
+                    </Button>
+                </View>
+            </View>
+        ),
+    };
+
+    const renderInfo = {
+        2: {
+            title: "Select Folio to Switch",
+            content: (
+                <View className="flex flex-col">
+                    <View className="flex md:flex-row items-center justify-between py-4 px-12 gap-4">
+                        <View className="flex flex-row items-center gap-2">
+                            <Image
+                                alt="fundHouse"
+                                className="mr-2"
+                                style={{
+                                    width: 32,
+                                    height: 32,
+                                    objectFit: "contain",
+                                }}
+                                source={{
+                                    uri: IsMFSearch
+                                        ? selectedFund?.logoUrl
+                                        : selectedFund?.mutualfund?.logoUrl,
+                                }}
+                            />
+                            <View>
+                                <Text className="text-xs">
+                                    {IsMFSearch
+                                        ? selectedFund?.name
+                                        : selectedFund?.mutualfund?.name}
+                                </Text>
+                                <Text className="text-xs text-gray-400">
+                                    {IsMFSearch
+                                        ? selectedFund?.category?.name
+                                        : selectedFund?.mutualfund
+                                              ?.category}{" "}
+                                    |{" "}
+                                    {IsMFSearch
+                                        ? selectedFund?.subCategory?.name
+                                        : selectedFund?.mutualfund?.subCategory}
+                                </Text>
+                            </View>
+                            <View>
+                                <Text className="text-xs">52 Week Low</Text>
+                                <Text className="text-xs text-gray-400">
+                                    {IsMFSearch
+                                        ? ""
+                                        : selectedFund.mutualfund.low52Week}
+                                </Text>
+                            </View>
+                            <View>
+                                <Text className="text-xs">52 Week High</Text>
+                                <Text className="text-xs text-gray-400">
+                                    {IsMFSearch
+                                        ? ""
+                                        : selectedFund.mutualfund.high52Week}
+                                </Text>
+                            </View>
+                        </View>
+                    </View>
+                    <Divider className="my-2" />
+                    {tabContent[showTab]}
+                </View>
+            ),
+        },
+    };
+
+    return (
+        <View className="flex flex-col">
+            <View className="h-16 flex flex-row justify-between items-center p-12">
+                <View className="flex flex-row items-center gap-x-2">
+                    {IsMFSearch && (
+                        <Pressable onPress={() => changeSelectedFund(null, 1)}>
+                            <IonIcon name="chevron-back-outline" size={24} />
+                        </Pressable>
+                    )}
+                    <Text className="text-xl font-medium center">
+                        {renderInfo[card]?.title}
+                    </Text>
+                </View>
+                <IonIcon name="close-outline" size={24} onPress={hideDialog} />
+            </View>
+            {renderInfo[card].content}
+        </View>
     );
 };
 

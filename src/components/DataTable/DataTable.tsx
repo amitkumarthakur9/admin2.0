@@ -168,18 +168,17 @@ const RowItem = ({ width, content, isLast, hasActions, options, data }) => {
                     {content}
                 </View>
                 <View className="md:pl-4">
-                {hasActions && isLast && (
-                    <Pressable
-                        className={`pl-6 md:pl-0md:absolute md:right-8 `}
-                        onPress={toggleDropdown}
-                    >
-                        <Icon name="dots-three-vertical" size={16} />
-                    </Pressable>
-                )}
+                    {hasActions && isLast && (
+                        <Pressable
+                            className={`pl-6 md:pl-0md:absolute md:right-8 `}
+                            onPress={toggleDropdown}
+                        >
+                            <Icon name="dots-three-vertical" size={16} />
+                        </Pressable>
+                    )}
                 </View>
-                
                 {showDropdown && (
-                    <View className="absolute top-0 right-14 bg-white border-gray-300 border rounded shadow z-9999 cursor-pointer">
+                    <View className="absolute bottom-0 right-14 bg-white border-gray-300 border rounded shadow z-9999 cursor-pointer">
                         {options?.map((option) => {
                             return (
                                 <Pressable
@@ -193,9 +192,7 @@ const RowItem = ({ width, content, isLast, hasActions, options, data }) => {
                         })}
                     </View>
                 )}
-                
             </View>
-            
         </TouchableWithoutFeedback>
     );
 };

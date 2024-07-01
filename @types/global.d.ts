@@ -141,6 +141,9 @@ declare global {
         maxInvestment: number;
         minAdditionalInvestment: number;
         minInvestment: number;
+        loadNote: string | null;
+        low52Week: number;
+        high52Week: number;
     }
 
     enum Type {
@@ -237,6 +240,24 @@ declare global {
         currentValue: number;
         redeemableAmount: number;
         redeemableUnits: number;
+        mutualfundDividendType: {
+            mutualfundOptionType: {
+                mutualfundDeliveryType: {
+                    mutualfund: {
+                        name: string;
+                        fundhouseId: number;
+                        isSwitchAllowed: boolean;
+                        high52Week: number;
+                        low52Week: number;
+                        load: number | null;
+                        loadNote: string | null;
+                    };
+                };
+            };
+        };
+        transactions: {
+            isUnitsLocked: boolean;
+        }[];
     }
 
 
