@@ -564,7 +564,7 @@ export default function AppLayout() {
                                     component={RiskProfile}
                                 />
 
-                                <Drawer.Screen
+                                {/* <Drawer.Screen
                                     name="ai-assitant/index"
                                     options={{
                                         drawerLabel: "AI Assitant",
@@ -573,7 +573,7 @@ export default function AppLayout() {
                                     }}
                                     initialParams={{}}
                                     component={AssitantScreen}
-                                />
+                                /> */}
                                 {/* <Drawer.Screen
                                     name="analytics/mutual-sip/index"
                                     options={{
@@ -711,7 +711,8 @@ export default function AppLayout() {
                                     </Center>
                                 </PresenceTransition>
                             </Fab> */}
-                            <View
+                            {/* {CoRover Code Starts Here} */}
+                            {/* <View
                                 style={{
                                     position: "absolute",
                                     right: 20,
@@ -727,7 +728,7 @@ export default function AppLayout() {
                                         />
                                     </Animated.View>
                                 </Pressable>
-                            </View>
+                            </View> */}
                             {(isOpen || showLoader) && (
                                 <View
                                     style={{

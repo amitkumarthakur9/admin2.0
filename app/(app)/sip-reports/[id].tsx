@@ -126,7 +126,7 @@ export default function SIPReportsDetail() {
                                 <Pressable
                                     className="mr-3"
                                     onPress={() =>
-                                        console.log("This will go back ")
+                                        router.push("/sip-reports")
                                     }
                                 >
                                     <Icon
