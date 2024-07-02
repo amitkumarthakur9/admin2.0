@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { View, useWindowDimensions } from "react-native";
 import { router, useLocalSearchParams, useRouter } from "expo-router";
 import {
@@ -2872,8 +2872,6 @@ const SwitchModalAction = ({
         });
     };
 
-    console.log("select", selectedFund);
-
     const toast = useToast();
     const {
         mutate: switchInvest,
@@ -2923,19 +2921,25 @@ const SwitchModalAction = ({
         enabled: true,
     });
 
+    const folio = useMemo(
+        () => folios.find((el) => el?.id === selectedFolio),
+        [selectedFolio]
+    );
+
     const tabContent = {
         1: (
             <View>
                 <View className="flex md:flex-row items-center justify-between py-4 px-12 gap-4">
                     <View className="w-full flex flex-col items-center gap-y-2">
                         <Text className="w-full flex flex-row items-start justify-start text-xs text-gray-400 mb-2">
-                            Choose Folio Number to switch from
+                            Choose Folio Number to switch from [Folio Number] -
+                             [Units] - [Amount]
                         </Text>
                         <DropdownComponent
                             label="Folio Number"
                             data={folios?.map((el) => {
                                 return {
-                                    label: el.folioNumber,
+                                    label: `${el.folioNumber} - [${el.redeemableUnits}] - [${RupeeSymbol} ${el.redeemableAmount}]`,
                                     value: el.id,
                                 };
                             })}
@@ -2947,7 +2951,9 @@ const SwitchModalAction = ({
                         <View className="w-full flex flex-col">
                             <View>
                                 <Text className="w-full flex flex-row items-start justify-start text-xs text-gray-400 mb-2">
-                                    Choose Folio Number to switch from
+                                    Units{" "}
+                                    {!!selectedFolio &&
+                                        `(Units: ${folio.redeemableUnits.toString()} - Amount: ${folio.redeemableAmount.toString()})`}
                                 </Text>
                                 <TextInput
                                     className={`outline-none w-full border border-gray-300 p-2 rounded ${
@@ -2973,13 +2979,7 @@ const SwitchModalAction = ({
                                     onPress={() => {
                                         if (!allUnits && selectedFolio) {
                                             setSwitchValue(
-                                                folios
-                                                    .find(
-                                                        (el) =>
-                                                            el?.id ===
-                                                            selectedFolio
-                                                    )
-                                                    .redeemableUnits.toString()
+                                                folio.redeemableUnits.toString()
                                             );
                                         }
                                         setAllUnits((prev) => !prev);
@@ -3015,9 +3015,9 @@ const SwitchModalAction = ({
         ),
         2: (
             <View className="px-8">
-                <Text className="px-4 py-2">To</Text>
                 <View className="p-2">
                     <Pressable className="flex flex-row justify-start items-center w-full p-4 bg-[#E8F1FF] rounded-full">
+                        <Text className="p-2">To</Text>
                         <TextInput
                             className="outline-none w-[100%]"
                             placeholder="Search for Mutual Funds to Switch"
@@ -3049,13 +3049,14 @@ const SwitchModalAction = ({
                             <DataTable
                                 key="searchMutualFund"
                                 headers={[]}
-                                cellSize={[10, 2]}
-                                noDataText={
-                                    query.length > 3
-                                        ? "No Data Available"
-                                        : "Lets switch"
-                                }
+                                cellSize={[8, 4]}
+                                noDataText={"Lets switch"}
                                 rows={mutualFundData?.data?.map((fund: any) => {
+                                    const minAdditionalInvestmentNotFilled =
+                                        (folio.redeemableAmount /
+                                            folio.redeemableUnits) *
+                                            Number(switchValue) <=
+                                        fund.minInvestment;
                                     return [
                                         {
                                             key: "name",
@@ -3096,12 +3097,19 @@ const SwitchModalAction = ({
                                             ),
                                         },
                                         {
-                                            key: "return",
+                                            key: "choose",
                                             content: (
                                                 <View className="flex flex-col w-full items-center py-2 rounded-full">
                                                     <Button
                                                         width="100%"
-                                                        bgColor={"#013974"}
+                                                        disabled={
+                                                            minAdditionalInvestmentNotFilled
+                                                        }
+                                                        bgColor={
+                                                            minAdditionalInvestmentNotFilled
+                                                                ? "#ddd"
+                                                                : "#013974"
+                                                        }
                                                         onPress={() => {
                                                             setTargetMutualfund(
                                                                 fund
@@ -3112,6 +3120,12 @@ const SwitchModalAction = ({
                                                     >
                                                         Choose
                                                     </Button>
+                                                    {minAdditionalInvestmentNotFilled && (
+                                                        <Text className="text-xs py-1">
+                                                            Minimum investment:
+                                                            {fund.minInvestment}
+                                                        </Text>
+                                                    )}
                                                 </View>
                                             ),
                                         },
@@ -3124,9 +3138,44 @@ const SwitchModalAction = ({
             </View>
         ),
         3: (
-            <View className="">
-                <View className="flex flex-row items-center justify-between gap-2 px-12">
+            <View className="px-2">
+                <View className="flex flex-col justify-between gap-2 px-12">
+                    <View className="flex flex-row items-center justify-between">
+                        <DataGrid
+                            key="switchAmount"
+                            value={
+                                <Text selectable className="text-xs">
+                                    Switch Approx Amount
+                                </Text>
+                            }
+                            title={
+                                <Text selectable className="text-xs">
+                                    {RupeeSymbol}{" "}
+                                    {(folio?.redeemableAmount /
+                                        folio?.redeemableUnits) *
+                                        Number(switchValue)}
+                                </Text>
+                            }
+                        />
+                        <DataGrid
+                            key="switchAmount"
+                            value={
+                                <Text selectable className="text-xs">
+                                    Switch Units
+                                </Text>
+                            }
+                            title={
+                                <Text selectable className="text-xs">
+                                    {Number(switchValue)}
+                                </Text>
+                            }
+                        />
+                    </View>
                     <View className="flex flex-row items-center">
+                        <Text>To</Text>
+                        <Divider className="mx-2" />
+                    </View>
+                    <View className="flex flex-row items-center gap-2">
                         <Image
                             alt="fundHouse"
                             className="mr-2"
@@ -3148,12 +3197,21 @@ const SwitchModalAction = ({
                                 {targetMutualfund?.subCategory?.name}
                             </Text>
                         </View>
-                    </View>
-                    <View className="flex flex-row items-center">
-                        <Tag>Switching to</Tag>
+                        <View>
+                            <Text className="text-xs">52 Week Low</Text>
+                            <Text className="text-xs text-gray-400">
+                                {targetMutualfund?.low52Week}
+                            </Text>
+                        </View>
+                        <View>
+                            <Text className="text-xs">52 Week High</Text>
+                            <Text className="text-xs text-gray-400">
+                                {targetMutualfund?.high52Week}
+                            </Text>
+                        </View>
                     </View>
                 </View>
-                <View className="flex flex-col justify-between gap-x-2 px-12 py-4">
+                <View className="flex flex-col justify-between gap-2 px-16 py-4">
                     <View className="w-1/2 flex flex-col items-center gap-y-2">
                         <Text className="w-full flex flex-row items-start justify-start text-xs text-gray-400 mb-2">
                             Option Type
@@ -3196,8 +3254,9 @@ const SwitchModalAction = ({
                 </View>
                 <View className="w-full flex flex-col items-center py-4 px-12 gap-4">
                     <Button
+                    disabled={mutateLoading}
                         width="100%"
-                        bgColor={"#013974"}
+                        bgColor={mutateLoading ? "#ddd" : "#013974"}
                         onPress={() => switchInvest()}
                         className="rounded-lg mt-4"
                     >
@@ -3275,8 +3334,10 @@ const SwitchModalAction = ({
         <View className="flex flex-col">
             <View className="h-16 flex flex-row justify-between items-center p-12">
                 <View className="flex flex-row items-center gap-x-2">
-                    {IsMFSearch && (
-                        <Pressable onPress={() => changeSelectedFund(null, 1)}>
+                    {showTab > 1 && (
+                        <Pressable
+                            onPress={() => setShowTab((prev) => prev - 1)}
+                        >
                             <IonIcon name="chevron-back-outline" size={24} />
                         </Pressable>
                     )}

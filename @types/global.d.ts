@@ -231,6 +231,8 @@ declare global {
         maxInvestment: number;
         minAdditionalInvestment: number;
         minInvestment: number;
+        low52Week: any;
+        high52Week: any;
     }
 
     interface FolioSchema {

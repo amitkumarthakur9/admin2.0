@@ -211,7 +211,7 @@ interface IDataTable {
     headers: any;
     rows: any;
     cellSize: any;
-    mobileCellSize: any;
+    mobileCellSize?: any;
     className?: any;
     hasActions?: boolean;
     options?: {
