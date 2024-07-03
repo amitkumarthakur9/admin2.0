@@ -86,3 +86,40 @@ interface Analytics {
     data: StaticDashboard;
   }
   
+  export interface DsaAllResponse {
+    code: number;
+    message: string;
+    error: any[];
+    data: AllRequestData[];
+    count: number;
+    filterCount: number;
+    totalCount: number;
+    errors: any[];
+  }
+  
+  export interface AllRequestData {
+    requestId: number;
+    distributor: Distributor;
+    managementUsers: ManagementUser[];
+    submissionAttempt: SubmissionAttempt;
+    remark: string | null;
+    createdAt: string;
+  }
+  
+  interface Distributor {
+    id: string;
+    name: string;
+    arn: string;
+    dscCode:string;
+  }
+  
+  interface ManagementUser {
+    id: string;
+    name: string;
+  }
+  
+  interface SubmissionAttempt {
+    id: number;
+    status: string;
+  }
+  

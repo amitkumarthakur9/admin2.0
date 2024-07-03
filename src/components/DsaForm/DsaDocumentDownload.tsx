@@ -8,14 +8,24 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 const DsaDocumentDownload = ({ clientId, downloadApi, fileName }) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedDocuments, setSelectedDocuments] = useState({
-        PanCard: false,
-        AadharFront: false,
-        AadharBack: false,
-        CheckCopy: false,
-        DsaAgreement: false,
+        pancard: false,
+        aadhaarfront: false,
+        aadhaarback: false,
+        esigneddocument: false,
     });
     const [isDownloadProcessing, setIsDownloadProcessing] = useState(false);
     const [message, setMessage] = useState(null);
+
+    const handleModalClose = () => {
+        setMessage(null);
+        setSelectedDocuments({
+            pancard: false,
+            aadhaarfront: false,
+            aadhaarback: false,
+            esigneddocument: false,
+        });
+        setModalVisible(false);
+    };
 
     const toggleDocumentSelection = (doc) => {
         setSelectedDocuments((prev) => ({ ...prev, [doc]: !prev[doc] }));
@@ -23,14 +33,31 @@ const DsaDocumentDownload = ({ clientId, downloadApi, fileName }) => {
 
     const downloadReport = async () => {
         setIsDownloadProcessing(true);
-        const data = { selectedDocuments, clientId: clientId };
+        setMessage(null);
+
+        const selectedKeys = Object.keys(selectedDocuments).filter(
+            (key) => selectedDocuments[key]
+        );
 
         try {
-            const response = await RemoteApi.downloadFile({
-                endpoint: downloadApi,
-                fileName: fileName,
-                data: data,
-            });
+            const downloadPromises = selectedKeys.map((key) =>
+                RemoteApi.getDownloadFile({
+                    endpoint: `file/download-dsa-documents?documentName=${key}&requestId=${clientId}`,
+                    fileName: `${fileName}_${key}`,
+                })
+            );
+
+            const responses:any = await Promise.all(downloadPromises);
+
+            const failedResponses = responses.filter(response => response.code !== 200);
+
+            if (failedResponses.length > 0) {
+                alert(failedResponses[0].message);
+                setIsDownloadProcessing(false);
+                setMessage("Download Failed: Failed to download some documents.");
+                return;
+            }
+
             setIsDownloadProcessing(false);
             setMessage("Download Success: Documents downloaded successfully.");
         } catch (error) {
@@ -48,7 +75,7 @@ const DsaDocumentDownload = ({ clientId, downloadApi, fileName }) => {
                         borderRadius: 25,
                         padding: 10,
                         borderColor: "#3A70FF",
-                        borderWidth: 1,  
+                        borderWidth: 1,
                     }}
                 >
                     <Text style={{ color: "#3A70FF", textAlign: "center" }}>
@@ -60,7 +87,7 @@ const DsaDocumentDownload = ({ clientId, downloadApi, fileName }) => {
             <Modal
                 transparent={true}
                 visible={modalVisible}
-                onRequestClose={() => setModalVisible(false)}
+                onRequestClose={handleModalClose}
             >
                 <View
                     style={{
@@ -78,17 +105,16 @@ const DsaDocumentDownload = ({ clientId, downloadApi, fileName }) => {
                         }}
                     >
                         <Pressable
-                            onPress={() => setModalVisible(false)}
+                            onPress={() => handleModalClose()}
                             style={{ alignSelf: "flex-end" }}
                         >
                             <Icon name="close" size={20} color="#7C899C" />
                         </Pressable>
-                      
+
                         {!message && (
                             <View className="p-4">
                                 <Text
-                                    style={{ fontSize: 18, marginBottom: 20, color:"#AAAAAA"}}
-                                    
+                                    style={{ fontSize: 18, marginBottom: 20, color: "#AAAAAA" }}
                                 >
                                     Select Documents to Download
                                 </Text>
@@ -158,7 +184,7 @@ const DsaDocumentDownload = ({ clientId, downloadApi, fileName }) => {
 
                         {message && (
                             <View className="p-4">
-                                <Success message={message} />
+                                <Success message={message} code={code} />
                             </View>
                         )}
                     </View>

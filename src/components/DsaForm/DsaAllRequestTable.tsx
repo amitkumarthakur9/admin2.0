@@ -29,6 +29,8 @@ import { useUserRole } from "../../context/useRoleContext";
 import NoDataAvailable from "../Others/NoDataAvailable";
 import DsaDocumentDownload from "./DsaDocumentDownload";
 import RequestModal from "./RequestModal";
+import { dateTimeFormat } from "src/helper/DateUtils";
+import { AllRequestData, DsaAllResponse } from "src/interfaces/DashboardInterface";
 
 const DsaAllRequestTable = () => {
     const [isLoading, setIsLoading] = React.useState(false);
@@ -36,7 +38,7 @@ const DsaAllRequestTable = () => {
     const [currentPageNumber, setCurrentPageNumber] = useState(1);
     const [totalItems, setTotalItems] = useState(0);
     const [itemsPerPage, setItemsPerPage] = useState(10);
-    const [data, setData] = useState<ClientWiseData[]>([]);
+    const [data, setData] = useState<AllRequestData[]>([]);
     const [totalPages, setTotalPages] = useState(1);
     const [appliedFilers, setAppliedFilers] = useState([]);
     const [filtersSchema, setFiltersSchema] = useState([]);
@@ -47,28 +49,28 @@ const DsaAllRequestTable = () => {
     });
     const { width } = useWindowDimensions();
     const [modalVisible, setModalVisible] = useState(false);
-  const [modalType, setModalType] = useState('approve');
-  const [currentClientId, setCurrentClientId] = useState(null);
+    const [modalType, setModalType] = useState("approve");
+    const [currentClientId, setCurrentClientId] = useState(null);
 
-  const DsaData = [
-    {
-        dsaId:"1",
-        name:"Harish",
-        arnCode:"ARN-34567",
-        rnName:"Ravi Rathi",
-        doA:"03/09/2024 8:09 PM",
-    }
-  ]
+    const DsaData = [
+        {
+            dsaId: "1",
+            name: "Harish",
+            arnCode: "ARN-34567",
+            rnName: "Ravi Rathi",
+            doA: "03/09/2024 8:09 PM",
+        },
+    ];
 
-  const handleOpenModal = (type, clientId) => {
-    setModalType(type);
-    setCurrentClientId(clientId);
-    setModalVisible(true);
-  };
-    
-      const handleCloseModal = () => {
+    const handleOpenModal = (type, clientId) => {
+        setModalType(type);
+        setCurrentClientId(clientId);
+        setModalVisible(true);
+    };
+
+    const handleCloseModal = () => {
         setModalVisible(false);
-      };
+    };
 
     async function getDataList(
         updatedFilterValues = [],
@@ -86,8 +88,8 @@ const DsaAllRequestTable = () => {
         }
 
         try {
-            const response: ClientWiseResponse = await RemoteApi.post(
-                "aum/client/list",
+            const response: DsaAllResponse = await RemoteApi.post(
+                "distributor-onboard/list",
                 data
             );
 
@@ -114,7 +116,9 @@ const DsaAllRequestTable = () => {
 
     React.useEffect(() => {
         async function getSchema() {
-            const response: any = await RemoteApi.get("aum/client/schema");
+            const response: any = await RemoteApi.get(
+                "distributor-onboard/schema"
+            );
             setFiltersSchema(response);
             setSorting(response.sort);
         }
@@ -132,12 +136,12 @@ const DsaAllRequestTable = () => {
 
     const mobileData = data.map((item) => ({
         // id: item.id,
-        Name: item?.name,
-        ClientId: item?.clientId,
-        PanNumber: item?.panNumber,
-        CurrentValue: RupeeSymbol + item.currentValue,
-        InvestedValue: RupeeSymbol + item.investedValue,
-        XIRR: item?.xirr,
+        // Name: item?.name,
+        // ClientId: item?.clientId,
+        // PanNumber: item?.panNumber,
+        // CurrentValue: RupeeSymbol + item.currentValue,
+        // InvestedValue: RupeeSymbol + item.investedValue,
+        // XIRR: item?.xirr,
     }));
 
     const transformedData = data?.map((item) => {
@@ -145,31 +149,30 @@ const DsaAllRequestTable = () => {
             {
                 key: "DsaName",
                 content: (
-                    <View className="flex flex-row items-center justify-start w-full">           
+                    <View className="flex flex-row items-center justify-start w-full">
                         <View className="flex flex-col w-11/12">
                             <View className="flex flex-row items-center text-black font-semibold mb-2">
                                 <Pressable
-                                    onPress={() =>
-                                        router.push(`clients/${item?.id}`)
-                                    }
+                                    // onPress={() =>
+                                    //     router.push(`clients/${item?.id}`)
+                                    // }
                                     className="flex flex-row w-[99%]"
                                 >
                                     <Text
                                         selectable
                                         className="flex flex-row text-black font-semibold break-all"
                                     >
-                                        {item?.name}&nbsp;{" "}
+                                        {item?.distributor?.name}&nbsp;{" "}
                                     </Text>
                                 </Pressable>
                             </View>
                             <View className="flex flex-row items-center mt-0">
-                                {/* {item?.kycStatus?.name == "Verified" ? ( */}
-                                <Tag>New</Tag>
-                                {/* ) : ( */}
-                                <Tag>Resubmitted</Tag>
-                                {/* )} */}
-                                {/* <Tag>SIP(N/A)</Tag> */}
-                                {/* <Tag>Autopay active</Tag> */}
+                                {item?.submissionAttempt?.id === 1 ? (
+                                      <Tag>New</Tag>
+                                ) : (
+                                    <Tag>Resubmitted</Tag>
+                                  
+                                )}
                             </View>
                         </View>
                     </View>
@@ -182,7 +185,7 @@ const DsaAllRequestTable = () => {
                         selectable
                         className="text-[#686868] font-semibold w-11/12"
                     >
-                        8851GJ91
+                        {item?.distributor?.arn}
                     </Text>
                 ),
             },
@@ -190,7 +193,7 @@ const DsaAllRequestTable = () => {
                 key: "rmName",
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
-                        Shobha Rathi
+                        {item?.managementUsers[0]?.name}
                     </Text>
                 ),
             },
@@ -198,7 +201,7 @@ const DsaAllRequestTable = () => {
                 key: "DateApplication",
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
-                        03/09/2020 8:09 PM
+                        {dateTimeFormat(item?.createdAt)  }
                     </Text>
                 ),
             },
@@ -207,8 +210,8 @@ const DsaAllRequestTable = () => {
                 content: (
                     <View className="flex flex-row w-[99%]">
                         <DsaDocumentDownload
-                            clientId={"fg"}
-                            downloadApi={"downloadApi"}
+                            clientId={item.requestId}
+                            downloadApi={`file/download-dsa-documents?documentName=esigneddocument&requestId=${item?.requestId}`}
                             fileName={"Dsa-Document"}
                         />
                     </View>
@@ -219,14 +222,14 @@ const DsaAllRequestTable = () => {
                 content: (
                     <View className="flex flex-row w-[99%]">
                         <Pressable
-                            onPress={() => handleOpenModal('approve', item.id)}
+                            onPress={() => handleOpenModal("approve", item.requestId)}
                             className="bg-[#CCF4C2] rounded-full px-5 py-2"
                         >
-                            <View >
+                            <View>
                                 <Text className="color-[#417135]">Approve</Text>
                             </View>
                         </Pressable>
-                     </View>
+                    </View>
                 ),
             },
             {
@@ -234,10 +237,10 @@ const DsaAllRequestTable = () => {
                 content: (
                     <View className="flex flex-row w-[99%]">
                         <Pressable
-                            onPress={() => handleOpenModal('reject', item.id)}
+                            onPress={() => handleOpenModal("reject", item.requestId)}
                             className="bg-[#FFD2D2] rounded-full px-5 py-2"
                         >
-                            <View >
+                            <View>
                                 <Text className="color-[#713535]">Reject</Text>
                             </View>
                         </Pressable>
@@ -259,7 +262,7 @@ const DsaAllRequestTable = () => {
                         setAppliedSorting={setAppliedSorting}
                         sorting={sorting}
                         fileName="Clients"
-                        downloadApi={"client/download-report"}
+                        // downloadApi={"client/download-report"}
                         schemaResponse={filtersSchema}
                         setCurrentPageNumber={setCurrentPageNumber}
                         getList={getDataList}
@@ -317,12 +320,12 @@ const DsaAllRequestTable = () => {
                 {/* )} */}
             </View>
             <RequestModal
-        visible={modalVisible}
-        onClose={handleCloseModal}
-        type={modalType}
-        clientId={currentClientId}
-        onSubmit={handleCloseModal}
-      />
+                visible={modalVisible}
+                onClose={handleCloseModal}
+                type={modalType}
+                clientId={currentClientId}
+                onSubmit={handleCloseModal}
+            />
         </View>
     );
 };

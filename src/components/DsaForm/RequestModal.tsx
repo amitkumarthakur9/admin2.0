@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import axios from "axios";
+import RemoteApi from "src/services/RemoteApi";
 
 const RequestModal = ({ visible, onClose, type, clientId, onSubmit }) => {
     const [approveInput, setApproveInput] = useState("");
@@ -24,28 +25,44 @@ const RequestModal = ({ visible, onClose, type, clientId, onSubmit }) => {
         }
     }, [visible]);
 
+    useEffect(() => {
+        
+    }, [message]);
+
     const handleSubmit = async () => {
         try {
             const data = {
-                clientId,
+                requestId: clientId,
                 ...(type === "approve"
-                    ? { dsaCode: approveInput }
-                    : { remarks: rejectInput }),
+                    ? { dscCode: approveInput }
+                    : { remark: rejectInput }),
             };
-            await axios.post("/onboard/distributor", data);
-            setMessage("Request successful");
-            onSubmit && onSubmit();
+
+            let response = null;
+            if (type === "approve") {
+                response = await RemoteApi.post(
+                    "distributor-onboard/approve-request",
+                    data
+                );
+            } else {
+                response = await RemoteApi.post(
+                    "distributor-onboard/reject-request",
+                    data
+                );
+            }
+
+            if (response.code == 200) {
+                setMessage("Submitted successful");
+            }
+
+            // onSubmit && onSubmit();
         } catch (error) {
             setMessage("Request failed");
         }
     };
 
     return (
-        <Modal
-            visible={visible}
-            transparent           
-            onRequestClose={onClose}
-        >
+        <Modal visible={visible} transparent onRequestClose={onClose}>
             <View style={styles.container}>
                 <View style={styles.modal}>
                     <TouchableOpacity
@@ -55,56 +72,60 @@ const RequestModal = ({ visible, onClose, type, clientId, onSubmit }) => {
                         <Icon name="close" size={20} color="#7C899C" />
                     </TouchableOpacity>
                     <View className="w-full p-4">
-                    {!message ? (
-                        <>
-                            <Text style={styles.title}>
-                                {type === "approve"
-                                    ? "Approve Request"
-                                    : "Reject Request"}
-                            </Text>
-                            <Text style={styles.label}>
-                                {type === "approve" ? "DSA Code*" : "Remarks*"}
-                            </Text>
-
-                            {type === "approve" ? (
-                                <TextInput
-                                    style={styles.input}
-                                    value={approveInput}
-                                    onChangeText={setApproveInput}
-                                />
-                            ) : (
-                                <TextInput
-                                    multiline={true}
-                                    numberOfLines={4}
-                                    style={styles.input}
-                                    value={rejectInput}
-                                    onChangeText={setRejectInput}
-                                />
-                            )}
-
-                            <Pressable
-                                style={[
-                                    styles.button,
-                                    type === "approve"
-                                        ? styles.approveButton
-                                        : styles.rejectButton,
-                                ]}
-                                onPress={handleSubmit}
-                            >
-                                <Text
-                                    style={
-                                        type === "approve"
-                                            ? styles.approveButtonText
-                                            : styles.rejectButtonText
-                                    }
-                                >
-                                    {type === "approve" ? "Approve" : "Reject"}
+                        {!message ? (
+                            <>
+                                <Text style={styles.title}>
+                                    {type === "approve"
+                                        ? "Approve Request"
+                                        : "Reject Request"}
                                 </Text>
-                            </Pressable>
-                        </>
-                    ) : (
-                        <Text style={styles.message}>{message}</Text>
-                    )}
+                                <Text style={styles.label}>
+                                    {type === "approve"
+                                        ? "DSA Code*"
+                                        : "Remarks*"}
+                                </Text>
+
+                                {type === "approve" ? (
+                                    <TextInput
+                                        style={styles.input}
+                                        value={approveInput}
+                                        onChangeText={setApproveInput}
+                                    />
+                                ) : (
+                                    <TextInput
+                                        multiline={true}
+                                        numberOfLines={4}
+                                        style={styles.input}
+                                        value={rejectInput}
+                                        onChangeText={setRejectInput}
+                                    />
+                                )}
+
+                                <Pressable
+                                    style={[
+                                        styles.button,
+                                        type === "approve"
+                                            ? styles.approveButton
+                                            : styles.rejectButton,
+                                    ]}
+                                    onPress={handleSubmit}
+                                >
+                                    <Text
+                                        style={
+                                            type === "approve"
+                                                ? styles.approveButtonText
+                                                : styles.rejectButtonText
+                                        }
+                                    >
+                                        {type === "approve"
+                                            ? "Approve"
+                                            : "Reject"}
+                                    </Text>
+                                </Pressable>
+                            </>
+                        ) : (
+                            <Text style={styles.message}>{message}</Text>
+                        )}
                     </View>
                 </View>
             </View>
@@ -142,7 +163,7 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         textAlign: "left",
         width: "100%",
-        color:"#97989B"
+        color: "#97989B",
     },
     input: {
         width: "100%",
