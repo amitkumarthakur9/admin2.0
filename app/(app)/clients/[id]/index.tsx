@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { View, useWindowDimensions } from "react-native";
 import { router, useLocalSearchParams, useRouter } from "expo-router";
 import {
@@ -2933,7 +2933,7 @@ const SwitchModalAction = ({
                     <View className="w-full flex flex-col items-center gap-y-2">
                         <Text className="w-full flex flex-row items-start justify-start text-xs text-gray-400 mb-2">
                             Choose Folio Number to switch from [Folio Number] -
-                             [Units] - [Amount]
+                            [Units] - [Amount]
                         </Text>
                         <DropdownComponent
                             label="Folio Number"
@@ -3254,7 +3254,7 @@ const SwitchModalAction = ({
                 </View>
                 <View className="w-full flex flex-col items-center py-4 px-12 gap-4">
                     <Button
-                    disabled={mutateLoading}
+                        disabled={mutateLoading}
                         width="100%"
                         bgColor={mutateLoading ? "#ddd" : "#013974"}
                         onPress={() => switchInvest()}
