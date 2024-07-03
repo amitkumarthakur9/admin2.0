@@ -15,6 +15,7 @@ const NewDropdownComponent = ({
     noIcon,
     value,
     setValue,
+    searchOn = false,
 }: {
     label: string;
     data: DropdownItem[];
@@ -22,6 +23,7 @@ const NewDropdownComponent = ({
     noIcon?: boolean;
     value: string | number | null;
     setValue: React.Dispatch<any>;
+    searchOn?: boolean;
 }) => {
     const [isFocus, setIsFocus] = useState(false);
 
@@ -51,10 +53,13 @@ const NewDropdownComponent = ({
                 ]}
                 placeholderStyle={styles.placeholderStyle}
                 selectedTextStyle={styles.selectedTextStyle}
-                inputSearchStyle={styles.inputSearchStyle}
+                inputSearchStyle={[
+                    styles.inputSearchStyle,
+                    isFocus && styles.inputSearchStyleFocus,
+                ]}
                 iconStyle={styles.iconStyle}
                 data={data}
-                search={false}
+                search={searchOn}
                 maxHeight={200}
                 labelField="label"
                 valueField="value"
@@ -99,6 +104,7 @@ const styles = StyleSheet.create({
         paddingLeft: 16,
         paddingRight: 12,
         fontSize: 12,
+        // zIndex: -1,
     },
     icon: {
         marginRight: 5,
@@ -108,7 +114,7 @@ const styles = StyleSheet.create({
         backgroundColor: "white",
         left: 22,
         top: 8,
-        zIndex: 999,
+        // zIndex: 999,
         paddingHorizontal: 8,
         fontSize: 12,
     },
@@ -125,5 +131,11 @@ const styles = StyleSheet.create({
     inputSearchStyle: {
         height: 40,
         fontSize: 12,
+        // borderWidth: 0,
+        // borderWidth: ,
+    },
+    inputSearchStyleFocus: {
+        // borderColor: "blue",
+        // borderWidth: 0,
     },
 });

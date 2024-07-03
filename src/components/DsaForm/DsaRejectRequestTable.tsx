@@ -129,7 +129,7 @@ const DsaRejectRequestTable = () => {
                             </Text>
                         </View> */}
                         <View className="flex flex-col  w-9/12">
-                            <View className="flex flex-row items-center text-black font-semibold mb-2">
+                            <View className="flex flex-row items-start justify-start text-black font-semibold mb-2">
                                 <Pressable
                                     // onPress={() =>
                                     //     router.push(`clients/${item?.id}`)
@@ -199,10 +199,7 @@ const DsaRejectRequestTable = () => {
                        {item?.remark}
                     </Text>
                 ),
-            },
-            
-            
-            
+            },          
         ];
 
         return itemStructure;

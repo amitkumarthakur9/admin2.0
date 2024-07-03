@@ -38,159 +38,163 @@ import CustomButton from "../Buttons/CustomButton";
 import HoverEffectComponent from "./Hover";
 import IonIcon from "react-native-vector-icons/Ionicons";
 
-const ContactDataTable = () => {
+const ContactDataTable = ({ children }) => {
+    // const dummyData = {
+    //     columnsModified: 0,
+    //     contacts: [
+    //         {
+    //             id: 1,
+    //             name: "test",
+    //             distributor: {
+    //                 user: {
+    //                     name: "EESHAN SHUKLAA",
+    //                 },
+    //             },
+    //             email: "test@gmail.com",
+    //             mobileNumber: "1234567890",
+    //             status: {
+    //                 id: 2,
+    //                 name: "Invited",
+    //             },
+    //             source: {
+    //                 id: 2,
+    //                 name: "Google",
+    //             },
+    //         },
+    //         {
+    //             id: 2,
+    //             name: "Saif M",
+    //             distributor: {
+    //                 user: {
+    //                     name: "EESHAN SHUKLAA",
+    //                 },
+    //             },
+    //             email: "msaffi786@gmail.com",
+    //             mobileNumber: "97786 86786",
+    //             status: {
+    //                 id: 2,
+    //                 name: "Not Invited",
+    //             },
+    //             source: {
+    //                 id: 2,
+    //                 name: "Google",
+    //             },
+    //         },
+    //         {
+    //             id: 3,
+    //             name: "Saheil",
+    //             distributor: {
+    //                 user: {
+    //                     name: "EESHAN SHUKLAA",
+    //                 },
+    //             },
+    //             email: "sakn357@gmail.com",
+    //             mobileNumber: "78676 56789",
+    //             status: {
+    //                 id: 2,
+    //                 name: "Invited",
+    //             },
+    //             source: {
+    //                 id: 2,
+    //                 name: "Google",
+    //             },
+    //         },
+    //         {
+    //             id: 4,
+    //             name: "Ydaf",
+    //             distributor: {
+    //                 user: {
+    //                     name: "EESHAN SHUKLAA",
+    //                 },
+    //             },
+    //             email: "jdnfjdb@gmail.com",
+    //             mobileNumber: "6839 274 649",
+    //             status: {
+    //                 id: 2,
+    //                 name: "Invited",
+    //             },
+    //             source: {
+    //                 id: 2,
+    //                 name: "Google",
+    //             },
+    //         },
+    //         {
+    //             id: 5,
+    //             name: "Zraf",
+    //             distributor: {
+    //                 user: {
+    //                     name: "EESHAN SHUKLAA",
+    //                 },
+    //             },
+    //             email: "zraf@gmail.com",
+    //             mobileNumber: "4567 890 432",
+    //             status: {
+    //                 id: 2,
+    //                 name: "Not Invited",
+    //             },
+    //             source: {
+    //                 id: 2,
+    //                 name: "Google",
+    //             },
+    //         },
+    //         {
+    //             id: 6,
+    //             name: "David Brown",
+    //             distributor: {
+    //                 user: {
+    //                     name: "EESHAN SHUKLAA",
+    //                 },
+    //             },
+    //             email: "user461@example.com",
+    //             mobileNumber: "554-490-3200",
+    //             status: {
+    //                 id: 2,
+    //                 name: "Not Invited",
+    //             },
+    //             source: {
+    //                 id: 2,
+    //                 name: "Google",
+    //             },
+    //         },
+    //         {
+    //             id: 7,
+    //             name: "Olivia Doe",
+    //             distributor: {
+    //                 user: {
+    //                     name: "EESHAN SHUKLAA",
+    //                 },
+    //             },
+    //             email: "user488@example.com",
+    //             mobileNumber: "308-570-4530",
+    //             status: {
+    //                 id: 2,
+    //                 name: "Invited",
+    //             },
+    //             source: {
+    //                 id: 2,
+    //                 name: "Google",
+    //             },
+    //         },
+    //         {
+    //             id: 8,
+    //             name: "Emily Martinez",
+    //             distributor: {
+    //                 user: {
+    //                     name: "EESHAN SHUKLAA",
+    //                 },
+    //             },
+    //             email: "user216@example.com",
+    //             mobileNumber: "361-881-5970",
+    //             status: {
+    //                 id: 2,
+    //                 name: "Invited",
+    //             },
+    //         },
+    //     ],
+    // };
     const dummyData = {
         columnsModified: 0,
-        contacts: [
-            {
-                id: 1,
-                name: "test",
-                distributor: {
-                    user: {
-                        name: "EESHAN SHUKLAA",
-                    },
-                },
-                email: "test@gmail.com",
-                mobileNumber: "1234567890",
-                status: {
-                    id: 2,
-                    name: "Invited",
-                },
-                source: {
-                    id: 2,
-                    name: "Google",
-                },
-            },
-            {
-                id: 2,
-                name: "Saif M",
-                distributor: {
-                    user: {
-                        name: "EESHAN SHUKLAA",
-                    },
-                },
-                email: "msaffi786@gmail.com",
-                mobileNumber: "97786 86786",
-                status: {
-                    id: 2,
-                    name: "Not Invited",
-                },
-                source: {
-                    id: 2,
-                    name: "Google",
-                },
-            },
-            {
-                id: 3,
-                name: "Saheil",
-                distributor: {
-                    user: {
-                        name: "EESHAN SHUKLAA",
-                    },
-                },
-                email: "sakn357@gmail.com",
-                mobileNumber: "78676 56789",
-                status: {
-                    id: 2,
-                    name: "Invited",
-                },
-                source: {
-                    id: 2,
-                    name: "Google",
-                },
-            },
-            {
-                id: 4,
-                name: "Ydaf",
-                distributor: {
-                    user: {
-                        name: "EESHAN SHUKLAA",
-                    },
-                },
-                email: "jdnfjdb@gmail.com",
-                mobileNumber: "6839 274 649",
-                status: {
-                    id: 2,
-                    name: "Invited",
-                },
-                source: {
-                    id: 2,
-                    name: "Google",
-                },
-            },
-            {
-                id: 5,
-                name: "Zraf",
-                distributor: {
-                    user: {
-                        name: "EESHAN SHUKLAA",
-                    },
-                },
-                email: "zraf@gmail.com",
-                mobileNumber: "4567 890 432",
-                status: {
-                    id: 2,
-                    name: "Not Invited",
-                },
-                source: {
-                    id: 2,
-                    name: "Google",
-                },
-            },
-            {
-                id: 6,
-                name: "David Brown",
-                distributor: {
-                    user: {
-                        name: "EESHAN SHUKLAA",
-                    },
-                },
-                email: "user461@example.com",
-                mobileNumber: "554-490-3200",
-                status: {
-                    id: 2,
-                    name: "Not Invited",
-                },
-                source: {
-                    id: 2,
-                    name: "Google",
-                },
-            },
-            {
-                id: 7,
-                name: "Olivia Doe",
-                distributor: {
-                    user: {
-                        name: "EESHAN SHUKLAA",
-                    },
-                },
-                email: "user488@example.com",
-                mobileNumber: "308-570-4530",
-                status: {
-                    id: 2,
-                    name: "Invited",
-                },
-                source: {
-                    id: 2,
-                    name: "Google",
-                },
-            },
-            {
-                id: 8,
-                name: "Emily Martinez",
-                distributor: {
-                    user: {
-                        name: "EESHAN SHUKLAA",
-                    },
-                },
-                email: "user216@example.com",
-                mobileNumber: "361-881-5970",
-                status: {
-                    id: 2,
-                    name: "Invited",
-                },
-            },
-        ],
+        contacts: [],
     };
     const [isLoading, setIsLoading] = React.useState(false);
 
@@ -214,12 +218,12 @@ const ContactDataTable = () => {
     const [filteredContacts, setFilteredContacts] = useState([]);
     const [inviteModalVisible, setModalVisible] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
-    console.log("selectedContacts");
-    console.log(selectedContacts);
+    // console.log("selectedContacts");
+    // console.log(selectedContacts);
     const isSelected = (contact) => {
-        console.log("Selected Contacts: ", selectedContacts);
-        console.log("Checking if contact is selected: ", contact);
-        console.log("isSelectContact: ", selectedContacts.includes(contact));
+        // console.log("Selected Contacts: ", selectedContacts);
+        // console.log("Checking if contact is selected: ", contact);
+        // console.log("isSelectContact: ", selectedContacts.includes(contact));
 
         return selectedContacts.some((c) => c.id === contact.id);
     };
@@ -269,18 +273,15 @@ const ContactDataTable = () => {
             data.orderBy = appliedSorting;
         }
 
-        // const response: AUMResponseInterface = await RemoteApi.post(
-        //     "client/list",
-        //     data
-        // );
-
         const response: ContactResponse = await RemoteApi.post(
             "onboard/client/list",
             data
         );
 
         if (response.code == 200) {
-            setData(response.data.data);
+            // setData(response.data.data);
+            // setData(dummyData.contacts);
+
             setFilteredContacts(response.data.data);
             // setFilteredContacts(dummyData.contacts);
             // console.log(filteredContacts);
@@ -381,17 +382,10 @@ const ContactDataTable = () => {
                     setAppliedFilers={setAppliedFilers}
                     newComponent={
                         <>
-                            {/* <View className=" ">
-                                <View className="py-1">
-                                    <Button
-                                        title=" Send Invite "
-                                        onPress={sendInvite}
-                                        disabled={selectedContacts.length === 0}
-                                    />
-                                </View>
-                            </View> */}
-
-                            <ManualInvite getlist={getDataList} />
+                            <ManualInvite
+                                getlist={getDataList}
+                                children={children}
+                            />
                             {width < 830 ? (
                                 <></>
                             ) : (
@@ -411,144 +405,85 @@ const ContactDataTable = () => {
                         <ScrollView className={"mt-4 z-[-2] "}>
                             <View className="flex w-full">
                                 <View className="flex flex-row justify-between py-1">
-                                    <Text className="font-bold text-lg">
-                                        {/* Welcome, {userInfo.name}! */}
-                                    </Text>
-                                    {/* <Button
-                                                    title="Sign Out"
-                                                    onPress={() => {
-                                                        setGooglemodalVisible(
-                                                            false
-                                                        );
-                                                        console.log(
-                                                            GooglemodalVisible
-                                                        );
-                                                        setUserInfo(null);
-                                                    }}
-                                                /> */}
+                                    <Text className="font-bold text-lg"></Text>
                                 </View>
                                 <View className="flex flex-row justify-center">
                                     <View className="w-full ">
-                                        {/* <TextInput
-                                                        placeholder="Search name"
-                                                        value={searchQuery}
-                                                        onChangeText={(text) =>
-                                                            handleSearchChange(
-                                                                text
-                                                            )
-                                                        }
-                                                        style={{
-                                                            borderWidth: 1,
-                                                            borderColor: "#ccc",
-                                                            padding: 8,
-                                                            marginBottom: 10,
-                                                        }}
-                                                    /> */}
-                                        {/* <Select
-                                                        selectedValue={filter}
-                                                        minWidth="200"
-                                                        accessibilityLabel="Filter"
-                                                        placeholder="Filter"
-                                                        _selectedItem={{
-                                                            bg: "teal.600",
-                                                            endIcon: (
-                                                                <CheckIcon size="5" />
-                                                            ),
-                                                        }}
-                                                        mt={1}
-                                                        onValueChange={
-                                                            handleFilterChange
-                                                        }
-                                                    >
-                                                        <Select.Item
-                                                            label="All"
-                                                            value="all"
-                                                        />
-                                                        <Select.Item
-                                                            label="Invited"
-                                                            value="invited"
-                                                        />
-                                                        <Select.Item
-                                                            label="Not Invited"
-                                                            value="notInvited"
-                                                        />
-                                                    </Select> */}
-
                                         <View>
                                             {filteredContacts.length > 0 ? (
                                                 <View>
                                                     <View className="flex flex-row items-center p-4 w-[99%] border-y-2 border-slate-200">
                                                         <View className="flex flex-row items-start justify-center w-2/12">
-                                                            
-                                                                <TouchableOpacity
-                                                                    onPress={
-                                                                        toggleSelectAll
-                                                                    }
-                                                                >
-                                                                    <Text className="font-semibold text-md">
-                                                                        {selectAll ? (
-                                                                            <>
-                                                                                <View className="flex flex-col justify-between pr-3 items-center">
-                                                                                    <View className="flex flex-col">
+                                                            <TouchableOpacity
+                                                                onPress={
+                                                                    toggleSelectAll
+                                                                }
+                                                            >
+                                                                <Text className="font-semibold text-md">
+                                                                    {selectAll ? (
+                                                                        <>
+                                                                            <View className="flex flex-col justify-between pr-3 items-center">
+                                                                                <View className="flex flex-col">
+                                                                                    <View
+                                                                                        style={{
+                                                                                            backgroundColor:
+                                                                                                "#114EA8",
+                                                                                            // padding: 10,
+                                                                                            borderRadius: 5,
+                                                                                            //    width:20,
+                                                                                            //    height:20,
+                                                                                            paddingTop: 4,
+                                                                                            paddingLeft: 4,
+                                                                                            paddingRight: 4,
+                                                                                            paddingBottom: 4,
+                                                                                        }}
+                                                                                    >
+                                                                                        <Icon
+                                                                                            name="check"
+                                                                                            size={
+                                                                                                10
+                                                                                            }
+                                                                                            color="white"
+                                                                                        />
+                                                                                    </View>
+                                                                                </View>
+                                                                                <View className="pl-2">
+                                                                                    <Text className="">
+                                                                                        Mark
+                                                                                        All
+                                                                                    </Text>
+                                                                                </View>
+                                                                            </View>
+                                                                        </>
+                                                                    ) : (
+                                                                        <>
+                                                                            <View className="flex flex-row justify-center">
+                                                                                <View className="flex flex-col pr-3 items-center justify-center">
+                                                                                    <View className="flex flex-row justify-center">
                                                                                         <View
                                                                                             style={{
                                                                                                 backgroundColor:
-                                                                                                    "#114EA8",
-                                                                                                // padding: 10,
-                                                                                                borderRadius: 5,
-                                                                                                //    width:20,
-                                                                                                //    height:20,
-                                                                                                paddingTop: 4,
-                                                                                                paddingLeft: 4,
-                                                                                                paddingRight: 4,
-                                                                                                paddingBottom: 4,
+                                                                                                    "transparent",
+                                                                                                padding: 8,
+                                                                                                borderRadius: 4,
+                                                                                                borderWidth: 2,
+                                                                                                borderColor:
+                                                                                                    "#CCCCCC",
                                                                                             }}
-                                                                                        >
-                                                                                            <Icon
-                                                                                                name="check"
-                                                                                                size={
-                                                                                                    10
-                                                                                                }
-                                                                                                color="white"
-                                                                                            />
-                                                                                        </View>
+                                                                                        ></View>
                                                                                     </View>
                                                                                     <View className="pl-2">
-                                                                                        <Text className="">
-                                                                                            Mark All
+                                                                                        <Text className="text-xs">
+                                                                                            Mark
+                                                                                            All
                                                                                         </Text>
                                                                                     </View>
                                                                                 </View>
-                                                                            </>
-                                                                        ) : (
-                                                                            <>
-                                                                                <View className="flex flex-row justify-center">
-                                                                                    <View className="flex flex-col pr-3 items-center justify-center">
-                                                                                        <View className="flex flex-row justify-center">
-                                                                                            <View
-                                                                                                style={{
-                                                                                                    backgroundColor:
-                                                                                                        "transparent",
-                                                                                                    padding: 8,
-                                                                                                    borderRadius: 4,
-                                                                                                    borderWidth: 2,
-                                                                                                    borderColor:
-                                                                                                        "#CCCCCC",
-                                                                                                }}
-                                                                                            ></View>
-                                                                                        </View>
-                                                                                        <View className="pl-2">
-                                                                                            <Text className="text-xs">
-                                                                                                Mark All
-                                                                                            </Text>
-                                                                                        </View>
-                                                                                    </View>
-                                                                                </View>
-                                                                            </>
-                                                                        )}
-                                                                    </Text>
-                                                                </TouchableOpacity>
-                                                            
+                                                                            </View>
+                                                                        </>
+                                                                    )}
+                                                                </Text>
+                                                            </TouchableOpacity>
                                                         </View>
                                                         {width < 830 ? (
                                                             <View className="pl-8">
@@ -833,9 +768,27 @@ const ContactDataTable = () => {
                                                 </View>
                                             ) : (
                                                 <View>
-                                                    <Text className="font-bold text-md text-center py-2">
-                                                        No Contacts
-                                                    </Text>
+                                                    <View
+                                                        style={{
+                                                            alignItems:
+                                                                "center",
+                                                        }}
+                                                    >
+                                                        <Icon
+                                                            name="address-book-o"
+                                                            size={100}
+                                                            color="#ccc"
+                                                        />
+                                                        <Text
+                                                            style={{
+                                                                fontSize: 24,
+                                                                color: "#888",
+                                                                marginTop: 20,
+                                                            }}
+                                                        >
+                                                            No contacts
+                                                        </Text>
+                                                    </View>
                                                 </View>
                                             )}
                                         </View>
@@ -930,21 +883,5 @@ const ContactDataTable = () => {
         </View>
     );
 };
-
-// const styles = StyleSheet.create({
-//     container: {
-//         padding: 10,
-//         backgroundColor: "#eee",
-//         borderRadius: 5,
-//         alignItems: "center",
-//     },
-//     hovered: {
-//         backgroundColor: "#ddd", // Change background color on hover
-//     },
-//     text: {
-//         fontSize: 16,
-//         fontWeight: "bold",
-//     },
-// });
 
 export default ContactDataTable;

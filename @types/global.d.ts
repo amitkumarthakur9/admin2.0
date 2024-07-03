@@ -310,6 +310,18 @@ declare global {
         subBrokerAmount: number;
         distributorAmount: number;
     }
+    interface DropdownList {
+        id: number;
+        name: string;
+    }
+
+    interface DropdownResponse {
+        code: number;
+        message: string;
+        errors: any[];
+        data: DropdownList[];
+    }
+    
 
 
     // You can declare multiple interfaces or types here

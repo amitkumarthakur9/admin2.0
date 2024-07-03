@@ -25,7 +25,7 @@ import { ToastAlert } from "../../../src/helper/CustomToaster";
 import UploadCsv from "./UploadCSV";
 import GoogleSignInButton from "./GoogleSignInButton";
 
-export default function ManualInvite({ getlist = () => {} }) {
+export default function ManualInvite({ getlist = () => {} , children}) {
     const [modalVisible, setModalVisible] = useState(false);
     const showDialog = () => setModalVisible(true);
     const hideDialog = () => setModalVisible(false);
@@ -237,6 +237,7 @@ export default function ManualInvite({ getlist = () => {} }) {
                                     />
                                 </Pressable>
                             </View>
+                            {children}
                             {/* <GoogleSignInButton /> */}
                             
 

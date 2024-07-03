@@ -32,40 +32,13 @@ import IonIcon from "react-native-vector-icons/Ionicons";
 
 const GoogleContactInvite = () => {
     const [userInfo, setUserInfo] = useState(null);
-    const [contacts, setContacts] = useState([]);
-    const [selectedContacts, setSelectedContacts] = useState([]);
     const [nowCurrentUrl, setNowCurrentUrl] = useState("");
-    const [selectAll, setSelectAll] = useState(false);
-    const [searchQuery, setSearchQuery] = useState("");
     const [inviteModalVisible, setModalVisible] = useState(false);
     const [dbContact, setDbContacts] = useState(false);
-    const [GooglemodalVisible, setGooglemodalVisible] = useState(false);
-    const [filteredContacts, setFilteredContacts] = useState(contacts);
-
     const [isLoading, setIsLoading] = useState(false);
-    const [filter, setFilter] = useState("All");
 
-    const showDialog = (key: string) => {
-        if (key === "invite") {
-            setModalVisible(true);
-        } else {
-            setGooglemodalVisible(true);
-        }
-    };
-
-    const hideDialog = (key: string) => {
-        if (key === "invite") {
-            setModalVisible(false);
-        } else {
-            setUserInfo(null);
-            setGooglemodalVisible(false);
-        }
-    };
-
-    // const hideDialog = () => setModalVisible(false);
-
-    // const redirectUri = "http://localhost:8081/invite-contact"; // Replace with your redirect URI
-    const redirectUri = "https://vision.kcp.com.in/invite-contact"; // Replace with your redirect URI
+    const redirectUri = "http://localhost:8081/invite-contact"; // Replace with your redirect URI
+    // const redirectUri = "https://vision.kcp.com.in/invite-contact"; // Replace with your redirect URI
 
     useEffect(() => {
         const getCurrentUrl = async () => {
@@ -86,10 +59,10 @@ const GoogleContactInvite = () => {
                         // Save the code parameter to AsyncStorage
                         // await AsyncStorage.setItem("Google_access_token", code);
                         // console.log("Code saved to AsyncStorage");
+                        // exchangeCodeForToken(code);
                     }
 
                     // getGoogleContacts(code);
-                    exchangeCodeForToken(code);
                 }
             } catch (error) {
                 console.error("Error getting current URL:", error);
@@ -99,37 +72,38 @@ const GoogleContactInvite = () => {
         getCurrentUrl();
     }, [nowCurrentUrl]);
 
-    useEffect(() => {
-        async function getContactList(
-            updatedFilterValues = [],
-            applyDirectly = false
-        ) {
-            setIsLoading(true);
-            let data: any = {
-                page: 1,
-                limit: 10,
-                filters: false,
-            };
+    // useEffect(() => {
 
-            const response: ContactResponse = await RemoteApi.post(
-                "onboard/client/list",
-                data
-            );
+    //     async function getContactList(
+    //         updatedFilterValues = [],
+    //         applyDirectly = false
+    //     ) {
+    //         setIsLoading(true);
+    //         let data: any = {
+    //             page: 1,
+    //             limit: 10,
+    //             filters: false,
+    //         };
 
-            if (response.code == 200) {
-                if (response.data.data.length > 0) {
-                    setDbContacts(true);
-                }
+    //         const response: ContactResponse = await RemoteApi.post(
+    //             "onboard/client/list",
+    //             data
+    //         );
 
-                console.log(
-                    "response.data.data.length" + response.data.data.length
-                );
-            } else {
-            }
-        }
+    //         if (response.code == 200) {
+    //             if (response.data.data.length > 0) {
+    //                 setDbContacts(true)
+    //             }
 
-        getContactList();
-    }, []);
+    //             console.log(
+    //                 "response.data.data.length" + response.data.data.length
+    //             );
+    //         } else {
+    //         }
+    //     }
+
+    //     getContactList();
+    // }, []);
 
     const exchangeCodeForToken = async (code) => {
         try {
@@ -176,6 +150,7 @@ const GoogleContactInvite = () => {
                     const userInfo = await userInfoResponse.json();
 
                     setUserInfo(userInfo);
+                    console.log(JSON.stringify(userInfo) + "userInfo");
                 } else {
                     console.error(
                         "Failed to fetch user info:",
@@ -217,9 +192,6 @@ const GoogleContactInvite = () => {
                             isCompleted: false, // Add the new key-value pair
                         };
                     });
-                    setContacts(updatedContacts); // Update the contacts state with the updated array
-                    // showDialog("google");
-                    setFilteredContacts(updatedContacts);
                 } // Update state with all contacts
             } else {
             }
@@ -229,25 +201,6 @@ const GoogleContactInvite = () => {
         }
         // setIsLoading(false);
     };
-
-    // const getContactsDB = async () => {
-    //     setIsLoading(true);
-
-    //     try {
-    //         const response: any = await RemoteApi.get("/onboard/distributor");
-
-    //         if (response?.message == "Success") {
-    //             console.log(response?.data);
-
-    //             setContacts(response?.data);
-    //         } else {
-    //             console.log(response?.errors);
-    //         }
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-    //     setIsLoading(false);
-    // };
 
     const getGoogleContacts = async (accessToken) => {
         // setIsLoading(true);
@@ -299,26 +252,6 @@ const GoogleContactInvite = () => {
             // setContacts(allContacts); // Update state with all contacts
             // setIsLoading(false);
             submitContactsDB(allContacts);
-            // try {
-            //     console.log("trydata");
-            //     console.log(allContacts);
-
-            //     const data = {
-            //         contacts: allContacts,
-            //     };
-
-            //     const response: any = await RemoteApi.post(
-            //         "onboard/client/save",
-            //         data
-            //     );
-
-            //     if (response?.message == "Success") {
-            //         console.log(data);
-
-            //         setContacts(response?.data?.contacts); // Update state with all contacts
-            //     } else {
-            //     }
-            // } catch (error) {}
         } catch (error) {
             console.error("Error fetching contacts:", error);
         }
@@ -345,102 +278,8 @@ const GoogleContactInvite = () => {
         }
     };
 
-    const sendInvite = async () => {
-        console.log(selectedContacts);
-        try {
-            console.log("selectedContacts");
-            console.log(selectedContacts);
-
-            const contactID = {
-                contacts: selectedContacts.map((obj) => obj.id),
-            };
-
-            const response: any = await RemoteApi.patch(
-                "onboard/client/invite",
-                contactID
-            );
-
-            if (response?.message == "Success") {
-                showDialog("invite");
-                setUserInfo(null);
-                setSelectedContacts([]);
-            } else {
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
-    const handleSearchChange = (value) => {
-        setSearchQuery(value);
-
-        const searchContacts = contacts.filter((contact) =>
-            contact.name.toLowerCase().includes(value.toLowerCase())
-        );
-
-        setFilteredContacts(searchContacts);
-    };
-
-    const toggleContactSelection = (contact) => {
-        const isSelected = selectedContacts.some((c) => c === contact);
-        if (isSelected) {
-            setSelectedContacts(selectedContacts.filter((c) => c !== contact));
-        } else {
-            setSelectedContacts([...selectedContacts, contact]);
-        }
-    };
-
-    const toggleSelectAll = () => {
-        if (selectAll) {
-            setSelectedContacts([]);
-        } else {
-            setSelectedContacts(contacts);
-        }
-        setSelectAll(!selectAll);
-    };
-
-    const isSelected = (contact) => selectedContacts.includes(contact);
-
-    const handleFilterChange = (value) => {
-        setFilter(value);
-        if (value === "all") {
-            // Show all contacts
-            setFilteredContacts(contacts);
-        } else if (value === "invited") {
-            // Show only invited contacts
-            const invitedContacts = contacts.filter(
-                (c) => c.status.name === "Invited"
-            );
-            setFilteredContacts(invitedContacts);
-        } else {
-            // Show only not invited contacts
-            const notInvitedContacts = contacts.filter(
-                (c) => c.status.name !== "Invited"
-            );
-            setFilteredContacts(notInvitedContacts);
-        }
-    };
-
     return (
         <>
-            {/* {isLoading ? (
-                <Center>
-                    <HStack
-                        space={2}
-                        marginTop={20}
-                        marginBottom={20}
-                        justifyContent="center"
-                    >
-                        <Spinner
-                            color={"black"}
-                            accessibilityLabel="Loading order"
-                        />
-                        <Heading color="black" fontSize="md">
-                            Loading
-                        </Heading>
-                    </HStack>
-                </Center>
-            ) : ( */}
             <ScrollView
                 className=""
                 style={{
@@ -456,264 +295,25 @@ const GoogleContactInvite = () => {
                     <View
                         style={{
                             flex: 1,
-                            // alignItems: "center",
-                            // justifyContent: "center",
                         }}
                     >
-                        {userInfo || dbContact ? (
-                            <>
-                                {/* <View className="flex flex-row justify-center items-center  p-4 h-[42px]">
-                                    <Button
-                                        title="Import Contacts from Google"
-                                        onPress={signInWithGoogle}
-                                        style={{ width: "100%" }}
-                                    />
-                                </View> */}
+                        {/* {(userInfo || dbContact) && ( */}
+                        <>
+                            <ContactDataTable
+                                children={
+                                    <>
+                                        <Button
+                                            title="Sign In Google"
+                                            onPress={signInWithGoogle}
+                                            style={{ width: "100%" }}
+                                        />
+                                    </>
+                                }
+                            />
+                        </>
+                        {/* )} */}
 
-                                <ContactDataTable />
-                            </>
-                        ) : (
-                            // <View
-                            //     className={
-                            //         "mt-4 z-[-1] w-[50%] flex items-center border-[#c8c8c8] border-[0.2px] rounded-[5px]"
-                            //     }
-                            // >
-                            //     <View className="flex w-8/12">
-                            //         <View className="flex flex-row justify-between py-1">
-                            //             <Text className="font-bold text-lg">
-                            //                 Welcome, {userInfo.name}!
-                            //             </Text>
-                            //             <Button
-                            //                 title="Sign Out"
-                            //                 onPress={() => {
-                            //                     setGooglemodalVisible(false);
-                            //                     console.log(GooglemodalVisible)
-                            //                     setUserInfo(null);
-
-                            //                 }}
-                            //             />
-                            //         </View>
-
-                            //         <Text className="font-bold text-md text-center py-2">
-                            //             Select Clients to send Invite
-                            //         </Text>
-                            //         <View className="flex flex-row justify-center">
-                            //             <View className="w-8/12 ">
-                            //                 <TextInput
-                            //                     placeholder="Search name"
-                            //                     value={searchQuery}
-                            //                     onChangeText={(text) =>
-                            //                         setSearchQuery(text)
-                            //                     }
-                            //                     style={{
-                            //                         borderWidth: 1,
-                            //                         borderColor: "#ccc",
-                            //                         padding: 8,
-                            //                         marginBottom: 10,
-                            //                     }}
-                            //                 />
-
-                            //                 <View>
-                            //                     {filteredContacts.length > 0 ? (
-                            //                         <View>
-                            //                             <TouchableOpacity
-                            //                                 onPress={
-                            //                                     toggleSelectAll
-                            //                                 }
-                            //                             >
-                            //                                 <Text className="font-semibold text-md border-solid border-b-2 border-gray-200 py-1">
-                            //                                     {selectAll ? (
-                            //                                         <>
-                            //                                         <View className="">
-                            //                                         <View
-                            //                                                 style={{
-                            //                                                     backgroundColor:
-                            //                                                         "#114EA8",
-                            //                                                     // padding: 7,
-                            //                                                     borderRadius: 5,
-                            //                                                 //    width:20,
-                            //                                                 //    height:20,
-                            //                                                    paddingTop: 0,
-                            //                                                    paddingLeft: 7,
-                            //                                                    paddingRight: 7,
-                            //                                                    paddingBottom: 0,
-
-                            //                                                 }}
-                            //                                             >
-                            //                                                 <Icon
-                            //                                                     name="check"
-                            //                                                     size={
-                            //                                                         6
-                            //                                                     }
-                            //                                                     color="white"
-                            //                                                 />
-                            //                                             </View>
-
-                            //                                         </View>
-
-                            //                                             <View className="pl-4">
-                            //                                                 <Text className="text-base">
-                            //                                                     Deselect
-                            //                                                     All
-                            //                                                 </Text>
-                            //                                             </View>
-                            //                                         </>
-                            //                                     ) : (
-                            //                                         <>
-                            //                                             <View className="flex flex-row items-center">
-                            //                                                 <View
-                            //                                                     style={{
-                            //                                                         backgroundColor:
-                            //                                                             "transparent",
-                            //                                                         padding: 8,
-                            //                                                         borderRadius: 4,
-                            //                                                         borderWidth: 2,
-                            //                                                         borderColor:
-                            //                                                             "#CCCCCC",
-                            //                                                     }}
-                            //                                                 ></View>
-                            //                                                 <View className="pl-4">
-                            //                                                     <Text className="text-base">
-                            //                                                         Select
-                            //                                                         All
-                            //                                                     </Text>
-                            //                                                 </View>
-                            //                                             </View>
-                            //                                         </>
-                            //                                     )}
-                            //                                 </Text>
-                            //                             </TouchableOpacity>
-
-                            //                             <View className="h-96 overflow-scroll">
-                            //                                 <FlatList
-                            //                                     data={
-                            //                                         filteredContacts
-                            //                                     }
-                            //                                     renderItem={({
-                            //                                         item,
-                            //                                     }) => (
-                            //                                         <TouchableOpacity
-                            //                                             onPress={() =>
-                            //                                                 toggleContactSelection(
-                            //                                                     item
-                            //                                                 )
-                            //                                             }
-                            //                                         >
-                            //                                             <View className="flex flex-row items-center border-solid border-b-1 border-gray-400 overflow-auto justify-start">
-                            //                                                 <View className="w-0.5/12">
-                            //                                                     <View>
-                            //                                                         {isSelected(
-                            //                                                             item
-                            //                                                         ) ? (
-                            //                                                             <View
-                            //                                                                 style={{
-                            //                                                                     backgroundColor:
-                            //                                                                         "#114EA8",
-                            //                                                                     padding: 7,
-                            //                                                                     borderRadius: 5,
-                            //                                                                 }}
-                            //                                                             >
-                            //                                                                 <Icon
-                            //                                                                     name="check"
-                            //                                                                     size={
-                            //                                                                         6
-                            //                                                                     }
-                            //                                                                     color="white"
-                            //                                                                 />
-                            //                                                             </View>
-                            //                                                         ) : (
-                            //                                                             <View
-                            //                                                                 style={{
-                            //                                                                     backgroundColor:
-                            //                                                                         "transparent",
-                            //                                                                     padding: 8,
-                            //                                                                     borderRadius: 4,
-                            //                                                                     borderWidth: 2,
-                            //                                                                     borderColor:
-                            //                                                                         "#CCCCCC",
-                            //                                                                 }}
-                            //                                                             ></View>
-                            //                                                         )}
-                            //                                                     </View>
-                            //                                                 </View>
-                            //                                                 <View className=" flex flex-col items-start pl-4 pb-2">
-                            //                                                     <Text
-                            //                                                         className="text-base"
-                            //                                                         onPress={() =>
-                            //                                                             toggleContactSelection(
-                            //                                                                 item
-                            //                                                             )
-                            //                                                         }
-                            //                                                     >
-                            //                                                         {
-                            //                                                             item.name
-                            //                                                         }
-                            //                                                     </Text>
-                            //                                                     <Text className="text-slate-400 text-xs">
-                            //                                                         {
-                            //                                                             item.mobileNumber
-                            //                                                         }
-                            //                                                     </Text>
-                            //                                                     <Text className="text-slate-400 text-xs">
-                            //                                                         {
-                            //                                                             item.email
-                            //                                                         }
-                            //                                                     </Text>
-                            //                                                 </View>
-                            //                                                 {/* <View className="w-3/12">
-                            //                                             <Text>
-                            //                                                 {
-                            //                                                     item.name
-                            //                                                 }
-                            //                                             </Text>
-                            //                                         </View>
-                            //                                         <View className="w-4/12">
-                            //                                             <Text>
-                            //                                                 {
-                            //                                                     item.email
-                            //                                                 }
-                            //                                             </Text>
-                            //                                         </View>
-                            //                                         <View className="w-4/12">
-                            //                                             <Text>
-                            //                                                 {
-                            //                                                     item.mobileNumber
-                            //                                                 }
-                            //                                             </Text>
-                            //                                         </View> */}
-                            //                                             </View>
-                            //                                         </TouchableOpacity>
-                            //                                     )}
-                            //                                     keyExtractor={(
-                            //                                         item,
-                            //                                         index
-                            //                                     ) =>
-                            //                                         index.toString()
-                            //                                     }
-                            //                                 />
-                            //                             </View>
-                            //                         </View>
-                            //                     ) : (
-                            //                         <Text className="font-bold text-md text-center py-2">
-                            //                             No Contacts
-                            //                         </Text>
-                            //                     )}
-                            //                 </View>
-
-                            //                 <View className="py-2">
-                            //                     <Button
-                            //                         title="Send Invite"
-                            //                         onPress={sendInvite}
-                            //                         disabled={
-                            //                             selectedContacts.length ===
-                            //                             0
-                            //                         }
-                            //                     />
-                            //                 </View>
-                            //             </View>
-                            //         </View>
-                            //     </View>
-                            // </View>
+                        {/* {      !dbContact         &&     (
                             <>
                                 <View
                                     style={{
@@ -752,396 +352,10 @@ const GoogleContactInvite = () => {
 
                                 <View className="flex flex-row justify-center items-center  p-4 h-[42px">
                                     <ManualInvite />
-                                </View>
-
-                                {/* <ContactDataTable /> */}
+                                </View>                              
                             </>
-                        )}
+                        )} */}
                     </View>
-                </View>
-                {/* <Button title="Modal" onPress={sendInvite} /> */}
-
-                <View className="">
-                    <Portal>
-                        <Dialog
-                            visible={inviteModalVisible}
-                            onDismiss={() => hideDialog("invite")}
-                            dismissable
-                            style={{
-                                display: "flex",
-                                justifyContent: "flex-start",
-                                alignSelf: "center",
-                                width: 400,
-                                height: "50%",
-                                overflow: "scroll",
-                                backgroundColor: "white",
-                            }}
-                        >
-                            <View className="flex flex-row justify-between p-4">
-                                <Pressable
-                                    onPress={() => hideDialog("invite")}
-                                    className={
-                                        "flex flex-row justify-center items-center border-[1px] rounded px-4 h-[42px] border-slate-200"
-                                    }
-                                    aria-describedby="InviteClient"
-                                >
-                                    <Icon
-                                        name="close"
-                                        size={20}
-                                        color="black"
-                                    />
-                                </Pressable>
-                            </View>
-                            <View className="flex flex-row justify-center">
-                                <View className="flex flex-col w-1/2 justify-center items-center">
-                                    <View
-                                        style={{
-                                            backgroundColor: "#114EA8",
-                                            padding: 10,
-                                            borderRadius: 10,
-                                        }}
-                                    >
-                                         <IonIcon name="close-outline" size={24}  color="white"  />
-                                        {/* <Icon
-                                            name="check"
-                                            size={100}
-                                            color="white"
-                                        /> */}
-                                    </View>
-                                    <Text className="pt-8 text-lg font-bold color-[#114EA8]">
-                                        Invite succesfully sent
-                                    </Text>
-                                </View>
-                            </View>
-                        </Dialog>
-                    </Portal>
-                </View>
-
-                <View className="">
-                    <Portal>
-                        <Dialog
-                            visible={GooglemodalVisible}
-                            onDismiss={() => hideDialog("google")}
-                            dismissable
-                            style={{
-                                display: "flex",
-                                justifyContent: "flex-start",
-                                alignSelf: "center",
-                                width: 500,
-                                height: "90%",
-                                overflow: "scroll",
-                                backgroundColor: "white",
-                            }}
-                        >
-                            <View className="flex flex-row justify-between p-4">
-                                <Text className="pl-4 text-lg font-bold"></Text>
-
-                                <Pressable
-                                    onPress={() => hideDialog("google")}
-                                    className={
-                                        "flex flex-row justify-center items-center border-[1px] rounded p-4 h-4 border-slate-200"
-                                    }
-                                    aria-describedby="addNewClient"
-                                >
-                                    <Icon
-                                        name="close"
-                                        size={20}
-                                        color="black"
-                                    />
-                                </Pressable>
-                            </View>
-
-                            <View
-                                style={{
-                                    flex: 1,
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                }}
-                            >
-                                {userInfo ? (
-                                    <View
-                                        className={
-                                            "mt-4 z-[-1] w-[99%] flex items-center  "
-                                        }
-                                    >
-                                        <View className="flex w-11/12">
-                                            <View className="flex flex-row justify-between py-1">
-                                                <Text className="font-bold text-lg">
-                                                    Welcome, {userInfo.name}!
-                                                </Text>
-                                                <Button
-                                                    title="Sign Out"
-                                                    onPress={() => {
-                                                        setGooglemodalVisible(
-                                                            false
-                                                        );
-                                                        console.log(
-                                                            GooglemodalVisible
-                                                        );
-                                                        setUserInfo(null);
-                                                    }}
-                                                />
-                                            </View>
-
-                                            <Text className="font-bold text-md text-center py-2">
-                                                Select Clients to send Invite
-                                            </Text>
-                                            <View className="flex flex-row justify-center">
-                                                <View className="w-8/12 ">
-                                                    <TextInput
-                                                        placeholder="Search name"
-                                                        value={searchQuery}
-                                                        onChangeText={(text) =>
-                                                            handleSearchChange(
-                                                                text
-                                                            )
-                                                        }
-                                                        style={{
-                                                            borderWidth: 1,
-                                                            borderColor: "#ccc",
-                                                            padding: 8,
-                                                            marginBottom: 10,
-                                                        }}
-                                                    />
-                                                    <Select
-                                                        selectedValue={filter}
-                                                        minWidth="200"
-                                                        accessibilityLabel="Filter"
-                                                        placeholder="Filter"
-                                                        _selectedItem={{
-                                                            bg: "teal.600",
-                                                            endIcon: (
-                                                                <CheckIcon size="5" />
-                                                            ),
-                                                        }}
-                                                        mt={1}
-                                                        onValueChange={
-                                                            handleFilterChange
-                                                        }
-                                                    >
-                                                        <Select.Item
-                                                            label="All"
-                                                            value="all"
-                                                        />
-                                                        <Select.Item
-                                                            label="Invited"
-                                                            value="invited"
-                                                        />
-                                                        <Select.Item
-                                                            label="Not Invited"
-                                                            value="notInvited"
-                                                        />
-                                                    </Select>
-
-                                                    <View>
-                                                        {filteredContacts.length >
-                                                        0 ? (
-                                                            <View>
-                                                                <TouchableOpacity
-                                                                    onPress={
-                                                                        toggleSelectAll
-                                                                    }
-                                                                >
-                                                                    <Text className="font-semibold text-md border-solid border-b-2 border-gray-200 py-1">
-                                                                        {selectAll ? (
-                                                                            <>
-                                                                                <View className="flex flex-row justify-between pr-2 py-4">
-                                                                                    <View className="pl-4">
-                                                                                        <Text className="text-base">
-                                                                                            Deselect
-                                                                                            All
-                                                                                        </Text>
-                                                                                    </View>
-                                                                                    <View className="">
-                                                                                        <View
-                                                                                            style={{
-                                                                                                backgroundColor:
-                                                                                                    "#114EA8",
-                                                                                                // padding: 7,
-                                                                                                borderRadius: 5,
-                                                                                                //    width:20,
-                                                                                                //    height:20,
-                                                                                                paddingTop: 0,
-                                                                                                paddingLeft: 7,
-                                                                                                paddingRight: 7,
-                                                                                                paddingBottom: 0,
-                                                                                            }}
-                                                                                        >
-                                                                                            <Icon
-                                                                                                name="check"
-                                                                                                size={
-                                                                                                    6
-                                                                                                }
-                                                                                                color="white"
-                                                                                            />
-                                                                                        </View>
-                                                                                    </View>
-                                                                                </View>
-                                                                            </>
-                                                                        ) : (
-                                                                            <>
-                                                                                <View className="flex flex-row justify-between pr-2 py-4">
-                                                                                    <View className="">
-                                                                                        <Text className="text-base">
-                                                                                            Select
-                                                                                            All
-                                                                                        </Text>
-                                                                                    </View>
-                                                                                    <View
-                                                                                        style={{
-                                                                                            backgroundColor:
-                                                                                                "transparent",
-                                                                                            padding: 8,
-                                                                                            borderRadius: 4,
-                                                                                            borderWidth: 2,
-                                                                                            borderColor:
-                                                                                                "#CCCCCC",
-                                                                                            height: 2,
-                                                                                        }}
-                                                                                    ></View>
-                                                                                </View>
-                                                                            </>
-                                                                        )}
-                                                                    </Text>
-                                                                </TouchableOpacity>
-
-                                                                <View className="h-96 overflow-scroll">
-                                                                    <FlatList
-                                                                        data={
-                                                                            filteredContacts
-                                                                        }
-                                                                        renderItem={({
-                                                                            item,
-                                                                        }) => (
-                                                                            <TouchableOpacity
-                                                                                onPress={() =>
-                                                                                    toggleContactSelection(
-                                                                                        item
-                                                                                    )
-                                                                                }
-                                                                            >
-                                                                                <View className="flex flex-row items-center border-solid border-b-1 border-gray-400 overflow-auto justify-between px-2">
-                                                                                    <View className=" flex flex-col items-start pb-2">
-                                                                                        <Text
-                                                                                            className="text-base"
-                                                                                            onPress={() =>
-                                                                                                toggleContactSelection(
-                                                                                                    item
-                                                                                                )
-                                                                                            }
-                                                                                        >
-                                                                                            {
-                                                                                                item.name
-                                                                                            }
-                                                                                        </Text>
-                                                                                        <Text className="text-slate-500 text-xs">
-                                                                                            {
-                                                                                                item.mobileNumber
-                                                                                            }
-                                                                                        </Text>
-                                                                                        <Text className="text-slate-500 text-xs">
-                                                                                            {
-                                                                                                item.email
-                                                                                            }
-                                                                                        </Text>
-                                                                                    </View>
-                                                                                    <View className="w-0.5/12">
-                                                                                        {item
-                                                                                            .status
-                                                                                            .name ==
-                                                                                        "Invited" ? (
-                                                                                            <View>
-                                                                                                <Text className="text-slate-500">
-                                                                                                    Invite
-                                                                                                    Sent
-                                                                                                </Text>
-                                                                                            </View>
-                                                                                        ) : (
-                                                                                            <View>
-                                                                                                {isSelected(
-                                                                                                    item
-                                                                                                ) ? (
-                                                                                                    <View
-                                                                                                        style={{
-                                                                                                            backgroundColor:
-                                                                                                                "#114EA8",
-                                                                                                            padding: 7,
-                                                                                                            borderRadius: 5,
-                                                                                                        }}
-                                                                                                    >
-                                                                                                        <Icon
-                                                                                                            name="check"
-                                                                                                            size={
-                                                                                                                6
-                                                                                                            }
-                                                                                                            color="white"
-                                                                                                        />
-                                                                                                    </View>
-                                                                                                ) : (
-                                                                                                    <View
-                                                                                                        style={{
-                                                                                                            backgroundColor:
-                                                                                                                "transparent",
-                                                                                                            padding: 8,
-                                                                                                            borderRadius: 4,
-                                                                                                            borderWidth: 2,
-                                                                                                            borderColor:
-                                                                                                                "#CCCCCC",
-                                                                                                        }}
-                                                                                                    ></View>
-                                                                                                )}
-                                                                                            </View>
-                                                                                        )}
-                                                                                    </View>
-                                                                                </View>
-                                                                            </TouchableOpacity>
-                                                                        )}
-                                                                        keyExtractor={(
-                                                                            item,
-                                                                            index
-                                                                        ) =>
-                                                                            index.toString()
-                                                                        }
-                                                                    />
-                                                                </View>
-                                                            </View>
-                                                        ) : (
-                                                            <View>
-                                                                <Text className="font-bold text-md text-center py-2">
-                                                                    No Contacts
-                                                                </Text>
-                                                            </View>
-                                                        )}
-                                                    </View>
-
-                                                    <View className="">
-                                                        <Button
-                                                            title="Send Invite"
-                                                            onPress={sendInvite}
-                                                            disabled={
-                                                                selectedContacts.length ===
-                                                                0
-                                                            }
-                                                        />
-                                                    </View>
-                                                </View>
-                                            </View>
-                                        </View>
-                                    </View>
-                                ) : (
-                                    <View className="w-full flex items-center">
-                                        <View className="flex flex-row justify-center items-center h-40">
-                                            <Button
-                                                title="Sign In Google"
-                                                onPress={signInWithGoogle}
-                                                style={{ width: "100%" }}
-                                            />
-                                        </View>
-                                    </View>
-                                )}
-                            </View>
-                        </Dialog>
-                    </Portal>
                 </View>
             </ScrollView>
             {/* )} */}

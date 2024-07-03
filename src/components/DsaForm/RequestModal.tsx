@@ -57,8 +57,18 @@ const RequestModal = ({ visible, onClose, type, clientId, onSubmit }) => {
 
             // onSubmit && onSubmit();
         } catch (error) {
-            setMessage("Request failed");
+            const updateState = () => {
+                setMessage("Request failed");
+            };
+
+            updateState();
         }
+    };
+
+    const getMessageStyle = () => {
+        return message === "Request successful"
+            ? styles.successMessage
+            : styles.errorMessage;
     };
 
     return (
@@ -176,8 +186,13 @@ const styles = StyleSheet.create({
     message: {
         marginTop: 20,
         fontSize: 16,
-        color: "green",
         textAlign: "center",
+    },
+    successMessage: {
+        color: "green",
+    },
+    errorMessage: {
+        color: "red",
     },
     button: {
         width: "100%",
@@ -186,16 +201,16 @@ const styles = StyleSheet.create({
         borderRadius: 5,
     },
     approveButton: {
-        backgroundColor: "#CCF4C2",
+        backgroundColor: "#114EA8",
     },
     rejectButton: {
-        backgroundColor: "#FFD2D2",
+        backgroundColor: "#114EA8",
     },
     approveButtonText: {
-        color: "#417135",
+        color: "#ffffff",
     },
     rejectButtonText: {
-        color: "#713535",
+        color: "#ffffff",
     },
 });
 

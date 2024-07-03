@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Button } from "react-native";
+import { Button, View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Linking } from "react-native";
 import RemoteApi from "../../../src/services/RemoteApi";
+import { Dialog, Portal } from "react-native-paper";
 
 const GoogleSignInButton = () => {
     const [nowCurrentUrl, setNowCurrentUrl] = useState("");
@@ -30,6 +31,7 @@ const GoogleSignInButton = () => {
                     );
                     const code = params.get("code");
                     console.log("Code:", code);
+                    console.log("useEffect")
 
                     if (code) {
                         // Save the code parameter to AsyncStorage
@@ -90,6 +92,8 @@ const GoogleSignInButton = () => {
                 }
             );
 
+            console.log("exchangeCodeForToken")
+
             if (tokenResponse.ok) {
                 const { access_token } = await tokenResponse.json();
                 getGoogleContacts(access_token);
@@ -116,6 +120,7 @@ const GoogleSignInButton = () => {
                     const userInfo = await userInfoResponse.json();
 
                     console.log(userInfo);
+                    console.log(JSON.stringify(userInfo) + "userInfo");
                 } else {
                     console.error(
                         "Failed to fetch user info:",
@@ -246,7 +251,338 @@ const GoogleSignInButton = () => {
         }
     };
 
-    return <Button title="Sign In with Google" onPress={signInWithGoogle} />;
+    return 
+    <>
+    <Button title="Sign In with Google" onPress={signInWithGoogle} />;
+
+    {/* <View className="">
+                    <Portal>
+                        <Dialog
+                            visible={GooglemodalVisible}
+                            onDismiss={() => hideDialog("google")}
+                            dismissable
+                            style={{
+                                display: "flex",
+                                justifyContent: "flex-start",
+                                alignSelf: "center",
+                                width: 500,
+                                height: "90%",
+                                overflow: "scroll",
+                                backgroundColor: "white",
+                            }}
+                        >
+                            <View className="flex flex-row justify-between p-4">
+                                <Text className="pl-4 text-lg font-bold"></Text>
+
+                                <Pressable
+                                    onPress={() => hideDialog("google")}
+                                    className={
+                                        "flex flex-row justify-center items-center border-[1px] rounded p-4 h-4 border-slate-200"
+                                    }
+                                    aria-describedby="addNewClient"
+                                >
+                                    <Icon
+                                        name="close"
+                                        size={20}
+                                        color="black"
+                                    />
+                                </Pressable>
+                            </View>
+
+                            <View
+                                style={{
+                                    flex: 1,
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                }}
+                            >
+                                {userInfo ? (
+                                    <View
+                                        className={
+                                            "mt-4 z-[-1] w-[99%] flex items-center  "
+                                        }
+                                    >
+                                        <View className="flex w-11/12">
+                                            <View className="flex flex-row justify-between py-1">
+                                                <Text className="font-bold text-lg">
+                                                    Welcome, {userInfo.name}!
+                                                </Text>
+                                                <Button
+                                                    title="Sign Out"
+                                                    onPress={() => {
+                                                        setGooglemodalVisible(
+                                                            false
+                                                        );
+                                                        console.log(
+                                                            GooglemodalVisible
+                                                        );
+                                                        setUserInfo(null);
+                                                    }}
+                                                />
+                                            </View>
+
+                                            <Text className="font-bold text-md text-center py-2">
+                                                Select Clients to send Invite
+                                            </Text>
+                                            <View className="flex flex-row justify-center">
+                                                <View className="w-8/12 ">
+                                                    <TextInput
+                                                        placeholder="Search name"
+                                                        value={searchQuery}
+                                                        onChangeText={(text) =>
+                                                            handleSearchChange(
+                                                                text
+                                                            )
+                                                        }
+                                                        style={{
+                                                            borderWidth: 1,
+                                                            borderColor: "#ccc",
+                                                            padding: 8,
+                                                            marginBottom: 10,
+                                                        }}
+                                                    />
+                                                    <Select
+                                                        selectedValue={filter}
+                                                        minWidth="200"
+                                                        accessibilityLabel="Filter"
+                                                        placeholder="Filter"
+                                                        _selectedItem={{
+                                                            bg: "teal.600",
+                                                            endIcon: (
+                                                                <CheckIcon size="5" />
+                                                            ),
+                                                        }}
+                                                        mt={1}
+                                                        onValueChange={
+                                                            handleFilterChange
+                                                        }
+                                                    >
+                                                        <Select.Item
+                                                            label="All"
+                                                            value="all"
+                                                        />
+                                                        <Select.Item
+                                                            label="Invited"
+                                                            value="invited"
+                                                        />
+                                                        <Select.Item
+                                                            label="Not Invited"
+                                                            value="notInvited"
+                                                        />
+                                                    </Select>
+
+                                                    <View>
+                                                        {filteredContacts.length >
+                                                        0 ? (
+                                                            <View>
+                                                                <TouchableOpacity
+                                                                    onPress={
+                                                                        toggleSelectAll
+                                                                    }
+                                                                >
+                                                                    <Text className="font-semibold text-md border-solid border-b-2 border-gray-200 py-1">
+                                                                        {selectAll ? (
+                                                                            <>
+                                                                                <View className="flex flex-row justify-between pr-2 py-4">
+                                                                                    <View className="pl-4">
+                                                                                        <Text className="text-base">
+                                                                                            Deselect
+                                                                                            All
+                                                                                        </Text>
+                                                                                    </View>
+                                                                                    <View className="">
+                                                                                        <View
+                                                                                            style={{
+                                                                                                backgroundColor:
+                                                                                                    "#114EA8",
+                                                                                                // padding: 7,
+                                                                                                borderRadius: 5,
+                                                                                                //    width:20,
+                                                                                                //    height:20,
+                                                                                                paddingTop: 0,
+                                                                                                paddingLeft: 7,
+                                                                                                paddingRight: 7,
+                                                                                                paddingBottom: 0,
+                                                                                            }}
+                                                                                        >
+                                                                                            <Icon
+                                                                                                name="check"
+                                                                                                size={
+                                                                                                    6
+                                                                                                }
+                                                                                                color="white"
+                                                                                            />
+                                                                                        </View>
+                                                                                    </View>
+                                                                                </View>
+                                                                            </>
+                                                                        ) : (
+                                                                            <>
+                                                                                <View className="flex flex-row justify-between pr-2 py-4">
+                                                                                    <View className="">
+                                                                                        <Text className="text-base">
+                                                                                            Select
+                                                                                            All
+                                                                                        </Text>
+                                                                                    </View>
+                                                                                    <View
+                                                                                        style={{
+                                                                                            backgroundColor:
+                                                                                                "transparent",
+                                                                                            padding: 8,
+                                                                                            borderRadius: 4,
+                                                                                            borderWidth: 2,
+                                                                                            borderColor:
+                                                                                                "#CCCCCC",
+                                                                                            height: 2,
+                                                                                        }}
+                                                                                    ></View>
+                                                                                </View>
+                                                                            </>
+                                                                        )}
+                                                                    </Text>
+                                                                </TouchableOpacity>
+
+                                                                <View className="h-96 overflow-scroll">
+                                                                    <FlatList
+                                                                        data={
+                                                                            filteredContacts
+                                                                        }
+                                                                        renderItem={({
+                                                                            item,
+                                                                        }) => (
+                                                                            <TouchableOpacity
+                                                                                onPress={() =>
+                                                                                    toggleContactSelection(
+                                                                                        item
+                                                                                    )
+                                                                                }
+                                                                            >
+                                                                                <View className="flex flex-row items-center border-solid border-b-1 border-gray-400 overflow-auto justify-between px-2">
+                                                                                    <View className=" flex flex-col items-start pb-2">
+                                                                                        <Text
+                                                                                            className="text-base"
+                                                                                            onPress={() =>
+                                                                                                toggleContactSelection(
+                                                                                                    item
+                                                                                                )
+                                                                                            }
+                                                                                        >
+                                                                                            {
+                                                                                                item.name
+                                                                                            }
+                                                                                        </Text>
+                                                                                        <Text className="text-slate-500 text-xs">
+                                                                                            {
+                                                                                                item.mobileNumber
+                                                                                            }
+                                                                                        </Text>
+                                                                                        <Text className="text-slate-500 text-xs">
+                                                                                            {
+                                                                                                item.email
+                                                                                            }
+                                                                                        </Text>
+                                                                                    </View>
+                                                                                    <View className="w-0.5/12">
+                                                                                        {item
+                                                                                            .status
+                                                                                            .name ==
+                                                                                        "Invited" ? (
+                                                                                            <View>
+                                                                                                <Text className="text-slate-500">
+                                                                                                    Invite
+                                                                                                    Sent
+                                                                                                </Text>
+                                                                                            </View>
+                                                                                        ) : (
+                                                                                            <View>
+                                                                                                {isSelected(
+                                                                                                    item
+                                                                                                ) ? (
+                                                                                                    <View
+                                                                                                        style={{
+                                                                                                            backgroundColor:
+                                                                                                                "#114EA8",
+                                                                                                            padding: 7,
+                                                                                                            borderRadius: 5,
+                                                                                                        }}
+                                                                                                    >
+                                                                                                        <Icon
+                                                                                                            name="check"
+                                                                                                            size={
+                                                                                                                6
+                                                                                                            }
+                                                                                                            color="white"
+                                                                                                        />
+                                                                                                    </View>
+                                                                                                ) : (
+                                                                                                    <View
+                                                                                                        style={{
+                                                                                                            backgroundColor:
+                                                                                                                "transparent",
+                                                                                                            padding: 8,
+                                                                                                            borderRadius: 4,
+                                                                                                            borderWidth: 2,
+                                                                                                            borderColor:
+                                                                                                                "#CCCCCC",
+                                                                                                        }}
+                                                                                                    ></View>
+                                                                                                )}
+                                                                                            </View>
+                                                                                        )}
+                                                                                    </View>
+                                                                                </View>
+                                                                            </TouchableOpacity>
+                                                                        )}
+                                                                        keyExtractor={(
+                                                                            item,
+                                                                            index
+                                                                        ) =>
+                                                                            index.toString()
+                                                                        }
+                                                                    />
+                                                                </View>
+                                                            </View>
+                                                        ) : (
+                                                            <View>
+                                                                <Text className="font-bold text-md text-center py-2">
+                                                                    No Contacts
+                                                                </Text>
+                                                            </View>
+                                                        )}
+                                                    </View>
+
+                                                    <View className="">
+                                                        <Button
+                                                            title="Send Invite"
+                                                            onPress={sendInvite}
+                                                            disabled={
+                                                                selectedContacts.length ===
+                                                                0
+                                                            }
+                                                        />
+                                                    </View>
+                                                </View>
+                                            </View>
+                                        </View>
+                                    </View>
+                                ) : (
+                                    <View className="w-full flex items-center">
+                                        <View className="flex flex-row justify-center items-center h-40">
+                                            <Button
+                                                title="Sign In Google"
+                                                onPress={signInWithGoogle}
+                                                style={{ width: "100%" }}
+                                            />
+                                        </View>
+                                    </View>
+                                )}
+                            </View>
+                        </Dialog>
+                    </Portal>
+                </View> */}
+    </>
+    
 };
 
 export default GoogleSignInButton;

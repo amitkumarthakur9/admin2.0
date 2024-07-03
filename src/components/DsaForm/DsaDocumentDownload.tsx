@@ -40,6 +40,40 @@ const DsaDocumentDownload = ({ clientId, downloadApi, fileName }) => {
         );
 
         try {
+
+            const response: any = await RemoteApi.get(
+                "file/download-dsa-documents?documentName=esigneddocument",
+            );
+            console.log("digiresponse:", JSON.stringify(response));
+
+            if (response.code === 200) {
+                // Convert the data object to a Uint8Array
+                const dataArray: any = Object.values(response.data.data);
+                const uint8Array = new Uint8Array(dataArray);
+
+                // Create a Blob from the Uint8Array
+                const blob = new Blob([uint8Array], {
+                    type: "application/pdf",
+                });
+
+                // Create a URL for the Blob
+                const url = URL.createObjectURL(blob);
+
+                // Create an anchor element and trigger a download
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = "e-esigned-document.pdf";
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+
+                // Clean up the URL object
+                URL.revokeObjectURL(url);
+            } else {
+                console.error("Error in API response:", response.data.message);
+                Alert.alert("Error", response.data.message);
+            }
+
             const downloadPromises = selectedKeys.map((key) =>
                 RemoteApi.getDownloadFile({
                     endpoint: `file/download-dsa-documents?documentName=${key}&requestId=${clientId}`,
@@ -60,10 +94,24 @@ const DsaDocumentDownload = ({ clientId, downloadApi, fileName }) => {
 
             setIsDownloadProcessing(false);
             setMessage("Download Success: Documents downloaded successfully.");
+
         } catch (error) {
-            setIsDownloadProcessing(false);
-            setMessage("Download Failed: Failed to download documents.");
+            console.error(error);
+            // Handle error
         }
+
+        // try {
+        //     const response = await RemoteApi.downloadFile({
+        //         endpoint: `file/download-dsa-documents?documentName=aadhaarfront`,
+        //         fileName: fileName,
+        //         data: data,
+        //     });
+        //     setIsDownloadProcessing(false);
+        //     setMessage("Download Success: Documents downloaded successfully.");
+        // } catch (error) {
+        //     setIsDownloadProcessing(false);
+        //     setMessage("Download Failed: Failed to download documents.");
+        // }
     };
 
     return (
