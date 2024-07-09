@@ -8,12 +8,14 @@ import {
     ScrollView,
     Alert,
     ActivityIndicator,
+    Pressable,
 } from "react-native";
 import { Formik, FormikProps } from "formik";
 import * as Yup from "yup";
 import { Checkbox } from "react-native-paper";
 import DropdownComponent from "../../components/Dropdowns/NewDropDown";
 import RemoteApi from "src/services/RemoteApi";
+import { MaterialIcons } from "@expo/vector-icons"; // Make sure to install expo/vector-icons
 
 const validationSchema = Yup.object().shape({
     fullName: Yup.string().required("Full Name is required"),
@@ -33,15 +35,6 @@ const validationSchema = Yup.object().shape({
         then: (schema) => schema.required("EUIN Number is required"),
         otherwise: (schema) => schema.notRequired(),
     }),
-    // arnNumber: Yup.string().test(
-    //     "arnNumber",
-    //     "ARN Number is required",
-    //     function (value) {
-    //         return (
-    //             !this.parent.isArnHolder || (this.parent.isArnHolder && value)
-    //         );
-    //     }
-    // ),
 });
 
 const PersonalDetailsForm = ({ onNext, initialValues }) => {
@@ -83,7 +76,6 @@ const PersonalDetailsForm = ({ onNext, initialValues }) => {
                         mobileNumber: mobileNumber || "",
                         isArnHolder: false,
                         arnNumber: "",
-                        // maritalStatus: initialValues.maritalStatus || "",
                     });
 
                     console.log("settingpersonal");
@@ -134,9 +126,6 @@ const PersonalDetailsForm = ({ onNext, initialValues }) => {
                 "user/update-personal-details",
                 data
             );
-            // const response = {
-            //     code: 200,
-            // };
             if (response.code === 200) {
                 onNext(values);
             } else {
@@ -241,6 +230,7 @@ const PersonalDetailsForm = ({ onNext, initialValues }) => {
                                     onBlur={handleBlur("mobileNumber")}
                                     value={values.mobileNumber}
                                     keyboardType="numeric"
+                                    maxLength={10} // Restrict input to 10 digits
                                 />
                                 {touched.mobileNumber &&
                                     errors.mobileNumber &&
@@ -275,7 +265,7 @@ const PersonalDetailsForm = ({ onNext, initialValues }) => {
                             </View>
                         </View>
 
-                        <View style={styles.checkboxContainer}>
+                        {/* <View style={styles.checkboxContainer}>
                             <Checkbox
                                 status={
                                     values.isArnHolder ? "checked" : "unchecked"
@@ -291,6 +281,33 @@ const PersonalDetailsForm = ({ onNext, initialValues }) => {
                             <Text style={styles.checkboxLabel}>
                                 I am an ARN holder
                             </Text>
+                        </View> */}
+
+                        <View style={styles.checkboxContainer}>
+                            <Pressable
+                                onPress={() =>
+                                    setFieldValue(
+                                        "isArnHolder",
+                                        !values.isArnHolder
+                                    )
+                                }
+                                style={[
+                                    styles.checkboxBase,
+                                    values.isArnHolder &&
+                                        styles.checkboxChecked,
+                                ]}
+                            >
+                                {values.isArnHolder && (
+                                    <MaterialIcons
+                                        name="check"
+                                        size={18}
+                                        color="white"
+                                    />
+                                )}
+                            </Pressable>
+                            <Text style={styles.checkboxLabel}>
+                                I am an ARN holder
+                            </Text>
                         </View>
 
                         {values.isArnHolder && (
@@ -299,12 +316,21 @@ const PersonalDetailsForm = ({ onNext, initialValues }) => {
                                     <Text style={styles.label}>
                                         Enter your ARN number
                                     </Text>
-                                    <TextInput
-                                        style={styles.input}
-                                        onChangeText={handleChange("arnNumber")}
-                                        onBlur={handleBlur("arnNumber")}
-                                        value={values.arnNumber}
-                                    />
+                                    <View style={styles.inputContainer}>
+                                        <View style={styles.prefixContainer}>
+                                            <Text style={styles.prefix}>
+                                                ARN-
+                                            </Text>
+                                        </View>
+                                        <TextInput
+                                            style={styles.input}
+                                            onChangeText={handleChange(
+                                                "arnNumber"
+                                            )}
+                                            onBlur={handleBlur("arnNumber")}
+                                            value={values.arnNumber}
+                                        />
+                                    </View>
                                     {touched.arnNumber &&
                                         errors.arnNumber &&
                                         typeof errors.arnNumber ===
@@ -318,14 +344,21 @@ const PersonalDetailsForm = ({ onNext, initialValues }) => {
                                     <Text style={styles.label}>
                                         Enter your EUIN number
                                     </Text>
-                                    <TextInput
-                                        style={styles.input}
-                                        onChangeText={handleChange(
-                                            "euinNumber"
-                                        )}
-                                        onBlur={handleBlur("euinNumber")}
-                                        value={values.euinNumber}
-                                    />
+                                    <View style={styles.inputContainer}>
+                                        <View style={styles.prefixContainer}>
+                                            <Text style={styles.prefix}>
+                                                E-
+                                            </Text>
+                                        </View>
+                                        <TextInput
+                                            style={styles.input}
+                                            onChangeText={handleChange(
+                                                "euinNumber"
+                                            )}
+                                            onBlur={handleBlur("euinNumber")}
+                                            value={values.euinNumber}
+                                        />
+                                    </View>
                                     {touched.euinNumber &&
                                         errors.euinNumber &&
                                         typeof errors.euinNumber ===
@@ -375,6 +408,15 @@ const styles = StyleSheet.create({
         padding: 10,
         borderRadius: 5,
         backgroundColor: "#fff",
+        flex: 1, // Make input take full width of its container
+    },
+    inputArn: {
+        borderTop: 1,
+        borderColor: "#ccc",
+        padding: 10,
+        borderRadius: 5,
+        backgroundColor: "#fff",
+        flex: 1, // Make input take full width of its container
     },
     dropdown: {
         borderWidth: 1,
@@ -389,7 +431,6 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     checkboxLabel: {
-        marginLeft: 8,
         fontSize: 16,
         color: "#333",
     },
@@ -402,6 +443,52 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
+    },
+    inputContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        borderWidth: 1,
+        borderColor: "#d1d5db",
+        borderRadius: 8,
+        // overflow: "hidden",
+        flex: 1, // Ensure the input container takes the full width of its parent
+    },
+    prefixContainer: {
+        // borderWidth: 1,
+        backgroundColor: "#f3f4f6",
+        paddingHorizontal: 12,
+        paddingVertical: 11,
+    },
+    prefix: {
+        color: "#6b7280",
+    },
+    checkbox: {
+        width: 24,
+        height: 24,
+        borderWidth: 2,
+        borderColor: "#0066cc",
+        justifyContent: "center",
+        alignItems: "center",
+        marginRight: 8,
+    },
+    checkboxChecked: {
+        backgroundColor: "#0066cc",
+    },
+    checkboxInner: {
+        width: 12,
+        height: 12,
+        backgroundColor: "#ffffff",
+    },
+    checkboxBase: {
+        width: 24,
+        height: 24,
+        borderRadius: 4,
+        borderWidth: 2,
+        borderColor: "#0066cc",
+        backgroundColor: "transparent",
+        alignItems: "center",
+        justifyContent: "center",
+        marginRight: 8,
     },
 });
 

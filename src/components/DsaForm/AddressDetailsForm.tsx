@@ -199,6 +199,9 @@ const AddressDetailsForm = ({ onNext, onPrevious, initialValues }) => {
                                         getDistrictList(value);
                                     }}
                                     containerStyle={styles.dropdown}
+                                    noIcon={true}
+                                    searchOn={true}
+                                  
                                 />
                             )}
                             {touched.state &&
@@ -243,6 +246,8 @@ const AddressDetailsForm = ({ onNext, onPrevious, initialValues }) => {
                                         setFieldValue("district", value)
                                     }
                                     containerStyle={styles.dropdown}
+                                    noIcon={true}
+                                    searchOn={true}
                                 />
                             )}
                             {touched.district &&

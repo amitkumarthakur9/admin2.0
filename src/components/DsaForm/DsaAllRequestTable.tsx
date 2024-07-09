@@ -210,8 +210,8 @@ const DsaAllRequestTable = () => {
                 content: (
                     <View className="flex flex-row w-[99%]">
                         <DsaDocumentDownload
-                            clientId={item.requestId}
-                            downloadApi={`file/download-dsa-documents?documentName=esigneddocument&requestId=${item?.requestId}`}
+                            requestId={item.requestId}
+                            dsaName={item?.distributor?.name}
                             fileName={"Dsa-Document"}
                         />
                     </View>
@@ -325,6 +325,7 @@ const DsaAllRequestTable = () => {
                 type={modalType}
                 clientId={currentClientId}
                 onSubmit={handleCloseModal}
+                getDataList={getDataList}
             />
         </View>
     );

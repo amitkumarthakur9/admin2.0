@@ -3,123 +3,223 @@ import React, { useEffect, useRef, useState } from "react";
 import {
     Platform,
     View,
-    Button,
     StyleSheet,
     Text,
     Alert,
-    Linking,
     Modal,
     ActivityIndicator,
     Pressable,
+    TouchableOpacity,
 } from "react-native";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { getResponse } from "src/helper/helper";
 import RemoteApi from "src/services/RemoteApi";
 
-// import RNFS from "react-native-fs";
-
-const DigioComponent = (onNext) => {
+const DigioComponent = ({ onNext }) => {
     const webViewRef = useRef(null);
     const [modalVisible, setModalVisible] = useState(false);
+    const [modalMessage, setModalMessage] = useState(null);
+    const [isVerifying, setIsVerifying] = useState(false);
     const [digioData, setDigioData] = useState({
         identifier: "",
         gwtToken: "",
-        documentId: "",
+        documentId: "DID240704155505835UPNNZ72RDXN2OQ",
         status: "",
     });
 
     const downloadReport = async () => {
+        setModalMessage("Downloading report...");
         try {
-            const response: any = await RemoteApi.get(
+            const response = await RemoteApi.get(
                 "file/download-dsa-documents?documentName=esigneddocument"
             );
             console.log("digiresponse:", JSON.stringify(response));
 
             if (response.code === 200) {
-                // Convert the data object to a Uint8Array
-                const dataArray: any = Object.values(response.data.data);
+                const dataArray = Object.values(response.data.data);
                 const uint8Array = new Uint8Array(dataArray);
-
-                // Create a Blob from the Uint8Array
                 const blob = new Blob([uint8Array], {
                     type: "application/pdf",
                 });
-
-                // Create a URL for the Blob
                 const url = URL.createObjectURL(blob);
-
-                // Create an anchor element and trigger a download
                 const a = document.createElement("a");
                 a.href = url;
                 a.download = "e-esigned-document.pdf";
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
-
-                // Clean up the URL object
                 URL.revokeObjectURL(url);
-                onNext();
+                setModalMessage("Report downloaded successfully.");
             } else {
                 console.error("Error in API response:", response.data.message);
-                Alert.alert("Error", response.data.message);
+                setModalMessage("Request failed, please try again.");
             }
         } catch (error) {
             console.error(error);
-
-            // Handle error
+            setModalMessage("Request failed, please try again.");
         } finally {
-            setModalVisible(false); // Hide modal after operation completion
+            // setIsVerifying(false);
         }
     };
 
-    const DownloadDigioPDF = async ({ statusId }) => {
-        setModalVisible(true); // Show modal
-        const data = {
-            statusId: statusId,
-            documentId: digioData.documentId,
-        };
+    const DownloadDigioPDF = async (statusId) => {
+        setModalMessage("Downloading Digio PDF...");
+        const data = { statusId: statusId, documentId: digioData.documentId };
 
         try {
-            const response: any = await RemoteApi.post(
+            const response = await RemoteApi.post(
                 "digio/download-esigned-document",
                 data
             );
+            console.log("responseData", response);
 
-            console.log("responseData");
-            console.log(response);
-            console.log(response.code);
-
-            if (response) {
+            if (
+                response.code === 200 &&
+                response.data !== "Unable to download document."
+            ) {
                 await downloadReport();
+            } else {
+                setModalMessage("Request failed, please try again.");
             }
         } catch (error) {
             console.error("Error downloading the PDF:", error);
-            setModalVisible(false); // Hide modal
+            setModalMessage("Request failed, please try again.");
         }
     };
 
-    // useEffect(() => {
-    //     updateStatus();
-    // }, []);
+    const updateStatus = async () => {
+        setModalMessage("Updating status...");
+        try {
+            const response = await RemoteApi.post("digio/create-sign-request");
+            console.log("digiresponse:", JSON.stringify(response));
+            // const response: any = await getResponse(200);
 
-    // useEffect(() => {
-    //     if (digioData.documentId.length > 0) {
-    //         handlePress();
-    //     }
-    // }, [digioData.documentId]);
+            if (response.code === 200) {
+                setDigioData((prevState) => ({
+                    ...prevState,
+                    identifier: response.data.identifier,
+                    gwtToken: response.data.gwtToken,
+                    documentId: response.data.documentId,
+                    status: "notset",
+                }));
 
-    // useEffect(() => {
-    //     if (digioData.documentId) {
-    //         console.log("Updated digioData:", JSON.stringify(digioData));
-    //     }
-    //     if (digioData.status === "signed") {
-    //         console.log("Updated digioData:", JSON.stringify(digioData));
-    //         DownloadDigioPDF({ statusId: 2 });
-    //     }
+                setModalMessage("Status updated successfully.");
+                return true;
+            } else {
+                setModalMessage("Request failed, please try again.");
+                return false;
+            }
+        } catch (error) {
+            console.error(error);
+            setModalMessage("Request failed, please try again.");
+            return false;
+        }
+    };
 
-    //     if (digioData.status === "rejected") {
-    //         console.log("Updated digioData:", JSON.stringify(digioData));
-    //         DownloadDigioPDF({ statusId: 3 });
-    //     }
-    // }, [digioData.status]);
+    const handlePress = () => {
+        setModalMessage("Processing Digio...");
+        if (Platform.OS === "web") {
+            const iframe = webViewRef.current;
+            const iframeDoc =
+                iframe.contentDocument || iframe.contentWindow.document;
+            iframeDoc.open();
+            iframeDoc.write(`
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                  <meta charset="UTF-8">
+                  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                  <title>Digio SDK</title>
+                  <style>
+                    body { margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; }
+                    #digio-container { width: 100%; height: 100%; }
+                  </style>
+                </head>
+                <body>
+                  <div id="digio-container"></div>
+                  <script src="https://ext.digio.in/sdk/v11/digio.js"></script>
+                  <script>
+                    document.addEventListener("DOMContentLoaded", function() {
+                      var options = {
+                        environment: 'sandbox',
+                        callback: function(response) {
+                          let status = "";
+                          if (response.hasOwnProperty('error_code')) {
+                            status = "rejected";
+                          } else {
+                            status = "signed";
+                          }
+                          window.parent.postMessage(JSON.stringify({status: status, documentId: response.digio_doc_id}), "*");
+                        },
+                        logo: 'https://www.mylogourl.com/image.jpeg',
+                        is_iframe: true,
+                        theme: {
+                          primaryColor: '#AB3498',
+                          secondaryColor: '#000000'
+                        }
+                      };
+                      var digio = new Digio(options);
+                      digio.init();
+                      digio.submit("${digioData.documentId}", "${digioData.identifier}", "${digioData.gwtToken}");
+                    });
+                  </script>
+                </body>
+                </html>
+            `);
+            iframeDoc.close();
+
+            return true;
+        } else {
+            Alert.alert("This functionality is only available on the web.");
+            setModalMessage("Request failed, please try again.");
+            return false;
+        }
+    };
+
+    const handleESignAndDownload = async () => {
+        setIsVerifying(true);
+        const statusUpdated = await updateStatus();
+
+        if (!statusUpdated) {
+            setModalMessage("Request failed, please try again.");
+            setIsVerifying(false);
+            return;
+        }
+
+        try {
+            const digioUpdated = await handlePress();
+
+            if (digioUpdated) {
+                // setDigioData((prevState) => ({
+                //     ...prevState,
+                //     status: "signed",
+                // }));
+                setIsVerifying(false);
+                return;
+            }
+
+            if (!digioUpdated) {
+                setModalMessage("Request failed, please try again.");
+                setIsVerifying(false);
+                return;
+            }
+
+            // setDigioData((prevState)=>({
+            //     ...prevState,
+            //     status: "signed",
+
+            // }))
+        } catch (error) {
+            setModalMessage("Request failed, please try again.");
+            setIsVerifying(false);
+            // setDigioData((prevState)=>({
+            //     ...prevState,
+            //     status: "signed",
+
+            // }))
+            return;
+        }
+    };
 
     useEffect(() => {
         const handleMessage = (event) => {
@@ -139,7 +239,6 @@ const DigioComponent = (onNext) => {
         };
 
         const iframe = webViewRef.current;
-
         const handleLoad = () => {
             window.addEventListener("message", handleMessage);
         };
@@ -156,169 +255,114 @@ const DigioComponent = (onNext) => {
         };
     }, []);
 
-    const updateStatus = async () => {
-        try {
-            const response: any = await RemoteApi.post(
-                "digio/create-sign-request"
-            );
-            console.log("digiresponse:", JSON.stringify(response));
-            if (response.code === 200) {
-                setDigioData((prevState) => ({
-                    ...prevState,
-                    identifier: response.data.identifier,
-                    gwtToken: response.data.gwtToken,
-                    documentId: response.data.documentId,
-                    status: "",
-                }));
-
-                // handlePress();
-                Alert.alert(
-                    "Success",
-                    response.message || "Successfully submitted the address"
-                );
-            } else {
-                console.log("Error");
-                Alert.alert(
-                    "Error",
-                    response.errors.message || "Failed to submit the address"
-                );
-            }
-        } catch (error) {
-            console.error(error);
-            // Handle error
+    useEffect(() => {
+        if (digioData.status === "signed") {
+            DownloadDigioPDF(2);
+            setIsVerifying(true);
+        } else if (digioData.status === "rejected") {
+            setModalMessage("Request failed, please try again.");
+            setIsVerifying(true);
+            DownloadDigioPDF(3);
+        } else if (digioData.status === "notset") {
+            handlePress();
         }
-    };
 
-    const handlePress = () => {
-        if (Platform.OS === "web") {
-            const iframe = webViewRef.current;
-            const iframeDoc =
-                iframe.contentDocument || iframe.contentWindow.document;
-            // Clear previous content
-            iframeDoc.open();
-            iframeDoc.write(`
-                <!DOCTYPE html>
-                <html lang="en">
-                <head>
-                  <meta charset="UTF-8">
-                  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                  <title>Digio SDK</title>
-                  <style>
-                    body { margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; }
-                    #digio-container { width: 100%; height: 100%; }
-                  </style>
-                </head>
-                <body>
-                  <div id="digio-container"></div>
-                  <script src="https://ext.digio.in/sdk/v11/digio.js"></script>
-                //   <script src="https://app.digio.in/sdk/v11/digio.js"></script>
-                  <script>
-                    document.addEventListener("DOMContentLoaded", function() {
-                      var options = {
-                        environment: 'sandbox',
-                        // environment: 'production',
-                        callback: function(response) {
-                            console.log("CallBack Diogio response:", JSON.stringify(response));
-                          let status = "";
-                          if (response.hasOwnProperty('error_code')) {
-                            console.error('Error occurred in process:', response);
-                            status = "rejected";
-                            console.error(status);
-                          } else {
-                            console.log('Signing completed successfully:', response);
-                            status = "signed";
-                            console.log("Posting message to parent:", {status: status, documentId: response.digio_doc_id});
-                            window.parent.postMessage(JSON.stringify({status: status, documentId: response.digio_doc_id}), "*");
-                            console.error(status);
-                          }
-                          console.log("Posting message to parent:", {status: status, documentId: response.digio_doc_id});
-          window.parent.postMessage(JSON.stringify({status: status, documentId: response.digio_doc_id}), "*");
-                        },
-                        logo: 'https://www.mylogourl.com/image.jpeg',
-                        is_iframe: true,
-                        theme: {
-                          primaryColor: '#AB3498',
-                          secondaryColor: '#000000'
-                        }
-                      };
-                      console.log("digiohtml");
-                      var digio = new Digio(options);
-                      digio.init();
-                      digio.submit("${digioData.documentId}", "${digioData.identifier}", "${digioData.gwtToken}");
-                      console.log("digihtmldata","${digioData.documentId}", "${digioData.identifier}", "${digioData.gwtToken}");
-                      window.addEventListener("message", (event) => {
-                        if (event && event.data) {
-                            const message = JSON.parse(event.data);
-                            if (message.status) {
-                                parent.postMessage(JSON.stringify({ status: message.status }), "*");
-                            }
-                        }
-                      });
-                    });
-                  </script>
-                </body>
-                </html>
-            `);
-            iframeDoc.close();
-            console.log("Message event listener attached");
-        } else {
-            Alert.alert("This functionality is only available on the web.");
-        }
-    };
+        console.log(digioData);
+    }, [digioData.status]);
+
     return (
         <View style={{ flex: 1 }}>
             {Platform.OS === "web" ? (
                 <>
+                    <>
+                        <View style={styles.buttonContainer}>
+                            <Pressable
+                                style={styles.proceed}
+                                onPress={handleESignAndDownload}
+                            >
+                                <Text style={styles.buttonText}>
+                                    E-sign document and download
+                                </Text>
+                            </Pressable>
+                        </View>
+                    </>
+
                     <iframe
                         ref={webViewRef}
                         style={styles.iframe}
                         title="Digio SDK"
                     />
-                    <Button title="Submit to Digio" onPress={handlePress} />
-                    <Button title="Update status" onPress={updateStatus} />
-                    <Button
-                        title="Download Digio PDF"
-                        onPress={() => DownloadDigioPDF({ statusId: 2 })}
-                    />
-                    <View className="flex flex-row justify-center">
-                        <View className="w-3/12">
-                            <Pressable
-                                style={({ pressed }) => [
-                                    styles.proceed,
-                                    {
-                                        borderColor: "#0066cc",
-                                        opacity: pressed ? 0.6 : 1,
-                                    },
-                                ]}
-                                onPress={() => updateStatus()}
-                                // disabled={isVerifing === true}
-                            >
-                                <Text
-                                    style={[
-                                        styles.buttonText,
-                                        { color: "#ffffff" },
-                                    ]}
-                                >
-                                    {"E-sign document and download"}
-                                </Text>
-                            </Pressable>
-                        </View>
-                    </View>
 
                     <Modal
                         transparent={true}
-                        // animationType="slide"
-                        visible={modalVisible}
+                        visible={isVerifying}
                         onRequestClose={() => {
-                            Alert.alert("Modal has been closed.");
-                            setModalVisible(!modalVisible);
+                            setIsVerifying(false);
+                            setModalMessage(null);
                         }}
                     >
-                        <View style={styles.modalView}>
-                            <Text style={styles.modalText}>
-                                Downloading PDF...
-                            </Text>
-                            <ActivityIndicator size="large" color="#0000ff" />
+                        <View style={styles.modalContainer}>
+                            <View style={styles.modalContent}>
+                                {modalMessage !==
+                                    "Report downloaded successfully." && (
+                                    <TouchableOpacity
+                                        style={styles.closeButton}
+                                        onPress={() => {
+                                            setIsVerifying(false);
+                                            setModalMessage(null);
+                                        }}
+                                    >
+                                        <Icon
+                                            name="close"
+                                            size={20}
+                                            color="#7C899C"
+                                        />
+                                    </TouchableOpacity>
+                                )}
+
+                                {modalMessage ? (
+                                    modalMessage === "Downloading report..." ||
+                                    modalMessage ===
+                                        "Downloading Digio PDF..." ||
+                                    modalMessage === "Updating status..." ||
+                                    modalMessage === "Processing Digio..." ? (
+                                        <>
+                                            <ActivityIndicator />
+                                            <Text style={styles.modalTitle}>
+                                                {modalMessage}
+                                            </Text>
+                                        </>
+                                    ) : modalMessage ===
+                                      "Report downloaded successfully." ? (
+                                        <>
+                                            <Text style={styles.modalTitle}>
+                                                {modalMessage}
+                                            </Text>
+                                            <Pressable
+                                                style={styles.proceed}
+                                                onPress={() => onNext()}
+                                            >
+                                                <Text style={styles.buttonText}>
+                                                    Proceed to Upload Document
+                                                </Text>
+                                            </Pressable>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Text style={styles.modalText}>
+                                                {modalMessage}
+                                            </Text>
+                                        </>
+                                    )
+                                ) : (
+                                    <>
+                                        <ActivityIndicator />
+                                        <Text style={styles.modalTitle}>
+                                            E-Sign Request in Progress
+                                        </Text>
+                                    </>
+                                )}
+                            </View>
                         </View>
                     </Modal>
                 </>
@@ -328,6 +372,7 @@ const DigioComponent = (onNext) => {
         </View>
     );
 };
+
 const styles = StyleSheet.create({
     iframe: {
         width: "100%",
@@ -342,7 +387,7 @@ const styles = StyleSheet.create({
     },
     modalText: {
         fontSize: 18,
-        color: "white",
+        color: "red",
         marginBottom: 20,
     },
     proceed: {
@@ -355,6 +400,37 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         fontSize: 16,
+        color: "#ffffff",
+    },
+    modalContainer: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "rgba(0, 0, 0, 0.5)",
+    },
+    modalContent: {
+        width: 500,
+        backgroundColor: "white",
+        borderRadius: 10,
+        padding: 20,
+        alignItems: "center",
+    },
+    closeButton: {
+        alignSelf: "flex-end",
+    },
+    modalTitle: {
+        fontSize: 18,
+        fontWeight: "600",
+        marginBottom: 20,
+        textAlign: "center",
+        width: "100%",
+    },
+    buttonContainer: {
+        flexDirection: "row",
+        justifyContent: "center",
+        flexWrap: "wrap",
+        margin: 20,
     },
 });
+
 export default DigioComponent;

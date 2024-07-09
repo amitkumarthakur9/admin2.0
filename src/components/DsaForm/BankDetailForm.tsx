@@ -10,6 +10,7 @@ import {
     ScrollView,
     Pressable,
     Alert,
+    ActivityIndicator,
 } from "react-native";
 import { Formik } from "formik";
 import * as Yup from "yup";
@@ -18,8 +19,9 @@ import DropdownComponent from "../../components/Dropdowns/NewDropDown"; // Assum
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import RemoteApi from "src/services/RemoteApi";
 import SearchableDropdown from "../Dropdowns/SearchableDropdown";
+import { getResponse } from "src/helper/helper";
 
-const BankDetailForm = ({ onNext, onPrevious, initialValues,  }) => {
+const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [modalFormData, setModalFormData] = useState({
         bank: "",
@@ -28,8 +30,9 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues,  }) => {
         branch: "",
     });
     const [ifscFromModal, setIfscFromModal] = useState("");
-    const [isVerifing, setIsVerifing] = React.useState(false);
-    const [isLoadingState, setIsLoadingState] = React.useState(false);
+    const [isVerifing, setIsVerifing] = useState(false);
+    const [isLoadingState, setIsLoadingState] = useState(false);
+    const [message, setMessage] = useState(null);
     const [isLoadingDistrict, setIsLoadingDistrict] = React.useState(false);
     const [stateOptions, setStateOptions] = React.useState([]);
     const [districtOptions, setDistrictOptions] = React.useState([]);
@@ -282,6 +285,7 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues,  }) => {
         // onNext(values);
 
         setIsVerifing(true);
+        // setIsModalVisible(true);
 
         try {
             const response: DropdownResponse = await RemoteApi.post(
@@ -289,37 +293,23 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues,  }) => {
                 data
             );
 
-            // const response = {
-            //     code: 500,
-            // };
+            // const response: any = await getResponse(500);
+            console.log("response");
+            console.log(response);
 
             if (response.code === 200) {
                 onNext(values);
-                
-                
-                Alert.alert(
-                    "success",
-                    response.message || "success to submit the address"
-                );
-                console.log("success");
-
-               
             } else {
-                console.log("Error");
-                Alert.alert(
-                    "Error",
-                    response.errors.message || "Failed to submit the address"
+                console.log("ElseError");
+                setMessage(
+                    "Verification Failed. Check your account Number and Try again"
                 );
             }
         } catch (error) {
-            Alert.alert(
-                "Error",
-                error.message ||
-                    "An error occurred while submitting the address"
+            setMessage(
+                "Verification Failed. Check your account Number and Try again"
             );
         }
-
-        setIsVerifing(false);
     };
 
     return (
@@ -488,7 +478,6 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues,  }) => {
                                 ]}
                                 onPress={() => handleSubmit()}
                                 disabled={isVerifing === true}
-                            
                             >
                                 <Text
                                     style={[
@@ -637,6 +626,48 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues,  }) => {
                                         </Text>
                                     )} */}
                                 </ScrollView>
+                            </View>
+                        </View>
+                    </Modal>
+                    <Modal
+                        visible={isVerifing}
+                        transparent
+                        onRequestClose={() => {
+                            setIsVerifing(false);
+                            setMessage(null);
+                        }}
+                    >
+                        <View style={styles.modalContainer}>
+                            <View style={styles.modalContent}>
+                                <TouchableOpacity
+                                    style={styles.closeButton}
+                                    onPress={() => {
+                                        setIsVerifing(false);
+                                        setMessage(null);
+                                    }}
+                                >
+                                    <Icon
+                                        name="close"
+                                        size={20}
+                                        color="#7C899C"
+                                    />
+                                </TouchableOpacity>
+                                {message ? (
+                                    <>
+                                        <View>
+                                            <Text className="text-red-600 text-lg">
+                                                {message}
+                                            </Text>
+                                        </View>
+                                    </>
+                                ) : (
+                                    <>
+                                        <ActivityIndicator />
+                                        <Text style={styles.modalTitle}>
+                                            Verifying Bank Account
+                                        </Text>
+                                    </>
+                                )}
                             </View>
                         </View>
                     </Modal>

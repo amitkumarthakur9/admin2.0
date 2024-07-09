@@ -24,38 +24,22 @@ const MainComponent = () => {
     const [step, setStep] = useState(null);
     const [showTooltip, setShowTooltip] = useState(false);
     const [formData, setFormData] = useState({
-        // fullName: "Saffi",
-        // email: "saffi@test.com",
-        // mobileNumber: "9876543210",
-        // panNumber: "ASBV0897",
-        // pincode: "756110",
-        // country: "India",
-        // arn: "dafbldlbf",
-        // maritalStatus: "Married",
-        // incomeRange: "0-10 Lacs",
-        // education: "Graduation",
-        // occupation: "Service",
-        // addressLine1: "dkfd",
-        // addressLine2: "dfas",
-        // addressLine3: "dsaf",
-        // city: "fdsf",
-        // state: "Odisha",
         fullName: null,
         email: "",
         mobileNumber: "",
-        panNumber: "ABCTY1234D",
-        pincode: "560025",
-        country: "India",
-        arn: "dafbldlbf",
+        panNumber: "",
+        pincode: "",
+        country: "",
+        arn: "",
         maritalStatus: null,
-        incomeRange: "0-10 Lacs",
-        education: "Graduation",
-        occupation: "Service",
-        addressLine1: "Bangalore",
-        addressLine2: "Bangalore",
-        addressLine3: "Bangalore",
-        city: "Bangalore",
-        state: "Odisha",
+        incomeRange: "",
+        education: "",
+        occupation: "",
+        addressLine1: "",
+        addressLine2: "",
+        addressLine3: "",
+        city: "",
+        state: "",
         accountNumber: "",
         accountType: "",
         ifscCode: "",
@@ -99,56 +83,104 @@ const MainComponent = () => {
     async function getUserDetail() {
         setIsLoading(true);
         try {
-            const response: any = await RemoteApi.get("user/me");
+            const response = await RemoteApi.get("user/me");
             if (response.code === 200) {
-                // setDsaData(response.data);
-                const step = () => {
-                    setStep(6);
-
-                    if(response.data.bankAccount.length > 0){
-                        // setStep(5);
-                    }
-                };
-
+                const userData = response.data;
                 const alreadySet = () => {
-                    console.log("alreadySet")
                     setFormData((prevState) => ({
                         ...prevState,
-                        fullName: response.data.name,
-                        email: response.data.email,
-                        mobileNumber: response.data.mobileNumber,
-                        panNumber: "ABCTY1234D",
-                        pincode: response.data.address[0].pincode,
-                        country: "India",
-                        arn: response.data.arn,
-                        maritalStatus: response.data.maritalStatus.id,
-                        incomeRange: response.data.incomeSlab.id,
-                        education: response.data.educationalQualification.id,
-                        occupation: response.data.educationalQualification.id,
-                        addressLine1: "Bangalore",
-                        addressLine2: "Bangalore",
-                        addressLine3: "Bangalore",
-                        city: "Bangalore",
-                        state: response.data.address[0].state.id,
-                        accountNumber: "",
-                        accountType: "",
-                        ifscCode: "",
-                        bankName: "",
-                        bankAddress: "",
-                        district: response.data.address[0].district.id,
-
+                        fullName: userData?.name || prevState.fullName,
+                        email: userData?.email || prevState.email,
+                        mobileNumber:
+                            userData?.mobileNumber || prevState.mobileNumber,
+                        panNumber: userData?.panNumber || prevState.panNumber,
+                        pincode:
+                            userData?.address?.[0]?.pincode ||
+                            prevState.pincode,
+                        arn: userData?.arn || prevState.arn,
+                        maritalStatus:
+                            userData?.maritalStatus?.id ||
+                            prevState.maritalStatus,
+                        incomeRange:
+                            userData?.incomeSlab?.name || prevState.incomeRange,
+                        education:
+                            userData?.educationalQualification?.name ||
+                            prevState.education,
+                        addressLine1:
+                            userData?.address?.[0]?.line1 ||
+                            prevState.addressLine1,
+                        addressLine2:
+                            userData?.address?.[0]?.line2 ||
+                            prevState.addressLine2,
+                        addressLine3:
+                            userData?.address?.[0]?.line3 ||
+                            prevState.addressLine3,
+                        city:
+                            userData?.address?.[0]?.district?.name ||
+                            prevState.city,
+                        state:
+                            userData?.address?.[0]?.state?.name ||
+                            prevState.state,
+                        accountNumber:
+                            userData?.bankAccount?.[0]?.accountNumber ||
+                            prevState.accountNumber,
+                        accountType:
+                            userData?.bankAccount?.[0]?.bankAccountType?.name ||
+                            prevState.accountType,
+                        ifscCode:
+                            userData?.bankAccount?.[0]?.bankBranch?.ifscCode ||
+                            prevState.ifscCode,
+                        bankName:
+                            userData?.bankAccount?.[0]?.bank?.name ||
+                            prevState.bankName,
+                        district:
+                            userData?.address?.[0]?.district?.name ||
+                            prevState.district,
                     }));
-                    step();
                 };
 
                 alreadySet();
 
+                let initialStep = 1;
+                if (
+                    userData.fullName &&
+                    userData.email &&
+                    userData.mobileNumber
+                ) {
+                    initialStep = 2;
+                }
+                if (
+                    userData.fullName &&
+                    userData.email &&
+                    userData.mobileNumber &&
+                    userData.address?.[0]?.state?.id &&
+                    userData.address?.[0]?.district?.id &&
+                    userData.address?.[0]?.pincode
+                ) {
+                    initialStep = 3;
+                }
+                if (
+                    userData.fullName &&
+                    userData.email &&
+                    userData.mobileNumber &&
+                    userData.address?.[0]?.state?.id &&
+                    userData.address?.[0]?.district?.id &&
+                    userData.address?.[0]?.pincode &&
+                    userData.incomeSlab
+                ) {
+                    initialStep = 4;
+                }
+                if (userData.bankAccount?.[0]?.accountNumber) {
+                    initialStep = 5;
+                }
+
+                setStep(1);
                 console.log(formData);
             } else {
-                alert("Failed to fetch state list");
+                alert("Failed to fetch user details");
             }
         } catch (error) {
-            alert("An error occurred while fetching the state list");
+            alert("An error occurred while fetching the user details");
         } finally {
             setIsLoading(false);
         }
@@ -164,7 +196,7 @@ const MainComponent = () => {
                 <Text>Loading.....</Text>
             </View>
         );
-    } 
+    }
 
     return (
         <View style={styles.container}>
@@ -325,7 +357,6 @@ const MainComponent = () => {
                         <BankDetailForm
                             onPrevious={handlePrevious}
                             onNext={handleNext}
-                           
                             initialValues={formData}
                         />
                     )}
@@ -333,10 +364,9 @@ const MainComponent = () => {
                         <ProceedSign
                             onPrevious={handlePrevious}
                             onNext={handleNext}
-                           
                         />
                     )}
-                    {step === 6 && <DigioFlowComponent  onNext={handleNext}/>}
+                    {step === 6 && <DigioFlowComponent onNext={handleNext} />}
 
                     {step === 7 && (
                         <StepThreeUpload onSuccess={handleSuccess} />
@@ -428,8 +458,6 @@ const styles = StyleSheet.create({
         color: "#0066cc",
     },
     line: {
-        // flex: 1,
-        // height: 1,
         backgroundColor: "#d3d3d3",
         alignSelf: "center",
         marginHorizontal: 10,
@@ -441,8 +469,6 @@ const styles = StyleSheet.create({
         padding: 10,
     },
     firstLine: {
-        // flex: 1,
-        // height: 1,
         backgroundColor: "#ffffff",
         alignSelf: "center",
         marginHorizontal: 10,

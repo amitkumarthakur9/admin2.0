@@ -47,7 +47,7 @@ const ProceedSign = ({ onNext, onPrevious }) => {
                     <Text style={styles.label}>Account Number*</Text>
                     <Text style={styles.input}>
                         {bankAddress
-                            ? bankAddress.bankAccount[0].accountNumber
+                            ? bankAddress?.bankAccount[0]?.accountNumber
                             : ""}
                     </Text>
                 </View>
@@ -55,7 +55,7 @@ const ProceedSign = ({ onNext, onPrevious }) => {
                     <Text style={styles.label}>Bank IFSC*</Text>
                     <Text style={styles.input}>
                         {bankAddress
-                            ? bankAddress.bankAccount[0].bankBranch.ifscCode
+                            ? bankAddress?.bankAccount[0]?.bankBranch.ifscCode
                             : ""}
                     </Text>
                 </View>
@@ -66,7 +66,7 @@ const ProceedSign = ({ onNext, onPrevious }) => {
                     <Text style={styles.label}>Account Type*</Text>
                     <Text style={styles.input}>
                         {bankAddress
-                            ? bankAddress.bankAccount[0].bankAccountType.name
+                            ? bankAddress?.bankAccount[0]?.bankAccountType.name
                             : ""}
                     </Text>
                 </View>
@@ -78,7 +78,7 @@ const ProceedSign = ({ onNext, onPrevious }) => {
                             </Text>
                             <Text className="">
                                 {bankAddress
-                                    ? bankAddress.bankAccount[0].bank.name
+                                    ? bankAddress?.bankAccount[0]?.bank.name
                                     : ""}
                             </Text>
                         </View>
@@ -88,15 +88,15 @@ const ProceedSign = ({ onNext, onPrevious }) => {
                             </Text>
                             <Text className="">
                                 {bankAddress
-                                    ? bankAddress.address[0].line1 +
+                                    ? bankAddress?.address[0]?.line1 +
                                       ", " +
-                                      bankAddress.address[0].line2 +
+                                      bankAddress?.address[0]?.line2 +
                                       ", " +
-                                      bankAddress.address[0].district.name +
+                                      bankAddress?.address[0]?.district?.name +
                                       ", " +
-                                      bankAddress.address[0].state.name +
+                                      bankAddress?.address[0]?.state.name +
                                       ", " +
-                                      bankAddress.address[0].pincode
+                                      bankAddress?.address[0]?.pincode
                                     : ""}
                             </Text>
                         </View>

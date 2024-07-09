@@ -39,8 +39,8 @@ const DsaRequestTabs = () => {
 
         const tabContent = [
             {
-                key: "AllRequest",
-                name: "All Request",
+                key: "pendingRequest",
+                name: "Pending Request",
                 content: <DsaAllRequestTable />,
             },
             {

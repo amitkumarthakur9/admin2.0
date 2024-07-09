@@ -12,7 +12,7 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import axios from "axios";
 import RemoteApi from "src/services/RemoteApi";
 
-const RequestModal = ({ visible, onClose, type, clientId, onSubmit }) => {
+const RequestModal = ({ visible, onClose, type, clientId, onSubmit, getDataList}) => {
     const [approveInput, setApproveInput] = useState("");
     const [rejectInput, setRejectInput] = useState("");
     const [message, setMessage] = useState(null);
@@ -22,6 +22,8 @@ const RequestModal = ({ visible, onClose, type, clientId, onSubmit }) => {
             setApproveInput("");
             setRejectInput("");
             setMessage(null);
+            getDataList();
+            
         }
     }, [visible]);
 

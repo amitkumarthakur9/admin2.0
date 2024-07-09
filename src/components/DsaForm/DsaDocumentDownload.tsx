@@ -5,7 +5,7 @@ import RemoteApi from "../../services/RemoteApi"; // Adjust the path as per your
 import Success from "./Success";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
-const DsaDocumentDownload = ({ clientId, downloadApi, fileName }) => {
+const DsaDocumentDownload = ({ requestId }) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedDocuments, setSelectedDocuments] = useState({
         pancard: false,
@@ -14,10 +14,12 @@ const DsaDocumentDownload = ({ clientId, downloadApi, fileName }) => {
         esigneddocument: false,
     });
     const [isDownloadProcessing, setIsDownloadProcessing] = useState(false);
-    const [message, setMessage] = useState(null);
+    const [successMessages, setSuccessMessages] = useState([]);
+    const [failedMessages, setFailedMessages] = useState([]);
 
     const handleModalClose = () => {
-        setMessage(null);
+        setSuccessMessages([]);
+        setFailedMessages([]);
         setSelectedDocuments({
             pancard: false,
             aadhaarfront: false,
@@ -33,85 +35,58 @@ const DsaDocumentDownload = ({ clientId, downloadApi, fileName }) => {
 
     const downloadReport = async () => {
         setIsDownloadProcessing(true);
-        setMessage(null);
+        setSuccessMessages([]);
+        setFailedMessages([]);
 
         const selectedKeys = Object.keys(selectedDocuments).filter(
             (key) => selectedDocuments[key]
         );
 
         try {
-
-            const response: any = await RemoteApi.get(
-                "file/download-dsa-documents?documentName=esigneddocument",
-            );
-            console.log("digiresponse:", JSON.stringify(response));
-
-            if (response.code === 200) {
-                // Convert the data object to a Uint8Array
-                const dataArray: any = Object.values(response.data.data);
-                const uint8Array = new Uint8Array(dataArray);
-
-                // Create a Blob from the Uint8Array
-                const blob = new Blob([uint8Array], {
-                    type: "application/pdf",
-                });
-
-                // Create a URL for the Blob
-                const url = URL.createObjectURL(blob);
-
-                // Create an anchor element and trigger a download
-                const a = document.createElement("a");
-                a.href = url;
-                a.download = "e-esigned-document.pdf";
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-
-                // Clean up the URL object
-                URL.revokeObjectURL(url);
-            } else {
-                console.error("Error in API response:", response.data.message);
-                Alert.alert("Error", response.data.message);
-            }
-
             const downloadPromises = selectedKeys.map((key) =>
-                RemoteApi.getDownloadFile({
-                    endpoint: `file/download-dsa-documents?documentName=${key}&requestId=${clientId}`,
-                    fileName: `${fileName}_${key}`,
-                })
+                RemoteApi.get(
+                    `file/download-dsa-documents?documentName=${key}&requestId=${requestId}`
+                )
             );
 
-            const responses:any = await Promise.all(downloadPromises);
+            const responses = await Promise.all(downloadPromises);
 
-            const failedResponses = responses.filter(response => response.code !== 200);
+            responses.forEach((response, index) => {
+                if (response.code === 200) {
+                    const dataArray = Object.values(response.data.data);
+                    const uint8Array = new Uint8Array(dataArray);
 
-            if (failedResponses.length > 0) {
-                alert(failedResponses[0].message);
-                setIsDownloadProcessing(false);
-                setMessage("Download Failed: Failed to download some documents.");
-                return;
-            }
+                    const blob = new Blob([uint8Array], {
+                        type: "application/pdf",
+                    });
+
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement("a");
+                    a.href = url;
+                    a.download = `${selectedKeys[index]}-document.pdf`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+
+                    setSuccessMessages((prev) => [
+                        ...prev,
+                        `${selectedKeys[index]} document downloaded successfully.`,
+                    ]);
+                } else {
+                    setFailedMessages((prev) => [
+                        ...prev,
+                        `${selectedKeys[index]} document download failed.`,
+                    ]);
+                }
+            });
 
             setIsDownloadProcessing(false);
-            setMessage("Download Success: Documents downloaded successfully.");
-
         } catch (error) {
             console.error(error);
-            // Handle error
+            Alert.alert("Error", "An error occurred while downloading documents.");
+            setIsDownloadProcessing(false);
         }
-
-        // try {
-        //     const response = await RemoteApi.downloadFile({
-        //         endpoint: `file/download-dsa-documents?documentName=aadhaarfront`,
-        //         fileName: fileName,
-        //         data: data,
-        //     });
-        //     setIsDownloadProcessing(false);
-        //     setMessage("Download Success: Documents downloaded successfully.");
-        // } catch (error) {
-        //     setIsDownloadProcessing(false);
-        //     setMessage("Download Failed: Failed to download documents.");
-        // }
     };
 
     return (
@@ -159,10 +134,14 @@ const DsaDocumentDownload = ({ clientId, downloadApi, fileName }) => {
                             <Icon name="close" size={20} color="#7C899C" />
                         </Pressable>
 
-                        {!message && (
+                        {successMessages.length === 0 && failedMessages.length === 0 && (
                             <View className="p-4">
                                 <Text
-                                    style={{ fontSize: 18, marginBottom: 20, color: "#AAAAAA" }}
+                                    style={{
+                                        fontSize: 18,
+                                        marginBottom: 20,
+                                        color: "#AAAAAA",
+                                    }}
                                 >
                                     Select Documents to Download
                                 </Text>
@@ -230,9 +209,12 @@ const DsaDocumentDownload = ({ clientId, downloadApi, fileName }) => {
                             </View>
                         )}
 
-                        {message && (
+                        {(successMessages.length > 0 || failedMessages.length > 0) && (
                             <View className="p-4">
-                                <Success message={message} code={code} />
+                                <Success
+                                    successMessages={successMessages}
+                                    failedMessages={failedMessages}
+                                />
                             </View>
                         )}
                     </View>

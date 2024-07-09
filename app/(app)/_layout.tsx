@@ -584,16 +584,19 @@ export default function AppLayout() {
                                     initialParams={{}}
                                     component={MutualSipAnalyticsScreen}
                                 /> */}
-                                {/* <Drawer.Screen
+                                <Drawer.Screen
                                     name="analytics/index"
                                     options={{
                                         drawerLabel: "Analytics",
                                         title: "Analytics",
+                                        drawerItemStyle: {
+                                            display: "none",
+                                        },
                                         unmountOnBlur: true,
                                     }}
                                     initialParams={{}}
                                     component={AnalyticsScreen}
-                                /> */}
+                                />
                                 {/* <Drawer.Screen
                                     name="marketing/index"
                                     options={{

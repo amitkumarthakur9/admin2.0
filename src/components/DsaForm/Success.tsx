@@ -1,45 +1,45 @@
 import React from "react";
-import { View, Text, useWindowDimensions } from "react-native";
-import {
-    Image,
-} from "native-base";
+import { View, Text } from "react-native";
+import { Image } from "native-base";
 
-const Success = ({ message = "Try Again", code }) => {
+const Success = ({ successMessages = [], failedMessages = [] }) => {
     return (
-        <View
-            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-        >
-            <View className="flex flex-row  justify-center pb-4">
+        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+            {/* <View className="flex flex-row  justify-center pb-4">
                 <Image
                     className=""
                     alt="ico"
                     source={require("../../../assets/images/Tick.png")}
                     style={{
-                        // flex: 1,
-                        // justifyContent: 'end',
-                        width: 100, // specify the desired width
+                        width: 100,
                         height: 100,
                     }}
                 />
-            </View>
+            </View> */}
 
-            <View className="flex flex-row justify-center md:pt-8">
-                {code == 200 ? (
+            <View className="flex flex-col justify-center md:pt-8">
+                {successMessages.map((message, index) => (
                     <Text
+                        key={`success-${index}`}
                         style={{
-                            color: message.startsWith("Download Success")
-                                ? "green"
-                                : "red",
+                            color: "green",
                             textAlign: "center",
                         }}
                     >
                         {message}
                     </Text>
-                ) : (
-                    <Text className="text-center font-semibold color-[#114EA8]">
+                ))}
+                {failedMessages.map((message, index) => (
+                    <Text
+                        key={`failed-${index}`}
+                        style={{
+                            color: "red",
+                            textAlign: "center",
+                        }}
+                    >
                         {message}
                     </Text>
-                )}
+                ))}
             </View>
         </View>
     );

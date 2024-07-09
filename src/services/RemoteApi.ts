@@ -202,7 +202,7 @@ class ApiRequest {
             link.href = url;
             link.setAttribute(
                 "download",
-                `${fileName}-${moment(new Date()).valueOf()}.pdf`
+                `${fileName}-${moment(new Date()).valueOf()}.csv`
             ); // Set the file name here
 
             // Simulate a click to trigger the download
