@@ -181,64 +181,80 @@ const PersonalDetailsForm = ({ onNext, initialValues }) => {
                     <ScrollView contentContainerStyle={styles.container}>
                         <View style={styles.formRow}>
                             <View style={styles.fieldContainer}>
-                                <Text style={styles.label}>
-                                    Enter your full name as per PAN
-                                </Text>
-                                <TextInput
-                                    style={styles.input}
-                                    onChangeText={handleChange("fullName")}
-                                    onBlur={handleBlur("fullName")}
-                                    value={values.fullName}
-                                />
-                                {touched.fullName &&
-                                    errors.fullName &&
-                                    typeof errors.fullName === "string" && (
-                                        <Text style={styles.error}>
-                                            {errors.fullName}
-                                        </Text>
-                                    )}
+                                <View style={styles.fieldContainer}>
+                                    <Text style={styles.label}>
+                                        Enter your full name as per PAN
+                                    </Text>
+                                    <TextInput
+                                        style={styles.input}
+                                        onChangeText={handleChange("fullName")}
+                                        onBlur={handleBlur("fullName")}
+                                        value={values.fullName}
+                                    />
+                                    <View style={styles.fieldContainer}>
+                                        {touched.fullName &&
+                                            errors.fullName &&
+                                            typeof errors.fullName ===
+                                                "string" && (
+                                                <Text style={styles.error}>
+                                                    {errors.fullName}
+                                                </Text>
+                                            )}
+                                    </View>
+                                </View>
                             </View>
-
                             <View style={styles.fieldContainer}>
-                                <Text style={styles.label}>
-                                    Enter your Email
-                                </Text>
-                                <TextInput
-                                    style={styles.input}
-                                    onChangeText={handleChange("email")}
-                                    onBlur={handleBlur("email")}
-                                    value={values.email}
-                                />
-                                {touched.email &&
-                                    errors.email &&
-                                    typeof errors.email === "string" && (
-                                        <Text style={styles.error}>
-                                            {errors.email}
-                                        </Text>
-                                    )}
+                                <View style={styles.fieldContainer}>
+                                    <Text style={styles.label}>
+                                        Enter your Email
+                                    </Text>
+                                    <TextInput
+                                        style={styles.input}
+                                        onChangeText={handleChange("email")}
+                                        onBlur={handleBlur("email")}
+                                        value={values.email}
+                                    />
+                                    <View style={styles.fieldContainer}>
+                                        {touched.email &&
+                                            errors.email &&
+                                            typeof errors.email ===
+                                                "string" && (
+                                                <Text style={styles.error}>
+                                                    {errors.email}
+                                                </Text>
+                                            )}
+                                    </View>
+                                </View>
                             </View>
                         </View>
 
                         <View style={styles.formRow}>
                             <View style={styles.fieldContainer}>
-                                <Text style={styles.label}>
-                                    Enter your Mobile number
-                                </Text>
-                                <TextInput
-                                    style={styles.input}
-                                    onChangeText={handleChange("mobileNumber")}
-                                    onBlur={handleBlur("mobileNumber")}
-                                    value={values.mobileNumber}
-                                    keyboardType="numeric"
-                                    maxLength={10} // Restrict input to 10 digits
-                                />
-                                {touched.mobileNumber &&
-                                    errors.mobileNumber &&
-                                    typeof errors.mobileNumber === "string" && (
-                                        <Text style={styles.error}>
-                                            {errors.mobileNumber}
-                                        </Text>
-                                    )}
+                                <View style={styles.fieldContainer}>
+                                    <Text style={styles.label}>
+                                        Enter your Mobile number
+                                    </Text>
+                                    <TextInput
+                                        style={styles.input}
+                                        onChangeText={handleChange(
+                                            "mobileNumber"
+                                        )}
+                                        onBlur={handleBlur("mobileNumber")}
+                                        value={values.mobileNumber}
+                                        keyboardType="numeric"
+                                        maxLength={10} // Restrict input to 10 digits
+                                    />
+                                </View>
+                                <View style={styles.fieldContainer}>
+                                    {touched.mobileNumber &&
+                                        errors.mobileNumber &&
+                                        typeof errors.mobileNumber ===
+                                            "string" && (
+                                            <Text style={styles.error}>
+                                                {errors.mobileNumber}
+                                            </Text>
+                                        )}
+                                </View>
                             </View>
 
                             <View style={styles.fieldContainer}>
@@ -264,25 +280,6 @@ const PersonalDetailsForm = ({ onNext, initialValues }) => {
                                     )}
                             </View>
                         </View>
-
-                        {/* <View style={styles.checkboxContainer}>
-                            <Checkbox
-                                status={
-                                    values.isArnHolder ? "checked" : "unchecked"
-                                }
-                                onPress={() =>
-                                    setFieldValue(
-                                        "isArnHolder",
-                                        !values.isArnHolder
-                                    )
-                                }
-                                color="#0066cc"
-                            />
-                            <Text style={styles.checkboxLabel}>
-                                I am an ARN holder
-                            </Text>
-                        </View> */}
-
                         <View style={styles.checkboxContainer}>
                             <Pressable
                                 onPress={() =>
@@ -316,14 +313,15 @@ const PersonalDetailsForm = ({ onNext, initialValues }) => {
                                     <Text style={styles.label}>
                                         Enter your ARN number
                                     </Text>
-                                    <View style={styles.inputContainer}>
-                                        <View style={styles.prefixContainer}>
+                                    <View className="flex flex-row items-center justify-center" >
+                                        <View className="p-[10px] bg-gray-100 border-gray-300 border-l border-t border-b rounded-l">
                                             <Text style={styles.prefix}>
                                                 ARN-
                                             </Text>
                                         </View>
                                         <TextInput
-                                            style={styles.input}
+                                            style={styles.inputArn}
+                                         
                                             onChangeText={handleChange(
                                                 "arnNumber"
                                             )}
@@ -331,6 +329,7 @@ const PersonalDetailsForm = ({ onNext, initialValues }) => {
                                             value={values.arnNumber}
                                         />
                                     </View>
+                                    <View style={styles.fieldContainer}>
                                     {touched.arnNumber &&
                                         errors.arnNumber &&
                                         typeof errors.arnNumber ===
@@ -340,33 +339,31 @@ const PersonalDetailsForm = ({ onNext, initialValues }) => {
                                             </Text>
                                         )}
                                 </View>
+                                </View>
                                 <View style={styles.fieldContainer}>
                                     <Text style={styles.label}>
                                         Enter your EUIN number
                                     </Text>
-                                    <View style={styles.inputContainer}>
-                                        <View style={styles.prefixContainer}>
-                                            <Text style={styles.prefix}>
-                                                E-
-                                            </Text>
-                                        </View>
-                                        <TextInput
-                                            style={styles.input}
-                                            onChangeText={handleChange(
-                                                "euinNumber"
-                                            )}
-                                            onBlur={handleBlur("euinNumber")}
-                                            value={values.euinNumber}
-                                        />
-                                    </View>
-                                    {touched.euinNumber &&
-                                        errors.euinNumber &&
-                                        typeof errors.euinNumber ===
-                                            "string" && (
-                                            <Text style={styles.error}>
-                                                {errors.euinNumber}
-                                            </Text>
+
+                                    <TextInput
+                                        style={styles.input}
+                                        onChangeText={handleChange(
+                                            "euinNumber"
                                         )}
+                                        onBlur={handleBlur("euinNumber")}
+                                        value={values.euinNumber}
+                                    />
+
+                                    <View style={styles.fieldContainer}>
+                                        {touched.euinNumber &&
+                                            errors.euinNumber &&
+                                            typeof errors.euinNumber ===
+                                                "string" && (
+                                                <Text style={styles.error}>
+                                                    {errors.euinNumber}
+                                                </Text>
+                                            )}
+                                    </View>
                                 </View>
                             </View>
                         )}
@@ -411,12 +408,16 @@ const styles = StyleSheet.create({
         flex: 1, // Make input take full width of its container
     },
     inputArn: {
-        borderTop: 1,
+        // borderWidth: 1,
         borderColor: "#ccc",
         padding: 10,
-        borderRadius: 5,
+        borderTopRightRadius: 5, // Left side border radius
+        borderBottomRightRadius: 5, // Left side border radius
         backgroundColor: "#fff",
         flex: 1, // Make input take full width of its container
+        borderTopWidth: 1,
+        borderBottomWidth: 1,
+        borderRightWidth: 1,
     },
     dropdown: {
         borderWidth: 1,
@@ -457,7 +458,7 @@ const styles = StyleSheet.create({
         // borderWidth: 1,
         backgroundColor: "#f3f4f6",
         paddingHorizontal: 12,
-        paddingVertical: 11,
+        paddingVertical: 12,
     },
     prefix: {
         color: "#6b7280",

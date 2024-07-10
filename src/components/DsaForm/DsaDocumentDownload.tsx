@@ -33,42 +33,114 @@ const DsaDocumentDownload = ({ requestId }) => {
         setSelectedDocuments((prev) => ({ ...prev, [doc]: !prev[doc] }));
     };
 
+    // const downloadReport = async () => {
+    //     setIsDownloadProcessing(true);
+    //     setSuccessMessages([]);
+    //     setFailedMessages([]);
+
+    //     const selectedKeys = Object.keys(selectedDocuments).filter(
+    //         (key) => selectedDocuments[key]
+    //     );
+
+    //     try {
+    //         const downloadPromises = selectedKeys.map((key) =>
+    //             RemoteApi.get(
+    //                 `file/download-dsa-documents?documentName=${key}&requestId=${requestId}`
+    //             )
+    //         );
+
+    //         const responses = await Promise.all(downloadPromises);
+
+    //         responses.forEach((response, index) => {
+    //             if (response.code === 200) {
+    //                 const dataArray = Object.values(response.data.data);
+    //                 const uint8Array = new Uint8Array(dataArray);
+
+    //                 const blob = new Blob([uint8Array], {
+    //                     type: "application/pdf",
+    //                 });
+
+    //                 const url = URL.createObjectURL(blob);
+    //                 const a = document.createElement("a");
+    //                 a.href = url;
+    //                 a.download = `${selectedKeys[index]}-document.pdf`;
+    //                 document.body.appendChild(a);
+    //                 a.click();
+    //                 document.body.removeChild(a);
+    //                 URL.revokeObjectURL(url);
+
+    //                 setSuccessMessages((prev) => [
+    //                     ...prev,
+    //                     `${selectedKeys[index]} document downloaded successfully.`,
+    //                 ]);
+    //             } else {
+    //                 setFailedMessages((prev) => [
+    //                     ...prev,
+    //                     `${selectedKeys[index]} document download failed.`,
+    //                 ]);
+    //             }
+    //         });
+
+    //         setIsDownloadProcessing(false);
+    //     } catch (error) {
+    //         console.error(error);
+    //         Alert.alert("Error", "An error occurred while downloading documents.");
+    //         setIsDownloadProcessing(false);
+    //     }
+    // };
+
     const downloadReport = async () => {
         setIsDownloadProcessing(true);
         setSuccessMessages([]);
         setFailedMessages([]);
-
+    
         const selectedKeys = Object.keys(selectedDocuments).filter(
             (key) => selectedDocuments[key]
         );
-
+    
         try {
             const downloadPromises = selectedKeys.map((key) =>
                 RemoteApi.get(
                     `file/download-dsa-documents?documentName=${key}&requestId=${requestId}`
                 )
             );
-
+    
             const responses = await Promise.all(downloadPromises);
-
+    
             responses.forEach((response, index) => {
                 if (response.code === 200) {
                     const dataArray = Object.values(response.data.data);
                     const uint8Array = new Uint8Array(dataArray);
-
-                    const blob = new Blob([uint8Array], {
-                        type: "application/pdf",
-                    });
-
+    
+                    // Determine the MIME type based on the file extension
+                    const fileExtension = selectedKeys[index].split('.').pop().toLowerCase();
+                    let mimeType = '';
+                    switch (fileExtension) {
+                        case 'pdf':
+                            mimeType = 'application/pdf';
+                            break;
+                        case 'jpeg':
+                        case 'jpg':
+                            mimeType = 'image/jpeg';
+                            break;
+                        case 'png':
+                            mimeType = 'image/png';
+                            break;
+                        default:
+                            mimeType = 'application/octet-stream';
+                    }
+    
+                    const blob = new Blob([uint8Array], { type: mimeType });
+    
                     const url = URL.createObjectURL(blob);
                     const a = document.createElement("a");
                     a.href = url;
-                    a.download = `${selectedKeys[index]}-document.pdf`;
+                    a.download = `${selectedKeys[index]}`;
                     document.body.appendChild(a);
                     a.click();
                     document.body.removeChild(a);
                     URL.revokeObjectURL(url);
-
+    
                     setSuccessMessages((prev) => [
                         ...prev,
                         `${selectedKeys[index]} document downloaded successfully.`,
@@ -80,7 +152,7 @@ const DsaDocumentDownload = ({ requestId }) => {
                     ]);
                 }
             });
-
+    
             setIsDownloadProcessing(false);
         } catch (error) {
             console.error(error);
@@ -88,6 +160,7 @@ const DsaDocumentDownload = ({ requestId }) => {
             setIsDownloadProcessing(false);
         }
     };
+    
 
     return (
         <View>

@@ -28,7 +28,7 @@ const DigioComponent = ({ onNext }) => {
     });
 
     const downloadReport = async () => {
-        setModalMessage("Downloading report...");
+        setModalMessage("Downloading E-Signed PDF...");
         try {
             const response = await RemoteApi.get(
                 "file/download-dsa-documents?documentName=esigneddocument"
@@ -50,6 +50,7 @@ const DigioComponent = ({ onNext }) => {
                 document.body.removeChild(a);
                 URL.revokeObjectURL(url);
                 setModalMessage("Report downloaded successfully.");
+                onNext();
             } else {
                 console.error("Error in API response:", response.data.message);
                 setModalMessage("Request failed, please try again.");
@@ -63,7 +64,7 @@ const DigioComponent = ({ onNext }) => {
     };
 
     const DownloadDigioPDF = async (statusId) => {
-        setModalMessage("Downloading Digio PDF...");
+        setModalMessage("Downloading E-Signed PDF...");
         const data = { statusId: statusId, documentId: digioData.documentId };
 
         try {
@@ -260,8 +261,8 @@ const DigioComponent = ({ onNext }) => {
             DownloadDigioPDF(2);
             setIsVerifying(true);
         } else if (digioData.status === "rejected") {
-            setModalMessage("Request failed, please try again.");
-            setIsVerifying(true);
+            // setModalMessage("Request failed, please try again.");
+            // setIsVerifying(true);
             DownloadDigioPDF(3);
         } else if (digioData.status === "notset") {
             handlePress();
@@ -270,12 +271,17 @@ const DigioComponent = ({ onNext }) => {
         console.log(digioData);
     }, [digioData.status]);
 
+    useEffect(() => {
+        handleESignAndDownload();
+        console.log(digioData);
+    }, []);
+
     return (
         <View style={{ flex: 1 }}>
             {Platform.OS === "web" ? (
                 <>
                     <>
-                        <View style={styles.buttonContainer}>
+                        {/* <View style={styles.buttonContainer}>
                             <Pressable
                                 style={styles.proceed}
                                 onPress={handleESignAndDownload}
@@ -284,7 +290,7 @@ const DigioComponent = ({ onNext }) => {
                                     E-sign document and download
                                 </Text>
                             </Pressable>
-                        </View>
+                        </View> */}
                     </>
 
                     <iframe
@@ -321,9 +327,10 @@ const DigioComponent = ({ onNext }) => {
                                 )}
 
                                 {modalMessage ? (
-                                    modalMessage === "Downloading report..." ||
                                     modalMessage ===
-                                        "Downloading Digio PDF..." ||
+                                        "Downloading E-Signed PDF..." ||
+                                    modalMessage ===
+                                        "Downloading E-Signed PDF..." ||
                                     modalMessage === "Updating status..." ||
                                     modalMessage === "Processing Digio..." ? (
                                         <>
@@ -352,6 +359,25 @@ const DigioComponent = ({ onNext }) => {
                                             <Text style={styles.modalText}>
                                                 {modalMessage}
                                             </Text>
+                                            <View
+                                                style={styles.buttonContainer}
+                                            >
+                                                <Pressable
+                                                    style={styles.proceed}
+                                                    onPress={
+                                                        handleESignAndDownload
+                                                    }
+                                                >
+                                                    <Text
+                                                        style={
+                                                            styles.buttonText
+                                                        }
+                                                    >
+                                                        E-sign document and
+                                                        download
+                                                    </Text>
+                                                </Pressable>
+                                            </View>
                                         </>
                                     )
                                 ) : (

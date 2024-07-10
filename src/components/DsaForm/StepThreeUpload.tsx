@@ -53,8 +53,8 @@ const StepThreeUpload = ({ onSuccess }) => {
     const pickDocument = async (documentType) => {
         if (pickedDocuments[documentType] == null) {
             let result: any = await DocumentPicker.getDocumentAsync({
-                // type: [".png", ".pdf", ".jpg", ".jpeg"],
-                type: [".pdf"],
+                type: [".png", ".pdf", ".jpg", ".jpeg"],
+                // type: [".pdf"],
                 copyToCacheDirectory: true,
             });
             // console.log('selected file', result);
