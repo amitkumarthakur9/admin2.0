@@ -63,6 +63,7 @@ const MutualFundDetail = lazy(() => import("./mutual-fund/[id]"));
 const AumReconcile = lazy(() => import("./aum-reconcile"));
 const SendInvite = lazy(() => import("./invite-contact"));
 const AddIfaRm = lazy(() => import("./add-ifa-rm"));
+const AddRm = lazy(() => import("./add-rm"));
 const DistributorDashboardScreen = lazy(() => import("./dashboard/[id]"));
 const IFAReportsScreen = lazy(() => import("./ifa"));
 const ARNTabScreen = lazy(() => import("./arn-transfer"));
@@ -85,7 +86,6 @@ const ChapterLearningCenter = lazy(
 import IonIcon from "react-native-vector-icons/Ionicons";
 import DsaFormScreen from "./dsa-form";
 import DsaRequestScreen from "./dsa-form/request";
-
 
 const queryClient = new QueryClient();
 
@@ -243,6 +243,28 @@ export default function AppLayout() {
                     initialParams={{}}
                     component={IFAReportsScreen}
                 />
+            ),
+        });
+    }
+
+    if (roleId > 3) {
+        drawerStructure.splice(1, 0, {
+            key: "addRm",
+            content: (
+                <>
+                    <Drawer.Screen
+                        name="add-rm"
+                        options={{
+                            drawerLabel: "Add RM",
+                            title: "addRm",
+                            unmountOnBlur: true,
+                            drawerItemStyle: { display: "none" },
+                        }}
+                        initialParams={{}}
+                        component={AddRm}
+                    />
+                    
+                </>
             ),
         });
     }
@@ -425,26 +447,32 @@ export default function AppLayout() {
                                 />
                                 {(roleId === 3 || roleId === 4) && (
                                     <>
-                                        {/* <Drawer.Screen
+                                        <Drawer.Screen
                                             name="rta-sync"
                                             options={{
                                                 drawerLabel: "RTA Sync",
                                                 title: "RTA Sync",
                                                 unmountOnBlur: true,
+                                                drawerItemStyle: {
+                                                    display: "none",
+                                                },
                                             }}
                                             initialParams={{}}
                                             component={RTASync}
-                                        /> */}
-                                        {/* <Drawer.Screen
+                                        />
+                                        <Drawer.Screen
                                             name="aum-reconcile"
                                             component={AumReconcile}
                                             options={{
                                                 drawerLabel: "AUM Reconcile",
                                                 title: "AUM Reconcile",
                                                 unmountOnBlur: true,
+                                                drawerItemStyle: {
+                                                    display: "none",
+                                                },
                                             }}
                                             initialParams={{}}
-                                        /> */}
+                                        />
                                         <Drawer.Screen
                                             name="add-ifa"
                                             options={{
@@ -643,37 +671,32 @@ export default function AppLayout() {
                                     component={ChapterLearningCenter}
                                 />
                                 <Drawer.Screen
-                                            name="dsa-form/index"
-                                            options={{
-                                                drawerLabel: "DSA form",
-                                                title: "DSA form",
-                                                drawerItemStyle: {
-                                                    display: "none",
-                                                },
-                                                unmountOnBlur: true,
-                                            }}
-                                            initialParams={{}}
-                                            component={
-                                                DsaFormScreen
-                                            }
-                                        />
+                                    name="dsa-form/index"
+                                    options={{
+                                        drawerLabel: "DSA form",
+                                        title: "DSA form",
+                                        drawerItemStyle: {
+                                            display: "none",
+                                        },
+                                        unmountOnBlur: true,
+                                    }}
+                                    initialParams={{}}
+                                    component={DsaFormScreen}
+                                />
 
-                                        <Drawer.Screen
-                                            name="dsa-form/request/index"
-                                            options={{
-                                                drawerLabel: "DSA form",
-                                                title: "DSA form",
-                                                drawerItemStyle: {
-                                                    display: "none",
-                                                },
-                                                unmountOnBlur: true,
-                                            }}
-                                            initialParams={{}}
-                                            component={
-                                                DsaRequestScreen
-                                            }
-                                        />
-
+                                <Drawer.Screen
+                                    name="dsa-form/request/index"
+                                    options={{
+                                        drawerLabel: "DSA form",
+                                        title: "DSA form",
+                                        drawerItemStyle: {
+                                            display: "none",
+                                        },
+                                        unmountOnBlur: true,
+                                    }}
+                                    initialParams={{}}
+                                    component={DsaRequestScreen}
+                                />
                             </Drawer.Navigator>
                             {/* <Fab
                                 renderInPortal={false}

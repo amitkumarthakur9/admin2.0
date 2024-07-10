@@ -1,364 +1,407 @@
 import React, { useEffect, useState } from "react";
-import { TextInput, View } from "react-native";
 import {
-    Button,
-    Center,
-    CheckCircleIcon,
-    FormControl,
-    HStack,
-    Heading,
-    Image,
-    Input,
-    Menu,
-    Pressable,
-    ScrollView,
-    Spinner,
-    Text,
-    WarningIcon,
-    WarningOutlineIcon,
-} from "native-base";
-import Modal from "../Modal/Modal";
-import Icon from "react-native-vector-icons/FontAwesome";
-import { Dialog, Portal } from "react-native-paper";
-import { TableBreadCrumb } from "../BreadCrumbs/TableBreadCrumb";
+  View,
+  Text,
+  TextInput,
+  Button,
+  StyleSheet,
+  ScrollView,
+  ActivityIndicator,
+  Pressable,
+} from "react-native";
+import { Formik } from "formik";
+import * as Yup from "yup";
+import RemoteApi from "../../services/RemoteApi";
+import { MaterialIcons } from "@expo/vector-icons";
+import { RMid } from "../../helper/helper";
+import { ToastAlert } from "../../helper/CustomToaster";
+import CalendarSinglePicker from "../CustomDatePicker/CalendarSinglePicker";
+import { useToast } from "native-base";
+import { v4 as uuidv4 } from "uuid";
 
-export default function AddRMUser() {
-    const [modalVisible, setModalVisible] = useState(false);
-    const showDialog = () => setModalVisible(true);
-    const hideDialog = () => setModalVisible(false);
-    const [passwordVisible, setPasswordVisible] = useState(false);
-    const [selectedOption, setSelectedOption] = useState(
-        "Residential Individual"
-    );
-    const [isOpen, setIsOpen] = useState(false);
-    const [value, setValue] = useState();
+const validationSchema = Yup.object().shape({
+  name: Yup.string().required("Name is required"),
+  email: Yup.string()
+    .email("Please enter a valid email address")
+    .required("Email is required"),
+  mobileNumber: Yup.string()
+    .matches(/^\d{10}$/, "Please enter a valid 10-digit mobile number")
+    .required("Mobile number is required"),
+  rm: Yup.string().required("RM is required"),
+  sexId: Yup.string().required("Gender is required"),
+  dateOfBirth: Yup.string()
+    .matches(
+      /^(19[0-9]{2}|20[0-9]{2})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/,
+      "Please enter a valid format YYYY-MM-DD"
+    )
+    .required("Date of birth is required")
+    .test(
+      "dateOfBirth",
+      "Date of birth must be after 1900-01-01",
+      (value) => {
+        const minDate = new Date("1900-01-01");
+        const inputDate = new Date(value);
+        return inputDate >= minDate;
+      }
+    ),
+  employeeCode: Yup.string()
+    .matches(/^[A-Z0-9]{6,10}$/, "Please enter a valid Employee code")
+    .required("Employee code is required"),
+  password: Yup.string().required("Password is required"),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref("password"), null], "Passwords must match")
+    .required("Confirm the password"),
+});
 
-    const options = [
-        {
-            option: "Residential Individual",
-            value: "4322",
-        },
-        {
-            option: "Foreign",
-            value: "4321",
-        },
-        {
-            option: "NRA",
-            value: "4320",
-        },
-    ];
+const AddRMUser = () => {
+  const role = RMid();
+  const [options, setOptions] = useState([{ name: "Self", id: role }]);
+  const [isLoading, setIsLoading] = useState(true);
+  const toast = useToast();
+  const [toasts, setToasts] = useState([]);
+  const [passwordVisible, setPasswordVisible] = useState(false);
 
-    const handleSubmit = () => {
-        // Check if passwords match
-        if (formData.password !== formData.confirmPassword) {
-            alert("Passwords do not match");
-            return;
+  useEffect(() => {
+    async function getRM() {
+      const response = await RemoteApi.post("aum/management-user/list");
+      setOptions(response.data);
+    }
+    getRM();
+    setIsLoading(false);
+  }, []);
+
+  useEffect(() => {
+    toast.closeAll();
+    if (toasts.length > 0) {
+      const latestToast = toasts[toasts.length - 1];
+      toast.show({
+        render: () => (
+          <ToastAlert
+            id={latestToast.id}
+            variant={latestToast.variant}
+            title={latestToast.title}
+            description=""
+            isClosable={false}
+            toast={toast}
+            status={latestToast.status}
+            onClose={() => removeToast(latestToast.id)}
+          />
+        ),
+        placement: "top",
+      });
+    }
+  }, [toasts]);
+
+  const removeToast = (id) => {
+    setToasts(toasts.filter((toast) => toast.id !== id));
+  };
+
+  const initialValues = {
+    name: "",
+    email: "",
+    mobileNumber: "",
+    rm: "",
+    sexId: "",
+    dateOfBirth: "",
+    employeeCode: "",
+    password: "",
+    confirmPassword: "",
+  };
+
+  const handleSubmit = async (values, { resetForm }) => {
+    const data = {
+      name: values.name,
+      employeeCode: values.employeeCode,
+      dateOfBirth: values.dateOfBirth,
+      sexId: parseInt(values.sexId),
+      email: values.email,
+      password: values.password,
+      mobileNumber: values.mobileNumber,
+      assignedTo: parseInt(values.rm),
+    };
+
+    try {
+      const response = await RemoteApi.post("/onboard/distributor", data);
+
+      if (response?.message === "Success") {
+        const uniqueId = uuidv4();
+        setToasts([
+          ...toasts,
+          {
+            id: uniqueId,
+            variant: "solid",
+            title: `RM added successfully`,
+            status: "success",
+          },
+        ]);
+      } else if (
+        response?.message === "Error in Adding User." ||
+        response?.code === 425
+      ) {
+        const uniqueId = uuidv4();
+        const errorMessage = response?.errors[0]?.message;
+        const fieldsToCheck = ["email", "mobileNumber", "employeeCode"];
+
+        let message;
+
+        if (errorMessage) {
+          const mentionedField = fieldsToCheck.find((field) =>
+            errorMessage.includes(field)
+          );
+
+          if (mentionedField) {
+            message = mentionedField;
+          } else {
+            message = "Unknown error";
+          }
+        } else {
+          message = "No error message";
         }
-        // Proceed with form submission
 
-        formData;
-        console.log(formData);
-    };
+        setToasts([
+          ...toasts,
+          {
+            id: uniqueId,
+            variant: "solid",
+            title: `${message} already in Database`,
+            status: "error",
+          },
+        ]);
+      }
+    } catch (error) {
+      console.error(error);
+    }
 
-    const [formData, setFormData] = useState({
-        name: "",
-        password: "",
-        confirmPassword: "",
-        email: "",
-        phone: "",
-        pan: "",
-    });
+    resetForm();
+  };
 
-    const handleChange = (key, value) => {
-        setFormData((prevData) => ({
-            ...prevData,
-            [key]: value,
-        }));
-    };
-
-    const togglePasswordVisibility = () => {
-        setPasswordVisible(!passwordVisible);
-    };
-
-    const handleOptionSelect = (option, optionValue) => {
-        setSelectedOption(option);
-        setValue(optionValue);
-        setIsOpen(false);
-    };
-
+  if (isLoading) {
     return (
-        <View
-            style={{
-                flex: 1,
-                justifyContent: "center",
-                alignItems: "center",
-            }}
-        >
-            <View className="flex flex-row lg:mt-0">
-                <Pressable
-                    onPress={showDialog}
-                    className={
-                        "flex flex-row justify-center items-center border-[1px] rounded px-4 h-[42px] border-slate-200"
-                    }
-                    aria-require="addNewClient"
-                >
-                    <Icon name="plus" size={14} color="#484848" />
-
-                    {<Text className="mx-2">Add RM</Text>}
-                </Pressable>
-                <Portal>
-                    <Dialog
-                        visible={modalVisible}
-                        onDismiss={hideDialog}
-                        dismissable
-                        style={{
-                            display: "flex",
-                            justifyContent: "flex-start",
-                            alignSelf: "center",
-                            width: 600,
-                            height: "80%",
-                            overflow: "scroll",
-                            backgroundColor: "white",
-                        }}
-                    >
-                        <View className="p-4">
-                            <View className="flex flex-row justify-between">
-                                <Text className="pl-4 text-lg font-bold">
-                                    Add RM
-                                </Text>
-
-                                <Pressable
-                                    onPress={hideDialog}
-                                    className={
-                                        "flex flex-row justify-center items-center border-[1px] rounded px-4 h-[42px] border-slate-200"
-                                    }
-                                    aria-describedby="addNewClient"
-                                >
-                                    <Icon
-                                        name="close"
-                                        size={14}
-                                        color="#484848"
-                                    />
-                                </Pressable>
-                            </View>
-                            <View className="flex flex-col items-center">
-                                <View className="gap-4">
-                                    <FormControl
-                                        isRequired
-                                        isInvalid={false}
-                                        w="100%"
-                                        maxW="300px"
-                                    >
-                                        <FormControl.Label>
-                                            Name
-                                        </FormControl.Label>
-                                        <Input
-                                            size="lg"
-                                            variant="outline"
-                                            placeholder="Name as on PAN"
-                                            value={formData.name}
-                                            onChangeText={(value) =>
-                                                handleChange("name", value)
-                                            }
-                                        />
-                                        <FormControl.ErrorMessage
-                                            leftIcon={
-                                                <WarningOutlineIcon size="xs" />
-                                            }
-                                        >
-                                            Try different from previous name.
-                                        </FormControl.ErrorMessage>
-                                    </FormControl>
-                                    <FormControl
-                                        isRequired
-                                        isInvalid={false}
-                                        w="100%"
-                                        maxW="300px"
-                                    >
-                                        <FormControl.Label>
-                                            Email Address
-                                        </FormControl.Label>
-                                        <Input
-                                            size="lg"
-                                            variant="outline"
-                                            placeholder="Email Address"
-                                            value={formData.email}
-                                            onChangeText={(value) =>
-                                                handleChange("email", value)
-                                            }
-                                        />
-                                        <FormControl.ErrorMessage
-                                            leftIcon={
-                                                <WarningOutlineIcon size="xs" />
-                                            }
-                                        >
-                                            Try different from previous email.
-                                        </FormControl.ErrorMessage>
-                                    </FormControl>
-                                    <FormControl
-                                        isRequired
-                                        isInvalid={false}
-                                        w="100%"
-                                        maxW="300px"
-                                    >
-                                        <FormControl.Label>
-                                            Mobile Number
-                                        </FormControl.Label>
-                                        <Input
-                                            size="lg"
-                                            variant="outline"
-                                            placeholder="Mobile Number"
-                                            value={formData.phone}
-                                            onChangeText={(value) =>
-                                                handleChange("phone", value)
-                                            }
-                                        />
-                                        <FormControl.ErrorMessage
-                                            leftIcon={
-                                                <WarningOutlineIcon size="xs" />
-                                            }
-                                        >
-                                            Try different from previous
-                                            passwords.
-                                        </FormControl.ErrorMessage>
-                                    </FormControl>
-
-                                    {/* <FormControl
-                            isRequired
-                            isInvalid={false}
-                            w="100%"
-                            maxW="300px"
-                        >
-                            <FormControl.Label>
-                                Assign RM
-                            </FormControl.Label>
-
-                            <Menu
-                                isOpen={isOpen}
-                                onClose={() =>
-                                    setIsOpen(
-                                        false
-                                    )
-                                }
-                                trigger={(
-                                    triggerProps
-                                ) => {
-                                    return (
-                                        <Pressable
-                                            accessibilityLabel="More options menu"
-                                            {...triggerProps}
-                                            onPress={() =>
-                                                setIsOpen(
-                                                    !isOpen
-                                                )
-                                            }
-                                        >
-                                            <View className="flex flex-row items-center border-2 border-[#a3a3a3] justify justify-between h-auto pr-4 rounded">
-                                                <Text
-                                                    selectable
-                                                    style={{
-                                                        fontSize: 16,
-                                                        color: "#a3a3a3",
-                                                        // fontWeight:
-                                                        //     "semi-bold",
-                                                        paddingLeft: 12,
-                                                        paddingTop: 4,
-                                                        paddingBottom: 4,
-                                                    }}
-                                                >
-                                                    {selectedOption ||
-                                                        "Select Option"}
-                                                </Text>
-
-                                                <Icon
-                                                    name={
-                                                        isOpen
-                                                            ? "angle-up"
-                                                            : "angle-down"
-                                                    }
-                                                    style={{
-                                                        color: "#888",
-                                                        fontSize: 24,
-                                                    }}
-                                                />
-                                            </View>
-                                        </Pressable>
-                                    );
-                                }}
-                            >
-                                {options.map(
-                                    (
-                                        item,
-                                        index
-                                    ) => (
-                                        <Menu.Item
-                                            key={
-                                                index
-                                            }
-                                            onPress={() =>
-                                                handleOptionSelect(
-                                                    item.option,
-                                                    item.value
-                                                )
-                                            }
-                                        >
-                                            {
-                                                item.option
-                                            }
-                                        </Menu.Item>
-                                    )
-                                )}
-                            </Menu>
-                            <FormControl.ErrorMessage
-                                leftIcon={
-                                    <WarningOutlineIcon size="xs" />
-                                }
-                            >
-                                Try different
-                                from previous
-                                passwords.
-                            </FormControl.ErrorMessage>
-                        </FormControl> */}
-                                    <FormControl
-                                        isRequired
-                                        isInvalid={false}
-                                        w="100%"
-                                        maxW="300px"
-                                    >
-                                        <FormControl.Label>
-                                            PAN Number
-                                        </FormControl.Label>
-                                        <Input
-                                            size="lg"
-                                            variant="outline"
-                                            placeholder="PAN Number"
-                                            value={formData.pan}
-                                            onChangeText={(value) =>
-                                                handleChange("pan", value)
-                                            }
-                                        />
-                                        <FormControl.ErrorMessage
-                                            leftIcon={
-                                                <WarningOutlineIcon size="xs" />
-                                            }
-                                        >
-                                            Try different from previous
-                                            passwords.
-                                        </FormControl.ErrorMessage>
-                                    </FormControl>
-                                    <Button
-                                        width="100%"
-                                        bgColor={"#013974"}
-                                        onPress={handleSubmit}
-                                    >
-                                        Invest
-                                    </Button>
-                                </View>
-                            </View>
-                        </View>
-                    </Dialog>
-                </Portal>
-            </View>
-        </View>
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#0066cc" />
+      </View>
     );
-}
+  }
+
+  return (
+    <Formik
+      initialValues={initialValues}
+      validationSchema={validationSchema}
+      onSubmit={handleSubmit}
+    >
+      {({
+        handleChange,
+        handleBlur,
+        handleSubmit,
+        values,
+        errors,
+        touched,
+        setFieldValue,
+      }) => (
+        <ScrollView contentContainerStyle={styles.container}>
+          <View style={styles.formRow}>
+            <View style={styles.fieldContainer}>
+              <Text style={styles.label}>Enter your full name as per PAN</Text>
+              <TextInput
+                style={styles.input}
+                onChangeText={handleChange("name")}
+                onBlur={handleBlur("name")}
+                value={values.name}
+              />
+              {touched.name && errors.name && (
+                <Text style={styles.error}>{errors.name}</Text>
+              )}
+            </View>
+
+            <View style={styles.fieldContainer}>
+              <Text style={styles.label}>Enter your Email</Text>
+              <TextInput
+                style={styles.input}
+                onChangeText={handleChange("email")}
+                onBlur={handleBlur("email")}
+                value={values.email}
+              />
+              {touched.email && errors.email && (
+                <Text style={styles.error}>{errors.email}</Text>
+              )}
+            </View>
+          </View>
+
+          <View style={styles.formRow}>
+            <View style={styles.fieldContainer}>
+              <Text style={styles.label}>Enter your Mobile number</Text>
+              <TextInput
+                style={styles.input}
+                onChangeText={handleChange("mobileNumber")}
+                onBlur={handleBlur("mobileNumber")}
+                value={values.mobileNumber}
+                keyboardType="numeric"
+                maxLength={10}
+              />
+              {touched.mobileNumber && errors.mobileNumber && (
+                <Text style={styles.error}>{errors.mobileNumber}</Text>
+              )}
+            </View>
+
+            <View style={styles.fieldContainer}>
+              <Text style={styles.label}>Gender</Text>
+              <View style={styles.radioGroup}>
+                <Pressable
+                  onPress={() => setFieldValue("sexId", "1")}
+                  style={[
+                    styles.radioButton,
+                    values.sexId === "1" && styles.radioSelected,
+                  ]}
+                >
+                  <Text style={styles.radioText}>Male</Text>
+                </Pressable>
+                <Pressable
+                  onPress={() => setFieldValue("sexId", "2")}
+                  style={[
+                    styles.radioButton,
+                    values.sexId === "2" && styles.radioSelected,
+                  ]}
+                >
+                  <Text style={styles.radioText}>Female</Text>
+                </Pressable>
+              </View>
+              {touched.sexId && errors.sexId && (
+                <Text style={styles.error}>{errors.sexId}</Text>
+              )}
+            </View>
+          </View>
+
+          <View style={styles.formRow}>
+            <View style={styles.fieldContainer}>
+              <Text style={styles.label}>Employee Code</Text>
+              <TextInput
+                style={styles.input}
+                onChangeText={handleChange("employeeCode")}
+                onBlur={handleBlur("employeeCode")}
+                value={values.employeeCode}
+              />
+              {touched.employeeCode && errors.employeeCode && (
+                <Text style={styles.error}>{errors.employeeCode}</Text>
+              )}
+            </View>
+
+            <View style={styles.fieldContainer}>
+              <Text style={styles.label}>Date of Birth</Text>
+              <CalendarSinglePicker
+                value={values.dateOfBirth}
+                handleFilterChange={(value) =>
+                  setFieldValue("dateOfBirth", value)
+                }
+              />
+              {touched.dateOfBirth && errors.dateOfBirth && (
+                <Text style={styles.error}>{errors.dateOfBirth}</Text>
+              )}
+            </View>
+          </View>
+
+          <View style={styles.formRow}>
+            <View style={styles.fieldContainer}>
+              <Text style={styles.label}>Password</Text>
+              <View className="flex flex-row justify-center items-center">
+              <TextInput
+                style={styles.input}
+                onChangeText={handleChange("password")}
+                onBlur={handleBlur("password")}
+                value={values.password}
+                secureTextEntry={!passwordVisible}
+              />
+              <MaterialIcons
+                name={passwordVisible ? "visibility" : "visibility-off"}
+                size={20}
+                color="#484848"
+                onPress={() => setPasswordVisible(!passwordVisible)}
+                className="p-4"
+              />
+              </View>
+              
+              {touched.password && errors.password && (
+                <Text style={styles.error}>{errors.password}</Text>
+              )}
+            </View>
+
+            <View style={styles.fieldContainer}>
+              <Text style={styles.label}>Confirm Password</Text>
+              <TextInput
+                style={styles.input}
+                onChangeText={handleChange("confirmPassword")}
+                onBlur={handleBlur("confirmPassword")}
+                value={values.confirmPassword}
+                secureTextEntry={!passwordVisible}
+              />
+              {touched.confirmPassword && errors.confirmPassword && (
+                <Text style={styles.error}>{errors.confirmPassword}</Text>
+              )}
+            </View>
+          </View>
+
+          <Button title="Submit" onPress={() => handleSubmit()} color="#0066cc" />
+        </ScrollView>
+      )}
+    </Formik>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flexGrow: 1,
+    padding: 20,
+    backgroundColor: "#ffffff",
+  },
+  formRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 20,
+  },
+  fieldContainer: {
+    flex: 1,
+    marginRight: 10,
+  },
+  label: {
+    fontSize: 16,
+    marginBottom: 5,
+    color: "#333",
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    padding: 10,
+    borderRadius: 5,
+    backgroundColor: "#fff",
+    flex: 1,
+  },
+  error: {
+    fontSize: 12,
+    color: "red",
+    marginTop: 5,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  radioGroup: {
+    flexDirection: "row",
+  },
+  radioButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 10,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 5,
+    marginRight: 10,
+  },
+  radioSelected: {
+    backgroundColor: "#b3d9ff",
+  },
+  radioText: {
+    marginLeft: 5,
+  },
+});
+
+export default AddRMUser;

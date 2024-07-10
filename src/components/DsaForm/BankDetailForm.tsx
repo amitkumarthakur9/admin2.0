@@ -293,7 +293,8 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
                 data
             );
 
-            // const response: any = await getResponse(500);
+            // const response: any = await getResponse(200);
+
             console.log("response");
             console.log(response);
 
@@ -322,9 +323,12 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
                 address: "",
             }}
             validationSchema={Yup.object().shape({
-                accountNumber: Yup.number().required(
-                    "Account Number is required"
-                ),
+                // accountNumber: Yup.number().required(
+                //     "Account Number is required"
+                // ),
+                accountNumber: Yup.string()
+                    .required("Account number is required")
+                    .matches(/^\d+$/, "Account number must be Numeric"),
                 ifsc: Yup.string()
                     .required("IFSC is required")
                     .length(11, "IFSC must be 11 characters"),
@@ -353,6 +357,7 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
                                 onChangeText={handleChange("accountNumber")}
                                 onBlur={handleBlur("accountNumber")}
                                 value={values.accountNumber}
+                                keyboardType="numeric"
                             />
                             {touched.accountNumber && errors.accountNumber && (
                                 <Text style={styles.error}>

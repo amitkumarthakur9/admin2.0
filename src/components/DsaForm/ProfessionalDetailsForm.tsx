@@ -8,19 +8,26 @@ import {
     ScrollView,
     Pressable,
     ActivityIndicator,
+    Alert,
 } from "react-native";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import DropdownComponent from "../../components/Dropdowns/NewDropDown";
 import RemoteApi from "src/services/RemoteApi";
 
+const panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]$/;
+
 const validationSchema = Yup.object().shape({
-    panNumber: Yup.string().required("PAN is required"),
-    country: Yup.string().required("Country is required"),
-    arn: Yup.string().required("ARN is required"),
-    incomeRange: Yup.string().required("Income range is required"),
-    education: Yup.string().required("Education is required"),
-    occupation: Yup.string().required("Occupation is required"),
+    // panNumber: Yup.string().required("PAN is required"),
+    panNumber: Yup.string()
+        .required("PAN number is required")
+        .matches(panRegex, "Please enter a valid PAN number. Ex: AAAPZ1234C"),
+
+    // country: Yup.string().required("Country is required"),
+    // arn: Yup.string().required("ARN is required"),
+    incomeRange: Yup.number().required("Income range is required"),
+    education: Yup.number().required("Education is required"),
+    occupation: Yup.number().required("Occupation is required"),
 });
 
 // const incomeRangeOptions = [
@@ -107,7 +114,10 @@ const ProfessionalDetailsForm = ({
         console.log(data);
 
         try {
-            const response :any= await RemoteApi.post("user/update-professional-details", data);
+            const response: any = await RemoteApi.post(
+                "user/update-professional-details",
+                data
+            );
             // const response = {
             //     code: 200,
             // };
@@ -130,7 +140,7 @@ const ProfessionalDetailsForm = ({
 
     if (isLoading) {
         return (
-            <View >
+            <View>
                 <ActivityIndicator size="large" color="#0066cc" />
             </View>
         );
@@ -194,8 +204,6 @@ const ProfessionalDetailsForm = ({
                         </View>
                     </View>
 
-                    
-
                     <View style={styles.formRow}>
                         <View style={styles.fieldContainer}>
                             <Text style={styles.label}>Enter Education</Text>
@@ -208,7 +216,6 @@ const ProfessionalDetailsForm = ({
                                 }
                                 containerStyle={styles.dropdown}
                                 noIcon={true}
-
                             />
                             {touched.education &&
                                 errors.education &&
