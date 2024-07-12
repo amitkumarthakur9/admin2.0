@@ -86,6 +86,7 @@ const ChapterLearningCenter = lazy(
 import IonIcon from "react-native-vector-icons/Ionicons";
 import DsaFormScreen from "./dsa-form";
 import DsaRequestScreen from "./dsa-form/request";
+import sipCancelUpload from "./operations/sip-cancel-upload";
 
 const queryClient = new QueryClient();
 
@@ -245,6 +246,24 @@ export default function AppLayout() {
                 />
             ),
         });
+        drawerStructure.splice(1, 0, {
+            key: "sipCancelUpload",
+            content: (
+                <>
+                    <Drawer.Screen
+                        name="operations/sip-cancel-upload/index"
+                        options={{
+                            drawerLabel: "Cancelled SIP Upload",
+                            title: "sipCancelUpload",
+                            unmountOnBlur: true,
+                            // drawerItemStyle: { display: "none" },
+                        }}
+                        initialParams={{}}
+                        component={sipCancelUpload}
+                    />
+                </>
+            ),
+        });
     }
 
     if (roleId > 3) {
@@ -263,7 +282,6 @@ export default function AppLayout() {
                         initialParams={{}}
                         component={AddRm}
                     />
-                    
                 </>
             ),
         });

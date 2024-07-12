@@ -28,6 +28,7 @@ export default ({ config }) => ({
     },
     web: {
         favicon: "./assets/favicon.png",
+        index: './web/index.html', // Custom index.html
     },
     plugins: ["expo-router"],
 
@@ -35,6 +36,7 @@ export default ({ config }) => ({
         scheme: "myapp",
         web: {
             bundler: "metro",
+            index: './web/index.html'
         },
         extra: {
             eas: {

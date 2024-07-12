@@ -9,6 +9,7 @@ import {
 import AddUser from "../../src/components/AddIFA/AddUser";
 import AddIFA from "../../src/components/AddIFA/AddUser";
 import AddRMUser from "../../src/components/AddIFA/AddRM";
+import DistributorForm from "src/components/AddIFA/DistributorForm";
 
 export default function AddRMUserForm() {
     return (
@@ -20,7 +21,8 @@ export default function AddRMUserForm() {
                 overflow: "scroll",
             }}
         >
-            <AddRMUser />
+            {/* <AddRMUser /> */}
+            <DistributorForm />
         </ScrollView>
     );
 }

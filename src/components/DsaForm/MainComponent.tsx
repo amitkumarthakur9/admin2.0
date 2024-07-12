@@ -18,6 +18,8 @@ import PersonalDetailsForm from "./PersonalDetailsForm";
 import AddressDetailsForm from "./AddressDetailsForm";
 import ProfessionalDetailsForm from "./ProfessionalDetailsForm";
 import ProceedSign from "./ProceedSign";
+import { ActivityIndicator } from "react-native-paper";
+import { getResponse } from "src/helper/helper";
 
 const MainComponent = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -46,7 +48,10 @@ const MainComponent = () => {
         bankName: "",
         bankAddress: "",
         district: "",
+        remark: null,
+        dsaCode: null,
     });
+    const [isResubmit, setIsResubmit] = useState(false);
 
     const [dsaData, setDsaData] = useState(null);
 
@@ -59,7 +64,7 @@ const MainComponent = () => {
         setStep(step - 1);
     };
 
-    const handleSuccess = () => setStep(7);
+    const handleSuccess = () => setStep(8);
 
     const toggleTooltip = () => {
         setShowTooltip(!showTooltip);
@@ -80,10 +85,135 @@ const MainComponent = () => {
         }
     };
 
+    const handleResubmit = () =>{
+        setIsResubmit(true);
+        setStep(1);
+    }
+
     async function getUserDetail() {
         setIsLoading(true);
         try {
-            const response = await RemoteApi.get("user/me");
+            // const response: any = await RemoteApi.get("user/me");
+            // const response = await getResponse(200);
+
+            const response = {
+                code: 200,
+                message: "Success",
+                data: {
+                    name: "Saffiulla Muhammad",
+                    email: "saffiulla@fundexpertfintech.com",
+                    mobileNumber: "9778686786",
+                    maritalStatus: {
+                        id:1,
+                        name: "single"
+                    },
+                    panNumber: "AAAPZ1234C",
+                    arn: "ARN-ARN123456",
+                    euin: "E123456",
+                    dsaCode: null,
+                    remark: [
+                        { id: 30, remark: null },
+                        { id: 31, remark: null },
+                        { id: 34, remark: null },
+                        { id: 35, remark: null },
+                        { id: 36, remark: null },
+                        { id: 37, remark: null },
+                        { id: 38, remark: null },
+                        { id: 39, remark: null },
+                        { id: 40, remark: null },
+                        { id: 41, remark: null },
+                        { id: 42, remark: null },
+                        { id: 43, remark: null },
+                        { id: 44, remark: null },
+                        { id: 45, remark: null },
+                        { id: 46, remark: null },
+                        { id: 47, remark: null },
+                        { id: 48, remark: null },
+                        { id: 49, remark: null },
+                        { id: 50, remark: null },
+                        { id: 51, remark: null },
+                        { id: 52, remark: null },
+                        { id: 53, remark: null },
+                        { id: 54, remark: null },
+                        { id: 55, remark: null },
+                        { id: 56, remark: null },
+                        { id: 57, remark: null },
+                        { id: 58, remark: null },
+                        { id: 59, remark: null },
+                        { id: 60, remark: null },
+                        { id: 61, remark: null },
+                        { id: 62, remark: null },
+                        { id: 63, remark: null },
+                        { id: 64, remark: null },
+                        { id: 65, remark: null },
+                        { id: 66, remark: null },
+                        { id: 67, remark: null },
+                        { id: 68, remark: null },
+                        { id: 69, remark: null },
+                        { id: 70, remark: null },
+                        { id: 71, remark: null },
+                        { id: 72, remark: null },
+                        { id: 73, remark: null },
+                        { id: 74, remark: null },
+                        { id: 75, remark: "Change Aadhar" },
+                    ],
+                    incomeSlab: "null",
+                    isOnBoarded: false,
+                    isEsigned: false,
+                    areDocumentsUploaded: true,
+                    educationalQualification: "null",
+                    bankAccount: [
+                        {
+                            id: "42",
+                            accountNumber: "4549938886",
+                            bankAccountType: {
+                                id: 1,
+                                name: "Savings Account",
+                            },
+                            bankBranch: {
+                                ifscCode: "KKBK0008066",
+                            },
+                            bank: {
+                                id: "107",
+                                name: "KOTAK MAHINDRA BANK LIMITED",
+                            },
+                        },
+                        {
+                            id: "43",
+                            accountNumber: "20278353143",
+                            bankAccountType: {
+                                id: 1,
+                                name: "Savings Account",
+                            },
+                            bankBranch: {
+                                ifscCode: "SBIN0007047",
+                            },
+                            bank: {
+                                id: "168",
+                                name: "STATE BANK OF INDIA",
+                            },
+                        },
+                    ],
+                    address: [
+                        {
+                            line1: "Bangalore",
+                            line2: "Bangalore",
+                            line3: null,
+                            pincode: "null",
+                            district: {
+                                id: "224",
+                                name: "BENGALURU",
+                            },
+                            state: {
+                                id: 15,
+                                name: "KARNATAKA",
+                            },
+                        },
+                    ],
+                },
+                errors: [],
+            };
+
             if (response.code === 200) {
                 const userData = response.data;
                 const alreadySet = () => {
@@ -102,7 +232,7 @@ const MainComponent = () => {
                             userData?.maritalStatus?.id ||
                             prevState.maritalStatus,
                         incomeRange:
-                            userData?.incomeSlab?.name || prevState.incomeRange,
+                            userData?.incomeSlab?.id || prevState.incomeRange,
                         education:
                             userData?.educationalQualification?.name ||
                             prevState.education,
@@ -136,6 +266,10 @@ const MainComponent = () => {
                         district:
                             userData?.address?.[0]?.district?.name ||
                             prevState.district,
+                        dsaCode: userData?.dsaCode || prevState.dsaCode,
+                        remark:
+                            userData?.remark?.[length - 1]?.remark ||
+                            prevState.remark,
                     }));
                 };
 
@@ -143,38 +277,54 @@ const MainComponent = () => {
 
                 let initialStep = 1;
                 if (
-                    userData.fullName &&
-                    userData.email &&
-                    userData.mobileNumber
+                    userData?.name &&
+                    userData?.email &&
+                    userData?.mobileNumber &&
+                    userData?.maritalStatus
                 ) {
                     initialStep = 2;
                 }
                 if (
-                    userData.fullName &&
-                    userData.email &&
-                    userData.mobileNumber &&
-                    userData.address?.[0]?.state?.id &&
-                    userData.address?.[0]?.district?.id &&
-                    userData.address?.[0]?.pincode
+                    userData?.name &&
+                    userData?.email &&
+                    userData?.mobileNumber &&
+                    userData?.address?.[0]?.state?.id &&
+                    userData?.address?.[0]?.district?.id &&
+                    userData?.address?.[0]?.pincode
                 ) {
                     initialStep = 3;
                 }
                 if (
-                    userData.fullName &&
-                    userData.email &&
-                    userData.mobileNumber &&
-                    userData.address?.[0]?.state?.id &&
-                    userData.address?.[0]?.district?.id &&
-                    userData.address?.[0]?.pincode &&
-                    userData.incomeSlab
+                    userData?.name &&
+                    userData?.email &&
+                    userData?.mobileNumber &&
+                    userData?.address?.[0]?.state?.id &&
+                    userData?.address?.[0]?.district?.id &&
+                    userData?.address?.[0]?.pincode &&
+                    userData?.incomeSlab
                 ) {
                     initialStep = 4;
                 }
-                if (userData.bankAccount?.[0]?.accountNumber) {
+                if (
+                    userData?.bankAccount?.[0]?.accountNumber &&
+                    userData?.educationalQualification
+                ) {
                     initialStep = 5;
                 }
+                if (userData?.isEsigned == true) {
+                    initialStep = 7;
+                }
+                if (userData?.areDocumentsUploaded == true) {
+                    initialStep = 8;
+                }
+                if (
+                    userData?.remark?.[userData.remark.length - 1]?.remark !=
+                    null
+                ) {
+                    initialStep = 9;
+                }
 
-                setStep(1);
+                setStep(initialStep);
                 console.log(formData);
             } else {
                 alert("Failed to fetch user details");
@@ -190,13 +340,13 @@ const MainComponent = () => {
         getUserDetail();
     }, []);
 
-    if (isLoading || step == 0) {
-        return (
-            <View>
-                <Text>Loading.....</Text>
-            </View>
-        );
-    }
+    // if (isLoading || step == 0) {
+    //     return (
+    //         <View>
+    //             <Text>Loading.....</Text>
+    //         </View>
+    //     );
+    // }
 
     return (
         <View style={styles.container}>
@@ -330,49 +480,101 @@ const MainComponent = () => {
                         ))}
                     </View>
                 </View>
+                {isLoading || step == 0 ? (
+                    <ActivityIndicator />
+                ) : (
+                    <>
+                        <View style={{ flex: 1, padding: 20 }}>
+                            {step === 1 && (
+                                <PersonalDetailsForm
+                                    onNext={handleNext}
+                                    initialValues={formData}
+                                />
+                            )}
+                            {step === 2 && (
+                                <AddressDetailsForm
+                                    onNext={handleNext}
+                                    onPrevious={handlePrevious}
+                                    initialValues={formData}
+                                />
+                            )}
+                            {step === 3 && (
+                                <ProfessionalDetailsForm
+                                    onSubmit={handleSubmit}
+                                    onNext={handleNext}
+                                    onPrevious={handlePrevious}
+                                    initialValues={formData}
+                                />
+                            )}
+                            {step === 4 && (
+                                <BankDetailForm
+                                    onPrevious={handlePrevious}
+                                    onNext={handleNext}
+                                    initialValues={formData}
+                                />
+                            )}
+                            {step === 5 && (
+                                <ProceedSign
+                                    onPrevious={handlePrevious}
+                                    onNext={handleNext}
+                                />
+                            )}
+                            {step === 6 && (
+                                <DigioFlowComponent onNext={handleNext} />
+                            )}
 
-                <View style={{ flex: 1, padding: 20 }}>
-                    {step === 1 && (
-                        <PersonalDetailsForm
-                            onNext={handleNext}
-                            initialValues={formData}
-                        />
-                    )}
-                    {step === 2 && (
-                        <AddressDetailsForm
-                            onNext={handleNext}
-                            onPrevious={handlePrevious}
-                            initialValues={formData}
-                        />
-                    )}
-                    {step === 3 && (
-                        <ProfessionalDetailsForm
-                            onSubmit={handleSubmit}
-                            onNext={handleNext}
-                            onPrevious={handlePrevious}
-                            initialValues={formData}
-                        />
-                    )}
-                    {step === 4 && (
-                        <BankDetailForm
-                            onPrevious={handlePrevious}
-                            onNext={handleNext}
-                            initialValues={formData}
-                        />
-                    )}
-                    {step === 5 && (
-                        <ProceedSign
-                            onPrevious={handlePrevious}
-                            onNext={handleNext}
-                        />
-                    )}
-                    {step === 6 && <DigioFlowComponent onNext={handleNext} />}
-
-                    {step === 7 && (
-                        <StepThreeUpload onSuccess={handleSuccess} />
-                    )}
-                    {step === 8 && <Success />}
-                </View>
+                            {step === 7 && (
+                                <StepThreeUpload onSuccess={handleSuccess} />
+                            )}
+                            {step === 8 && (
+                                <Success
+                                    successMessages={[
+                                        "Application successfully submitted.",
+                                        "Approval Pending.",
+                                    ]}
+                                />
+                            )}
+                            {step === 9 &&
+                                (formData.dsaCode != null ? (
+                                    <Success
+                                        successMessages={[
+                                            "Your DSE Code is",
+                                            `${formData.dsaCode}`,
+                                        ]}
+                                    />
+                                ) : (
+                                    <>
+                                    <View
+                                                style={styles.buttonContainer}
+                                            >
+                                                <Pressable
+                                                    style={styles.proceed}
+                                                    onPress={
+                                                        handleResubmit
+                                                    }
+                                                >
+                                                    <Text
+                                                        style={
+                                                            styles.buttonText
+                                                        }
+                                                    >
+                                                        Resubmit
+                                                    </Text>
+                                                </Pressable>
+                                            </View>
+                                    <View>
+                                        <Text className="text-center color-black text-lg font-bold p-4">
+                                            Remarks
+                                        </Text>
+                                        <Text className="text-center color-black text-lg font-bold p-4">
+                                            {formData.remark}
+                                        </Text>
+                                    </View>
+                                    </>
+                                ))}
+                        </View>
+                    </>
+                )}
             </View>
         </View>
     );
@@ -488,6 +690,24 @@ const styles = StyleSheet.create({
         fontSize: 12,
         color: "#333",
         textAlign: "center",
+    },
+    buttonContainer: {
+        flexDirection: "row",
+        justifyContent: "center",
+        flexWrap: "wrap",
+        margin: 20,
+    },
+    buttonText: {
+        fontSize: 16,
+        color: "#ffffff",
+    },
+    proceed: {
+        padding: 10,
+        borderWidth: 1,
+        borderRadius: 5,
+        alignItems: "center",
+        marginBottom: 20,
+        backgroundColor: "#0066cc",
     },
 });
 

@@ -138,7 +138,7 @@ const StepThreeUpload = ({ onSuccess }) => {
                     aadharBack: null,
                 });
 
-                // onSuccess();
+                onSuccess();
             } else {
                 // const uniqueId = uuidv4();
                 // setToasts([...toasts, { id: uniqueId, variant: "solid", title: "Upload Failed", status: "error" }]);

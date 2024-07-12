@@ -205,14 +205,8 @@ const AddRMUser = () => {
                     }}
                 >
                     <View className="w-full flex items-center">
-                        <View className="flex flex-row justify-center items-center w-[50%]">
-                            <View
-                                style={{
-                                    flex: 1,
-                                    // justifyContent: "center",
-                                    alignItems: "center",
-                                }}
-                            >
+                        <View className="flex flex-row justify-center items-center">
+                            <View style={styles.formContainer}>
                                 <Formik
                                     initialValues={initialValues}
                                     validationSchema={validationSchema}
@@ -232,340 +226,286 @@ const AddRMUser = () => {
                                                 styles.container
                                             }
                                         >
-                                            <View style={styles.formRow}>
-                                                <View
-                                                    style={
-                                                        styles.fieldContainer
-                                                    }
-                                                >
-                                                    <Text style={styles.label}>
-                                                        Enter your full name as
-                                                        per PAN
-                                                    </Text>
-                                                    <TextInput
-                                                        style={styles.input}
-                                                        onChangeText={handleChange(
-                                                            "name"
-                                                        )}
-                                                        onBlur={handleBlur(
-                                                            "name"
-                                                        )}
-                                                        value={values.name}
-                                                    />
-                                                    {touched.name &&
-                                                        errors.name && (
-                                                            <Text
-                                                                style={
-                                                                    styles.error
-                                                                }
-                                                            >
-                                                                {errors.name}
-                                                            </Text>
-                                                        )}
-                                                </View>
-
-                                                <View
-                                                    style={
-                                                        styles.fieldContainer
-                                                    }
-                                                >
-                                                    <Text style={styles.label}>
-                                                        Enter your Email
-                                                    </Text>
-                                                    <TextInput
-                                                        style={styles.input}
-                                                        onChangeText={handleChange(
-                                                            "email"
-                                                        )}
-                                                        onBlur={handleBlur(
-                                                            "email"
-                                                        )}
-                                                        value={values.email}
-                                                    />
-                                                    {touched.email &&
-                                                        errors.email && (
-                                                            <Text
-                                                                style={
-                                                                    styles.error
-                                                                }
-                                                            >
-                                                                {errors.email}
-                                                            </Text>
-                                                        )}
-                                                </View>
+                                            <View style={styles.fieldContainer}>
+                                                <Text style={styles.label}>
+                                                    Enter your full name as per
+                                                    PAN
+                                                </Text>
+                                                <TextInput
+                                                    style={styles.input}
+                                                    onChangeText={handleChange(
+                                                        "name"
+                                                    )}
+                                                    onBlur={handleBlur("name")}
+                                                    value={values.name}
+                                                />
+                                                {touched.name &&
+                                                    errors.name && (
+                                                        <Text
+                                                            style={styles.error}
+                                                        >
+                                                            {errors.name}
+                                                        </Text>
+                                                    )}
                                             </View>
 
-                                            <View style={styles.formRow}>
-                                                <View
-                                                    style={
-                                                        styles.fieldContainer
-                                                    }
-                                                >
-                                                    <Text style={styles.label}>
-                                                        Enter your Mobile number
-                                                    </Text>
-                                                    <TextInput
-                                                        style={styles.input}
-                                                        onChangeText={handleChange(
-                                                            "mobileNumber"
-                                                        )}
-                                                        onBlur={handleBlur(
-                                                            "mobileNumber"
-                                                        )}
-                                                        value={
-                                                            values.mobileNumber
-                                                        }
-                                                        keyboardType="numeric"
-                                                        maxLength={10}
-                                                    />
-                                                    {touched.mobileNumber &&
-                                                        errors.mobileNumber && (
-                                                            <Text
-                                                                style={
-                                                                    styles.error
-                                                                }
-                                                            >
-                                                                {
-                                                                    errors.mobileNumber
-                                                                }
-                                                            </Text>
-                                                        )}
-                                                </View>
-
-                                                <View
-                                                    style={
-                                                        styles.fieldContainer
-                                                    }
-                                                >
-                                                    <Text style={styles.label}>
-                                                        Gender
-                                                    </Text>
-                                                    <View
-                                                        style={
-                                                            styles.radioGroup
-                                                        }
-                                                    >
-                                                        <Pressable
-                                                            onPress={() =>
-                                                                setFieldValue(
-                                                                    "sexId",
-                                                                    "1"
-                                                                )
-                                                            }
-                                                            style={[
-                                                                styles.radioButton,
-                                                                values.sexId ===
-                                                                    "1" &&
-                                                                    styles.radioSelected,
-                                                            ]}
+                                            <View style={styles.fieldContainer}>
+                                                <Text style={styles.label}>
+                                                    Enter your Email
+                                                </Text>
+                                                <TextInput
+                                                    style={styles.input}
+                                                    onChangeText={handleChange(
+                                                        "email"
+                                                    )}
+                                                    onBlur={handleBlur("email")}
+                                                    value={values.email}
+                                                />
+                                                {touched.email &&
+                                                    errors.email && (
+                                                        <Text
+                                                            style={styles.error}
                                                         >
-                                                            <Text
-                                                                style={
-                                                                    styles.radioText
-                                                                }
-                                                            >
-                                                                Male
-                                                            </Text>
-                                                        </Pressable>
-                                                        <Pressable
-                                                            onPress={() =>
-                                                                setFieldValue(
-                                                                    "sexId",
-                                                                    "2"
-                                                                )
-                                                            }
-                                                            style={[
-                                                                styles.radioButton,
-                                                                values.sexId ===
-                                                                    "2" &&
-                                                                    styles.radioSelected,
-                                                            ]}
-                                                        >
-                                                            <Text
-                                                                style={
-                                                                    styles.radioText
-                                                                }
-                                                            >
-                                                                Female
-                                                            </Text>
-                                                        </Pressable>
-                                                    </View>
-                                                    {touched.sexId &&
-                                                        errors.sexId && (
-                                                            <Text
-                                                                style={
-                                                                    styles.error
-                                                                }
-                                                            >
-                                                                {errors.sexId}
-                                                            </Text>
-                                                        )}
-                                                </View>
+                                                            {errors.email}
+                                                        </Text>
+                                                    )}
                                             </View>
 
-                                            <View style={styles.formRow}>
-                                                <View
-                                                    style={
-                                                        styles.fieldContainer
+                                            <View style={styles.fieldContainer}>
+                                                <Text style={styles.label}>
+                                                    Enter your Mobile number
+                                                </Text>
+                                                <TextInput
+                                                    style={styles.input}
+                                                    onChangeText={handleChange(
+                                                        "mobileNumber"
+                                                    )}
+                                                    onBlur={handleBlur(
+                                                        "mobileNumber"
+                                                    )}
+                                                    value={
+                                                        values.mobileNumber
                                                     }
-                                                >
-                                                    <Text style={styles.label}>
-                                                        Employee Code
-                                                    </Text>
-                                                    <TextInput
-                                                        style={styles.input}
-                                                        onChangeText={handleChange(
-                                                            "employeeCode"
-                                                        )}
-                                                        onBlur={handleBlur(
-                                                            "employeeCode"
-                                                        )}
-                                                        value={
-                                                            values.employeeCode
-                                                        }
-                                                    />
-                                                    {touched.employeeCode &&
-                                                        errors.employeeCode && (
-                                                            <Text
-                                                                style={
-                                                                    styles.error
-                                                                }
-                                                            >
-                                                                {
-                                                                    errors.employeeCode
-                                                                }
-                                                            </Text>
-                                                        )}
-                                                </View>
+                                                    keyboardType="numeric"
+                                                    maxLength={10}
+                                                />
+                                                {touched.mobileNumber &&
+                                                    errors.mobileNumber && (
+                                                        <Text
+                                                            style={styles.error}
+                                                        >
+                                                            {
+                                                                errors.mobileNumber
+                                                            }
+                                                        </Text>
+                                                    )}
+                                            </View>
 
-                                                <View
-                                                    style={
-                                                        styles.fieldContainer
-                                                    }
-                                                >
-                                                    <Text style={styles.label}>
-                                                        Date of Birth
-                                                    </Text>
-                                                    <CalendarSinglePicker
-                                                        value={
-                                                            values.dateOfBirth
-                                                        }
-                                                        handleFilterChange={(
-                                                            value
-                                                        ) =>
+                                            <View style={styles.fieldContainer}>
+                                                <Text style={styles.label}>
+                                                    Gender
+                                                </Text>
+                                                <View style={styles.radioGroup}>
+                                                    <Pressable
+                                                        onPress={() =>
                                                             setFieldValue(
-                                                                "dateOfBirth",
-                                                                value
+                                                                "sexId",
+                                                                "1"
                                                             )
                                                         }
-                                                    />
-                                                    {touched.dateOfBirth &&
-                                                        errors.dateOfBirth && (
-                                                            <Text
-                                                                style={
-                                                                    styles.error
-                                                                }
-                                                            >
-                                                                {
-                                                                    errors.dateOfBirth
-                                                                }
-                                                            </Text>
-                                                        )}
+                                                        style={[
+                                                            styles.radioButton,
+                                                            values.sexId ===
+                                                                "1" &&
+                                                                styles.radioSelected,
+                                                        ]}
+                                                    >
+                                                        <Text
+                                                            style={
+                                                                styles.radioText
+                                                            }
+                                                        >
+                                                            Male
+                                                        </Text>
+                                                    </Pressable>
+                                                    <Pressable
+                                                        onPress={() =>
+                                                            setFieldValue(
+                                                                "sexId",
+                                                                "2"
+                                                            )
+                                                        }
+                                                        style={[
+                                                            styles.radioButton,
+                                                            values.sexId ===
+                                                                "2" &&
+                                                                styles.radioSelected,
+                                                        ]}
+                                                    >
+                                                        <Text
+                                                            style={
+                                                                styles.radioText
+                                                            }
+                                                        >
+                                                            Female
+                                                        </Text>
+                                                    </Pressable>
+                                                    <Pressable
+                                                        onPress={() =>
+                                                            setFieldValue(
+                                                                "sexId",
+                                                                "3"
+                                                            )
+                                                        }
+                                                        style={[
+                                                            styles.radioButton,
+                                                            values.sexId ===
+                                                                "3" &&
+                                                                styles.radioSelected,
+                                                        ]}
+                                                    >
+                                                        <Text
+                                                            style={
+                                                                styles.radioText
+                                                            }
+                                                        >
+                                                            Other
+                                                        </Text>
+                                                    </Pressable>
                                                 </View>
+                                                {touched.sexId &&
+                                                    errors.sexId && (
+                                                        <Text
+                                                            style={styles.error}
+                                                        >
+                                                            {errors.sexId}
+                                                        </Text>
+                                                    )}
                                             </View>
 
-                                            <View style={styles.formRow}>
-                                                <View
-                                                    style={
-                                                        styles.fieldContainer
-                                                    }
-                                                >
-                                                    <Text style={styles.label}>
-                                                        Password
-                                                    </Text>
-                                                    <View className="flex flex-row justify-center items-center">
-                                                        <TextInput
-                                                            style={styles.input}
-                                                            onChangeText={handleChange(
-                                                                "password"
-                                                            )}
-                                                            onBlur={handleBlur(
-                                                                "password"
-                                                            )}
-                                                            value={
-                                                                values.password
-                                                            }
-                                                            secureTextEntry={
-                                                                !passwordVisible
-                                                            }
-                                                        />
-                                                        <MaterialIcons
-                                                            name={
-                                                                passwordVisible
-                                                                    ? "visibility"
-                                                                    : "visibility-off"
-                                                            }
-                                                            size={20}
-                                                            color="#484848"
-                                                            onPress={() =>
-                                                                setPasswordVisible(
-                                                                    !passwordVisible
-                                                                )
-                                                            }
-                                                            className="p-4"
-                                                        />
-                                                    </View>
+                                            <View style={styles.fieldContainer}>
+                                                <Text style={styles.label}>
+                                                    Employee Code
+                                                </Text>
+                                                <TextInput
+                                                    style={styles.input}
+                                                    onChangeText={handleChange(
+                                                        "employeeCode"
+                                                    )}
+                                                    onBlur={handleBlur(
+                                                        "employeeCode"
+                                                    )}
+                                                    value={values.employeeCode}
+                                                />
+                                                {touched.employeeCode &&
+                                                    errors.employeeCode && (
+                                                        <Text
+                                                            style={styles.error}
+                                                        >
+                                                            {errors.employeeCode}
+                                                        </Text>
+                                                    )}
+                                            </View>
 
-                                                    {touched.password &&
-                                                        errors.password && (
-                                                            <Text
-                                                                style={
-                                                                    styles.error
-                                                                }
-                                                            >
-                                                                {
-                                                                    errors.password
-                                                                }
-                                                            </Text>
-                                                        )}
-                                                </View>
-
-                                                <View
-                                                    style={
-                                                        styles.fieldContainer
+                                            <View style={styles.fieldContainer}>
+                                                <Text style={styles.label}>
+                                                    Date of Birth
+                                                </Text>
+                                                <CalendarSinglePicker
+                                                    value={values.dateOfBirth}
+                                                    handleFilterChange={(
+                                                        value
+                                                    ) =>
+                                                        setFieldValue(
+                                                            "dateOfBirth",
+                                                            value
+                                                        )
                                                     }
-                                                >
-                                                    <Text style={styles.label}>
-                                                        Confirm Password
-                                                    </Text>
+                                                />
+                                                {touched.dateOfBirth &&
+                                                    errors.dateOfBirth && (
+                                                        <Text
+                                                            style={styles.error}
+                                                        >
+                                                            {errors.dateOfBirth}
+                                                        </Text>
+                                                    )}
+                                            </View>
+
+                                            <View style={styles.fieldContainer}>
+                                                <Text style={styles.label}>
+                                                    Password
+                                                </Text>
+                                                <View className="flex flex-row justify-center items-center">
                                                     <TextInput
                                                         style={styles.input}
                                                         onChangeText={handleChange(
-                                                            "confirmPassword"
+                                                            "password"
                                                         )}
                                                         onBlur={handleBlur(
-                                                            "confirmPassword"
+                                                            "password"
                                                         )}
-                                                        value={
-                                                            values.confirmPassword
-                                                        }
+                                                        value={values.password}
                                                         secureTextEntry={
                                                             !passwordVisible
                                                         }
                                                     />
-                                                    {touched.confirmPassword &&
-                                                        errors.confirmPassword && (
-                                                            <Text
-                                                                style={
-                                                                    styles.error
-                                                                }
-                                                            >
-                                                                {
-                                                                    errors.confirmPassword
-                                                                }
-                                                            </Text>
-                                                        )}
+                                                    <MaterialIcons
+                                                        name={
+                                                            passwordVisible
+                                                                ? "visibility"
+                                                                : "visibility-off"
+                                                        }
+                                                        size={20}
+                                                        color="#484848"
+                                                        onPress={() =>
+                                                            setPasswordVisible(
+                                                                !passwordVisible
+                                                            )
+                                                        }
+                                                        className="p-4"
+                                                    />
                                                 </View>
+
+                                                {touched.password &&
+                                                    errors.password && (
+                                                        <Text
+                                                            style={styles.error}
+                                                        >
+                                                            {errors.password}
+                                                        </Text>
+                                                    )}
+                                            </View>
+
+                                            <View style={styles.fieldContainer}>
+                                                <Text style={styles.label}>
+                                                    Confirm Password
+                                                </Text>
+                                                <TextInput
+                                                    style={styles.input}
+                                                    onChangeText={handleChange(
+                                                        "confirmPassword"
+                                                    )}
+                                                    onBlur={handleBlur(
+                                                        "confirmPassword"
+                                                    )}
+                                                    value={
+                                                        values.confirmPassword
+                                                    }
+                                                    secureTextEntry={
+                                                        !passwordVisible
+                                                    }
+                                                />
+                                                {touched.confirmPassword &&
+                                                    errors.confirmPassword && (
+                                                        <Text
+                                                            style={styles.error}
+                                                        >
+                                                            {
+                                                                errors.confirmPassword
+                                                            }
+                                                        </Text>
+                                                    )}
                                             </View>
 
                                             <Button
@@ -590,15 +530,13 @@ const styles = StyleSheet.create({
         flexGrow: 1,
         padding: 20,
         backgroundColor: "#ffffff",
+        width: "100%", // Ensure full width
     },
-    formRow: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        marginBottom: 20,
+    formContainer: {
+        width: "100%",
     },
     fieldContainer: {
-        flex: 1,
-        marginRight: 10,
+        marginBottom: 20,
     },
     label: {
         fontSize: 16,
@@ -611,7 +549,6 @@ const styles = StyleSheet.create({
         padding: 10,
         borderRadius: 5,
         backgroundColor: "#fff",
-        flex: 1,
     },
     error: {
         fontSize: 12,
@@ -625,6 +562,7 @@ const styles = StyleSheet.create({
     },
     radioGroup: {
         flexDirection: "row",
+        justifyContent: "space-between",
     },
     radioButton: {
         flexDirection: "row",
@@ -634,6 +572,8 @@ const styles = StyleSheet.create({
         borderColor: "#ccc",
         borderRadius: 5,
         marginRight: 10,
+        flex: 1,
+        justifyContent: "center",
     },
     radioSelected: {
         backgroundColor: "#b3d9ff",
