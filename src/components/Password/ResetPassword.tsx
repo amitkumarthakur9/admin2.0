@@ -139,15 +139,15 @@ const ResetPassword = ({authToken}) => {
             );
 
             // Check if the response is successful
-            if (!response.ok) {
+            if (!response) {
                 // Handle the error response
-                throw new Error(`HTTP error! Status: ${response.status}`);
+                throw new Error(`Internal Server error!`);
             }
 
             // Parse the JSON response
-            const responseData = await response.json();
+            // const responseData = await response.json();
 
-            return responseData;
+            return response;
         } catch (error) {
             // Handle any errors that occurred during the fetch request
             console.error("Error:", error.message);

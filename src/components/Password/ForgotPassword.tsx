@@ -169,11 +169,12 @@ const ForgotPassword = () => {
                 body
             );
 
-            // console.log("main api response" + response.json())
+            console.log("main api response" + response)
 
         
             // Check if the response is successful
-            if (!response.ok) {
+            if (!response) {
+                console.log("response.")
                 // Handle the error response
                 // await ApiError(true,response.status)
                 const uniqueId = uuidv4();
@@ -182,7 +183,7 @@ const ForgotPassword = () => {
                     {
                         id: uniqueId,
                         variant: "solid",
-                        title: `Internal server Error! Status: ${response.status}`,
+                        title: `Internal server Error! Check the Email Address`,
                         status: "error",
                     },
                 ]);
@@ -194,16 +195,26 @@ const ForgotPassword = () => {
             }
 
             // Parse the JSON response
-            const responseData = await response.json();
+            // const responseData = await response.json();
 
             // const responseData = {
             //     message:"Success",
             // }
 
-            return responseData;
+            return response;
         } catch (error) {
             // Handle any errors that occurred during the fetch request
             console.error("Error:", error.message);
+            const uniqueId = uuidv4();
+                setToasts([
+                    ...toasts,
+                    {
+                        id: uniqueId,
+                        variant: "solid",
+                        title: `Internal server Error! Status: ${response.status}`,
+                        status: "error",
+                    },
+                ]);
             throw error;
         }
     };

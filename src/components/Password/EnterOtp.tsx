@@ -171,9 +171,9 @@ const EnterOtp = ({ emailId, token }) => {
             );
 
             // Check if the response is successful
-            if (!response.ok) {
+            if (!response) {
                 // Handle the error response
-                throw new Error(`HTTP error! Status: ${response.status}`);
+                throw new Error(`HTTP error!`);
             }
 
             // Parse the JSON response
@@ -214,9 +214,9 @@ const EnterOtp = ({ emailId, token }) => {
             );
 
             // Check if the response is successful
-            if (!response.ok) {
+            if (!response) {
                 // Handle the error response
-                throw new Error(`HTTP error! Status: ${response.status}`);
+                throw new Error(`HTTP error!`);
             }
 
             // Parse the JSON response
@@ -257,9 +257,9 @@ const EnterOtp = ({ emailId, token }) => {
             );
 
             // Check if the response is successful
-            if (!response.ok) {
+            if (!response) {
                 // Handle the error response
-                throw new Error(`HTTP error! Status: ${response.status}`);
+                throw new Error(`HTTP error!`);
             }
 
             // Parse the JSON response

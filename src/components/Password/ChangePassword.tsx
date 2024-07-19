@@ -225,7 +225,7 @@ const ChangePassword = () => {
             // });
 
             // Check if the response is successful
-            if (!response.ok) {
+            if (!response || response?.message !== "Success") {
                 // Handle the error response
 
                 await ApiError(true, "incorrect old Password");
