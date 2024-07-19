@@ -209,12 +209,12 @@ const DsaAllRequestTable = () => {
                 key: "DsaDocumentDownload",
                 content: (
                     <View className="flex flex-row w-[99%]">
-                        <DsaDocumentDownload
+                        {/* <DsaDocumentDownload
 
                             clientId={item.requestId}
                             downloadApi={`file/download-dsa-documents?documentName=esigneddocument&requestId=${item?.requestId}`}
                             fileName={"Dsa-Document"}
-                        />
+                        /> */}
                     </View>
                 ),
             },
@@ -320,7 +320,7 @@ const DsaAllRequestTable = () => {
                 />
                 {/* )} */}
             </View>
-            <RequestModal
+            {/* <RequestModal
                 visible={modalVisible}
                 onClose={handleCloseModal}
                 type={modalType}
@@ -328,7 +328,7 @@ const DsaAllRequestTable = () => {
                 onSubmit={handleCloseModal}
 
 
-            />
+            /> */}
         </View>
     );
 };

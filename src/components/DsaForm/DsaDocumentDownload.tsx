@@ -29,16 +29,16 @@ const DsaDocumentDownload = ({ requestId }) => {
         setModalVisible(false);
     };
 
-    const handleModalClose = () => {
-        setMessage(null);
-        setSelectedDocuments({
-            pancard: false,
-            aadhaarfront: false,
-            aadhaarback: false,
-            esigneddocument: false,
-        });
-        setModalVisible(false);
-    };
+    // const handleModalClose = () => {
+    //     setMessage(null);
+    //     setSelectedDocuments({
+    //         pancard: false,
+    //         aadhaarfront: false,
+    //         aadhaarback: false,
+    //         esigneddocument: false,
+    //     });
+    //     setModalVisible(false);
+    // };
 
     const toggleDocumentSelection = (doc) => {
         setSelectedDocuments((prev) => ({ ...prev, [doc]: !prev[doc] }));

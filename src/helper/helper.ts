@@ -185,6 +185,46 @@ export const getResponse = (code) =>  {
     });
 }
 
+export const getResponselate = (code) =>  {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            if (code === 200) {
+                resolve({
+                    code: 200,
+                    message: "Success",
+                    data: {
+                        identifier: "partner@fundexpert.in",
+                        gwtToken: "GWT240626164926515MJ11CEIMQQ5UDU",
+                        documentId: "DID240626164926347AW99Q8FAMHVIMN"
+                    },
+                    error: []
+                });
+            } else if (code === 500) {
+                resolve({
+                    code: 500,
+                    message: "Internal Server Error",
+                    data: null,
+                    error: ["An error occurred."]
+                });
+            } else if (code > 200 && code < 500) {
+                resolve({
+                    code: code,
+                    message: "Success",
+                    data: "Data not found",
+                    error: []
+                });
+            } else {
+                resolve({
+                    code: 400,
+                    message: "Bad Request",
+                    data: null,
+                    error: ["Invalid input."]
+                });
+            }
+        }, 2000);
+    });
+}
+
 
 
     

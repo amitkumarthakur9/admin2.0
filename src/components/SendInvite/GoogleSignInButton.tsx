@@ -12,6 +12,7 @@ const GoogleSignInButton = () => {
     const scopeURL =
         "profile email https://www.googleapis.com/auth/contacts.readonly";
     // const redirectUri = "https://vision.kcp.com.in/invite-contact";
+    // const redirectUri = "https://vision.kcp.com.in/invite-contact";
     // const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${encodeURIComponent(
     //     scopeURL
     // )}`;

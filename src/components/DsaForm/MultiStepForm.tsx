@@ -81,13 +81,13 @@ const MultiStepForm = () => {
                     initialValues={formData}
                 />
             )}
-            {step === 3 && (
+            {/* {step === 3 && (
                 <ProfessionalDetailsForm
                     onSubmit={handleSubmit}
                     onPrevious={handlePrevious}
                     initialValues={formData}
                 />
-            )}
+            )} */}
         </View>
     );
 };
