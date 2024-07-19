@@ -16,7 +16,9 @@ const GoogleSignInButton = () => {
     // const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${encodeURIComponent(
     //     scopeURL
     // )}`;
-    const redirectUrilink = "http://localhost:8081/invite-contact"; // Replace with your redirect URI
+    // const redirectUrilink = "http://localhost:8081/invite-contact"; // Replace with your redirect URI
+    const redirectUrilink = "https://qvision-kcp.kotaksecurities.online/invite-contact"; // Replace with your redirect URI
+    
     const clientSecretCode = "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";
     useEffect(() => {
         const getCurrentUrl = async () => {
