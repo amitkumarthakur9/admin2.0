@@ -1,4 +1,5 @@
 import React from "react";
+
 import { View, Text } from "react-native";
 import { Image } from "native-base";
 
@@ -8,6 +9,7 @@ const Success = ({
     ],
     failedMessages = [],
 }) => {
+
     return (
         <View
             style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
@@ -18,11 +20,14 @@ const Success = ({
                     alt="ico"
                     source={require("../../../assets/images/Tick.png")}
                     style={{
+
                         width: 100,
+
                         height: 100,
                     }}
                 />
             </View>
+
 
             <View className="flex flex-col justify-center md:pt-8">
                 {successMessages.map((message, index) => (
@@ -41,6 +46,7 @@ const Success = ({
                         {message}
                     </Text>
                 ))}
+
             </View>
         </View>
     );

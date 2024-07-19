@@ -209,12 +209,20 @@ const ChangePassword = () => {
         const url = `https://vision-be.kcp.com.in/${endpoint}`;
         // const url = `https://vision-connect.azurewebsites.net/${endpoint}`;
 
+
+
         try {
-            const response = await fetch(url, {
-                method: "PATCH", // or "GET", "PUT", "DELETE", etc.
-                headers,
-                body,
-            });
+
+            const response: any = await RemoteApi.patch(
+                endpoint,
+                body
+            );
+
+            // const response = await fetch(url, {
+            //     method: "PATCH", // or "GET", "PUT", "DELETE", etc.
+            //     headers,
+            //     body,
+            // });
 
             // Check if the response is successful
             if (!response.ok) {

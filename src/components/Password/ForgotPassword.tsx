@@ -158,11 +158,16 @@ const ForgotPassword = () => {
         // const url = `https://vision-connect.azurewebsites.net/${endpoint}`;
 
         try {
-            const response: any = await fetch(url, {
-                method: "POST", // or "GET", "PUT", "DELETE", etc.
-                headers,
-                body,
-            });
+            // const response: any = await fetch(url, {
+            //     method: "POST", // or "GET", "PUT", "DELETE", etc.
+            //     headers,
+            //     body,
+            // });
+
+            const response: any = await RemoteApi.post(
+                endpoint,
+                body
+            );
 
             // console.log("main api response" + response.json())
 

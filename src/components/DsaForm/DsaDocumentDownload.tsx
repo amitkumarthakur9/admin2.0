@@ -29,6 +29,17 @@ const DsaDocumentDownload = ({ requestId }) => {
         setModalVisible(false);
     };
 
+    const handleModalClose = () => {
+        setMessage(null);
+        setSelectedDocuments({
+            pancard: false,
+            aadhaarfront: false,
+            aadhaarback: false,
+            esigneddocument: false,
+        });
+        setModalVisible(false);
+    };
+
     const toggleDocumentSelection = (doc) => {
         setSelectedDocuments((prev) => ({ ...prev, [doc]: !prev[doc] }));
     };
@@ -91,6 +102,7 @@ const DsaDocumentDownload = ({ requestId }) => {
 
     const downloadReport = async () => {
         setIsDownloadProcessing(true);
+
         setSuccessMessages([]);
         setFailedMessages([]);
     
@@ -153,6 +165,7 @@ const DsaDocumentDownload = ({ requestId }) => {
                 }
             });
     
+
             setIsDownloadProcessing(false);
         } catch (error) {
             console.error(error);
@@ -207,6 +220,7 @@ const DsaDocumentDownload = ({ requestId }) => {
                             <Icon name="close" size={20} color="#7C899C" />
                         </Pressable>
 
+
                         {successMessages.length === 0 && failedMessages.length === 0 && (
                             <View className="p-4">
                                 <Text
@@ -215,6 +229,7 @@ const DsaDocumentDownload = ({ requestId }) => {
                                         marginBottom: 20,
                                         color: "#AAAAAA",
                                     }}
+
                                 >
                                     Select Documents to Download
                                 </Text>
@@ -284,10 +299,12 @@ const DsaDocumentDownload = ({ requestId }) => {
 
                         {(successMessages.length > 0 || failedMessages.length > 0) && (
                             <View className="p-4">
+
                                 <Success
                                     successMessages={successMessages}
                                     failedMessages={failedMessages}
                                 />
+
                             </View>
                         )}
                     </View>

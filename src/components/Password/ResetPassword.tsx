@@ -127,11 +127,16 @@ const ResetPassword = ({authToken}) => {
         // const url = `https://vision-connect.azurewebsites.net/${endpoint}`;
 
         try {
-            const response = await fetch(url, {
-                method: "PATCH", // or "GET", "PUT", "DELETE", etc.
-                headers,
-                body,
-            });
+            // const response = await fetch(url, {
+            //     method: "PATCH", // or "GET", "PUT", "DELETE", etc.
+            //     headers,
+            //     body,
+            // });
+
+            const response: any = await RemoteApi.patch(
+                endpoint,
+                body
+            );
 
             // Check if the response is successful
             if (!response.ok) {

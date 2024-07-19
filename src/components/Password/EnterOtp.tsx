@@ -159,11 +159,16 @@ const EnterOtp = ({ emailId, token }) => {
         // const url = `https://vision-connect.azurewebsites.net/${endpoint}`;
 
         try {
-            const response = await fetch(url, {
-                method: "PATCH", // or "GET", "PUT", "DELETE", etc.
-                headers,
-                body,
-            });
+            // const response = await fetch(url, {
+            //     method: "PATCH", // or "GET", "PUT", "DELETE", etc.
+            //     headers,
+            //     body,
+            // });
+
+            const response: any = await RemoteApi.patch(
+                endpoint,
+                body
+            );
 
             // Check if the response is successful
             if (!response.ok) {
@@ -197,11 +202,16 @@ const EnterOtp = ({ emailId, token }) => {
         // const url = `https://vision-connect.azurewebsites.net/${endpoint}`;
 
         try {
-            const response = await fetch(url, {
-                method: "POST", // or "GET", "PUT", "DELETE", etc.
-                // headers,
-                body,
-            });
+            // const response = await fetch(url, {
+            //     method: "POST", // or "GET", "PUT", "DELETE", etc.
+            //     // headers,
+            //     body,
+            // });
+
+            const response: any = await RemoteApi.post(
+                endpoint,
+                body
+            );
 
             // Check if the response is successful
             if (!response.ok) {
@@ -236,11 +246,15 @@ const EnterOtp = ({ emailId, token }) => {
         // const url = `https://vision-connect.azurewebsites.net/${endpoint}`;
 
         try {
-            const response = await fetch(url, {
-                method: "GET", // or "GET", "PUT", "DELETE", etc.
-                headers,
-                // body,
-            });
+            // const response = await fetch(url, {
+            //     method: "GET", // or "GET", "PUT", "DELETE", etc.
+            //     headers,
+            //     // body,
+            // });
+
+            const response: any = await RemoteApi.get(
+                endpoint
+            );
 
             // Check if the response is successful
             if (!response.ok) {

@@ -37,8 +37,13 @@ const GoogleContactInvite = () => {
     const [dbContact, setDbContacts] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
-    const redirectUri = "http://localhost:8081/invite-contact"; // Replace with your redirect URI
+
+    // const hideDialog = () => setModalVisible(false);
+
+    // const redirectUri = "http://localhost:8081/invite-contact"; // Replace with your redirect URI
     // const redirectUri = "https://vision.kcp.com.in/invite-contact"; // Replace with your redirect URI
+    const redirectUri = "https://qvision-kcp.kotaksecurities.online/invite-contact"; // Replace with your redirect URI
+
 
     useEffect(() => {
         const getCurrentUrl = async () => {
