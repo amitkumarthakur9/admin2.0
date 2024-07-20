@@ -248,15 +248,15 @@ const EnterOtp = ({ emailId, token }) => {
         // const url = `https://vision-connect.azurewebsites.net/${endpoint}`;
 
         try {
-            // const response = await fetch(url, {
-            //     method: "GET", // or "GET", "PUT", "DELETE", etc.
-            //     headers,
-            //     // body,
-            // });
+            const response = await fetch(`${process.env.API_ENDPOINT}/${endpoint}`, {
+                method: "GET", // or "GET", "PUT", "DELETE", etc.
+                headers,
+                // body,
+            });
 
-            const response: any = await RemoteApi.get(
-                endpoint
-            );
+            // const response: any = await RemoteApi.get(
+            //     endpoint
+            // );
 
             // Check if the response is successful
             if (!response) {

@@ -186,7 +186,7 @@ const ResetPassword = ({authToken}) => {
 
      
 
-                if (response?.message == "Success") {
+                if (response?.message == "Success" || response?.code == 200 || response ) {
                     setIsSubmitted(true);
                     setShowModal(true);
                     // Reset form data and validation after submission
