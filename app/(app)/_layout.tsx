@@ -246,24 +246,24 @@ export default function AppLayout() {
                 />
             ),
         });
-        drawerStructure.splice(1, 0, {
-            key: "sipCancelUpload",
-            content: (
-                <>
-                    <Drawer.Screen
-                        name="operations/sip-cancel-upload/index"
-                        options={{
-                            drawerLabel: "Cancelled SIP Upload",
-                            title: "sipCancelUpload",
-                            unmountOnBlur: true,
-                            // drawerItemStyle: { display: "none" },
-                        }}
-                        initialParams={{}}
-                        component={sipCancelUpload}
-                    />
-                </>
-            ),
-        });
+        // drawerStructure.splice(1, 0, {
+        //     key: "sipCancelUpload",
+        //     content: (
+        //         <>
+        //             <Drawer.Screen
+        //                 name="operations/sip-cancel-upload/index"
+        //                 options={{
+        //                     drawerLabel: "Cancelled SIP Upload",
+        //                     title: "sipCancelUpload",
+        //                     unmountOnBlur: true,
+        //                     // drawerItemStyle: { display: "none" },
+        //                 }}
+        //                 initialParams={{}}
+        //                 component={sipCancelUpload}
+        //             />
+        //         </>
+        //     ),
+        // });
     }
 
     if (roleId > 3) {
@@ -492,7 +492,7 @@ export default function AppLayout() {
                                             initialParams={{}}
                                         />
                                         <Drawer.Screen
-                                            name="add-ifa"
+                                            name="add-ifa-rm"
                                             options={{
                                                 drawerLabel: "Add Distributor",
                                                 title: "Add Distributor",
