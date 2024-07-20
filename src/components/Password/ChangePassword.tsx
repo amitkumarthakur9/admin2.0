@@ -263,23 +263,64 @@ const ChangePassword = () => {
             console.log("SubmitFormdata");
             console.log(data);
 
-            let token = null;
+            // let token = null;
 
-            if (Platform.OS == "web") {
-                token = await localStorage.getItem("token");
-            } else {
-                token = await AsyncStorage.getItem("token");
-            }
+            // if (Platform.OS == "web") {
+            //     token = await localStorage.getItem("token");
+            // } else {
+            //     token = await AsyncStorage.getItem("token");
+            // }
 
-            const response = await makePatchRequest(
-                "user/change-password",
-                data,
-                token
-            );
+            // try {
+
+             
+    
+            //     // const response = await fetch(url, {
+            //     //     method: "PATCH", // or "GET", "PUT", "DELETE", etc.
+            //     //     headers,
+            //     //     body,
+            //     // });
+    
+            //     // Check if the response is successful
+            //     if (!response || response?.message !== "Success") {
+            //         // Handle the error response
+    
+            //         await ApiError(true, "incorrect old Password");
+    
+            //         (newErrors.oldPassword = "Wrong old password"),
+            //             setErrors(newErrors);
+    
+            //         // Return validation result
+            //         return Object.values(newErrors).every(
+            //             (error) => error === null
+            //         ); // Return true if there are no errors
+            //         throw new Error(`HTTP error! Status: ${response.status}`);
+            //     }
+    
+            //     // Parse the JSON response
+            //     const responseData = await response.json();
+    
+            //     return responseData;
+            // } catch (error) {
+            //     // Handle any errors that occurred during the fetch request
+            //     console.error("Error:", error.message);
+            //     throw error;
+            // }
+
+            // const response = await makePatchRequest(
+            //     "user/change-password",
+            //     data,
+            //     token
+            // );
 
             // const response = {
             //     message: "Success",
             // }
+
+            const response: any = await RemoteApi.patch(
+                "user/change-password",
+                data
+            );
 
             if (response?.message == "Success") {
                 // const uniqueId = uuidv4();
@@ -311,20 +352,31 @@ const ChangePassword = () => {
 
                 setShowModal(true);
             } else {
-                const uniqueId = uuidv4();
 
-                console.log("else" + response);
+                await ApiError(true, "incorrect old Password");
+    
+                (newErrors.oldPassword = "Wrong old password"),
+                    setErrors(newErrors);
+
+                // Return validation result
+                return Object.values(newErrors).every(
+                    (error) => error === null
+                ); // Return true if there are no errors
+                // throw new Error(`HTTP error! Status: ${response.status}`);
+                // const uniqueId = uuidv4();
+
+                // console.log("else" + response);
                 // alert("IFA added succesfully");
                 // Add the success toast to the toasts array in the component's state
-                setToasts([
-                    ...toasts,
-                    {
-                        id: uniqueId,
-                        variant: "solid",
-                        title: `Server Error`,
-                        status: "error",
-                    },
-                ]);
+                // setToasts([
+                //     ...toasts,
+                //     {
+                //         id: uniqueId,
+                //         variant: "solid",
+                //         title: `Server Error`,
+                //         status: "error",
+                //     },
+                // ]);
             }
         } catch (error) {
             const uniqueId = uuidv4();

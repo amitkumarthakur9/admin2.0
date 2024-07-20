@@ -123,20 +123,20 @@ const ResetPassword = ({authToken}) => {
         const body = JSON.stringify(data);
 
         // Construct the complete URL
-        const url = `https://vision-be.kcp.com.in/${endpoint}`;
+        // const url = `https://vision-be.kcp.com.in/${endpoint}`;
         // const url = `https://vision-connect.azurewebsites.net/${endpoint}`;
 
         try {
-            // const response = await fetch(url, {
-            //     method: "PATCH", // or "GET", "PUT", "DELETE", etc.
-            //     headers,
-            //     body,
-            // });
+            const response = await fetch(`${process.env.API_ENDPOINT}/${endpoint}`, {
+                method: "PATCH", // or "GET", "PUT", "DELETE", etc.
+                headers,
+                body,
+            });
 
-            const response: any = await RemoteApi.patch(
-                endpoint,
-                body
-            );
+            // const response: any = await RemoteApi.patch(
+            //     endpoint,
+            //     body
+            // );
 
             // Check if the response is successful
             if (!response) {

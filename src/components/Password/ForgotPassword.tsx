@@ -166,7 +166,7 @@ const ForgotPassword = () => {
 
             const response: any = await RemoteApi.post(
                 endpoint,
-                body
+                data
             );
 
             console.log("main api response" + response)

@@ -19,18 +19,20 @@ axiosInstance.interceptors.response.use(
         // console.error('API Error:', error.toJSON());
 
         if (error?.response?.status === 401) {
-            if (Platform.OS == "web") {
-                localStorage.removeItem("token");
-            } else {
-                AsyncStorage.removeItem("token");
-            }
-
             // if (Platform.OS == "web") {
             // router
-            if (error?.response.config?.url?.includes("/login")) {
+            if (
+                error?.response.config?.url?.includes("/login") ||
+                error?.response.config?.url?.includes("/dashboard")
+            ) {
                 // console.log();
             } else {
-                window.location.reload();
+                if (Platform.OS == "web") {
+                    localStorage.removeItem("token");
+                } else {
+                    AsyncStorage.removeItem("token");
+                }
+                // window.location.reload();
                 // console.log(error);
             }
             // }
