@@ -2,7 +2,7 @@
 FROM node:20
 
 ARG API_ENDPOINT
-ENV API_ENDPOINT="https://qvision-be-kcp.kotaksecurities.online/"
+ENV API_ENDPOINT="https://vision-be.kcp.com.in/"
 
 RUN apt-get update && apt-get install -y nginx && apt-get install -y nginx-extras
 
