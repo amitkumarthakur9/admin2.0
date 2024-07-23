@@ -1,15 +1,10 @@
 import {
-    Platform,
     ScrollView,
-    StyleProp,
-    TextStyle,
-    View,
-    ViewStyle,
 } from "react-native";
-import AddUser from "../../src/components/AddIFA/AddUser";
-import AddIFA from "../../src/components/AddIFA/AddUser";
 
-export default function AddIfaRm() {
+import DistributorUserForm from "src/components/AddDistributor/DistributorUserForm";
+
+export default function AddDistributorUserForm() {
     return (
         <ScrollView
             className=""
@@ -19,8 +14,8 @@ export default function AddIfaRm() {
                 overflow: "scroll",
             }}
         >
-            <AddUser />
-            {/* <AddIFA /> */}
+            {/* <AddRMUser /> */}
+            <DistributorUserForm />
         </ScrollView>
     );
 }

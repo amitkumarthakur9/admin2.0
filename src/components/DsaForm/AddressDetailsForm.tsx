@@ -1,9 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
     View,
     Text,
     TextInput,
-    Button,
     StyleSheet,
     ScrollView,
     ActivityIndicator,
@@ -39,7 +38,7 @@ const AddressDetailsForm = ({ onNext, onPrevious, initialValues }) => {
     async function getStateList() {
         setIsLoadingState(true);
         try {
-            const response: DropdownResponse = await RemoteApi.get("state/");
+            const response = await RemoteApi.get("state/");
             if (response.code === 200) {
                 setStateOptions(
                     response.data.map((state) => ({
@@ -60,9 +59,7 @@ const AddressDetailsForm = ({ onNext, onPrevious, initialValues }) => {
     async function getDistrictList(stateId) {
         setIsLoadingDistrict(true);
         try {
-            const response: DropdownResponse = await RemoteApi.get(
-                `district/${stateId}`
-            );
+            const response = await RemoteApi.get(`district/${stateId}`);
             console.log("District API Response:", response); // Debugging line
             if (response.code === 200) {
                 const mappedDistricts = response.data.map((district) => ({
@@ -81,7 +78,7 @@ const AddressDetailsForm = ({ onNext, onPrevious, initialValues }) => {
         }
     }
 
-    React.useEffect(() => {
+    useEffect(() => {
         getStateList();
     }, []);
 
@@ -96,22 +93,9 @@ const AddressDetailsForm = ({ onNext, onPrevious, initialValues }) => {
             },
         };
 
-        // onNext(values);
-
         try {
-            const response: DropdownResponse = await RemoteApi.post(
-                "address/add-address",
-                data
-            );
-
-            // const response = {
-            //     code: 200,
-            // };
-
-            console.log("response")
-
+            const response = await RemoteApi.post("address/add-address", data);
             if (response.code === 200) {
-              console.log("200")
                 onNext(values);
             } else {
                 Alert.alert(
@@ -142,184 +126,220 @@ const AddressDetailsForm = ({ onNext, onPrevious, initialValues }) => {
                 values,
                 errors,
                 touched,
-            }) => (
-                <ScrollView contentContainerStyle={styles.container}>
-                    <View style={styles.formRow}>
-                        <View style={styles.fieldContainer}>
-                            <Text style={styles.label}>Address line 1</Text>
-                            <TextInput
-                                style={styles.input}
-                                onChangeText={handleChange("addressLine1")}
-                                onBlur={handleBlur("addressLine1")}
-                                value={values.addressLine1}
-                                maxLength={300}
-                            />
-                            {touched.addressLine1 &&
-                                typeof errors.addressLine1 === "string" && (
+            }) => {
+                useEffect(() => {
+                    if (initialValues.state) {
+                        setFieldValue("state", initialValues.state);
+                        getDistrictList(initialValues.state);
+                    }
+                    if (initialValues.district) {
+                        setFieldValue("district", initialValues.district);
+                    }
+                }, [initialValues, setFieldValue]);
+
+                return (
+                    <ScrollView contentContainerStyle={styles.container}>
+                        <View style={styles.formRow}>
+                            <View style={styles.fieldContainer}>
+                                <Text style={styles.label}>Address line 1</Text>
+                                <TextInput
+                                    style={styles.input}
+                                    onChangeText={handleChange("addressLine1")}
+                                    onBlur={handleBlur("addressLine1")}
+                                    value={values.addressLine1}
+                                    maxLength={300}
+                                />
+                                {touched.addressLine1 &&
+                                    typeof errors.addressLine1 === "string" && (
+                                        <Text style={styles.error}>
+                                            {errors.addressLine1}
+                                        </Text>
+                                    )}
+                                {initialValues.addressLineError && (
                                     <Text style={styles.error}>
-                                        {errors.addressLine1}
+                                        Please correct it as per remarks
                                     </Text>
                                 )}
+                            </View>
+
+                            <View style={styles.fieldContainer}>
+                                <Text style={styles.label}>Address line 2</Text>
+                                <TextInput
+                                    style={styles.input}
+                                    onChangeText={handleChange("addressLine2")}
+                                    onBlur={handleBlur("addressLine2")}
+                                    value={values.addressLine2}
+                                    maxLength={300}
+                                />
+                                {touched.addressLine2 &&
+                                    typeof errors.addressLine2 === "string" && (
+                                        <Text style={styles.error}>
+                                            {errors.addressLine2}
+                                        </Text>
+                                    )}
+                                {initialValues.addressLineError && (
+                                    <Text style={styles.error}>
+                                        Please correct it as per remarks
+                                    </Text>
+                                )}
+                            </View>
                         </View>
 
-                        <View style={styles.fieldContainer}>
-                            <Text style={styles.label}>Address line 2</Text>
-                            <TextInput
-                                style={styles.input}
-                                onChangeText={handleChange("addressLine2")}
-                                onBlur={handleBlur("addressLine2")}
-                                value={values.addressLine2}
-                                maxLength={300}
-                            />
-                            {touched.addressLine2 &&
-                                typeof errors.addressLine2 === "string" && (
+                        <View style={styles.formRow}>
+                            <View style={styles.fieldContainer}>
+                                <Text style={styles.label}>State</Text>
+                                {isLoadingState ? (
+                                    <ActivityIndicator
+                                        size="large"
+                                        color="#0000ff"
+                                    />
+                                ) : (
+                                    <DropdownComponent
+                                        label="State"
+                                        data={stateOptions}
+                                        value={values.state}
+                                        setValue={(value) => {
+                                            setFieldValue("state", value);
+                                            setFieldValue("district", ""); // Reset district when state changes
+                                            getDistrictList(value);
+                                        }}
+                                        containerStyle={styles.dropdown}
+                                        noIcon={true}
+                                        searchOn={true}
+                                    />
+                                )}
+                                {touched.state &&
+                                    typeof errors.state === "string" && (
+                                        <Text style={styles.error}>
+                                            {errors.state}
+                                        </Text>
+                                    )}
+                                {initialValues.stateError && (
                                     <Text style={styles.error}>
-                                        {errors.addressLine2}
+                                        Please correct it as per remarks
                                     </Text>
                                 )}
-                        </View>
-                    </View>
+                            </View>
 
-                    <View style={styles.formRow}>
-                        <View style={styles.fieldContainer}>
-                            <Text style={styles.label}>State</Text>
-                            {isLoadingState ? (
-                                <ActivityIndicator
-                                    size="large"
-                                    color="#0000ff"
+                            <View style={styles.fieldContainer}>
+                                <Text style={styles.label}>City</Text>
+                                <TextInput
+                                    style={styles.input}
+                                    onChangeText={handleChange("city")}
+                                    onBlur={handleBlur("city")}
+                                    value={values.city}
                                 />
-                            ) : (
-                                <DropdownComponent
-                                    label="State"
-                                    data={stateOptions}
-                                    value={values.state}
-                                    setValue={(value) => {
-                                        setFieldValue("state", value);
-                                        setFieldValue("district", ""); // Reset district when state changes
-                                        getDistrictList(value);
-                                    }}
-                                    containerStyle={styles.dropdown}
-                                    noIcon={true}
-                                    searchOn={true}
-                                  
-                                />
-                            )}
-                            {touched.state &&
-                                typeof errors.state === "string" && (
+                                {touched.city &&
+                                    typeof errors.city === "string" && (
+                                        <Text style={styles.error}>
+                                            {errors.city}
+                                        </Text>
+                                    )}
+                                {initialValues.cityError && (
                                     <Text style={styles.error}>
-                                        {errors.state}
+                                        Please correct it as per remarks
                                     </Text>
                                 )}
+                            </View>
                         </View>
 
-                        <View style={styles.fieldContainer}>
-                            <Text style={styles.label}>City</Text>
-                            <TextInput
-                                style={styles.input}
-                                onChangeText={handleChange("city")}
-                                onBlur={handleBlur("city")}
-                                value={values.city}
-                            />
-                            {touched.city &&
-                                typeof errors.city === "string" && (
-                                    <Text style={styles.error}>
-                                        {errors.city}
-                                    </Text>
+                        <View style={styles.formRow}>
+                            <View style={styles.fieldContainer}>
+                                <Text style={styles.label}>District</Text>
+                                {isLoadingDistrict ? (
+                                    <ActivityIndicator
+                                        size="large"
+                                        color="#0000ff"
+                                    />
+                                ) : (
+                                    <DropdownComponent
+                                        label="District"
+                                        data={districtOptions}
+                                        value={values.district}
+                                        setValue={(value) =>
+                                            setFieldValue("district", value)
+                                        }
+                                        containerStyle={styles.dropdown}
+                                        noIcon={true}
+                                        searchOn={true}
+                                    />
                                 )}
-                        </View>
-                    </View>
-
-                    <View style={styles.formRow}>
-                        <View style={styles.fieldContainer}>
-                            <Text style={styles.label}>District</Text>
-                            {isLoadingDistrict ? (
-                                <ActivityIndicator
-                                    size="large"
-                                    color="#0000ff"
+                                {touched.district &&
+                                    typeof errors.district === "string" && (
+                                        <Text style={styles.error}>
+                                            {errors.district}
+                                        </Text>
+                                    )}
+                            </View>
+                            <View style={styles.fieldContainer}>
+                                <Text style={styles.label}>Enter Pincode</Text>
+                                <TextInput
+                                    style={styles.input}
+                                    onChangeText={handleChange("pincode")}
+                                    onBlur={handleBlur("pincode")}
+                                    value={values.pincode}
+                                    keyboardType="numeric"
                                 />
-                            ) : (
-                                <DropdownComponent
-                                    label="District"
-                                    data={districtOptions}
-                                    value={values.district}
-                                    setValue={(value) =>
-                                        setFieldValue("district", value)
-                                    }
-                                    containerStyle={styles.dropdown}
-                                    noIcon={true}
-                                    searchOn={true}
-                                />
-                            )}
-                            {touched.district &&
-                                typeof errors.district === "string" && (
+                                {touched.pincode &&
+                                    typeof errors.pincode === "string" && (
+                                        <Text style={styles.error}>
+                                            {errors.pincode}
+                                        </Text>
+                                    )}
+                                {initialValues.pinCodeError && (
                                     <Text style={styles.error}>
-                                        {errors.district}
+                                        Please correct it as per remarks
                                     </Text>
                                 )}
+                            </View>
                         </View>
-                        <View style={styles.fieldContainer}>
-                            <Text style={styles.label}>Enter Pincode</Text>
-                            <TextInput
-                                style={styles.input}
-                                onChangeText={handleChange("pincode")}
-                                onBlur={handleBlur("pincode")}
-                                value={values.pincode}
-                                keyboardType="numeric"
-                            />
-                            {touched.pincode &&
-                                typeof errors.pincode === "string" && (
-                                    <Text style={styles.error}>
-                                        {errors.pincode}
-                                    </Text>
-                                )}
-                        </View>
-                    </View>
-                    <View className="flex flex-row justify-center gap-2">
-                        <View className="w-3/12">
-                            <Pressable
-                                style={({ pressed }) => [
-                                    styles.back,
-                                    {
-                                        borderColor: "#0066cc",
-                                        opacity: pressed ? 0.6 : 1,
-                                    },
-                                ]}
-                                onPress={onPrevious}
-                            >
-                                <Text
-                                    style={[
-                                        styles.buttonText,
-                                        { color: "#0066cc" },
+                        <View className="flex flex-row justify-center gap-2">
+                            <View className="w-3/12">
+                                <Pressable
+                                    style={({ pressed }) => [
+                                        styles.back,
+                                        {
+                                            borderColor: "#0066cc",
+                                            opacity: pressed ? 0.6 : 1,
+                                        },
                                     ]}
+                                    onPress={onPrevious}
                                 >
-                                    {"Back"}
-                                </Text>
-                            </Pressable>
-                        </View>
-                        <View className="w-3/12">
-                            <Pressable
-                                style={({ pressed }) => [
-                                    styles.proceed,
-                                    {
-                                        borderColor: "#0066cc",
-                                        opacity: pressed ? 0.6 : 1,
-                                    },
-                                ]}
-                                onPress={() => handleSubmit()}
-                            >
-                                <Text
-                                    style={[
-                                        styles.buttonText,
-                                        { color: "#ffffff" },
+                                    <Text
+                                        style={[
+                                            styles.buttonText,
+                                            { color: "#0066cc" },
+                                        ]}
+                                    >
+                                        {"Back"}
+                                    </Text>
+                                </Pressable>
+                            </View>
+                            <View className="w-3/12">
+                                <Pressable
+                                    style={({ pressed }) => [
+                                        styles.proceed,
+                                        {
+                                            borderColor: "#0066cc",
+                                            opacity: pressed ? 0.6 : 1,
+                                        },
                                     ]}
+                                    onPress={() => handleSubmit()}
                                 >
-                                    {"Proceed"}
-                                </Text>
-                            </Pressable>        
+                                    <Text
+                                        style={[
+                                            styles.buttonText,
+                                            { color: "#ffffff" },
+                                        ]}
+                                    >
+                                        {"Proceed"}
+                                    </Text>
+                                </Pressable>
+                            </View>
                         </View>
-                    </View>
-                </ScrollView>
-            )}
+                    </ScrollView>
+                );
+            }}
         </Formik>
     );
 };

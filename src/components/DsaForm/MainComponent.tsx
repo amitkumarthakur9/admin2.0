@@ -5,6 +5,7 @@ import {
     StyleSheet,
     TouchableOpacity,
     Pressable,
+    Button,
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import DigioFlowComponent from "./DigioFlowComponent";
@@ -20,19 +21,24 @@ import ProfessionalDetailsForm from "./ProfessionalDetailsForm";
 import ProceedSign from "./ProceedSign";
 import { ActivityIndicator } from "react-native-paper";
 import { getResponse } from "src/helper/helper";
+import { UserMeData } from "src/interfaces/DsaFormApproveInterface";
+import StepProgressBar from "../AddManagementUser/StepProgressBar";
 
 const MainComponent = () => {
     const [isLoading, setIsLoading] = useState(false);
-    const [step, setStep] = useState(null);
+    const [step, setStep] = useState(0);
     const [showTooltip, setShowTooltip] = useState(false);
+    const [formDataSet, setFormDataSet] = useState(false);
     const [formData, setFormData] = useState({
-        fullName: null,
+        fullName: "",
         email: "",
         mobileNumber: "",
         panNumber: "",
         pincode: "",
         country: "",
-        arn: "",
+        arnNumber: "",
+        euinNumber: "",
+        isArnHolder: false,
         maritalStatus: null,
         incomeRange: null,
         education: null,
@@ -41,19 +47,42 @@ const MainComponent = () => {
         addressLine2: "",
         addressLine3: "",
         city: "",
-        state: "",
+        state: 0,
         accountNumber: "",
         accountType: "",
         ifscCode: "",
         bankName: "",
         bankAddress: "",
         district: "",
-        remark: null,
+        remark: "",
+        isOnBoarded: false,
         dsaCode: null,
+        nameError: false,
+        emailError: false,
+        mobileNumberError: false,
+        arnNumberError: false,
+        euinNumberError: false,
+        addressLineError: false,
+        countryError: false,
+        stateError: false,
+        cityError: false,
+        pinCodeError: false,
+        panError: false,
+        esignedDocumentError: false,
+        aadharFrontDocumentError: false,
+        aadharBackDocumentError: false,
+        panCardDocumentError: false,
+        cancelledChequeError: false,
+        areDocumentsUploaded: false,
+        isEsigned: false,
     });
     const [isResubmit, setIsResubmit] = useState(false);
 
     const [dsaData, setDsaData] = useState(null);
+    const formSteps = [];
+
+    const stepLabel = [];
+    let initalStep = 1;
 
     const handleNext = (values) => {
         setFormData({ ...formData, ...values });
@@ -77,7 +106,7 @@ const MainComponent = () => {
                 "/onboard/distributor",
                 finalData
             );
-            console.log(response);
+            // console.log(response);
             // Handle successful submission
         } catch (error) {
             console.error(error);
@@ -85,121 +114,70 @@ const MainComponent = () => {
         }
     };
 
-    const handleResubmit = () =>{
+    const handleResubmit = () => {
         setIsResubmit(true);
         setStep(1);
-    }
+    };
 
     async function getUserDetail() {
         setIsLoading(true);
         try {
-            // const response: any = await RemoteApi.get("user/me");
+            // const response: UserMeData = await RemoteApi.get("user/me");
             // const response = await getResponse(200);
 
             const response = {
                 code: 200,
                 message: "Success",
                 data: {
-                    name: "Saffiulla Muhammad",
-                    email: "saffiulla@fundexpertfintech.com",
+                    name: "Senior Manager",
+                    email: "sm@gmail.com",
                     mobileNumber: "9778686786",
                     maritalStatus: {
-                        id:1,
-                        name: "single"
+                        id: 1,
+                        name: "Single",
                     },
-                    panNumber: "AAAPZ1234C",
-                    arn: "ARN-ARN123456",
-                    euin: "E123456",
+                    panNumber: "ABCDE1234G",
+                    arn: "12345",
+                    euin: "12345",
                     dsaCode: null,
-                    remark: [
-                        { id: 30, remark: null },
-                        { id: 31, remark: null },
-                        { id: 34, remark: null },
-                        { id: 35, remark: null },
-                        { id: 36, remark: null },
-                        { id: 37, remark: null },
-                        { id: 38, remark: null },
-                        { id: 39, remark: null },
-                        { id: 40, remark: null },
-                        { id: 41, remark: null },
-                        { id: 42, remark: null },
-                        { id: 43, remark: null },
-                        { id: 44, remark: null },
-                        { id: 45, remark: null },
-                        { id: 46, remark: null },
-                        { id: 47, remark: null },
-                        { id: 48, remark: null },
-                        { id: 49, remark: null },
-                        { id: 50, remark: null },
-                        { id: 51, remark: null },
-                        { id: 52, remark: null },
-                        { id: 53, remark: null },
-                        { id: 54, remark: null },
-                        { id: 55, remark: null },
-                        { id: 56, remark: null },
-                        { id: 57, remark: null },
-                        { id: 58, remark: null },
-                        { id: 59, remark: null },
-                        { id: 60, remark: null },
-                        { id: 61, remark: null },
-                        { id: 62, remark: null },
-                        { id: 63, remark: null },
-                        { id: 64, remark: null },
-                        { id: 65, remark: null },
-                        { id: 66, remark: null },
-                        { id: 67, remark: null },
-                        { id: 68, remark: null },
-                        { id: 69, remark: null },
-                        { id: 70, remark: null },
-                        { id: 71, remark: null },
-                        { id: 72, remark: null },
-                        { id: 73, remark: null },
-                        { id: 74, remark: null },
-                        { id: 75, remark: "Change Aadhar" },
-                    ],
-                    incomeSlab: "null",
-                    isOnBoarded: false,
+                    remark: {
+                        id: 2,
+                        remark: "",
+                    },
+                    incomeSlab: {
+                        id: 0,
+                        name: null,
+                    },
+                    isOnBoarded: true,
                     isEsigned: false,
-                    areDocumentsUploaded: true,
-                    educationalQualification: "null",
+                    areDocumentsUploaded: false,
+                    educationalQualification: {
+                        id: null,
+                        name: null,
+                    },
                     bankAccount: [
-                        {
-                            id: "42",
-                            accountNumber: "4549938886",
-                            bankAccountType: {
-                                id: 1,
-                                name: "Savings Account",
-                            },
-                            bankBranch: {
-                                ifscCode: "KKBK0008066",
-                            },
-                            bank: {
-                                id: "107",
-                                name: "KOTAK MAHINDRA BANK LIMITED",
-                            },
-                        },
-                        {
-                            id: "43",
-                            accountNumber: "20278353143",
-                            bankAccountType: {
-                                id: 1,
-                                name: "Savings Account",
-                            },
-                            bankBranch: {
-                                ifscCode: "SBIN0007047",
-                            },
-                            bank: {
-                                id: "168",
-                                name: "STATE BANK OF INDIA",
-                            },
-                        },
+                        // {
+                        //     id: "42",
+                        //     accountNumber: "45499388",
+                        //     bankAccountType: {
+                        //         id: 1,
+                        //         name: "Savings Account",
+                        //     },
+                        //     bankBranch: {
+                        //         ifscCode: "KKBK0008066",
+                        //     },
+                        //     bank: {
+                        //         id: "107",
+                        //         name: "KOTAK MAHINDRA BANK LIMITED",
+                        //     },
+                        // },
                     ],
                     address: [
                         {
                             line1: "Bangalore",
                             line2: "Bangalore",
                             line3: null,
-                            pincode: "null",
+                            pincode: "560025",
                             district: {
                                 id: "224",
                                 name: "BENGALURU",
@@ -210,6 +188,22 @@ const MainComponent = () => {
                             },
                         },
                     ],
+                    nameError: false,
+                    emailError: false,
+                    mobileNumberError: false,
+                    arnNumberError: false,
+                    euinNumberError: false,
+                    addressLineError: false,
+                    countryError: false,
+                    stateError: false,
+                    cityError: false,
+                    pinCodeError: false,
+                    panError: false,
+                    esignedDocumentError: false,
+                    aadharFrontDocumentError: false,
+                    aadharBackDocumentError: false,
+                    panCardDocumentError: false,
+                    cancelledChequeError: false,
                 },
                 errors: [],
             };
@@ -217,6 +211,14 @@ const MainComponent = () => {
             if (response.code === 200) {
                 const userData = response.data;
                 const alreadySet = () => {
+                    console.log("setStated");
+
+                    if (userData.arn)
+                        setFormData((prevState) => ({
+                            ...prevState,
+                            isArnHolder: true,
+                        }));
+
                     setFormData((prevState) => ({
                         ...prevState,
                         fullName: userData?.name || prevState.fullName,
@@ -227,10 +229,12 @@ const MainComponent = () => {
                         pincode:
                             userData?.address?.[0]?.pincode ||
                             prevState.pincode,
-                        arn: userData?.arn || prevState.arn,
+                        arnNumber: userData?.arn || prevState.arnNumber,
+                        euinNumber: userData?.euin || prevState.euinNumber,
                         maritalStatus:
                             userData?.maritalStatus?.id ||
                             prevState.maritalStatus,
+
                         incomeRange:
                             userData?.incomeSlab?.id || prevState.incomeRange,
                         education:
@@ -249,7 +253,7 @@ const MainComponent = () => {
                             userData?.address?.[0]?.district?.name ||
                             prevState.city,
                         state:
-                            userData?.address?.[0]?.state?.name ||
+                            userData?.address?.[0]?.state?.id ||
                             prevState.state,
                         accountNumber:
                             userData?.bankAccount?.[0]?.accountNumber ||
@@ -264,67 +268,60 @@ const MainComponent = () => {
                             userData?.bankAccount?.[0]?.bank?.name ||
                             prevState.bankName,
                         district:
-                            userData?.address?.[0]?.district?.name ||
+                            userData?.address?.[0]?.district?.id ||
                             prevState.district,
                         dsaCode: userData?.dsaCode || prevState.dsaCode,
-                        remark:
-                            userData?.remark?.[length - 1]?.remark ||
-                            prevState.remark,
+                        remark: userData?.remark?.remark || prevState.remark,
+                        nameError: userData?.nameError || prevState.nameError,
+                        emailError:
+                            userData?.emailError || prevState.emailError,
+                        mobileNumberError:
+                            userData?.mobileNumberError ||
+                            prevState.mobileNumberError,
+                        arnNumberError:
+                            userData?.arnNumberError ||
+                            prevState.arnNumberError,
+                        euinNumberError:
+                            userData?.euinNumberError ||
+                            prevState.euinNumberError,
+                        addressLineError:
+                            userData?.addressLineError ||
+                            prevState.addressLineError,
+                        countryError:
+                            userData?.countryError || prevState.countryError,
+                        stateError:
+                            userData?.stateError || prevState.stateError,
+                        cityError: userData?.cityError || prevState.cityError,
+                        pinCodeError:
+                            userData?.pinCodeError || prevState.pinCodeError,
+                        panError: userData?.panError || prevState.panError,
+                        esignedDocumentError:
+                            userData?.esignedDocumentError ||
+                            prevState.esignedDocumentError,
+                        aadharFrontDocumentError:
+                            userData?.aadharFrontDocumentError ||
+                            prevState.aadharFrontDocumentError,
+                        aadharBackDocumentError:
+                            userData?.aadharBackDocumentError ||
+                            prevState.aadharBackDocumentError,
+                        panCardDocumentError:
+                            userData?.panCardDocumentError ||
+                            prevState.panCardDocumentError,
+                        cancelledChequeError:
+                            userData?.cancelledChequeError ||
+                            prevState.cancelledChequeError,
+                        isOnBoarded:
+                            userData?.isOnBoarded || prevState.isOnBoarded,
                     }));
                 };
 
                 alreadySet();
 
-                let initialStep = 1;
-                if (
-                    userData?.name &&
-                    userData?.email &&
-                    userData?.mobileNumber &&
-                    userData?.maritalStatus
-                ) {
-                    initialStep = 2;
-                }
-                if (
-                    userData?.name &&
-                    userData?.email &&
-                    userData?.mobileNumber &&
-                    userData?.address?.[0]?.state?.id &&
-                    userData?.address?.[0]?.district?.id &&
-                    userData?.address?.[0]?.pincode
-                ) {
-                    initialStep = 3;
-                }
-                if (
-                    userData?.name &&
-                    userData?.email &&
-                    userData?.mobileNumber &&
-                    userData?.address?.[0]?.state?.id &&
-                    userData?.address?.[0]?.district?.id &&
-                    userData?.address?.[0]?.pincode &&
-                    userData?.incomeSlab
-                ) {
-                    initialStep = 4;
-                }
-                if (
-                    userData?.bankAccount?.[0]?.accountNumber &&
-                    userData?.educationalQualification
-                ) {
-                    initialStep = 5;
-                }
-                if (userData?.isEsigned == true) {
-                    initialStep = 7;
-                }
-                if (userData?.areDocumentsUploaded == true) {
-                    initialStep = 8;
-                }
-                if (
-                    userData?.remark?.[userData.remark.length - 1]?.remark !=
-                    null
-                ) {
-                    initialStep = 9;
-                }
+                console.log("setEnd");
 
-                setStep(initialStep);
+                setFormDataSet(true);
+
+                // setStep(initialStep);
                 console.log(formData);
             } else {
                 alert("Failed to fetch user details");
@@ -340,13 +337,675 @@ const MainComponent = () => {
         getUserDetail();
     }, []);
 
-    // if (isLoading || step == 0) {
-    //     return (
-    //         <View>
-    //             <Text>Loading.....</Text>
-    //         </View>
-    //     );
-    // }
+    useEffect(() => {
+        if (formDataSet) {
+            console.log("useEffect");
+            console.log(formData);
+
+            renderCurrentStep();
+            // setStep(1);
+            setStep(initalStep);
+        }
+    }, [formDataSet]);
+
+    // Render the current step's content
+    const renderCurrentStep = () => {
+        const errorFlags = {
+            nameError: formData.nameError,
+            emailError: formData.emailError,
+            mobileNumberError: formData.mobileNumberError,
+            arnNumberError: formData.arnNumberError,
+            euinNumberError: formData.euinNumberError,
+            addressLineError: formData.addressLineError,
+            countryError: formData.countryError,
+            stateError: formData.stateError,
+            cityError: formData.cityError,
+            pinCodeError: formData.pinCodeError,
+            panError: formData.panError,
+            esignedDocumentError: formData.esignedDocumentError,
+            aadharFrontDocumentError: formData.aadharFrontDocumentError,
+            aadharBackDocumentError: formData.aadharBackDocumentError,
+            panCardDocumentError: formData.panCardDocumentError,
+            cancelledChequeError: formData.cancelledChequeError,
+        };
+
+        const hasNoError = Object.values(errorFlags).some((flag) => flag);
+
+        console.log(hasNoError); // Will print true if any error flag is true, otherwise false
+
+        if (formData.remark) {
+            stepLabel.push("Remarks");
+            formSteps.push({
+                key: "10",
+                content: (
+                    <>
+                        {/* <View style={styles.buttonContainer}>
+                            <Pressable
+                                style={styles.proceed}
+                                onPress={handleResubmit}
+                            >
+                                <Text style={styles.buttonText}>Resubmit</Text>
+                            </Pressable>
+                        </View> */}
+                        <View>
+                            <Text className="text-center color-black text-lg font-bold p-4">
+                                Remarks
+                            </Text>
+                            <Text className="text-center color-black text-lg font-bold p-4">
+                                {formData.remark}
+                            </Text>
+                        </View>
+                        <View className="flex flex-row justify-center gap-2">
+                            {/* <View className="w-3/12">
+                            <Pressable
+                                style={({ pressed }) => [
+                                    styles.back,
+                                    {
+                                        borderColor: "#0066cc",
+                                        opacity: pressed ? 0.6 : 1,
+                                    },
+                                ]}
+                                onPress={onPrevious}
+                            >
+                                <Text
+                                    style={[
+                                        styles.buttonText,
+                                        { color: "#0066cc" },
+                                    ]}
+                                >
+                                    {"Back"}
+                                </Text>
+                            </Pressable>
+                        </View> */}
+                            <View className="w-3/12">
+                                <Pressable
+                                    style={({ pressed }) => [
+                                        styles.proceed,
+                                        {
+                                            borderColor: "#0066cc",
+                                            opacity: pressed ? 0.6 : 1,
+                                        },
+                                    ]}
+                                    onPress={() => handleNext("")}
+                                >
+                                    <Text
+                                        style={[
+                                            styles.buttonText,
+                                            { color: "#ffffff" },
+                                        ]}
+                                    >
+                                        {"Proceed"}
+                                    </Text>
+                                </Pressable>
+                            </View>
+                        </View>
+                    </>
+                ),
+            });
+        }
+
+        // if (
+        //     !formData.remark ||
+        //     (
+        //     formData.remark && (
+        //     formData.esignedDocumentError === true ||
+        //     formData.aadharFrontDocumentError === true ||
+        //     formData.aadharBackDocumentError === true ||
+        //     formData.panCardDocumentError === true ||
+        //     formData.cancelledChequeError === true
+        // ))
+        // ) {
+        //     stepLabel.push("Upload Documents");
+        //     formSteps.push({
+        //         key: "7",
+        //         content: (
+        //             <View>
+        //                 {/* {step === 7 && ( */}
+        //                 <StepThreeUpload
+        //                     onSuccess={handleSuccess}
+        //                     initialValues={formData}
+        //                 />
+        //                 {/* )} */}
+        //             </View>
+        //         ),
+        //     });
+        // }
+
+        if (
+            !formData.remark ||
+            (formData.remark && formData.nameError) ||
+            formData.emailError ||
+            formData.mobileNumberError ||
+            formData.arnNumberError ||
+            formData.euinNumberError
+        ) {
+            stepLabel.push("Personal");
+            formSteps.push({
+                key: "1",
+                content: (
+                    <View>
+                        {/* {step === 1 && ( */}
+                        <PersonalDetailsForm
+                            onNext={handleNext}
+                            initialValues={formData}
+                            onPrevious={handlePrevious}
+                        />
+                        {/* )}  */}
+                    </View>
+                ),
+            });
+        }
+
+        // else if (formData.remark && hasNoError) {
+        //     stepLabel.push("Personal");
+        //     formSteps.push({
+        //         key: "1",
+        //         content: (
+        //             <View>
+        //                 {/* {step === 1 && ( */}
+        //                 <PersonalDetailsForm
+        //                     onNext={handleNext}
+        //                     initialValues={formData}
+        //                     onPrevious={handlePrevious}
+        //                 />
+        //                 {/* )}  */}
+        //             </View>
+        //         ),
+        //     });
+        // }
+
+        if (
+            !formData.remark ||
+            // !formData.addressLine1 ||
+            // !formData.addressLine2 ||
+            // !formData.addressLine3 ||
+            // !formData.city ||
+            // !formData.state ||
+            // !formData.district ||
+            (formData.remark && formData.addressLineError === true) ||
+            formData.countryError === true ||
+            formData.stateError === true ||
+            formData.cityError === true ||
+            formData.pinCodeError === true ||
+            formData.esignedDocumentError === true
+        ) {
+            stepLabel.push("Address");
+            formSteps.push({
+                key: "2",
+                content: (
+                    <View>
+                        {/* {step === 2 && ( */}
+                        <AddressDetailsForm
+                            onNext={handleNext}
+                            onPrevious={handlePrevious}
+                            initialValues={formData}
+                        />
+                        {/* )}  */}
+                    </View>
+                ),
+            });
+        }
+
+        // else if (formData.remark && hasNoError) {
+        //     stepLabel.push("Address");
+        //     formSteps.push({
+        //         key: "2",
+        //         content: (
+        //             <View>
+        //                 {/* {step === 2 && ( */}
+        //                 <AddressDetailsForm
+        //                     onNext={handleNext}
+        //                     onPrevious={handlePrevious}
+        //                     initialValues={formData}
+        //                 />
+        //                 {/* )}  */}
+        //             </View>
+        //         ),
+        //     });
+        // }
+
+        if (
+            !formData.remark ||
+            // !formData.incomeRange ||
+            // !formData.education ||
+            // !formData.occupation ||
+            (formData.remark && formData.panError === true) ||
+            formData.esignedDocumentError === true
+        ) {
+            stepLabel.push("Professional");
+            formSteps.push({
+                key: "3",
+                content: (
+                    <View>
+                        {/* {step === 3 && ( */}
+                        <ProfessionalDetailsForm
+                            onSubmit={handleSubmit}
+                            onNext={handleNext}
+                            onPrevious={handlePrevious}
+                            initialValues={formData}
+                        />
+                        {/* )} */}
+                    </View>
+                ),
+            });
+        }
+
+        // else if (formData.remark && hasNoError) {
+        //     stepLabel.push("Professional");
+        //     formSteps.push({
+        //         key: "3",
+        //         content: (
+        //             <View>
+        //                 {/* {step === 3 && ( */}
+        //                 <ProfessionalDetailsForm
+        //                     onSubmit={handleSubmit}
+        //                     onNext={handleNext}
+        //                     onPrevious={handlePrevious}
+        //                     initialValues={formData}
+        //                 />
+        //                 {/* )} */}
+        //             </View>
+        //         ),
+        //     });
+        // }
+
+        if (
+            !formData.remark ||
+            // !formData.accountNumber ||
+            // !formData.ifscCode ||
+            (formData.remark && formData.esignedDocumentError === true)
+        ) {
+            stepLabel.push("Bank");
+
+            formSteps.push({
+                key: "4",
+                content: (
+                    <View>
+                        {/* {step === 4 && ( */}
+                        <BankDetailForm
+                            onPrevious={handlePrevious}
+                            onNext={handleNext}
+                            initialValues={formData}
+                        />
+                        {/* )} */}
+                    </View>
+                ),
+            });
+        }
+
+        // else if (formData.remark && formData.esignedDocumentError === false) {
+        //     stepLabel.push("Bank");
+
+        //     formSteps.push({
+        //         key: "4",
+        //         content: (
+        //             <View>
+        //                 {/* {step === 4 && ( */}
+        //                 <BankDetailForm
+        //                     onPrevious={handlePrevious}
+        //                     onNext={handleNext}
+        //                     initialValues={formData}
+        //                 />
+        //                 {/* )} */}
+        //             </View>
+        //         ),
+        //     });
+        // }
+
+        if (
+            !formData.remark ||
+            (formData.remark && formData.esignedDocumentError === true)
+        ) {
+            stepLabel.push("Proceed E-sign");
+
+            formSteps.push({
+                key: "5",
+                content: (
+                    <View>
+                        {/* {step === 5 && ( */}
+                        <ProceedSign
+                            onPrevious={handlePrevious}
+                            onNext={handleNext}
+                        />
+                        {/* )} */}
+                    </View>
+                ),
+            });
+        }
+
+        // else if (formData.remark && hasNoError) {
+        //     stepLabel.push("Proceed E-sign");
+
+        //     formSteps.push({
+        //         key: "5",
+        //         content: (
+        //             <View>
+        //                 {/* {step === 5 && ( */}
+        //                 <ProceedSign
+        //                     onPrevious={handlePrevious}
+        //                     onNext={handleNext}
+        //                 />
+        //                 {/* )} */}
+        //             </View>
+        //         ),
+        //     });
+        // }
+
+        if (
+            !formData.remark ||
+            (formData.remark &&
+                (formData.esignedDocumentError === true ||
+                    formData.nameError === true ||
+                    formData.emailError === true ||
+                    formData.mobileNumberError === true ||
+                    formData.arnNumberError === true ||
+                    formData.euinNumberError === true ||
+                    formData.addressLineError === true ||
+                    formData.countryError === true ||
+                    formData.stateError === true ||
+                    formData.cityError === true ||
+                    formData.pinCodeError === true ||
+                    formData.panError === true))
+        ) {
+            stepLabel.push("E-sign Document");
+            formSteps.push({
+                key: "6",
+                content: (
+                    <View>
+                        {/* {step === 6 &&  */}
+                        <DigioFlowComponent onNext={handleNext} />
+                        {/* } */}
+                    </View>
+                ),
+            });
+        }
+
+        // else if (formData.remark && hasNoError) {
+        //     stepLabel.push("E-sign Document");
+        //     formSteps.push({
+        //         key: "6",
+        //         content: (
+        //             <View>
+        //                 {/* {step === 6 &&  */}
+        //                 <DigioFlowComponent onNext={handleNext} />
+        //                 {/* } */}
+        //             </View>
+        //         ),
+        //     });
+        // }
+
+        if (
+            !formData.remark ||
+            (formData.remark && formData.aadharFrontDocumentError === true) ||
+            formData.aadharBackDocumentError === true ||
+            formData.panCardDocumentError === true ||
+            formData.cancelledChequeError === true
+        ) {
+            stepLabel.push("Upload Documents");
+            formSteps.push({
+                key: "7",
+                content: (
+                    <View>
+                        {/* {step === 7 && ( */}
+                        <StepThreeUpload
+                            onSuccess={handleSuccess}
+                            initialValues={formData}
+                        />
+                        {/* )} */}
+                    </View>
+                ),
+            });
+        }
+
+        // else if (formData.remark && hasNoError) {
+        //     stepLabel.push("Upload Documents");
+        //     formSteps.push({
+        //         key: "7",
+        //         content: (
+        //             <View>
+        //                 {/* {step === 7 && ( */}
+        //                 <StepThreeUpload
+        //                     onSuccess={handleSuccess}
+        //                     initialValues={formData}
+        //                 />
+        //                 {/* )} */}
+        //             </View>
+        //         ),
+        //     });
+        // }
+
+        if (!formData.remark || formData.remark) {
+            stepLabel.push("Submit");
+            formSteps.push({
+                key: "8",
+                content: (
+                    <View>
+                        {/* {step === 8 && ( */}
+                        <Success
+                            successMessages={[
+                                "Application successfully submitted.",
+                                "Approval Pending.",
+                            ]}
+                        />
+                        {/* )} */}
+                    </View>
+                ),
+            });
+        }
+
+        if (formData.dsaCode != null) {
+            formSteps.push({
+                key: "9",
+                content: (
+                    <Success
+                        successMessages={[
+                            "Your DSE Code is",
+                            `${formData.dsaCode}`,
+                        ]}
+                    />
+                ),
+            });
+        }
+
+        // let currentStep = formSteps[step - 1];
+        console.log("steps");
+        console.log(step);
+
+        if (formSteps.length > 0 && !formData.remark) {
+            if (
+                formData?.fullName &&
+                formData?.email &&
+                formData?.mobileNumber &&
+                formData?.maritalStatus
+            ) {
+                initalStep = 2;
+            }
+            if (
+                formData?.fullName &&
+                formData?.email &&
+                formData?.mobileNumber &&
+                formData?.addressLine1 &&
+                formData?.state &&
+                formData?.pincode
+            ) {
+                console.log(step);
+                initalStep = 3;
+            }
+            if (
+                formData?.fullName &&
+                formData?.email &&
+                formData?.mobileNumber &&
+                formData?.addressLine1 &&
+                formData?.state &&
+                formData?.pincode &&
+                formData?.incomeRange
+            ) {
+                initalStep = 4;
+            }
+            if (formData?.accountNumber && formData?.education) {
+                initalStep = 5;
+            }
+            if (formData?.isEsigned == true) {
+                initalStep = 6;
+            }
+            if (formData?.areDocumentsUploaded == true) {
+                initalStep = 7;
+            }
+        }
+
+        const currentStep = formSteps[step - 1];
+        if (!currentStep) return null;
+
+        console.log("uireturn");
+        console.table(formSteps);
+        return (
+            <View>
+                {currentStep.content}
+                <View
+                    style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        marginTop: 20,
+                    }}
+                >
+                    {/* {step > 1 && (
+                        <Button title="Back" onPress={handlePrevious} />
+                    )}
+                    {step < formSteps.length && (
+                        <Button title="Next" onPress={() => handleNext({})} />
+                    )}
+                    {step === formSteps.length && (
+                        <Button title="Submit" onPress={handleSubmit} />
+                    )} */}
+                </View>
+            </View>
+        );
+    };
+
+    // const formStepComponent =  renderCurrentStep();
+    console.log("Steps");
+    console.log(step);
+
+    // const components = [
+    //     {
+    //         key: "1",
+    //         content: (
+    //             <View>
+    //                 {step === 1 && (
+    //                     <PersonalDetailsForm
+    //                         onNext={handleNext}
+    //                         initialValues={formData}
+    //                     />
+    //                 )}
+    //             </View>
+    //         ),
+    //     },
+    //     {
+    //         key: "2",
+    //         content: (
+    //             <View>
+    //                 {step === 2 && (
+    //                     <AddressDetailsForm
+    //                         onNext={handleNext}
+    //                         onPrevious={handlePrevious}
+    //                         initialValues={formData}
+    //                     />
+    //                 )}
+    //             </View>
+    //         ),
+    //     },
+    //     {
+    //         key: "3",
+    //         content: (
+    //             <View>
+    //                 {step === 3 && (
+    //                     <ProfessionalDetailsForm
+    //                         onSubmit={handleSubmit}
+    //                         onNext={handleNext}
+    //                         onPrevious={handlePrevious}
+    //                         initialValues={formData}
+    //                     />
+    //                 )}
+    //             </View>
+    //         ),
+    //     },
+    //     {
+    //         key: "4",
+    //         content: (
+    //             <View>
+    //                 {step === 4 && (
+    //                     <BankDetailForm
+    //                         onPrevious={handlePrevious}
+    //                         onNext={handleNext}
+    //                         initialValues={formData}
+    //                     />
+    //                 )}
+    //             </View>
+    //         ),
+    //     },
+    //     {
+    //         key: "5",
+    //         content: (
+    //             <View>
+    //                 {step === 5 && (
+    //                     <ProceedSign
+    //                         onPrevious={handlePrevious}
+    //                         onNext={handleNext}
+    //                     />
+    //                 )}
+    //             </View>
+    //         ),
+    //     },
+    //     {
+    //         key: "6",
+    //         content: (
+    //             <View>
+    //                 {step === 6 && <DigioFlowComponent onNext={handleNext} />}
+    //             </View>
+    //         ),
+    //     },
+    //     {
+    //         key: "7",
+    //         content: (
+    //             <View>
+    //                 {step === 7 && (
+    //                     <StepThreeUpload onSuccess={handleSuccess} />
+    //                 )}
+    //             </View>
+    //         ),
+    //     },
+    //     {
+    //         key: "8",
+    //         content: (
+    //             <View>
+    //                 {step === 8 && (
+    //                     <Success
+    //                         successMessages={[
+    //                             "Application successfully submitted.",
+    //                             "Approval Pending.",
+    //                         ]}
+    //                     />
+    //                 )}
+    //             </View>
+    //         ),
+    //     },
+    //     // {
+    //     //     key: "clientName",
+    //     //     content: (
+    //     //         <View>
+    //     //              {step === 9 &&
+    //     //                         (formData.dsaCode != null ? (
+    //     //                             <Success
+    //     //                                 successMessages={[
+    //     //                                     "Your DSE Code is",
+    //     //                                     `${formData.dsaCode}`,
+    //     //                                 ]}
+    //     //                             />
+    //     //                         )}
+    //     //         </View>
+    //     //     ),
+    //     // },
+    // ];
 
     return (
         <View style={styles.container}>
@@ -398,7 +1057,9 @@ const MainComponent = () => {
                             </Text>
                         </View>
                     )}
-                    <View style={styles.steps}>
+
+                    <StepProgressBar step={step} stepLabel={stepLabel} />
+                    {/* <View style={styles.steps}>
                         {[
                             "Personal Details",
                             "Address",
@@ -478,13 +1139,24 @@ const MainComponent = () => {
                                 </View>
                             </React.Fragment>
                         ))}
-                    </View>
+                    </View> */}
                 </View>
                 {isLoading || step == 0 ? (
                     <ActivityIndicator />
                 ) : (
                     <>
-                        <View style={{ flex: 1, padding: 20 }}>
+                        {/* <View style={{ flex: 1, padding: 20 }}>
+                            {formSteps.map((formStep, index) => (
+                                <View key={formStep.key}>
+                                    {step === index + 1 && formStep.content}
+                                </View>
+                            ))}
+                        </View> */}
+
+                        {renderCurrentStep()}
+
+                        {/* <View style={{ flex: 1, padding: 20 }}>
+                 
                             {step === 1 && (
                                 <PersonalDetailsForm
                                     onNext={handleNext}
@@ -544,35 +1216,27 @@ const MainComponent = () => {
                                     />
                                 ) : (
                                     <>
-                                    <View
-                                                style={styles.buttonContainer}
+                                        <View style={styles.buttonContainer}>
+                                            <Pressable
+                                                style={styles.proceed}
+                                                onPress={handleResubmit}
                                             >
-                                                <Pressable
-                                                    style={styles.proceed}
-                                                    onPress={
-                                                        handleResubmit
-                                                    }
-                                                >
-                                                    <Text
-                                                        style={
-                                                            styles.buttonText
-                                                        }
-                                                    >
-                                                        Resubmit
-                                                    </Text>
-                                                </Pressable>
-                                            </View>
-                                    <View>
-                                        <Text className="text-center color-black text-lg font-bold p-4">
-                                            Remarks
-                                        </Text>
-                                        <Text className="text-center color-black text-lg font-bold p-4">
-                                            {formData.remark}
-                                        </Text>
-                                    </View>
+                                                <Text style={styles.buttonText}>
+                                                    Resubmit
+                                                </Text>
+                                            </Pressable>
+                                        </View>
+                                        <View>
+                                            <Text className="text-center color-black text-lg font-bold p-4">
+                                                Remarks
+                                            </Text>
+                                            <Text className="text-center color-black text-lg font-bold p-4">
+                                                {formData.remark}
+                                            </Text>
+                                        </View>
                                     </>
                                 ))}
-                        </View>
+                        </View> */}
                     </>
                 )}
             </View>

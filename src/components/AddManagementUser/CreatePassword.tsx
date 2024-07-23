@@ -1,75 +1,63 @@
-import React from "react";
+import React, { useState } from "react";
 import {
     View,
     Text,
     TextInput,
-    Button,
     StyleSheet,
     ScrollView,
     Pressable,
     ActivityIndicator,
     Alert,
+    TouchableOpacity,
 } from "react-native";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import DropdownComponent from "../Dropdowns/NewDropDown";
 import RemoteApi from "src/services/RemoteApi";
-
-const panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]$/;
+import { Ionicons } from "@expo/vector-icons";
 
 const validationSchema = Yup.object().shape({
-    // panNumber: Yup.string().required("PAN is required"),
-    panNumber: Yup.string()
-        .required("PAN number is required")
-        .matches(panRegex, "Please enter a valid PAN number. Ex: AAAPZ1234C"),
-
-    // country: Yup.string().required("Country is required"),
-    // arn: Yup.string().required("ARN is required"),
-    incomeRange: Yup.number().required("Income range is required"),
-    education: Yup.number().required("Education is required"),
-    occupation: Yup.number().required("Occupation is required"),
+    password: Yup.string()
+        .required("Password is required")
+        .min(8, "Password must be at least 8 characters")
+        .max(16, "Password must be at most 16 characters")
+        .matches(/[a-zA-Z]/, "Password must contain at least one letter")
+        .matches(/\d/, "Password must contain at least one number")
+        .matches(/[!@#$%^&*(),.?":{}|<>]/, "Password must contain at least one special character"),
+    passwordConfirm: Yup.string()
+        .oneOf([Yup.ref('password'), null], 'Passwords must match')
+        .required("Confirm Password is required"),
+    assignedRole: Yup.number().required("Role Assign is required"),
 });
 
-// const incomeRangeOptions = [
-//   { label: "0-10 Lacs", value: "0-10 Lacs" },
-//   { label: "10-15 Lacs", value: "10-15 Lacs" },
-//   { label: "15+ Lacs", value: "15+ Lacs" },
-// ];
+const dummyRolesOptions = [
+    { label: "RelationShip Manager", value: "1" },
+    { label: "Operation Manager", value: "2" },
+    { label: "Senior Manager", value: "3" },
+];
 
-// const educationOptions = [
-//     { label: "10th", value: "10th" },
-//     { label: "Graduation", value: "Graduation" },
-//     { label: "Post Graduation", value: "Post Graduation" },
-// ];
-
-// const occupationOptions = [
-//   { label: "Service", value: "Service" },
-//   { label: "Business", value: "Business" },
-// ];
-
-const ProfessionalDetailsForm = ({
-    onNext,
-    onSubmit,
-    onPrevious,
-    initialValues,
-}) => {
-    const [isLoading, setIsLoading] = React.useState(false);
-
-
+const CreatePassword = ({ onNext, onPrevious, initialValues }) => {
+    const [isLoading, setIsLoading] = useState(false);
+    const [rolesOptions, setRolesOptions] = useState(dummyRolesOptions);
+    const [showPassword, setShowPassword] = useState(false);
+    const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
 
     const handleSubmit = async (values) => {
         const data = {
-            panNumber: values.panNumber,
-            incomeSlabId: values.incomeRange,
-            educationId: values.education,
-            occupationId: values.occupation,
+            name: values.fullName,
+            employeeId: values.employeeCode,
+            email: values.email,
+            mobileNumber: values.mobileNumber,
+            password: values.password,
+            // passwordConfirm: values.passwordConfirm,
+            roleId: values.assignedRole,
         };
 
         console.log(data);
 
         try {
-            const response: any = await RemoteApi.post(
-                "user/update-professional-details",
+            const response = await RemoteApi.post(
+                "onboard/rm",
                 data
             );
             // const response = {
@@ -104,7 +92,6 @@ const ProfessionalDetailsForm = ({
         <Formik
             initialValues={initialValues}
             validationSchema={validationSchema}
-            // onSubmit={(values) => onSubmit(values)}
             onSubmit={handleSubmit}
         >
             {({
@@ -115,44 +102,69 @@ const ProfessionalDetailsForm = ({
                 errors,
                 touched,
                 setFieldValue,
+                isValid,
             }) => (
                 <ScrollView contentContainerStyle={styles.container}>
                     <View style={styles.formRow}>
                         <View style={styles.fieldContainer}>
-                            <Text style={styles.label}>Enter PAN</Text>
-                            <TextInput
-                                style={styles.input}
-                                onChangeText={handleChange("panNumber")}
-                                onBlur={handleBlur("panNumber")}
-                                value={values.panNumber}
-                            />
-                            {touched.panNumber &&
-                                errors.panNumber &&
-                                typeof errors.panNumber === "string" && (
+                            <Text style={styles.label}>Enter Password</Text>
+                            <View style={styles.inputWrapper}>
+                                <TextInput
+                                    style={styles.input}
+                                    onChangeText={handleChange("password")}
+                                    onBlur={handleBlur("password")}
+                                    value={values.password}
+                                    secureTextEntry={!showPassword}
+                                />
+                                <TouchableOpacity
+                                    onPress={() => setShowPassword(!showPassword)}
+                                    className="pl-2"
+                                >
+                                    <Ionicons
+                                        name={showPassword ? "eye-off" : "eye"}
+                                        size={24}
+                                        color="gray"
+                                    />
+                                </TouchableOpacity>
+                            </View>
+                            {touched.password &&
+                                errors.password &&
+                                typeof errors.password === "string" && (
                                     <Text style={styles.error}>
-                                        {errors.panNumber}
+                                        {errors.password}
                                     </Text>
                                 )}
+                            <Text style={styles.helperText}>
+                                Password must be 8-16 characters long, include letters, numbers, and at least one special character.
+                            </Text>
                         </View>
 
                         <View style={styles.fieldContainer}>
-                            <Text style={styles.label}>Income Range</Text>
-                            <DropdownComponent
-                                label="Income Range"
-                                data={incomeRangeOptions}
-                                value={values.incomeRange}
-                                // setValue={handleChange("incomeRange")}
-                                containerStyle={styles.dropdown}
-                                noIcon={true}
-                                setValue={(value) =>
-                                    setFieldValue("incomeRange", value)
-                                }
-                            />
-                            {touched.incomeRange &&
-                                errors.incomeRange &&
-                                typeof errors.incomeRange === "string" && (
+                            <Text style={styles.label}>Confirm Password</Text>
+                            <View style={styles.inputWrapper}>
+                                <TextInput
+                                    style={styles.input}
+                                    onChangeText={handleChange("passwordConfirm")}
+                                    onBlur={handleBlur("passwordConfirm")}
+                                    value={values.passwordConfirm}
+                                    secureTextEntry={!showPasswordConfirm}
+                                />
+                                <TouchableOpacity
+                                 className="pl-2"
+                                    onPress={() => setShowPasswordConfirm(!showPasswordConfirm)}
+                                >
+                                    <Ionicons
+                                        name={showPasswordConfirm ? "eye-off" : "eye"}
+                                        size={24}
+                                        color="gray"
+                                    />
+                                </TouchableOpacity>
+                            </View>
+                            {touched.passwordConfirm &&
+                                errors.passwordConfirm &&
+                                typeof errors.passwordConfirm === "string" && (
                                     <Text style={styles.error}>
-                                        {errors.incomeRange}
+                                        {errors.passwordConfirm}
                                     </Text>
                                 )}
                         </View>
@@ -160,47 +172,26 @@ const ProfessionalDetailsForm = ({
 
                     <View style={styles.formRow}>
                         <View style={styles.fieldContainer}>
-                            <Text style={styles.label}>Enter Education</Text>
+                            <Text style={styles.label}>Assign Role</Text>
                             <DropdownComponent
-                                label="Education"
-                                data={educationOptions}
-                                value={values.education}
+                                label="select role"
+                                data={rolesOptions}
+                                value={values.assignedRole}
                                 setValue={(value) =>
-                                    setFieldValue("education", value)
+                                    setFieldValue("assignedRole", value)
                                 }
                                 containerStyle={styles.dropdown}
                                 noIcon={true}
                             />
-                            {touched.education &&
-                                errors.education &&
-                                typeof errors.education === "number" && (
+                            {touched.assignedRole &&
+                                errors.assignedRole &&
+                                typeof errors.assignedRole === "string" && (
                                     <Text style={styles.error}>
-                                        {errors.education}
+                                        {errors.assignedRole}
                                     </Text>
                                 )}
                         </View>
-
-                        <View style={styles.fieldContainer}>
-                            <Text style={styles.label}>Enter Occupation</Text>
-                            <DropdownComponent
-                                label="Occupation"
-                                data={occupationOptions}
-                                value={values.occupation}
-                                // setValue={handleChange("occupation")}
-                                containerStyle={styles.dropdown}
-                                noIcon={true}
-                                setValue={(value) =>
-                                    setFieldValue("occupation", value)
-                                }
-                            />
-                            {touched.occupation &&
-                                errors.occupation &&
-                                typeof errors.occupation === "string" && (
-                                    <Text style={styles.error}>
-                                        {errors.occupation}
-                                    </Text>
-                                )}
-                        </View>
+                        <View style={styles.fieldContainer}></View>
                     </View>
 
                     <View className="flex flex-row justify-center gap-2">
@@ -242,7 +233,7 @@ const ProfessionalDetailsForm = ({
                                         { color: "#ffffff" },
                                     ]}
                                 >
-                                    {"Proceed"}
+                                    {"Submit"}
                                 </Text>
                             </Pressable>
                         </View>
@@ -274,11 +265,21 @@ const styles = StyleSheet.create({
         color: "#333",
     },
     input: {
+        flex: 1,
         borderWidth: 1,
         borderColor: "#ccc",
         padding: 10,
         borderRadius: 5,
         backgroundColor: "#fff",
+    },
+    inputWrapper: {
+        flexDirection: "row",
+        alignItems: "center",
+        borderWidth: 1,
+        borderColor: "#ccc",
+        borderRadius: 5,
+        backgroundColor: "#fff",
+        paddingRight: 10,
     },
     dropdown: {
         borderWidth: 1,
@@ -289,6 +290,11 @@ const styles = StyleSheet.create({
     error: {
         fontSize: 12,
         color: "red",
+        marginTop: 5,
+    },
+    helperText: {
+        fontSize: 12,
+        color: "#666",
         marginTop: 5,
     },
     back: {
@@ -309,6 +315,10 @@ const styles = StyleSheet.create({
     buttonText: {
         fontSize: 16,
     },
+    buttonRow: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+    },
 });
 
-export default ProfessionalDetailsForm;
+export default CreatePassword;

@@ -6,6 +6,7 @@ import {
     ViewStyle,
     Text,
     TouchableOpacity,
+    Alert,
 } from "react-native";
 import { TableBreadCrumb } from "../../../../src/components/BreadCrumbs/TableBreadCrumb";
 import {
@@ -29,14 +30,45 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import RemoteApi from "../../../../src/services/RemoteApi";
 import { ToastAlert } from "../../../../src/helper/CustomToaster";
 import { v4 as uuidv4 } from "uuid";
+import { dateTimeFormat } from "src/helper/DateUtils";
 
-export default function sipCancelUpload() {
+export default function SipCancelUpload() {
     const [rta, setRta] = useState("");
     const [pickedDocument, setPickedDocument] = useState<any>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [isSyncing, setIsSyncing] = useState(false);
     const toast = useToast();
     const [toasts, setToasts] = useState([]);
+    const [lastUpdate, setLastUpdate] = useState({
+        cxl: "",
+        autoCxl: "",
+    });
+
+    async function getlastUpdate() {
+        try {
+            const response: CancelSIP = await RemoteApi.get(
+                "file/last-updated-at"
+            );
+            if (response.code === 200) {
+                setLastUpdate({
+                    ...lastUpdate,
+                    cxl: response.data?.cxlLastUpdatedAt,
+                    autoCxl: response.data?.autoCxlLastUpdatedAt,
+                });
+            } else {
+                Alert.alert("Error", "Failed to fetch marital status list");
+            }
+        } catch (error) {
+            Alert.alert(
+                "Error",
+                "An error occurred while fetching the marital status list"
+            );
+        }
+    }
+
+    useEffect(() => {
+        getlastUpdate();
+    }, []);
 
     useEffect(() => {
         // Clear existing toasts
@@ -71,7 +103,7 @@ export default function sipCancelUpload() {
     const pickDocument = async () => {
         if (pickedDocument == null) {
             let result: any = await DocumentPicker.getDocumentAsync({
-                type: [".dbf", ".csv"],
+                type: [".xlsx"],
                 copyToCacheDirectory: true,
             });
             // console.log('selected file', result);
@@ -93,20 +125,35 @@ export default function sipCancelUpload() {
             setPickedDocument(null);
         }
     };
-
+    // console.log(rta);
     const uploadDocument = async () => {
         setIsLoading(true);
         let formData = new FormData();
-        formData.append("rta", rta);
+        // formData.append("rta", rta);
         formData.append("file", pickedDocument);
 
         try {
-            const response: any = await RemoteApi.postWithFormData(
-                "/file/upload-transaction",
-                formData
-            );
+            console.log(rta);
+            let response: SIPCancelUpload = {
+                code: 0,
+                message: "",
+                errors: [],
+                data: "",
+            };
 
-            if (response?.message == "Success") {
+            if (rta === "CXL") {
+                response = await RemoteApi.postWithFormData(
+                    "file/upload-cxl-file",
+                    formData
+                );
+            } else if (rta === "AutoCXL") {
+                response = await RemoteApi.postWithFormData(
+                    "file/upload-auto-cxl-file",
+                    formData
+                );
+            }
+
+            if (response?.code == 200) {
                 const uniqueId = uuidv4();
                 // Add the success toast to the toasts array in the component's state
                 setToasts([
@@ -175,11 +222,25 @@ export default function sipCancelUpload() {
         >
             <View className="bg-white">
                 <View className="">
-                    <TableBreadCrumb name={"RTA Sync"} />
+                    <TableBreadCrumb name={"Cancelled SIP Sync"} />
                 </View>
                 <View className="w-full flex items-center">
-                    <View className="flex flex-row justify-end w-[90%]">
-                        <Button
+                    <View className="flex flex-row items-center justify-between w-[90%]">
+                        <View className="mt-10 flex-1">
+                            <Text className="text-gray-700 pb-2">
+                                CXL last synced at:{" "}
+                                <Text className="text-black font-semibold">
+                                    {dateTimeFormat(lastUpdate.cxl)}
+                                </Text>
+                            </Text>
+                            <Text className="text-gray-700 ">
+                                AutoCXL last synced at:{" "}
+                                <Text className="text-black font-semibold">
+                                    {dateTimeFormat(lastUpdate.autoCxl)}
+                                </Text>
+                            </Text>
+                        </View>
+                        {/* <Button
                             rightIcon={
                                 <Icon
                                     name="rotate-right"
@@ -196,7 +257,7 @@ export default function sipCancelUpload() {
                             onPress={handleSync}
                         >
                             Sync
-                        </Button>
+                        </Button> */}
                     </View>
                     <View
                         className={
@@ -207,12 +268,12 @@ export default function sipCancelUpload() {
                             selectable
                             className={"text-xl font-bold mt-[10px]"}
                         >
-                            {"Upload RTA File"}
+                            {"Upload Cancelled SIP File"}
                         </Text>
-                        <View className="mt-[20px] w-[80%]">
+                        <View className="mt-[20px] w-[40%]">
                             <Stack mx="4" w={"100%"}>
                                 <FormControl.Label>
-                                    Select RTA
+                                    Select Cancelled SIP file Type
                                 </FormControl.Label>
                                 <Select
                                     accessibilityLabel="Select"
@@ -222,17 +283,15 @@ export default function sipCancelUpload() {
                                         endIcon: <CheckIcon size="2" />,
                                     }}
                                     mt={1}
-                                    onValueChange={(itemValue) =>
-                                        setRta(itemValue)
-                                    }
+                                    onValueChange={(itemValue) => {
+                                        setRta(itemValue);
+                                        setPickedDocument(null);
+                                    }}
                                 >
+                                    <Select.Item label={"CXL"} value={"CXL"} />
                                     <Select.Item
-                                        label={"CAMS"}
-                                        value={"CAMS"}
-                                    />
-                                    <Select.Item
-                                        label={"KARVY"}
-                                        value={"KARVY"}
+                                        label={"AutoCXL"}
+                                        value={"AutoCXL"}
                                     />
                                 </Select>
                             </Stack>

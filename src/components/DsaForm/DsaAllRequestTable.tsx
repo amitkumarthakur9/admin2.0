@@ -30,7 +30,12 @@ import NoDataAvailable from "../Others/NoDataAvailable";
 import DsaDocumentDownload from "./DsaDocumentDownload";
 import RequestModal from "./RequestModal";
 import { dateTimeFormat } from "src/helper/DateUtils";
-import { AllRequestData, DsaAllResponse } from "src/interfaces/DashboardInterface";
+import {
+    AllRequestData,
+    DsaAllResponse,
+} from "src/interfaces/DashboardInterface";
+import RemarkCheckModal from "./RemarkCheckModal";
+import RejectModal from "./RejectModal";
 
 const DsaAllRequestTable = () => {
     const [isLoading, setIsLoading] = React.useState(false);
@@ -49,6 +54,10 @@ const DsaAllRequestTable = () => {
     });
     const { width } = useWindowDimensions();
     const [modalVisible, setModalVisible] = useState(false);
+    const [RejectmodalVisible, setRejectModalVisible] = useState(false);
+    
+    const [remarkCheckModalVisible, setRemarkCheckModalVisible] =
+        useState(false);
     const [modalType, setModalType] = useState("approve");
     const [currentClientId, setCurrentClientId] = useState(null);
 
@@ -62,14 +71,37 @@ const DsaAllRequestTable = () => {
         },
     ];
 
+    // const handleOpenModal = (type, clientId) => {
+    //     setRemarkCheckModalVisible(true);
+    //     setModalType(type);
+    //     setCurrentClientId(clientId);
+    //     setModalVisible(true);
+    // };
+
     const handleOpenModal = (type, clientId) => {
         setModalType(type);
         setCurrentClientId(clientId);
+
+        if (type === "reject") {
+            setRejectModalVisible(true)
+        } else {
+            setModalVisible(true);
+        }
+    };
+
+    const handleRemarkCheckModalNext = () => {
+        setRemarkCheckModalVisible(false);
         setModalVisible(true);
+    };
+
+    const handleBackToRemarkCheckModal = () => {
+        setModalVisible(false);
+        setRemarkCheckModalVisible(true);
     };
 
     const handleCloseModal = () => {
         setModalVisible(false);
+        setRejectModalVisible(false)
     };
 
     async function getDataList(
@@ -168,10 +200,9 @@ const DsaAllRequestTable = () => {
                             </View>
                             <View className="flex flex-row items-center mt-0">
                                 {item?.submissionAttempt?.id === 1 ? (
-                                      <Tag>New</Tag>
+                                    <Tag>New</Tag>
                                 ) : (
                                     <Tag>Resubmitted</Tag>
-                                  
                                 )}
                             </View>
                         </View>
@@ -201,7 +232,7 @@ const DsaAllRequestTable = () => {
                 key: "DateApplication",
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
-                        {dateTimeFormat(item?.createdAt)  }
+                        {dateTimeFormat(item?.createdAt)}
                     </Text>
                 ),
             },
@@ -223,7 +254,9 @@ const DsaAllRequestTable = () => {
                 content: (
                     <View className="flex flex-row w-[99%]">
                         <Pressable
-                            onPress={() => handleOpenModal("approve", item.requestId)}
+                            onPress={() =>
+                                handleOpenModal("approve", item.requestId)
+                            }
                             className="bg-[#CCF4C2] rounded-full px-5 py-2"
                         >
                             <View>
@@ -236,16 +269,28 @@ const DsaAllRequestTable = () => {
             {
                 key: "Reject",
                 content: (
-                    <View className="flex flex-row w-[99%]">
-                        <Pressable
-                            onPress={() => handleOpenModal("reject", item.requestId)}
-                            className="bg-[#FFD2D2] rounded-full px-5 py-2"
-                        >
-                            <View>
-                                <Text className="color-[#713535]">Reject</Text>
-                            </View>
-                        </Pressable>
-                    </View>
+                    <>
+                        <View className="flex flex-row w-[99%]">
+                            <Pressable
+                                onPress={() =>
+                                    handleOpenModal("reject", item.requestId)
+                                }
+
+                                // onPress={() =>
+                                //     setRejectModalVisible(true)
+                                // }
+
+                                
+                                className="bg-[#FFD2D2] rounded-full px-5 py-2"
+                            >
+                                <View>
+                                    <Text className="color-[#713535]">
+                                        Reject
+                                    </Text>
+                                </View>
+                            </Pressable>
+                        </View>
+                    </>
                 ),
             },
         ];
@@ -320,14 +365,29 @@ const DsaAllRequestTable = () => {
                 />
                 {/* )} */}
             </View>
-            {/* <RequestModal
+            
+            <RejectModal
+                visible={RejectmodalVisible}
+                onClose={handleCloseModal}
+                // type={modalType}
+                clientId={currentClientId}
+                // onSubmit={handleCloseModal}
+                getDataList={getDataList}
+                onBack={handleCloseModal}
+            />
+            {/* <RejectModal
                 visible={modalVisible}
                 onClose={handleCloseModal}
                 type={modalType}
                 clientId={currentClientId}
                 onSubmit={handleCloseModal}
-
-
+                getDataList={getDataList}
+                onBack={handleBackToRemarkCheckModal}
+            /> */}
+            {/* <RemarkCheckModal
+                visible={remarkCheckModalVisible}
+                onClose={() => setRemarkCheckModalVisible(false)}
+                onNext={handleRemarkCheckModalNext}
             /> */}
         </View>
     );

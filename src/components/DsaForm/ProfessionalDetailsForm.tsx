@@ -179,6 +179,11 @@ const ProfessionalDetailsForm = ({
                                         {errors.panNumber}
                                     </Text>
                                 )}
+                            {initialValues.panError && (
+                                <Text style={styles.error}>
+                                    Please correct it as per remarks
+                                </Text>
+                            )}
                         </View>
 
                         <View style={styles.fieldContainer}>

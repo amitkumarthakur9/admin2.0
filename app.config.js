@@ -36,7 +36,6 @@ export default ({ config }) => ({
         scheme: "myapp",
         web: {
             bundler: "metro",
-            index: './web/index.html'
         },
         extra: {
             eas: {

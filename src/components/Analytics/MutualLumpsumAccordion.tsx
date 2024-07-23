@@ -5,6 +5,20 @@ import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { List, DataTable } from "react-native-paper";
 import Icon from "react-native-vector-icons/FontAwesome";
 
+// RM Name
+// Lumpsum Amount
+// Lumpsum Count
+// Redemption Amount
+// Redemption Count
+// CAMS Transfer-in Amount
+// CAMS Transfer-in Count
+// Switch in Amount
+// Switch in Count
+// Switch out Amount
+// Switch out Count
+// SIP Amount
+// SIP Count
+
 const MutualLumpsumAccordion = ({ data }) => {
     const [expanded, setExpanded] = useState(false);
 
@@ -23,19 +37,50 @@ const MutualLumpsumAccordion = ({ data }) => {
                             paddingVertical: 14,
                         }}
                     >
-                        <View className="w-[30%] justify-center">
+                        <View className="w-[7.5%] justify-center">
                             <Text className="font-semibold">RM Name</Text>
                         </View>
-                        <View className="w-[30%] justify-center">
+                        <View className="w-[7.5%] justify-center">
                             <Text className="font-semibold">
                                 Lumpsum Count
                             </Text>
                         </View>
-                        <View className="w-[30%] justify-center">
+                        <View className="w-[7.5%] justify-center">
                             <Text className="font-semibold">Lumpsum Amount</Text>
                         </View>
+                        
+                        <View className="w-[7.5%] justify-center">
+                            <Text className="font-semibold">Redemption Count</Text>
+                        </View>
+                        <View className="w-[7.5%] justify-center">
+                            <Text className="font-semibold">Redemption Amount</Text>
+                        </View>
+                        <View className="w-[7.5%] justify-center">
+                            <Text className="font-semibold">CAMS Transfer-in Count</Text>
+                        </View>
+                        <View className="w-[7.5%] justify-center">
+                            <Text className="font-semibold">CAMS Transfer-in Amount</Text>
+                        </View>
+                        <View className="w-[7.5%] justify-center">
+                            <Text className="font-semibold">Switch in Count</Text>
+                        </View>
+                        <View className="w-[7.5%] justify-center">
+                            <Text className="font-semibold">Switch in Amount</Text>
+                        </View>
+                        <View className="w-[7.5%] justify-center">
+                            <Text className="font-semibold">Switch out Count</Text>
+                        </View>
+                        <View className="w-[7.5%] justify-center">
+                            <Text className="font-semibold">Switch out Amount</Text>
+                        </View>
+                        <View className="w-[7.5%] justify-center">
+                            <Text className="font-semibold">SIP Amount</Text>
+                        </View>
+                        <View className="w-[7.5%] justify-center">
+                            <Text className="font-semibold">SIP Amount</Text>
+                        </View>
 
-                        <View className="w-[10%] justify-center items-center"></View>
+                        <View className="w-[2.5%] justify-center items-center"></View>
                     </DataTable.Header>
 
                     {data.rmList.map((rm, index) => (
@@ -88,16 +133,46 @@ const RMRow = ({ rm }) => {
                 }}
                 onPress={() => setExpanded(!expanded)}
             >
-                <View className="w-[30%] justify-center">
+                <View className="w-[7.5%] justify-center">
                     <Text>{rm.rmName}</Text>
                 </View>
-                <View className="w-[30%] justify-center">
+                <View className="w-[7.5%] justify-center">
                     <Text>{rm.lumpCount}</Text>
                 </View>
-                <View className="w-[30%] justify-center">
+                <View className="w-[7.5%] justify-center">
                     <Text>{rm.lumpAmount}</Text>
                 </View>
-                <View className="w-[10%] justify-center items-center">
+                <View className="w-[7.5%] justify-center">
+                    <Text>{rm.redemptionAmount}</Text>
+                </View>
+                <View className="w-[7.5%] justify-center">
+                    <Text>{rm.redemptionCount}</Text>
+                </View>
+                <View className="w-[7.5%] justify-center">
+                    <Text>{rm.CAMSTransferInAmount}</Text>
+                </View>
+                <View className="w-[7.5%] justify-center">
+                    <Text>{rm.CAMSTransferInCount}</Text>
+                </View>
+                <View className="w-[7.5%] justify-center">
+                    <Text>{rm.switchInAmount}</Text>
+                </View>
+                <View className="w-[7.5%] justify-center">
+                    <Text>{rm.switchInCount}</Text>
+                </View>
+                <View className="w-[7.5%] justify-center">
+                    <Text>{rm.switchOutAmount}</Text>
+                </View>
+                <View className="w-[7.5%] justify-center">
+                    <Text>{rm.switchOutCount}</Text>
+                </View>
+                <View className="w-[7.5%] justify-center">
+                    <Text>{rm.sipAmount}</Text>
+                </View>
+                <View className="w-[7.5%] justify-center">
+                    <Text>{rm.sipCount}</Text>
+                </View>
+                <View className="w-[2.5%] justify-center items-center">
                     {!expanded ? (
                         <Icon name="caret-down" size={16} />
                     ) : (
@@ -132,18 +207,49 @@ const RMAccordion = ({ ifalist, ifaTotal }) => {
                     paddingVertical: 14,
                     }}
                 >
-                    <View className="w-[30%] justify-center">
-                        <Text className="font-semibold">RM Name</Text>
+                    <View className="w-[7.5%] justify-center">
+                        <Text className="font-semibold">IFA Name</Text>
                     </View>
-                    <View className="w-[30%] justify-center">
+                    <View className="w-[7.5%] justify-center">
                         <Text className="font-semibold">Lumpsum Count</Text>
                     </View>
 
-                    <View className="w-[30%] justify-center">
+                    <View className="w-[7.5%] justify-center">
                         <Text className="font-semibold">Lumpsum Amount</Text>
                     </View>
+                    <View className="w-[7.5%] justify-center">
+                            <Text className="font-semibold">Redemption Count</Text>
+                        </View>
+                        <View className="w-[7.5%] justify-center">
+                            <Text className="font-semibold">Redemption Amount</Text>
+                        </View>
+                        <View className="w-[7.5%] justify-center">
+                            <Text className="font-semibold">CAMS Transfer-in Count</Text>
+                        </View>
+                        <View className="w-[7.5%] justify-center">
+                            <Text className="font-semibold">CAMS Transfer-in Amount</Text>
+                        </View>
+                        <View className="w-[7.5%] justify-center">
+                            <Text className="font-semibold">Switch in Count</Text>
+                        </View>
+                        <View className="w-[7.5%] justify-center">
+                            <Text className="font-semibold">Switch in Amount</Text>
+                        </View>
+                        <View className="w-[7.5%] justify-center">
+                            <Text className="font-semibold">Switch out Count</Text>
+                        </View>
+                        <View className="w-[7.5%] justify-center">
+                            <Text className="font-semibold">Switch out Amount</Text>
+                        </View>
+                        <View className="w-[7.5%] justify-center">
+                            <Text className="font-semibold">SIP Amount</Text>
+                        </View>
+                        <View className="w-[7.5%] justify-center">
+                            <Text className="font-semibold">SIP Amount</Text>
+                        </View>
 
-                    <View className="w-[10%] justify-center items-center"></View>
+                    
+                    <View className="w-[2.5%] justify-center items-center"></View>
                 </DataTable.Header>
                 {ifalist.map((ifa, index) => (
                     <IFAAccordion key={index} ifa={ifa} />
@@ -166,17 +272,48 @@ const IFAAccordion = ({ ifa }) => {
                 }}
                 onPress={() => setExpanded(!expanded)}
             >
-                <View className="w-[30%] justify-center">
-                    <Text>{ifa.ifaName}</Text>
+                <View className="w-[7.5%] justify-center">
+                    <Text>{ifa?.ifaName}</Text>
                 </View>
-                <View className="w-[30%] justify-center">
-                    <Text>{ifa.lumpCount}</Text>
+                <View className="w-[7.5%] justify-center">
+                    <Text>{ifa?.lumpCount}</Text>
                 </View>
-                <View className="w-[30%] justify-center">
-                    <Text>{ifa.lumpAmount}</Text>
+                <View className="w-[7.5%] justify-center">
+                    <Text>{ifa?.lumpAmount}</Text>
+                </View>
+                <View className="w-[7.5%] justify-center">
+                    <Text>{ifa?.redemptionAmount}</Text>
+                </View>
+                <View className="w-[7.5%] justify-center">
+                    <Text>{ifa?.redemptionCount}</Text>
+                </View>
+                <View className="w-[7.5%] justify-center">
+                    <Text>{ifa?.CAMSTransferInAmount}</Text>
+                </View>
+                <View className="w-[7.5%] justify-center">
+                    <Text>{ifa?.CAMSTransferInCount}</Text>
+                </View>
+                <View className="w-[7.5%] justify-center">
+                    <Text>{ifa?.switchInAmount}</Text>
+                </View>
+                <View className="w-[7.5%] justify-center">
+                    <Text>{ifa?.switchInCount}</Text>
+                </View>
+                <View className="w-[7.5%] justify-center">
+                    <Text>{ifa?.switchOutAmount}</Text>
+                </View>
+                <View className="w-[7.5%] justify-center">
+                    <Text>{ifa?.switchOutCount}</Text>
+                </View>
+                <View className="w-[7.5%] justify-center">
+                    <Text>{ifa?.sipAmount}</Text>
+                </View>
+                <View className="w-[7.5%] justify-center">
+                    <Text>{ifa?.sipCount}</Text>
                 </View>
 
-                <View className="w-[10%] justify-center items-center">
+
+                <View className="w-[2.5%] justify-center items-center">
                     {!expanded ? (
                         <Icon name="caret-down" size={16} />
                     ) : (
@@ -213,11 +350,14 @@ const ClientTable = ({ clients }) => {
                 <View className="w-[20%] justify-center">
                     <Text className="font-semibold">User Name</Text>
                 </View>
-                <View className="w-[30%] justify-center">
+                <View className="w-[20%] justify-center">
                     <Text className="font-semibold">Scheme Name</Text>
                 </View>
                 <View className="w-[10%] justify-center">
                     <Text className="font-semibold">Amount</Text>
+                </View>
+                <View className="w-[10%] justify-center">
+                    <Text className="font-semibold">Transaction Type</Text>
                 </View>
                 <View className="w-[15%] justify-center">
                     <Text className="font-semibold">Transaction Date</Text>
@@ -240,11 +380,14 @@ const ClientTable = ({ clients }) => {
                     <View className="w-[20%] justify-center">
                         <Text>{client.name}</Text>
                     </View>
-                    <View className="w-[30%] justify-center">
+                    <View className="w-[20%] justify-center">
                         <Text>{client.scheme}</Text>
                     </View>
                     <View className="w-[10%] justify-center">
                         <Text>{client.amount}</Text>
+                    </View>
+                    <View className="w-[10%] justify-center">
+                        <Text>{client.transactionType}</Text>
                     </View>
                     <View className="w-[15%] justify-center">
                         <Text>{client.transactionDate}</Text>

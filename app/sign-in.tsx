@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
     TouchableOpacity,
     StyleSheet,
@@ -139,6 +139,22 @@ export default function SignIn() {
 
     // </>
 
+    const handleKeyPress = useCallback(
+        (event) => {
+            if (event.key === "Enter") {
+                onLoginPressed();
+            }
+        },
+        [onLoginPressed]
+    );
+
+    useEffect(() => {
+        window.addEventListener("keydown", handleKeyPress);
+        return () => {
+            window.removeEventListener("keydown", handleKeyPress);
+        };
+    }, [handleKeyPress]);
+
     return (
         <View className="" style={{ height, backgroundColor: "white" }}>
             <Background />
@@ -178,6 +194,7 @@ export default function SignIn() {
                                 onChangeText={(text) =>
                                     setEmail({ value: text, error: "" })
                                 }
+                                onKeyPress={handleKeyPress}
                             />
                             <FormControl.ErrorMessage
                                 leftIcon={<WarningOutlineIcon size="xs" />}
@@ -216,6 +233,7 @@ export default function SignIn() {
                                     </Pressable>
                                 }
                                 placeholder="Password"
+                                onKeyPress={handleKeyPress}
                             />
                             <FormControl.ErrorMessage
                                 leftIcon={<WarningOutlineIcon size="xs" />}

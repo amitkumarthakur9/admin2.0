@@ -62,8 +62,8 @@ const AUMTabScreen = lazy(() => import("./aum-reports"));
 const MutualFundDetail = lazy(() => import("./mutual-fund/[id]"));
 const AumReconcile = lazy(() => import("./aum-reconcile"));
 const SendInvite = lazy(() => import("./invite-contact"));
-const AddIfaRm = lazy(() => import("./add-ifa-rm"));
-const AddRm = lazy(() => import("./add-rm"));
+// const AddIfaRm = lazy(() => import("./add-ifa-rm"));
+// const AddRm = lazy(() => import("./add-rm"));
 const DistributorDashboardScreen = lazy(() => import("./dashboard/[id]"));
 const IFAReportsScreen = lazy(() => import("./ifa"));
 const ARNTabScreen = lazy(() => import("./arn-transfer"));
@@ -74,7 +74,6 @@ const Sip = lazy(() => import("./calculators/sip"));
 const SIPDelay = lazy(() => import("./calculators/sip-delay"));
 const RiskProfile = lazy(() => import("./calculators/risk-profile"));
 const AssitantScreen = lazy(() => import("./ai-assitant"));
-const MutualSipAnalyticsScreen = lazy(() => import("./analytics/mutual-sip"));
 const AnalyticsScreen = lazy(() => import("./analytics"));
 const LearningManagement = lazy(() => import("./learning-center"));
 const ModuleLearningManagement = lazy(
@@ -86,7 +85,9 @@ const ChapterLearningCenter = lazy(
 import IonIcon from "react-native-vector-icons/Ionicons";
 import DsaFormScreen from "./dsa-form";
 import DsaRequestScreen from "./dsa-form/request";
-import sipCancelUpload from "./operations/sip-cancel-upload";
+import SipCancelUpload from "./operations/sip-cancel-upload";
+import AddManagementUserForm from "./add-user/management";
+import AddDistributorUserForm from "./add-user/distributor";
 
 const queryClient = new QueryClient();
 
@@ -246,46 +247,85 @@ export default function AppLayout() {
                 />
             ),
         });
-        // drawerStructure.splice(1, 0, {
-        //     key: "sipCancelUpload",
-        //     content: (
-        //         <>
-        //             <Drawer.Screen
-        //                 name="operations/sip-cancel-upload/index"
-        //                 options={{
-        //                     drawerLabel: "Cancelled SIP Upload",
-        //                     title: "sipCancelUpload",
-        //                     unmountOnBlur: true,
-        //                     // drawerItemStyle: { display: "none" },
-        //                 }}
-        //                 initialParams={{}}
-        //                 component={sipCancelUpload}
-        //             />
-        //         </>
-        //     ),
-        // });
-    }
-
-    if (roleId > 3) {
         drawerStructure.splice(1, 0, {
-            key: "addRm",
+            key: "sipCancelUpload",
             content: (
                 <>
                     <Drawer.Screen
-                        name="add-rm"
+                        name="operations/sip-cancel-upload/index"
                         options={{
-                            drawerLabel: "Add RM",
-                            title: "addRm",
+                            drawerLabel: "Cancelled SIP Upload",
+                            title: "sipCancelUpload",
                             unmountOnBlur: true,
-                            drawerItemStyle: { display: "none" },
+                            // drawerItemStyle: { display: "none" },
                         }}
                         initialParams={{}}
-                        component={AddRm}
+                        component={SipCancelUpload}
                     />
                 </>
             ),
         });
+        drawerStructure.splice(1, 0, {
+            key: "addManagementUser",
+            content: (
+                <>
+                    <Drawer.Screen
+                        name="add-user/management/index"
+                        options={{
+                            drawerLabel: "Add Management User",
+                            title: "addManagementUser",
+                            unmountOnBlur: true,
+                            // drawerItemStyle: { display: "none" },
+                        }}
+                        initialParams={{}}
+                        component={AddManagementUserForm}
+                    />
+                </>
+            ),
+        });
+        drawerStructure.splice(1, 0, {
+            key: "AddDistributorUserForm",
+            content: (
+                <>
+                    <Drawer.Screen
+                        name="add-user/distributor/index"
+                        options={{
+                            drawerLabel: "Add Distributor",
+                            title: "AddDistributorUserForm",
+                            unmountOnBlur: true,
+                            // drawerItemStyle: { display: "none" },
+                        }}
+                        initialParams={{}}
+                        component={AddDistributorUserForm}
+                    />
+                </>
+            ),
+        });
+
+
+        
     }
+
+    // if (roleId > 3) {
+    //     drawerStructure.splice(1, 0, {
+    //         key: "addRm",
+    //         content: (
+    //             <>
+    //                 <Drawer.Screen
+    //                     name="add-rm"
+    //                     options={{
+    //                         drawerLabel: "Add RM",
+    //                         title: "addRm",
+    //                         unmountOnBlur: true,
+    //                         drawerItemStyle: { display: "none" },
+    //                     }}
+    //                     initialParams={{}}
+    //                     component={AddRm}
+    //                 />
+    //             </>
+    //         ),
+    //     });
+    // }
 
     return (
         <SafeAreaProvider style={{ backgroundColor: "white" }}>
@@ -491,8 +531,8 @@ export default function AppLayout() {
                                             }}
                                             initialParams={{}}
                                         />
-                                        <Drawer.Screen
-                                            name="add-ifa-rm"
+                                        {/* <Drawer.Screen
+                                            name="add-ifa"
                                             options={{
                                                 drawerLabel: "Add Distributor",
                                                 title: "Add Distributor",
@@ -500,7 +540,7 @@ export default function AppLayout() {
                                             }}
                                             initialParams={{}}
                                             component={AddIfaRm}
-                                        />
+                                        /> */}
 
                                         <Drawer.Screen
                                             name="ifa/[id]"
@@ -620,30 +660,20 @@ export default function AppLayout() {
                                     initialParams={{}}
                                     component={AssitantScreen}
                                 /> */}
-                                {/* <Drawer.Screen
-                                    name="analytics/mutual-sip/index"
-                                    options={{
-                                        drawerLabel: "Analytics",
-                                        title: "Analytics",
-                                        unmountOnBlur: true,
-                                    }}
-                                    initialParams={{}}
-                                    component={MutualSipAnalyticsScreen}
-                                /> */}
                                 <Drawer.Screen
                                     name="analytics/index"
                                     options={{
                                         drawerLabel: "Analytics",
                                         title: "Analytics",
-                                        drawerItemStyle: {
-                                            display: "none",
-                                        },
+                                        // drawerItemStyle: {
+                                        //     display: "none",
+                                        // },
                                         unmountOnBlur: true,
                                     }}
                                     initialParams={{}}
                                     component={AnalyticsScreen}
                                 />
-                                {/* <Drawer.Screen
+                                <Drawer.Screen
                                     name="marketing/index"
                                     options={{
                                         drawerLabel: "Marketing",
@@ -652,7 +682,7 @@ export default function AppLayout() {
                                     }}
                                     initialParams={{}}
                                     component={MarketingScreen}
-                                /> */}
+                                />
 
                                 {/* <Drawer.Screen
                                     name="learning-center/index"

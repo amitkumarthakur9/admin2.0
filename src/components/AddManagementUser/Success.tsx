@@ -2,12 +2,7 @@ import React from "react";
 import { View, Text } from "react-native";
 import { Image } from "native-base";
 
-const Success = ({
-    successMessages = [
-        
-    ],
-    failedMessages = [],
-}) => {
+const Success = ({ successMessages = [], failedMessages = [] }) => {
     return (
         <View
             style={{ flex: 1, justifyContent: "center", alignItems: "center" }}

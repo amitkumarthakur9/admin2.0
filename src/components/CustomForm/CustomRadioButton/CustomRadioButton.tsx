@@ -31,9 +31,9 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   selectedRadioContainer: {
-    backgroundColor: '#e0e0e0',
+    // backgroundColor: '#e0e0e0',
     borderRadius: 5,
-    padding: 5,
+    // padding: 5,
   },
   radioButton: {
     height: 20,
@@ -46,13 +46,13 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   selectedRadioButton: {
-    borderColor: '#007BFF',
+    borderColor: '#114EA8',
   },
   radioButtonInner: {
     height: 10,
     width: 10,
     borderRadius: 5,
-    backgroundColor: '#007BFF',
+    backgroundColor: '#114EA8',
   },
   radioText: {
     fontSize: 16,

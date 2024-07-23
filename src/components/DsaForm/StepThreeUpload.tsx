@@ -6,8 +6,9 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import RemoteApi from "../../services/RemoteApi";
 import { ToastAlert } from "../../helper/CustomToaster";
 import { v4 as uuidv4 } from "uuid";
+import CustomCheckbox from "../Checkbox/NativeCheckbox";
 
-const StepThreeUpload = ({ onSuccess }) => {
+const StepThreeUpload = ({ onSuccess, initialValues }) => {
     const [pickedDocuments, setPickedDocuments] = useState({
         panCard: null,
         aadharFront: null,
@@ -18,13 +19,29 @@ const StepThreeUpload = ({ onSuccess }) => {
     const [isLoading, setIsLoading] = useState(false);
     const toast = useToast();
     const [toasts, setToasts] = useState([]);
-    const isSubmitDisabled = !pickedDocuments.panCard || !pickedDocuments.aadharFront || !pickedDocuments.aadharBack;
+    const [consentGiven, setConsentGiven] = useState(false);
+
+    const documentErrors = {
+        aadharFront: initialValues.aadharFrontDocumentError,
+        aadharBack: initialValues.aadharBackDocumentError,
+        panCard: initialValues.panCardDocumentError,
+        bankCheck: initialValues.cancelledChequeError,
+    };
+
+    const anyDocumentError = Object.values(documentErrors).some(
+        (error) => error
+    );
+
+    const isSubmitDisabled =
+        !pickedDocuments.panCard ||
+        !pickedDocuments.aadharFront ||
+        !pickedDocuments.aadharBack ||
+        !consentGiven ||
+        anyDocumentError;
 
     useEffect(() => {
-        // Clear existing toasts
         toast.closeAll();
 
-        // Show the latest toast
         if (toasts.length > 0) {
             const latestToast = toasts[toasts.length - 1];
             toast.show({
@@ -37,7 +54,7 @@ const StepThreeUpload = ({ onSuccess }) => {
                         isClosable={false}
                         toast={toast}
                         status={latestToast.status}
-                        onClose={() => removeToast(latestToast.id)} // Remove the toast from the 'toasts' array when closed
+                        onClose={() => removeToast(latestToast.id)}
                     />
                 ),
                 placement: "top",
@@ -45,43 +62,24 @@ const StepThreeUpload = ({ onSuccess }) => {
         }
     }, [toasts]);
 
-    // Function to remove a toast from the toasts array
     const removeToast = (id) => {
         setToasts(toasts.filter((toast) => toast.id !== id));
     };
 
     const pickDocument = async (documentType) => {
         if (pickedDocuments[documentType] == null) {
-            let result: any = await DocumentPicker.getDocumentAsync({
+            let result = await DocumentPicker.getDocumentAsync({
                 type: [".png", ".pdf", ".jpg", ".jpeg"],
-                // type: [".pdf"],
                 copyToCacheDirectory: true,
             });
-            // console.log('selected file', result);
+
             if (result.assets.length > 0) {
-                // let { name, size, uri } = result.assets[0];
-                // let newUri = "file:///" + uri.split("data:/").join("");
-                // let nameParts = name.split(".");
-                // let fileType = nameParts[nameParts.length - 1];
-                // var fileToUpload = {
-                //     name: name,
-                //     size: size,
-                //     uri: newUri,
-                //     type: "application/" + fileType,
-                // };
-
-                if (documentType == "panCard") {
-                    setPickedDocuments(result.assets[0].file);
-                }
-                // console.log(fileToUpload, '...............file')
-
                 setPickedDocuments({
                     ...pickedDocuments,
                     [documentType]: result.assets[0].file,
                 });
             }
         } else {
-            // setPickedDocuments(null);
             setPickedDocuments({
                 ...pickedDocuments,
                 [documentType]: null,
@@ -105,22 +103,20 @@ const StepThreeUpload = ({ onSuccess }) => {
                 } else if (key === "esignedAgreement") {
                     fileKey = "esigned_document";
                 } else if (key === "bankCheck") {
-                    fileKey = "bank_check";
+                    fileKey = "cancelled_check";
                 }
-
                 formData.append(fileKey, pickedDocuments[key]);
             }
         });
 
         try {
-            const response: any = await RemoteApi.postWithFormData(
+            const response = await RemoteApi.postWithFormData(
                 "file/upload-dsa-documents",
                 formData
             );
 
             if (response.code === 200) {
                 const uniqueId = uuidv4();
-                // Add the success toast to the toasts array in the component's state
                 setToasts([
                     ...toasts,
                     {
@@ -140,8 +136,16 @@ const StepThreeUpload = ({ onSuccess }) => {
 
                 onSuccess();
             } else {
-                // const uniqueId = uuidv4();
-                // setToasts([...toasts, { id: uniqueId, variant: "solid", title: "Upload Failed", status: "error" }]);
+                const uniqueId = uuidv4();
+                setToasts([
+                    ...toasts,
+                    {
+                        id: uniqueId,
+                        variant: "solid",
+                        title: "Upload Failed",
+                        status: "error",
+                    },
+                ]);
             }
         } catch (error) {
             const uniqueId = uuidv4();
@@ -155,7 +159,6 @@ const StepThreeUpload = ({ onSuccess }) => {
                 },
             ]);
         }
-        // onSuccess();
         setIsLoading(false);
     };
 
@@ -167,8 +170,11 @@ const StepThreeUpload = ({ onSuccess }) => {
             <View className="flex flex-col justify-center items-start w-full">
                 <FormControl.Label>{label}*</FormControl.Label>
                 <TouchableOpacity
-                    className="flex flex-row border-[#114EA8] border-[1px] rounded-[5px] px-3 py-2 items-center justify-between w-full"
+                    className={`flex flex-row border-[#114EA8] border-[1px] rounded-[5px] px-3 py-2 items-center justify-between w-full ${
+                        documentErrors[documentKey] ? "border-red-500" : ""
+                    }`}
                     onPress={() => pickDocument(documentKey)}
+                    disabled={anyDocumentError && !documentErrors[documentKey]}
                 >
                     <View className="flex flex-row justify-start items-center w-full">
                         {pickedDocuments[documentKey] && (
@@ -208,6 +214,11 @@ const StepThreeUpload = ({ onSuccess }) => {
                         </View>
                     </View>
                 </TouchableOpacity>
+                {documentErrors[documentKey] && (
+                    <Text className="text-red-500 mt-1">
+                        Please re-upload the {label}.
+                    </Text>
+                )}
             </View>
         </View>
     );
@@ -224,22 +235,7 @@ const StepThreeUpload = ({ onSuccess }) => {
                 <View className="w-full flex items-center">
                     <View className="w-[90%] justify-center items-center gap-2">
                         <View className="flex flex-row justify-center w-[50%] gap-2">
-                            {renderDocumentUpload("Pan Card", "panCard")}
-                            {renderDocumentUpload(
-                                "Aadhar Card front",
-                                "aadharFront"
-                            )}
-                        </View>
-                        <View className="flex flex-row justify-center w-[50%] gap-2">
-                            {renderDocumentUpload(
-                                "Aadhar Card back",
-                                "aadharBack"
-                            )}
-                            {/* {renderDocumentUpload(
-                                "esignedAgreement",
-                                "esignedAgreement"
-                            )} */}
-                            <View className="flex flex-row justify-center items-center w-full mb-4">
+                            <View className="flex flex-row justify-center items-start w-full mb-4">
                                 <View className="flex flex-col justify-center items-start w-full">
                                     <FormControl.Label>
                                         E-signed Agreement*
@@ -269,7 +265,38 @@ const StepThreeUpload = ({ onSuccess }) => {
                                     </TouchableOpacity>
                                 </View>
                             </View>
+                            {renderDocumentUpload("Pan Card", "panCard")}
                         </View>
+                        <View className="flex flex-row justify-center items-start w-[50%] gap-2">
+                            {renderDocumentUpload(
+                                "Aadhar Card front",
+                                "aadharFront"
+                            )}
+                            {renderDocumentUpload(
+                                "Aadhar Card back",
+                                "aadharBack"
+                            )}
+                        </View>
+                        <View className="flex flex-row justify-center w-[50%] gap-2">
+                            {initialValues.aadharFrontDocumentError ||
+                            initialValues.aadharBackDocumentError ||
+                            !initialValues.remark ? (
+                                <View className="justify-center items-center w-full mb-4">
+                                    <View className="p-4">
+                                        <CustomCheckbox
+                                            label="I provide my consent to use Aadhar document for address verification and I agree to have masked the first 8 numbers of Aadhar and I agree for the collection, storage, and use of my Aadhar number for the specified purposes."
+                                            isChecked={consentGiven}
+                                            onChange={() =>
+                                                setConsentGiven(!consentGiven)
+                                            }
+                                        />
+                                    </View>
+                                </View>
+                            ) : (
+                                <></>
+                            )}
+                        </View>
+
                         <View className="flex items-center my-[20px] w-full">
                             <Button
                                 w="100%"

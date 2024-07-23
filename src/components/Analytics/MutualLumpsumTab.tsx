@@ -31,171 +31,226 @@ import { useUserRole } from "../../context/useRoleContext";
 import NoDataAvailable from "../Others/NoDataAvailable";
 import MutualLumpsumAccordion from "./MutualLumpsumAccordion";
 
+// RM Name
+// Lumpsum Amount
+// Lumpsum Count
+// Redemption Amount
+// Redemption Count
+// CAMS Transfer-in Amount
+// CAMS Transfer-in Count
+// Switch in Amount
+// Switch in Count
+// Switch out Amount
+// Switch out Count
+// SIP Amount
+// SIP Count
 const nestedData = {
-  id: 1,
-  rmList: [
-      {
-          rmName: "Swarnava Ghosh",
-          lumpAmount: "1,00,000",
-          lumpCount: "100",
-          ifalist: [
-              {
-                  ifaName: "PRAMOD R BHARTIYA",
-                  lumpCount: "60",
-                  lumpAmount: "60,000",
-                  
-                  clientList: [
-                      {
-                          id: "149645",
-                          name: "Varsha Pramod",
-                          scheme: "KOTAK FLEXICAP FUND - GROWTH",
-                          amount: "60000",
-                       
-                          transactionDate: "02/05/2024",
-                          startDate: "03/04/2024",
-                      },
-                  ],
-                  clientTotal: {
-                      liveSip: "60",
-                      liveAmount: "60,000",
-                      cancelledSip: "3",
-                      cancelledAmount: "30,000",
-                      failedSip: "1",
-                      failedAmount: "10,000",
-                  },
-              },
-              {
-                  ifaName: "Avijit Kar",
-                  lumpCount: "40",
-                  lumpAmount: "40,000",
-                  
-                  clientList: [
-                      {
-                          id: "134629",
-                          name: "SUKUMAR MAITY",
-                          scheme: "ICICI PRUDENTIAL LARGE AND MID CAP FUND - GROWTH",
-                          amount: "20000",
-                    
-                          transactionDate: "24/02/23",
-                          startDate: "24/01/23",
-                     
-                      },
-                      {
-                          id: "150574",
-                          name: "SANJOY RAY",
-                          scheme: "SBI INFRASTRUCTURE FUND REGULAR PLAN - GROWTH",
-                          amount: "20000",
-                     
-                          transactionDate: "24/02/23",
-                          startDate: "24/01/23",
-                    
-                      
-                      },
-                  ],
-                  clientTotal: {
-                      liveSip: "40",
-                      liveAmount: "40,000",
-                      cancelledSip: "2",
-                      cancelledAmount: "20,000",
-                      failedSip: "1",
-                      failedAmount: "10,000",
-                  },
-              },
-          ],
-          ifaTotal: {
-              liveSip: "100",
-              liveAmount: "1,00,000",
-              cancelledSip: "5",
-              cancelledAmount: "50,000",
-              failedSip: "2",
-              failedAmount: "20,000",
-          },
-      },
-      {
-        rmName: "Rohan Soans",
-        lumpAmount: "1,00,000",
-        lumpCount: "100",
-        ifalist: [
-            {
-                ifaName: "Gajanana Rao ",
-                lumpCount: "60",
-                lumpAmount: "60,000",
-                
-                clientList: [
-                    {
-                        id: "149645",
-                        name: "Varsha Bharatiya",
-                        scheme: "KOTAK FLEXICAP FUND - GROWTH",
-                        amount: "60000",
-                     
-                        transactionDate: "02/05/2024",
-                        startDate: "03/04/2024",
+    id: 1,
+    rmList: [
+        {
+            rmName: "Swarnava Ghosh",
+            lumpAmount: "1,00,000",
+            lumpCount: "100",
+            redemptionAmount: "0",
+            redemptionCount: "0",
+            CAMSTransferInAmount: "0",
+            CAMSTransferInCount: "0",
+            switchInAmount: "0",
+            switchInCount: "0",
+            switchOutAmount: "0",
+            switchOutCount: "0",
+            sipAmount: "0",
+            sipCount: "0",
+            ifalist: [
+                {
+                    ifaName: "PRAMOD R BHARTIYA",
+                    lumpCount: "60",
+                    lumpAmount: "60,000",
+                    redemptionAmount: "0",
+                    redemptionCount: "0",
+                    CAMSTransferInAmount: "0",
+                    CAMSTransferInCount: "0",
+                    switchInAmount: "0",
+                    switchInCount: "0",
+                    switchOutAmount: "0",
+                    switchOutCount: "0",
+                    sipAmount: "0",
+                    sipCount: "0",
+
+                    clientList: [
+                        {
+                            id: "149645",
+                            name: "Varsha Pramod",
+                            scheme: "KOTAK FLEXICAP FUND - GROWTH",
+                            amount: "60000",
+                            transactionType: "Switch In",
+                            transactionDate: "02/05/2024",
+                            startDate: "03/04/2024",
+                        },
+                    ],
+                    clientTotal: {
+                        liveSip: "60",
+                        liveAmount: "60,000",
+                        cancelledSip: "3",
+                        cancelledAmount: "30,000",
+                        failedSip: "1",
+                        failedAmount: "10,000",
                     },
-                ],
-                clientTotal: {
-                    liveSip: "60",
-                    liveAmount: "60,000",
-                    cancelledSip: "3",
-                    cancelledAmount: "30,000",
-                    failedSip: "1",
-                    failedAmount: "10,000",
                 },
-            },
-            {
-                ifaName: "Mohit Jacob",
-                lumpCount: "40",
-                lumpAmount: "40,000",
-                
-                clientList: [
-                    {
-                        id: "134629",
-                        name: "SUKUMAR MAITY",
-                        scheme: "ICICI PRUDENTIAL LARGE AND MID CAP FUND - GROWTH",
-                        amount: "20000",
-                  
-                        transactionDate: "24/02/23",
-                        startDate: "24/01/23",
-                   
+                {
+                    ifaName: "Avijit Kar",
+                    lumpCount: "40",
+                    lumpAmount: "40,000",
+                    redemptionAmount: "0",
+                    redemptionCount: "0",
+                    CAMSTransferInAmount: "0",
+                    CAMSTransferInCount: "0",
+                    switchInAmount: "0",
+                    switchInCount: "0",
+                    switchOutAmount: "0",
+                    switchOutCount: "0",
+                    sipAmount: "0",
+                    sipCount: "0",
+
+                    clientList: [
+                        {
+                            id: "134629",
+                            name: "SUKUMAR MAITY",
+                            scheme: "ICICI PRUDENTIAL LARGE AND MID CAP FUND - GROWTH",
+                            amount: "20000",
+                            transactionType: "Switch In",
+                            transactionDate: "24/02/23",
+                            startDate: "24/01/23",
+                        },
+                        {
+                            id: "150574",
+                            name: "SANJOY RAY",
+                            scheme: "SBI INFRASTRUCTURE FUND REGULAR PLAN - GROWTH",
+                            amount: "20000",
+                            transactionType: "Switch In",
+                            transactionDate: "24/02/23",
+                            startDate: "24/01/23",
+                        },
+                    ],
+                    clientTotal: {
+                        liveSip: "40",
+                        liveAmount: "40,000",
+                        cancelledSip: "2",
+                        cancelledAmount: "20,000",
+                        failedSip: "1",
+                        failedAmount: "10,000",
                     },
-                    {
-                        id: "150574",
-                        name: "SANJOY RAY",
-                        scheme: "SBI INFRASTRUCTURE FUND REGULAR PLAN - GROWTH",
-                        amount: "20000",
-                   
-                        transactionDate: "24/02/23",
-                        startDate: "24/01/23",
-                    
-                    },
-                ],
-                clientTotal: {
-                    liveSip: "40",
-                    liveAmount: "40,000",
-                    cancelledSip: "2",
-                    cancelledAmount: "20,000",
-                    failedSip: "1",
-                    failedAmount: "10,000",
                 },
+            ],
+            ifaTotal: {
+                liveSip: "100",
+                liveAmount: "1,00,000",
+                cancelledSip: "5",
+                cancelledAmount: "50,000",
+                failedSip: "2",
+                failedAmount: "20,000",
             },
-        ],
-        ifaTotal: {
-            liveSip: "100",
-            liveAmount: "1,00,000",
-            cancelledSip: "5",
-            cancelledAmount: "50,000",
-            failedSip: "2",
-            failedAmount: "20,000",
         },
+        {
+            rmName: "Rohan Soans",
+            lumpAmount: "1,00,000",
+            lumpCount: "100",
+            ifalist: [
+                {
+                    ifaName: "Gajanana Rao ",
+                    lumpCount: "60",
+                    lumpAmount: "60,000",
+                    redemptionAmount: "0",
+                    redemptionCount: "0",
+                    CAMSTransferInAmount: "0",
+                    CAMSTransferInCount: "0",
+                    switchInAmount: "0",
+                    switchInCount: "0",
+                    switchOutAmount: "0",
+                    switchOutCount: "0",
+                    sipAmount: "0",
+                    sipCount: "0",
+
+                    clientList: [
+                        {
+                            id: "149645",
+                            name: "Varsha Bharatiya",
+                            scheme: "KOTAK FLEXICAP FUND - GROWTH",
+                            amount: "60000",
+                            transactionType: "Switch In",
+                            transactionDate: "02/05/2024",
+                            startDate: "03/04/2024",
+                        },
+                    ],
+                    clientTotal: {
+                        liveSip: "60",
+                        liveAmount: "60,000",
+                        cancelledSip: "3",
+                        cancelledAmount: "30,000",
+                        failedSip: "1",
+                        failedAmount: "10,000",
+                    },
+                },
+                {
+                    ifaName: "Mohit Jacob",
+                    lumpCount: "40",
+                    lumpAmount: "40,000",
+                    redemptionAmount: "0",
+                    redemptionCount: "0",
+                    CAMSTransferInAmount: "0",
+                    CAMSTransferInCount: "0",
+                    switchInAmount: "0",
+                    switchInCount: "0",
+                    switchOutAmount: "0",
+                    switchOutCount: "0",
+                    sipAmount: "0",
+                    sipCount: "0",
+
+                    clientList: [
+                        {
+                            id: "134629",
+                            name: "SUKUMAR MAITY",
+                            scheme: "ICICI PRUDENTIAL LARGE AND MID CAP FUND - GROWTH",
+                            amount: "20000",
+                            transactionType: "Switch In",
+                            transactionDate: "24/02/23",
+                            startDate: "24/01/23",
+                        },
+                        {
+                            id: "150574",
+                            name: "SANJOY RAY",
+                            scheme: "SBI INFRASTRUCTURE FUND REGULAR PLAN - GROWTH",
+                            amount: "20000",
+                            transactionType: "Switch In",
+                            transactionDate: "24/02/23",
+                            startDate: "24/01/23",
+                        },
+                    ],
+                    clientTotal: {
+                        liveSip: "40",
+                        liveAmount: "40,000",
+                        cancelledSip: "2",
+                        cancelledAmount: "20,000",
+                        failedSip: "1",
+                        failedAmount: "10,000",
+                    },
+                },
+            ],
+            ifaTotal: {
+                liveSip: "100",
+                liveAmount: "1,00,000",
+                cancelledSip: "5",
+                cancelledAmount: "50,000",
+                failedSip: "2",
+                failedAmount: "20,000",
+            },
+        },
+    ],
+    rmTotal: {
+        lumpCount: "200",
+        lumpAmount: "2,00,000",
     },
-
-  ],
-  rmTotal: {
-    lumpCount: "200",
-    lumpAmount: "2,00,000",
-      
-  },
 };
-
 
 const MutualLumpsumTab = () => {
     const [isLoading, setIsLoading] = React.useState(false);
@@ -296,7 +351,6 @@ const MutualLumpsumTab = () => {
                     />
 
                     {!isLoading ? (
-                 
                         <View className={"mt-4 z-[-1] min-h-[500]"}>
                             <MutualLumpsumAccordion data={nestedData} />
                         </View>

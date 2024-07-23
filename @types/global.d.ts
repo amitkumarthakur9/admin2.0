@@ -321,6 +321,25 @@ declare global {
         errors: any[];
         data: DropdownList[];
     }
+
+    interface CancelSIP {
+        code: number;
+        message: string;
+        data: {
+            cxlLastUpdatedAt: string;
+            autoCxlLastUpdatedAt: string;
+        };
+        errors: any[];
+    }
+
+    interface SIPCancelUpload {
+        code: number;
+        message: string;
+        errors: any[];
+        data: string;
+    }
+    
+    
     
 
 

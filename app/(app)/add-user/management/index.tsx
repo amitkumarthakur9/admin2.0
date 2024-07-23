@@ -1,10 +1,10 @@
 import {
     ScrollView,
 } from "react-native";
-import MutualSipAnalytics from "../../../../src/components/Analytics/MutualSipAnalytics";
 
-export default function MutualSipAnalyticsScreen() {
+import ManagementUserForm from "src/components/AddManagementUser/ManagementUserForm";
 
+export default function AddManagementUserForm() {
     return (
         <ScrollView
             className=""
@@ -13,8 +13,9 @@ export default function MutualSipAnalyticsScreen() {
                 height: "100%",
                 overflow: "scroll",
             }}
-        >            
-         <MutualSipAnalytics />
+        >
+            {/* <AddRMUser /> */}
+            <ManagementUserForm />
         </ScrollView>
     );
 }

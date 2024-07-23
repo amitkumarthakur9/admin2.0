@@ -27,21 +27,34 @@ const validationSchema = Yup.object().shape({
     isArnHolder: Yup.boolean(),
     arnNumber: Yup.string().when("isArnHolder", {
         is: (isArnHolder) => isArnHolder,
-        then: (schema) => schema.required("ARN Number is required"),
+        then: (schema) =>
+            schema
+                .required("ARN Number is required")
+                .matches(
+                    /^\d{1,6}$/,
+                    "Enter only the digits of the ARN-Number. example: ARN-123456"
+                ),
         otherwise: (schema) => schema.notRequired(),
     }),
     euinNumber: Yup.string().when("isArnHolder", {
         is: (isArnHolder) => isArnHolder,
-        then: (schema) => schema.required("EUIN Number is required"),
+        then: (schema) =>
+            schema
+                .required("EUIN Number is required")
+                .matches(
+                    /^E\d{1,6}$/,
+                    "EUIN Number must be in the format 'E' followed by up to 6 digits"
+                ),
         otherwise: (schema) => schema.notRequired(),
     }),
 });
 
-const PersonalDetailsForm = ({ onNext, initialValues }) => {
-    const [isLoading, setIsLoading] = React.useState(true);
+const PersonalDetailsForm = ({ onNext, initialValues, onPrevious }) => {
+    const [isLoading, setIsLoading] = React.useState(false);
     const [maritalStatusOptions, setMaritalStatusOptions] = React.useState([]);
 
     async function getMaritalStatus() {
+        setIsLoading(true);
         try {
             const response: any = await RemoteApi.get("marital-status");
             if (response.code === 200) {
@@ -60,41 +73,8 @@ const PersonalDetailsForm = ({ onNext, initialValues }) => {
                 "An error occurred while fetching the marital status list"
             );
         }
-    }
 
-    async function getPersonalDetail(setValues) {
-        try {
-            const response: any = await RemoteApi.get("user/me");
-
-            if (response.message === "Success") {
-                const { name, email, mobileNumber } = response.data;
-
-                const setPersonal = () => {
-                    setValues({
-                        fullName: name || "",
-                        email: email || "",
-                        mobileNumber: mobileNumber || "",
-                        isArnHolder: false,
-                        arnNumber: "",
-                    });
-
-                    console.log("settingpersonal");
-                };
-
-                // setPersonal();
-
-                console.log("setpersonal");
-            } else {
-                Alert.alert("Error", "Failed to fetch personal details");
-            }
-        } catch (error) {
-            Alert.alert(
-                "Error",
-                "An error occurred while fetching the personal details"
-            );
-        } finally {
-            setIsLoading(false);
-        }
+        setIsLoading(false);
     }
 
     React.useEffect(() => {
@@ -145,12 +125,7 @@ const PersonalDetailsForm = ({ onNext, initialValues }) => {
 
     return (
         <Formik
-            initialValues={{
-                ...initialValues,
-                isArnHolder: false,
-                arnNumber: "",
-                euinNumber: "",
-            }}
+            initialValues={initialValues}
             validationSchema={validationSchema}
             onSubmit={handleSubmit}
         >
@@ -164,10 +139,10 @@ const PersonalDetailsForm = ({ onNext, initialValues }) => {
                 setFieldValue,
                 setValues,
             }) => {
-                React.useEffect(() => {
-                    console.log("called get detail");
-                    getPersonalDetail(setValues);
-                }, []);
+                // React.useEffect(() => {
+                //     console.log("called get detail");
+                //     getPersonalDetail(setValues);
+                // }, []);
 
                 if (isLoading) {
                     return (
@@ -201,6 +176,13 @@ const PersonalDetailsForm = ({ onNext, initialValues }) => {
                                                 </Text>
                                             )}
                                     </View>
+                                    <View style={styles.fieldContainer}>
+                                        {initialValues.nameError && (
+                                            <Text style={styles.error}>
+                                                Please correct it as per remarks
+                                            </Text>
+                                        )}
+                                    </View>
                                 </View>
                             </View>
                             <View style={styles.fieldContainer}>
@@ -224,6 +206,13 @@ const PersonalDetailsForm = ({ onNext, initialValues }) => {
                                                 </Text>
                                             )}
                                     </View>
+                                    <View style={styles.fieldContainer}>
+                                        {initialValues.emailError && (
+                                            <Text style={styles.error}>
+                                                Please correct it as per remarks
+                                            </Text>
+                                        )}
+                                    </View>
                                 </View>
                             </View>
                         </View>
@@ -244,16 +233,23 @@ const PersonalDetailsForm = ({ onNext, initialValues }) => {
                                         keyboardType="numeric"
                                         maxLength={10} // Restrict input to 10 digits
                                     />
-                                </View>
-                                <View style={styles.fieldContainer}>
-                                    {touched.mobileNumber &&
-                                        errors.mobileNumber &&
-                                        typeof errors.mobileNumber ===
-                                            "string" && (
+                                    <View style={styles.fieldContainer}>
+                                        {touched.mobileNumber &&
+                                            errors.mobileNumber &&
+                                            typeof errors.mobileNumber ===
+                                                "string" && (
+                                                <Text style={styles.error}>
+                                                    {errors.mobileNumber}
+                                                </Text>
+                                            )}
+                                    </View>
+                                    <View style={styles.fieldContainer}>
+                                        {initialValues.mobileNumberError && (
                                             <Text style={styles.error}>
-                                                {errors.mobileNumber}
+                                                Please correct it as per remarks
                                             </Text>
                                         )}
+                                    </View>
                                 </View>
                             </View>
 
@@ -313,7 +309,7 @@ const PersonalDetailsForm = ({ onNext, initialValues }) => {
                                     <Text style={styles.label}>
                                         Enter your ARN number
                                     </Text>
-                                    <View className="flex flex-row items-center justify-center" >
+                                    <View className="flex flex-row items-center justify-center">
                                         <View className="p-[10px] bg-gray-100 border-gray-300 border-l border-t border-b rounded-l">
                                             <Text style={styles.prefix}>
                                                 ARN-
@@ -321,7 +317,6 @@ const PersonalDetailsForm = ({ onNext, initialValues }) => {
                                         </View>
                                         <TextInput
                                             style={styles.inputArn}
-                                         
                                             onChangeText={handleChange(
                                                 "arnNumber"
                                             )}
@@ -330,15 +325,22 @@ const PersonalDetailsForm = ({ onNext, initialValues }) => {
                                         />
                                     </View>
                                     <View style={styles.fieldContainer}>
-                                    {touched.arnNumber &&
-                                        errors.arnNumber &&
-                                        typeof errors.arnNumber ===
-                                            "string" && (
+                                        {touched.arnNumber &&
+                                            errors.arnNumber &&
+                                            typeof errors.arnNumber ===
+                                                "string" && (
+                                                <Text style={styles.error}>
+                                                    {errors.arnNumber}
+                                                </Text>
+                                            )}
+                                    </View>
+                                    <View style={styles.fieldContainer}>
+                                        {initialValues.arnNumberError && (
                                             <Text style={styles.error}>
-                                                {errors.arnNumber}
+                                                Please correct it as per remarks
                                             </Text>
                                         )}
-                                </View>
+                                    </View>
                                 </View>
                                 <View style={styles.fieldContainer}>
                                     <Text style={styles.label}>
@@ -364,14 +366,68 @@ const PersonalDetailsForm = ({ onNext, initialValues }) => {
                                                 </Text>
                                             )}
                                     </View>
+                                    <View style={styles.fieldContainer}>
+                                        {initialValues.euinNumberError && (
+                                            <Text style={styles.error}>
+                                                Please correct it as per remarks
+                                            </Text>
+                                        )}
+                                    </View>
                                 </View>
                             </View>
                         )}
-                        <Button
+                        <View className="flex flex-row justify-center gap-2">
+                            {initialValues.remark && (
+                                <View className="w-3/12">
+                                    <Pressable
+                                        style={({ pressed }) => [
+                                            styles.back,
+                                            {
+                                                borderColor: "#0066cc",
+                                                opacity: pressed ? 0.6 : 1,
+                                            },
+                                        ]}
+                                        onPress={onPrevious}
+                                    >
+                                        <Text
+                                            style={[
+                                                styles.buttonText,
+                                                { color: "#0066cc" },
+                                            ]}
+                                        >
+                                            {"Back"}
+                                        </Text>
+                                    </Pressable>
+                                </View>
+                            )}
+
+                            <View className="w-3/12">
+                                <Pressable
+                                    style={({ pressed }) => [
+                                        styles.proceed,
+                                        {
+                                            borderColor: "#0066cc",
+                                            opacity: pressed ? 0.6 : 1,
+                                        },
+                                    ]}
+                                    onPress={() => handleSubmit()}
+                                >
+                                    <Text
+                                        style={[
+                                            styles.buttonText,
+                                            { color: "#ffffff" },
+                                        ]}
+                                    >
+                                        {"Proceed"}
+                                    </Text>
+                                </Pressable>
+                            </View>
+                        </View>
+                        {/* <Button
                             title="Proceed"
                             onPress={() => handleSubmit()}
                             color="#0066cc"
-                        />
+                        /> */}
                     </ScrollView>
                 );
             }}
@@ -490,6 +546,24 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
         marginRight: 8,
+    },
+    back: {
+        padding: 10,
+        borderWidth: 1,
+        borderRadius: 5,
+        alignItems: "center",
+        marginBottom: 20,
+    },
+    proceed: {
+        padding: 10,
+        borderWidth: 1,
+        borderRadius: 5,
+        alignItems: "center",
+        marginBottom: 20,
+        backgroundColor: "#0066cc",
+    },
+    buttonText: {
+        fontSize: 16,
     },
 });
 
