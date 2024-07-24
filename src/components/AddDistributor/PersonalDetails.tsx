@@ -23,7 +23,9 @@ const validationSchema = Yup.object().shape({
     dateOfBirth: Yup.string().required("dateOfBirth is required"),
 
     email: Yup.string().email("Invalid email").required("Email is required"),
-    gender: Yup.number().required("Gender is required"),
+    gender: Yup.number()
+        .typeError("Gender is required")
+        .required("Gender is required"),
     mobileNumber: Yup.string()
         .matches(/^\d{10}$/, "Mobile number must be exactly 10 digits")
         .required("Mobile number is required"),
@@ -36,7 +38,7 @@ const PersonalDetails = ({ onNext, initialValues }) => {
     const [isLoading, setIsLoading] = React.useState(false);
 
     const options = [
-        { label: "Male", value: 1},
+        { label: "Male", value: 1 },
         { label: "Female", value: 2 },
         { label: "Other", value: 4 },
     ];
@@ -186,13 +188,17 @@ const PersonalDetails = ({ onNext, initialValues }) => {
                                     />
                                     <View style={styles.fieldContainer}>
                                         {touched.gender &&
-                                            errors.gender &&
                                             typeof errors.gender ===
-                                                "number" && (
+                                                "string" && (
                                                 <Text style={styles.error}>
                                                     {errors.gender}
                                                 </Text>
                                             )}
+                                        {/* {touched.gender && errors.gender && (
+                                            <Text style={styles.error}>
+                                                {errors.gender}
+                                            </Text>
+                                        )} */}
                                     </View>
                                 </View>
                             </View>

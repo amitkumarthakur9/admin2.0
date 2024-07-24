@@ -122,91 +122,91 @@ const MainComponent = () => {
     async function getUserDetail() {
         setIsLoading(true);
         try {
-            // const response: UserMeData = await RemoteApi.get("user/me");
+            const response: UserMeData = await RemoteApi.get("user/me");
             // const response = await getResponse(200);
 
-            const response = {
-                code: 200,
-                message: "Success",
-                data: {
-                    name: "Senior Manager",
-                    email: "sm@gmail.com",
-                    mobileNumber: "9778686786",
-                    maritalStatus: {
-                        id: 1,
-                        name: "Single",
-                    },
-                    panNumber: "ABCDE1234G",
-                    arn: "12345",
-                    euin: "12345",
-                    dsaCode: null,
-                    remark: {
-                        id: 2,
-                        remark: "",
-                    },
-                    incomeSlab: {
-                        id: 0,
-                        name: null,
-                    },
-                    isOnBoarded: true,
-                    isEsigned: false,
-                    areDocumentsUploaded: false,
-                    educationalQualification: {
-                        id: null,
-                        name: null,
-                    },
-                    bankAccount: [
-                        // {
-                        //     id: "42",
-                        //     accountNumber: "45499388",
-                        //     bankAccountType: {
-                        //         id: 1,
-                        //         name: "Savings Account",
-                        //     },
-                        //     bankBranch: {
-                        //         ifscCode: "KKBK0008066",
-                        //     },
-                        //     bank: {
-                        //         id: "107",
-                        //         name: "KOTAK MAHINDRA BANK LIMITED",
-                        //     },
-                        // },
-                    ],
-                    address: [
-                        {
-                            line1: "Bangalore",
-                            line2: "Bangalore",
-                            line3: null,
-                            pincode: "560025",
-                            district: {
-                                id: "224",
-                                name: "BENGALURU",
-                            },
-                            state: {
-                                id: 15,
-                                name: "KARNATAKA",
-                            },
-                        },
-                    ],
-                    nameError: false,
-                    emailError: false,
-                    mobileNumberError: false,
-                    arnNumberError: false,
-                    euinNumberError: false,
-                    addressLineError: false,
-                    countryError: false,
-                    stateError: false,
-                    cityError: false,
-                    pinCodeError: false,
-                    panError: false,
-                    esignedDocumentError: false,
-                    aadharFrontDocumentError: false,
-                    aadharBackDocumentError: false,
-                    panCardDocumentError: false,
-                    cancelledChequeError: false,
-                },
-                errors: [],
-            };
+            // const response = {
+            //     code: 200,
+            //     message: "Success",
+            //     data: {
+            //         name: "Senior Manager",
+            //         email: "sm@gmail.com",
+            //         mobileNumber: "9778686786",
+            //         maritalStatus: {
+            //             id: 1,
+            //             name: "Single",
+            //         },
+            //         panNumber: "ABCDE1234G",
+            //         arn: "12345",
+            //         euin: "12345",
+            //         dsaCode: null,
+            //         remark: {
+            //             id: 2,
+            //             remark: "Remasdngfkdsnagladnsglkndlkanbglkdnl;kagn;lkdkng;ladnslg;nld;anglkndsalgndsl;ngldsngl;ndslgnlsdnagodsangndsaalgnaddknfkdnfkndkfndknfkdnalfldk;nfkldnafklndlkfnldksanfklsdanflkasdnfklsadnlfknsdlknslark",
+            //         },
+            //         incomeSlab: {
+            //             id: 0,
+            //             name: null,
+            //         },
+            //         isOnBoarded: true,
+            //         isEsigned: false,
+            //         areDocumentsUploaded: false,
+            //         educationalQualification: {
+            //             id: null,
+            //             name: null,
+            //         },
+            //         bankAccount: [
+            //             // {
+            //             //     id: "42",
+            //             //     accountNumber: "45499388",
+            //             //     bankAccountType: {
+            //             //         id: 1,
+            //             //         name: "Savings Account",
+            //             //     },
+            //             //     bankBranch: {
+            //             //         ifscCode: "KKBK0008066",
+            //             //     },
+            //             //     bank: {
+            //             //         id: "107",
+            //             //         name: "KOTAK MAHINDRA BANK LIMITED",
+            //             //     },
+            //             // },
+            //         ],
+            //         address: [
+            //             {
+            //                 line1: "Bangalore",
+            //                 line2: "Bangalore",
+            //                 line3: null,
+            //                 pincode: "560025",
+            //                 district: {
+            //                     id: "224",
+            //                     name: "BENGALURU",
+            //                 },
+            //                 state: {
+            //                     id: 15,
+            //                     name: "KARNATAKA",
+            //                 },
+            //             },
+            //         ],
+            //         nameError: false,
+            //         emailError: false,
+            //         mobileNumberError: false,
+            //         arnNumberError: false,
+            //         euinNumberError: false,
+            //         addressLineError: false,
+            //         countryError: false,
+            //         stateError: false,
+            //         cityError: false,
+            //         pinCodeError: false,
+            //         panError: false,
+            //         esignedDocumentError: false,
+            //         aadharFrontDocumentError: true,
+            //         aadharBackDocumentError: false,
+            //         panCardDocumentError: false,
+            //         cancelledChequeError: false,
+            //     },
+            //     errors: [],
+            // };
 
             if (response.code === 200) {
                 const userData = response.data;
@@ -387,11 +387,11 @@ const MainComponent = () => {
                                 <Text style={styles.buttonText}>Resubmit</Text>
                             </Pressable>
                         </View> */}
-                        <View>
+                        <View className="flex flex-col items-center">
                             <Text className="text-center color-black text-lg font-bold p-4">
                                 Remarks
                             </Text>
-                            <Text className="text-center color-black text-lg font-bold p-4">
+                            <Text className="text-center color-gray-700 text-lg p-4 w-1/2">
                                 {formData.remark}
                             </Text>
                         </View>
@@ -775,7 +775,7 @@ const MainComponent = () => {
         // }
 
         if (!formData.remark || formData.remark) {
-            stepLabel.push("Submit");
+            // stepLabel.push("Submit");
             formSteps.push({
                 key: "8",
                 content: (

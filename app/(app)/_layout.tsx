@@ -199,6 +199,24 @@ export default function AppLayout() {
             ),
         },
         {
+            key: "DsaForm",
+            content: (
+                <Drawer.Screen
+                                    name="dsa-form/index"
+                                    options={{
+                                        drawerLabel: "DSA form",
+                                        title: "DSA form",
+                                        // drawerItemStyle: {
+                                        //     display: "none",
+                                        // },
+                                        unmountOnBlur: true,
+                                    }}
+                                    initialParams={{}}
+                                    component={DsaFormScreen}
+                                />
+            ),
+        },
+        {
             key: "clientName",
             content: (
                 <Drawer.Screen
@@ -228,7 +246,10 @@ export default function AppLayout() {
                 />
             ),
         },
+       
     ];
+
+    
 
     // Conditionally add an additional object based on roleId to index 2
     if (roleId > 2) {
@@ -301,6 +322,28 @@ export default function AppLayout() {
                 </>
             ),
         });
+        drawerStructure.splice(1, 0, {
+            key: "AddDistributorUserForm",
+            content: (
+                <>
+                    <Drawer.Screen
+                                    name="dsa-form/request/index"
+                                    options={{
+                                        drawerLabel: "DSA Onboard Request",
+                                        title: "DSA Onboard Request",
+                                        // drawerItemStyle: {
+                                        //     display: "none",
+                                        // },
+                                        unmountOnBlur: true,
+                                    }}
+                                    initialParams={{}}
+                                    component={DsaRequestScreen}
+                                />
+                </>
+            ),
+        });
+
+        
 
 
         
@@ -718,33 +761,9 @@ export default function AppLayout() {
                                     initialParams={{}}
                                     component={ChapterLearningCenter}
                                 />
-                                <Drawer.Screen
-                                    name="dsa-form/index"
-                                    options={{
-                                        drawerLabel: "DSA form",
-                                        title: "DSA form",
-                                        drawerItemStyle: {
-                                            display: "none",
-                                        },
-                                        unmountOnBlur: true,
-                                    }}
-                                    initialParams={{}}
-                                    component={DsaFormScreen}
-                                />
+                                
 
-                                <Drawer.Screen
-                                    name="dsa-form/request/index"
-                                    options={{
-                                        drawerLabel: "DSA form",
-                                        title: "DSA form",
-                                        drawerItemStyle: {
-                                            display: "none",
-                                        },
-                                        unmountOnBlur: true,
-                                    }}
-                                    initialParams={{}}
-                                    component={DsaRequestScreen}
-                                />
+                                
                             </Drawer.Navigator>
                             {/* <Fab
                                 renderInPortal={false}

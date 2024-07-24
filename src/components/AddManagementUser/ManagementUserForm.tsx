@@ -22,13 +22,13 @@ const ManagementUserForm = () => {
     const [step, setStep] = useState(1);
     const [showTooltip, setShowTooltip] = useState(false);
     const [formData, setFormData] = useState({
-        fullName: "Test Name",
-        email: "test@gmail.con",
-        mobileNumber: "9999999999",
-        employeeCode: "8888888888",
-        password: "Test@1234",
-        passwordConfirm: "Test@1234",
-        assignedRole: "1",
+        fullName: "",
+        email: "",
+        mobileNumber: "",
+        employeeCode: "",
+        password: "",
+        passwordConfirm: "",
+        assignedRole: "0",
     });
 
     const handleNext = (values) => {

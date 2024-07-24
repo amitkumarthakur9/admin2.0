@@ -32,12 +32,20 @@ const StepThreeUpload = ({ onSuccess, initialValues }) => {
         (error) => error
     );
 
-    const isSubmitDisabled =
-        !pickedDocuments.panCard ||
-        !pickedDocuments.aadharFront ||
-        !pickedDocuments.aadharBack ||
-        !consentGiven ||
-        anyDocumentError;
+    const hasAadharErrors =
+        documentErrors.aadharFront || documentErrors.aadharBack;
+
+    const isSubmitDisabled = anyDocumentError
+        ? (documentErrors.panCard && !pickedDocuments.panCard) ||
+          (documentErrors.aadharFront && !pickedDocuments.aadharFront) ||
+          (documentErrors.aadharBack && !pickedDocuments.aadharBack) ||
+          (documentErrors.bankCheck && !pickedDocuments.bankCheck) ||
+          (hasAadharErrors && !consentGiven)
+        : !pickedDocuments.panCard ||
+          !pickedDocuments.aadharFront ||
+          !pickedDocuments.aadharBack ||
+          !pickedDocuments.bankCheck ||
+          !consentGiven;
 
     useEffect(() => {
         toast.closeAll();
@@ -132,6 +140,8 @@ const StepThreeUpload = ({ onSuccess, initialValues }) => {
                     panCard: null,
                     aadharFront: null,
                     aadharBack: null,
+                    bankCheck: null,
+                    esignedAgreement: null,
                 });
 
                 onSuccess();
@@ -170,22 +180,68 @@ const StepThreeUpload = ({ onSuccess, initialValues }) => {
             <View className="flex flex-col justify-center items-start w-full">
                 <FormControl.Label>{label}*</FormControl.Label>
                 <TouchableOpacity
-                    className={`flex flex-row border-[#114EA8] border-[1px] rounded-[5px] px-3 py-2 items-center justify-between w-full ${
-                        documentErrors[documentKey] ? "border-red-500" : ""
-                    }`}
+                    className={`flex flex-row border-[#114EA8] border-[1px] rounded-[5px] px-3 py-2 items-center justify-between w-full 
+                        `}
                     onPress={() => pickDocument(documentKey)}
                     disabled={anyDocumentError && !documentErrors[documentKey]}
                 >
-                    <View className="flex flex-row justify-start items-center w-full">
-                        {pickedDocuments[documentKey] && (
-                            <View className="mr-[10px] bg-[#E8F1FF] p-2 rounded-full">
-                                <Icon
-                                    name="file-multiple-outline"
-                                    size={16}
-                                    color="#396CB7"
-                                />
-                            </View>
+                    <View className="flex flex-row justify-start items-center w-full space-x-2">
+                        {pickedDocuments[documentKey] ? (
+                            <>
+                                <View className="mr-[10px] bg-[#E8F1FF] p-2 rounded-full">
+                                    <Icon
+                                        name="file-multiple-outline"
+                                        size={16}
+                                        color="#396CB7"
+                                    />
+                                </View>
+                                <View className="flex flex-row justify-between w-11/12">
+                                    <Text className="text-[#ada9a9]">
+                                        {pickedDocuments[documentKey].name}
+                                    </Text>
+                                    <Icon
+                                        name="delete-forever-outline"
+                                        size={20}
+                                        color="#FF551F"
+                                    />
+                                </View>
+                            </>
+                        ) : !documentErrors[documentKey] ? (
+                            <>
+                                <View className="mr-[10px] bg-[#E8F1FF] p-2 rounded-full">
+                                    <Icon
+                                        name="file-multiple-outline"
+                                        size={16}
+                                        color="#396CB7"
+                                    />
+                                </View>
+                                <Text className="text-[#114EA8]">{`${label} Uploaded`}</Text>
+                            </>
+                        ) : (
+                            <>
+                                <View className="mr-[10px] bg-[#E8F1FF] p-2 rounded-full">
+                                    <Icon
+                                        name="file-multiple-outline"
+                                        size={16}
+                                        color="#396CB7"
+                                    />
+                                </View>
+                                <Text className="text-[#114EA8]">{`Upload ${label}`}</Text>
+                            </>
                         )}
+                    </View>
+
+                    {/* <View className="flex flex-row justify-start items-center w-full">
+                        {pickedDocuments[documentKey] ||
+                            (!documentErrors[documentKey] && (
+                                <View className="mr-[10px] bg-[#E8F1FF] p-2 rounded-full">
+                                    <Icon
+                                        name="file-multiple-outline"
+                                        size={16}
+                                        color="#396CB7"
+                                    />
+                                </View>
+                            ))}
                         <View
                             className={
                                 pickedDocuments[documentKey]
@@ -200,9 +256,10 @@ const StepThreeUpload = ({ onSuccess, initialValues }) => {
                                         : "text-[#114EA8]"
                                 }
                             >
-                                {pickedDocuments[documentKey]
-                                    ? pickedDocuments[documentKey].name
-                                    : `Upload ${label}`}
+                                {!documentErrors[documentKey] ? label :
+                                    (pickedDocuments[documentKey]
+                                        ? pickedDocuments[documentKey].name
+                                        : `Upload ${label}`)}
                             </Text>
                             {pickedDocuments[documentKey] && (
                                 <Icon
@@ -212,7 +269,7 @@ const StepThreeUpload = ({ onSuccess, initialValues }) => {
                                 />
                             )}
                         </View>
-                    </View>
+                    </View> */}
                 </TouchableOpacity>
                 {documentErrors[documentKey] && (
                     <Text className="text-red-500 mt-1">
@@ -277,12 +334,19 @@ const StepThreeUpload = ({ onSuccess, initialValues }) => {
                                 "aadharBack"
                             )}
                         </View>
-                        <View className="flex flex-row justify-center w-[50%] gap-2">
+                        <View className="flex flex-row justify-center items-start w-[50%] gap-2">
+                            {renderDocumentUpload(
+                                "Cancelled Bank Check",
+                                "bankCheck"
+                            )}
+                            <View className="flex flex-col justify-center items-start w-full"></View>
+                        </View>
+                        <View className="flex flex-row justify-center w-[50%]">
                             {initialValues.aadharFrontDocumentError ||
                             initialValues.aadharBackDocumentError ||
                             !initialValues.remark ? (
                                 <View className="justify-center items-center w-full mb-4">
-                                    <View className="p-4">
+                                    <View className="">
                                         <CustomCheckbox
                                             label="I provide my consent to use Aadhar document for address verification and I agree to have masked the first 8 numbers of Aadhar and I agree for the collection, storage, and use of my Aadhar number for the specified purposes."
                                             isChecked={consentGiven}
@@ -297,12 +361,12 @@ const StepThreeUpload = ({ onSuccess, initialValues }) => {
                             )}
                         </View>
 
-                        <View className="flex items-center my-[20px] w-full">
+                        <View className="flex items-center w-1/3">
                             <Button
                                 w="100%"
                                 isLoading={isLoading}
                                 isLoadingText="Uploading..."
-                                marginTop={6}
+                                // marginTop={1}
                                 bgColor={"#013974"}
                                 onPress={uploadDocument}
                                 isDisabled={isSubmitDisabled}

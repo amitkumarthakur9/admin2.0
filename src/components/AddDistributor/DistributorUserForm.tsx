@@ -23,17 +23,17 @@ const DistributorUserForm = () => {
     const [step, setStep] = useState(1);
     const [showTooltip, setShowTooltip] = useState(false);
     const [formData, setFormData] = useState({
-        fullName: "Test Name",
-        email: "test@gmail.con",
-        mobileNumber: "9999999999",
-        password: "Test@1234",
-        passwordConfirm: "Test@1234",
+        fullName: "",
+        email: "",
+        mobileNumber: "",
+        password: "",
+        passwordConfirm: "",
         assignedRole: "0",
         dateOfBirth: "",
-        panNumber: "AAAPZ1234G",
-        arnNumber: "AAAPZ1234G",
-        euinNumber: "AAAPZ1234G",
-        gender: 0,
+        panNumber: "",
+        arnNumber: "",
+        euinNumber: "",
+        gender: null,
     });
 
     const handleNext = (values) => {
