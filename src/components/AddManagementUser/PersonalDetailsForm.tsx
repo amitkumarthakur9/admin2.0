@@ -21,8 +21,7 @@ const validationSchema = Yup.object().shape({
         .matches(/^\d{10}$/, "Mobile number must be exactly 10 digits")
         .required("Mobile number is required"),
     employeeCode: Yup.string()
-        .matches(/^\d{10}$/, "Mobile number must be exactly 10 digits")
-        .required("Mobile number is required"),
+        .required("Employee Code is required"),
 });
 
 const PersonalDetailsForm = ({ onNext, initialValues }) => {

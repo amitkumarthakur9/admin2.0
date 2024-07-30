@@ -31,7 +31,7 @@ import DataGrid from "../DataGrid/DataGrid";
 import CardWithTabs from "../Card/CardWithTabs";
 import { useStorageState } from "../../services/useStorageState";
 import { jwtDecode } from "jwt-decode";
-import MutualSipAnalytics from "./MutualSipAnalytics";
+// import MutualSipAnalytics from "./MutualSipAnalytics";
 import LumpsumAnalytics from "./LumpsumAnalytics";
 import MutualSipTab from "./MutualSipTab";
 import MutualSipTable from "./MutualSipTable";

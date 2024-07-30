@@ -55,7 +55,7 @@ const DsaAllRequestTable = () => {
     const { width } = useWindowDimensions();
     const [modalVisible, setModalVisible] = useState(false);
     const [RejectmodalVisible, setRejectModalVisible] = useState(false);
-    
+
     const [remarkCheckModalVisible, setRemarkCheckModalVisible] =
         useState(false);
     const [modalType, setModalType] = useState("approve");
@@ -83,7 +83,7 @@ const DsaAllRequestTable = () => {
         setCurrentClientId(clientId);
 
         if (type === "reject") {
-            setRejectModalVisible(true)
+            setRejectModalVisible(true);
         } else {
             setModalVisible(true);
         }
@@ -101,7 +101,7 @@ const DsaAllRequestTable = () => {
 
     const handleCloseModal = () => {
         setModalVisible(false);
-        setRejectModalVisible(false)
+        setRejectModalVisible(false);
     };
 
     async function getDataList(
@@ -240,12 +240,7 @@ const DsaAllRequestTable = () => {
                 key: "DsaDocumentDownload",
                 content: (
                     <View className="flex flex-row w-[99%]">
-                        {/* <DsaDocumentDownload
-
-                            clientId={item.requestId}
-                            downloadApi={`file/download-dsa-documents?documentName=esigneddocument&requestId=${item?.requestId}`}
-                            fileName={"Dsa-Document"}
-                        /> */}
+                        <DsaDocumentDownload requestId={item.requestId} />
                     </View>
                 ),
             },
@@ -275,12 +270,10 @@ const DsaAllRequestTable = () => {
                                 onPress={() =>
                                     handleOpenModal("reject", item.requestId)
                                 }
-
                                 // onPress={() =>
                                 //     setRejectModalVisible(true)
                                 // }
 
-                                
                                 className="bg-[#FFD2D2] rounded-full px-5 py-2"
                             >
                                 <View>
@@ -365,7 +358,7 @@ const DsaAllRequestTable = () => {
                 />
                 {/* )} */}
             </View>
-            
+
             <RejectModal
                 visible={RejectmodalVisible}
                 onClose={handleCloseModal}
@@ -375,7 +368,7 @@ const DsaAllRequestTable = () => {
                 getDataList={getDataList}
                 onBack={handleCloseModal}
             />
-            {/* <RejectModal
+            <RequestModal
                 visible={modalVisible}
                 onClose={handleCloseModal}
                 type={modalType}
@@ -383,7 +376,7 @@ const DsaAllRequestTable = () => {
                 onSubmit={handleCloseModal}
                 getDataList={getDataList}
                 onBack={handleBackToRemarkCheckModal}
-            /> */}
+            />
             {/* <RemarkCheckModal
                 visible={remarkCheckModalVisible}
                 onClose={() => setRemarkCheckModalVisible(false)}

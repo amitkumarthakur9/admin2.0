@@ -1,117 +1,99 @@
-// NestedAccordion.js
-import { background } from "native-base/lib/typescript/theme/styled-system";
-import React, { useState } from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
-import { List, DataTable } from "react-native-paper";
+import React, { useState, useEffect } from "react";
+import {
+    View,
+    Text,
+    StyleSheet,
+    ScrollView,
+    TouchableOpacity,
+    ActivityIndicator,
+} from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
+import { dateFormat, dateTimeFormat } from "src/helper/DateUtils";
+import { MutualSIPAnalytics } from "src/interfaces/MutualSIPanalyticsInterface";
+import RemoteApi from "src/services/RemoteApi";
 
 const MutualSipAccordion = ({ data }) => {
-    const [expanded, setExpanded] = useState(false);
+    const [totals, setTotals] = useState({
+        canceledSipAmount: 0,
+        canceledSipCount: 0,
+        successSipAmount: 0,
+        successSipCount: 0,
+        failedSipAmount: 0,
+        failedSipCount: 0,
+    });
 
-    console.log("rm list");
-    console.table(data);
+    const calculateTotals = () => {
+        const totalData = data.reduce(
+            (acc, item) => {
+                acc.canceledSipAmount += item.canceledSipAmount;
+                acc.canceledSipCount += item.canceledSipCount;
+                acc.successSipAmount += item.successSipAmount;
+                acc.successSipCount += item.successSipCount;
+                acc.failedSipAmount += item.failedSipAmount;
+                acc.failedSipCount += item.failedSipCount;
+                return acc;
+            },
+            {
+                canceledSipAmount: 0,
+                canceledSipCount: 0,
+                successSipAmount: 0,
+                successSipCount: 0,
+                failedSipAmount: 0,
+                failedSipCount: 0,
+            }
+        );
+
+        setTotals(totalData);
+    };
+
+    useEffect(() => {
+        calculateTotals();
+    }, [data]);
 
     return (
         <ScrollView>
             <View style={styles.details}>
-                <DataTable>
-                    <DataTable.Header
-                        style={{
-                            backgroundColor: "#CDF0FF",
-                            // borderBottomColor: "grey",
-                            // height:16,
-                            borderWidth: 0,
-                            paddingVertical: 14,
-                        }}
-                    >
-                        <View className="w-[19%] justify-center">
-                            <Text className="font-semibold">RM Name</Text>
-                        </View>
-                        <View className="w-[13%] justify-center">
-                            <Text className="font-semibold">
-                                Live SIP Count
-                            </Text>
-                        </View>
-                        <View className="w-[13%] justify-center">
-                            <Text className="font-semibold">
-                                Live SIP Amount
-                            </Text>
-                        </View>
-                        <View className="w-[13%] justify-center">
-                            <Text className="font-semibold">
-                                Cancelled SIP Count
-                            </Text>
-                        </View>
-                        <View className="w-[13%] justify-center">
-                            <Text className="font-semibold">
-                                Cancelled SIP Amount
-                            </Text>
-                        </View>
-                        <View className="w-[13%] justify-center">
-                            <Text className="font-semibold">
-                                Transaction Failed SIP Count
-                            </Text>
-                        </View>
-                        <View className="w-[13%] justify-center">
-                            <Text className="font-semibold">
-                                Transaction Failed SIP Amount
-                            </Text>
-                        </View>
-                        <View className="w-[3%] justify-center items-center"></View>
-                    </DataTable.Header>
+                <View style={styles.RmtableHeader}>
+                    <Text style={styles.headerCell}>RM Name</Text>
+                    <Text style={styles.headerCell}>Live SIP Count</Text>
+                    <Text style={styles.headerCell}>Live SIP Amount</Text>
+                    <Text style={styles.headerCell}>Cancelled SIP Count</Text>
+                    <Text style={styles.headerCell}>Cancelled SIP Amount</Text>
+                    <Text style={styles.headerCell}>
+                        Transaction Failed SIP Count
+                    </Text>
+                    <Text style={styles.headerCell}>
+                        Transaction Failed SIP Amount
+                    </Text>
+                    <View style={styles.iconCell}></View>
+                </View>
 
-                    {data.rmList.map((rm, index) => (
-                        <RMRow key={index} rm={rm} />
-                    ))}
+                {data.map((rm, index) => (
+                    <RMRow key={index} rm={rm} />
+                ))}
 
-                    <DataTable.Header
-                        style={{
-                            backgroundColor: "#bae1ff",
-                            // borderBottomColor: "grey",
-                            borderWidth: 0,
-                            paddingVertical: 14,
-                        }}
-                    >
-                        {/* <DataTable.Title className="font-bold" >Total</DataTable.Title> */}
-                        <View className="w-[19%] justify-center">
-                            <Text className="font-bold">Total</Text>
-                        </View>
-                        <View className="w-[13%] justify-center">
-                            <Text className="font-bold">
-                                {data.rmTotal.liveSip}
-                            </Text>
-                        </View>
-                        <View className="w-[13%] justify-center">
-                            <Text className="font-bold">
-                                {data.rmTotal.liveAmount}
-                            </Text>
-                        </View>
-                        <View className="w-[13%] justify-center">
-                            <Text className="font-bold">
-                                {data.rmTotal.cancelledSip}
-                            </Text>
-                        </View>
-                        <View className="w-[13%] justify-center">
-                            <Text className="font-bold">
-                                {data.rmTotal.cancelledAmount}
-                            </Text>
-                        </View>
-                        <View className="w-[13%] justify-center">
-                            <Text className="font-bold">
-                                {data.rmTotal.failedSip}
-                            </Text>
-                        </View>
-                        <View className="w-[13%] justify-center">
-                            <Text className="font-bold">
-                                {" "}
-                                {data.rmTotal.failedAmount}
-                            </Text>
-                        </View>
-                        <View className="w-[3%] justify-center">
-                            <Text className="font-bold"></Text>
-                        </View>
-                    </DataTable.Header>
-                </DataTable>
+                <View style={styles.tableFooter}>
+                    <Text style={styles.footerCell}>Total</Text>
+                    <Text style={styles.footerCell}>
+                        {totals.successSipCount}
+                    </Text>
+                    <Text style={styles.footerCell}>
+                        {totals.successSipAmount}
+                    </Text>
+                    <Text style={styles.footerCell}>
+                        {totals.canceledSipCount}
+                    </Text>
+                    <Text style={styles.footerCell}>
+                        {totals.canceledSipAmount}
+                    </Text>
+                    <Text style={styles.footerCell}>
+                        {totals.failedSipCount}
+                    </Text>
+                    <Text style={styles.footerCell}>
+                        {totals.failedSipAmount}
+                    </Text>
+                    <View style={styles.iconCell}></View>
+                </View>
             </View>
         </ScrollView>
     );
@@ -119,49 +101,81 @@ const MutualSipAccordion = ({ data }) => {
 
 const RMRow = ({ rm }) => {
     const [expanded, setExpanded] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [ifaList, setIfaList] = useState([]);
+
+    const handleExpand = async () => {
+        setExpanded(!expanded);
+        setLoading(true);
+
+        const data = {
+            startDate: "2024-01-01",
+            endDate: "2024-12-31",
+        };
+
+        try {
+            const response: MutualSIPAnalytics = await RemoteApi.post(
+                `mutualfund-analytics/sip/rm/${rm.id}`,
+                data
+            );
+
+            if (response.message == "Success") {
+                setIfaList(response.data);
+                // setItemsPerPage(response.count)
+                // setTotalItems(response.filterCount);
+                setLoading(false);
+                // setTotalPages(
+                //     Math.ceil(
+                //         (response.filterCount || response.data.length) /
+                //             itemsPerPage
+                //     )
+                // );
+                console.log("ifalist");
+                console.log(response.data);
+            } else {
+                setLoading(false);
+
+                // alert("Internal Server Error");
+            }
+        } catch (error) {
+            alert(error);
+        }
+
+        // if (!expanded && ifaList.length === 0) {
+        //     setLoading(true);
+        //     // Simulating API call
+        //     setTimeout(() => {
+        //         setIfaList(rm.ifalist); // Replace with actual API call
+        //         setLoading(false);
+        //     }, 1000);
+        // }
+    };
 
     return (
         <>
-            <DataTable.Row
-                style={{
-                    backgroundColor: "#ECF9FF",
-                    // borderBottomColor: "grey",
-                }}
-                onPress={() => setExpanded(!expanded)}
-            >
-                <View className="w-[19%] justify-center">
-                    <Text>{rm.rmName}</Text>
+            <TouchableOpacity onPress={handleExpand} style={styles.RmTableRow}>
+                <Text style={styles.cell}>{rm?.name}</Text>
+                <Text style={styles.cell}>{rm?.successSipCount}</Text>
+                <Text style={styles.cell}>{rm?.successSipAmount}</Text>
+                <Text style={styles.cell}>{rm?.canceledSipCount}</Text>
+                <Text style={styles.cell}>{rm?.canceledSipAmount}</Text>
+                <Text style={styles.cell}>{rm?.failedSipCount}</Text>
+                <Text style={styles.cell}>{rm?.failedSipAmount}</Text>
+                <View style={styles.iconCell}>
+                    <Icon
+                        name={!expanded ? "caret-down" : "caret-up"}
+                        size={16}
+                    />
                 </View>
-                <View className="w-[13%] justify-center">
-                    <Text>{rm.liveSip}</Text>
-                </View>
-                <View className="w-[13%] justify-center">
-                    <Text>{rm.liveAmount}</Text>
-                </View>
-                <View className="w-[13%] justify-center">
-                    <Text>{rm.cancelledSip}</Text>
-                </View>
-                <View className="w-[13%] justify-center">
-                    <Text>{rm.cancelledAmount}</Text>
-                </View>
-                <View className="w-[13%] justify-center">
-                    <Text>{rm.failedSip}</Text>
-                </View>
-                <View className="w-[13%] justify-center">
-                    <Text>{rm.failedAmount}</Text>
-                </View>
-                <View className="w-[3%] justify-center items-center">
-                    {!expanded ? (
-                        <Icon name="caret-down" size={16} />
-                    ) : (
-                        <Icon name="caret-up" size={16} />
-                    )}
-                </View>
-            </DataTable.Row>
+            </TouchableOpacity>
 
             {expanded && (
                 <View style={styles.details}>
-                    <RMAccordion ifalist={rm.ifalist} ifaTotal={rm.ifaTotal} />
+                    {loading ? (
+                        <ActivityIndicator size="small" color="#0000ff" />
+                    ) : (
+                        <RMAccordion ifalist={ifaList} ifaTotal={rm.ifaTotal} />
+                    )}
                 </View>
             )}
         </>
@@ -169,108 +183,106 @@ const RMRow = ({ rm }) => {
 };
 
 const RMAccordion = ({ ifalist, ifaTotal }) => {
-    const [expanded, setExpanded] = useState(false);
-
-    console.log("RMaccordian");
-    console.table(ifalist);
-
     return (
         <View style={styles.details}>
-            <DataTable>
-                <DataTable.Header
-                    style={{
-                        backgroundColor: "#D4FCF9",
-                        // borderBottomColor: "grey",
-                        // height:16,
-                        borderWidth: 0,
-                            paddingVertical: 14,
-                    }}
-                >
-                    <View className="w-[19%] justify-center">
-                        <Text className="font-semibold">IFA Name</Text>
-                    </View>
-                    <View className="w-[13%] justify-center">
-                        <Text className="font-semibold">Live SIP Count</Text>
-                    </View>
-                    <View className="w-[13%] justify-center">
-                        <Text className="font-semibold">Live SIP Amount</Text>
-                    </View>
-                    <View className="w-[13%] justify-center">
-                        <Text className="font-semibold">
-                            Cancelled SIP Count
-                        </Text>
-                    </View>
-                    <View className="w-[13%] justify-center">
-                        <Text className="font-semibold">
-                            Cancelled SIP Amount
-                        </Text>
-                    </View>
-                    <View className="w-[13%] justify-center">
-                        <Text className="font-semibold">
-                            Transaction Failed SIP Count
-                        </Text>
-                    </View>
-                    <View className="w-[13%] justify-center">
-                        <Text className="font-semibold">
-                            Transaction Failed SIP Amount
-                        </Text>
-                    </View>
-                    <View className="w-[3%] justify-center items-center"></View>
-                </DataTable.Header>
-                {ifalist.map((ifa, index) => (
-                    <IFAAccordion key={index} ifa={ifa} />
-                ))}
-            </DataTable>
+            <View style={styles.ifaTableHeader}>
+                <Text style={styles.headerCell}>IFA Name</Text>
+                <Text style={styles.headerCell}>Live SIP Count</Text>
+                <Text style={styles.headerCell}>Live SIP Amount</Text>
+                <Text style={styles.headerCell}>Cancelled SIP Count</Text>
+                <Text style={styles.headerCell}>Cancelled SIP Amount</Text>
+                <Text style={styles.headerCell}>
+                    Transaction Failed SIP Count
+                </Text>
+                <Text style={styles.headerCell}>
+                    Transaction Failed SIP Amount
+                </Text>
+                <View style={styles.iconCell}></View>
+            </View>
+            {ifalist.map((ifa, index) => (
+                <IFAAccordion key={index} ifa={ifa} />
+            ))}
         </View>
-        // </List.Accordion>
     );
 };
 
 const IFAAccordion = ({ ifa }) => {
     const [expanded, setExpanded] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [clients, setClients] = useState([]);
+
+    const handleExpand = async () => {
+        setExpanded(!expanded);
+        setLoading(true);
+
+        const data = {
+            startDate: "2024-01-01",
+            endDate: "2024-12-31",
+        };
+
+        try {
+            const response: MutualSIPAnalytics = await RemoteApi.post(
+                `mutualfund-analytics/sip/distributor/${ifa.id}`,
+                data
+            );
+
+            if (response.message == "Success") {
+                setClients(response.data);
+                // setItemsPerPage(response.count)
+                // setTotalItems(response.filterCount);
+                setLoading(false);
+                // setTotalPages(
+                //     Math.ceil(
+                //         (response.filterCount || response.data.length) /
+                //             itemsPerPage
+                //     )
+                // );
+                console.log("clientlist");
+                console.log(response.data);
+            } else {
+                setLoading(false);
+
+                // alert("Internal Server Error");
+            }
+        } catch (error) {
+            alert(error);
+        }
+
+        // if (!expanded && ifaList.length === 0) {
+        //     setLoading(true);
+        //     // Simulating API call
+        //     setTimeout(() => {
+        //         setIfaList(rm.ifalist); // Replace with actual API call
+        //         setLoading(false);
+        //     }, 1000);
+        // }
+    };
 
     return (
         <>
-            <DataTable.Row
-                style={{
-                    backgroundColor: "#ECFFFE",
-                    // borderBottomColor: "grey",
-                }}
-                onPress={() => setExpanded(!expanded)}
-            >
-                <View className="w-[19%] justify-center">
-                    <Text>{ifa.ifaName}</Text>
+            <TouchableOpacity onPress={handleExpand} style={styles.ifaTableRow}>
+                <Text style={styles.cell}>{ifa?.name}</Text>
+                <Text style={styles.cell}>{ifa?.successSipCount}</Text>
+                <Text style={styles.cell}>{ifa?.successSipAmount}</Text>
+                <Text style={styles.cell}>{ifa?.canceledSipCount}</Text>
+                <Text style={styles.cell}>{ifa?.canceledSipAmount}</Text>
+                <Text style={styles.cell}>{ifa?.failedSipCount}</Text>
+                <Text style={styles.cell}>{ifa?.failedSipAmount}</Text>
+                <View style={styles.iconCell}>
+                    <Icon
+                        name={!expanded ? "caret-down" : "caret-up"}
+                        size={16}
+                    />
                 </View>
-                <View className="w-[13%] justify-center">
-                    <Text>{ifa.liveSip}</Text>
-                </View>
-                <View className="w-[13%] justify-center">
-                    <Text>{ifa.liveAmount}</Text>
-                </View>
-                <View className="w-[13%] justify-center">
-                    <Text>{ifa.cancelledSip}</Text>
-                </View>
-                <View className="w-[13%] justify-center">
-                    <Text>{ifa.cancelledAmount}</Text>
-                </View>
-                <View className="w-[13%] justify-center">
-                    <Text>{ifa.failedSip}</Text>
-                </View>
-                <View className="w-[13%] justify-center">
-                    <Text>{ifa.failedAmount}</Text>
-                </View>
-                <View className="w-[3%] justify-center items-center">
-                    {!expanded ? (
-                        <Icon name="caret-down" size={16} />
-                    ) : (
-                        <Icon name="caret-up" size={16} />
-                    )}
-                </View>
-            </DataTable.Row>
+            </TouchableOpacity>
 
             {expanded && (
                 <View style={styles.details}>
-                    <ClientTable clients={ifa.clientList} />
+                    {loading ? (
+                        <ActivityIndicator size="small" color="#0000ff" />
+                    ) : (
+                        <ClientTable clients={clients} />
+                    )}
                 </View>
             )}
         </>
@@ -278,84 +290,102 @@ const IFAAccordion = ({ ifa }) => {
 };
 
 const ClientTable = ({ clients }) => {
-    // const clients = ifaList.clientListclient;
-    // const clientTotal = ifaList.clientTotal;
     return (
-        <DataTable>
-            <DataTable.Header
-                style={{
-                    backgroundColor: "#D5F1DB",
-                    // borderBottomColor: "grey",
-                    borderWidth: 0,
-                    paddingVertical: 14,
-                }}
-            >
-                <View className="w-[10%] justify-center">
-                    <Text className="font-semibold">User ID</Text>
-                </View>
-                <View className="w-[15%] justify-center">
-                    <Text className="font-semibold">User Name</Text>
-                </View>
-                <View className="w-[25%] justify-center">
-                    <Text className="font-semibold">Scheme Name</Text>
-                </View>
-                <View className="w-[10%] justify-center">
-                    <Text className="font-semibold">Amount</Text>
-                </View>
-                <View className="w-[10%] justify-center">
-                    <Text className="font-semibold">Status</Text>
-                </View>
-                <View className="w-[10%] justify-center">
-                    <Text className="font-semibold">Transaction Date</Text>
-                </View>
-                <View className="w-[10%] justify-center">
-                    <Text className="font-semibold">Start Date</Text>
-                </View>
-                <View className="w-[10%] justify-center">
-                    <Text className="font-semibold">Cancelled Date</Text>
-                </View>
-            </DataTable.Header>
+        <View>
+            <View style={styles.clientTableHeader}>
+                <Text style={styles.headerCell}>User ID</Text>
+                <Text style={styles.headerCell}>User Name</Text>
+                <Text style={styles.headerCell}>Scheme Name</Text>
+                <Text style={styles.headerCell}>Amount</Text>
+                <Text style={styles.headerCell}>Status</Text>
+                <Text style={styles.headerCell}>Transaction Date</Text>
+                <Text style={styles.headerCell}>Start Date</Text>
+                <Text style={styles.headerCell}>Cancelled Date</Text>
+            </View>
             {clients.map((client, index) => (
-                <DataTable.Row
-                    style={{
-                        backgroundColor: "#F3FEEF",
-                        // borderBottomColor: "grey",
-                    }}
-                    key={index}
-                >
-                    <View className="w-[10%] justify-center">
-                        <Text>{client.id}</Text>
-                    </View>
-                    <View className="w-[15%] justify-center">
-                        <Text>{client.name}</Text>
-                    </View>
-                    <View className="w-[25%] justify-center">
-                        <Text>{client.scheme}</Text>
-                    </View>
-                    <View className="w-[10%] justify-center">
-                        <Text>{client.amount}</Text>
-                    </View>
-                    <View className="w-[10%] justify-center">
-                        <Text>{client.status}</Text>
-                    </View>
-                    <View className="w-[10%] justify-center">
-                        <Text>{client.transactionDate}</Text>
-                    </View>
-                    <View className="w-[10%] justify-center">
-                        <Text>{client.startDate}</Text>
-                    </View>
-                    <View className="w-[10%] justify-center">
-                        <Text>{client.cancelledDate}</Text>
-                    </View>
-                </DataTable.Row>
+                <View key={index} style={styles.clientTableRow}>
+                    <Text style={styles.cell}>{client?.account.id}</Text>
+                    <Text style={styles.cell}>{client?.account.name}</Text>
+                    <Text style={styles.cell}>{client?.mutualfund.name}</Text>
+                    <Text style={styles.cell}>{client?.amount}</Text>
+                    <Text style={styles.cell}>{client?.orderStatus?.name}</Text>
+                    <Text style={styles.cell}>
+                        {dateTimeFormat(client?.createdAt)}
+                    </Text>
+                    <Text style={styles.cell}>
+                        {dateTimeFormat(client?.startDate)}
+                    </Text>
+                    <Text style={styles.cell}>{client?.cancelledDate}</Text>
+                </View>
             ))}
-        </DataTable>
+        </View>
     );
 };
 
 const styles = StyleSheet.create({
     details: {
         padding: 10,
+    },
+    RmtableHeader: {
+        flexDirection: "row",
+        backgroundColor: "#CDF0FF",
+        paddingVertical: 14,
+    },
+    ifaTableHeader: {
+        flexDirection: "row",
+        backgroundColor: "#D4FCF9",
+        paddingVertical: 14,
+    },
+    clientTableHeader: {
+        flexDirection: "row",
+        backgroundColor: "#D5F1DB",
+        paddingVertical: 14,
+    },
+    ifaTableRow: {
+        flexDirection: "row",
+        backgroundColor: "#ECFFFE",
+        paddingVertical: 10,
+    },
+    RmTableRow: {
+        flexDirection: "row",
+        backgroundColor: "#ECF9FF",
+        paddingVertical: 10,
+    },
+    clientTableRow: {
+        flexDirection: "row",
+        backgroundColor: "#F3FEEF",
+        paddingVertical: 10,
+    },
+    tableFooter: {
+        flexDirection: "row",
+        backgroundColor: "#bae1ff",
+        paddingVertical: 14,
+    },
+
+    cell: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        padding: 5,
+    },
+    headerCell: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        fontWeight: "bold",
+        padding: 5,
+    },
+    footerCell: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        fontWeight: "bold",
+        padding: 5,
+    },
+    iconCell: {
+        flex: 0.3,
+        justifyContent: "center",
+        alignItems: "center",
     },
 });
 

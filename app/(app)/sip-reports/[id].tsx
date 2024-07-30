@@ -591,7 +591,7 @@ const TransactionList = ({ data }: { data: SIPReportDetail }) => {
                         value={
                             item?.nav
                                 ? RupeeSymbol + item?.nav
-                                : `${RupeeSymbol + "898"}`
+                                : `${RupeeSymbol + "-"}`
                         }
                     />
                 ),
