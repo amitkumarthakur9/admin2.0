@@ -42,7 +42,10 @@ import DataValue from "../../../../src/components/DataValue/DataValue";
 import useDebouncedSearch from "../../../../src/hooks/useDebounceSearch";
 import ApiRequest from "../../../../src/services/RemoteApi";
 import { dateTimeFormat } from "../../../../src/helper/DateUtils";
-import Tag from "src/components/Tag/Tag";
+import {
+    UserRoleProvider,
+    useUserRole,
+} from "../../../../src/context/useRoleContext";
 
 const isMutualFundSearchResult = (
     data: MutualFundSearchResult | Holding
@@ -71,6 +74,9 @@ export default function ClientDetail() {
     const [allowModalCardChange, setAllowModalCardChange] = useState(true);
     const [viewDetails, setViewDetails] = useState(true);
     const { width } = useWindowDimensions();
+
+    const { roleId } = useUserRole();
+    const isDistributor = roleId === 2;
 
     useEffect(() => {
         if (width < 830) {
@@ -247,36 +253,46 @@ export default function ClientDetail() {
                                                 </Pressable>
                                             </View>
                                         ) : (
-                                            <>
-                                                <View className="flex flex-row gap-4">
-                                                    <Button
-                                                        borderColor={"#013974"}
-                                                        bgColor={"#fff"}
-                                                        _text={{
-                                                            color: "#013974",
-                                                        }}
-                                                        variant="outline"
-                                                        width="48"
-                                                        onPress={showModal(
-                                                            "externalPortfolio"
-                                                        )}
-                                                    >
-                                                        {data?.externalFundLastUpdatedOn ==
-                                                        null
-                                                            ? "Import Portfolio"
-                                                            : "Refresh Portfolio"}
-                                                    </Button>
-                                                    <Button
-                                                        width="48"
-                                                        bgColor={"#013974"}
-                                                        onPress={showModal(
-                                                            "invest"
-                                                        )}
-                                                    >
-                                                        Invest
-                                                    </Button>
-                                                </View>
-                                            </>
+                                            <View className="flex flex-row gap-4">
+                                                <Button
+                                                    borderColor={
+                                                        isDistributor
+                                                            ? "#013974"
+                                                            : "#ddd"
+                                                    }
+                                                    bgColor={"#fff"}
+                                                    _text={{
+                                                        color: isDistributor
+                                                            ? "#013974"
+                                                            : "#ddd",
+                                                    }}
+                                                    variant="outline"
+                                                    width="48"
+                                                    onPress={showModal(
+                                                        "externalPortfolio"
+                                                    )}
+                                                    disabled={!isDistributor}
+                                                >
+                                                    {data?.externalFundLastUpdatedOn ==
+                                                    null
+                                                        ? "Import Portfolio"
+                                                        : "Refresh Portfolio"}
+                                                </Button>
+                                                <Button
+                                                    width="48"
+                                                    bgColor={
+                                                        isDistributor
+                                                            ? "#013974"
+                                                            : "#ddd"
+                                                    }
+                                                    onPress={showModal(
+                                                        "invest"
+                                                    )}
+                                                    disabled={!isDistributor}
+                                                >
+                                                    Invest
+                                                </Button>
+                                            </View>
                                         )}
                                     </View>
 
@@ -451,6 +467,8 @@ const PortfolioCard = ({
     const handleTabPress = (tab) => {
         setSelectedTab(tab);
     };
+    const { roleId } = useUserRole();
+    const isDistributor = roleId === 2;
 
     useEffect(() => {
         if (typeHolding === "internal") {
@@ -498,14 +516,21 @@ const PortfolioCard = ({
                         <View>
                             {!(typeHolding === "internal") && (
                                 <Button
-                                    borderColor={"#013974"}
+                                    borderColor={
+                                        isDistributor ? "#013974" : "#ddd"
+                                    }
                                     bgColor={"#fff"}
-                                    _text={{ color: "#013974" }}
+                                    _text={{
+                                        color: isDistributor
+                                            ? "#013974"
+                                            : "#ddd",
+                                    }}
                                     variant="outline"
                                     style={{ width: 198, height: 39 }}
                                     onPress={() =>
                                         router.push(`arn-transfer/${data?.id}`)
                                     }
+                                    disabled={!isDistributor}
                                 >
                                     Transfer Portfolio
                                 </Button>
@@ -681,7 +706,7 @@ const PortfolioCard = ({
                                     },
                                 ];
                             })}
-                            hasActions
+                            hasActions={isDistributor}
                             options={[
                                 {
                                     key: "invest",
