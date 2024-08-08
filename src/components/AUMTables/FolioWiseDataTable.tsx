@@ -249,7 +249,7 @@ const FolioWiseDataTable = () => {
                         selectable
                         className="text-[#686868] font-semibold w-11/12"
                     >
-                        {item?.units ? item?.units : "-"}
+                        {item?.units ? item?.units.toFixed(2) : "-"}
                     </Text>
                 ),
             },
@@ -286,7 +286,7 @@ const FolioWiseDataTable = () => {
                         selectable
                         className="text-[#686868] font-semibold w-11/12 "
                     >
-                        {item?.xirr ? item?.xirr : "0"}{"%"}
+                        {item?.xirr ? item?.xirr.toFixed(2) : "0"}{"%"}
                     </Text>
                 ),
             },

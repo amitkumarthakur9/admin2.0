@@ -1,330 +1,295 @@
-// NestedAccordion.js
-import { background } from "native-base/lib/typescript/theme/styled-system";
-import React, { useState } from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
-import { List, DataTable } from "react-native-paper";
+import React, { useState, useEffect } from "react";
+import {
+    View,
+    Text,
+    StyleSheet,
+    ScrollView,
+    TouchableOpacity,
+    ActivityIndicator,
+} from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
+import { dateFormat, dateTimeFormat } from "src/helper/DateUtils";
+import RemoteApi from "src/services/RemoteApi";
 
-// RM Name
-// Lumpsum Amount
-// Lumpsum Count
-// Redemption Amount
-// Redemption Count
-// CAMS Transfer-in Amount
-// CAMS Transfer-in Count
-// Switch in Amount
-// Switch in Count
-// Switch out Amount
-// Switch out Count
-// SIP Amount
-// SIP Count
+const MutualLumpsumAccordion = ({ data, appliedFilers }) => {
+    console.log(data);
+    const [totals, setTotals] = useState({
+        purchaseAmount: 0,
+        purchaseCount: 0,
+        redemptionAmount: 0,
+        redemptionCount: 0,
+    });
 
-const MutualLumpsumAccordion = ({ data }) => {
-    const [expanded, setExpanded] = useState(false);
+    const calculateTotals = () => {
+        const totalData = data.reduce(
+            (acc, item) => {
+                item.info.forEach((infoItem) => {
+                    if (infoItem.type === "Purchase") {
+                        acc.purchaseAmount += infoItem.amount;
+                        acc.purchaseCount += infoItem.count;
+                    } else if (infoItem.type === "Redemption") {
+                        acc.redemptionAmount += infoItem.amount;
+                        acc.redemptionCount += infoItem.count;
+                    }
+                });
+                return acc;
+            },
+            {
+                purchaseAmount: 0,
+                purchaseCount: 0,
+                redemptionAmount: 0,
+                redemptionCount: 0,
+            }
+        );
 
-    console.log("rm list");
-    console.table(data);
+        setTotals(totalData);
+    };
+
+    useEffect(() => {
+        calculateTotals();
+    }, [data]);
 
     return (
         <ScrollView>
             <View style={styles.details}>
-                <DataTable>
-                    <DataTable.Header
-                        style={{
-                            backgroundColor: "#CDF0FF",
-                            // borderBottomColor: "#CDF0FF",
-                            borderWidth: 0,
-                            paddingVertical: 14,
-                        }}
-                    >
-                        <View className="w-[7.5%] justify-center">
-                            <Text className="font-semibold">RM Name</Text>
-                        </View>
-                        <View className="w-[7.5%] justify-center">
-                            <Text className="font-semibold">
-                                Lumpsum Count
-                            </Text>
-                        </View>
-                        <View className="w-[7.5%] justify-center">
-                            <Text className="font-semibold">Lumpsum Amount</Text>
-                        </View>
-                        
-                        <View className="w-[7.5%] justify-center">
-                            <Text className="font-semibold">Redemption Count</Text>
-                        </View>
-                        <View className="w-[7.5%] justify-center">
-                            <Text className="font-semibold">Redemption Amount</Text>
-                        </View>
-                        <View className="w-[7.5%] justify-center">
-                            <Text className="font-semibold">CAMS Transfer-in Count</Text>
-                        </View>
-                        <View className="w-[7.5%] justify-center">
-                            <Text className="font-semibold">CAMS Transfer-in Amount</Text>
-                        </View>
-                        <View className="w-[7.5%] justify-center">
-                            <Text className="font-semibold">Switch in Count</Text>
-                        </View>
-                        <View className="w-[7.5%] justify-center">
-                            <Text className="font-semibold">Switch in Amount</Text>
-                        </View>
-                        <View className="w-[7.5%] justify-center">
-                            <Text className="font-semibold">Switch out Count</Text>
-                        </View>
-                        <View className="w-[7.5%] justify-center">
-                            <Text className="font-semibold">Switch out Amount</Text>
-                        </View>
-                        <View className="w-[7.5%] justify-center">
-                            <Text className="font-semibold">SIP Amount</Text>
-                        </View>
-                        <View className="w-[7.5%] justify-center">
-                            <Text className="font-semibold">SIP Amount</Text>
-                        </View>
+                <View style={styles.RmtableHeader}>
+                    {renderHeaderCell("RM Name", "7.5%")}
+                    {renderHeaderCell("Lumpsum Count", "7.5%")}
+                    {renderHeaderCell("Lumpsum Amount", "7.5%")}
+                    {renderHeaderCell("Redemption Count", "7.5%")}
+                    {renderHeaderCell("Redemption Amount", "7.5%")}
+                    {renderHeaderCell("CAMS Transfer-in Count", "7.5%")}
+                    {renderHeaderCell("CAMS Transfer-in Amount", "7.5%")}
+                    {renderHeaderCell("Switch in Count", "7.5%")}
+                    {renderHeaderCell("Switch in Amount", "7.5%")}
+                    {renderHeaderCell("Switch out Count", "7.5%")}
+                    {renderHeaderCell("Switch out Amount", "7.5%")}
+                    {renderHeaderCell("SIP Amount", "7.5%")}
+                    {renderHeaderCell("SIP Amount", "7.5%")}
+                    {renderHeaderCell("", "7.5%")}
+                </View>
 
-                        <View className="w-[2.5%] justify-center items-center"></View>
-                    </DataTable.Header>
+                {data.map((rm, index) => (
+                    <RMRow key={index} rm={rm} appliedFilers={appliedFilers} />
+                ))}
 
-                    {data.rmList.map((rm, index) => (
-                        <RMRow key={index} rm={rm} />
-                    ))}
-
-                    <DataTable.Header
-                        style={{
-                            backgroundColor: "#bae1ff",
-                            // borderBottomColor: "grey",
-                            borderWidth: 0,
-                            paddingVertical: 14,
-                        }}
-                    >
-                        {/* <DataTable.Title className="font-bold" >Total</DataTable.Title> */}
-                        <View className="w-[30%] justify-center">
-                            <Text className="font-bold">Total</Text>
-                        </View>
-                        <View className="w-[30%] justify-center">
-                            <Text className="font-bold">
-                                {data.rmTotal.lumpCount}
-                            </Text>
-                        </View>
-                        <View className="w-[30%] justify-center">
-                            <Text className="font-bold">
-                                {data.rmTotal.lumpAmount}
-                            </Text>
-                        </View>
-
-                        <View className="w-[10%] justify-center">
-                            <Text className="font-bold"></Text>
-                        </View>
-                    </DataTable.Header>
-                </DataTable>
+                <View style={styles.tableFooter}>
+                {renderCell("Total", "7.5%")}
+                    {renderCell(totals.purchaseCount, "7.5%")}
+                    {renderCell(totals.purchaseAmount, "7.5%")}
+                    {renderCell(totals.redemptionCount, "7.5%")}
+                    {renderCell(totals.redemptionAmount, "7.5%")}
+                    {renderCell("NA", "7.5%")}
+                    {renderCell("NA", "7.5%")}
+                    {renderCell("NA", "7.5%")}
+                    {renderCell("NA", "7.5%")}
+                    {renderCell("NA", "7.5%")}
+                    {renderCell("NA", "7.5%")}
+                    {renderCell("NA", "7.5%")}
+                    {renderCell("NA", "7.5%")}
+                    {renderCell("", "7.5%")}
+                </View>
             </View>
         </ScrollView>
     );
 };
 
-const RMRow = ({ rm }) => {
+const RMRow = ({ rm, appliedFilers }) => {
     const [expanded, setExpanded] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [ifaList, setIfaList] = useState([]);
+
+    const handleExpand = async () => {
+        const newExpanded = !expanded;
+        setExpanded(newExpanded);
+
+        if (newExpanded) {
+            setLoading(true);
+
+            const data = {
+                filters: appliedFilers,
+            };
+
+            try {
+                const response: any = await RemoteApi.post(
+                    `mutualfund-analytics/transaction/rm/${rm.id}`,
+                    data
+                );
+
+                if (response.message === "Success") {
+                    setIfaList(response.data);
+                } else {
+                    // Handle the error if needed
+                }
+            } catch (error) {
+                alert(error);
+            } finally {
+                setLoading(false);
+            }
+        }
+    };
 
     return (
         <>
-            <DataTable.Row
-                style={{
-                    backgroundColor: "#ECF9FF",
-                    // borderBottomColor: "grey",
-                    // borderWidth: 0,
-                }}
-                onPress={() => setExpanded(!expanded)}
-            >
-                <View className="w-[7.5%] justify-center">
-                    <Text>{rm.rmName}</Text>
+            <TouchableOpacity onPress={handleExpand} style={styles.RmTableRow}>
+                {renderCell(rm?.name, "7.5%")}
+                {renderCell(
+                    rm.info.find((i) => i.type === "Purchase")?.count || 0,
+                    "7.5%"
+                )}
+                {renderCell(
+                    rm.info.find((i) => i.type === "Purchase")?.amount || 0,
+                    "7.5%"
+                )}
+                {renderCell(
+                    rm.info.find((i) => i.type === "Redemption")?.count || 0,
+                    "7.5%"
+                )}
+                {renderCell(
+                    rm.info.find((i) => i.type === "Redemption")?.amount || 0,
+                    "7.5%"
+                )}
+                {renderCell("NA", "7.5%")} {/* CAMS Transfer-in Count */}
+                {renderCell("NA", "7.5%")} {/* CAMS Transfer-in Amount */}
+                {renderCell("NA", "7.5%")} {/* Switch in Count */}
+                {renderCell("NA", "7.5%")} {/* Switch in Amount */}
+                {renderCell("NA", "7.5%")} {/* Switch out Count */}
+                {renderCell("NA", "7.5%")} {/* Switch out Amount */}
+                {renderCell("NA", "7.5%")} {/* SIP Amount */}
+                {renderCell("NA", "7.5%")} {/* SIP Amount */}
+                <View style={styles.iconCell}>
+                    <Icon
+                        name={!expanded ? "caret-down" : "caret-up"}
+                        size={16}
+                    />
                 </View>
-                <View className="w-[7.5%] justify-center">
-                    <Text>{rm.lumpCount}</Text>
-                </View>
-                <View className="w-[7.5%] justify-center">
-                    <Text>{rm.lumpAmount}</Text>
-                </View>
-                <View className="w-[7.5%] justify-center">
-                    <Text>{rm.redemptionAmount}</Text>
-                </View>
-                <View className="w-[7.5%] justify-center">
-                    <Text>{rm.redemptionCount}</Text>
-                </View>
-                <View className="w-[7.5%] justify-center">
-                    <Text>{rm.CAMSTransferInAmount}</Text>
-                </View>
-                <View className="w-[7.5%] justify-center">
-                    <Text>{rm.CAMSTransferInCount}</Text>
-                </View>
-                <View className="w-[7.5%] justify-center">
-                    <Text>{rm.switchInAmount}</Text>
-                </View>
-                <View className="w-[7.5%] justify-center">
-                    <Text>{rm.switchInCount}</Text>
-                </View>
-                <View className="w-[7.5%] justify-center">
-                    <Text>{rm.switchOutAmount}</Text>
-                </View>
-                <View className="w-[7.5%] justify-center">
-                    <Text>{rm.switchOutCount}</Text>
-                </View>
-                <View className="w-[7.5%] justify-center">
-                    <Text>{rm.sipAmount}</Text>
-                </View>
-                <View className="w-[7.5%] justify-center">
-                    <Text>{rm.sipCount}</Text>
-                </View>
-                <View className="w-[2.5%] justify-center items-center">
-                    {!expanded ? (
-                        <Icon name="caret-down" size={16} />
-                    ) : (
-                        <Icon name="caret-up" size={16} />
-                    )}
-                </View>
-            </DataTable.Row>
+            </TouchableOpacity>
 
             {expanded && (
                 <View style={styles.details}>
-                    <RMAccordion ifalist={rm.ifalist} ifaTotal={rm.ifaTotal} />
+                    {loading ? (
+                        <ActivityIndicator size="small" color="#0000ff" />
+                    ) : (
+                        <RMAccordion
+                            ifalist={ifaList}
+                            ifaTotal={rm.ifaTotal}
+                            appliedFilers={appliedFilers}
+                        />
+                    )}
                 </View>
             )}
         </>
     );
 };
 
-const RMAccordion = ({ ifalist, ifaTotal }) => {
-    const [expanded, setExpanded] = useState(false);
-
-    console.log("RMaccordian");
-    console.table(ifalist);
-
+const RMAccordion = ({ ifalist, ifaTotal, appliedFilers }) => {
     return (
         <View style={styles.details}>
-            <DataTable>
-                <DataTable.Header
-                    style={{
-                        backgroundColor: "#D4FCF9",
-                        // borderBottomColor: "#D4FCF9",
-                        borderWidth: 0,
-                    paddingVertical: 14,
-                    }}
-                >
-                    <View className="w-[7.5%] justify-center">
-                        <Text className="font-semibold">IFA Name</Text>
-                    </View>
-                    <View className="w-[7.5%] justify-center">
-                        <Text className="font-semibold">Lumpsum Count</Text>
-                    </View>
-
-                    <View className="w-[7.5%] justify-center">
-                        <Text className="font-semibold">Lumpsum Amount</Text>
-                    </View>
-                    <View className="w-[7.5%] justify-center">
-                            <Text className="font-semibold">Redemption Count</Text>
-                        </View>
-                        <View className="w-[7.5%] justify-center">
-                            <Text className="font-semibold">Redemption Amount</Text>
-                        </View>
-                        <View className="w-[7.5%] justify-center">
-                            <Text className="font-semibold">CAMS Transfer-in Count</Text>
-                        </View>
-                        <View className="w-[7.5%] justify-center">
-                            <Text className="font-semibold">CAMS Transfer-in Amount</Text>
-                        </View>
-                        <View className="w-[7.5%] justify-center">
-                            <Text className="font-semibold">Switch in Count</Text>
-                        </View>
-                        <View className="w-[7.5%] justify-center">
-                            <Text className="font-semibold">Switch in Amount</Text>
-                        </View>
-                        <View className="w-[7.5%] justify-center">
-                            <Text className="font-semibold">Switch out Count</Text>
-                        </View>
-                        <View className="w-[7.5%] justify-center">
-                            <Text className="font-semibold">Switch out Amount</Text>
-                        </View>
-                        <View className="w-[7.5%] justify-center">
-                            <Text className="font-semibold">SIP Amount</Text>
-                        </View>
-                        <View className="w-[7.5%] justify-center">
-                            <Text className="font-semibold">SIP Amount</Text>
-                        </View>
-
-                    
-                    <View className="w-[2.5%] justify-center items-center"></View>
-                </DataTable.Header>
-                {ifalist.map((ifa, index) => (
-                    <IFAAccordion key={index} ifa={ifa} />
-                ))}
-            </DataTable>
+            <View style={styles.ifaTableHeader}>
+                {renderHeaderCell("RM Name", "7.5%")}
+                {renderHeaderCell("Lumpsum Count", "7.5%")}
+                {renderHeaderCell("Lumpsum Amount", "7.5%")}
+                {renderHeaderCell("Redemption Count", "7.5%")}
+                {renderHeaderCell("Redemption Amount", "7.5%")}
+                {renderHeaderCell("CAMS Transfer-in Count", "7.5%")}
+                {renderHeaderCell("CAMS Transfer-in Amount", "7.5%")}
+                {renderHeaderCell("Switch in Count", "7.5%")}
+                {renderHeaderCell("Switch in Amount", "7.5%")}
+                {renderHeaderCell("Switch out Count", "7.5%")}
+                {renderHeaderCell("Switch out Amount", "7.5%")}
+                {renderHeaderCell("SIP Amount", "7.5%")}
+                {renderHeaderCell("SIP Amount", "7.5%")}
+                {renderHeaderCell("", "7.5%")}
+            </View>
+            {ifalist.map((ifa, index) => (
+                <IFAAccordion
+                    key={index}
+                    ifa={ifa}
+                    appliedFilers={appliedFilers}
+                />
+            ))}
         </View>
-        // </List.Accordion>
     );
 };
 
-const IFAAccordion = ({ ifa }) => {
+const IFAAccordion = ({ ifa, appliedFilers }) => {
     const [expanded, setExpanded] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [clients, setClients] = useState([]);
+
+    const handleExpand = async () => {
+        const newExpanded = !expanded;
+        setExpanded(newExpanded);
+
+        if (newExpanded) {
+            setLoading(true);
+
+            const data = {
+                filters: appliedFilers,
+            };
+
+            try {
+                const response: any = await RemoteApi.post(
+                    `mutualfund-analytics/transaction/distributor/${ifa.id}`,
+                    data
+                );
+
+                if (response.message === "Success") {
+                    setClients(response.data);
+                } else {
+                    // Handle the error if needed
+                }
+            } catch (error) {
+                alert(error);
+            } finally {
+                setLoading(false);
+            }
+        }
+    };
 
     return (
         <>
-            <DataTable.Row
-                style={{
-                    backgroundColor: "#ECFFFE",
-                    // borderBottomColor: "grey",
-                }}
-                onPress={() => setExpanded(!expanded)}
-            >
-                <View className="w-[7.5%] justify-center">
-                    <Text>{ifa?.ifaName}</Text>
+            <TouchableOpacity onPress={handleExpand} style={styles.ifaTableRow}>
+                {renderCell(ifa?.name, "7.5%")}
+                {renderCell(
+                    ifa.info.find((i) => i.type === "Purchase")?.count || 0,
+                    "7.5%"
+                )}
+                {renderCell(
+                    ifa.info.find((i) => i.type === "Purchase")?.amount || 0,
+                    "7.5%"
+                )}
+                {renderCell(
+                    ifa.info.find((i) => i.type === "Redemption")?.count || 0,
+                    "7.5%"
+                )}
+                {renderCell(
+                    ifa.info.find((i) => i.type === "Redemption")?.amount || 0,
+                    "7.5%"
+                )}
+                {renderCell("NA", "7.5%")} {/* CAMS Transfer-in Count */}
+                {renderCell("NA", "7.5%")} {/* CAMS Transfer-in Amount */}
+                {renderCell("NA", "7.5%")} {/* Switch in Count */}
+                {renderCell("NA", "7.5%")} {/* Switch in Amount */}
+                {renderCell("NA", "7.5%")} {/* Switch out Count */}
+                {renderCell("NA", "7.5%")} {/* Switch out Amount */}
+                {renderCell("NA", "7.5%")} {/* SIP Amount */}
+                {renderCell("NA", "7.5%")} {/* SIP Amount */}
+                <View style={styles.iconCell}>
+                    <Icon
+                        name={!expanded ? "caret-down" : "caret-up"}
+                        size={16}
+                    />
                 </View>
-                <View className="w-[7.5%] justify-center">
-                    <Text>{ifa?.lumpCount}</Text>
-                </View>
-                <View className="w-[7.5%] justify-center">
-                    <Text>{ifa?.lumpAmount}</Text>
-                </View>
-                <View className="w-[7.5%] justify-center">
-                    <Text>{ifa?.redemptionAmount}</Text>
-                </View>
-                <View className="w-[7.5%] justify-center">
-                    <Text>{ifa?.redemptionCount}</Text>
-                </View>
-                <View className="w-[7.5%] justify-center">
-                    <Text>{ifa?.CAMSTransferInAmount}</Text>
-                </View>
-                <View className="w-[7.5%] justify-center">
-                    <Text>{ifa?.CAMSTransferInCount}</Text>
-                </View>
-                <View className="w-[7.5%] justify-center">
-                    <Text>{ifa?.switchInAmount}</Text>
-                </View>
-                <View className="w-[7.5%] justify-center">
-                    <Text>{ifa?.switchInCount}</Text>
-                </View>
-                <View className="w-[7.5%] justify-center">
-                    <Text>{ifa?.switchOutAmount}</Text>
-                </View>
-                <View className="w-[7.5%] justify-center">
-                    <Text>{ifa?.switchOutCount}</Text>
-                </View>
-                <View className="w-[7.5%] justify-center">
-                    <Text>{ifa?.sipAmount}</Text>
-                </View>
-                <View className="w-[7.5%] justify-center">
-                    <Text>{ifa?.sipCount}</Text>
-                </View>
-
-
-                <View className="w-[2.5%] justify-center items-center">
-                    {!expanded ? (
-                        <Icon name="caret-down" size={16} />
-                    ) : (
-                        <Icon name="caret-up" size={16} />
-                    )}
-                </View>
-            </DataTable.Row>
+            </TouchableOpacity>
 
             {expanded && (
                 <View style={styles.details}>
-                    <ClientTable clients={ifa.clientList} />
+                    {loading ? (
+                        <ActivityIndicator size="small" color="#0000ff" />
+                    ) : (
+                        <ClientTable clients={clients} />
+                    )}
                 </View>
             )}
         </>
@@ -332,78 +297,105 @@ const IFAAccordion = ({ ifa }) => {
 };
 
 const ClientTable = ({ clients }) => {
-    // const clients = ifaList.clientListclient;
-    // const clientTotal = ifaList.clientTotal;
     return (
-        <DataTable>
-            <DataTable.Header
-                style={{
-                    backgroundColor: "#D5F1DB",
-                    // borderBottomColor: "#D5F1DB",
-                    borderWidth: 0,
-                    paddingVertical: 14,
-                }}
-            >
-                <View className="w-[10%] justify-center">
-                    <Text className="font-semibold">User ID</Text>
-                </View>
-                <View className="w-[20%] justify-center">
-                    <Text className="font-semibold">User Name</Text>
-                </View>
-                <View className="w-[20%] justify-center">
-                    <Text className="font-semibold">Scheme Name</Text>
-                </View>
-                <View className="w-[10%] justify-center">
-                    <Text className="font-semibold">Amount</Text>
-                </View>
-                <View className="w-[10%] justify-center">
-                    <Text className="font-semibold">Transaction Type</Text>
-                </View>
-                <View className="w-[15%] justify-center">
-                    <Text className="font-semibold">Transaction Date</Text>
-                </View>
-                <View className="w-[15%] justify-center">
-                    <Text className="font-semibold">Start Date</Text>
-                </View>
-            </DataTable.Header>
+        <View>
+            <View style={styles.clientTableHeader}>
+                {renderHeaderCell("User ID", "10%")}
+                {renderHeaderCell("User Name", "20%")}
+                {renderHeaderCell("Scheme Name", "20%")}
+                {renderHeaderCell("Amount", "10%")}
+                {renderHeaderCell("Transaction Type", "10%")}
+                {renderHeaderCell("Initiation Date", "15%")}
+                {renderHeaderCell("Allotment Date", "15%")}
+            </View>
             {clients.map((client, index) => (
-                <DataTable.Row
-                    style={{
-                        backgroundColor: "#F3FEEF",
-                        // borderBottomColor: "grey",
-                    }}
-                    key={index}
-                >
-                    <View className="w-[10%] justify-center">
-                        <Text>{client.id}</Text>
-                    </View>
-                    <View className="w-[20%] justify-center">
-                        <Text>{client.name}</Text>
-                    </View>
-                    <View className="w-[20%] justify-center">
-                        <Text>{client.scheme}</Text>
-                    </View>
-                    <View className="w-[10%] justify-center">
-                        <Text>{client.amount}</Text>
-                    </View>
-                    <View className="w-[10%] justify-center">
-                        <Text>{client.transactionType}</Text>
-                    </View>
-                    <View className="w-[15%] justify-center">
-                        <Text>{client.transactionDate}</Text>
-                    </View>
-                    <View className="w-[15%] justify-center">
-                        <Text>{client.startDate}</Text>
-                    </View>
-                </DataTable.Row>
+                <View key={index} style={styles.clientTableRow}>
+                    {renderCell(client?.account.id, "10%")}
+                    {renderCell(client?.account.name, "20%")}
+                    {renderCell(client?.mutualfund.name, "20%")}
+                    {renderCell(client?.amount, "10%")}
+                    {renderCell(client?.type, "10%")}
+                    {renderCell(dateTimeFormat(client?.initiationDate), "15%")}
+                    {renderCell(dateTimeFormat(client?.allotmentDate), "15%")}
+                    {/* <Text style={styles.cell}>{client?.cancelledDate}</Text> */}
+                </View>
             ))}
-        </DataTable>
+        </View>
     );
 };
+
+const renderHeaderCell = (text, width) => (
+    <View style={[styles.headerCell, { width }]}>
+        <Text className="font-semibold">{text}</Text>
+    </View>
+);
+
+const renderCell = (text, width) => (
+    <View style={[styles.cell, { width }]}>
+        <Text>{text}</Text>
+    </View>
+);
 
 const styles = StyleSheet.create({
     details: {
         padding: 10,
+    },
+    RmtableHeader: {
+        flexDirection: "row",
+        backgroundColor: "#CDF0FF",
+        paddingVertical: 14,
+    },
+    ifaTableHeader: {
+        flexDirection: "row",
+        backgroundColor: "#D4FCF9",
+        paddingVertical: 14,
+    },
+    clientTableHeader: {
+        flexDirection: "row",
+        backgroundColor: "#D5F1DB",
+        paddingVertical: 14,
+    },
+    ifaTableRow: {
+        flexDirection: "row",
+        backgroundColor: "#ECFFFE",
+        paddingVertical: 10,
+    },
+    RmTableRow: {
+        flexDirection: "row",
+        backgroundColor: "#ECF9FF",
+        paddingVertical: 10,
+    },
+    clientTableRow: {
+        flexDirection: "row",
+        backgroundColor: "#F3FEEF",
+        paddingVertical: 10,
+    },
+    tableFooter: {
+        flexDirection: "row",
+        backgroundColor: "#bae1ff",
+        paddingVertical: 14,
+    },
+    cell: {
+        justifyContent: "center",
+        alignItems: "center",
+        padding: 5,
+    },
+    headerCell: {
+        justifyContent: "center",
+        alignItems: "center",
+        fontWeight: "bold",
+        padding: 5,
+    },
+    footerCell: {
+        justifyContent: "center",
+        alignItems: "center",
+        fontWeight: "bold",
+        padding: 5,
+    },
+    iconCell: {
+        flex: 0.3,
+        justifyContent: "center",
+        alignItems: "center",
     },
 });
 

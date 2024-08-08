@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState} from "react";
 import {
     View,
     Text,
@@ -50,8 +50,12 @@ const validationSchema = Yup.object().shape({
 });
 
 const PersonalDetailsForm = ({ onNext, initialValues, onPrevious }) => {
-    const [isLoading, setIsLoading] = React.useState(false);
-    const [maritalStatusOptions, setMaritalStatusOptions] = React.useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [maritalStatusOptions, setMaritalStatusOptions] = useState([]);
+    const [isVerified, setIsVerified] =useState({
+        ArnNumber: "",
+        euin: "",
+    })
 
     async function getMaritalStatus() {
         setIsLoading(true);
@@ -81,7 +85,7 @@ const PersonalDetailsForm = ({ onNext, initialValues, onPrevious }) => {
         getMaritalStatus();
     }, []);
 
-    const handleSubmit = async (values) => {
+    const handleSubmit = async (values, { setErrors }) => {
         console.log("handlesubmit");
 
         let data = {};
@@ -108,11 +112,30 @@ const PersonalDetailsForm = ({ onNext, initialValues, onPrevious }) => {
             );
             if (response.code === 200) {
                 onNext(values);
-            } else {
-                Alert.alert(
-                    "Error",
-                    response.message || "Failed to submit the address"
-                );
+            } else if(response.code === 254) {
+
+                // if(response.message == "Wrong EUIN Number provided for the given ARN Number."){
+                //     setIsVerified({ ...isVerified, euin: response.message });
+                // }
+
+                // if(response.message == "ARN Number does not exist."){
+                //     setIsVerified({ ...isVerified, ArnNumber: response.message });
+                // }
+
+                const newErrors = {
+                    euinNumber: "",
+                    arnNumber: "",
+                };
+                if (
+                    response.message ===
+                    "Wrong EUIN Number provided for the given ARN Number."
+                ) {
+                    newErrors.euinNumber = response.message;
+                } else if (response.message === "ARN Number does not exist.") {
+                    newErrors.arnNumber = response.message;
+                }
+                setErrors(newErrors);
+                   
             }
         } catch (error) {
             Alert.alert(
@@ -158,7 +181,7 @@ const PersonalDetailsForm = ({ onNext, initialValues, onPrevious }) => {
                             <View style={styles.fieldContainer}>
                                 <View style={styles.fieldContainer}>
                                     <Text style={styles.label}>
-                                        Enter your full name as per PAN
+                                        Enter your full name as per AMFI
                                     </Text>
                                     <TextInput
                                         style={styles.input}
@@ -341,6 +364,13 @@ const PersonalDetailsForm = ({ onNext, initialValues, onPrevious }) => {
                                             </Text>
                                         )}
                                     </View>
+                                    <View style={styles.fieldContainer}>
+                                        {isVerified.ArnNumber && (
+                                            <Text style={styles.error}>
+                                                {isVerified.ArnNumber}
+                                            </Text>
+                                        )}
+                                    </View>
                                 </View>
                                 <View style={styles.fieldContainer}>
                                     <Text style={styles.label}>
@@ -370,6 +400,13 @@ const PersonalDetailsForm = ({ onNext, initialValues, onPrevious }) => {
                                         {initialValues.euinNumberError && (
                                             <Text style={styles.error}>
                                                 Please correct it as per remarks
+                                            </Text>
+                                        )}
+                                    </View>
+                                    <View style={styles.fieldContainer}>
+                                        {isVerified.euin && (
+                                            <Text style={styles.error}>
+                                                {isVerified.euin}
                                             </Text>
                                         )}
                                     </View>

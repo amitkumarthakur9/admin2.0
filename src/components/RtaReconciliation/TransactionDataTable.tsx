@@ -147,20 +147,21 @@ const TransactionDataTable = () => {
                                 </Text>
                             </Pressable> */}
                             <View className="flex flex-col flex-wrap w-[99%]">
-                            <Pressable
-                                onPress={() =>
-                                    router.push(`/clients/${rta.account.id}`)
-                                }
-                                
-                            >
-                                <View className="flex flex-row items-center text-black font-semibold flex-wrap w-11/12">
-                                    <Text
-                                        selectable
-                                        className="text-black font-semibold break-all"
-                                    >
-                                        {rta.account.name}&nbsp;
-                                    </Text>
-                                    {/* <Popover
+                                <Pressable
+                                    onPress={() =>
+                                        router.push(
+                                            `/clients/${rta.account.id}`
+                                        )
+                                    }
+                                >
+                                    <View className="flex flex-row items-center text-black font-semibold flex-wrap w-11/12">
+                                        <Text
+                                            selectable
+                                            className="text-black font-semibold break-all"
+                                        >
+                                            {rta.account.name}&nbsp;
+                                        </Text>
+                                        {/* <Popover
                                         trigger={(triggerProps) => {
                                             return (
                                                 <TouchableOpacity
@@ -200,10 +201,10 @@ const TransactionDataTable = () => {
                                             </Popover.Body>
                                         </Popover.Content>
                                     </Popover> */}
-                                </View>
+                                    </View>
                                 </Pressable>
                                 <View className="flex flex-col items-start mt-0 w-[99%]">
-                                <Text
+                                    <Text
                                         selectable
                                         className="text-[#6C6A6A] text-xs"
                                     >
@@ -218,7 +219,7 @@ const TransactionDataTable = () => {
                                     {/* <View className='rounded-full bg-[#6C6A6A] h-2 w-2 mx-1'></View> */}
                                 </View>
                                 <View className="flex flex-col items-start mt-0 w-[99%]">
-                                <Text
+                                    <Text
                                         selectable
                                         className="text-[#6C6A6A] text-xs"
                                     >
@@ -249,20 +250,21 @@ const TransactionDataTable = () => {
                                 {rta.mutualfund.name}
                             </Text>
                             <Text
-                            selectable
-                            className="text-[#686868] font-semibold text-xs"
-                        >
-                            {rta?.mutualfund?.deliveryType?.name
-                                ? rta?.mutualfund?.deliveryType?.name
-                                : "-"}
-                            {rta?.mutualfund?.optionType?.name
-                                ? " - " + rta?.mutualfund?.optionType?.name
-                                : "-"}
-                            {rta?.mutualfund?.dividendType?.name &&
-                            rta?.mutualfund?.dividendType?.name !== "NA"
-                                ? " - " + rta?.mutualfund?.dividendType?.name
-                                : ""}
-                        </Text>
+                                selectable
+                                className="text-[#686868] font-semibold text-xs"
+                            >
+                                {rta?.mutualfund?.deliveryType?.name
+                                    ? rta?.mutualfund?.deliveryType?.name
+                                    : "-"}
+                                {rta?.mutualfund?.optionType?.name
+                                    ? " - " + rta?.mutualfund?.optionType?.name
+                                    : "-"}
+                                {rta?.mutualfund?.dividendType?.name &&
+                                rta?.mutualfund?.dividendType?.name !== "NA"
+                                    ? " - " +
+                                      rta?.mutualfund?.dividendType?.name
+                                    : ""}
+                            </Text>
                         </View>
                     </View>
                 ),
@@ -355,50 +357,50 @@ const TransactionDataTable = () => {
                     <View className="flex flex-row w-[99%] justify-start items-start">
                         <View className="flex flex-col h-6 items-start justify-start w-full">
                             <View className="w-full flex flex-row items-center justify-start">
-                                <View className="flex flex-row items-start justify-start w-2/3">
+                                <View className="flex flex-row items-center justify-start w-full">
+                                    <View className="flex flex-row h-full justify-start items-start p-1">
+                                        <Popover
+                                            trigger={(triggerProps) => {
+                                                return (
+                                                    <TouchableOpacity
+                                                        {...triggerProps}
+                                                    >
+                                                        <Icon
+                                                            name="info-circle"
+                                                            size={12}
+                                                            color="black"
+                                                        />
+                                                    </TouchableOpacity>
+                                                );
+                                            }}
+                                        >
+                                            <Popover.Content
+                                                accessibilityLabel="Order Details"
+                                                w="56"
+                                            >
+                                                <Popover.Arrow />
+                                                <Popover.CloseButton />
+                                                <Popover.Header>
+                                                    {rta.transactionStatus}
+                                                </Popover.Header>
+                                                <Popover.Body>
+                                                    <View>
+                                                        <Text>
+                                                            {getTransactionMessage(
+                                                                rta.transactionStatus
+                                                            )}
+                                                        </Text>
+                                                    </View>
+                                                </Popover.Body>
+                                            </Popover.Content>
+                                        </Popover>
+                                    </View>
                                     <Text
                                         selectable
                                         className="text-black text-md w-[99%]"
                                     >
                                         {rta.transactionStatus || "NA"}
                                     </Text>
-                                </View>
-                                <View className="flex flex-row h-full justify-start items-start pt-1">
-                                    <Popover
-                                        trigger={(triggerProps) => {
-                                            return (
-                                                <TouchableOpacity
-                                                    {...triggerProps}
-                                                >
-                                                    <Icon
-                                                        name="info-circle"
-                                                        size={12}
-                                                        color="black"
-                                                    />
-                                                </TouchableOpacity>
-                                            );
-                                        }}
-                                    >
-                                        <Popover.Content
-                                            accessibilityLabel="Order Details"
-                                            w="56"
-                                        >
-                                            <Popover.Arrow />
-                                            <Popover.CloseButton />
-                                            <Popover.Header>
-                                                {rta.transactionStatus}
-                                            </Popover.Header>
-                                            <Popover.Body>
-                                                <View>
-                                                    <Text>
-                                                        {getTransactionMessage(
-                                                            rta.transactionStatus
-                                                        )}
-                                                    </Text>
-                                                </View>
-                                            </Popover.Body>
-                                        </Popover.Content>
-                                    </Popover>
                                 </View>
                             </View>
                         </View>
@@ -477,7 +479,10 @@ const TransactionDataTable = () => {
     return (
         <View className="bg-white">
             <View className="">
-                <TableBreadCrumb name={"Transactions"} icon={require("../../../assets/transactionReport.png")} />
+                <TableBreadCrumb
+                    name={"Transactions"}
+                    icon={require("../../../assets/transactionReport.png")}
+                />
             </View>
             <View className="h-screen">
                 <>

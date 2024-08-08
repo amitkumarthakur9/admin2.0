@@ -65,9 +65,19 @@ const SIPReportTable = () => {
             data
         );
 
-        if (response.code == 200) {
+        if (response?.code == 200) {
             setData(response.data);
             // setItemsPerPage(response.count)
+            setTotalItems(response.filterCount);
+            setIsLoading(false);
+            setTotalPages(
+                Math.ceil(
+                    (response.filterCount || response.data.length) /
+                        itemsPerPage
+                )
+            );
+        }else{
+            setData([]);
             setTotalItems(response.filterCount);
             setIsLoading(false);
             setTotalPages(
@@ -83,7 +93,7 @@ const SIPReportTable = () => {
         async function getSchema() {
             const response: any = await RemoteApi.get("sip/schema");
             setFiltersSchema(response);
-            setSorting(response.sort);
+            setSorting(response?.sort);
         }
         getSchema();
     }, []);
@@ -219,7 +229,10 @@ const SIPReportTable = () => {
                             selectable
                             className="text-[#686868] font-semibold text-xs"
                         >
-                            {"SIPRegnNo: " + item.sipReferenceNumber}
+                            {"SIPRegnNo: " +
+                                (item?.sipReferenceNumber == null
+                                    ? "NA"
+                                    : item?.sipReferenceNumber)}
                         </Text>
                         {/* <Text selectable className="text-[#686868] font-semibold text-xs">
                         {item?.mutualfund?.category ? item?.mutualfund?.category : "" }
@@ -379,103 +392,101 @@ const SIPReportTable = () => {
     return (
         <View className="bg-white">
             <View className="">
-                <TableBreadCrumb name={"SIP Reports"} icon={require("../../../assets/sipReport.png")}/>
+                <TableBreadCrumb
+                    name={"SIP Reports"}
+                    icon={require("../../../assets/sipReport.png")}
+                />
             </View>
             <View className="h-screen">
                 <>
                     <View className="border-[0.2px]  border-[#e4e4e4]">
                         {/* {data.length !== 0 && ( */}
-                            <DynamicFilters
-                                appliedSorting={appliedSorting}
-                                setAppliedSorting={setAppliedSorting}
-                                sorting={sorting}
-                                fileName="SIP"
-                                downloadApi={"sip/download-report"}
-                                schemaResponse={filtersSchema}
-                                setCurrentPageNumber={setCurrentPageNumber}
-                                getList={getDataList}
-                                appliedFilers={appliedFilers}
-                                setAppliedFilers={setAppliedFilers}
-                            />
+                        <DynamicFilters
+                            appliedSorting={appliedSorting}
+                            setAppliedSorting={setAppliedSorting}
+                            sorting={sorting}
+                            fileName="SIP"
+                            downloadApi={"sip/download-report"}
+                            schemaResponse={filtersSchema}
+                            setCurrentPageNumber={setCurrentPageNumber}
+                            getList={getDataList}
+                            appliedFilers={appliedFilers}
+                            setAppliedFilers={setAppliedFilers}
+                        />
                         {/* )} */}
                         {!isLoading ? (
                             // data.length === 0 ? (
                             //     <NoDataAvailable />
                             // ) : (
-                                <ScrollView className="mt-4 z-[-1]">
-                                    {width < 830 ? (
-                                        <MobileSIPRows
-                                            data={data}
-                                            schema={null}
-                                        />
-                                    ) : roleId > 3 ? (
-                                        <DataTable
-                                            headers={[
-                                                "Client",
-                                                "Folio",
-                                                "Distributor",
-                                                "Manager",
-                                                "Scheme",
-                                                "Request Date Time",
-                                                "Next SIP Date",
-                                                "Amount",
-                                                "Status",
-                                                "Action",
-                                            ]}
-                                            cellSize={[
-                                                2, 1, 1, 1, 2, 1, 1, 1, 1, 1,
-                                            ]}
-                                            // cellSize={[
-                                            //     "20%",
-                                            //     "10%",
-                                            //     "10%",
-                                            //     "10%",
-                                            //     "10%",
-                                            //     "10%",
-                                            //     "10%",
-                                            //     "5%",
-                                            //     "10%",
-                                            //     "5%",
-                                            // ]}
-                                            rows={transformedData}
-                                        />
-                                    ) : roleId > 2 ? (
-                                        <DataTable
-                                            headers={[
-                                                "Client",
-                                                "Folio",
-                                                "Distributor",
-                                                "Scheme",
-                                                "Request Date Time",
-                                                "Next SIP Date",
-                                                "Amount",
-                                                "Status",
-                                                "Action",
-                                            ]}
-                                            cellSize={[
-                                                2, 1, 1, 2, 1, 1, 1, 1, 1,
-                                            ]}
-                                            rows={transformedData}
-                                        />
-                                    ) : (
-                                        <DataTable
-                                            headers={[
-                                                "Client",
-                                                "Folio",
-                                                "Scheme",
-                                                "Request Date Time",
-                                                "Next SIP Date",
-                                                "Amount",
-                                                "Status",
-                                                "Action",
-                                            ]}
-                                            cellSize={[2, 1, 2, 1, 1, 1, 1, 1]}
-                                            rows={transformedData}
-                                        />
-                                    )}
-                                </ScrollView>
-                            // )
+                            <ScrollView className="mt-4 z-[-1]">
+                                {width < 830 ? (
+                                    <MobileSIPRows data={data} schema={null} />
+                                ) : roleId > 3 ? (
+                                    <DataTable
+                                        headers={[
+                                            "Client",
+                                            "Folio",
+                                            "Distributor",
+                                            "Manager",
+                                            "Scheme",
+                                            "Request Date Time",
+                                            "Next SIP Date",
+                                            "Amount",
+                                            "Status",
+                                            "Action",
+                                        ]}
+                                        cellSize={[
+                                            2, 1, 1, 1, 2, 1, 1, 1, 1, 1,
+                                        ]}
+                                        // cellSize={[
+                                        //     "20%",
+                                        //     "10%",
+                                        //     "10%",
+                                        //     "10%",
+                                        //     "10%",
+                                        //     "10%",
+                                        //     "10%",
+                                        //     "5%",
+                                        //     "10%",
+                                        //     "5%",
+                                        // ]}
+                                        rows={transformedData}
+                                    />
+                                ) : roleId > 2 ? (
+                                    <DataTable
+                                        headers={[
+                                            "Client",
+                                            "Folio",
+                                            "Distributor",
+                                            "Scheme",
+                                            "Request Date Time",
+                                            "Next SIP Date",
+                                            "Amount",
+                                            "Status",
+                                            "Action",
+                                        ]}
+                                        cellSize={[2, 1, 1, 2, 1, 1, 1, 1, 1]}
+                                        rows={transformedData}
+                                    />
+                                ) : (
+                                    <DataTable
+                                        headers={[
+                                            "Client",
+                                            "Folio",
+                                            "Scheme",
+                                            "Request Date Time",
+                                            "Next SIP Date",
+                                            "Amount",
+                                            "Status",
+                                            "Action",
+                                        ]}
+                                        cellSize={[2, 1, 2, 1, 1, 1, 1, 1]}
+                                        rows={transformedData}
+                                    />
+                                )}
+                            </ScrollView>
                         ) : (
+                            // )
                             <HStack
                                 space={2}
                                 marginTop={20}
@@ -493,14 +504,14 @@ const SIPReportTable = () => {
                         )}
                     </View>
                     {/* {data.length !== 0 && ( */}
-                        <Pagination
-                            itemsPerPage={itemsPerPage}
-                            setItemsPerPage={setItemsPerPage}
-                            getDataList={getDataList}
-                            currentPageNumber={currentPageNumber}
-                            totalPages={totalPages}
-                            setCurrentPageNumber={setCurrentPageNumber}
-                        />
+                    <Pagination
+                        itemsPerPage={itemsPerPage}
+                        setItemsPerPage={setItemsPerPage}
+                        getDataList={getDataList}
+                        currentPageNumber={currentPageNumber}
+                        totalPages={totalPages}
+                        setCurrentPageNumber={setCurrentPageNumber}
+                    />
                     {/* )} */}
                 </>
             </View>

@@ -63,36 +63,47 @@ export default function SignIn() {
             const response: any = await RemoteApi.post("/user/login", {
                 email: email.value,
                 password: password.value,
-                // email: "bhupendrajogi@gmail.com", password: "US me bohot jagha gaye hai"
             });
+
+            // const response = {
+
+               
+            //     errors: [
+            //         {
+            //             message: "failed",
+            //         }
+            //     ],
+            // };
 
             console.log("response", response);
 
-            if (response.message == "Success") {
-                signIn(response.token, response.data);
+            if (response?.message == "Success") {
+                signIn(response?.token, response?.data);
                 router.replace("/orders");
                 setIsLoggedIn(true);
             } else {
                 if (response.errors && response.errors.length > 0) {
-                    response.errors.forEach((error, index) => {
-                        toast.show({
-                            render: ({ index }) => {
-                                return (
-                                    <ToastAlert
-                                        id={index}
-                                        variant={"solid"}
-                                        title={error.message}
-                                        description={""}
-                                        isClosable={true}
-                                        toast={toast}
-                                        status={"error"}
-                                    />
-                                );
-                            },
-                            placement: "top",
-                        });
-                    });
+                    // response.errors.forEach((error, index) => {
+                    //     toast.show({
+                    //         render: ({ index }) => {
+                    //             return (
+                    //                 <ToastAlert
+                    //                     id={index}
+                    //                     variant={"solid"}
+                    //                     title={error.message}
+                    //                     description={""}
+                    //                     isClosable={true}
+                    //                     toast={toast}
+                    //                     status={"error"}
+                    //                 />
+                    //             );
+                    //         },
+                    //         placement: "top",
+                    //     });
+                    // });
                 }
+
+                setEmail({ ...email, error: response?.errors[0]?.message});
             }
         } catch (err) {
             console.log(err);

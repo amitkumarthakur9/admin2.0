@@ -244,7 +244,7 @@ const HoldingWiseDataTable = () => {
                             selectable
                             className="text-[#686868] font-semibold text-wrap"
                         >
-                            {item?.xirr ? item?.xirr + "%" : "NA"}
+                            {item?.xirr ? item?.xirr.toFixed(2) + "%" : "NA"}
                         </Text>
                     </View>
                 ),

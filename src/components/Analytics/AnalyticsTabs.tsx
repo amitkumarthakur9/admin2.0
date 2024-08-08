@@ -75,35 +75,27 @@ const AnalyticsTabs = () => {
 
     const AUMCard = ({ data }) => {
         const [selectedTab, setSelectedTab] = useState(1);
+        const [loadedTabs, setLoadedTabs] = useState([true, false]);
 
         const handleTabPress = (tab) => {
             setSelectedTab(tab);
+            if (!loadedTabs[tab - 1]) {
+                const newLoadedTabs = [...loadedTabs];
+                newLoadedTabs[tab - 1] = true;
+                setLoadedTabs(newLoadedTabs);
+            }
         };
-
-        const assetBifurcation = [
-            { label: "Equity", value: 20 },
-            { label: "Hybrid", value: 20 },
-            { label: "Debt", value: 20 },
-            { label: "Others", value: 40 },
-        ];
-
-        const assetBifurcationColors = [
-            "#715CFA",
-            "#69E1AB",
-            "#39C3E2",
-            "#FA8B5C",
-        ];
 
         const tabContent = [
             {
                 key: "MutualSipAnalytics",
                 name: "SIP",
-                content: <MutualSipTab />,
+                content: loadedTabs[0] ? <MutualSipTab /> : null,
             },
             {
                 key: "MutualLumpsumAnalytics",
                 name: "Lumpsum",
-                content: <MutualLumpsumTab />,
+                content: loadedTabs[1] ? <MutualLumpsumTab /> : null,
             },
         ];
 
@@ -111,36 +103,14 @@ const AnalyticsTabs = () => {
             selectedTab,
             handleTabPress,
             tabContent,
-            tabscount = 2,
         }) => {
-            const scrollViewRef = useRef(null);
-            const { width: windowWidth } = useWindowDimensions();
-
-            useEffect(() => {
-                if (scrollViewRef.current) {
-                    const tabWidth = windowWidth / 5; // Adjust based on the number of tabs
-                    const xOffset =
-                        (selectedTab - 1) * tabWidth -
-                        (windowWidth - tabWidth) / 2;
-                    scrollViewRef.current.scrollTo({
-                        x: xOffset,
-                        animated: true,
-                    });
-                }
-            }, [selectedTab]);
-
-            const tabWidth = windowWidth / tabscount;
-            console.log("tabWidth");
-            console.log(tabWidth);
-
             return (
                 <View className="flex-1 bg-white rounded h-full">
                     <View className="w-full flex flex-row">
                         {tabContent?.map((tab, index) => {
                             return (
-                                <View className="w-1/2">
+                                <View className="w-1/2" key={index}>
                                     <Pressable
-                                        key={index}
                                         onPress={() =>
                                             handleTabPress(index + 1)
                                         }
@@ -164,7 +134,6 @@ const AnalyticsTabs = () => {
                             );
                         })}
                     </View>
-
                     <View className="w-full h-full">
                         {tabContent[selectedTab - 1]?.content}
                     </View>
@@ -174,48 +143,30 @@ const AnalyticsTabs = () => {
 
         return (
             <View className="overflow-auto">
-                {/* <View className="w-full"> */}
-
                 <AUMCardWithTabs
                     key="aum-tables"
                     selectedTab={selectedTab}
                     handleTabPress={handleTabPress}
                     tabContent={tabContent}
                 />
-                {/* </View> */}
             </View>
         );
     };
 
     return (
         <View className="bg-white">
-            <View className="">
+            <View>
                 <TableBreadCrumb
                     name={"Analytics"}
                     icon={require("../../../assets/aumReport.png")}
                 />
             </View>
             <View className="border-[0.2px]  border-[#e4e4e4]">
-                {/* <DynamicFilters
-                    appliedSorting={appliedSorting}
-                    setAppliedSorting={setAppliedSorting}
-                    sorting={sorting}
-                    fileName="Clients"
-                    downloadApi={"client/download-report"}
-                    schemaResponse={filtersSchema}
-                    setCurrentPageNumber={setCurrentPageNumber}
-                    getList={getDataList}
-                    appliedFilers={appliedFilers}
-                    setAppliedFilers={setAppliedFilers}
-                /> */}
-
                 {!isLoading ? (
-                    // <ScrollView className={"mt-0 z-[-1] "}>
                     <View className="w-12/12 h-full rounded">
-                        <AUMCard data={data} />
+                        <AUMCard roles={roles} />
                     </View>
                 ) : (
-                    // </ScrollView>
                     <HStack
                         space={"md"}
                         marginTop={20}
@@ -232,15 +183,6 @@ const AnalyticsTabs = () => {
                     </HStack>
                 )}
             </View>
-
-            {/* <Pagination
-                itemsPerPage={itemsPerPage}
-                setItemsPerPage={setItemsPerPage}
-                getDataList={getDataList}
-                currentPageNumber={currentPageNumber}
-                totalPages={totalPages}
-                setCurrentPageNumber={setCurrentPageNumber}
-            /> */}
         </View>
     );
 };

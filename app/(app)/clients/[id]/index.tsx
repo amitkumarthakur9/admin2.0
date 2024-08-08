@@ -87,6 +87,7 @@ export default function ClientDetail() {
     }, [width]);
 
     const closeModal = () => {
+        console.log("closemodal");
         setVisible(false);
         setModalKey("");
         setCardPage(1);
@@ -514,7 +515,7 @@ const PortfolioCard = ({
                             />
                         </View>
                         <View>
-                            {!(typeHolding === "internal") && (
+                            {(typeHolding !== "internal" && holdings.length > 0 ) && (
                                 <Button
                                     borderColor={
                                         isDistributor ? "#013974" : "#ddd"
@@ -2633,7 +2634,8 @@ const ExternalPortfolioModalCard = ({
     allowModalCardChange: boolean;
     clientInfo: any;
 }) => {
-    const [apisuccess, setApisuccess] = useState(false);
+    const [apisuccess, setApisuccess] = useState<boolean | null>(null);
+    // const [apisuccess, setApisuccess] = useState(false);
     const [importDate, setImportDate] = useState(false);
     console.log(clientInfo);
     console.log(dateTimeFormat(clientInfo.lastDate));
@@ -2665,30 +2667,35 @@ const ExternalPortfolioModalCard = ({
     // Example usage:
     const inputDate = new Date("2024-04-20T12:00:00");
 
-    async function sendRequest() {
-        const response: ArnImport = await RemoteApi.get(
-            `client/${clientInfo.id}/request-import-folio`
-        );
+    useEffect(() => {
+        const sendRequest = async () => {
+            try {
+                const response: ArnImport = await RemoteApi.get(`client/${clientInfo.id}/request-import-folio`);
+                
+                const refreshDate = checkDate(clientInfo.lastDate);
 
-        const refreshDate = await checkDate(clientInfo.lastDate);
-        // const refreshDate = await checkDate(inputDate);
-        console.log(refreshDate);
-
-        // const response = {
-        //     message: "fail"
-        // }
-        if (response.message == "Success") {
-            setApisuccess(true);
-            if (refreshDate == "false") {
-                setImportDate(true);
+                if (response.message === "Success") {
+                    setApisuccess(true);
+                    if (refreshDate === "false") {
+                        setImportDate(true);
+                    }
+                } else {
+                    setApisuccess(false);
+                }
+            } catch (error) {
+                setApisuccess(false);
             }
-        } else {
-            setApisuccess(false);
-        }
-    }
+        };
 
-    if (apisuccess === false) {
         sendRequest();
+    }, [clientInfo.id, clientInfo.lastDate]);
+
+    if (apisuccess === null) {
+        return (
+            <View>
+                <Text>Loading...</Text>
+            </View>
+        );
     }
 
     return (
@@ -2696,11 +2703,14 @@ const ExternalPortfolioModalCard = ({
             {apisuccess ? (
                 <View className="flex flex-col">
                     <View className="flex flex-row justify-end items-center">
-                        <IonIcon
-                            name="close-outline"
-                            size={24}
-                            onPress={hideDialog}
-                        />
+                        <Pressable
+                            onPress={() => {
+                                console.log("pressed close");
+                                hideDialog();
+                            }}
+                        >
+                            <IonIcon name="close-outline" size={24} />
+                        </Pressable>
                     </View>
 
                     {importDate ? (
@@ -2759,18 +2769,20 @@ const ExternalPortfolioModalCard = ({
                 </View>
             ) : (
                 <>
-                    <View className=" flex flex-row justify-between items-center">
-                        <View className="flex flex-row items-center "></View>
-                        <IonIcon
-                            name="close-outline"
-                            size={24}
-                            onPress={hideDialog}
-                        />
-                    </View>
                     <View className="flex flex-col justify-center items-center p-8 gap-4">
                         <Text className="text-center font-semibold text-lg">
                             Server Error! Request Failed!
                         </Text>
+                    </View>
+                    <View className="flex flex-row justify-center">
+                        <Pressable
+                            onPress={() => {
+                                console.log("pressed close");
+                                hideDialog();
+                            }}
+                        >
+                            <Text>Close</Text>
+                        </Pressable>
                     </View>
                 </>
             )}

@@ -12,7 +12,7 @@ import { dateFormat, dateTimeFormat } from "src/helper/DateUtils";
 import { MutualSIPAnalytics } from "src/interfaces/MutualSIPanalyticsInterface";
 import RemoteApi from "src/services/RemoteApi";
 
-const MutualSipAccordion = ({ data }) => {
+const MutualSipAccordion = ({ data, appliedFilers }) => {
     const [totals, setTotals] = useState({
         canceledSipAmount: 0,
         canceledSipCount: 0,
@@ -69,7 +69,7 @@ const MutualSipAccordion = ({ data }) => {
                 </View>
 
                 {data.map((rm, index) => (
-                    <RMRow key={index} rm={rm} />
+                    <RMRow key={index} rm={rm} appliedFilers={appliedFilers} />
                 ))}
 
                 <View style={styles.tableFooter}>
@@ -99,56 +99,39 @@ const MutualSipAccordion = ({ data }) => {
     );
 };
 
-const RMRow = ({ rm }) => {
+const RMRow = ({ rm, appliedFilers }) => {
     const [expanded, setExpanded] = useState(false);
     const [loading, setLoading] = useState(false);
     const [ifaList, setIfaList] = useState([]);
 
     const handleExpand = async () => {
-        setExpanded(!expanded);
-        setLoading(true);
+        const newExpanded = !expanded;
+        setExpanded(newExpanded);
 
-        const data = {
-            startDate: "2024-01-01",
-            endDate: "2024-12-31",
-        };
+        if (newExpanded) {
+            setLoading(true);
 
-        try {
-            const response: MutualSIPAnalytics = await RemoteApi.post(
-                `mutualfund-analytics/sip/rm/${rm.id}`,
-                data
-            );
+            const data = {
+                filters: appliedFilers,
+            };
 
-            if (response.message == "Success") {
-                setIfaList(response.data);
-                // setItemsPerPage(response.count)
-                // setTotalItems(response.filterCount);
+            try {
+                const response: any = await RemoteApi.post(
+                    `mutualfund-analytics/sip/rm/${rm.id}`,
+                    data
+                );
+
+                if (response.message === "Success") {
+                    setIfaList(response.data);
+                } else {
+                    // Handle the error if needed
+                }
+            } catch (error) {
+                alert(error);
+            } finally {
                 setLoading(false);
-                // setTotalPages(
-                //     Math.ceil(
-                //         (response.filterCount || response.data.length) /
-                //             itemsPerPage
-                //     )
-                // );
-                console.log("ifalist");
-                console.log(response.data);
-            } else {
-                setLoading(false);
-
-                // alert("Internal Server Error");
             }
-        } catch (error) {
-            alert(error);
         }
-
-        // if (!expanded && ifaList.length === 0) {
-        //     setLoading(true);
-        //     // Simulating API call
-        //     setTimeout(() => {
-        //         setIfaList(rm.ifalist); // Replace with actual API call
-        //         setLoading(false);
-        //     }, 1000);
-        // }
     };
 
     return (
@@ -174,7 +157,11 @@ const RMRow = ({ rm }) => {
                     {loading ? (
                         <ActivityIndicator size="small" color="#0000ff" />
                     ) : (
-                        <RMAccordion ifalist={ifaList} ifaTotal={rm.ifaTotal} />
+                        <RMAccordion
+                            ifalist={ifaList}
+                            ifaTotal={rm.ifaTotal}
+                            appliedFilers={appliedFilers}
+                        />
                     )}
                 </View>
             )}
@@ -182,7 +169,7 @@ const RMRow = ({ rm }) => {
     );
 };
 
-const RMAccordion = ({ ifalist, ifaTotal }) => {
+const RMAccordion = ({ ifalist, ifaTotal, appliedFilers }) => {
     return (
         <View style={styles.details}>
             <View style={styles.ifaTableHeader}>
@@ -200,62 +187,49 @@ const RMAccordion = ({ ifalist, ifaTotal }) => {
                 <View style={styles.iconCell}></View>
             </View>
             {ifalist.map((ifa, index) => (
-                <IFAAccordion key={index} ifa={ifa} />
+                <IFAAccordion
+                    key={index}
+                    ifa={ifa}
+                    appliedFilers={appliedFilers}
+                />
             ))}
         </View>
     );
 };
 
-const IFAAccordion = ({ ifa }) => {
+const IFAAccordion = ({ ifa, appliedFilers }) => {
     const [expanded, setExpanded] = useState(false);
     const [loading, setLoading] = useState(false);
     const [clients, setClients] = useState([]);
 
     const handleExpand = async () => {
-        setExpanded(!expanded);
-        setLoading(true);
+        const newExpanded = !expanded;
+        setExpanded(newExpanded);
 
-        const data = {
-            startDate: "2024-01-01",
-            endDate: "2024-12-31",
-        };
+        if (newExpanded) {
+            setLoading(true);
 
-        try {
-            const response: MutualSIPAnalytics = await RemoteApi.post(
-                `mutualfund-analytics/sip/distributor/${ifa.id}`,
-                data
-            );
+            const data = {
+                filters: appliedFilers,
+            };
 
-            if (response.message == "Success") {
-                setClients(response.data);
-                // setItemsPerPage(response.count)
-                // setTotalItems(response.filterCount);
+            try {
+                const response: any = await RemoteApi.post(
+                    `mutualfund-analytics/sip/distributor/${ifa.id}`,
+                    data
+                );
+
+                if (response.message === "Success") {
+                    setClients(response.data);
+                } else {
+                    // Handle the error if needed
+                }
+            } catch (error) {
+                alert(error);
+            } finally {
                 setLoading(false);
-                // setTotalPages(
-                //     Math.ceil(
-                //         (response.filterCount || response.data.length) /
-                //             itemsPerPage
-                //     )
-                // );
-                console.log("clientlist");
-                console.log(response.data);
-            } else {
-                setLoading(false);
-
-                // alert("Internal Server Error");
             }
-        } catch (error) {
-            alert(error);
         }
-
-        // if (!expanded && ifaList.length === 0) {
-        //     setLoading(true);
-        //     // Simulating API call
-        //     setTimeout(() => {
-        //         setIfaList(rm.ifalist); // Replace with actual API call
-        //         setLoading(false);
-        //     }, 1000);
-        // }
     };
 
     return (

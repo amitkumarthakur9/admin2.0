@@ -43,34 +43,73 @@ const ForgotPassword = () => {
         typing: false,
     });
     const [toasts, setToasts] = useState([]);
+    const toastIdRef = React.useRef();
 
     useEffect(() => {
+        console.log("toasts.length" + toasts.length);
+        // toast.closeAll();
         // Clear existing toasts
-        toast.closeAll();
-
+        toast.close(toastIdRef.current);
+        console.log("toastIdRef.current");
+        if (toasts.length == 1) {
+            console.log("toasts.length" + toasts.length);
+            // toast.closeAll();
+        }
+        console.log("toastsUseeffect");
+        console.log(JSON.stringify(toasts));
         // Show the latest toast
         if (toasts.length > 0) {
             const latestToast = toasts[toasts.length - 1];
-            toast.show({
+
+            // Show the new toast
+            const toastId = toast.show({
                 render: () => (
                     <ToastAlert
                         id={latestToast.id}
                         variant={latestToast.variant}
                         title={latestToast.title}
-                        description=""
-                        isClosable={false}
+                        description={latestToast.description}
+                        isClosable={latestToast.isClosable}
                         toast={toast}
                         status={latestToast.status}
-                        onClose={() => removeToast(latestToast.id)} // Remove the toast from the 'toasts' array when closed
+                        onClose={() => removeToast(latestToast.id)}
                     />
                 ),
                 placement: "top",
             });
+
+            console.log(toastId);
+
+            // removeToast(latestToast.id);
         }
+
+        // toast.closeAll();
+
+        // toast.close(toastIdRef.current);
     }, [toasts]);
 
+    const addToast = () => {
+        toastIdRef.current = toast.show({
+            title: "Hi, Nice to see you",
+            placement: "top",
+        });
+    };
+
+    const closeAll = () => {
+        console.log("Closetoatfunc");
+        toast.closeAll();
+    };
+
+    const close = () => {
+        if (toastIdRef.current) {
+            toast.close(toastIdRef.current);
+        }
+    };
+
     const removeToast = (id) => {
-        setToasts(toasts.filter((toast) => toast.id !== id));
+        setToasts((prevToasts) =>
+            prevToasts.filter((toast) => toast.id !== id)
+        );
     };
 
     const setToken = async (newToken) => {
@@ -115,8 +154,8 @@ const ForgotPassword = () => {
                 [key]: value,
             };
 
-            console.log(value); // This will log the current value
-            console.log(updatedData.email); // This will also log the current value
+            // console.log(value); // This will log the current value
+            // console.log(updatedData.email); // This will also log the current value
 
             return updatedData;
         });
@@ -164,17 +203,13 @@ const ForgotPassword = () => {
             //     body,
             // });
 
-            const response: any = await RemoteApi.post(
-                endpoint,
-                data
-            );
+            const response: any = await RemoteApi.post(endpoint, data);
 
-            console.log("main api response" + response)
+            console.log("main api response" + response);
 
-        
             // Check if the response is successful
             if (!response) {
-                console.log("response.")
+                console.log("response.");
                 // Handle the error response
                 // await ApiError(true,response.status)
                 const uniqueId = uuidv4();
@@ -206,15 +241,15 @@ const ForgotPassword = () => {
             // Handle any errors that occurred during the fetch request
             console.error("Error:", error.message);
             const uniqueId = uuidv4();
-                setToasts([
-                    ...toasts,
-                    {
-                        id: uniqueId,
-                        variant: "solid",
-                        title: `Internal server Error! Status: ${response.status}`,
-                        status: "error",
-                    },
-                ]);
+            setToasts([
+                ...toasts,
+                {
+                    id: uniqueId,
+                    variant: "solid",
+                    title: `Internal server Error! Status: ${response.status}`,
+                    status: "error",
+                },
+            ]);
             throw error;
         }
     };
@@ -223,6 +258,7 @@ const ForgotPassword = () => {
         // setValidation({
         //     typing: false,
         // });
+
         console.log(formData.email);
         const isValid = validate();
         if (isValid) {
@@ -235,6 +271,10 @@ const ForgotPassword = () => {
                     { email: formData.email },
                     null
                 );
+
+                // const response: any = {
+                //     message: "Fail",
+                // };
 
                 console.log(response);
 
@@ -249,21 +289,62 @@ const ForgotPassword = () => {
                     setValidation({ typing: false });
                 } else {
                     // Update the error state
-                    const uniqueId = uuidv4();
-                    setToasts([
-                        ...toasts,
-                        {
-                            id: uniqueId,
-                            variant: "solid",
-                            title: `Email doesn't exist. ${response.message}`,
-                            status: "error",
-                        },
-                    ]);
+                    // const uniqueId = uuidv4();
+                    // setToasts([
+                    //     ...toasts,
+                    //     {
+                    //         id: uniqueId,
+                    //         variant: "solid",
+                    //         title: `${response.message}`,
+                    //         status: "error",
+                    //     },
+                    // ]);
+                    // async function handleToast() {
+                    //     const toaster = await toast.closeAll();
+                    //     console.log("toaster" + toaster);
 
-                    if (response.code === 251) {
+                    //     closeAll();
+                    //     console.log("Closetoat");
+                    //     addToast();
+                    //     console.log("addtost");
+                    // }
+
+                    setErrors({
+                        ...errors,
+                        email: response?.message,
+                    });
+                    setValidation({ typing: false });
+                    // handleToast();
+
+                    if (response.code === 254) {
                         newErrors.email = "Email doesn't exist.";
-                        setErrors(newErrors);
+                        setErrors({
+                            ...errors,
+                            email: response?.message,
+                        });
+                        setValidation({ typing: false });
+
+                        // setToasts([
+                        //     ...toasts,
+                        //     {
+                        //         id: uniqueId,
+                        //         variant: "solid",
+                        //         title: `${formData.email} doesn't exist. ${response.message}`,
+                        //         status: "error",
+                        //     },
+                        // ]);
                     }
+
+                    setFormData((prevData) => {
+                        const updatedData = {
+                            ...prevData,
+                            email: "",
+                        };
+
+                        console.log(updatedData.email); // This will also log the current value
+
+                        return updatedData;
+                    });
 
                     // await ApiError(true,response.error.message)
                     // await setIsSubmitted(true);
@@ -386,9 +467,13 @@ const ForgotPassword = () => {
                                         </FormControl>
                                         <View className="flex flex-row justify-center pt-4">
                                             <Pressable
-                                                disabled={!validation.typing}
+                                                disabled={
+                                                    !validation.typing &&
+                                                    formData.email.length == 0
+                                                }
                                                 className={
-                                                    (validation.typing
+                                                    (validation.typing &&
+                                                    formData.email.length > 0
                                                         ? "bg-[#114EA8]  "
                                                         : "bg-gray-400  ") +
                                                     "rounded w-full p-1.5"

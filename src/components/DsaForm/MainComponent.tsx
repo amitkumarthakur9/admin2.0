@@ -129,7 +129,7 @@ const MainComponent = () => {
             //     code: 200,
             //     message: "Success",
             //     data: {
-            //         name: "Senior Manager",
+            //         name: "Saffiulla",
             //         email: "sm@gmail.com",
             //         mobileNumber: "9778686786",
             //         maritalStatus: {
@@ -137,18 +137,18 @@ const MainComponent = () => {
             //             name: "Single",
             //         },
             //         panNumber: "ABCDE1234G",
-            //         arn: "12345",
-            //         euin: "12345",
+            //         arn: "",
+            //         euin: "E12345",
             //         dsaCode: null,
             //         remark: {
             //             id: 2,
-            //             remark: "Remasdngfkdsnagladnsglkndlkanbglkdnl;kagn;lkdkng;ladnslg;nld;anglkndsalgndsl;ngldsngl;ndslgnlsdnagodsangndsaalgnaddknfkdnfkndkfndknfkdnalfldk;nfkldnafklndlkfnldksanfklsdanflkasdnfklsadnlfknsdlknslark",
+            //             remark: "Upload pancard",
             //         },
             //         incomeSlab: {
             //             id: 0,
             //             name: null,
             //         },
-            //         isOnBoarded: true,
+            //         isOnBoarded: false,
             //         isEsigned: false,
             //         areDocumentsUploaded: false,
             //         educationalQualification: {
@@ -373,20 +373,27 @@ const MainComponent = () => {
 
         console.log(hasNoError); // Will print true if any error flag is true, otherwise false
 
-        if (formData.remark) {
+        if (formData.dsaCode != null || formData.isOnBoarded == true) {
+            // stepLabel.push("DSA Completed");
+            formSteps.push({
+                key: "9",
+                content: (
+                    <Success
+                        successMessages={[
+                            "Your DSE Code is",
+                            `${formData.dsaCode}`,
+                        ]}
+                    />
+                ),
+            });
+        }
+
+        if (formData.remark && formData.isOnBoarded == false) {
             stepLabel.push("Remarks");
             formSteps.push({
                 key: "10",
                 content: (
                     <>
-                        {/* <View style={styles.buttonContainer}>
-                            <Pressable
-                                style={styles.proceed}
-                                onPress={handleResubmit}
-                            >
-                                <Text style={styles.buttonText}>Resubmit</Text>
-                            </Pressable>
-                        </View> */}
                         <View className="flex flex-col items-center">
                             <Text className="text-center color-black text-lg font-bold p-4">
                                 Remarks
@@ -444,33 +451,6 @@ const MainComponent = () => {
             });
         }
 
-        // if (
-        //     !formData.remark ||
-        //     (
-        //     formData.remark && (
-        //     formData.esignedDocumentError === true ||
-        //     formData.aadharFrontDocumentError === true ||
-        //     formData.aadharBackDocumentError === true ||
-        //     formData.panCardDocumentError === true ||
-        //     formData.cancelledChequeError === true
-        // ))
-        // ) {
-        //     stepLabel.push("Upload Documents");
-        //     formSteps.push({
-        //         key: "7",
-        //         content: (
-        //             <View>
-        //                 {/* {step === 7 && ( */}
-        //                 <StepThreeUpload
-        //                     onSuccess={handleSuccess}
-        //                     initialValues={formData}
-        //                 />
-        //                 {/* )} */}
-        //             </View>
-        //         ),
-        //     });
-        // }
-
         if (
             !formData.remark ||
             (formData.remark && formData.nameError) ||
@@ -496,32 +476,8 @@ const MainComponent = () => {
             });
         }
 
-        // else if (formData.remark && hasNoError) {
-        //     stepLabel.push("Personal");
-        //     formSteps.push({
-        //         key: "1",
-        //         content: (
-        //             <View>
-        //                 {/* {step === 1 && ( */}
-        //                 <PersonalDetailsForm
-        //                     onNext={handleNext}
-        //                     initialValues={formData}
-        //                     onPrevious={handlePrevious}
-        //                 />
-        //                 {/* )}  */}
-        //             </View>
-        //         ),
-        //     });
-        // }
-
         if (
             !formData.remark ||
-            // !formData.addressLine1 ||
-            // !formData.addressLine2 ||
-            // !formData.addressLine3 ||
-            // !formData.city ||
-            // !formData.state ||
-            // !formData.district ||
             (formData.remark && formData.addressLineError === true) ||
             formData.countryError === true ||
             formData.stateError === true ||
@@ -534,41 +490,18 @@ const MainComponent = () => {
                 key: "2",
                 content: (
                     <View>
-                        {/* {step === 2 && ( */}
                         <AddressDetailsForm
                             onNext={handleNext}
                             onPrevious={handlePrevious}
                             initialValues={formData}
                         />
-                        {/* )}  */}
                     </View>
                 ),
             });
         }
 
-        // else if (formData.remark && hasNoError) {
-        //     stepLabel.push("Address");
-        //     formSteps.push({
-        //         key: "2",
-        //         content: (
-        //             <View>
-        //                 {/* {step === 2 && ( */}
-        //                 <AddressDetailsForm
-        //                     onNext={handleNext}
-        //                     onPrevious={handlePrevious}
-        //                     initialValues={formData}
-        //                 />
-        //                 {/* )}  */}
-        //             </View>
-        //         ),
-        //     });
-        // }
-
         if (
             !formData.remark ||
-            // !formData.incomeRange ||
-            // !formData.education ||
-            // !formData.occupation ||
             (formData.remark && formData.panError === true) ||
             formData.esignedDocumentError === true
         ) {
@@ -577,42 +510,19 @@ const MainComponent = () => {
                 key: "3",
                 content: (
                     <View>
-                        {/* {step === 3 && ( */}
                         <ProfessionalDetailsForm
                             onSubmit={handleSubmit}
                             onNext={handleNext}
                             onPrevious={handlePrevious}
                             initialValues={formData}
                         />
-                        {/* )} */}
                     </View>
                 ),
             });
         }
 
-        // else if (formData.remark && hasNoError) {
-        //     stepLabel.push("Professional");
-        //     formSteps.push({
-        //         key: "3",
-        //         content: (
-        //             <View>
-        //                 {/* {step === 3 && ( */}
-        //                 <ProfessionalDetailsForm
-        //                     onSubmit={handleSubmit}
-        //                     onNext={handleNext}
-        //                     onPrevious={handlePrevious}
-        //                     initialValues={formData}
-        //                 />
-        //                 {/* )} */}
-        //             </View>
-        //         ),
-        //     });
-        // }
-
         if (
             !formData.remark ||
-            // !formData.accountNumber ||
-            // !formData.ifscCode ||
             (formData.remark && formData.esignedDocumentError === true)
         ) {
             stepLabel.push("Bank");
@@ -621,36 +531,15 @@ const MainComponent = () => {
                 key: "4",
                 content: (
                     <View>
-                        {/* {step === 4 && ( */}
                         <BankDetailForm
                             onPrevious={handlePrevious}
                             onNext={handleNext}
                             initialValues={formData}
                         />
-                        {/* )} */}
                     </View>
                 ),
             });
         }
-
-        // else if (formData.remark && formData.esignedDocumentError === false) {
-        //     stepLabel.push("Bank");
-
-        //     formSteps.push({
-        //         key: "4",
-        //         content: (
-        //             <View>
-        //                 {/* {step === 4 && ( */}
-        //                 <BankDetailForm
-        //                     onPrevious={handlePrevious}
-        //                     onNext={handleNext}
-        //                     initialValues={formData}
-        //                 />
-        //                 {/* )} */}
-        //             </View>
-        //         ),
-        //     });
-        // }
 
         if (
             !formData.remark ||
@@ -672,24 +561,6 @@ const MainComponent = () => {
                 ),
             });
         }
-
-        // else if (formData.remark && hasNoError) {
-        //     stepLabel.push("Proceed E-sign");
-
-        //     formSteps.push({
-        //         key: "5",
-        //         content: (
-        //             <View>
-        //                 {/* {step === 5 && ( */}
-        //                 <ProceedSign
-        //                     onPrevious={handlePrevious}
-        //                     onNext={handleNext}
-        //                 />
-        //                 {/* )} */}
-        //             </View>
-        //         ),
-        //     });
-        // }
 
         if (
             !formData.remark ||
@@ -720,26 +591,14 @@ const MainComponent = () => {
             });
         }
 
-        // else if (formData.remark && hasNoError) {
-        //     stepLabel.push("E-sign Document");
-        //     formSteps.push({
-        //         key: "6",
-        //         content: (
-        //             <View>
-        //                 {/* {step === 6 &&  */}
-        //                 <DigioFlowComponent onNext={handleNext} />
-        //                 {/* } */}
-        //             </View>
-        //         ),
-        //     });
-        // }
-
         if (
-            !formData.remark ||
-            (formData.remark && formData.aadharFrontDocumentError === true) ||
-            formData.aadharBackDocumentError === true ||
-            formData.panCardDocumentError === true ||
-            formData.cancelledChequeError === true
+            (!formData.remark ||
+                (formData.remark &&
+                    formData.aadharFrontDocumentError === true) ||
+                formData.aadharBackDocumentError === true ||
+                formData.panCardDocumentError === true ||
+                formData.cancelledChequeError === true) &&
+            formData.isOnBoarded == false
         ) {
             stepLabel.push("Upload Documents");
             formSteps.push({
@@ -757,23 +616,6 @@ const MainComponent = () => {
             });
         }
 
-        // else if (formData.remark && hasNoError) {
-        //     stepLabel.push("Upload Documents");
-        //     formSteps.push({
-        //         key: "7",
-        //         content: (
-        //             <View>
-        //                 {/* {step === 7 && ( */}
-        //                 <StepThreeUpload
-        //                     onSuccess={handleSuccess}
-        //                     initialValues={formData}
-        //                 />
-        //                 {/* )} */}
-        //             </View>
-        //         ),
-        //     });
-        // }
-
         if (!formData.remark || formData.remark) {
             // stepLabel.push("Submit");
             formSteps.push({
@@ -789,20 +631,6 @@ const MainComponent = () => {
                         />
                         {/* )} */}
                     </View>
-                ),
-            });
-        }
-
-        if (formData.dsaCode != null) {
-            formSteps.push({
-                key: "9",
-                content: (
-                    <Success
-                        successMessages={[
-                            "Your DSE Code is",
-                            `${formData.dsaCode}`,
-                        ]}
-                    />
                 ),
             });
         }
@@ -867,145 +695,10 @@ const MainComponent = () => {
                         justifyContent: "space-between",
                         marginTop: 20,
                     }}
-                >
-                    {/* {step > 1 && (
-                        <Button title="Back" onPress={handlePrevious} />
-                    )}
-                    {step < formSteps.length && (
-                        <Button title="Next" onPress={() => handleNext({})} />
-                    )}
-                    {step === formSteps.length && (
-                        <Button title="Submit" onPress={handleSubmit} />
-                    )} */}
-                </View>
+                ></View>
             </View>
         );
     };
-
-    // const formStepComponent =  renderCurrentStep();
-    console.log("Steps");
-    console.log(step);
-
-    // const components = [
-    //     {
-    //         key: "1",
-    //         content: (
-    //             <View>
-    //                 {step === 1 && (
-    //                     <PersonalDetailsForm
-    //                         onNext={handleNext}
-    //                         initialValues={formData}
-    //                     />
-    //                 )}
-    //             </View>
-    //         ),
-    //     },
-    //     {
-    //         key: "2",
-    //         content: (
-    //             <View>
-    //                 {step === 2 && (
-    //                     <AddressDetailsForm
-    //                         onNext={handleNext}
-    //                         onPrevious={handlePrevious}
-    //                         initialValues={formData}
-    //                     />
-    //                 )}
-    //             </View>
-    //         ),
-    //     },
-    //     {
-    //         key: "3",
-    //         content: (
-    //             <View>
-    //                 {step === 3 && (
-    //                     <ProfessionalDetailsForm
-    //                         onSubmit={handleSubmit}
-    //                         onNext={handleNext}
-    //                         onPrevious={handlePrevious}
-    //                         initialValues={formData}
-    //                     />
-    //                 )}
-    //             </View>
-    //         ),
-    //     },
-    //     {
-    //         key: "4",
-    //         content: (
-    //             <View>
-    //                 {step === 4 && (
-    //                     <BankDetailForm
-    //                         onPrevious={handlePrevious}
-    //                         onNext={handleNext}
-    //                         initialValues={formData}
-    //                     />
-    //                 )}
-    //             </View>
-    //         ),
-    //     },
-    //     {
-    //         key: "5",
-    //         content: (
-    //             <View>
-    //                 {step === 5 && (
-    //                     <ProceedSign
-    //                         onPrevious={handlePrevious}
-    //                         onNext={handleNext}
-    //                     />
-    //                 )}
-    //             </View>
-    //         ),
-    //     },
-    //     {
-    //         key: "6",
-    //         content: (
-    //             <View>
-    //                 {step === 6 && <DigioFlowComponent onNext={handleNext} />}
-    //             </View>
-    //         ),
-    //     },
-    //     {
-    //         key: "7",
-    //         content: (
-    //             <View>
-    //                 {step === 7 && (
-    //                     <StepThreeUpload onSuccess={handleSuccess} />
-    //                 )}
-    //             </View>
-    //         ),
-    //     },
-    //     {
-    //         key: "8",
-    //         content: (
-    //             <View>
-    //                 {step === 8 && (
-    //                     <Success
-    //                         successMessages={[
-    //                             "Application successfully submitted.",
-    //                             "Approval Pending.",
-    //                         ]}
-    //                     />
-    //                 )}
-    //             </View>
-    //         ),
-    //     },
-    //     // {
-    //     //     key: "clientName",
-    //     //     content: (
-    //     //         <View>
-    //     //              {step === 9 &&
-    //     //                         (formData.dsaCode != null ? (
-    //     //                             <Success
-    //     //                                 successMessages={[
-    //     //                                     "Your DSE Code is",
-    //     //                                     `${formData.dsaCode}`,
-    //     //                                 ]}
-    //     //                             />
-    //     //                         )}
-    //     //         </View>
-    //     //     ),
-    //     // },
-    // ];
 
     return (
         <View style={styles.container}>

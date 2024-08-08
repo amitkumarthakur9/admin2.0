@@ -64,7 +64,7 @@ const ClientsDataTable = () => {
         const response: ApiResponse<ClientDataResponse[]> =
             await RemoteApi.post("client/list", data);
 
-        if (response.code == 200) {
+        if (response?.code == 200) {
             setData(response.data);
             // setItemsPerPage(response.count)
             setTotalItems(response.filterCount);
@@ -86,7 +86,7 @@ const ClientsDataTable = () => {
         async function getSchema() {
             const response: any = await RemoteApi.get("client/schema");
             setFiltersSchema(response);
-            setSorting(response.sort);
+            setSorting(response?.sort);
         }
         getSchema();
     }, []);
