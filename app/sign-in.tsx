@@ -31,6 +31,9 @@ import {
     WarningOutlineIcon,
     useToast,
 } from "native-base";
+import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
+
+import GoogleRecaptchaV3 from "../src/components/ReCaptcha";
 import { ToastAlert } from "../src/helper/CustomToaster";
 import Icon from "react-native-vector-icons/FontAwesome";
 import ForgotPassword from "../src/components/Password/ForgotPassword";
@@ -43,10 +46,8 @@ export default function SignIn() {
     const [isLoading, setIsLoading] = useState(false);
     const toast = useToast();
     const { height, width } = useWindowDimensions();
-    // console.log('in login------');
+    const [token, setToken] = useState(null);
     const onLoginPressed = async () => {
-        // console.log('clicked');
-
         setIsLoading(true);
         const emailError = emailValidator(email.value);
         const passwordError = passwordValidator(password.value);
@@ -57,25 +58,12 @@ export default function SignIn() {
             return;
         }
 
-        // console.log(process.env.API_ENDPOINT);
-
         try {
             const response: any = await RemoteApi.post("/user/login", {
                 email: email.value,
                 password: password.value,
+                recaptchaToken: token,
             });
-
-            // const response = {
-
-               
-            //     errors: [
-            //         {
-            //             message: "failed",
-            //         }
-            //     ],
-            // };
-
-            console.log("response", response);
 
             if (response?.message == "Success") {
                 signIn(response?.token, response?.data);
@@ -84,26 +72,25 @@ export default function SignIn() {
             } else {
                 if (response.errors && response.errors.length > 0) {
                     // response.errors.forEach((error, index) => {
-                    //     toast.show({
-                    //         render: ({ index }) => {
-                    //             return (
-                    //                 <ToastAlert
-                    //                     id={index}
-                    //                     variant={"solid"}
-                    //                     title={error.message}
-                    //                     description={""}
-                    //                     isClosable={true}
-                    //                     toast={toast}
-                    //                     status={"error"}
-                    //                 />
-                    //             );
-                    //         },
-                    //         placement: "top",
-                    //     });
-                    // });
+                    toast.show({
+                        render: ({ index }) => {
+                            return (
+                                <ToastAlert
+                                    id={index}
+                                    variant={"solid"}
+                                    title={response.message}
+                                    description={""}
+                                    isClosable={true}
+                                    toast={toast}
+                                    status={"error"}
+                                />
+                            );
+                        },
+                        placement: "top",
+                    });
                 }
 
-                setEmail({ ...email, error: response?.errors[0]?.message});
+                setEmail({ ...email, error: response?.errors[0]?.message });
             }
         } catch (err) {
             console.log(err);
@@ -111,44 +98,6 @@ export default function SignIn() {
         setIsLoading(false);
     };
     const [show, setShow] = useState(false);
-    // return <>
-
-    //     {!isLoggedIn ? <Background>
-    //         <Logo />
-    //         <Header className="text-black">Welcome back.</Header>
-    //         <TextInput
-    //             description={""}
-    //             label="Email"
-    //             returnKeyType="next"
-    //             value={email.value}
-    //             onChangeText={(text) => setEmail({ value: text, error: '' })}
-    //             error={!!email.error}
-    //             errorText={email.error}
-    //             autoCapitalize="none"
-    //             autoCompleteType="email"
-    //             textContentType="emailAddress"
-    //             keyboardType="email-address"
-
-    //         />
-    //         <TextInput
-    //             description={""}
-    //             label="Password"
-    //             returnKeyType="done"
-    //             value={password.value}
-    //             onChangeText={(text: string) => setPassword({ value: text, error: '' })}
-    //             error={!!password.error}
-    //             errorText={password.error}
-    //             secureTextEntry
-
-    //         />
-    //         <Button isLoading={isLoading} isLoadingText="Logging In" marginTop={6} width={40} bgColor={"#013974"} onPress={onLoginPressed}>
-    //             Login
-    //         </Button>
-    //     </Background>
-    //         : <Redirect href="/" />
-    //     }
-
-    // </>
 
     const handleKeyPress = useCallback(
         (event) => {
@@ -254,22 +203,29 @@ export default function SignIn() {
                         </FormControl>
                     </Box>
 
-                    {/* <Input
-                    type="text"
-                    marginY={3}
-                    w={{
-                        base: "75%",
-                        md: "25%"
-                    }} placeholder="Email" />
-                <Input
-                    w={{
-                        base: "75%",
-                        md: "25%"
-                    }}
-                    type={show ? "text" : "password"}
-                    InputRightElement={<Pressable onPress={() => setShow(!show)}>
-                        <Icon name={show ? "eye" : "eye-slash"} style={{ marginRight: 10 }} size={14} color="#484848" />
-                    </Pressable>} placeholder="Password" /> */}
+                    <Box
+                        w={{
+                            base: "75%",
+                            md: "60%",
+                            sm: "75%",
+                            lg: "60%",
+                        }}
+                        alignItems="center"
+                    >
+                        <FormControl isInvalid={!!password.error}>
+                            <GoogleReCaptchaProvider
+                                useRecaptchaNet
+                                reCaptchaKey="6Lcf0SUqAAAAAIsMoed1c16vYiq7g_K--2uSov3h"
+                                scriptProps={{
+                                    async: true,
+                                    defer: true,
+                                    appendTo: "body",
+                                }}
+                            >
+                                <GoogleRecaptchaV3 updateToken={setToken} />
+                            </GoogleReCaptchaProvider>
+                        </FormControl>
+                    </Box>
                     <Button
                         isLoading={isLoading}
                         isLoadingText="Logging In"
