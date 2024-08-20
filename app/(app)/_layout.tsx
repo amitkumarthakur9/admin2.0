@@ -6,6 +6,7 @@ import {
     Platform,
     Pressable,
     Text,
+    TouchableOpacity,
     View,
     useWindowDimensions,
 } from "react-native";
@@ -87,35 +88,73 @@ const ChapterLearningCenter = lazy(
 );
 import IonIcon from "react-native-vector-icons/Ionicons";
 import DsaFormScreen from "./dsa-form";
+import TrainingArnExamScreen from "./dsa-form/training-arn-exam";
 import DsaRequestScreen from "./dsa-form/request";
 import SipCancelUpload from "./operations/sip-cancel-upload";
 import AddManagementUserForm from "./add-user/management";
 import AddDistributorUserForm from "./add-user/distributor";
+import { UserMeData } from "src/interfaces/DsaFormApproveInterface";
+import RemoteApi from "src/services/RemoteApi";
 
 const queryClient = new QueryClient();
+
+const LoadingSpinner = () => (
+    <Center>
+        <HStack space={2} justifyContent="center">
+            <Spinner color={"black"} accessibilityLabel="Loading" />
+            <Heading color="black" fontSize="md">
+                Loading
+            </Heading>
+        </HStack>
+    </Center>
+);
+
+const getUserDetail = async () => {
+    try {
+
+        const response: UserMeData = await RemoteApi.get("user/me");
+        console.log("useEffectlayouttoken" + "userme" )
+        // const response = {
+        //     code: 200,
+        //     message: "Success",
+        //     data: {
+        //         name: "Saffiulla",
+        //         email: "sm@gmail.com",
+        //         mobileNumber: "9778686786",
+        //         isOnBoarded: false,
+        //         dsaCode: "null",
+        //         arn: "ARN",
+        //     },
+        // };
+
+        if (response.code === 200) {
+            const userData = response.data;
+            return userData;
+        } else {
+            alert("Failed to fetch user details");
+        }
+    } catch (error) {
+        alert("An error occurred while fetching the user details");
+    }
+    return null;
+};
 
 export default function AppLayout() {
     const [isOpen, setIsOpen] = useState(false);
     const [showLoader, setShowLoader] = useState(false);
     const [[isLoading, token], setToken] = useStorageState("token");
     const { height, width } = useWindowDimensions();
-    // const [roleId, setroleID] = useState(null);
+    // const [roleId, setRoleId] = useState(null);
     const [inviteDisplay, setinviteDisplay] = useState("");
     const CoRoverURL =
         "https://builder.corover.ai/params/?appid=f525521d-c54f-4723-8d41-592f5497b460&partnerKey=c65ed7c2-a07f-4a46-a161-3ed104d7ab57&token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik5FUCIsImNvbXBhbnlOYW1lIjoiQ29Sb3ZlciIsImVtYWlsSWQiOiJuZXAuc3VwcG9ydEBjb3JvdmVyLmFpIiwiaWF0IjoxNzE1MTcwMDcyLCJleHAiOjE3MTUyNTY0NzJ9.KSBawWk-TC0ykqBMZOY4mIuQjm-xHeSGmkLfnd5cYnE#/";
     const ViewHeight = height * 0.6;
-
-    // useEffect(() => {
-    //     if (token) {
-    //         const decoded: any = jwtDecode(token);
-    //         setroleID(decoded.roleId);
-    //         if (decoded.roleId === 3 || decoded.roleId === 4) {
-    //             setinviteDisplay("none");
-    //         }
-    //     }
-    // }, [token]);
-
-    // const { roleId } = useUserRole();
+    // const [renderDsaForm, setRenderDsaForm] = useState(false);
+    // const [userDetails, setUserDetails] = useState(null);
+    const [dsaForm, setDsaForm] = useState({
+        userDetails: null,
+        renderDsaForm: false,
+    });
 
     const shakeAnimation = useRef(new Animated.Value(0)).current;
 
@@ -169,17 +208,35 @@ export default function AppLayout() {
         }
     };
 
+    useEffect(() => {
+        const fetchUserDetail = async () => {
+            const decoded: any = jwtDecode(token);
+            console.log(decoded.roleId);
+
+            const roleId = decoded.roleId;
+            if (roleId == 2) {
+                const userData = await getUserDetail();
+                console.log("userData" + JSON.stringify(userData));
+                if (userData != null) {
+                    setDsaForm((prevState) => ({
+                        ...prevState,
+                        userDetails: userData,
+                        renderDsaForm: true,
+                    }));
+
+                    console.log(dsaForm.renderDsaForm + dsaForm.userDetails);
+                }
+            }
+        };
+
+        if (token) {
+            console.log("useEffectlayouttoken" + token )
+            fetchUserDetail();
+        }
+    }, [token]);
+
     if (isLoading) {
-        return (
-            <Center>
-                <HStack space={2} justifyContent="center">
-                    <Spinner color={"black"} accessibilityLabel="Loading" />
-                    <Heading color="black" fontSize="md">
-                        Loading
-                    </Heading>
-                </HStack>
-            </Center>
-        );
+        return <LoadingSpinner />;
     }
 
     if (!token) {
@@ -199,6 +256,95 @@ export default function AppLayout() {
     console.log(token);
     console.log(roleId);
     console.log(drawerStructure);
+
+    // RoldeID == 2, is for Distributor.
+    if (roleId == 2) {
+        drawerStructure.push({
+            key: "DsaForm",
+            content: (
+                <Drawer.Screen
+                    name="dsa-form/index"
+                    options={{
+                        drawerLabel: "DSA form",
+                        title: "DSA form",
+                        // drawerItemStyle: {
+                        //     display: "none",
+                        // },
+                        unmountOnBlur: true,
+                    }}
+                    initialParams={{}}
+                    component={DsaFormScreen}
+                />
+            ),
+        });
+        drawerStructure.push({
+            key: "marketing",
+            content: (
+                <Drawer.Screen
+                    name="marketing/index"
+                    options={{
+                        drawerLabel: "Marketing",
+                        title: "Marketing",
+                        unmountOnBlur: true,
+                    }}
+                    initialParams={{}}
+                    component={MarketingScreen}
+                />
+            ),
+        });
+        drawerStructure.push({
+            key: "invite-contact",
+            content: (
+                <Drawer.Screen
+                    name="invite-contact"
+                    options={{
+                        drawerLabel: "Invite Client",
+                        title: "Invite Client",
+                        drawerItemStyle: {
+                            display: inviteDisplay,
+                        },
+                        unmountOnBlur: true,
+                    }}
+                    initialParams={{}}
+                    component={SendInvite}
+                />
+            ),
+        });
+        drawerStructure.push({
+            key: "ModuleLearningCenter",
+            content: (
+                <Drawer.Screen
+                    name="learning-center/[id]/index"
+                    options={{
+                        drawerLabel: "Module Learning Center",
+                        title: "Module Learning Center",
+                        drawerItemStyle: { display: "none" },
+                        unmountOnBlur: true,
+                    }}
+                    initialParams={{}}
+                    component={ModuleLearningManagement}
+                />
+            ),
+        });
+
+        drawerStructure.push({
+            key: "ChapterLearningCenter",
+            content: (
+                <Drawer.Screen
+                    name="learning-center/[id]/[chapterId]/index"
+                    options={{
+                        drawerLabel: "Chapter Learning Center",
+                        title: "Module Learning Center",
+                        drawerItemStyle: { display: "none" },
+                        unmountOnBlur: true,
+                    }}
+                    initialParams={{}}
+                    component={ChapterLearningCenter}
+                />
+            ),
+        });
+    }
+
     // RoldeID == 3, is for junior manager.
     // RoldeID == 4, is for Senior manager.
     if (roleId >= 2 && roleId <= 4) {
@@ -606,111 +752,22 @@ export default function AppLayout() {
         });
     }
     if (roleId == 3 || roleId == 4) {
-
-    drawerStructure.push({
-        key: "AddDistributorUserForm",
-        content: (
-            <>
-                <Drawer.Screen
-                    name="add-user/distributor/index"
-                    options={{
-                        drawerLabel: "Add Distributor",
-                        title: "AddDistributorUserForm",
-                        unmountOnBlur: true,
-                        // drawerItemStyle: { display: "none" },
-                    }}
-                    initialParams={{}}
-                    component={AddDistributorUserForm}
-                />
-            </>
-        ),
-    });
-}
-
-    // RoldeID == 2, is for Distributor.
-    if (roleId == 2) {
         drawerStructure.push({
-            key: "DsaForm",
+            key: "AddDistributorUserForm",
             content: (
-                <Drawer.Screen
-                    name="dsa-form/index"
-                    options={{
-                        drawerLabel: "DSA form",
-                        title: "DSA form",
-                        // drawerItemStyle: {
-                        //     display: "none",
-                        // },
-                        unmountOnBlur: true,
-                    }}
-                    initialParams={{}}
-                    component={DsaFormScreen}
-                />
-            ),
-        });
-        drawerStructure.push({
-            key: "marketing",
-            content: (
-                <Drawer.Screen
-                    name="marketing/index"
-                    options={{
-                        drawerLabel: "Marketing",
-                        title: "Marketing",
-                        unmountOnBlur: true,
-                    }}
-                    initialParams={{}}
-                    component={MarketingScreen}
-                />
-            ),
-        });
-        drawerStructure.push({
-            key: "invite-contact",
-            content: (
-                <Drawer.Screen
-                    name="invite-contact"
-                    options={{
-                        drawerLabel: "Invite Client",
-                        title: "Invite Client",
-                        drawerItemStyle: {
-                            display: inviteDisplay,
-                        },
-                        unmountOnBlur: true,
-                    }}
-                    initialParams={{}}
-                    component={SendInvite}
-                />
-            ),
-        });
-        drawerStructure.push({
-            key: "ModuleLearningCenter",
-            content: (
-                <Drawer.Screen
-                    name="learning-center/[id]/index"
-                    options={{
-                        drawerLabel: "Module Learning Center",
-                        title: "Module Learning Center",
-                        drawerItemStyle: { display: "none" },
-                        unmountOnBlur: true,
-                    }}
-                    initialParams={{}}
-                    component={ModuleLearningManagement}
-                />
-            ),
-        });
-
-        drawerStructure.push({
-            key: "ChapterLearningCenter",
-            content: (
-                <Drawer.Screen
-                    name="learning-center/[id]/[chapterId]/index"
-                    options={{
-                        drawerLabel: "Chapter Learning Center",
-                        title: "Module Learning Center",
-                        drawerItemStyle: { display: "none" },
-                        unmountOnBlur: true,
-                    }}
-                    initialParams={{}}
-                    component={ChapterLearningCenter}
-                />
+                <>
+                    <Drawer.Screen
+                        name="add-user/distributor/index"
+                        options={{
+                            drawerLabel: "Add Distributor",
+                            title: "AddDistributorUserForm",
+                            unmountOnBlur: true,
+                            // drawerItemStyle: { display: "none" },
+                        }}
+                        initialParams={{}}
+                        component={AddDistributorUserForm}
+                    />
+                </>
             ),
         });
     }
@@ -732,7 +789,6 @@ export default function AppLayout() {
             ),
         });
 
-        
         drawerStructure.push({
             key: "Analytics",
             content: (
@@ -852,51 +908,75 @@ export default function AppLayout() {
         });
     }
 
+    console.log("renderDsaForm" + dsaForm.renderDsaForm);
+    console.log("userDetails" + JSON.stringify(dsaForm.userDetails));
     return (
         <SafeAreaProvider style={{ backgroundColor: "white" }}>
             <QueryClientProvider client={queryClient}>
                 <PaperProvider theme={PaperTheme}>
                     <UserRoleProvider>
-                    <Suspense
-                        fallback={
-                            <Center>
-                                <Spinner
-                                    color="black"
-                                    accessibilityLabel="Loading"
-                                />
-                            </Center>
-                        }
-                    >
-                        <Drawer.Navigator
-                            screenOptions={({ navigation }) => ({
-                                drawerActiveTintColor: "#000000",
-                                drawerStyle: {
-                                    width: width < 830 ? "60%" : "15%",
-                                },
-                                drawerType: width <= 768 ? "back" : "permanent",
-                                header: (props) => (
-                                    <TopHeader navigation={navigation} />
-                                ),
-                                headerLeft: (props) => (
-                                    <View className="ml-4">
-                                        <Icon
-                                            size={18}
-                                            name={"bars"}
-                                            onPress={navigation.toggleDrawer}
-                                        />
-                                    </View>
-                                ),
-                            })}
-                            backBehavior="history"
-                            detachInactiveScreens={true}
-                            initialRouteName="clients/index"
-                            drawerContent={(props) => (
-                                <CustomSidebarMenu {...props} />
-                            )}
+                        <Suspense
+                            fallback={
+                                <Center>
+                                    <Spinner
+                                        color="black"
+                                        accessibilityLabel="Loading"
+                                    />
+                                </Center>
+                            }
                         >
-                            {drawerStructure.map((item) => item.content)}
-                        </Drawer.Navigator>
-                        {/* <Fab
+                            {!dsaForm?.userDetails?.arn ||
+                            !dsaForm?.userDetails?.isOnBoarded ? (
+                                !dsaForm?.userDetails?.isOnBoarded ? (
+                                    <>
+                                        <TopHeader navigation={""} logo={true} />
+                                        <DsaFormScreen />
+                                    </>
+                                ) : (
+                                    <>
+                                        <TopHeader navigation={""}  logo={true} />
+                                        <TrainingArnExamScreen />
+                                    </>
+                                )
+                            ) : (
+                                <Drawer.Navigator
+                                    screenOptions={({ navigation }) => ({
+                                        drawerActiveTintColor: "#000000",
+                                        drawerStyle: {
+                                            width: width < 830 ? "60%" : "15%",
+                                        },
+                                        drawerType:
+                                            width <= 768 ? "back" : "permanent",
+                                        header: (props) => (
+                                            <TopHeader
+                                                navigation={navigation}
+                                            />
+                                        ),
+                                        headerLeft: (props) => (
+                                            <View className="ml-4">
+                                                <Icon
+                                                    size={18}
+                                                    name={"bars"}
+                                                    onPress={
+                                                        navigation.toggleDrawer
+                                                    }
+                                                />
+                                            </View>
+                                        ),
+                                    })}
+                                    backBehavior="history"
+                                    detachInactiveScreens={true}
+                                    initialRouteName="clients/index"
+                                    drawerContent={(props) => (
+                                        <CustomSidebarMenu {...props} />
+                                    )}
+                                >
+                                    {drawerStructure.map(
+                                        (item) => item.content
+                                    )}
+                                </Drawer.Navigator>
+                            )}
+                            {/* <Fab
                                 renderInPortal={false}
                                 shadow={2}
                                 size="sm"
@@ -935,8 +1015,8 @@ export default function AppLayout() {
                                     </Center>
                                 </PresenceTransition>
                             </Fab> */}
-                        {/* {CoRover Code Starts Here} */}
-                        {/* <View
+                            {/* {CoRover Code Starts Here} */}
+                            {/* <View
                                 style={{
                                     position: "absolute",
                                     right: 20,
@@ -953,73 +1033,76 @@ export default function AppLayout() {
                                     </Animated.View>
                                 </Pressable>
                             </View> */}
-                        {(isOpen || showLoader) && (
-                            <View
-                                style={{
-                                    position: "absolute",
-                                    right: "2%",
-                                    bottom: "21%",
-                                }}
-                            >
-                                <PresenceTransition
-                                    visible={isOpen || showLoader}
-                                    initial={{
-                                        opacity: 0,
-                                        scale: 0,
-                                    }}
-                                    animate={{
-                                        opacity: 1,
-                                        scale: 1,
-                                        transition: {
-                                            duration: 250,
-                                        },
+                            {(isOpen || showLoader) && (
+                                <View
+                                    style={{
+                                        position: "absolute",
+                                        right: "2%",
+                                        bottom: "21%",
                                     }}
                                 >
-                                    <View>
-                                        {Platform.OS === "web" ? (
-                                            <View>
-                                                <Pressable
-                                                    onPress={() => {
-                                                        setIsOpen(false);
-                                                        setShowLoader(false);
-                                                    }}
-                                                    className="flex flex-row items-center"
-                                                >
-                                                    <Text>Close</Text>
-                                                    <IonIcon
-                                                        name="close-outline"
-                                                        size={20}
-                                                        color="black"
+                                    <PresenceTransition
+                                        visible={isOpen || showLoader}
+                                        initial={{
+                                            opacity: 0,
+                                            scale: 0,
+                                        }}
+                                        animate={{
+                                            opacity: 1,
+                                            scale: 1,
+                                            transition: {
+                                                duration: 250,
+                                            },
+                                        }}
+                                    >
+                                        <View>
+                                            {Platform.OS === "web" ? (
+                                                <View>
+                                                    <Pressable
+                                                        onPress={() => {
+                                                            setIsOpen(false);
+                                                            setShowLoader(
+                                                                false
+                                                            );
+                                                        }}
+                                                        className="flex flex-row items-center"
+                                                    >
+                                                        <Text>Close</Text>
+                                                        <IonIcon
+                                                            name="close-outline"
+                                                            size={20}
+                                                            color="black"
+                                                        />
+                                                    </Pressable>
+                                                    <iframe
+                                                        src={CoRoverURL}
+                                                        style={{
+                                                            width: width * 0.23,
+                                                            height: ViewHeight,
+                                                        }}
+                                                        title="Embedded Web Content"
                                                     />
-                                                </Pressable>
-                                                <iframe
-                                                    src={CoRoverURL}
+                                                </View>
+                                            ) : (
+                                                <Center
                                                     style={{
+                                                        backgroundColor:
+                                                            "white",
                                                         width: width * 0.23,
                                                         height: ViewHeight,
                                                     }}
-                                                    title="Embedded Web Content"
-                                                />
-                                            </View>
-                                        ) : (
-                                            <Center
-                                                style={{
-                                                    backgroundColor: "white",
-                                                    width: width * 0.23,
-                                                    height: ViewHeight,
-                                                }}
-                                            >
-                                                <Spinner
-                                                    color={"blue"}
-                                                    accessibilityLabel="Loading.."
-                                                />
-                                            </Center>
-                                        )}
-                                    </View>
-                                </PresenceTransition>
-                            </View>
-                        )}
-                    </Suspense>
+                                                >
+                                                    <Spinner
+                                                        color={"blue"}
+                                                        accessibilityLabel="Loading.."
+                                                    />
+                                                </Center>
+                                            )}
+                                        </View>
+                                    </PresenceTransition>
+                                </View>
+                            )}
+                        </Suspense>
                     </UserRoleProvider>
                 </PaperProvider>
             </QueryClientProvider>
