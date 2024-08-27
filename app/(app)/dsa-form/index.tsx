@@ -13,6 +13,7 @@ export default function DsaFormScreen() {
                 backgroundColor: "white",
                 height: "100%",
                 overflow: "scroll",
+
             }}
         >            
          <MainComponent />

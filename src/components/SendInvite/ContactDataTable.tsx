@@ -274,7 +274,7 @@ const ContactDataTable = ({ children }) => {
         }
 
         const response: ContactResponse = await RemoteApi.post(
-            "onboard/client/list",
+            "invite/client/list",
             data
         );
 
@@ -301,7 +301,7 @@ const ContactDataTable = ({ children }) => {
 
     React.useEffect(() => {
         async function getSchema() {
-            const response: any = await RemoteApi.get("onboard/client/schema");
+            const response: any = await RemoteApi.get("invite/client/schema");
             setFiltersSchema(response);
             setSorting(response.sort);
         }
@@ -344,7 +344,7 @@ const ContactDataTable = ({ children }) => {
             };
 
             const response: any = await RemoteApi.patch(
-                "onboard/client/invite",
+                "invite/client/send-invite",
                 contactID
             );
 

@@ -334,30 +334,31 @@ const StepThreeUpload = ({ onSuccess, initialValues }) => {
                                 "aadharBack"
                             )}
                         </View>
-                        <View className="flex flex-row justify-center items-start w-[50%] gap-2">
+                        <View className="flex flex-row justify-center items-center w-[50%] gap-2 ">
+                            <View className="flex flex-row justify-start items-start w-full pr-4 ">
+                                {initialValues.aadharFrontDocumentError ||
+                                initialValues.aadharBackDocumentError ||
+                                !initialValues.remark ? (
+                                    <View className="justify-start items-start w-full mb-4">
+                                        <View className="">
+                                            <CustomCheckbox
+                                                label="I provide my consent to use Aadhar document for address verification and I agree to have masked the first 8 numbers of Aadhar and I agree for the collection, storage, and use of my Aadhar number for the specified purposes."
+                                                isChecked={consentGiven}
+                                                onChange={() =>
+                                                    setConsentGiven(
+                                                        !consentGiven
+                                                    )
+                                                }
+                                            />
+                                        </View>
+                                    </View>
+                                ) : (
+                                    <></>
+                                )}
+                            </View>
                             {renderDocumentUpload(
                                 "Cancelled Bank Check",
                                 "bankCheck"
-                            )}
-                            <View className="flex flex-col justify-center items-start w-full"></View>
-                        </View>
-                        <View className="flex flex-row justify-center w-[50%]">
-                            {initialValues.aadharFrontDocumentError ||
-                            initialValues.aadharBackDocumentError ||
-                            !initialValues.remark ? (
-                                <View className="justify-center items-center w-full mb-4">
-                                    <View className="">
-                                        <CustomCheckbox
-                                            label="I provide my consent to use Aadhar document for address verification and I agree to have masked the first 8 numbers of Aadhar and I agree for the collection, storage, and use of my Aadhar number for the specified purposes."
-                                            isChecked={consentGiven}
-                                            onChange={() =>
-                                                setConsentGiven(!consentGiven)
-                                            }
-                                        />
-                                    </View>
-                                </View>
-                            ) : (
-                                <></>
                             )}
                         </View>
 

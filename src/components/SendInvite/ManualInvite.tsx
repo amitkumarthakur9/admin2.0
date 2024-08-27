@@ -106,7 +106,7 @@ export default function ManualInvite({ getlist = () => {} , children}) {
                 console.log(data);
                 // throw new Error('This is an explicitly thrown error');
                 const response: any = await RemoteApi.post(
-                    "onboard/client/save",
+                    "invite/client/save",
                     data
                 );
 

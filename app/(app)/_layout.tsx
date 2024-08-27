@@ -260,13 +260,13 @@ export default function AppLayout() {
     // RoldeID == 2, is for Distributor.
     if (roleId == 2) {
         drawerStructure.push({
-            key: "DsaForm",
+            key: "DsaOnboarding",
             content: (
                 <Drawer.Screen
                     name="dsa-form/index"
                     options={{
-                        drawerLabel: "DSA form",
-                        title: "DSA form",
+                        drawerLabel: "DSA Onboarding",
+                        title: "DSA Onboarding",
                         // drawerItemStyle: {
                         //     display: "none",
                         // },
@@ -925,8 +925,8 @@ export default function AppLayout() {
                                 </Center>
                             }
                         >
-                            {!dsaForm?.userDetails?.arn ||
-                            !dsaForm?.userDetails?.isOnBoarded ? (
+                             {roleId === 2 && (!dsaForm?.userDetails?.arn ||
+                            !dsaForm?.userDetails?.isOnBoarded) ? (
                                 !dsaForm?.userDetails?.isOnBoarded ? (
                                     <>
                                         <TopHeader navigation={""} logo={true} />

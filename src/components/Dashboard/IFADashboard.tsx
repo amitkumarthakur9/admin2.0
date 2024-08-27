@@ -42,6 +42,8 @@ const IFADashboard = () => {
     const [sipPercentage, setSipPercentage] = useState([]);
     const [data, setData] = useState<DashboardData>();
     const [staticData, setStaticData] = useState<StaticDashboard>();
+    const [topClientData, setTopClientData] = useState([]);
+    const [topDistributor, setTopDistributor] = useState([]);
 
     const { roleId } = useUserRole();
     const DummyDate = {
@@ -107,33 +109,6 @@ const IFADashboard = () => {
         },
     };
 
-    const topClientData = [
-        // {
-        //     name: "Anand Gupta",
-        //     sip: "5",
-        //     investment: 8000,
-        // },
-        // {
-        //     name: "Deepti Shasil Namoshi",
-        //     sip: "3",
-        //     investment: 6000,
-        // },
-        // {
-        //     name: "AnandRaj Sangappa Malagi  ",
-        //     sip: "2",
-        //     investment: 5500,
-        // },
-        // {
-        //     name: "Rashmi Ranjan Sahoo",
-        //     sip: "2",
-        //     investment: 4500,
-        // },
-        // {
-        //     name: "Priyanshu Jain",
-        //     sip: "1",
-        //     investment: 2000,
-        // },
-    ];
     const sipBreakdownChart = (sip) => {
         const totalValue = sip?.reduce(
             (accumulator, count) => accumulator + count.count,
@@ -356,10 +331,41 @@ const IFADashboard = () => {
             if (response) {
                 setStaticData(response?.data);
 
-                setIsLoading(false);
+               
             }
         }
 
+        async function getTopClients() {
+            const response: any = await RemoteApi.get(`dashboard/top-clients`);
+
+            if (response.message == "Success") {
+                setTopClientData(response?.data);
+
+               
+            }
+        }
+
+        async function getTopDistributor() {
+            const response: any = await RemoteApi.get(`dashboard/top-distributors`);
+
+            if (response.message == "Success") {
+                setTopDistributor(response?.data);
+
+               
+            }
+        }
+
+        setIsLoading(false);
+
+        if(roleId == 2){
+            getTopClients();
+        }
+
+        if(roleId == 3 || roleId == 4){
+            getTopDistributor();
+        }
+       
+       
         getStaticDetails();
     }, []);
 
@@ -1072,7 +1078,7 @@ const IFADashboard = () => {
                                                                 selectable
                                                                 className="text-[#686868] font-semibold text-start"
                                                             >
-                                                                {item.sip}
+                                                                {item?.sip ?  item?.sip: "NA"}
                                                             </Text>
                                                         </View>
                                                         <View className="w-4/12">
@@ -1082,7 +1088,7 @@ const IFADashboard = () => {
                                                             >
                                                                 {RupeeSymbol}{" "}
                                                                 {
-                                                                    item.investment
+                                                                    item.currentValue.toFixed(2)
                                                                 }
                                                             </Text>
                                                         </View>
@@ -1259,7 +1265,7 @@ const IFADashboard = () => {
                                             </Text>
                                         </View> */}
 
-                                {topClientData.length > 0 ? (
+                                {topDistributor.length > 0 ? (
                                     <>
                                         <View className="flex flex-row py-2">
                                             <View className="w-6/12">
@@ -1275,7 +1281,7 @@ const IFADashboard = () => {
                                             </View>
                                         </View>
                                         <View className=" h-48 overflow-scroll">
-                                            {topClientData.map(
+                                            {topDistributor.map(
                                                 (item, index) => (
                                                     <View
                                                         key={index}
@@ -1297,7 +1303,7 @@ const IFADashboard = () => {
                                                                 selectable
                                                                 className="text-[#686868] font-semibold"
                                                             >
-                                                                {item.sip}
+                                                                {item?.sip ? item?.sip : "NA"}
                                                             </Text>
                                                         </View>
                                                         <View className="w-4/12">
@@ -1307,7 +1313,7 @@ const IFADashboard = () => {
                                                             >
                                                                 {RupeeSymbol}{" "}
                                                                 {
-                                                                    item.investment
+                                                                    item.currentValue.toFixed(2)
                                                                 }
                                                             </Text>
                                                         </View>

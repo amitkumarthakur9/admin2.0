@@ -152,7 +152,7 @@ const GoogleSignInButton = () => {
             };
 
             const response: any = await RemoteApi.post(
-                "onboard/client/save",
+                "invite/client/save",
                 data
             );
 

@@ -41,7 +41,7 @@ import RadioButton from "../../../../src/components/Radio/Radio";
 import DataValue from "../../../../src/components/DataValue/DataValue";
 import useDebouncedSearch from "../../../../src/hooks/useDebounceSearch";
 import ApiRequest from "../../../../src/services/RemoteApi";
-import { dateTimeFormat } from "../../../../src/helper/DateUtils";
+import { dateFormat, dateTimeFormat } from "../../../../src/helper/DateUtils";
 import {
     UserRoleProvider,
     useUserRole,
@@ -900,11 +900,13 @@ const PortfolioCard = ({
                                                 className="text-xs text-gray-500"
                                             >
                                                 {transaction?.paymentDate
-                                                    ? DateTime.fromISO(
-                                                          transaction?.paymentDate
-                                                      ).toFormat(
-                                                          "dd LLL yyyy, t"
-                                                      )
+                                                    ? 
+                                                    dateTimeFormat(transaction?.paymentDate)
+                                                    // DateTime.fromISO(
+                                                    //       transaction?.paymentDate
+                                                    //   ).toFormat(
+                                                    //       "dd LLL yyyy, t"
+                                                    //   )
                                                     : "NA"}
                                             </Text>
                                         </View>
@@ -2385,9 +2387,11 @@ const AccountDetailsCard = ({ data }: { data: ClientDetailedDataResponse }) => {
                                         className="text-sm text-slate-500"
                                     >
                                         {nominee?.dob
-                                            ? DateTime.fromISO(
-                                                  nominee?.dob
-                                              ).toFormat("LLL dd, yyyy")
+                                            ? 
+                                            dateFormat(nominee?.dob)
+                                            // DateTime.fromISO(
+                                            //       nominee?.dob
+                                            //   ).toFormat("LLL dd, yyyy")
                                             : "NA"}
                                     </Text>
                                     <Text selectable className="font-medium">

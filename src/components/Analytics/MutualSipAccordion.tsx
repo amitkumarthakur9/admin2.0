@@ -278,9 +278,9 @@ const ClientTable = ({ clients }) => {
             </View>
             {clients.map((client, index) => (
                 <View key={index} style={styles.clientTableRow}>
-                    <Text style={styles.cell}>{client?.account.id}</Text>
-                    <Text style={styles.cell}>{client?.account.name}</Text>
-                    <Text style={styles.cell}>{client?.mutualfund.name}</Text>
+                    <Text style={styles.cell}>{client?.accounts?.id}</Text>
+                    <Text style={styles.cell}>{client?.accounts?.name}</Text>
+                    <Text style={styles.cell}>{client?.mutualfund?.name}</Text>
                     <Text style={styles.cell}>{client?.amount}</Text>
                     <Text style={styles.cell}>{client?.orderStatus?.name}</Text>
                     <Text style={styles.cell}>

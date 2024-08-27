@@ -7,7 +7,7 @@ import {
     getMonthName,
     monthNames,
 } from "../../helper/DateUtils";
-import { Text, TouchableOpacity, StyleSheet } from "react-native";
+import { Text, TouchableOpacity, StyleSheet, Modal } from "react-native";
 import {
     Box,
     Popover,
@@ -18,7 +18,9 @@ import {
     View,
     Select,
     CheckIcon,
+    Input, FormControl,
 } from "native-base";
+
 import Icon from "react-native-vector-icons/FontAwesome";
 import moment from "moment";
 
@@ -66,7 +68,6 @@ const CalendarSinglePicker = ({
         handleFilterChange(moment(date).format("YYYY-MM-DD"));
         setIsOpen(false);
     };
-    
 
     const getSelectedColor = (date) => {
         let color = "";
@@ -104,7 +105,9 @@ const CalendarSinglePicker = ({
                     className={
                         "w-[15%] " +
                         getSelectedColor(
-                            `${selectedYear}-${selectedMonth - 1}-${prevMonthDate}`
+                            `${selectedYear}-${
+                                selectedMonth - 1
+                            }-${prevMonthDate}`
                         )
                     }
                     key={`prev-${i}`}
@@ -167,7 +170,9 @@ const CalendarSinglePicker = ({
                         className={
                             "w-[15%] " +
                             getSelectedColor(
-                                `${selectedYear}-${selectedMonth + 1}-${nextMonthDate}`
+                                `${selectedYear}-${
+                                    selectedMonth + 1
+                                }-${nextMonthDate}`
                             )
                         }
                     >
@@ -210,14 +215,23 @@ const CalendarSinglePicker = ({
 
     return (
         <View className="w-full">
-            <Popover
-                onOpen={() => setIsOpen(true)}
-                onClose={() => setIsOpen(false)}
-                isOpen={isOpen}
-                trigger={(triggerProps) => {
-                    return (
-                        <TouchableOpacity
-                            {...triggerProps}
+       
+            <TouchableOpacity onPress={() => setIsOpen(true)} className={
+                                "flex w-full items-start justify-center flex-col rounded border-[1px] border-[#cccccc] p-[10px] " 
+                               
+                            }>
+                {showCalendar && (
+                    <Icon
+                        name="calendar"
+                        size={14}
+                        color="black"
+                        style={{ marginRight: 8 }}
+                    />
+                )}
+                <Text>{value ? value : fromName}</Text>
+            </TouchableOpacity>
+            {/* <TouchableOpacity
+                            // {...triggerProps}
                             className={
                                 "flex w-full items-center justify-center flex-col rounded border-[0.2px] border-[#c7c7c7] px-4 " +
                                 py
@@ -250,14 +264,21 @@ const CalendarSinglePicker = ({
                                     </Text>
                                 </View>
                             </View>
-                        </TouchableOpacity>
-                    );
-                }}
+                        </TouchableOpacity> */}
+
+            <Modal
+                // animationType="slide"
+                transparent={true}
+                visible={isOpen}
+                onRequestClose={() => setIsOpen(false)}
             >
-                <Popover.Content accessibilityLabel="" w="100%" h={"xs"}>
-                    <Popover.Body>
-                        <View h={"xs"}>
-                        <View className="flex flex-row p-2 justify-between mb-4">
+                <View
+                    className="flex-1 justify-center items-center  "
+                    style={{ backgroundColor: "rgba(128, 128, 128, 0.5)" }}
+                >
+                    <View className="px-4 bg-white rounded-lg items-center ">
+                        <View className="p-4">
+                            <View className="flex flex-row p-2 justify-between mb-4">
                                 <View>
                                     <Pressable onPress={handleBack}>
                                         <ChevronLeftIcon />
@@ -279,8 +300,8 @@ const CalendarSinglePicker = ({
                             </View>
                             {monthChangeOpened ? (
                                 <View className="flex flex-col items-center">
-                                    <View className="flex flex-row justify-center mb-10">
-                                        <View className="mr-2">
+                                    <View className="flex flex-col justify-center mb-10">
+                                        <View className="">
                                             <Select
                                                 selectedValue={
                                                     "" + selectedMonth
@@ -385,12 +406,11 @@ const CalendarSinglePicker = ({
                                 </View>
                             )}
                         </View>
-                    </Popover.Body>
-                </Popover.Content>
-            </Popover>
+                    </View>
+                </View>
+            </Modal>
         </View>
     );
 };
 
 export default memo(CalendarSinglePicker);
-

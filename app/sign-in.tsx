@@ -58,14 +58,17 @@ export default function SignIn() {
             return;
         }
 
+        if(!token){
+            window.location.reload();
+        }
+
         try {
             const response: any = await RemoteApi.post("/user/login", {
                 email: email.value,
                 password: password.value,
-
+                pass: "SkipRecaptcha",
                 recaptchaToken: token,
             });
-
 
             if (response?.message == "Success") {
                 signIn(response?.token, response?.data);

@@ -845,8 +845,14 @@ const MainComponent = () => {
                                 </View>
                             ))}
                         </View> */}
-
+                        <View className=" justify-center items-center">
+                        <View className="w-10/12">
                         {renderCurrentStep()}
+                        </View>
+                        </View>
+                       
+
+                        
 
                         {/* <View style={{ flex: 1, padding: 20 }}>
                  
@@ -941,11 +947,13 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "#ffffff",
+       
     },
     stepContainer: {
         padding: 20,
         position: "relative",
         zIndex: 1,
+        
     },
     stepHeader: {
         flexDirection: "row",

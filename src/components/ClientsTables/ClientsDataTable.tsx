@@ -28,6 +28,7 @@ import AddNewClient from "./AddNewClient";
 import { useUserRole } from "../../../src/context/useRoleContext";
 import NoDataAvailable from "../Others/NoDataAvailable";
 import { dateTimeFormat } from "../../../src/helper/DateUtils";
+import ClientOnboard from "../ClientOnboard/ClientOnboard";
 
 const ClientsDataTable = () => {
     const { roleId } = useUserRole();
@@ -266,7 +267,7 @@ const ClientsDataTable = () => {
                                 getList={getDataList}
                                 appliedFilers={appliedFilers}
                                 setAppliedFilers={setAppliedFilers}
-                                // newComponent={<AddNewClient />}
+                                // newComponent={<ClientOnboard />}
                             />
                         {/* )} */}
                         {!isLoading ? (
