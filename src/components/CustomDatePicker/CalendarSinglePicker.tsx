@@ -27,7 +27,7 @@ import moment from "moment";
 const CalendarSinglePicker = ({
     handleFilterChange,
     value,
-    fromName = "1990-03-23",
+    fromName = "",
     toName = "To",
     showCalendar = false,
     py = "py-2",
@@ -53,7 +53,7 @@ const CalendarSinglePicker = ({
     );
     const [isOpen, setIsOpen] = useState(false);
     const [monthChangeOpened, setMonthChangeOpened] = useState(false);
-
+    const currentYear = new Date().getFullYear();
     const handleYearChange = (year) => {
         setSelectedYear(year);
     };
@@ -228,7 +228,7 @@ const CalendarSinglePicker = ({
                         style={{ marginRight: 8 }}
                     />
                 )}
-                <Text>{value ? value : fromName}</Text>
+                <Text>{value ? value : "YYYY-MM-DD"}</Text>
             </TouchableOpacity>
             {/* <TouchableOpacity
                             // {...triggerProps}
@@ -357,8 +357,9 @@ const CalendarSinglePicker = ({
                                                 }
                                             >
                                                 {Array.from(
-                                                    { length: 2051 - 1970 },
-                                                    (_, index) => 1970 + index
+
+                                                    { length: (currentYear+1) - 1900 },
+                                                    (_, index) => 1900 + index
                                                 ).map((year, index) => (
                                                     <Select.Item
                                                         key={index}

@@ -260,15 +260,15 @@ export const DynamicFilters = ({
             )
             .map((obj) => obj.title);
 
-            // const resultString = keysToInclude?.join("/");
+        // const resultString = keysToInclude?.join("/");
 
-            let resultString;
+        let resultString;
 
-            if (!keysToInclude || keysToInclude.length === 0) {
-                resultString = "Search...";
-            } else {
-                resultString = keysToInclude.join("/");
-            }
+        if (!keysToInclude || keysToInclude.length === 0) {
+            resultString = "Search...";
+        } else {
+            resultString = keysToInclude.join("/");
+        }
 
         return resultString?.length > maxPlaceholderLength &&
             maxPlaceholderLength > 0
@@ -283,56 +283,9 @@ export const DynamicFilters = ({
                 style={{}}
             >
                 {getList === "" ? (
-                         <Pressable
+                    <Pressable
                         //  onPress={handleSearchBoxClick}
-                         className="flex flex-row justify-start items-center w-full lg:w-[50%] border-[1px] rounded border-slate-200 bg-gray-100"
-                     >
-                         {/* <View className="flex flex-row items-center w-full "> */}
-                         <View className="w-[6%] flex flex-row items-center justify-center pl-2">
-                             <Icon
-                                 name="search"
-                                 style={{}}
-                                 size={14}
-                                 color="#484848"
-                             />
-                         </View>
-                         <TextInput
-                         editable={false}
-                             ref={searchBoxRef}
-                             className="outline-transparent w-[75%] "
-                            //  placeholder={searchPlaceholder(width < 650 ? 40 : 50)}
-                             underlineColorAndroid="transparent"
-                             selectionColor="transparent"
-                             placeholderTextColor={"#484848"}
-                             cursorColor={"transparent"}
-                             style={{ ...searchInputStyle, overflow: "hidden" }}
-                             onChangeText={handleSearchInput}
-                             value={
-                                 filterValues.find((filter) => filter.key === "all")
-                                     ?.value || ""
-                             }
-                             onKeyPress={handleKeyPress}
-                         />
-     
-                         <View className="w-[19%] justify-end items-end pr-2">
-                             {filterValues.find((filter) => filter.key === "all")
-                                 ?.value && (
-                                 <Button
-                                     onPress={applyFilters}
-                                     width={20}
-                                     size={"xs"}
-                                     bgColor={"#000000"}
-                                 >
-                                     Search
-                                 </Button>
-                             )}
-                         </View>
-                         {/* </View> */}
-                     </Pressable>
-                    ) : (
-                        <Pressable
-                        onPress={handleSearchBoxClick}
-                        className="flex flex-row justify-start items-center w-full lg:w-[50%] border-[1px] rounded border-slate-200"
+                        className="flex flex-row justify-start items-center w-full lg:w-[50%] border-[1px] rounded border-slate-200 bg-gray-100"
                     >
                         {/* <View className="flex flex-row items-center w-full "> */}
                         <View className="w-[6%] flex flex-row items-center justify-center pl-2">
@@ -344,9 +297,10 @@ export const DynamicFilters = ({
                             />
                         </View>
                         <TextInput
+                            editable={false}
                             ref={searchBoxRef}
                             className="outline-transparent w-[75%] "
-                            placeholder={searchPlaceholder(width < 650 ? 40 : 50)}
+                            //  placeholder={searchPlaceholder(width < 650 ? 40 : 50)}
                             underlineColorAndroid="transparent"
                             selectionColor="transparent"
                             placeholderTextColor={"#484848"}
@@ -354,12 +308,13 @@ export const DynamicFilters = ({
                             style={{ ...searchInputStyle, overflow: "hidden" }}
                             onChangeText={handleSearchInput}
                             value={
-                                filterValues.find((filter) => filter.key === "all")
-                                    ?.value || ""
+                                filterValues.find(
+                                    (filter) => filter.key === "all"
+                                )?.value || ""
                             }
                             onKeyPress={handleKeyPress}
                         />
-    
+
                         <View className="w-[19%] justify-end items-end pr-2">
                             {filterValues.find((filter) => filter.key === "all")
                                 ?.value && (
@@ -375,96 +330,137 @@ export const DynamicFilters = ({
                         </View>
                         {/* </View> */}
                     </Pressable>
-                        )}
-                
+                ) : (
+                    <Pressable
+                        onPress={handleSearchBoxClick}
+                        className="flex flex-row justify-start items-center w-full lg:w-[50%] border-[1px] rounded border-slate-200"
+                    >
+                        {/* <View className="flex flex-row items-center w-full "> */}
+                        <View className="w-[6%] flex flex-row items-center justify-center pl-2">
+                            <Icon
+                                name="search"
+                                style={{}}
+                                size={14}
+                                color="#484848"
+                            />
+                        </View>
+                        <TextInput
+                            ref={searchBoxRef}
+                            className="outline-transparent w-[75%] "
+                            placeholder={searchPlaceholder(
+                                width < 650 ? 40 : 50
+                            )}
+                            underlineColorAndroid="transparent"
+                            selectionColor="transparent"
+                            placeholderTextColor={"#484848"}
+                            cursorColor={"transparent"}
+                            style={{ ...searchInputStyle, overflow: "hidden" }}
+                            onChangeText={handleSearchInput}
+                            value={
+                                filterValues.find(
+                                    (filter) => filter.key === "all"
+                                )?.value || ""
+                            }
+                            onKeyPress={handleKeyPress}
+                        />
+
+                        <View className="w-[19%] justify-end items-end pr-2">
+                            {filterValues.find((filter) => filter.key === "all")
+                                ?.value && (
+                                <Button
+                                    onPress={applyFilters}
+                                    width={20}
+                                    size={"xs"}
+                                    bgColor={"#000000"}
+                                >
+                                    Search
+                                </Button>
+                            )}
+                        </View>
+                        {/* </View> */}
+                    </Pressable>
+                )}
+
                 <View className="flex flex-row w-full lg:w-6/12 justify-between mt-2 lg:mt-0 flex-wrap">
-                {getList === "" ? (
-                      <View className="flex flex-row mb-1 lg:mb-0">
-                      <View className="ml-0 lg:ml-1">
-                          <Pressable
-                              style={{ position: "relative" }}
-                            //   onPress={() => setFilterOpen(!filterOpen)}
-                              className={
-                                  "flex flex-row justify-center items-center border-[1px] rounded px-4 py-3 border-slate-200  bg-gray-100" +
-                                  (filterOpen ? "bg-zinc-100" : "")
-                              }
-                              accessibilityLabel="More options menu"
-                          >
-                              <Icon
-                                  name="filter"
-                                  style={{ marginLeft: 10, marginRight: 5 }}
-                                  size={14}
-                                  color="#484848"
-                              />
-
-                              <Text className="mr-1">Filters</Text>
-                              {determineDisplayValue()}
-                          </Pressable>
-
-                          
-                      </View>
-                      <View className="ml-0 lg:ml-1">
-                          <Pressable
-                              style={{ position: "relative" }}
-                            //   onPress={() => setFilterOpen(!filterOpen)}
-                              className={
-                                  "flex flex-row justify-center items-center border-[1px] rounded px-4 py-3 border-slate-200  bg-gray-100" +
-                                  (filterOpen ? "bg-zinc-100" : "")
-                              }
-                              accessibilityLabel="More options menu"
-                          >
-                              <Icon
-                                  name="sort"
-                                  style={{ marginLeft: 10, marginRight: 5 }}
-                                  size={14}
-                                  color="#484848"
-                              />
-
-                              <Text className="mr-1">Sorting</Text>
-                              {determineDisplayValue()}
-                          </Pressable>
-
-                          
-                      </View>
-                  </View>
-                    ) : (
-
+                    {getList === "" ? (
                         <View className="flex flex-row mb-1 lg:mb-0">
-                        <View className="ml-0 lg:ml-1">
-                            <Pressable
-                                style={{ position: "relative" }}
-                                onPress={() => setFilterOpen(!filterOpen)}
-                                className={
-                                    "flex flex-row justify-center items-center border-[1px] rounded px-4 py-3 border-slate-200 " +
-                                    (filterOpen ? "bg-zinc-100" : "")
-                                }
-                                accessibilityLabel="More options menu"
-                            >
-                                <Icon
-                                    name="filter"
-                                    style={{ marginLeft: 10, marginRight: 5 }}
-                                    size={14}
-                                    color="#484848"
-                                />
+                            <View className="ml-0 lg:ml-1">
+                                <Pressable
+                                    style={{ position: "relative" }}
+                                    //   onPress={() => setFilterOpen(!filterOpen)}
+                                    className={
+                                        "flex flex-row justify-center items-center border-[1px] rounded px-4 py-3 border-slate-200  bg-gray-100" +
+                                        (filterOpen ? "bg-zinc-100" : "")
+                                    }
+                                    accessibilityLabel="More options menu"
+                                >
+                                    <Icon
+                                        name="filter"
+                                        style={{
+                                            marginLeft: 10,
+                                            marginRight: 5,
+                                        }}
+                                        size={14}
+                                        color="#484848"
+                                    />
 
-                                <Text className="mr-1">Filters</Text>
-                                {determineDisplayValue()}
-                            </Pressable>
+                                    <Text className="mr-1">Filters</Text>
+                                    {determineDisplayValue()}
+                                </Pressable>
+                            </View>
+                            <View className="ml-0 lg:ml-1">
+                                <Pressable
+                                    style={{ position: "relative" }}
+                                    //   onPress={() => setFilterOpen(!filterOpen)}
+                                    className={
+                                        "flex flex-row justify-center items-center border-[1px] rounded px-4 py-3 border-slate-200  bg-gray-100" +
+                                        (filterOpen ? "bg-zinc-100" : "")
+                                    }
+                                    accessibilityLabel="More options menu"
+                                >
+                                    <Icon
+                                        name="sort"
+                                        style={{
+                                            marginLeft: 10,
+                                            marginRight: 5,
+                                        }}
+                                        size={14}
+                                        color="#484848"
+                                    />
 
-                            {width < 830 ? (
-                                <FilterActionSheet
-                                    open={filterOpen}
-                                    removeFilter={removeFilter}
-                                    clearFilters={clearFilters}
-                                    filtersSchema={filtersSchema}
-                                    handleFilterChange={handleFilterChange}
-                                    applyFilters={applyFilters}
-                                    setFilterOpen={setFilterOpen}
-                                    filterValues={filterValues}
-                                />
-                            ) : (
-                                filterOpen && (
-                                    <FilterPopup
+                                    <Text className="mr-1">Sorting</Text>
+                                    {determineDisplayValue()}
+                                </Pressable>
+                            </View>
+                        </View>
+                    ) : (
+                        <View className="flex flex-row mb-1 lg:mb-0">
+                            <View className="ml-0 lg:ml-1">
+                                <Pressable
+                                    style={{ position: "relative" }}
+                                    onPress={() => setFilterOpen(!filterOpen)}
+                                    className={
+                                        "flex flex-row justify-center items-center border-[1px] rounded px-4 py-3 border-slate-200 " +
+                                        (filterOpen ? "bg-zinc-100" : "")
+                                    }
+                                    accessibilityLabel="More options menu"
+                                >
+                                    <Icon
+                                        name="filter"
+                                        style={{
+                                            marginLeft: 10,
+                                            marginRight: 5,
+                                        }}
+                                        size={14}
+                                        color="#484848"
+                                    />
+
+                                    <Text className="mr-1">Filters</Text>
+                                    {determineDisplayValue()}
+                                </Pressable>
+
+                                {width < 830 ? (
+                                    <FilterActionSheet
                                         open={filterOpen}
                                         removeFilter={removeFilter}
                                         clearFilters={clearFilters}
@@ -474,49 +470,65 @@ export const DynamicFilters = ({
                                         setFilterOpen={setFilterOpen}
                                         filterValues={filterValues}
                                     />
-                                )
+                                ) : (
+                                    filterOpen && (
+                                        <FilterPopup
+                                            open={filterOpen}
+                                            removeFilter={removeFilter}
+                                            clearFilters={clearFilters}
+                                            filtersSchema={filtersSchema}
+                                            handleFilterChange={
+                                                handleFilterChange
+                                            }
+                                            applyFilters={applyFilters}
+                                            setFilterOpen={setFilterOpen}
+                                            filterValues={filterValues}
+                                        />
+                                    )
+                                )}
+                            </View>
+                            {sorting.length > 0 &&
+                                (width < 830 ? (
+                                    <SortingSheet
+                                        setSortingOpen={setSortingOpen}
+                                        setFilterOpen={setFilterOpen}
+                                        sortingOpen={sortingOpen}
+                                        appliedSorting={appliedSorting}
+                                        setAppliedSorting={setAppliedSorting}
+                                        sorting={sorting}
+                                        handleSortingChange={
+                                            handleSortingChange
+                                        }
+                                    />
+                                ) : (
+                                    <SortingPopup
+                                        setSortingOpen={setSortingOpen}
+                                        setFilterOpen={setFilterOpen}
+                                        sortingOpen={sortingOpen}
+                                        appliedSorting={appliedSorting}
+                                        setAppliedSorting={setAppliedSorting}
+                                        sorting={sorting}
+                                        handleSortingChange={
+                                            handleSortingChange
+                                        }
+                                    />
+                                ))}
+
+                            {schemaResponse?.fastFilter && (
+                                <ExtraFilters
+                                    filtersSchema={schemaResponse?.fastFilter}
+                                    onFilterChange={handleExtraFilterChange}
+                                    filterValues={filterValues}
+                                    removeFilter={removeFilter}
+                                />
                             )}
                         </View>
-                        {width < 830 ? (
-                            <SortingSheet
-                                setSortingOpen={setSortingOpen}
-                                setFilterOpen={setFilterOpen}
-                                sortingOpen={sortingOpen}
-                                appliedSorting={appliedSorting}
-                                setAppliedSorting={setAppliedSorting}
-                                sorting={sorting}
-                                handleSortingChange={handleSortingChange}
-                            />
-                        ) : (
-                            <SortingPopup
-                                setSortingOpen={setSortingOpen}
-                                setFilterOpen={setFilterOpen}
-                                sortingOpen={sortingOpen}
-                                appliedSorting={appliedSorting}
-                                setAppliedSorting={setAppliedSorting}
-                                sorting={sorting}
-                                handleSortingChange={handleSortingChange}
-                            />
-                        )}
-                        {schemaResponse?.fastFilter && (
-                            <ExtraFilters
-                                filtersSchema={schemaResponse?.fastFilter}
-                                onFilterChange={handleExtraFilterChange}
-                                filterValues={filterValues}
-                                removeFilter={removeFilter}
-                            />
-                        )}
-                    </View>
+                    )}
 
-                        )}
-                    
-                    
                     {newComponent}
                     {downloadApi === "" ? (
                         <View></View>
                     ) : (
-
-                        
                         <View className="flex flex-row lg:mt-0">
                             <Pressable
                                 onPress={downloadReport}

@@ -107,7 +107,8 @@ const CreatePassword = ({ onNext, onPrevious, initialValues }) => {
                 <ScrollView contentContainerStyle={styles.container}>
                     <View style={styles.formRow}>
                         <View style={styles.fieldContainer}>
-                            <Text style={styles.label}>Enter Password</Text>
+                            <Text style={styles.label}>Enter Password{" "}
+                            <Text className="text-red-500">*</Text></Text>
                             <View style={styles.inputWrapper}>
                                 <TextInput
                                     style={styles.input}
@@ -140,7 +141,8 @@ const CreatePassword = ({ onNext, onPrevious, initialValues }) => {
                         </View>
 
                         <View style={styles.fieldContainer}>
-                            <Text style={styles.label}>Confirm Password</Text>
+                            <Text style={styles.label}>Confirm Password{" "}
+                            <Text className="text-red-500">*</Text></Text>
                             <View style={styles.inputWrapper}>
                                 <TextInput
                                     style={styles.input}
@@ -172,7 +174,8 @@ const CreatePassword = ({ onNext, onPrevious, initialValues }) => {
 
                     <View style={styles.formRow}>
                         <View style={styles.fieldContainer}>
-                            <Text style={styles.label}>Assign Role</Text>
+                            <Text style={styles.label}>Assign Role{" "}
+                            <Text className="text-red-500">*</Text></Text>
                             <DropdownComponent
                                 label="select role"
                                 data={rolesOptions}

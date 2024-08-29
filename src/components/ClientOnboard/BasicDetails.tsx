@@ -25,14 +25,14 @@ const validationSchema = Yup.object().shape({
     gender: Yup.number()
         .typeError("Gender is required")
         .required("Gender is required"),
-    // mobileNumber: Yup.string()
-    //     .matches(/^\d{10}$/, "Mobile number must be exactly 10 digits")
-    //     .required("Mobile number is required"),
+    mobileNumber: Yup.string()
+        .matches(/^\d{10}$/, "Mobile number must be exactly 10 digits")
+        .required("Mobile number is required"),
     panNumber: Yup.string()
         .required("PAN number is required")
         .matches(panRegex, "Please enter a valid PAN number. Ex: AAAPZ1234C"),
-    // occupation: Yup.string().required("Occupation is required"),
-    // isResidentIndian: Yup.boolean().required("Resident status is required"),
+    occupation: Yup.string().required("Occupation is required"),
+    isResidentIndian: Yup.boolean().required("Resident status is required"),
     // country: Yup.string().when("isResidentIndian", {
     //     is: (isResidentIndian) => isResidentIndian,
     //     then: (schema) =>
@@ -43,12 +43,12 @@ const validationSchema = Yup.object().shape({
     // }),
 });
 
-
-const BasicDetails = ({ onNext, initialValues, onSaveDraft }) => {
+const BasicDetails = ({ onNext, initialValues, onSaveDraft, onPrevious }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [occupationOptions, setOccupationOptions] = useState([]);
     const [countryOptions, setCountryOptions] = useState([]);
     const [showAddressForm, setShowAddressForm] = useState(false);
+    const [cookieToken, setcookieToken] = useState("");
 
     // Function to fetch dropdown options
     const getOptions = async (endpoint, setter) => {
@@ -66,27 +66,29 @@ const BasicDetails = ({ onNext, initialValues, onSaveDraft }) => {
                             value: state.id,
                         }))
                     );
-                    setCountryOptions(
-                        response.data.data.map((state) => ({
-                            label: state.name,
-                            value: state.id,
-                        }))
-                    );
-                } else if (endpoint === "countries") {
-                    setCountryOptions(
-                        response.data.data.map((state) => ({
-                            label: state.name,
-                            value: state.id,
-                        }))
-                    );
-                } else if (endpoint === "education") {
-                    // setEducationOptions(
-                    //     response.data.map((state) => ({
+                    // setCountryOptions(
+                    //     response.data.data.map((state) => ({
                     //         label: state.name,
                     //         value: state.id,
                     //     }))
                     // );
                 }
+
+                // else if (endpoint === "countries") {
+                //     setCountryOptions(
+                //         response.data.data.map((state) => ({
+                //             label: state.name,
+                //             value: state.id,
+                //         }))
+                //     );
+                // } else if (endpoint === "education") {
+                // setEducationOptions(
+                //     response.data.map((state) => ({
+                //         label: state.name,
+                //         value: state.id,
+                //     }))
+                // );
+                // }
             } else {
                 alert("Failed to fetch data list");
             }
@@ -98,7 +100,7 @@ const BasicDetails = ({ onNext, initialValues, onSaveDraft }) => {
     };
 
     useEffect(() => {
-        // getOptions("occupation", setOccupationOptions);
+        getOptions("occupation", setOccupationOptions);
         // getOptions("countries", setCountryOptions);
     }, []);
 
@@ -117,40 +119,86 @@ const BasicDetails = ({ onNext, initialValues, onSaveDraft }) => {
         console.log("handleSubmit");
         console.log(values);
         setIsLoading(true);
+
+        const data = {
+            name: values.fullName,
+            email: values.email,
+            mobileNumber: values.mobileNumber,
+            panNumber: values.panNumber,
+            dob: values.dateOfBirth,
+            sexId: values.gender,
+            occupationId: values.occupation,
+            isIndianResident: values.isResidentIndian,
+        };
         try {
-            // const response = await RemoteApi.post("/api/submitDetails", values);
-            console.log("handleSubmit");
+            console.log(data);
+            // const response:any = await RemoteApi.post(
+            //     "/onboard/client/basic-details",
+            //     data
+            // );
+
             const response = {
+                code: 200,
+                message: "success",
                 data: {
-                    success: true,
-                    mismatchDob: false,
-                    panVerified: true,
-                    addressMismatch: true,
-                    mismatchName: false,
+                    isNameMissMatch: false,
+                    isDOBMissMatch: false,
+                    isAddressPresent: false,
+                    token: "cookieToken",
                 },
+                errors: [],
             };
-            if (response.data.success) {
-                const valuesWithFlag = { ...values, basicDetailSubmitted: true };
+            if (
+                response.code === 200 &&
+                !response.data.isNameMissMatch &&
+                !response.data.isDOBMissMatch &&
+                response.data.isAddressPresent &&
+                response.data.token
+            ) {
+                const valuesWithFlag = {
+                    ...values,
+                    basicDetailSubmitted: true,
+                };
                 onNext(valuesWithFlag); // Include the submission flag
                 // onNext(values)
-            } else if (response.data.addressMismatch) {
+            } else if (response.code === 200) {
+                setcookieToken(() =>  response.data.token);
                 console.log("mismatch");
-                // if (response.data.addressMismatch) {
-                //     const valuesWithFlag = { ...values, basicDetailSubmitted: true };
-                //     onNext(valuesWithFlag); 
-                // }
-                if (response.data.mismatchDob) {
-                    actions.setFieldError("dateOfBirth", "Mismatch in Date of Birth.");
+
+                if (
+                    !response.data.isAddressPresent &&
+                    !response.data.isNameMissMatch &&
+                    !response.data.isDOBMissMatch &&
+                    response.data.token
+                ) {
+                    const valuesWithFlag = {
+                        ...values,
+                        basicDetailSubmitted: true,
+                    };
+                    // onNext(valuesWithFlag);
+                    setShowAddressForm(true); // Show AddressForm if there is an address mismatch
                 }
-                if (!response.data.panVerified) {
-                    actions.setFieldError("panNumber", "PAN number verification failed.");
+
+                if (response.data.isDOBMissMatch) {
+                    actions.setFieldError(
+                        "dateOfBirth",
+                        "Mismatch in Date of Birth."
+                    );
                 }
-                if (response.data.mismatchName) {
-                    actions.setFieldError("fullName", "Name does not match records.");
+                if (!response.data.token) {
+                    actions.setFieldError(
+                        "panNumber",
+                        "PAN number verification failed."
+                    );
+                }
+                if (response.data.isNameMissMatch) {
+                    actions.setFieldError(
+                        "fullName",
+                        "Name does not match records."
+                    );
                 }
                 // onNext(values)
                 // setStep(2);
-                // setShowAddressForm(true); // Show AddressForm if there is an address mismatch
             } else {
                 // actions.setErrors(response.data.errors);
             }
@@ -176,7 +224,7 @@ const BasicDetails = ({ onNext, initialValues, onSaveDraft }) => {
                 setFieldValue,
             }) => (
                 <ScrollView contentContainerStyle={styles.container}>
-                    {!showAddressForm ? (
+                    {!showAddressForm && !cookieToken ? (
                         <>
                             <View style={styles.formRow}>
                                 <View style={styles.fieldContainer}>
@@ -256,6 +304,54 @@ const BasicDetails = ({ onNext, initialValues, onSaveDraft }) => {
                             <View style={styles.formRow}>
                                 <View style={styles.fieldContainer}>
                                     <Text style={styles.label}>
+                                        Mobile Number{" "}
+                                        <Text style={styles.required}>*</Text>
+                                    </Text>
+                                    <TextInput
+                                        style={styles.input}
+                                        onChangeText={handleChange(
+                                            "mobileNumber"
+                                        )}
+                                        onBlur={handleBlur("mobileNumber")}
+                                        value={values.mobileNumber}
+                                        keyboardType="numeric" // Restrict input to numeric characters
+                                        maxLength={10}
+                                    />
+                                    {touched.mobileNumber &&
+                                        errors.mobileNumber && (
+                                            <Text style={styles.error}>
+                                                {errors.mobileNumber}
+                                            </Text>
+                                        )}
+                                </View>
+
+                                <View style={styles.fieldContainer}>
+                                    <Text style={styles.label}>
+                                        Client’s Occupation{" "}
+                                        <Text style={styles.required}>*</Text>
+                                    </Text>
+                                    <DropdownComponent
+                                        label="Occupation"
+                                        data={occupationOptions}
+                                        value={values.occupation}
+                                        setValue={(value) =>
+                                            setFieldValue("occupation", value)
+                                        }
+                                        // containerStyle={styles.dropdown}
+                                        noIcon={true}
+                                    />
+                                    {touched.occupation &&
+                                        errors.occupation && (
+                                            <Text style={styles.error}>
+                                                {errors.occupation}
+                                            </Text>
+                                        )}
+                                </View>
+                            </View>
+
+                            <View style={styles.formRow}>
+                                <View style={styles.fieldContainer}>
+                                    <Text style={styles.label}>
                                         Client’s Gender{" "}
                                         <Text style={styles.required}>*</Text>
                                     </Text>
@@ -272,31 +368,6 @@ const BasicDetails = ({ onNext, initialValues, onSaveDraft }) => {
                                         </Text>
                                     )}
                                 </View>
-                                {/* <View style={styles.fieldContainer}>
-                                    <Text style={styles.label}>
-                                        Client’s Occupation{" "}
-                                        <Text style={styles.required}>*</Text>
-                                    </Text>
-                                    <DropdownComponent
-                                        label="Occupation"
-                                        data={occupationOptions}
-                                        value={values.occupation}
-                                        setValue={(value) =>
-                                            setFieldValue("occupation", value)
-                                        }
-                                        containerStyle={styles.dropdown}
-                                        noIcon={true}
-                                    />
-                                    {touched.occupation &&
-                                        errors.occupation && (
-                                            <Text style={styles.error}>
-                                                {errors.occupation}
-                                            </Text>
-                                        )}
-                                </View> */}
-                            </View>
-
-                            <View style={styles.formRow}>
                                 <View style={styles.fieldContainer}>
                                     <Text style={styles.label}>
                                         Is your client a resident Indian?{" "}
@@ -325,24 +396,46 @@ const BasicDetails = ({ onNext, initialValues, onSaveDraft }) => {
                                             </Text>
                                         )}
                                 </View>
-                                {!values.isResidentIndian && (
+                            </View>
+                            <View style={styles.formRow}>
+                                {values.isResidentIndian === false && (
                                     <View style={styles.fieldContainer}>
                                         <Text style={styles.label}>
-                                            Client’s Country{" "}
+                                            Tax Status{" "}
                                             <Text style={styles.required}>
                                                 *
                                             </Text>
                                         </Text>
-                                        <DropdownComponent
+                                        <TextInput
+                                            style={[
+                                                styles.input,
+                                                styles.disabledInput,
+                                            ]}
+                                            onChangeText={handleChange(
+                                                "taxStatus"
+                                            )}
+                                            onBlur={handleBlur("taxStatus")}
+                                            value={values.taxStatus}
+                                            editable={false}
+                                        />
+                                        {/* <DropdownComponent
                                             label="Country"
                                             data={countryOptions}
                                             value={values.country}
                                             setValue={(value) =>
                                                 setFieldValue("country", value)
                                             }
-                                            containerStyle={styles.dropdown}
+                                            // containerStyle={styles.dropdown}
                                             noIcon={true}
-                                        />
+                                        /> */}
+                                        {touched.country &&
+                                            errors.country &&
+                                            typeof errors.country ===
+                                                "string" && (
+                                                <Text style={styles.error}>
+                                                    {errors.country}
+                                                </Text>
+                                            )}
                                         {touched.country && errors.country && (
                                             <Text style={styles.error}>
                                                 {errors.country}
@@ -350,6 +443,7 @@ const BasicDetails = ({ onNext, initialValues, onSaveDraft }) => {
                                         )}
                                     </View>
                                 )}
+                                <View style={styles.fieldContainer}></View>
                             </View>
                             <View style={styles.buttonRow}>
                                 <Pressable
@@ -390,9 +484,11 @@ const BasicDetails = ({ onNext, initialValues, onSaveDraft }) => {
                         </>
                     ) : (
                         <AddressForm
-                            initialValues={{ address: "" }} // Adjust according to real needs
-                            onPrevious={() => setShowAddressForm(false)}
+                            initialValues={initialValues}
+                            formValues={values}
+                            onPrevious={onPrevious}
                             onNext={onNext}
+                            cookieToken={cookieToken}
                         />
                     )}
                 </ScrollView>
@@ -419,7 +515,7 @@ const styles = StyleSheet.create({
         marginRight: 10,
     },
     label: {
-        fontSize: 16,
+        fontSize: 12,
         marginBottom: 5,
         color: "#333",
     },
@@ -474,14 +570,9 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: "#ffffff",
     },
-    // dropdown: {
-    //     borderWidth: 1,
-    //     borderColor: "#ccc",
-    //     padding: 10,
-    //     borderRadius: 5,
-    //     backgroundColor: "#fff",
-    //     flex: 1, // Dropdown fills the width of its container
-    // },
+    disabledInput: {
+        backgroundColor: "#f5f5f5", // Light grey to indicate disabled
+    },
 });
 
 export default BasicDetails;

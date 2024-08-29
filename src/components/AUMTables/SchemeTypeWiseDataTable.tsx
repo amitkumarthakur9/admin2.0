@@ -155,7 +155,7 @@ const SchemeTypeWiseDataTable = () => {
             </View> */}
             <View className="border-[0.2px]  border-[#e4e4e4]">
                 
-            {data.length !== 0 &&
+            {/* {data.length !== 0 &&
                 <DynamicFilters
                     appliedSorting={appliedSorting}
                     setAppliedSorting={setAppliedSorting}
@@ -168,7 +168,7 @@ const SchemeTypeWiseDataTable = () => {
                     appliedFilers={appliedFilers}
                     setAppliedFilers={setAppliedFilers}
                 />
-            }
+            } */}
 
                 {!isLoading ? (
                     data.length === 0 ? (

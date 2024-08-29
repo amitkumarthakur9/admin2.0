@@ -295,7 +295,7 @@ const ClientWiseDataTable = () => {
                         setAppliedSorting={setAppliedSorting}
                         sorting={sorting}
                         fileName="Clients"
-                        downloadApi={"client/download-report"}
+                        downloadApi={""}
                         schemaResponse={filtersSchema}
                         setCurrentPageNumber={setCurrentPageNumber}
                         getList={getDataList}

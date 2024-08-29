@@ -25,20 +25,20 @@ const ClientOnboard = () => {
     const [step, setStep] = useState(1);
     const [visible, setVisible] = useState(false);
     const [showDropdown, setShowDropdown] = useState(false);
-    const [modalTitle, setModalTitle] = useState("Client Details");
+    const [modalTitle, setModalTitle] = useState("Client Onboarding");
 
     const [formData, setFormData] = useState({
         fullName: "Saffi",
         email: "saffi@gmail.com",
-        mobileNumber: "98876767",
+        mobileNumber: "9876543210",
         isTaxpayer: "",
         passportNumber: "0",
-        dateOfBirth: "20-04-1997",
+        dateOfBirth: "1997-04-30",
         panNumber: "ABCDE1234G",
         isPoliticalExposed: "",
         placeOfBirth: "Bangalore",
         gender: null,
-        occupation: "1",
+        occupation: "",
         accountNumber: "20278353143",
         accountType: "1",
         ifsc: "SBI00007",
@@ -48,7 +48,10 @@ const ClientOnboard = () => {
         addressMismatch: true,
         mismatchName: false,
         isResidentIndian: null,
-        country: null,
+        taxStatus: "Non-Resident Indian ",
+        addressLine1: "Bangalore",
+        addressLine2: "Bangalore",
+        postalCode: "751006",
     });
     const [loading, setLoading] = useState(false);
 
@@ -166,7 +169,7 @@ const ClientOnboard = () => {
                 style={styles.addButton}
                 onPress={() => setShowDropdown(!showDropdown)}
             >
-                <Icon name="account-plus" size={20} color="#fff" />
+                <Icon name="account-plus" size={19} color="#fff" />
                 <Text style={styles.addButtonText}>Add New Client</Text>
             </Pressable>
 
@@ -231,37 +234,38 @@ const ClientOnboard = () => {
                                             initialValues={formData}
                                             onNext={handleNext}
                                             onSaveDraft={saveAsDraft}
+                                            onPrevious={handlePrevious}
                                         />
                                     )}
-                                    {step === 2 && (
+                                    {/* {step === 2 && (
                                         <AddressForm
                                             onPrevious={handlePrevious}
                                             onNext={handleNext}
                                             initialValues={formData}
                                         />
-                                    )}
-                                    {step === 3 && (
+                                    )} */}
+                                    {step === 2 && (
                                         <BankDetailForm
                                             onPrevious={handlePrevious}
                                             onNext={handleNext}
                                             initialValues={formData}
                                         />
                                     )}
-                                    {step === 4 && (
+                                    {step === 3 && (
                                         <Additonalinfo
                                             onNext={handleNext}
                                             onPrevious={handlePrevious}
                                             initialValues={formData}
                                         />
                                     )}
-                                    {step === 5 && (
+                                    {step === 4 && (
                                         <AddNominee
                                             onNext={handleNext}
                                             onPrevious={handlePrevious}
                                             initialValues={formData}
                                         />
                                     )}
-                                    {step === 7 && (
+                                    {step === 5 && (
                                         <ClientVerify
                                             clientEmail={"john@gmail.com"}
                                             clientNumber={"98765433"}
@@ -340,7 +344,7 @@ const styles = StyleSheet.create({
     dropdown: {
         backgroundColor: "white",
         borderRadius: 5,
-        marginTop: 5,
+        marginTop: 48,
         paddingVertical: 5,
         shadowColor: "#000",
         shadowOffset: { width: 0, height: 2 },
@@ -348,6 +352,7 @@ const styles = StyleSheet.create({
         shadowRadius: 3.84,
         elevation: 5,
         width: 200,
+        position: "absolute",
     },
     dropdownItem: {
         padding: 10,

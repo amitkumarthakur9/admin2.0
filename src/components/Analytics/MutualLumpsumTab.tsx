@@ -143,7 +143,7 @@ const MutualLumpsumTab = () => {
                         setAppliedSorting={setAppliedSorting}
                         sorting={sorting}
                         fileName="Clients"
-                        downloadApi={"client/download-report"}
+                        downloadApi={""}
                         schemaResponse={filtersSchema}
                         setCurrentPageNumber={setCurrentPageNumber}
                         getList={getDataList}
@@ -177,14 +177,14 @@ const MutualLumpsumTab = () => {
                     )}
                 </View>
                 {/* {data.length !== 0 && ( */}
-                <Pagination
+                {/* <Pagination
                     itemsPerPage={itemsPerPage}
                     setItemsPerPage={setItemsPerPage}
                     getDataList={getDataList}
                     currentPageNumber={currentPageNumber}
                     totalPages={totalPages}
                     setCurrentPageNumber={setCurrentPageNumber}
-                />
+                /> */}
                 {/* )} */}
             </View>
         </View>

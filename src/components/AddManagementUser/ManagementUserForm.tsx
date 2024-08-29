@@ -28,7 +28,7 @@ const ManagementUserForm = () => {
         employeeCode: "",
         password: "",
         passwordConfirm: "",
-        assignedRole: "0",
+        assignedRole: "",
     });
 
     const handleNext = (values) => {

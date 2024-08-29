@@ -17,12 +17,18 @@ import CustomRadioButton from "../CustomForm/CustomRadioButton/CustomRadioButton
 import CalendarSinglePicker from "../CustomDatePicker/CalendarSinglePicker";
 
 const panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]$/;
+const emailRegexRFC5322 =
+    /^(?:[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-zA-Z0-9-]*[a-zA-Z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)])$/;
 
 const validationSchema = Yup.object().shape({
-    fullName: Yup.string().required("Full Name is required"),
-    dateOfBirth: Yup.string().required("dateOfBirth is required"),
+    fullName: Yup.string()
+        .matches(/^[A-Za-z\s]+$/, "Full Name should contain only alphabets")
+        .required("Full Name is required"),
+    dateOfBirth: Yup.string().required("Date of birth is required"),
 
-    email: Yup.string().email("Invalid email").required("Email is required"),
+    email: Yup.string()
+        .matches(emailRegexRFC5322, "Invalid email address")
+        .required("Email is required"),
     gender: Yup.number()
         .typeError("Gender is required")
         .required("Gender is required"),
@@ -76,7 +82,8 @@ const PersonalDetails = ({ onNext, initialValues }) => {
                             <View style={styles.fieldContainer}>
                                 <View style={styles.fieldContainer}>
                                     <Text style={styles.label}>
-                                        Enter full name as per PAN
+                                        Enter full name as per PAN{" "}
+                                        <Text className="text-red-500">*</Text>
                                     </Text>
                                     <TextInput
                                         style={styles.input}
@@ -99,7 +106,8 @@ const PersonalDetails = ({ onNext, initialValues }) => {
                             <View style={styles.fieldContainer}>
                                 <View style={styles.fieldContainer}>
                                     <Text style={styles.label}>
-                                        Enter Email
+                                        Enter Email{" "}
+                                        <Text className="text-red-500">*</Text>
                                     </Text>
                                     <TextInput
                                         style={styles.input}
@@ -125,7 +133,8 @@ const PersonalDetails = ({ onNext, initialValues }) => {
                             <View style={styles.fieldContainer}>
                                 <View style={styles.fieldContainer}>
                                     <Text style={styles.label}>
-                                        Enter Mobile number
+                                        Enter Mobile number{" "}
+                                        <Text className="text-red-500">*</Text>
                                     </Text>
                                     <TextInput
                                         style={styles.input}
@@ -151,7 +160,10 @@ const PersonalDetails = ({ onNext, initialValues }) => {
 
                             <View style={styles.fieldContainer}>
                                 <View style={styles.fieldContainer}>
-                                    <Text style={styles.label}>PAN Number</Text>
+                                    <Text style={styles.label}>
+                                        PAN Number{" "}
+                                        <Text className="text-red-500">*</Text>
+                                    </Text>
                                     <TextInput
                                         style={styles.input}
                                         onChangeText={handleChange("panNumber")}
@@ -177,7 +189,12 @@ const PersonalDetails = ({ onNext, initialValues }) => {
                             <View style={styles.fieldContainer}>
                                 <View style={styles.fieldContainer}>
                                     <Text style={styles.label}>
-                                        <Text>Select Gender</Text>
+                                        <Text>
+                                            Select Gender{" "}
+                                            <Text className="text-red-500">
+                                                *
+                                            </Text>
+                                        </Text>
                                     </Text>
                                     <CustomRadioButton
                                         options={options}
@@ -206,7 +223,8 @@ const PersonalDetails = ({ onNext, initialValues }) => {
                             <View style={styles.fieldContainer}>
                                 <View style={styles.fieldContainer}>
                                     <Text style={styles.label}>
-                                        Date of Birth
+                                        Date of Birth{" "}
+                                        <Text className="text-red-500">*</Text>
                                     </Text>
                                     <CalendarSinglePicker
                                         value={values.dateOfBirth}

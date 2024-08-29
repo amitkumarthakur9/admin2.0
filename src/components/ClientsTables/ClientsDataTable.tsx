@@ -188,11 +188,9 @@ const ClientsDataTable = () => {
                                 selectable
                                 className="text-[#686868] font-semibold"
                             >
-
                                 {item?.lastInvestment
                                     ? dateTimeFormat(item?.lastInvestment)
                                     : "NA"}
-
                             </Text>
                         </View>
                         {/* <View className="flex flex-row items-center mt-0">
@@ -210,11 +208,9 @@ const ClientsDataTable = () => {
                 key: "externalFundDate",
                 content: (
                     <Text selectable className="text-[#686868] font-semibold">
-
                         {item?.externalFundLastUpdatedOn
                             ? dateTimeFormat(item?.externalFundLastUpdatedOn)
                             : "NA"}
-
                     </Text>
                 ),
             },
@@ -249,87 +245,95 @@ const ClientsDataTable = () => {
     return (
         <View className="bg-white">
             <View className="">
-                <TableBreadCrumb name={"Clients"} icon={require("../../../assets/clientReport.png")} />
+                <TableBreadCrumb
+                    name={"Clients"}
+                    icon={require("../../../assets/clientReport.png")}
+                />
             </View>
 
             <View className="h-screen">
                 <>
                     <View className="border-[0.2px] border-[#e4e4e4]">
                         {/* {data.length !== 0 && ( */}
-                            <DynamicFilters
-                                appliedSorting={appliedSorting}
-                                setAppliedSorting={setAppliedSorting}
-                                sorting={sorting}
-                                fileName="Clients"
-                                downloadApi={"client/download-report"}
-                                schemaResponse={filtersSchema}
-                                setCurrentPageNumber={setCurrentPageNumber}
-                                getList={getDataList}
-                                appliedFilers={appliedFilers}
-                                setAppliedFilers={setAppliedFilers}
-                                // newComponent={<ClientOnboard />}
-                            />
+                        <View className="flex flex-row justify-between items-center">
+                            <View className="w-[80%]">
+                                <DynamicFilters
+                                    appliedSorting={appliedSorting}
+                                    setAppliedSorting={setAppliedSorting}
+                                    sorting={sorting}
+                                    fileName="Clients"
+                                    downloadApi={"client/download-report"}
+                                    schemaResponse={filtersSchema}
+                                    setCurrentPageNumber={setCurrentPageNumber}
+                                    getList={getDataList}
+                                    appliedFilers={appliedFilers}
+                                    setAppliedFilers={setAppliedFilers}
+                                    // newComponent={<ClientOnboard />}
+                                />
+                            </View>
+                           // <View className="w-[20%] px-2 pt-4">
+                              //  <ClientOnboard />
+                          //  </View>
+                        </View>
                         {/* )} */}
                         {!isLoading ? (
                             // data.length === 0 ? (
                             //     <NoDataAvailable />
                             // ) : (
-                                <>
-                                    <ScrollView className={"mt-4 z-[-1] "}>
-                                        {width < 830 ? (
-                                            <MobileClientsRows
-                                                data={data}
-                                                schema={null}
-                                            />
-                                        ) : roleId > 3 ? (
-                                            <DataTable
-                                                headers={[
-                                                    "Name",
-                                                    "PAN No",
-                                                    "Distributor",
-                                                    "Manager",
-                                                    "Client Code",
-                                                    "Client DOI",
-                                                    "Last Investment",
-                                                    "External Fund Update Date",
-                                                ]}
-                                                cellSize={[
-                                                    3, 1, 1, 1, 1, 1, 1, 2,
-                                                ]}
-                                                rows={transformedData}
-                                            />
-                                        ) : roleId > 2 ? (
-                                            <DataTable
-                                                headers={[
-                                                    "Name",
-                                                    "PAN No",
-                                                    "Distributor",
-                                                    "Client Code",
-                                                    "Client DOI",
-                                                    "Last Investment",
-                                                    "External Fund Update Date",
-                                                ]}
-                                                cellSize={[3, 1, 1, 1, 2, 2, 2]}
-                                                rows={transformedData}
-                                            />
-                                        ) : (
-                                            <DataTable
-                                                headers={[
-                                                    "Name",
-                                                    "PAN No",
-                                                    "Client Code",
-                                                    "Client DOI",
-                                                    "Last Investment",
-                                                    "External Fund Update Date",
-                                                ]}
-                                                cellSize={[4, 2, 1, 1, 2, 2]}
-                                                rows={transformedData}
-                                            />
-                                        )}
-                                    </ScrollView>
-                                </>
-                            // )
+                            <>
+                                <ScrollView className={"mt-4 z-[-1] "}>
+                                    {width < 830 ? (
+                                        <MobileClientsRows
+                                            data={data}
+                                            schema={null}
+                                        />
+                                    ) : roleId > 3 ? (
+                                        <DataTable
+                                            headers={[
+                                                "Name",
+                                                "PAN No",
+                                                "Distributor",
+                                                "Manager",
+                                                "Client Code",
+                                                "Client DOI",
+                                                "Last Investment",
+                                                "External Fund Update Date",
+                                            ]}
+                                            cellSize={[3, 1, 1, 1, 1, 1, 1, 2]}
+                                            rows={transformedData}
+                                        />
+                                    ) : roleId > 2 ? (
+                                        <DataTable
+                                            headers={[
+                                                "Name",
+                                                "PAN No",
+                                                "Distributor",
+                                                "Client Code",
+                                                "Client DOI",
+                                                "Last Investment",
+                                                "External Fund Update Date",
+                                            ]}
+                                            cellSize={[3, 1, 1, 1, 2, 2, 2]}
+                                            rows={transformedData}
+                                        />
+                                    ) : (
+                                        <DataTable
+                                            headers={[
+                                                "Name",
+                                                "PAN No",
+                                                "Client Code",
+                                                "Client DOI",
+                                                "Last Investment",
+                                                "External Fund Update Date",
+                                            ]}
+                                            cellSize={[4, 2, 1, 1, 2, 2]}
+                                            rows={transformedData}
+                                        />
+                                    )}
+                                </ScrollView>
+                            </>
                         ) : (
+                            // )
                             <HStack
                                 space={"md"}
                                 marginTop={20}
@@ -347,14 +351,14 @@ const ClientsDataTable = () => {
                         )}
                     </View>
                     {/* {data.length !== 0 && ( */}
-                        <Pagination
-                            itemsPerPage={itemsPerPage}
-                            setItemsPerPage={setItemsPerPage}
-                            getDataList={getDataList}
-                            currentPageNumber={currentPageNumber}
-                            totalPages={totalPages}
-                            setCurrentPageNumber={setCurrentPageNumber}
-                        />
+                    <Pagination
+                        itemsPerPage={itemsPerPage}
+                        setItemsPerPage={setItemsPerPage}
+                        getDataList={getDataList}
+                        currentPageNumber={currentPageNumber}
+                        totalPages={totalPages}
+                        setCurrentPageNumber={setCurrentPageNumber}
+                    />
                     {/* )} */}
                 </>
             </View>

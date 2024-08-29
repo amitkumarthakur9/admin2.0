@@ -135,7 +135,7 @@ const FolioWiseDataTable = () => {
                                 <View className="w-11/12">
                                     <Pressable
                                         onPress={() =>
-                                            router.push(`clients/${item?.id}`)
+                                            router.push(`clients/${item?.account?.id}`)
                                         }
                                     >
                                         <Text
@@ -358,7 +358,7 @@ const FolioWiseDataTable = () => {
                             setAppliedSorting={setAppliedSorting}
                             sorting={sorting}
                             fileName="Folio"
-                            downloadApi={"folio/download-report"}
+                            downloadApi={""}
                             schemaResponse={filtersSchema}
                             setCurrentPageNumber={setCurrentPageNumber}
                             getList={getDataList}

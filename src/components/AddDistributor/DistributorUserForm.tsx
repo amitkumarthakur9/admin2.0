@@ -28,7 +28,7 @@ const DistributorUserForm = () => {
         mobileNumber: "",
         password: "",
         passwordConfirm: "",
-        assignedRole: "0",
+        assignedRole: "",
         dateOfBirth: "",
         panNumber: "",
         arnNumber: "",

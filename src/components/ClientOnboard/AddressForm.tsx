@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { Formik } from "formik";
 import * as Yup from "yup";
+import RemoteApi from "src/services/RemoteApi";
 
 const validationSchema = Yup.object().shape({
     // panNumber: Yup.string()
@@ -18,31 +19,55 @@ const validationSchema = Yup.object().shape({
     // gender: Yup.string().required("Gender is required"),
     addressLine1: Yup.string().required("Address Line 1 is required"),
     addressLine2: Yup.string().required("Address Line 2 is required"),
-    city: Yup.string().required("City is required"),
-    state: Yup.string().required("State is required"),
+    // city: Yup.string().required("City is required"),
+    // state: Yup.string().required("State is required"),
     postalCode: Yup.string()
         .required("Postal Code is required")
         .matches(/^[0-9]{6}$/, "Please enter a valid Postal Code"),
 });
 
-const AddressForm = ({ initialValues, onPrevious, onNext }) => {
+const AddressForm = ({ initialValues, onPrevious, onNext, formValues, cookieToken }) => {
     const [isLoading, setIsLoading] = useState(false);
+    const [Address, setAddress] = React.useState({
+        state: "",
+        district: "",
+        pincodeId: "",
+    });
+    console.log("cookieToken")
+    console.log(cookieToken)
     const handleSubmit = async (values, actions) => {
         console.log("handleSubmit");
         console.log(values);
         setIsLoading(true);
+
+        const data = {
+            line_1: values.addressLine1,
+            line_2: values.addressLine2,
+            pincodeId: Address.pincodeId,
+        };
         try {
-            // const response = await RemoteApi.post("/api/submitDetails", values);
-            console.log("handleSubmit");
-            const response = {
-                data: {
-                    success: true,
-                    mismatchDob: false,
-                    panVerified: true,
-                    addressMismatch: true,
-                    mismatchName: false,
-                },
-            };
+            // const response = await RemoteApi.post(
+            //     "/onboard/client//address",
+            //     data,
+            //     cookieToken
+            // );
+
+            const response = await RemoteApi.setCookieWithAxios(
+                "/onboard/client//address",
+                data,
+                cookieToken
+            );
+            
+            console.log(response);
+            // const response = {
+            //     data: {
+            //         success: true,
+            //         mismatchDob: false,
+            //         panVerified: true,
+            //         addressMismatch: true,
+            //         mismatchName: false,
+            //     },
+            // };
             if (response.data.success) {
                 const valuesWithFlag = {
                     ...values,
@@ -52,31 +77,7 @@ const AddressForm = ({ initialValues, onPrevious, onNext }) => {
                 // onNext(values)
             } else if (response.data.addressMismatch) {
                 console.log("mismatch");
-                // if (response.data.addressMismatch) {
-                //     const valuesWithFlag = { ...values, basicDetailSubmitted: true };
-                //     onNext(valuesWithFlag);
-                // }
-                if (response.data.mismatchDob) {
-                    actions.setFieldError(
-                        "dateOfBirth",
-                        "Mismatch in Date of Birth."
-                    );
-                }
-                if (!response.data.panVerified) {
-                    actions.setFieldError(
-                        "panNumber",
-                        "PAN number verification failed."
-                    );
-                }
-                if (response.data.mismatchName) {
-                    actions.setFieldError(
-                        "fullName",
-                        "Name does not match records."
-                    );
-                }
-                // onNext(values)
-                // setStep(2);
-                // setShowAddressForm(true); // Show AddressForm if there is an address mismatch
+                
             } else {
                 // actions.setErrors(response.data.errors);
             }
@@ -85,6 +86,35 @@ const AddressForm = ({ initialValues, onPrevious, onNext }) => {
         }
         setIsLoading(false);
         actions.setSubmitting(false);
+    };
+
+    const fetchPincodeDetails = async (pincode) => {
+        setIsLoading(true);
+        try {
+            const response: any = await RemoteApi.get(
+                `pincode/details?pincode=${pincode}`
+            );
+
+            if (response.code === 200) {
+                const { bankBranch, pincode, district, state } = response.data;
+                const address = `${bankBranch}, ${district}, ${state}, ${pincode}`;
+
+                setAddress({
+                    state: response.data.state.name,
+                    district: response.data.district.name,
+                    pincodeId: response.data.pincodeId,
+                });
+
+                console.log(JSON.stringify(address));
+                console.log(JSON.stringify(response));
+            } else {
+                alert("Failed to fetch district list");
+            }
+        } catch (error) {
+            alert("An error occurred while fetching the district list");
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -103,7 +133,13 @@ const AddressForm = ({ initialValues, onPrevious, onNext }) => {
                 isValid,
                 isSubmitting,
             }) => (
-                <ScrollView contentContainerStyle={styles.container}>
+                <View contentContainerStyle={styles.container}>
+                    <View className="py-4">
+                        <Text style={styles.modalTitle}>
+                            Address Confirmation
+                        </Text>
+                        <Text>Please add client’s Address</Text>
+                    </View>
                     <View style={styles.formRow}>
                         <View style={styles.fieldContainer}>
                             <Text style={styles.label}>
@@ -114,7 +150,7 @@ const AddressForm = ({ initialValues, onPrevious, onNext }) => {
                                 style={[styles.input, styles.disabledInput]}
                                 onChangeText={handleChange("panNumber")}
                                 onBlur={handleBlur("panNumber")}
-                                value={values.panNumber}
+                                value={formValues.panNumber}
                                 editable={false} // Autofilled and disabled
                             />
                             {touched.panNumber && errors.panNumber && (
@@ -132,7 +168,7 @@ const AddressForm = ({ initialValues, onPrevious, onNext }) => {
                                 style={[styles.input, styles.disabledInput]}
                                 onChangeText={handleChange("dateOfBirth")}
                                 onBlur={handleBlur("dateOfBirth")}
-                                value={values.dateOfBirth}
+                                value={formValues.dateOfBirth}
                                 editable={false} // Autofilled and disabled
                             />
                             {touched.dateOfBirth && errors.dateOfBirth && (
@@ -152,7 +188,7 @@ const AddressForm = ({ initialValues, onPrevious, onNext }) => {
                                 style={[styles.input, styles.disabledInput]}
                                 onChangeText={handleChange("gender")}
                                 onBlur={handleBlur("gender")}
-                                value={values.gender}
+                                value={formValues.gender}
                                 editable={false} // Autofilled and disabled
                             />
                             {touched.gender && errors.gender && (
@@ -219,43 +255,27 @@ const AddressForm = ({ initialValues, onPrevious, onNext }) => {
                         </View>
                         <View style={styles.fieldContainer}>
                             <Text style={styles.label}>
-                                City <Text style={styles.required}>*</Text>
-                            </Text>
-                            <TextInput
-                                style={styles.input}
-                                onChangeText={handleChange("city")}
-                                onBlur={handleBlur("city")}
-                                value={values.city}
-                            />
-                            {touched.city && errors.city && (
-                                <Text style={styles.error}>{errors.city}</Text>
-                            )}
-                        </View>
-                    </View>
-
-                    <View style={styles.formRow}>
-                        <View style={styles.fieldContainer}>
-                            <Text style={styles.label}>
-                                State <Text style={styles.required}>*</Text>
-                            </Text>
-                            <TextInput
-                                style={styles.input}
-                                onChangeText={handleChange("state")}
-                                onBlur={handleBlur("state")}
-                                value={values.state}
-                            />
-                            {touched.state && errors.state && (
-                                <Text style={styles.error}>{errors.state}</Text>
-                            )}
-                        </View>
-                        <View style={styles.fieldContainer}>
-                            <Text style={styles.label}>
                                 Postal Code{" "}
                                 <Text style={styles.required}>*</Text>
                             </Text>
+
                             <TextInput
                                 style={styles.input}
-                                onChangeText={handleChange("postalCode")}
+                                // onChangeText={handleChange("postalCode")}
+                                onChangeText={(value) => {
+                                    handleChange("postalCode")(value);
+                                    console.log("postal");
+                                    console.log(value);
+                                    if (value.length === 6) {
+                                        fetchPincodeDetails(value);
+                                    } else {
+                                        setAddress({
+                                            district: "",
+                                            state: "",
+                                            pincodeId: "",
+                                        });
+                                    }
+                                }}
                                 onBlur={handleBlur("postalCode")}
                                 value={values.postalCode}
                                 keyboardType="numeric" // Restrict input to numeric characters
@@ -268,6 +288,39 @@ const AddressForm = ({ initialValues, onPrevious, onNext }) => {
                             )}
                         </View>
                     </View>
+                    {Address.state && Address.district && (
+                        <View style={styles.formRow}>
+                            <View style={styles.fieldContainer}>
+                                <Text style={styles.label}>
+                                    District{" "}
+                                    <Text style={styles.required}>*</Text>
+                                </Text>
+                                <TextInput
+                                    style={[styles.input, styles.disabledInput]}
+                                    onChangeText={handleChange("district")}
+                                    // onBlur={handleBlur("city")}
+                                    value={Address.district}
+                                />
+                                {/* {touched.city && errors.city && (
+                                <Text style={styles.error}>{errors.city}</Text>
+                            )} */}
+                            </View>
+                            <View style={styles.fieldContainer}>
+                                <Text style={styles.label}>
+                                    State <Text style={styles.required}>*</Text>
+                                </Text>
+                                <TextInput
+                                    style={[styles.input, styles.disabledInput]}
+                                    onChangeText={handleChange("state")}
+                                    // onBlur={handleBlur("state")}
+                                    value={Address.state}
+                                />
+                                {/* {touched.state && errors.state && (
+                                <Text style={styles.error}>{errors.state}</Text>
+                            )} */}
+                            </View>
+                        </View>
+                    )}
 
                     <View style={styles.buttonRow}>
                         <Pressable
@@ -288,12 +341,12 @@ const AddressForm = ({ initialValues, onPrevious, onNext }) => {
                                     ? styles.disabledButton
                                     : {},
                             ]}
-                            onPress={handleSubmit}
+                            onPress={() => handleSubmit()}
                             disabled={!isValid || isSubmitting} // Disable the button if the form is invalid or submitting
                         >
                             <Text
                                 style={[
-                                    styles.buttonText,
+                                    styles.saveButtonText,
                                     !isValid || isSubmitting
                                         ? styles.disabledButtonText
                                         : {},
@@ -303,7 +356,7 @@ const AddressForm = ({ initialValues, onPrevious, onNext }) => {
                             </Text>
                         </Pressable>
                     </View>
-                </ScrollView>
+                </View>
             )}
         </Formik>
     );
@@ -325,7 +378,7 @@ const styles = StyleSheet.create({
         marginRight: 10,
     },
     label: {
-        fontSize: 16,
+        fontSize: 12,
         marginBottom: 5,
         color: "#333",
     },
@@ -370,6 +423,10 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: "#0066cc",
     },
+    saveButtonText: {
+        fontSize: 16,
+        color: "#ffffff",
+    },
     disabledButton: {
         backgroundColor: "#cccccc", // Grey out the button when disabled
         borderColor: "#aaaaaa",
@@ -379,6 +436,10 @@ const styles = StyleSheet.create({
     },
     disabledInput: {
         backgroundColor: "#f5f5f5", // Light grey to indicate disabled
+    },
+    modalTitle: {
+        fontSize: 18,
+        fontWeight: "600",
     },
 });
 

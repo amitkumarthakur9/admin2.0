@@ -206,7 +206,7 @@ const AMCWiseDataTable = () => {
                     </Pressable>
                 </View> */}
             <View className="border-[0.2px]  border-[#e4e4e4]">
-                <DynamicFilters
+                {/* <DynamicFilters
                     appliedSorting={appliedSorting}
                     setAppliedSorting={setAppliedSorting}
                     sorting={sorting}
@@ -217,7 +217,7 @@ const AMCWiseDataTable = () => {
                     getList=""
                     appliedFilers={appliedFilers}
                     setAppliedFilers={setAppliedFilers}
-                />
+                /> */}
                 
 
                 {!isLoading ? (

@@ -109,7 +109,8 @@ const CreatePassword = ({ onNext, onPrevious, initialValues }) => {
                     <View className="flex flex-row justify-center">
                     <View style={styles.formCol} >
                         <View style={styles.fieldContainer}>
-                            <Text style={styles.label}>Enter Password</Text>
+                            <Text style={styles.label}>Enter Password{" "}
+                            <Text className="text-red-500">*</Text></Text>
                             <View style={styles.inputWrapper}>
                                 <TextInput
                                     style={styles.input}
@@ -147,7 +148,8 @@ const CreatePassword = ({ onNext, onPrevious, initialValues }) => {
                         </View>
 
                         <View style={styles.fieldContainer}>
-                            <Text style={styles.label}>Confirm Password</Text>
+                            <Text style={styles.label}>Confirm Password{" "}
+                            <Text className="text-red-500">*</Text></Text>
                             <View style={styles.inputWrapper}>
                                 <TextInput
                                     style={styles.input}

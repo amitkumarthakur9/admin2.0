@@ -8,6 +8,7 @@ import { router } from "expo-router";
 // Create a new Axios instance with defaults
 const axiosInstance = axios.create({
     baseURL: process.env.API_ENDPOINT,
+    withCredentials: true, // Ensure cookies are sent with requests
 });
 
 // Set up a response interceptor to handle errors
@@ -60,26 +61,57 @@ class ApiRequest {
         return response?.data;
     }
 
-    static async post<T>(endpoint: string, data?: any): Promise<T> {
-        const config: AxiosRequestConfig = {
-            method: "POST",
-            url: endpoint,
-            data: JSON.stringify(data),
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${await AsyncStorage.getItem("token")}`,
-                // You can add any custom headers here, like authorization headers
-            },
-        };
+    static async post<T>(endpoint: string, data?: any, cookieToken?: string): Promise<T> {
+        // const config: AxiosRequestConfig = {
+        //     method: "POST",
+        //     url: endpoint,
+        //     data: JSON.stringify(data),
+        //     headers: {
+        //         "Content-Type": "application/json",
+        //         Authorization: `Bearer ${await AsyncStorage.getItem("token")}`,
+        //         // You can add any custom headers here, like authorization headers
+        //     },
+        // };
 
+        const headers: Record<string, string> = {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${await AsyncStorage.getItem("token")}`,
+        };
+    
+         // Conditionally add the Cookie header if cookieToken is provided
+    if (cookieToken) {
+        console.log("header")
+        console.log(cookieToken)
+        headers["Cookie"] = cookieToken;
+    }
+
+
+    const config: AxiosRequestConfig = {
+        method: "POST",
+        url: endpoint,
+        data: JSON.stringify(data),
+        headers: headers,
+        withCredentials: true, // Ensure cookies are sent
+    };
         // console.log('post token', await AsyncStorage.getItem("token"));
 
-        const response = await axiosInstance(config);
+        try {
+            const response = await axiosInstance(config);
+            // console.log('response', response);
+            return response?.data;
+        } catch (error) {
+            console.error('Error in POST request', error);
+            throw error;
+        }
 
-        // console.log('response', response);
+        // const response = await axiosInstance(config);
 
-        return response?.data;
+        // // console.log('response', response);
+
+        // return response?.data;
     }
+
+    // Function to set a cookie via Axios
 
     static async postWithFormData<T>(endpoint: string, data?: any): Promise<T> {
         const config: AxiosRequestConfig = {

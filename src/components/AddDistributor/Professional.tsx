@@ -119,7 +119,8 @@ const Professional = ({ onNext, initialValues, onPrevious }) => {
                             <View style={styles.fieldContainer}>
                                 <View style={styles.fieldContainer}>
                                     <Text style={styles.label}>
-                                        Enter ARN Number
+                                        Enter ARN Number{" "}
+                                        <Text className="text-red-500">*</Text>
                                     </Text>
                                     <View className="flex flex-row items-center justify-center">
                                         <View className="p-[10px] bg-gray-100 border-gray-300 border-l border-t border-b rounded-l">
@@ -151,7 +152,8 @@ const Professional = ({ onNext, initialValues, onPrevious }) => {
                             <View style={styles.fieldContainer}>
                                 <View style={styles.fieldContainer}>
                                     <Text style={styles.label}>
-                                        Enter EUIN Number
+                                        Enter EUIN Number{" "}
+                                        <Text className="text-red-500">*</Text>
                                     </Text>
                                     <TextInput
                                         style={styles.input}
@@ -177,7 +179,8 @@ const Professional = ({ onNext, initialValues, onPrevious }) => {
 
                         <View style={styles.formRow}>
                             <View style={styles.fieldContainer}>
-                                <Text style={styles.label}>Assign Role</Text>
+                                <Text style={styles.label}>Assign Role{" "}
+                                <Text className="text-red-500">*</Text></Text>
                                 <DropdownComponent
                                     label="select role"
                                     data={rolesOptions}
