@@ -125,7 +125,7 @@ const SIPReportTable = () => {
                                 <View className="w-11/12">
                                     <Pressable
                                         onPress={() =>
-                                            router.push(`clients/${item?.id}`)
+                                            router.push(`clients/${item?.client?.id}`)
                                         }
                                     >
                                         <Text

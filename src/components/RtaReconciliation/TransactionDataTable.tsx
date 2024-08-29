@@ -308,11 +308,11 @@ const TransactionDataTable = () => {
                     <View className="flex flex-row w-[99%] ">
                         <View className="flex flex-col">
                             <Text selectable>
-                                {rta.amount ? RupeeSymbol + rta.amount : "NA"}
+                                {rta.amount ? RupeeSymbol + rta.amount.toFixed(2) : "NA"}
                             </Text>
                             {rta.units ? (
                                 <Text selectable className="text-[10px]">
-                                    {rta.units} Units
+                                    {rta.units.toFixed(2)} Units
                                 </Text>
                             ) : (
                                 ""
@@ -320,7 +320,7 @@ const TransactionDataTable = () => {
 
                             {rta.nav ? (
                                 <Text selectable className="text-[10px]">
-                                    {rta.nav} NAV
+                                    {rta.nav.toFixed(2)} NAV
                                 </Text>
                             ) : (
                                 ""

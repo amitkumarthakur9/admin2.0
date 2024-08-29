@@ -31,9 +31,8 @@ const validationSchema = Yup.object().shape({
 });
 
 const dummyRolesOptions = [
-    { label: "RelationShip Manager", value: "1" },
-    { label: "Operation Manager", value: "2" },
-    { label: "Senior Manager", value: "3" },
+    { label: "Relationship Manager", value: "3" },
+    { label: "Operation Manager", value: "5" },
 ];
 
 const CreatePassword = ({ onNext, onPrevious, initialValues }) => {

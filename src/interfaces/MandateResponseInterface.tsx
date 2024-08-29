@@ -11,6 +11,7 @@ interface BankAccount {
 }
 
 interface Account {
+    id: string;
     name: string;
     clientCode: string;
 }
