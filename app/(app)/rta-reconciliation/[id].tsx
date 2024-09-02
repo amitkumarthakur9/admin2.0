@@ -43,6 +43,15 @@ export default function RTAConciliationDetail() {
         }
     }, [id]);
 
+    let bgTransaction = "bg-[#FFEFC8]  p-4";
+    // Alloted, Approved
+    if (data?.transactionStatus?.id == 3 || data?.transactionStatus?.id == 7) {
+        bgTransaction = "bg-[#F3FFED] p-4";
+    }
+    // Failed, Rejected
+    if (data?.transactionStatus?.id == 5 || data?.transactionStatus?.id == 11) {
+        bgTransaction = "bg-[#FFEDED] p-4";
+    }
     return (
         <>
             {isLoading ? (
@@ -90,77 +99,70 @@ export default function RTAConciliationDetail() {
                                 </Text>
                             </View>
                             <View
-                                className="flex flex-row justify-between rounded bg-white h-auto p-4"
+                                className="flex flex-row justify-between rounded bg-white h-auto"
                                 style={{ ...BreadcrumbShadow }}
                             >
-                                <View className="flex flex-col gap-2 w-full">
-                                    <View
-                                        className={`flex flex-row items-center w-full justify-start`}
-                                    >
-                                        <Text
-                                            selectable
-                                            className="text-lg font-bold text-start"
+                                <View className="flex flex-col  w-full">
+                                    <View className={bgTransaction}>
+                                        <View
+                                            className={`flex flex-row items-center w-full justify-start`}
                                         >
-                                            Transaction ID: {data?.id}
-                                        </Text>
+                                            <Text
+                                                selectable
+                                                className="text-lg font-bold text-start"
+                                            >
+                                                Transaction ID: {data?.id}
+                                            </Text>
+                                        </View>
+                                        <View className="w-full flex flex-row items-start justify-between">
+                                            <View className="flex flex-row items-center">
+                                                <Text
+                                                    className="text-bold font-medium text-gray-500 mr-2"
+                                                    selectable
+                                                >
+                                                    Client Name:
+                                                </Text>
+                                                <Text
+                                                    selectable
+                                                    className="font-medium text-start text-black"
+                                                >
+                                                    {data?.account?.name}
+                                                </Text>
+                                            </View>
+                                            <View className="flex flex-row items-center">
+                                                <Text
+                                                    className="text-bold font-medium text-gray-500 mr-2"
+                                                    selectable
+                                                >
+                                                    Client Code:
+                                                </Text>
+                                                <Text
+                                                    selectable
+                                                    className="font-medium text-start text-black"
+                                                >
+                                                    {data?.account?.clientId}
+                                                </Text>
+                                            </View>
+                                            <View className="flex flex-row items-center">
+                                                <Text
+                                                    className="text-bold font-medium text-gray-500 mr-2"
+                                                    selectable
+                                                >
+                                                    PAN:
+                                                </Text>
+                                                <Text
+                                                    selectable
+                                                    className="font-medium text-start text-black"
+                                                >
+                                                    {
+                                                        data?.account?.user[0]
+                                                            ?.panNumber
+                                                    }
+                                                </Text>
+                                            </View>
+                                        </View>
                                     </View>
-                                    <View className="w-full flex flex-row items-start justify-between">
-                                        <View className="flex flex-row items-center">
-                                            <Text
-                                                className="text-bold font-medium text-gray-500 mr-2"
-                                                selectable
-                                            >
-                                                Client Name:
-                                            </Text>
-                                            <Text
-                                                selectable
-                                                className="font-medium text-start text-black"
-                                            >
-                                                {data?.account?.name}
-                                            </Text>
-                                        </View>
-                                        <View className="flex flex-row items-center">
-                                            <Text
-                                                className="text-bold font-medium text-gray-500 mr-2"
-                                                selectable
-                                            >
-                                                Client Code:
-                                            </Text>
-                                            <Text
-                                                selectable
-                                                className="font-medium text-start text-black"
-                                            >
-                                                {data?.account?.clientId}
-                                            </Text>
-                                        </View>
-                                        <View className="flex flex-row items-center">
-                                            <Text
-                                                className="text-bold font-medium text-gray-500 mr-2"
-                                                selectable
-                                            >
-                                                PAN:
-                                            </Text>
-                                            <Text
-                                                selectable
-                                                className="font-medium text-start text-black"
-                                            >
-                                                {
-                                                    data?.account?.user[0]
-                                                        ?.panNumber
-                                                }
-                                            </Text>
-                                        </View>
-                                    </View>
-                                    <View
-                                        className="my-2"
-                                        style={{
-                                            borderColor: "#e4e4e4",
-                                            borderBottomWidth:
-                                                StyleSheet.hairlineWidth,
-                                        }}
-                                    />
-
-                                    <View className="flex flex-row py-2 items-center w-full flex-wrap ">
+                                    <View className="flex flex-row p-4 items-center w-full flex-wrap ">
                                         <View
                                             className={
                                                 "flex flex-row items-center justify-start w-8/12"
@@ -182,7 +184,28 @@ export default function RTAConciliationDetail() {
                                                 />
                                                 <View>
                                                     <Text className="text-normal">
-                                                        {data.mutualfund.name}
+                                                        {data.mutualfund.name}{" "}
+                                                        {data?.mutualfund
+                                                            ?.optionType
+                                                            ?.name !== "NA"
+                                                            ? data?.mutualfund
+                                                                  ?.optionType
+                                                                  ?.name
+                                                            : ""}{" "}
+                                                        {data?.mutualfund
+                                                            ?.deliveryType
+                                                            ?.name !== "NA"
+                                                            ? data?.mutualfund
+                                                                  ?.deliveryType
+                                                                  ?.name
+                                                            : ""}{" "}
+                                                        {data?.mutualfund
+                                                            ?.dividendType
+                                                            ?.name !== "NA"
+                                                            ? data?.mutualfund
+                                                                  ?.dividendType
+                                                                  ?.name
+                                                            : ""}
                                                     </Text>
                                                     <View className="flex flex-row items-center gap-2">
                                                         <Text className="text-xs text-gray-400">
@@ -199,7 +222,40 @@ export default function RTAConciliationDetail() {
                                             </View>
                                         </View>
                                     </View>
-                                    <View className="flex flex-row py-2 justify-between items-start w-full">
+                                    <View className="flex flex-row p-4 justify-between items-start w-full">
+                                        <View className="w-3/12 flex-flex-col gap-4 px-2">
+                                            <DataValue
+                                                key="transactionType"
+                                                title="Transaction, Order Type"
+                                                value={
+                                                    data?.transactionType
+                                                        ?.name +
+                                                    ", " +
+                                                    data?.order.orderType?.name
+                                                }
+                                            />
+                                            <DataValue
+                                                key="createdAt"
+                                                title="created Date"
+                                                value={
+                                                    data?.createdAt
+                                                        ? dateFormat(
+                                                              data?.createdAt
+                                                          )
+                                                        : "NA"
+                                                }
+                                            />
+                                            <DataValue
+                                                key="nav"
+                                                title="NAV"
+                                                value={
+                                                    data?.nav
+                                                        ? RupeeSymbol +
+                                                          data?.nav
+                                                        : "NA"
+                                                }
+                                            />
+                                        </View>
                                         <View className="w-3/12 flex-flex-col gap-4 px-2">
                                             <DataValue
                                                 key="amount"
@@ -222,63 +278,52 @@ export default function RTAConciliationDetail() {
                                                 }
                                             />
                                             <DataValue
-                                                key="rta"
-                                                title="RTA"
-                                                value={`${data?.mutualfund?.rta.toUpperCase()}`}
+                                                key="units"
+                                                title="Units"
+                                                value={data?.units}
                                             />
+                                        </View>
+                                        <View className="w-3/12 flex-flex-col gap-4 px-2">
                                             <DataValue
                                                 key="status"
                                                 title="Transaction Status"
                                                 value={`${data?.transactionStatus?.name}`}
                                             />
-                                        </View>
-                                        <View className="w-3/12 flex-flex-col gap-4 px-2">
-                                            <DataValue
-                                                key="allotedInvestment"
-                                                title="Alloted Investment"
-                                                value={
-                                                    data?.allotedAmount
-                                                        ? `${RupeeSymbol}${data?.allotedAmount}`
-                                                        : null
-                                                }
-                                            />
                                             <DataValue
                                                 key="settlementDate"
                                                 title="Settlement Date"
                                                 value={
-                                                    data?.paymentDate
+                                                    data?.settlementDate
                                                         ? dateFormat(
                                                               data?.settlementDate
                                                           )
                                                         : "NA"
                                                 }
                                             />
+                                            {data?.order?.orderType?.name ==
+                                            "Purchase" ? (
+                                                <DataValue
+                                                    key="stampDuty"
+                                                    title="Stamp Duty"
+                                                    value={
+                                                        data?.stampDuty
+                                                            ? `${RupeeSymbol}${data?.stampDuty}`
+                                                            : null
+                                                    }
+                                                />
+                                            ) : (
+                                                <DataValue
+                                                    key="stt"
+                                                    title="STT"
+                                                    value={data?.stt}
+                                                />
+                                            )}
+                                        </View>
+                                        <View className="w-3/12 flex-flex-col gap-4 px-2">
                                             <DataValue
                                                 key="bseOrderNumber"
                                                 title="BSE Order Number"
                                                 value={data?.bseOrderNumber}
-                                            />
-                                            <DataValue
-                                                key="type"
-                                                title="Transaction Type"
-                                                value={
-                                                    data?.transactionType?.name
-                                                }
-                                            />
-                                        </View>
-                                        <View className="w-3/12 flex-flex-col gap-4 px-2">
-                                            <DataValue
-                                                key="optionType"
-                                                title="Option Type"
-                                                value={
-                                                    data?.mutualfund?.optionType
-                                                        ?.name
-                                                }
-                                            />
-                                            <DataValue
-                                                key="units"
-                                                title="Units"
-                                                value={data?.units}
                                             />
                                             <DataValue
                                                 key="folioNo"
@@ -286,45 +331,9 @@ export default function RTAConciliationDetail() {
                                                 value={data?.folio?.folioNumber}
                                             />
                                             <DataValue
-                                                key="stampDuty"
-                                                title="Stamp Duty"
-                                                value={
-                                                    data?.stampDuty
-                                                        ? `${RupeeSymbol}${data?.stampDuty}`
-                                                        : null
-                                                }
-                                            />
-                                        </View>
-                                        <View className="w-3/12 flex-flex-col gap-4 px-2">
-                                            <DataValue
-                                                key="dividendType"
-                                                title="Dividend Type"
-                                                value={
-                                                    data?.mutualfund
-                                                        ?.dividendType?.name
-                                                }
-                                            />
-                                            <DataValue
-                                                key="nav"
-                                                title="NAV"
-                                                value={
-                                                    data?.nav
-                                                        ? RupeeSymbol +
-                                                          data?.nav
-                                                        : "NA"
-                                                }
-                                            />
-                                            <DataValue
-                                                key="orderType"
-                                                title="Order Type"
-                                                value={
-                                                    data?.transactionType?.name
-                                                }
-                                            />
-                                            <DataValue
-                                                key="stt"
-                                                title="STT"
-                                                value={data?.stt}
+                                                key="rta"
+                                                title="RTA"
+                                                value={`${data?.mutualfund?.rta.toUpperCase()}`}
                                             />
                                         </View>
                                     </View>
@@ -357,7 +366,7 @@ export default function RTAConciliationDetail() {
                                                 selectable
                                                 className="font-medium text-start text-black"
                                             >
-                                                Razorpay
+                                                NA
                                             </Text>
                                         </View>
                                         <View className="flex flex-row items-center">
@@ -371,7 +380,7 @@ export default function RTAConciliationDetail() {
                                                 selectable
                                                 className="font-medium text-start text-black"
                                             >
-                                                UPI
+                                                NA
                                             </Text>
                                         </View>
                                         <View className="flex flex-row items-center">
@@ -385,7 +394,7 @@ export default function RTAConciliationDetail() {
                                                 selectable
                                                 className="font-medium text-start text-black"
                                             >
-                                                987HDSCD67
+                                                NA
                                             </Text>
                                         </View>
                                     </View>
@@ -416,7 +425,6 @@ export default function RTAConciliationDetail() {
                                         >
                                             <View className="w-1/3 flex flex-row items-center gap-2">
                                                 <Image
-                                                    alt="fundHouse"
                                                     className="mr-2"
                                                     style={{
                                                         width: 32,
@@ -475,10 +483,7 @@ export default function RTAConciliationDetail() {
                                                     <DataValue
                                                         key="autopay"
                                                         title="Autopay"
-                                                        value={
-                                                            data?.autopay
-                                                                
-                                                        }
+                                                        value={data?.autopay}
                                                     />
                                                 </View>
                                             </View>

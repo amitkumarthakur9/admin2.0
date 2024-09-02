@@ -447,7 +447,7 @@ const IFADashboard = () => {
                             <View className="flex flex-col md:flex-row rounded  flex-wrap  md:w-full gap-1 pb-2">
                                 <View className="flex flex-col md:w-[20%]  rounded bg-[#0769D0] h-auto items-between gap-2 mr-1">
                                     <Text className="text-[#D2CFCF]  ">
-                                        Total Aum
+                                        Total AUM
                                     </Text>
                                     <Text className="text-white font-bold text-3xl ">
                                         {data?.aum?.total

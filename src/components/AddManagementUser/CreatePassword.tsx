@@ -21,11 +21,15 @@ const validationSchema = Yup.object().shape({
         .required("Password is required")
         .min(8, "Password must be at least 8 characters")
         .max(16, "Password must be at most 16 characters")
-        .matches(/[a-zA-Z]/, "Password must contain at least one letter")
+        .matches(/[a-z]/, "Password must contain at least one lowercase letter")
+        .matches(/[A-Z]/, "Password must contain at least one uppercase letter")
         .matches(/\d/, "Password must contain at least one number")
-        .matches(/[!@#$%^&*(),.?":{}|<>]/, "Password must contain at least one special character"),
+        .matches(
+            /[!@#$%^&*(),.?":{}|<>]/,
+            "Password must contain at least one special character"
+        ),
     passwordConfirm: Yup.string()
-        .oneOf([Yup.ref('password'), null], 'Passwords must match')
+        .oneOf([Yup.ref("password"), null], "Passwords must match")
         .required("Confirm Password is required"),
     assignedRole: Yup.number().required("Role Assign is required"),
 });
@@ -55,10 +59,7 @@ const CreatePassword = ({ onNext, onPrevious, initialValues }) => {
         console.log(data);
 
         try {
-            const response = await RemoteApi.post(
-                "onboard/rm",
-                data
-            );
+            const response = await RemoteApi.post("onboard/rm", data);
             // const response = {
             //     code: 200,
             // };
@@ -106,8 +107,10 @@ const CreatePassword = ({ onNext, onPrevious, initialValues }) => {
                 <ScrollView contentContainerStyle={styles.container}>
                     <View style={styles.formRow}>
                         <View style={styles.fieldContainer}>
-                            <Text style={styles.label}>Enter Password{" "}
-                            <Text className="text-red-500">*</Text></Text>
+                            <Text style={styles.label}>
+                                Enter Password{" "}
+                                <Text className="text-red-500">*</Text>
+                            </Text>
                             <View style={styles.inputWrapper}>
                                 <TextInput
                                     style={styles.input}
@@ -117,7 +120,9 @@ const CreatePassword = ({ onNext, onPrevious, initialValues }) => {
                                     secureTextEntry={!showPassword}
                                 />
                                 <TouchableOpacity
-                                    onPress={() => setShowPassword(!showPassword)}
+                                    onPress={() =>
+                                        setShowPassword(!showPassword)
+                                    }
                                     className="pl-2"
                                 >
                                     <Ionicons
@@ -135,27 +140,41 @@ const CreatePassword = ({ onNext, onPrevious, initialValues }) => {
                                     </Text>
                                 )}
                             <Text style={styles.helperText}>
-                                Password must be 8-16 characters long, include letters, numbers, and at least one special character.
+                                Password must be 8-16 characters long, include
+                                at least one uppercase letter, one lowercase
+                                letter, one number, and one special character.
                             </Text>
                         </View>
 
                         <View style={styles.fieldContainer}>
-                            <Text style={styles.label}>Confirm Password{" "}
-                            <Text className="text-red-500">*</Text></Text>
+                            <Text style={styles.label}>
+                                Confirm Password{" "}
+                                <Text className="text-red-500">*</Text>
+                            </Text>
                             <View style={styles.inputWrapper}>
                                 <TextInput
                                     style={styles.input}
-                                    onChangeText={handleChange("passwordConfirm")}
+                                    onChangeText={handleChange(
+                                        "passwordConfirm"
+                                    )}
                                     onBlur={handleBlur("passwordConfirm")}
                                     value={values.passwordConfirm}
                                     secureTextEntry={!showPasswordConfirm}
                                 />
                                 <TouchableOpacity
-                                 className="pl-2"
-                                    onPress={() => setShowPasswordConfirm(!showPasswordConfirm)}
+                                    className="pl-2"
+                                    onPress={() =>
+                                        setShowPasswordConfirm(
+                                            !showPasswordConfirm
+                                        )
+                                    }
                                 >
                                     <Ionicons
-                                        name={showPasswordConfirm ? "eye-off" : "eye"}
+                                        name={
+                                            showPasswordConfirm
+                                                ? "eye-off"
+                                                : "eye"
+                                        }
                                         size={24}
                                         color="gray"
                                     />
@@ -173,8 +192,10 @@ const CreatePassword = ({ onNext, onPrevious, initialValues }) => {
 
                     <View style={styles.formRow}>
                         <View style={styles.fieldContainer}>
-                            <Text style={styles.label}>Assign Role{" "}
-                            <Text className="text-red-500">*</Text></Text>
+                            <Text style={styles.label}>
+                                Assign Role{" "}
+                                <Text className="text-red-500">*</Text>
+                            </Text>
                             <DropdownComponent
                                 label="select role"
                                 data={rolesOptions}

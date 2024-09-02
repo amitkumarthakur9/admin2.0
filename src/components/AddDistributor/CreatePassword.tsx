@@ -21,7 +21,8 @@ const validationSchema = Yup.object().shape({
         .required("Password is required")
         .min(8, "Password must be at least 8 characters")
         .max(16, "Password must be at most 16 characters")
-        .matches(/[a-zA-Z]/, "Password must contain at least one letter")
+        .matches(/[a-z]/, "Password must contain at least one lowercase letter")
+        .matches(/[A-Z]/, "Password must contain at least one uppercase letter")
         .matches(/\d/, "Password must contain at least one number")
         .matches(
             /[!@#$%^&*(),.?":{}|<>]/,
@@ -33,12 +34,10 @@ const validationSchema = Yup.object().shape({
     assignedRole: Yup.number().required("Role Assign is required"),
 });
 
-
 const CreatePassword = ({ onNext, onPrevious, initialValues }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
-
 
     const handleSubmit = async (values) => {
         const data = {
@@ -57,10 +56,7 @@ const CreatePassword = ({ onNext, onPrevious, initialValues }) => {
         console.log(data);
 
         try {
-            const response = await RemoteApi.post(
-                "onboard/distributor",
-                data
-            );
+            const response = await RemoteApi.post("onboard/distributor", data);
             // const response = {
             //     code: 200,
             // };
@@ -107,89 +103,96 @@ const CreatePassword = ({ onNext, onPrevious, initialValues }) => {
             }) => (
                 <ScrollView contentContainerStyle={styles.container}>
                     <View className="flex flex-row justify-center">
-                    <View style={styles.formCol} >
-                        <View style={styles.fieldContainer}>
-                            <Text style={styles.label}>Enter Password{" "}
-                            <Text className="text-red-500">*</Text></Text>
-                            <View style={styles.inputWrapper}>
-                                <TextInput
-                                    style={styles.input}
-                                    onChangeText={handleChange("password")}
-                                    onBlur={handleBlur("password")}
-                                    value={values.password}
-                                    secureTextEntry={!showPassword}
-                                />
-                                
-                                <TouchableOpacity
-                                    onPress={() =>
-                                        setShowPassword(!showPassword)
-                                    }
-                                    className="pl-2"
-                                >
-                                    <Ionicons
-                                        name={showPassword ? "eye-off" : "eye"}
-                                        size={24}
-                                        color="gray"
+                        <View style={styles.formCol}>
+                            <View style={styles.fieldContainer}>
+                                <Text style={styles.label}>
+                                    Enter Password{" "}
+                                    <Text className="text-red-500">*</Text>
+                                </Text>
+                                <View style={styles.inputWrapper}>
+                                    <TextInput
+                                        style={styles.input}
+                                        onChangeText={handleChange("password")}
+                                        onBlur={handleBlur("password")}
+                                        value={values.password}
+                                        secureTextEntry={!showPassword}
                                     />
-                                </TouchableOpacity>
-                            </View>
-                            {touched.password &&
-                                errors.password &&
-                                typeof errors.password === "string" && (
-                                    <Text style={styles.error}>
-                                        {errors.password}
-                                    </Text>
-                                )}
-                            <Text style={styles.helperText}>
-                                Password must be 8-16 characters long, include
-                                letters, numbers, and at least one special
-                                character.
-                            </Text>
-                        </View>
 
-                        <View style={styles.fieldContainer}>
-                            <Text style={styles.label}>Confirm Password{" "}
-                            <Text className="text-red-500">*</Text></Text>
-                            <View style={styles.inputWrapper}>
-                                <TextInput
-                                    style={styles.input}
-                                    onChangeText={handleChange(
-                                        "passwordConfirm"
-                                    )}
-                                    onBlur={handleBlur("passwordConfirm")}
-                                    value={values.passwordConfirm}
-                                    secureTextEntry={!showPasswordConfirm}
-                                />
-                                <TouchableOpacity
-                                    className="pl-2"
-                                    onPress={() =>
-                                        setShowPasswordConfirm(
-                                            !showPasswordConfirm
-                                        )
-                                    }
-                                >
-                                    <Ionicons
-                                        name={
-                                            showPasswordConfirm
-                                                ? "eye-off"
-                                                : "eye"
+                                    <TouchableOpacity
+                                        onPress={() =>
+                                            setShowPassword(!showPassword)
                                         }
-                                        size={24}
-                                        color="gray"
-                                    />
-                                </TouchableOpacity>
+                                        className="pl-2"
+                                    >
+                                        <Ionicons
+                                            name={
+                                                showPassword ? "eye-off" : "eye"
+                                            }
+                                            size={24}
+                                            color="gray"
+                                        />
+                                    </TouchableOpacity>
+                                </View>
+                                {touched.password &&
+                                    errors.password &&
+                                    typeof errors.password === "string" && (
+                                        <Text style={styles.error}>
+                                            {errors.password}
+                                        </Text>
+                                    )}
+                                <Text style={styles.helperText}>
+                                    Password must be 8-16 characters long,
+                                    include at least one uppercase letter, one
+                                    lowercase letter, one number, and one
+                                    special character.
+                                </Text>
                             </View>
-                            {touched.passwordConfirm &&
-                                errors.passwordConfirm &&
-                                typeof errors.passwordConfirm === "string" && (
-                                    <Text style={styles.error}>
-                                        {errors.passwordConfirm}
-                                    </Text>
-                                )}
+
+                            <View style={styles.fieldContainer}>
+                                <Text style={styles.label}>
+                                    Confirm Password{" "}
+                                    <Text className="text-red-500">*</Text>
+                                </Text>
+                                <View style={styles.inputWrapper}>
+                                    <TextInput
+                                        style={styles.input}
+                                        onChangeText={handleChange(
+                                            "passwordConfirm"
+                                        )}
+                                        onBlur={handleBlur("passwordConfirm")}
+                                        value={values.passwordConfirm}
+                                        secureTextEntry={!showPasswordConfirm}
+                                    />
+                                    <TouchableOpacity
+                                        className="pl-2"
+                                        onPress={() =>
+                                            setShowPasswordConfirm(
+                                                !showPasswordConfirm
+                                            )
+                                        }
+                                    >
+                                        <Ionicons
+                                            name={
+                                                showPasswordConfirm
+                                                    ? "eye-off"
+                                                    : "eye"
+                                            }
+                                            size={24}
+                                            color="gray"
+                                        />
+                                    </TouchableOpacity>
+                                </View>
+                                {touched.passwordConfirm &&
+                                    errors.passwordConfirm &&
+                                    typeof errors.passwordConfirm ===
+                                        "string" && (
+                                        <Text style={styles.error}>
+                                            {errors.passwordConfirm}
+                                        </Text>
+                                    )}
+                            </View>
                         </View>
                     </View>
-                    </View>
-                    
 
                     <View className="flex flex-row justify-center gap-2">
                         <View className="w-3/12">
@@ -256,7 +259,6 @@ const styles = StyleSheet.create({
         flexDirection: "column",
         marginBottom: 40,
         width: "40%",
-        
     },
 
     fieldContainer: {

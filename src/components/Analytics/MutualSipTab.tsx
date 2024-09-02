@@ -44,9 +44,9 @@ const MutualSipTab = () => {
     const [totalPages, setTotalPages] = useState(1);
     const [appliedFilers, setAppliedFilers] = useState([
         {
-            key: "createdAt",
-            operator: "between",
-            value: ["2024-01-01", "2024-12-31"],
+            key: "",
+            operator: "",
+            value: [""],
         },
     ]);
     const [filtersSchema, setFiltersSchema] = useState([]);
@@ -117,7 +117,16 @@ const MutualSipTab = () => {
 
     React.useEffect(() => {
         getSchema();
-        getDataList();
+        getDataList(
+            [
+                {
+                    key: "createdAt",
+                    operator: "between",
+                    value: ["2024-01-01", "2024-12-31"],
+                },
+            ],
+            true
+        );
     }, []);
 
     // React.useEffect(() => {
@@ -152,10 +161,20 @@ const MutualSipTab = () => {
 
                     {!isLoading ? (
                         <View className={"mt-4 z-[-1] min-h-[500]"}>
-                            <MutualSipAccordion
-                                data={data}
-                                appliedFilers={appliedFilers}
-                            />
+                            {data.length == 0  ? (
+                                <>
+                                    <NoDataAvailable
+                                        message="Select date from filter to get
+                                            required data."
+                                            height="200px"
+                                    />
+                                </>
+                            ) : (
+                                <MutualSipAccordion
+                                    data={data}
+                                    appliedFilers={appliedFilers}
+                                />
+                            )}
                         </View>
                     ) : (
                         // )

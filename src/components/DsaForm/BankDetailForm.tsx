@@ -323,9 +323,6 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
                 address: "",
             }}
             validationSchema={Yup.object().shape({
-                // accountNumber: Yup.number().required(
-                //     "Account Number is required"
-                // ),
                 accountNumber: Yup.string()
                     .required("Account number is required")
                     .matches(/^\d+$/, "Account number must be Numeric"),
@@ -351,7 +348,10 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
                 <ScrollView contentContainerStyle={styles.container}>
                     <View style={styles.formRow}>
                         <View style={styles.fieldContainer}>
-                            <Text style={styles.label}>Account Number*</Text>
+                            <Text style={styles.label}>
+                                Account Number{" "}
+                                <Text className="text-red-500">*</Text>
+                            </Text>
                             <TextInput
                                 style={styles.input}
                                 onChangeText={handleChange("accountNumber")}
@@ -367,7 +367,10 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
                             )}
                         </View>
                         <View style={styles.fieldContainer}>
-                            <Text style={styles.label}>Bank IFSC*</Text>
+                            <Text style={styles.label}>
+                                Bank IFSC{" "}
+                                <Text className="text-red-500">*</Text>
+                            </Text>
                             <TextInput
                                 style={styles.input}
                                 onChangeText={(value) => {
@@ -404,7 +407,10 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
 
                     <View style={styles.formRow}>
                         <View style={styles.fieldContainer}>
-                            <Text style={styles.label}>Account Type*</Text>
+                            <Text style={styles.label}>
+                                Account Type{" "}
+                                <Text className="text-red-500">*</Text>
+                            </Text>
                             <DropdownComponent
                                 label="Account Type"
                                 data={accountTypeOptions}
@@ -519,7 +525,10 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
                                 <ScrollView className="w-full p-16">
                                     <View className="px-5">
                                         <Text style={styles.label}>
-                                            Bank name*
+                                            Bank name{" "}
+                                            <Text className="text-red-500">
+                                                *
+                                            </Text>
                                         </Text>
                                     </View>
                                     <SearchableDropdown
@@ -535,27 +544,42 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
                                         )} */}
 
                                     <View style={styles.fieldContainer}>
-                                        <Text style={styles.label}>State*</Text>
-                                        <DropdownComponent
-                                            label="State"
-                                            data={stateOptions}
-                                            value={modalFormData.state}
-                                            setValue={(value) => {
-                                                setModalFormData({
-                                                    ...modalFormData,
-                                                    state: value,
-                                                });
-                                                getDistrictList(value);
-                                            }}
-                                            searchOn={true}
-                                            containerStyle={styles.dropdown}
-                                            noIcon={true}
-                                        />
+                                        <Text style={styles.label}>
+                                            State{" "}
+                                            <Text className="text-red-500">
+                                                *
+                                            </Text>
+                                        </Text>
+                                        {modalFormData.bank ? (
+                                            <DropdownComponent
+                                                label="State"
+                                                data={stateOptions}
+                                                value={modalFormData.state}
+                                                setValue={(value) => {
+                                                    setModalFormData({
+                                                        ...modalFormData,
+                                                        state: value,
+                                                    });
+                                                    getDistrictList(value);
+                                                }}
+                                                searchOn={true}
+                                                containerStyle={styles.dropdown}
+                                                noIcon={true}
+                                            />
+                                        ) : (
+                                            <View className="border border-gray-500 p-[10px] rounded mr-2">
+                                                <Text>Select bank first</Text>
+                                            </View>
+                                        )}
                                     </View>
                                     <View style={styles.fieldContainer}>
                                         <Text style={styles.label}>
-                                            District*
+                                            District{" "}
+                                            <Text className="text-red-500">
+                                                *
+                                            </Text>
                                         </Text>
+                                        {modalFormData.state ? (
                                         <DropdownComponent
                                             label="District"
                                             data={districtOptions}
@@ -571,11 +595,20 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
                                             containerStyle={styles.dropdown}
                                             noIcon={true}
                                         />
+                                    ) : (
+                                        <View className="border border-gray-500 p-[10px] rounded mr-2">
+                                            <Text>Select state first</Text>
+                                        </View>
+                                    )}
                                     </View>
                                     <View style={styles.fieldContainer}>
                                         <Text style={styles.label}>
-                                            Branch*
+                                            Branch{" "}
+                                            <Text className="text-red-500">
+                                                *
+                                            </Text>
                                         </Text>
+                                        {modalFormData.district ? (
                                         <DropdownComponent
                                             label="Branch"
                                             data={branchOptions}
@@ -591,6 +624,11 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
                                             containerStyle={styles.dropdown}
                                             noIcon={true}
                                         />
+                                    ) : (
+                                        <View className="border border-gray-500 p-[10px] rounded mr-2">
+                                            <Text>Select district first</Text>
+                                        </View>
+                                    )}
                                     </View>
                                     {ifscCode !== "null" && (
                                         <View className="flex flex-row py-4">

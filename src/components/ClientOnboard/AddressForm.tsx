@@ -6,6 +6,7 @@ import {
     StyleSheet,
     ScrollView,
     Pressable,
+    ActivityIndicator,
 } from "react-native";
 import { Formik } from "formik";
 import * as Yup from "yup";
@@ -46,17 +47,17 @@ const AddressForm = ({ initialValues, onPrevious, onNext, formValues, cookieToke
             pincodeId: Address.pincodeId,
         };
         try {
-            // const response = await RemoteApi.post(
-            //     "/onboard/client//address",
-            //     data,
-            //     cookieToken
-            // );
-
-            const response = await RemoteApi.setCookieWithAxios(
+            const response = await RemoteApi.post(
                 "/onboard/client//address",
                 data,
                 cookieToken
             );
+
+            // const response = await RemoteApi.setCookieWithAxios(
+            //     "/onboard/client//address",
+            //     data,
+            //     cookieToken
+            // );
             
             console.log(response);
             // const response = {
@@ -88,7 +89,7 @@ const AddressForm = ({ initialValues, onPrevious, onNext, formValues, cookieToke
         actions.setSubmitting(false);
     };
 
-    const fetchPincodeDetails = async (pincode) => {
+    const fetchPincodeDetails = async (pincode, setFieldError) => {
         setIsLoading(true);
         try {
             const response: any = await RemoteApi.get(
@@ -105,10 +106,10 @@ const AddressForm = ({ initialValues, onPrevious, onNext, formValues, cookieToke
                     pincodeId: response.data.pincodeId,
                 });
 
-                console.log(JSON.stringify(address));
-                console.log(JSON.stringify(response));
+            } else if (response.code === 254) {
+                setFieldError("pincode", "Pincode does not exist.");
             } else {
-                alert("Failed to fetch district list");
+                alert("Failed to fetch pincode details");
             }
         } catch (error) {
             alert("An error occurred while fetching the district list");
@@ -132,6 +133,7 @@ const AddressForm = ({ initialValues, onPrevious, onNext, formValues, cookieToke
                 touched,
                 isValid,
                 isSubmitting,
+                setFieldError
             }) => (
                 <View contentContainerStyle={styles.container}>
                     <View className="py-4">
@@ -267,7 +269,10 @@ const AddressForm = ({ initialValues, onPrevious, onNext, formValues, cookieToke
                                     console.log("postal");
                                     console.log(value);
                                     if (value.length === 6) {
-                                        fetchPincodeDetails(value);
+                                        fetchPincodeDetails(
+                                            value,
+                                            setFieldError
+                                        );
                                     } else {
                                         setAddress({
                                             district: "",
@@ -288,7 +293,12 @@ const AddressForm = ({ initialValues, onPrevious, onNext, formValues, cookieToke
                             )}
                         </View>
                     </View>
-                    {Address.state && Address.district && (
+                    {isLoading && (
+                            <View style={styles.formRow}>
+                                <ActivityIndicator />
+                            </View>
+                        )}
+                    {Address.state && Address.district && !isLoading && (
                         <View style={styles.formRow}>
                             <View style={styles.fieldContainer}>
                                 <Text style={styles.label}>

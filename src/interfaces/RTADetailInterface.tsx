@@ -17,6 +17,10 @@ interface MutualFund {
         id: string;
         name: string;
     };
+    deliveryType: {
+        id: string;
+        name: string;
+    };
     dividendType: {
         id: string;
         name: string;

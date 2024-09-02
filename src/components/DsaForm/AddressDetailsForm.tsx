@@ -25,7 +25,7 @@ const validationSchema = Yup.object().shape({
     state: Yup.string().required("State is required"),
     district: Yup.string().required("District is required"),
     pincode: Yup.string()
-        .matches(/^\d{6}$/, "Pincode must be exactly 6 digits")
+        .matches(/^[0-9]{6}$/, "Please enter a valid Postal Code")
         .required("Pincode is required"),
 });
 
@@ -34,7 +34,12 @@ const AddressDetailsForm = ({ onNext, onPrevious, initialValues }) => {
     const [isLoadingDistrict, setIsLoadingDistrict] = React.useState(false);
     const [stateOptions, setStateOptions] = React.useState([]);
     const [districtOptions, setDistrictOptions] = React.useState([]);
-
+    const [Address, setAddress] = React.useState({
+        state: "",
+        district: "",
+        pincodeId: "",
+    });
+    const [isLoading, setIsLoading] = React.useState(false);
     async function getStateList() {
         setIsLoadingState(true);
         try {
@@ -78,8 +83,34 @@ const AddressDetailsForm = ({ onNext, onPrevious, initialValues }) => {
         }
     }
 
+    const fetchPincodeDetails = async (pincode, setFieldError) => {
+        setIsLoading(true);
+        try {
+            const response: any = await RemoteApi.get(
+                `pincode/details?pincode=${pincode}`
+            );
+
+            if (response.code === 200 ) {
+                const { state, district, pincodeId } = response.data;
+                setAddress({
+                    state: state.name,
+                    district: district.name,
+                    pincodeId: pincodeId,
+                });
+            } else if (response.code === 254) {
+                setFieldError("pincode", "Pincode does not exist.");
+            } else {
+                alert("Failed to fetch pincode details");
+            }
+        } catch (error) {
+            alert("An error occurred while fetching the district list");
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     useEffect(() => {
-        getStateList();
+        // getStateList();
     }, []);
 
     const handleSubmit = async (values) => {
@@ -126,6 +157,7 @@ const AddressDetailsForm = ({ onNext, onPrevious, initialValues }) => {
                 values,
                 errors,
                 touched,
+                setFieldError,
             }) => {
                 useEffect(() => {
                     if (initialValues.state) {
@@ -141,7 +173,10 @@ const AddressDetailsForm = ({ onNext, onPrevious, initialValues }) => {
                     <ScrollView contentContainerStyle={styles.container}>
                         <View style={styles.formRow}>
                             <View style={styles.fieldContainer}>
-                                <Text style={styles.label}>Address line 1</Text>
+                                <Text style={styles.label}>
+                                    Address line 1{" "}
+                                    <Text className="text-red-500">*</Text>
+                                </Text>
                                 <TextInput
                                     style={styles.input}
                                     onChangeText={handleChange("addressLine1")}
@@ -163,7 +198,10 @@ const AddressDetailsForm = ({ onNext, onPrevious, initialValues }) => {
                             </View>
 
                             <View style={styles.fieldContainer}>
-                                <Text style={styles.label}>Address line 2</Text>
+                                <Text style={styles.label}>
+                                    Address line 2{" "}
+                                    <Text className="text-red-500">*</Text>
+                                </Text>
                                 <TextInput
                                     style={styles.input}
                                     onChangeText={handleChange("addressLine2")}
@@ -186,8 +224,9 @@ const AddressDetailsForm = ({ onNext, onPrevious, initialValues }) => {
                         </View>
 
                         <View style={styles.formRow}>
-                            <View style={styles.fieldContainer}>
-                                <Text style={styles.label}>State</Text>
+                            {/* <View style={styles.fieldContainer}>
+                                <Text style={styles.label}>State{" "}
+                                <Text className="text-red-500">*</Text></Text>
                                 {isLoadingState ? (
                                     <ActivityIndicator
                                         size="large"
@@ -219,10 +258,12 @@ const AddressDetailsForm = ({ onNext, onPrevious, initialValues }) => {
                                         Please correct it as per remarks
                                     </Text>
                                 )}
-                            </View>
+                            </View> */}
 
                             <View style={styles.fieldContainer}>
-                                <Text style={styles.label}>City</Text>
+                                <Text style={styles.label}>
+                                    City <Text className="text-red-500">*</Text>
+                                </Text>
                                 <TextInput
                                     style={styles.input}
                                     onChangeText={handleChange("city")}
@@ -241,11 +282,57 @@ const AddressDetailsForm = ({ onNext, onPrevious, initialValues }) => {
                                     </Text>
                                 )}
                             </View>
+                            <View style={styles.fieldContainer}>
+                                <Text style={styles.label}>
+                                    Pincode{" "}
+                                    <Text className="text-red-500">*</Text>
+                                </Text>
+
+                                <TextInput
+                                    style={styles.input}
+                                    // onChangeText={handleChange("postalCode")}
+                                    onChangeText={(value) => {
+                                        handleChange("pincode")(value);
+                                        console.log("pincode");
+                                        console.log(value);
+                                        if (value.length === 6) {
+                                            fetchPincodeDetails(
+                                                value,
+                                                setFieldError
+                                            );
+                                        } else {
+                                            setAddress({
+                                                district: "",
+                                                state: "",
+                                                pincodeId: "",
+                                            });
+                                        }
+                                    }}
+                                    onBlur={handleBlur("pincode")}
+                                    value={values.postalCode}
+                                    keyboardType="numeric" // Restrict input to numeric characters
+                                    maxLength={6}
+                                />
+                                {touched.pincode &&
+                                    typeof errors.pincode === "string" && (
+                                        <Text style={styles.error}>
+                                            {errors.pincode}
+                                        </Text>
+                                    )}
+                                {initialValues.pinCodeError && (
+                                    <Text style={styles.error}>
+                                        Please correct it as per remarks
+                                    </Text>
+                                )}
+                            </View>
                         </View>
 
                         <View style={styles.formRow}>
-                            <View style={styles.fieldContainer}>
-                                <Text style={styles.label}>District</Text>
+                            {/* <View style={styles.fieldContainer}>
+                                <Text style={styles.label}>
+                                    District{" "}
+                                    <Text className="text-red-500">*</Text>
+                                </Text>
                                 {isLoadingDistrict ? (
                                     <ActivityIndicator
                                         size="large"
@@ -270,9 +357,12 @@ const AddressDetailsForm = ({ onNext, onPrevious, initialValues }) => {
                                             {errors.district}
                                         </Text>
                                     )}
-                            </View>
-                            <View style={styles.fieldContainer}>
-                                <Text style={styles.label}>Enter Pincode</Text>
+                            </View> */}
+                            {/* <View style={styles.fieldContainer}>
+                                <Text style={styles.label}>
+                                    Enter Pincode{" "}
+                                    <Text className="text-red-500">*</Text>
+                                </Text>
                                 <TextInput
                                     style={styles.input}
                                     onChangeText={handleChange("pincode")}
@@ -291,8 +381,53 @@ const AddressDetailsForm = ({ onNext, onPrevious, initialValues }) => {
                                         Please correct it as per remarks
                                     </Text>
                                 )}
-                            </View>
+                            </View> */}
                         </View>
+                        {isLoading && (
+                            <View style={styles.formRow}>
+                                <ActivityIndicator />
+                            </View>
+                        )}
+                        {Address.state && Address.district && !isLoading && (
+                            <View style={styles.formRow}>
+                                <View style={styles.fieldContainer}>
+                                    <Text style={styles.label}>
+                                        District{" "}
+                                        <Text style={styles.required}>*</Text>
+                                    </Text>
+                                    <TextInput
+                                        style={[
+                                            styles.input,
+                                            styles.disabledInput,
+                                        ]}
+                                        onChangeText={handleChange("district")}
+                                        // onBlur={handleBlur("city")}
+                                        value={Address.district}
+                                    />
+                                    {/* {touched.city && errors.city && (
+                                <Text style={styles.error}>{errors.city}</Text>
+                            )} */}
+                                </View>
+                                <View style={styles.fieldContainer}>
+                                    <Text style={styles.label}>
+                                        State{" "}
+                                        <Text style={styles.required}>*</Text>
+                                    </Text>
+                                    <TextInput
+                                        style={[
+                                            styles.input,
+                                            styles.disabledInput,
+                                        ]}
+                                        onChangeText={handleChange("state")}
+                                        // onBlur={handleBlur("state")}
+                                        value={Address.state}
+                                    />
+                                    {/* {touched.state && errors.state && (
+                                <Text style={styles.error}>{errors.state}</Text>
+                            )} */}
+                                </View>
+                            </View>
+                        )}
                         <View className="flex flex-row justify-center gap-2">
                             <View className="w-3/12">
                                 <Pressable
@@ -399,6 +534,12 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         fontSize: 16,
+    },
+    disabledInput: {
+        backgroundColor: "#f5f5f5", // Light grey to indicate disabled
+    },
+    required: {
+        color: "red",
     },
 });
 

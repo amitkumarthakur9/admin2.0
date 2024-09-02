@@ -28,7 +28,8 @@ const validationSchema = Yup.object().shape({
     mobileNumber: Yup.string()
         .matches(/^\d{10}$/, "Mobile number must be exactly 10 digits")
         .required("Mobile number is required"),
-    employeeCode: Yup.string()
+        employeeCode: Yup.string()
+        .min(3, "Employee Code must be at least 3 characters long")
         .matches(
             /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]+$/,
             "Employee Code must contain both letters and numbers"

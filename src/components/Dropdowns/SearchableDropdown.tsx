@@ -42,11 +42,16 @@ const SearchableDropdown = ({ endpoint, onSelect }) => {
     };
 
     useEffect(() => {
-        if (searchQuery.length >= 3) {
-            fetchOptions(searchQuery);
-        } else {
-            setOptions([]);
-        }
+        const delayDebounceFn = setTimeout(() => {
+            if (searchQuery.length >= 3) {
+                fetchOptions(searchQuery);
+            } else {
+                setOptions([]);
+            }
+        }, 500); // 0.5 seconds
+
+        // Cleanup function to cancel the timeout if the component is unmounted or if searchQuery changes
+        return () => clearTimeout(delayDebounceFn);
     }, [searchQuery]);
 
     const handleSelectItem = (item) => {

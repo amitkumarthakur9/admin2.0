@@ -64,7 +64,7 @@ const NewDropdownComponent = ({
                 labelField="label"
                 valueField="value"
                 placeholder={label}
-                searchPlaceholder="Search..."
+                searchPlaceholder="Search"
                 //@ts-ignore
                 value={value}
                 onFocus={() => setIsFocus(true)}
@@ -131,11 +131,13 @@ const styles = StyleSheet.create({
     inputSearchStyle: {
         height: 40,
         fontSize: 12,
-        // borderWidth: 0,
+        paddingLeft: 10,
+        // fontWeight: 600,
+        borderWidth: 1,
         // borderWidth: ,
     },
     inputSearchStyleFocus: {
         // borderColor: "blue",
-        // borderWidth: 0,
+        borderWidth: 0,
     },
 });

@@ -103,9 +103,9 @@ const ClientVerify = ({
         return (
             <View style={styles.container}>
                 <View style={styles.content}>
-                    <Pressable style={styles.closeButton} onPress={onClose}>
+                    {/* <Pressable style={styles.closeButton} onPress={onClose}>
                         <Ionicons name="close" size={24} color="black" />
-                    </Pressable>
+                    </Pressable> */}
                     <Text style={styles.verifiedTitle}>
                         Verified Successfully
                     </Text>
@@ -128,9 +128,9 @@ const ClientVerify = ({
     return (
         <View style={styles.container}>
             <View style={styles.content}>
-                <Pressable style={styles.closeButton} onPress={onClose}>
+                {/* <Pressable style={styles.closeButton} onPress={onClose}>
                     <Ionicons name="close" size={24} color="black" />
-                </Pressable>
+                </Pressable> */}
 
                 <Text style={styles.title}>
                     {title}
@@ -178,7 +178,7 @@ const ClientVerify = ({
                                     styles.resendButton,
                                     resendEnabled && resendTimer === 0
                                         ? null
-                                        : styles.disabledButton,
+                                        : styles.resenddisabledButton,
                                 ]}
                                 onPress={handleResendOtp}
                                 disabled={!resendEnabled || resendTimer > 0}
@@ -232,11 +232,11 @@ const styles = StyleSheet.create({
         backgroundColor: "white",
         borderRadius: 10,
         padding: 20,
-        elevation: 3,
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
+        // elevation: 3,
+        // shadowColor: "#000",
+        // shadowOffset: { width: 0, height: 2 },
+        // shadowOpacity: 0.25,
+        // shadowRadius: 3.84,
     },
     closeButton: {
         position: "absolute",
@@ -300,6 +300,9 @@ const styles = StyleSheet.create({
     disabledButton: {
         backgroundColor: "#A0AEC0",
     },
+    resenddisabledButton: {
+        backgroundColor: "",
+    },   
     verifiedTitle: {
         fontSize: 20,
         fontWeight: "bold",

@@ -57,16 +57,18 @@ const ClientOnboard = () => {
 
     const handleNext = (values) => {
         setFormData({ ...formData, ...values });
-        if (values?.addressMismatch && values?.basicDetailSubmitted) {
-            setStep(step + 1);
-        } else if (
-            values?.addressMismatch == false &&
-            values?.basicDetailSubmitted
-        ) {
-            setStep(step + 2);
-        } else {
-            setStep(step + 1);
-        }
+        // if (values?.addressMismatch && values?.basicDetailSubmitted) {
+        //     setStep(step + 1);
+        // } else if (
+        //     values?.addressMismatch == false &&
+        //     values?.basicDetailSubmitted
+        // ) {
+        //     setStep(step + 2);
+        // } else {
+        //     setStep(step + 1);
+        // }
+
+        setStep(step + 1);
     };
 
     const mockVerifyDetails = (data) => {
@@ -217,7 +219,7 @@ const ClientOnboard = () => {
                                         />
                                     </Pressable>
                                 </View>
-                                {(step === 1 || step === 3 || step === 4) && (
+                                {(step === 1 || step === 2 || step === 3) && (
                                     <StepProgressBar
                                         step={step}
                                         stepLabel={[
@@ -226,7 +228,7 @@ const ClientOnboard = () => {
                                             "Additional Info",
                                         ]}
                                     />
-                                )}
+                           )} 
 
                                 <View style={{ flex: 1, width: "100%" }}>
                                     {step === 1 && (

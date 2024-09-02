@@ -295,7 +295,7 @@ const DistributorDashboard = () => {
                                         <View className="flex flex-row rounded  bg-[#eaf3fe] flex-wrap w-[99.5%] gap-1 justify-between pb-2">
                                             <View className="flex flex-col w-[32%]  rounded bg-[#0769D0] h-auto items-between gap-2">
                                                 <Text className="text-[#D2CFCF]">
-                                                    Total Aum
+                                                Total AUM
                                                 </Text>
                                                 <Text className="text-white font-bold text-[36px]">
                                                     {data?.aum?.total

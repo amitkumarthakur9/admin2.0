@@ -178,7 +178,8 @@ const StepThreeUpload = ({ onSuccess, initialValues }) => {
             key={documentKey}
         >
             <View className="flex flex-col justify-center items-start w-full">
-                <FormControl.Label>{label}*</FormControl.Label>
+                <FormControl.Label>{label}{" "}
+                <Text className="text-red-500">*</Text></FormControl.Label>
                 <TouchableOpacity
                     className={`flex flex-row border-[#114EA8] border-[1px] rounded-[5px] px-3 py-2 items-center justify-between w-full 
                         `}
@@ -295,7 +296,8 @@ const StepThreeUpload = ({ onSuccess, initialValues }) => {
                             <View className="flex flex-row justify-center items-start w-full mb-4">
                                 <View className="flex flex-col justify-center items-start w-full">
                                     <FormControl.Label>
-                                        E-signed Agreement*
+                                        E-signed Agreement{" "}
+                                        <Text className="text-red-500">*</Text>
                                     </FormControl.Label>
                                     <TouchableOpacity className="flex flex-row border-[#114EA8] border-[1px] rounded-[5px] px-3 py-2 items-center justify-between w-full">
                                         <View className="flex flex-row justify-start items-center w-full">

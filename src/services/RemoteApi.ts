@@ -83,6 +83,7 @@ class ApiRequest {
         console.log("header")
         console.log(cookieToken)
         headers["Cookie"] = cookieToken;
+        headers["onboardToken"] = cookieToken;
     }
 
 

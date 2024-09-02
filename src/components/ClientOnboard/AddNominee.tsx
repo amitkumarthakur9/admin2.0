@@ -177,12 +177,12 @@ const styles = StyleSheet.create({
         backgroundColor: "white",
         borderRadius: 10,
         padding: 20,
-        position: "relative",
-        elevation: 3, // Add shadow on Android
-        shadowColor: "#000", // Add shadow on iOS
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
+        // position: "relative",
+        // elevation: 3, // Add shadow on Android
+        // shadowColor: "#000", // Add shadow on iOS
+        // shadowOffset: { width: 0, height: 2 },
+        // shadowOpacity: 0.25,
+        // shadowRadius: 3.84,
     },
     closeButton: {
         position: "absolute",

@@ -342,7 +342,9 @@ export default function SIPReportsDetail() {
                                             <DataValue
                                                 key="Registeredby"
                                                 title="Registered by"
-                                                value="Sunil Mehra(Client)"
+                                                value={
+                                                   "NA"
+                                                }
                                             />
                                         </View>
                                         <View className="w-3/12 flex-flex-col gap-4 px-2">
@@ -358,7 +360,7 @@ export default function SIPReportsDetail() {
                                                 title="Registration No.:"
                                                 value={
                                                     data?.sipReferenceNumber ||
-                                                    "345675"
+                                                    "NA"
                                                 }
                                             />
                                             <DataValue
@@ -378,9 +380,12 @@ export default function SIPReportsDetail() {
                                                 )}
                                             />
                                             <DataValue
-                                                key="kycStatus"
+                                                key="orderStatus"
                                                 title="Status"
-                                                value="Active"
+                                                value={
+                                                    data?.orderStatus?.name ||
+                                                    "NA"
+                                                }
                                             />
                                         </View>
                                     </View>
@@ -578,7 +583,7 @@ const TransactionList = ({ data }: { data: SIPReportDetail }) => {
             },
             {
                 key: "units",
-                content: <DataText value={item?.units || "01"} />,
+                content: <DataText value={item?.units || "NA"} />,
             },
             {
                 key: "paymentDate",
@@ -591,7 +596,7 @@ const TransactionList = ({ data }: { data: SIPReportDetail }) => {
                         value={
                             item?.nav
                                 ? RupeeSymbol + item?.nav
-                                : `${RupeeSymbol + "-"}`
+                                : `${"NA"}`
                         }
                     />
                 ),

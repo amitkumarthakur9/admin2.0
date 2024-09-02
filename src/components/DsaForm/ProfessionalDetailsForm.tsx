@@ -165,7 +165,10 @@ const ProfessionalDetailsForm = ({
                 <ScrollView contentContainerStyle={styles.container}>
                     <View style={styles.formRow}>
                         <View style={styles.fieldContainer}>
-                            <Text style={styles.label}>Enter PAN</Text>
+                            <Text style={styles.label}>
+                                Enter PAN{" "}
+                                <Text className="text-red-500">*</Text>
+                            </Text>
                             <TextInput
                                 style={styles.input}
                                 onChangeText={handleChange("panNumber")}
@@ -187,7 +190,10 @@ const ProfessionalDetailsForm = ({
                         </View>
 
                         <View style={styles.fieldContainer}>
-                            <Text style={styles.label}>Income Range</Text>
+                            <Text style={styles.label}>
+                                Income Range{" "}
+                                <Text className="text-red-500">*</Text>
+                            </Text>
                             <DropdownComponent
                                 label="Income Range"
                                 data={incomeRangeOptions}
@@ -211,28 +217,34 @@ const ProfessionalDetailsForm = ({
 
                     <View style={styles.formRow}>
                         <View style={styles.fieldContainer}>
-                            <Text style={styles.label}>Enter Education</Text>
+                            <Text style={styles.label}>
+                                Enter Education{" "}
+                                <Text className="text-red-500">*</Text>
+                            </Text>
                             <DropdownComponent
                                 label="Education"
                                 data={educationOptions}
                                 value={values.education}
+                                // setValue={handleChange("incomeRange")}
+                                containerStyle={styles.dropdown}
+                                noIcon={true}
                                 setValue={(value) =>
                                     setFieldValue("education", value)
                                 }
-                                containerStyle={styles.dropdown}
-                                noIcon={true}
                             />
                             {touched.education &&
                                 errors.education &&
-                                typeof errors.education === "number" && (
+                                typeof errors.education === "string" && (
                                     <Text style={styles.error}>
                                         {errors.education}
                                     </Text>
                                 )}
                         </View>
-
                         <View style={styles.fieldContainer}>
-                            <Text style={styles.label}>Enter Occupation</Text>
+                            <Text style={styles.label}>
+                                Enter Occupation{" "}
+                                <Text className="text-red-500">*</Text>
+                            </Text>
                             <DropdownComponent
                                 label="Occupation"
                                 data={occupationOptions}

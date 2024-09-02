@@ -179,7 +179,7 @@ const Professional = ({ onNext, initialValues, onPrevious }) => {
 
                         <View style={styles.formRow}>
                             <View style={styles.fieldContainer}>
-                                <Text style={styles.label}>Assign Role{" "}
+                                <Text style={styles.label}>Assign Relationship Manager{" "}
                                 <Text className="text-red-500">*</Text></Text>
                                 <DropdownComponent
                                     label="select role"

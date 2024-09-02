@@ -307,7 +307,7 @@ const Additonalinfo = ({ onNext, onPrevious, initialValues }) => {
                             ]}
                             onPress={() => onNext()}
                         >
-                            <Text style={styles.buttonText}>
+                            <Text style={styles.confirmButtonText}>
                                 Save and Continue
                             </Text>
                         </Pressable>
@@ -384,6 +384,10 @@ const styles = StyleSheet.create({
     buttonText: {
         fontSize: 16,
         color: "#0066cc",
+    },
+    confirmButtonText: {
+        fontSize: 16,
+        color: "#fff",
     },
 });
 

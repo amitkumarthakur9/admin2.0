@@ -17,10 +17,14 @@ import RemoteApi from "src/services/RemoteApi";
 import AddressForm from "./AddressForm";
 
 const panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]$/;
+const today = new Date();
 
 const validationSchema = Yup.object().shape({
     fullName: Yup.string().required("Full Name is required"),
-    dateOfBirth: Yup.string().required("Date of Birth is required"),
+    dateOfBirth: Yup.date()
+        .max(today, "Date of birth cannot be in the future")
+        .required("Date of birth is required"),
+   
     email: Yup.string().email("Invalid email").required("Email is required"),
     gender: Yup.number()
         .typeError("Gender is required")

@@ -2189,7 +2189,7 @@ const AccountDetailsCard = ({ data }: { data: ClientDetailedDataResponse }) => {
                 </View>
             ),
             content: (
-                <View className="w-full p-4">
+                <ScrollView className="w-full p-4 h-[350px]">
                     <DataValue
                         key="branchName"
                         title="Branch Name"
@@ -2287,7 +2287,7 @@ const AccountDetailsCard = ({ data }: { data: ClientDetailedDataResponse }) => {
                             );
                         })}
                     </View>
-                </View>
+                </ScrollView>
             ),
         };
     });

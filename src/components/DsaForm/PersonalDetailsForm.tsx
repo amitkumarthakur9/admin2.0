@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React, { useState } from "react";
 import {
     View,
     Text,
@@ -16,10 +16,16 @@ import { Checkbox } from "react-native-paper";
 import DropdownComponent from "../../components/Dropdowns/NewDropDown";
 import RemoteApi from "src/services/RemoteApi";
 import { MaterialIcons } from "@expo/vector-icons"; // Make sure to install expo/vector-icons
+const emailRegexRFC5322 =
+    /^(?:[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-zA-Z0-9-]*[a-zA-Z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)])$/;
 
 const validationSchema = Yup.object().shape({
-    fullName: Yup.string().required("Full Name is required"),
-    email: Yup.string().email("Invalid email").required("Email is required"),
+    fullName: Yup.string()
+        .matches(/^[A-Za-z\s]+$/, "Full Name should contain only alphabets")
+        .required("Full Name is required"),
+    email: Yup.string()
+        .matches(emailRegexRFC5322, "Invalid email address")
+        .required("Email is required"),
     mobileNumber: Yup.string()
         .matches(/^\d{10}$/, "Mobile number must be exactly 10 digits")
         .required("Mobile number is required"),
@@ -52,10 +58,10 @@ const validationSchema = Yup.object().shape({
 const PersonalDetailsForm = ({ onNext, initialValues, onPrevious }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [maritalStatusOptions, setMaritalStatusOptions] = useState([]);
-    const [isVerified, setIsVerified] =useState({
+    const [isVerified, setIsVerified] = useState({
         ArnNumber: "",
         euin: "",
-    })
+    });
 
     async function getMaritalStatus() {
         setIsLoading(true);
@@ -112,8 +118,7 @@ const PersonalDetailsForm = ({ onNext, initialValues, onPrevious }) => {
             );
             if (response.code === 200) {
                 onNext(values);
-            } else if(response.code === 254) {
-
+            } else if (response.code === 254) {
                 // if(response.message == "Wrong EUIN Number provided for the given ARN Number."){
                 //     setIsVerified({ ...isVerified, euin: response.message });
                 // }
@@ -135,7 +140,6 @@ const PersonalDetailsForm = ({ onNext, initialValues, onPrevious }) => {
                     newErrors.arnNumber = response.message;
                 }
                 setErrors(newErrors);
-                   
             }
         } catch (error) {
             Alert.alert(
@@ -181,7 +185,8 @@ const PersonalDetailsForm = ({ onNext, initialValues, onPrevious }) => {
                             <View style={styles.fieldContainer}>
                                 <View style={styles.fieldContainer}>
                                     <Text style={styles.label}>
-                                        Enter your full name as per AMFI
+                                        Enter your full name as per AMFI{" "}
+                                        <Text className="text-red-500">*</Text>
                                     </Text>
                                     <TextInput
                                         style={styles.input}
@@ -211,7 +216,8 @@ const PersonalDetailsForm = ({ onNext, initialValues, onPrevious }) => {
                             <View style={styles.fieldContainer}>
                                 <View style={styles.fieldContainer}>
                                     <Text style={styles.label}>
-                                        Enter your Email
+                                        Enter your Email{" "}
+                                        <Text className="text-red-500">*</Text>
                                     </Text>
                                     <TextInput
                                         style={styles.input}
@@ -244,7 +250,8 @@ const PersonalDetailsForm = ({ onNext, initialValues, onPrevious }) => {
                             <View style={styles.fieldContainer}>
                                 <View style={styles.fieldContainer}>
                                     <Text style={styles.label}>
-                                        Enter your Mobile number
+                                        Enter your Mobile number{" "}
+                                        <Text className="text-red-500">*</Text>
                                     </Text>
                                     <TextInput
                                         style={styles.input}
@@ -275,24 +282,25 @@ const PersonalDetailsForm = ({ onNext, initialValues, onPrevious }) => {
                                     </View>
                                 </View>
                             </View>
-
                             <View style={styles.fieldContainer}>
                                 <Text style={styles.label}>
-                                    Enter Marital Status
+                                    Enter Marital Status{" "}
+                                    <Text className="text-red-500">*</Text>
                                 </Text>
                                 <DropdownComponent
                                     label="Marital Status"
                                     data={maritalStatusOptions}
                                     value={values.maritalStatus}
+                                    // setValue={handleChange("incomeRange")}
+                                    noIcon={true}
                                     setValue={(value) =>
                                         setFieldValue("maritalStatus", value)
                                     }
-                                    noIcon={true}
                                 />
                                 {touched.maritalStatus &&
                                     errors.maritalStatus &&
                                     typeof errors.maritalStatus ===
-                                        "number" && (
+                                        "string" && (
                                         <Text style={styles.error}>
                                             {errors.maritalStatus}
                                         </Text>
@@ -330,7 +338,8 @@ const PersonalDetailsForm = ({ onNext, initialValues, onPrevious }) => {
                             <View style={styles.formRow}>
                                 <View style={styles.fieldContainer}>
                                     <Text style={styles.label}>
-                                        Enter your ARN number
+                                        Enter your ARN number{" "}
+                                        <Text className="text-red-500">*</Text>
                                     </Text>
                                     <View className="flex flex-row items-center justify-center">
                                         <View className="p-[10px] bg-gray-100 border-gray-300 border-l border-t border-b rounded-l">
@@ -374,7 +383,8 @@ const PersonalDetailsForm = ({ onNext, initialValues, onPrevious }) => {
                                 </View>
                                 <View style={styles.fieldContainer}>
                                     <Text style={styles.label}>
-                                        Enter your EUIN number
+                                        Enter your EUIN number{" "}
+                                        <Text className="text-red-500">*</Text>
                                     </Text>
 
                                     <TextInput

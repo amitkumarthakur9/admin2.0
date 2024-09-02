@@ -55,9 +55,9 @@ const MutualLumpsumTab = () => {
     const [totalPages, setTotalPages] = useState(1);
     const [appliedFilers, setAppliedFilers] = useState([
         {
-            key: "createdAt",
-            operator: "between",
-            value: ["2024-01-01", "2024-12-31"],
+            key: "",
+            operator: "",
+            value: [""],
         },
     ]);
     const [filtersSchema, setFiltersSchema] = useState([]);
@@ -109,16 +109,26 @@ const MutualLumpsumTab = () => {
             alert(error);
         }
     }
+    async function getSchema() {
+        const response: any = await RemoteApi.get(
+            "mutualfund-analytics/transaction/schema"
+        );
+        setFiltersSchema(response);
+        // setSorting(response.sort);
+    }
 
     React.useEffect(() => {
-        async function getSchema() {
-            const response: any = await RemoteApi.get(
-                "mutualfund-analytics/transaction/schema"
-            );
-            setFiltersSchema(response);
-            // setSorting(response.sort);
-        }
         getSchema();
+        getDataList(
+            [
+                {
+                    key: "createdAt",
+                    operator: "between",
+                    value: ["2024-01-01", "2024-12-31"],
+                },
+            ],
+            true
+        );
     }, []);
 
     // React.useEffect(() => {
@@ -153,10 +163,20 @@ const MutualLumpsumTab = () => {
 
                     {!isLoading ? (
                         <View className={"mt-4 z-[-1] min-h-[500]"}>
-                            <MutualLumpsumAccordion
-                                data={data}
-                                appliedFilers={appliedFilers}
-                            />
+                            {data.length == 0 ? (
+                                <>
+                                    <NoDataAvailable
+                                        message="Select date from filter to get
+                                            required data."
+                                        height="200px"
+                                    />
+                                </>
+                            ) : (
+                                <MutualLumpsumAccordion
+                                    data={data}
+                                    appliedFilers={appliedFilers}
+                                />
+                            )}
                         </View>
                     ) : (
                         // )
