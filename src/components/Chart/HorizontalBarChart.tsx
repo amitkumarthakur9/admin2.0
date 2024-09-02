@@ -29,11 +29,14 @@ const HorizontalStackedBarChart = ({ data, colors }) => {
                             backgroundColor: colors[index % colors.length],
                         }}
                     >
-                        {hoveredIndex === index && (
+                        {/* {hoveredIndex === index && (
                             <Text className="text-white" selectable>
                                 {item.value}
                             </Text>
-                        )}
+                        )} */}
+                         <Text className="text-white" selectable>
+                                {item.value}
+                            </Text>
                     </Pressable>
                 ))}
             </View>

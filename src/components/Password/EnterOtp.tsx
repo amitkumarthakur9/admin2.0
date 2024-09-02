@@ -16,7 +16,7 @@ import { ToastAlert } from "../../../src/helper/CustomToaster";
 import { v4 as uuidv4 } from "uuid";
 
 const EnterOtp = ({ emailId, token }) => {
-    const [countdown, setCountdown] = useState(0);
+    const [countdown, setCountdown] = useState(120);
     const [formData, setFormData] = useState({
         otp: "",
         email: emailId,

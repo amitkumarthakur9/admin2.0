@@ -227,6 +227,7 @@ const ContactDataTable = ({ children }) => {
 
         return selectedContacts.some((c) => c.id === contact.id);
     };
+    const [allInvited, setAllInvited] = useState(false);
 
     const handleMouseEnter = () => {
         setIsHovered(true);
@@ -283,6 +284,7 @@ const ContactDataTable = ({ children }) => {
             // setData(dummyData.contacts);
 
             setFilteredContacts(response.data.data);
+            setAllInvited(response.data.data.every(contact => contact.status.name === "Invited"));
             // setFilteredContacts(dummyData.contacts);
             // console.log(filteredContacts);
             setTotalItems(response?.data?.filterCount);
@@ -296,6 +298,7 @@ const ContactDataTable = ({ children }) => {
         } else {
             setIsLoading(false);
             setFilteredContacts(dummyData.contacts);
+            setAllInvited(response.data.data.every(contact => contact.status.name === "Invited"));
         }
     }
 
@@ -356,6 +359,7 @@ const ContactDataTable = ({ children }) => {
                 showDialog("invite");
                 getDataList();
                 setSelectedContacts([]);
+                setSelectAll(false);
             } else {
                 alert("Server Error" + ": " + response?.message);
             }
@@ -418,6 +422,8 @@ const ContactDataTable = ({ children }) => {
                                                                 onPress={
                                                                     toggleSelectAll
                                                                 }
+                                                                disabled={allInvited}
+                                                                
                                                             >
                                                                 <Text className="font-semibold text-md">
                                                                     {selectAll ? (
@@ -462,7 +468,7 @@ const ContactDataTable = ({ children }) => {
                                                                                     <View className="flex flex-row justify-center">
                                                                                         <View
                                                                                             style={{
-                                                                                                backgroundColor:
+                                                                                                backgroundColor: allInvited ? "#CCCCCC" :
                                                                                                     "transparent",
                                                                                                 padding: 8,
                                                                                                 borderRadius: 4,

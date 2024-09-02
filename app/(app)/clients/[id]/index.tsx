@@ -464,6 +464,7 @@ const PortfolioCard = ({
     const [selectedTab, setSelectedTab] = useState(1);
     const [typeHolding, setTypeHolding] = useState("internal");
     const [holdings, setHoldings] = useState<Holding[]>([]);
+    const [assetBifurcation, setassetBifurcation] = useState([]);
 
     const handleTabPress = (tab) => {
         setSelectedTab(tab);
@@ -474,14 +475,17 @@ const PortfolioCard = ({
     useEffect(() => {
         if (typeHolding === "internal") {
             setHoldings(data?.holdings.filter((el) => !el.isExternal));
+            setassetBifurcation(generateAssetBifurcation(data?.holdings.filter((el) => !el.isExternal)));
         } else if (typeHolding === "external") {
             setHoldings(data?.holdings.filter((el) => el.isExternal));
+            setassetBifurcation(generateAssetBifurcation(data?.holdings.filter((el) => el.isExternal)));
         } else {
             setHoldings(data?.holdings);
+            setassetBifurcation(generateAssetBifurcation(data?.holdings));
         }
     }, [typeHolding]);
 
-    const assetBifurcation = generateAssetBifurcation(data?.holdings);
+    // const assetBifurcation = generateAssetBifurcation(data?.holdings);
 
     const assetBifurcationColors = ["#715CFA", "#69E1AB", "#39C3E2", "#FA8B5C"];
 
@@ -515,27 +519,30 @@ const PortfolioCard = ({
                             />
                         </View>
                         <View>
-                            {(typeHolding !== "internal" && holdings.length > 0 ) && (
-                                <Button
-                                    borderColor={
-                                        isDistributor ? "#013974" : "#ddd"
-                                    }
-                                    bgColor={"#fff"}
-                                    _text={{
-                                        color: isDistributor
-                                            ? "#013974"
-                                            : "#ddd",
-                                    }}
-                                    variant="outline"
-                                    style={{ width: 198, height: 39 }}
-                                    onPress={() =>
-                                        router.push(`arn-transfer/${data?.id}`)
-                                    }
-                                    disabled={!isDistributor}
-                                >
-                                    Transfer Portfolio
-                                </Button>
-                            )}
+                            {typeHolding !== "internal" &&
+                                holdings.length > 0 && (
+                                    <Button
+                                        borderColor={
+                                            isDistributor ? "#013974" : "#ddd"
+                                        }
+                                        bgColor={"#fff"}
+                                        _text={{
+                                            color: isDistributor
+                                                ? "#013974"
+                                                : "#ddd",
+                                        }}
+                                        variant="outline"
+                                        style={{ width: 198, height: 39 }}
+                                        onPress={() =>
+                                            router.push(
+                                                `arn-transfer/${data?.id}`
+                                            )
+                                        }
+                                        disabled={!isDistributor}
+                                    >
+                                        Transfer Portfolio
+                                    </Button>
+                                )}
                         </View>
                     </View>
                     <View className="h-96 overflow-scroll">
@@ -587,7 +594,22 @@ const PortfolioCard = ({
                                 <DataGrid
                                     key="xirr"
                                     title="XIRR"
-                                    value={<Text className="">00.00 %</Text>}
+                                    value={
+                                        <Text className="">
+                                            {holdings
+                                                ?.reduce(
+                                                    (
+                                                        accumulator,
+                                                        currentValue
+                                                    ) =>
+                                                        accumulator +
+                                                        currentValue.xirr,
+                                                    0
+                                                )
+                                                .toFixed(2)}{" "}
+                                            %
+                                        </Text>
+                                    }
                                     reverse
                                 />
                                 <DataGrid
@@ -595,7 +617,27 @@ const PortfolioCard = ({
                                     title="Total Returns"
                                     value={
                                         <Text className="text-green-700">
-                                            00.00 %
+                                            {RupeeSymbol}{" "}
+                                            {(
+                                                holdings?.reduce(
+                                                    (
+                                                        accumulator,
+                                                        currentValue
+                                                    ) =>
+                                                        accumulator +
+                                                        currentValue.currentValue,
+                                                    0
+                                                ) -
+                                                holdings?.reduce(
+                                                    (
+                                                        accumulator,
+                                                        currentValue
+                                                    ) =>
+                                                        accumulator +
+                                                        currentValue.investedValue,
+                                                    0
+                                                )
+                                            ).toFixed(2)}
                                         </Text>
                                     }
                                     reverse
@@ -900,14 +942,15 @@ const PortfolioCard = ({
                                                 className="text-xs text-gray-500"
                                             >
                                                 {transaction?.paymentDate
-                                                    ? 
-                                                    dateTimeFormat(transaction?.paymentDate)
-                                                    // DateTime.fromISO(
-                                                    //       transaction?.paymentDate
-                                                    //   ).toFormat(
-                                                    //       "dd LLL yyyy, t"
-                                                    //   )
-                                                    : "NA"}
+                                                    ? dateTimeFormat(
+                                                          transaction?.paymentDate
+                                                      )
+                                                    : // DateTime.fromISO(
+                                                      //       transaction?.paymentDate
+                                                      //   ).toFormat(
+                                                      //       "dd LLL yyyy, t"
+                                                      //   )
+                                                      "NA"}
                                             </Text>
                                         </View>
                                     ),
@@ -1229,7 +1272,12 @@ const LumpSumOrderTab = ({
                     placeholderTextColor={"rgb(156, 163, 175)"}
                     cursorColor={"transparent"}
                     value={investmentAmount}
-                    onChangeText={setInvestmentAmount}
+                    onChangeText={(text) => {
+                        // Only allow numeric values
+                        const numericValue = text.replace(/[^0-9]/g, "");
+                        setInvestmentAmount(numericValue);
+                    }}
+                    keyboardType="numeric"
                 />
             </View>
             <Button
@@ -1408,7 +1456,12 @@ const SipOrderTab = ({
                     placeholderTextColor={"rgb(156, 163, 175)"}
                     cursorColor={"transparent"}
                     value={investmentAmount}
-                    onChangeText={setInvestmentAmount}
+                    onChangeText={(text) => {
+                        // Only allow numeric values
+                        const numericValue = text.replace(/[^0-9]/g, "");
+                        setInvestmentAmount(numericValue);
+                    }}
+                    keyboardType="numeric"
                 />
                 <Text className="w-full flex flex-row items-start justify-start text-xs text-gray-500">
                     In multiples of {RupeeSymbol}1000
@@ -2387,12 +2440,11 @@ const AccountDetailsCard = ({ data }: { data: ClientDetailedDataResponse }) => {
                                         className="text-sm text-slate-500"
                                     >
                                         {nominee?.dob
-                                            ? 
-                                            dateFormat(nominee?.dob)
-                                            // DateTime.fromISO(
-                                            //       nominee?.dob
-                                            //   ).toFormat("LLL dd, yyyy")
-                                            : "NA"}
+                                            ? dateFormat(nominee?.dob)
+                                            : // DateTime.fromISO(
+                                              //       nominee?.dob
+                                              //   ).toFormat("LLL dd, yyyy")
+                                              "NA"}
                                     </Text>
                                     <Text selectable className="font-medium">
                                         {nominee?.nomineePercentage + "%"}
@@ -2593,7 +2645,7 @@ const TopAMCCard = () => {
 
 const generateAssetBifurcation = (holdings: Holding[]) => {
     const getTotalCount = (arr: Holding[]) =>
-        arr.reduce((total, { currentValue }) => total + currentValue, 0);
+        arr.reduce((total, { currentValue }) => total + currentValue, 1);
     const calculatePercentage = (count, total) =>
         ((count / total) * 100).toFixed(2);
 
@@ -2674,8 +2726,10 @@ const ExternalPortfolioModalCard = ({
     useEffect(() => {
         const sendRequest = async () => {
             try {
-                const response: ArnImport = await RemoteApi.get(`client/${clientInfo.id}/request-import-folio`);
-                
+                const response: ArnImport = await RemoteApi.get(
+                    `client/${clientInfo.id}/request-import-folio`
+                );
+
                 const refreshDate = checkDate(clientInfo.lastDate);
 
                 if (response.message === "Success") {
@@ -3009,7 +3063,15 @@ const SwitchModalAction = ({
                                     cursorColor={"transparent"}
                                     style={{ outline: "none" }}
                                     value={switchValue}
-                                    onChangeText={setSwitchValue}
+                                    onChangeText={(text) => {
+                                        // Only allow numeric values
+                                        const numericValue = text.replace(
+                                            /[^0-9]/g,
+                                            ""
+                                        );
+                                        setSwitchValue(numericValue);
+                                    }}
+                                    keyboardType="numeric"
                                 />
                             </View>
                             <View className="w-full flex flex-row">

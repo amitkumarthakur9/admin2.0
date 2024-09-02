@@ -1,194 +1,96 @@
-import React, { useEffect, useState } from "react";
-import { TextInput, View } from "react-native";
+import React from "react";
+import { View, Modal, Pressable } from "react-native";
 import {
     Button,
-    Center,
-    CheckCircleIcon,
     FormControl,
-    HStack,
-    Heading,
-    Image,
     Input,
-    Menu,
-    Pressable,
-    ScrollView,
-    Spinner,
     Text,
-    WarningIcon,
-    WarningOutlineIcon,
     useToast,
 } from "native-base";
 import Icon from "react-native-vector-icons/FontAwesome";
-import { Dialog, Portal } from "react-native-paper";
-import RemoteApi from "../../../src/services/RemoteApi";
+import { Formik } from "formik";
+import * as Yup from "yup";
 import { ToastAlert } from "../../../src/helper/CustomToaster";
-import UploadCsv from "./UploadCSV";
-import GoogleSignInButton from "./GoogleSignInButton";
+import RemoteApi from "../../../src/services/RemoteApi";
 
-export default function ManualInvite({ getlist = () => {} , children}) {
-    const [modalVisible, setModalVisible] = useState(false);
+const emailRegexRFC5322 = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+const validationSchema = Yup.object().shape({
+    fullName: Yup.string()
+        .matches(/^[A-Za-z\s]+$/, "Full Name should contain only alphabets")
+        .required("Full Name is required"),
+    email: Yup.string()
+        .matches(emailRegexRFC5322, "Invalid email address")
+        .required("Email is required"),
+    mobileNumber: Yup.string()
+        .matches(/^\d{10}$/, "Mobile number must be exactly 10 digits")
+        .required("Mobile number is required"),
+});
+
+export default function ManualInvite({ getlist = () => {}, children }) {
+    const [modalVisible, setModalVisible] = React.useState(false);
+    const toast = useToast();
+
     const showDialog = () => setModalVisible(true);
     const hideDialog = () => setModalVisible(false);
-    const [formData, setFormData] = useState({
-        name: "",
-        email: "",
-        phone: "",
-    });
-    const toast = useToast();
-    const [errors, setErrors] = useState({
-        name: null,
-        email: null,
-        phone: null,
-    });
-    const newErrors = {
-        name: null,
-        email: null,
-        phone: null,
-    }; // Initialize empty error object
-    const [isSubmitted, setIsSubmitted] = useState(false);
 
-    const validate = () => {
-        // Name validation
-        if (!formData.name) {
-            newErrors.name = "Name is required";
-        } else {
-            newErrors.name = null; // Clear error message if validation passes
-        }
+    const handleSubmit = async (values, { resetForm }) => {
+        const data = {
+            contacts: [
+                {
+                    name: values.fullName,
+                    email: values.email,
+                    mobileNumber: values.mobileNumber,
+                    sourceId: 1,
+                },
+            ],
+        };
 
-        // phone number validation
-        const phoneRegex = /^\d{10}$/;
-        if (!phoneRegex.test(formData.phone)) {
-            newErrors.phone = !formData.phone
-                ? "phone number is required"
-                : "Please enter a valid 10-digit phone number";
-        } else {
-            newErrors.phone = null; // Clear error message if validation passes
-        }
+        try {
+            const response = await RemoteApi.post("invite/client/save", data);
 
-        // Email validation
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(formData.email)) {
-            newErrors.email =  "Please enter a valid email address";
-        } else {
-            newErrors.email = null; // Clear error message if validation passes
-        }
-
-        // Update the error state
-        setErrors(newErrors);
-
-        // Return validation result
-        return Object.values(newErrors).every((error) => error === null); // Return true if there are no errors
-    };
-
-    const handleSubmit = async () => {
-        console.log("manualcontactformData");
-
-        console.log(formData);
-
-        setIsSubmitted(true);
-
-        const isValid = validate();
-
-        if (isValid) {
-            const data = {
-                contacts: [
-                    {
-                        name: formData.name,
-                        email: formData.email,
-                        mobileNumber: formData.phone,
-                        sourceId: 1,
-                    },
-                ],
-            };
-
-            try {
-                console.log("ManualContact");
-                console.log(data);
-                // throw new Error('This is an explicitly thrown error');
-                const response: any = await RemoteApi.post(
-                    "invite/client/save",
-                    data
-                );
-
-                // const response = {
-                //     message: "success",
-                //     error: "blunder"
-                // }
-
-                if (response?.message == "Success") {
-                    hideDialog();
-
-                    toast.show({
-                        render: () => (
-                            <ToastAlert
-                                id={123} // Unique identifier for the toast
-                                status="success" // Toast status (success, error, warning, info)
-                                variant="solid" // Toast variant (solid, subtle, left-accent, top-accent)
-                                title="Success" // Toast title
-                                description="Contact added succesfully" // Toast description
-                                isClosable={false} // Whether the toast is closable
-                                toast={toast} // Pass the toast function to close the toast
-                            />
-                        ),
-                        duration: 1000,
-                    });
-
-                    setFormData({
-                        name: "",
-                        email: "",
-                        phone: "",
-                    });
-
-                    getlist();
-                } else {
-                }
-            } catch (error) {
+            if (response?.message == "Success") {
                 hideDialog();
-                console.log(error);
+
                 toast.show({
                     render: () => (
                         <ToastAlert
-                            id={123} // Unique identifier for the toast
-                            status="error" // Toast status (success, error, warning, info)
-                            variant="solid" // Toast variant (solid, subtle, left-accent, top-accent)
-                            title={error} // Toast title
-                            description={error} // Toast description
-                            isClosable={false} // Whether the toast is closable
-                            toast={toast} // Pass the toast function to close the toast
+                            id={123}
+                            status="success"
+                            variant="solid"
+                            title="Success"
+                            description="Contact added successfully"
+                            isClosable={false}
+                            toast={toast}
                         />
                     ),
-                    duration: 1500,
+                    duration: 1000,
                 });
+
+                resetForm();
+                getlist();
             }
-        } else {
-            // toast.show({
-            //     render: () => (
-            //       <ToastAlert
-            //         id={123} // Unique identifier for the toast
-            //         status="Warning" // Toast status (success, error, warning, info)
-            //         variant="solid" // Toast variant (solid, subtle, left-accent, top-accent)
-            //         title="Validation error" // Toast title
-            //         description="Validation error" // Toast description
-            //         isClosable = {false} // Whether the toast is closable
-            //         toast={toast} // Pass the toast function to close the toast
-            //       />
-            //     ),
-            //     duration: 1500
-            //   });
+        } catch (error) {
+            hideDialog();
+            toast.show({
+                render: () => (
+                    <ToastAlert
+                        id={123}
+                        status="error"
+                        variant="solid"
+                        title="Error"
+                        description={error.message || "An error occurred"}
+                        isClosable={false}
+                        toast={toast}
+                    />
+                ),
+                duration: 1500,
+            });
         }
     };
 
-    const handleChange = (key, value) => {
-        setFormData((prevData) => ({
-            ...prevData,
-            [key]: value,
-        }));
-    };
-
     return (
-        <View
-        // style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-        >
+        <View>
             <View className="flex flex-row lg:mt-0">
                 <Pressable
                     onPress={showDialog}
@@ -197,177 +99,202 @@ export default function ManualInvite({ getlist = () => {} , children}) {
                     }
                     aria-require="addNewClient"
                 >
-                    {/* <Icon name="plus" size={14} color="#484848" /> */}
-
-                    {<Text className="mx-2">Add Contact</Text>}
+                    <Text className="mx-2">Add Contact</Text>
                 </Pressable>
-                <Portal>
-                    <Dialog
-                        visible={modalVisible}
-                        onDismiss={hideDialog}
-                        dismissable
-                        style={{
-                            display: "flex",
-                            justifyContent: "flex-start",
-                            alignSelf: "center",
-                            height: "80%",
-                            overflow: "scroll",
-                            backgroundColor: "white",
-                            minWidth: 320,
-                            maxWidth: 600,
-                        }}
-                    >
-                        <View className="p-4">
-                            <View className="flex flex-row justify-between md:w-[500px]">
-                                <Text className="text-lg pl-4 font-bold">
-                                    Add Contacts
-                                </Text>
+                <Modal
+                    visible={modalVisible}
+                    transparent={true}
+                    animationType="slide"
+                    onRequestClose={hideDialog}
+                >
+                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.5)' }}>
+                        <View style={{ backgroundColor: 'white', padding: 20, borderRadius: 10, minWidth: 400, maxWidth: 600 }}>
+                            <Formik
+                                initialValues={{
+                                    fullName: "",
+                                    email: "",
+                                    mobileNumber: "",
+                                }}
+                                validationSchema={validationSchema}
+                                onSubmit={handleSubmit}
+                            >
+                                {({
+                                    handleChange,
+                                    handleBlur,
+                                    handleSubmit,
+                                    values,
+                                    errors,
+                                    touched,
+                                    isValid,
+                                }) => (
+                                    <View>
+                                        <View className="flex flex-row justify-between">
+                                            <Text className="text-lg font-bold">
+                                                Add Contacts
+                                            </Text>
 
-                                <Pressable
-                                    onPress={hideDialog}
-                                    className={
-                                        "flex flex-row justify-center items-center border-[1px] rounded px-4 h-[42px] border-slate-200"
-                                    }
-                                    aria-describedby="addNewClient"
-                                >
-                                    <Icon
-                                        name="close"
-                                        size={14}
-                                        color="#484848"
-                                    />
-                                </Pressable>
-                            </View>
-                            {children}
-                            {/* <GoogleSignInButton /> */}
-                            
+                                            <Pressable
+                                                onPress={hideDialog}
+                                                className={
+                                                    "flex flex-row justify-center items-center border-[1px] rounded px-4 h-[42px] border-slate-200"
+                                                }
+                                                aria-describedby="addNewClient"
+                                            >
+                                                <Icon
+                                                    name="close"
+                                                    size={14}
+                                                    color="#484848"
+                                                />
+                                            </Pressable>
+                                        </View>
+                                        {children}
+                                        <View className="bg-white mt-4">
+                                            <View className="w-full flex items-center">
+                                                <View
+                                                    className={
+                                                        "mt-4 w-full flex items-center"
+                                                    }
+                                                >
+                                                    <Text
+                                                        selectable
+                                                        className={
+                                                            "text-base md:text-lg font-bold"
+                                                        }
+                                                    >
+                                                        {"Add contact manually"}
+                                                    </Text>
+                                                    <View className="flex flex-col items-center gap-4 mt-4 w-11/12">
+                                                        <FormControl
+                                                            isRequired
+                                                            isInvalid={
+                                                                touched.fullName &&
+                                                                errors.fullName
+                                                            }
+                                                            w="100%"
+                                                            maxW="300px"
+                                                        >
+                                                            <FormControl.Label>
+                                                                Name
+                                                            </FormControl.Label>
+                                                            <Input
+                                                                size="lg"
+                                                                variant="outline"
+                                                                placeholder="Name"
+                                                                onChangeText={handleChange(
+                                                                    "fullName"
+                                                                )}
+                                                                onBlur={handleBlur(
+                                                                    "fullName"
+                                                                )}
+                                                                value={
+                                                                    values.fullName
+                                                                }
+                                                            />
+                                                            {touched.fullName &&
+                                                            errors.fullName ? (
+                                                                <FormControl.ErrorMessage>
+                                                                    {
+                                                                        errors.fullName
+                                                                    }
+                                                                </FormControl.ErrorMessage>
+                                                            ) : null}
+                                                        </FormControl>
 
-                            <View className="bg-white">
-                                <View className="w-full flex items-center">
-                                    <View
-                                        className={
-                                            "mt-4 z-[-1] w-[99%] flex items-center border-[#c8c8c8] border-[0.2px] rounded-[5px] shadow"
-                                        }
-                                    >
-                                        <Text
-                                            selectable
-                                            className={
-                                                "text-base md:text-lg font-bold mt-[10px]"
-                                            }
-                                        >
-                                            {"Add contact manually"}
-                                        </Text>
-                                        <View className="flex flex-col items-center">
-                                            <View className="gap-4">
-                                                <FormControl
-                                                    isRequired
-                                                    isInvalid={
-                                                        errors.name !== null
-                                                    }
-                                                    w="100%"
-                                                    maxW="300px"
-                                                >
-                                                    <FormControl.Label>
-                                                        Name
-                                                    </FormControl.Label>
-                                                    <Input
-                                                        size="lg"
-                                                        variant="outline"
-                                                        placeholder="Name"
-                                                        value={formData.name}
-                                                        onChangeText={(value) =>
-                                                            handleChange(
-                                                                "name",
-                                                                value
-                                                            )
-                                                        }
-                                                    />
-                                                    {"name" in errors && (
-                                                        <FormControl.ErrorMessage>
-                                                            {errors.name}
-                                                        </FormControl.ErrorMessage>
-                                                    )}
-                                                </FormControl>
-                                                <FormControl
-                                                isRequired
-                                                    isInvalid={
-                                                        errors.email !== null
-                                                    }
-                                                    w="100%"
-                                                    maxW="300px"
-                                                >
-                                                    <FormControl.Label>
-                                                        Email Address
-                                                    </FormControl.Label>
-                                                    <Input
-                                                        size="lg"
-                                                        variant="outline"
-                                                        placeholder="Email Address"
-                                                        value={formData.email}
-                                                        onChangeText={(value) =>
-                                                            handleChange(
-                                                                "email",
-                                                                value
-                                                            )
-                                                        }
-                                                    />
-                                                    {"email" in errors && (
-                                                        <FormControl.ErrorMessage>
-                                                            {errors.email}
-                                                        </FormControl.ErrorMessage>
-                                                    )}
-                                                </FormControl>
-                                                <FormControl
-                                                    isRequired
-                                                    isInvalid={
-                                                        errors.phone !== null
-                                                    }
-                                                    w="100%"
-                                                    maxW="300px"
-                                                >
-                                                    <FormControl.Label>
-                                                        Mobile Number
-                                                    </FormControl.Label>
-                                                    <Input
-                                                        size="lg"
-                                                        variant="outline"
-                                                        placeholder="Mobile Number"
-                                                        value={formData.phone}
-                                                        onChangeText={(value) =>
-                                                            handleChange(
-                                                                "phone",
-                                                                value
-                                                            )
-                                                        }
-                                                    />
-                                                    {errors.phone ? (
-                                                        <FormControl.ErrorMessage>
-                                                            {errors.phone}
-                                                        </FormControl.ErrorMessage>
-                                                    ) : (
-                                                        <FormControl.HelperText>
-                                                            Enter 10 digit
-                                                            mobile Number.
-                                                        </FormControl.HelperText>
-                                                    )}
-                                                </FormControl>
-                                                <Button
-                                                    width="100%"
-                                                    bgColor={"#013974"}
-                                                    marginBottom={2}
-                                                    onPress={handleSubmit}
-                                                >
-                                                    Add Contact
-                                                </Button>
+                                                        <FormControl
+                                                            isRequired
+                                                            isInvalid={
+                                                                touched.email &&
+                                                                errors.email
+                                                            }
+                                                            w="100%"
+                                                            maxW="300px"
+                                                        >
+                                                            <FormControl.Label>
+                                                                Email Address
+                                                            </FormControl.Label>
+                                                            <Input
+                                                                size="lg"
+                                                                variant="outline"
+                                                                placeholder="Email Address"
+                                                                onChangeText={handleChange(
+                                                                    "email"
+                                                                )}
+                                                                onBlur={handleBlur(
+                                                                    "email"
+                                                                )}
+                                                                value={
+                                                                    values.email
+                                                                }
+                                                            />
+                                                            {touched.email &&
+                                                            errors.email ? (
+                                                                <FormControl.ErrorMessage>
+                                                                    {errors.email}
+                                                                </FormControl.ErrorMessage>
+                                                            ) : null}
+                                                        </FormControl>
+
+                                                        <FormControl
+                                                            isRequired
+                                                            isInvalid={
+                                                                touched.mobileNumber &&
+                                                                errors.mobileNumber
+                                                            }
+                                                            w="100%"
+                                                            maxW="300px"
+                                                        >
+                                                            <FormControl.Label>
+                                                                Mobile Number
+                                                            </FormControl.Label>
+                                                            <Input
+                                                                size="lg"
+                                                                variant="outline"
+                                                                placeholder="Mobile Number"
+                                                                keyboardType="numeric"
+                                                                maxLength={10}
+                                                                onChangeText={handleChange(
+                                                                    "mobileNumber"
+                                                                )}
+                                                                onBlur={handleBlur(
+                                                                    "mobileNumber"
+                                                                )}
+                                                                value={
+                                                                    values.mobileNumber
+                                                                }
+                                                            />
+                                                            {touched.mobileNumber &&
+                                                            errors.mobileNumber ? (
+                                                                <FormControl.ErrorMessage>
+                                                                    {
+                                                                        errors.mobileNumber
+                                                                    }
+                                                                </FormControl.ErrorMessage>
+                                                            ) : (
+                                                                <FormControl.HelperText>
+                                                                    Enter 10 digit
+                                                                    mobile number.
+                                                                </FormControl.HelperText>
+                                                            )}
+                                                        </FormControl>
+                                                        <Button
+                                                            width="100%"
+                                                            bgColor={"#013974"}
+                                                            marginBottom={2}
+                                                            onPress={handleSubmit}
+                                                            isDisabled={!isValid}
+                                                        >
+                                                            Add Contact
+                                                        </Button>
+                                                    </View>
+                                                </View>
                                             </View>
                                         </View>
                                     </View>
-                                </View>
-                            </View>
-
-                            {/* <UploadCsv /> */}
+                                )}
+                            </Formik>
                         </View>
-                    </Dialog>
-                </Portal>
+                    </View>
+                </Modal>
             </View>
         </View>
     );
