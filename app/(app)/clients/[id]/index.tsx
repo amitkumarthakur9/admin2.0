@@ -46,6 +46,7 @@ import {
     UserRoleProvider,
     useUserRole,
 } from "../../../../src/context/useRoleContext";
+import CustomRadioButton from "src/components/CustomForm/CustomRadioButton/CustomRadioButton";
 
 const isMutualFundSearchResult = (
     data: MutualFundSearchResult | Holding
@@ -475,10 +476,18 @@ const PortfolioCard = ({
     useEffect(() => {
         if (typeHolding === "internal") {
             setHoldings(data?.holdings.filter((el) => !el.isExternal));
-            setassetBifurcation(generateAssetBifurcation(data?.holdings.filter((el) => !el.isExternal)));
+            setassetBifurcation(
+                generateAssetBifurcation(
+                    data?.holdings.filter((el) => !el.isExternal)
+                )
+            );
         } else if (typeHolding === "external") {
             setHoldings(data?.holdings.filter((el) => el.isExternal));
-            setassetBifurcation(generateAssetBifurcation(data?.holdings.filter((el) => el.isExternal)));
+            setassetBifurcation(
+                generateAssetBifurcation(
+                    data?.holdings.filter((el) => el.isExternal)
+                )
+            );
         } else {
             setHoldings(data?.holdings);
             setassetBifurcation(generateAssetBifurcation(data?.holdings));
@@ -519,7 +528,7 @@ const PortfolioCard = ({
                             />
                         </View>
                         <View>
-                            {typeHolding !== "internal" &&
+                            {typeHolding == "external" &&
                                 holdings.length > 0 && (
                                     <Button
                                         borderColor={
@@ -1236,29 +1245,39 @@ const LumpSumOrderTab = ({
         }
     };
 
+    const isButtonDisabled =
+        (folios.length !== 0 && !folioID) ||
+        Number(investmentAmount) <= 0 ||
+        mutateLoading;
+
     return (
         <View className="w-full flex flex-col justify-items items-center py-2 gap-y-4">
             <View className="w-1/2 flex flex-col items-center gap-y-2">
-                <Text className="w-full flex flex-row items-start justify-start text-xs text-gray-400 mb-2">
-                    Folio Number
-                </Text>
-                <DropdownComponent
-                    label="Folio Number"
-                    data={
-                        folios.length === 0
-                            ? [{ label: "NA", value: "0" }]
-                            : folios?.map((el) => {
-                                  return {
-                                      label: el.folioNumber,
-                                      value: el.id,
-                                  };
-                              })
-                    }
-                    containerStyle={{ width: "100%" }}
-                    noIcon
-                    value={folioID}
-                    setValue={setFolioID}
-                />
+                {folios.length !== 0 && (
+                    <>
+                        <Text className="w-full flex flex-row items-start justify-start text-xs text-gray-400 mb-2">
+                            Folio Number
+                        </Text>
+
+                        <DropdownComponent
+                            label="Folio Number"
+                            data={
+                                folios.length === 0
+                                    ? [{ label: "NA", value: "0" }]
+                                    : folios?.map((el) => {
+                                          return {
+                                              label: el.folioNumber,
+                                              value: el.id,
+                                          };
+                                      })
+                            }
+                            containerStyle={{ width: "100%" }}
+                            noIcon
+                            value={folioID}
+                            setValue={setFolioID}
+                        />
+                    </>
+                )}
             </View>
             <View className="w-1/2 flex flex-col items-center gap-y-2">
                 <Text className="w-full flex flex-row items-start justify-start text-xs text-gray-400">
@@ -1282,11 +1301,11 @@ const LumpSumOrderTab = ({
             </View>
             <Button
                 width="50%"
-                bgColor={"#013974"}
+                bgColor={isButtonDisabled ? "#ccc" : "#013974"}
                 opacity={mutateLoading ? "50" : "100"}
                 onPress={() => handleSubmit()}
                 className="rounded-lg"
-                disabled={mutateLoading}
+                disabled={isButtonDisabled}
             >
                 {mutateLoading ? "Investing..." : "Invest"}
             </Button>
@@ -1366,6 +1385,10 @@ const SipOrderTab = ({
                     ? mutualFund.mutualfund.maxInvestment
                     : 9999999,
                 "Cannot be more than maximum investment allowed"
+            )
+            .refine(
+                (value) => value % 1000 === 0,
+                "Amount should be in multiples of 1000"
             ),
     });
     const handleSubmit = () => {
@@ -1384,6 +1407,11 @@ const SipOrderTab = ({
             }
         }
     };
+
+    const isButtonDisabled =
+        (folios.length !== 0 && !folioID) ||
+        !sipDate ||
+        Number(investmentAmount) <= 0;
 
     const {
         mutate: invest,
@@ -1423,26 +1451,30 @@ const SipOrderTab = ({
     return (
         <View className="w-full flex flex-col justify-items items-center py-2 gap-y-4">
             <View className="w-1/2 flex flex-col items-center gap-y-2">
-                <Text className="w-full flex flex-row items-start justify-start text-xs text-gray-400 mb-2">
-                    Folio Number
-                </Text>
-                <DropdownComponent
-                    label="Folio Number"
-                    data={
-                        folios.length === 0
-                            ? [{ label: "NA", value: "0" }]
-                            : folios?.map((el) => {
-                                  return {
-                                      label: el.folioNumber,
-                                      value: el.id,
-                                  };
-                              })
-                    }
-                    containerStyle={{ width: "100%" }}
-                    noIcon
-                    value={folioID}
-                    setValue={setFolioID}
-                />
+                {folios.length !== 0 && (
+                    <>
+                        <Text className="w-full flex flex-row items-start justify-start text-xs text-gray-400 mb-2">
+                            Folio Number
+                        </Text>
+                        <DropdownComponent
+                            label="Folio Number"
+                            data={
+                                folios.length === 0
+                                    ? [{ label: "NA", value: "0" }]
+                                    : folios?.map((el) => {
+                                          return {
+                                              label: el.folioNumber,
+                                              value: el.id,
+                                          };
+                                      })
+                            }
+                            containerStyle={{ width: "100%" }}
+                            noIcon
+                            value={folioID}
+                            setValue={setFolioID}
+                        />
+                    </>
+                )}
             </View>
             <View className="w-1/2 flex flex-col items-center gap-y-2">
                 <Text className="w-full flex flex-row items-start justify-start text-xs text-gray-400">
@@ -1506,16 +1538,16 @@ const SipOrderTab = ({
                         value={sipDate}
                         setValue={setSipDate}
                     />
-                    <Text className="text-xs ml-2">of every month</Text>
+                    <Text className="text-xs ml-2">of every month*</Text>
                 </View>
             </View>
             <Button
                 width="50%"
-                bgColor={"#013974"}
+                bgColor={isButtonDisabled ? "#ccc" : "#013974"}
                 opacity={mutateLoading ? "50" : "100"}
                 onPress={() => handleSubmit()}
                 className="rounded-lg"
-                disabled={mutateLoading}
+                disabled={mutateLoading || isButtonDisabled}
             >
                 {mutateLoading ? "Investing..." : "Invest"}
             </Button>
@@ -1936,6 +1968,52 @@ const RedeemModalCard = ({
         setRedeemAll(false);
     }, [methodSelect]);
 
+    const textInputSchema = z.object({
+        input: z
+            .number()
+            .min(0.01, "Value must be greater than zero")
+            .refine(
+                (value) => {
+                    if (methodSelect === "amount") {
+                        return value <= (folio?.redeemableAmount ?? 0);
+                    }
+                    if (methodSelect === "units") {
+                        return value <= (folio?.redeemableUnits ?? 0);
+                    }
+                    return false;
+                },
+                {
+                    message:
+                        methodSelect === "amount"
+                            ? "Amount cannot exceed redeemable amount"
+                            : "Units cannot exceed redeemable units",
+                }
+            )
+            .refine((value) => {
+                if (methodSelect === "amount") {
+                    return value % 1000 === 0; // Ensures amount is a multiple of 1000
+                }
+                return true; // No need for this check for units
+            }, "Amount should be in multiples of 1000"),
+    });
+
+    const handleSubmit = () => {
+        try {
+            textInputSchema.parse({ input: Number(value) });
+            // If validation passes, execute the mutation
+            redeem();
+        } catch (err) {
+            if (err instanceof z.ZodError) {
+                toast.show({
+                    placement: "top",
+                    render: () => (
+                        <ErrorToaster message={err.errors[0].message} />
+                    ),
+                });
+            }
+        }
+    };
+
     const {
         mutate: redeem,
         isError,
@@ -2102,10 +2180,7 @@ const RedeemModalCard = ({
                                 <Text className="w-full flex flex-row items-start justify-start text-xs text-gray-400">
                                     Redeem through
                                 </Text>
-                                <RadioButton
-                                    name="Redeem Through"
-                                    value={methodSelect}
-                                    setValue={setMethodSelect}
+                                <CustomRadioButton
                                     options={[
                                         {
                                             label: "Enter Amount",
@@ -2116,6 +2191,8 @@ const RedeemModalCard = ({
                                             value: "units",
                                         },
                                     ]}
+                                    value={methodSelect}
+                                    setValue={setMethodSelect}
                                 />
                                 <TextInput
                                     className={`outline-none w-full border border-gray-300 p-2 rounded ${
@@ -2163,7 +2240,7 @@ const RedeemModalCard = ({
                             <Button
                                 width="100%"
                                 bgColor={"#013974"}
-                                onPress={() => redeem()}
+                                onPress={() => handleSubmit()}
                                 className="rounded-lg mt-4"
                             >
                                 Redeem
@@ -3055,7 +3132,7 @@ const SwitchModalAction = ({
                                         allUnits &&
                                         "bg-gray-200 cursor-not-allowed"
                                     }`}
-                                    editable={!allUnits || !!selectedFolio}
+                                    editable={!!selectedFolio && !allUnits}
                                     placeholder={`Enter Units`}
                                     underlineColorAndroid="transparent"
                                     selectionColor="transparent"
@@ -3064,15 +3141,38 @@ const SwitchModalAction = ({
                                     style={{ outline: "none" }}
                                     value={switchValue}
                                     onChangeText={(text) => {
-                                        // Only allow numeric values
-                                        const numericValue = text.replace(
-                                            /[^0-9]/g,
+                                        // Allow numeric values and a single decimal point
+                                        let numericValue = text.replace(
+                                            /[^0-9.]/g,
                                             ""
                                         );
+
+                                        // Ensure that there's only one decimal point and limit to three digits after the decimal
+                                        if (numericValue.includes(".")) {
+                                            const [integerPart, decimalPart] =
+                                                numericValue.split(".");
+                                            numericValue =
+                                                integerPart +
+                                                "." +
+                                                decimalPart.slice(0, 3);
+                                        }
                                         setSwitchValue(numericValue);
                                     }}
                                     keyboardType="numeric"
                                 />
+                                {!!selectedFolio &&
+                                    Number(switchValue) >
+                                        folio?.redeemableUnits && (
+                                        <Text
+                                            style={{
+                                                color: "red",
+                                                fontSize: 12,
+                                            }}
+                                        >
+                                            Entered units exceed available units
+                                            ({folio?.redeemableUnits}).
+                                        </Text>
+                                    )}
                             </View>
                             <View className="w-full flex flex-row">
                                 <Checkbox
@@ -3097,10 +3197,18 @@ const SwitchModalAction = ({
                 </View>
                 <View className="w-full flex flex-col items-center py-4 px-12 gap-4">
                     <Button
-                        disabled={!selectedFolio && !switchValue}
+                        disabled={
+                            !selectedFolio ||
+                            Number(switchValue) < 1 ||
+                            !Number(switchValue) ||
+                            Number(switchValue) > folio?.redeemableUnits // Disable if validation fails
+                        }
                         width="100%"
                         bgColor={
-                            !selectedFolio || switchValue == "0"
+                            !selectedFolio ||
+                            Number(switchValue) < 1 ||
+                            !Number(switchValue) ||
+                            Number(switchValue) > folio?.redeemableUnits
                                 ? "#ddd"
                                 : "#013974"
                         }

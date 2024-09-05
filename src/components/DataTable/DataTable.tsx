@@ -85,10 +85,20 @@ const TableHeader = ({ headers, cellSize }) => {
 const TableRows = ({ rows, cellSize, hasActions, options }) => {
     // console.log("cellsize" + cellSize);
     // console.log("dimension" + Dimensions.get("screen").width)
-    return rows?.map((row, index) => {
+    const [openDropdown, setOpenDropdown] = useState({ row: null, item: null });
+
+    const toggleDropdown = (rowIndex, itemIndex) => {
+        // If the clicked dropdown is already open, close it. Otherwise, open the new one.
+        setOpenDropdown((prevState) =>
+            prevState.row === rowIndex && prevState.item === itemIndex
+                ? { row: null, item: null }
+                : { row: rowIndex, item: itemIndex }
+        );
+    };
+    return rows?.map((row, rowIndex) => {
         return (
             <View
-                key={index}
+                key={rowIndex}
                 className={` ${
                     Dimensions.get("screen").width < 830
                         ? `w-[${Dimensions.get("screen").width - 20}]`
@@ -115,12 +125,19 @@ const TableRows = ({ rows, cellSize, hasActions, options }) => {
                                     options={options}
                                     hasActions={hasActions}
                                     data={row[0]?.data}
+                                    isOpen={
+                                        openDropdown.row === rowIndex &&
+                                        openDropdown.item === itemIndex
+                                    } // Check if this row item is open
+                                    toggleDropdown={() =>
+                                        toggleDropdown(rowIndex, itemIndex)
+                                    } // Toggle dropdown state for the specific row item
                                 />
                             </React.Fragment>
                         );
                     })}
                 </View>
-                {index < rows.length && (
+                {rowIndex < rows.length && (
                     <View
                         className="my-2 -z-50"
                         style={{
@@ -134,11 +151,11 @@ const TableRows = ({ rows, cellSize, hasActions, options }) => {
     });
 };
 
-const RowItem = ({ width, content, isLast, hasActions, options, data }) => {
-    const [showDropdown, setShowDropdown] = useState(false);
+const RowItem = ({ width, content, isLast, hasActions, options, data, isOpen, toggleDropdown  }) => {
+    // const [showDropdown, setShowDropdown] = useState(false);
 
-    const toggleDropdown = () => setShowDropdown(!showDropdown);
-    const closeDropdown = () => setShowDropdown(false);
+    // const toggleDropdown = () => setShowDropdown(!showDropdown);
+    // const closeDropdown = () => setShowDropdown(false);
 
     // Check if the variable is a string
     // if (typeof width === "string") {
@@ -154,7 +171,7 @@ const RowItem = ({ width, content, isLast, hasActions, options, data }) => {
     // console.log(width);
 
     return (
-        <TouchableWithoutFeedback onPress={closeDropdown}>
+        <TouchableWithoutFeedback onPress={() => toggleDropdown(null)}>
             <View
                 className={`flex flex-row relative items-center w-${
                     typeof width === "string" ? `[${width}]` : `${width}/12`
@@ -177,13 +194,13 @@ const RowItem = ({ width, content, isLast, hasActions, options, data }) => {
                         </Pressable>
                     )}
                 </View>
-                {showDropdown && (
+                {isOpen && (
                     <View className="absolute bottom-0 right-14 bg-white border-gray-300 border rounded shadow z-9999 cursor-pointer">
                         {options?.map((option) => {
                             return (
                                 <Pressable
                                     key={option.key}
-                                    className="p-2"
+                                    className="py-2 px-4"
                                     onPress={option.onClick(data)}
                                 >
                                     <Text selectable>{option.name}</Text>

@@ -271,7 +271,7 @@ const ARNHoldingDataTable = ({ id }) => {
             setFiltersSchema(response);
             setSorting(response.sort);
         }
-        getSchema();
+        // getSchema();
     }, []);
 
     React.useEffect(() => {
@@ -326,20 +326,21 @@ const ARNHoldingDataTable = ({ id }) => {
                 data: folioData,
             });
 
-            console.log(JSON.stringify(response) + "response");
-
             if (response) {
-                setApiFail(false);
-            } else {
+                console.log(JSON.stringify(response) + "response");
+
                 setShowImport(true);
                 console.log("setShowImport(true);");
                 getDataList();
                 setSelectedContacts([]);
-                setIsDownloadProcessing(false);
             }
         } catch (error) {
+            console.log("insideerror");
+            setSelectedContacts([]);
             console.log(error);
         }
+
+        setIsDownloadProcessing(false);
     };
 
     // console.log("filteredContacts)" + JSON.stringify(filteredContacts));

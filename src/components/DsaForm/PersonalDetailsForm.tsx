@@ -349,11 +349,21 @@ const PersonalDetailsForm = ({ onNext, initialValues, onPrevious }) => {
                                         </View>
                                         <TextInput
                                             style={styles.inputArn}
-                                            onChangeText={handleChange(
-                                                "arnNumber"
-                                            )}
+                                            // onChangeText={handleChange(
+                                            //     "arnNumber"
+                                            // )}
                                             onBlur={handleBlur("arnNumber")}
                                             value={values.arnNumber}
+                                            onChangeText={(text) => {
+                                                // Only allow numeric values
+                                                const numericValue =
+                                                    text.replace(/[^0-9]/g, "");
+
+                                                handleChange("arnNumber")(
+                                                    numericValue
+                                                );
+                                            }}
+                                            keyboardType="numeric"
                                         />
                                     </View>
                                     <View style={styles.fieldContainer}>

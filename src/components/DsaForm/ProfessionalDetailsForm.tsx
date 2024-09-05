@@ -15,7 +15,7 @@ import * as Yup from "yup";
 import DropdownComponent from "../../components/Dropdowns/NewDropDown";
 import RemoteApi from "src/services/RemoteApi";
 
-const panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]$/;
+const panRegex = /^([A-Z]){3}([ABCFGHJLPT])([A-Z]){1}([0-9]){4}([A-Z]){1}?$/;
 
 const validationSchema = Yup.object().shape({
     // panNumber: Yup.string().required("PAN is required"),

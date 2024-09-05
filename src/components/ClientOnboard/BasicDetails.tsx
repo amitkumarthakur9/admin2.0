@@ -16,7 +16,7 @@ import DropdownComponent from "../../components/Dropdowns/NewDropDown";
 import RemoteApi from "src/services/RemoteApi";
 import AddressForm from "./AddressForm";
 
-const panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]$/;
+const panRegex = /^([A-Z]){3}([ABCFGHJLPT])([A-Z]){1}([0-9]){4}([A-Z]){1}?$/;
 const today = new Date();
 
 const validationSchema = Yup.object().shape({

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TextInput, Switch } from "react-native";
+import { View, Text, TextInput, Switch, Button } from "react-native";
 import { Select, Input } from "native-base";
 // import Icon from 'react-native-vector-icons/MaterialIcons'
 import DropdownComponent from "react-native-element-dropdown/lib/typescript/components/Dropdown";
@@ -15,23 +15,33 @@ const FilterComponent = ({
     onFilterChange,
     filterValues,
     removeFilter,
+    onErrorChange,
 }) => {
     let { title, key, fieldType, valueConfig, operator } = filter;
     let initialFilterValue = filterValues.find((f) => f.key === key);
+    const [error, setError] = useState(false);
+
+    useEffect(() => {
+        onErrorChange(key, error); // Notify parent of error state
+    }, [error]);
 
     const removeSingleFilter = () => {
         removeFilter(key);
         initialFilterValue = filterValues.find((f) => f.key === key);
+        setError(false);
     };
 
     const handleOperatorChange = (operatorValue) => {
         onFilterChange(key, initialFilterValue?.value, operatorValue);
         initialFilterValue = filterValues.find((f) => f.key === key);
+        setError(!operatorValue && initialFilterValue?.value);
         // console.log('initialFilterValue', initialFilterValue);
     };
 
     const handleFilterChange = (newValue) => {
-        // console.log('value', newValue);
+        console.log("value", newValue);
+        console.log("key", key);
+        console.log("valueConfig.valueType ", valueConfig.valueType);
 
         onFilterChange(
             key,
@@ -41,6 +51,14 @@ const FilterComponent = ({
                 : initialFilterValue?.operator
         );
         initialFilterValue = filterValues.find((f) => f.key === key);
+        if (valueConfig.valueType == "date") {
+        } else {
+            setError(!initialFilterValue?.operator && newValue);
+        }
+
+        if (key == "transactionTypeId" || key == "transactionStatusId") {
+            initialFilterValue?.value?.length == 0 && setError(false);
+        }
         // console.log(initialFilterValue);
     };
 
@@ -258,6 +276,9 @@ const FilterComponent = ({
                 <Text selectable className="">
                     {title}
                 </Text>
+                {error && (
+                    <Text style={{ color: "red" }}>Operator is required</Text>
+                )}
             </View>
             {fieldType != "date" && (
                 <View className="w-4/12">{renderOperatorSelect()}</View>
@@ -266,7 +287,20 @@ const FilterComponent = ({
                 {renderFilterInput()}
             </View>
             <View className={"w-1/12 flex flex-row ml-2"}>
-                {initialFilterValue?.value ? (
+                {fieldType == "multiSelect" ? (
+                    initialFilterValue?.value?.length > 0 ? (
+                        <Pressable onPress={removeSingleFilter}>
+                            <Icon
+                                name="trash"
+                                style={{ fontWeight: "100" }}
+                                color="black"
+                            />
+                        </Pressable>
+                    ) : (
+                        ""
+                    )
+                ) : initialFilterValue?.value ||
+                  initialFilterValue?.value == 0 ? (
                     <Pressable onPress={removeSingleFilter}>
                         <Icon
                             name="trash"
@@ -289,7 +323,43 @@ const FilterForm = ({
     onFilterChange,
     filterValues,
     removeFilter,
+    applyFilters,
 }) => {
+    const [isApplyEnabled, setApplyEnabled] = useState(false);
+    const [errorState, setErrorState] = useState({}); // Track errors for each filter
+
+    const handleErrorChange = (key, hasError) => {
+        setErrorState((prevState) => ({
+            ...prevState,
+            [key]: hasError,
+        }));
+    };
+
+    useEffect(() => {
+        // const hasValue = filterValues.some((filter) => filter.value);
+        // console.log("hasValue" + hasValue)
+        console.log("hasValue" + JSON.stringify(filterValues));
+        console.log("hasValue" + JSON.stringify(filterValues[0]?.value));
+
+        const hasValue = filterValues.some((filter) => {
+            if (filter.key === "isActive") {
+                // Convert isActive value to string and check if it exists
+                return (
+                    filter.value !== undefined &&
+                    filter.value !== null &&
+                    filter.value.toString().trim().length > 0
+                );
+            } else {
+                // For all other filters, keep the same logic
+                return filter.value;
+            }
+        });
+
+        const hasError = Object.values(errorState).some((error) => error); // Check if any error exists
+        console.log("hasError" + hasError);
+        setApplyEnabled(hasValue && !hasError); // Only enable if there are no errors and at least one value is filled
+    }, [filterValues, errorState]);
+
     return (
         <View>
             {filtersSchema?.map((filter, key) => (
@@ -301,10 +371,28 @@ const FilterForm = ({
                             onFilterChange={onFilterChange}
                             filterValues={filterValues}
                             removeFilter={removeFilter}
+                            onErrorChange={handleErrorChange}
                         />
                     )}
                 </View>
             ))}
+            <View className={isApplyEnabled ? `bg-[#114EA8]` : `bg-gray-400`}>
+                <Pressable
+                    className="py-2"
+                    onPress={isApplyEnabled ? applyFilters : null} // Disable the onPress when not enabled
+                    disabled={!isApplyEnabled} // Optional, in case you want the actual press to be disabled
+                >
+                    <View className="flex flex-row justify-center items-center">
+                        <Text
+                            selectable
+                            className="text-center text-sm mr-2 text-white"
+                        >
+                            Apply Filters
+                        </Text>
+                        <Icon name="filter" size={15} color="#ffffff" />
+                    </View>
+                </Pressable>
+            </View>
         </View>
     );
 };

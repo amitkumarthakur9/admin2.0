@@ -47,6 +47,7 @@ export default function SignIn() {
     const toast = useToast();
     const { height, width } = useWindowDimensions();
     const [token, setToken] = useState(null);
+    const [gtoken, setGtoken] = useState(null);
     const onLoginPressed = async () => {
         setIsLoading(true);
         const emailError = emailValidator(email.value);
@@ -58,16 +59,12 @@ export default function SignIn() {
             return;
         }
 
-        if(!token){
-            window.location.reload();
-        }
-
         try {
             const response: any = await RemoteApi.post("/user/login", {
                 email: email.value,
                 password: password.value,
                 pass: "SkipRecaptcha",
-                recaptchaToken: token,
+                recaptchaToken: gtoken,
             });
 
             if (response?.message == "Success") {
@@ -227,7 +224,7 @@ export default function SignIn() {
                                     appendTo: "body",
                                 }}
                             >
-                                <GoogleRecaptchaV3 updateToken={setToken} />
+                                <GoogleRecaptchaV3 updateToken={setGtoken} />
                             </GoogleReCaptchaProvider>
                         </FormControl>
                     </Box>

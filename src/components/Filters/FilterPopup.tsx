@@ -97,9 +97,10 @@ export const FilterPopup = ({
                                     filtersSchema={filtersSchema}
                                     onFilterChange={handleFilterChange}
                                     filterValues={filterValues}
+                                    applyFilters={applyFilters}
                                 />
                             </View>
-                            <View
+                            {/* <View
                                 className="bg-[#000000]"
                                 style={{ borderRadius: 5 }}
                             >
@@ -121,7 +122,7 @@ export const FilterPopup = ({
                                         />
                                     </View>
                                 </TouchableRipple>
-                            </View>
+                            </View> */}
                         </View>
                     </Box>
                 </View>

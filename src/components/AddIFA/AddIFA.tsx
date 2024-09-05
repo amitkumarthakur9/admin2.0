@@ -209,7 +209,7 @@ export default function AddIFAUser() {
             newErrors.rm = null; // Clear error message if validation passes
         }
 
-        const panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]$/;
+        const panRegex = /^([A-Z]){3}([ABCFGHJLPT])([A-Z]){1}([0-9]){4}([A-Z]){1}?$/;
 
         if (!panRegex.test(formData.panNumber)) {
             newErrors.panNumber = !formData.panNumber

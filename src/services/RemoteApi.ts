@@ -1,9 +1,10 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 import moment from "moment";
-import { Platform } from "react-native";
+import { Platform, View } from "react-native";
 import * as SecureStore from "expo-secure-store";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
+import { Toast } from "native-base";
 
 // Create a new Axios instance with defaults
 const axiosInstance = axios.create({
@@ -11,14 +12,29 @@ const axiosInstance = axios.create({
     withCredentials: true, // Ensure cookies are sent with requests
 });
 
+// Request interceptor
+axiosInstance.interceptors.request.use(
+    (config) => {
+        // You can add custom logic here before the request is sent, e.g., adding authentication tokens
+        // console.log("Request sent:", config);
+        return config;
+    },
+    (error) => {
+        // Handle request error
+        console.error("Error in request:", error);
+        return Promise.reject(error);
+    }
+);
+
 // Set up a response interceptor to handle errors
 axiosInstance.interceptors.response.use(
     (response: AxiosResponse) => {
+        // console.log("Response:", response);
         return response;
     },
-    (error: AxiosError) => {
-        // console.error('API Error:', error.toJSON());
-
+    async (error: any) => {
+        // const { showToast } = useToastContext();
+        Toast.closeAll();
         if (error?.response?.status === 401) {
             // if (Platform.OS == "web") {
             // router
@@ -33,14 +49,55 @@ axiosInstance.interceptors.response.use(
                 } else {
                     AsyncStorage.removeItem("token");
                 }
-                // window.location.reload();
+                window.location.reload();
                 // console.log(error);
             }
             // }
-        } else {
-            console.log("error", error);
-        }
+        } else if (error.response && error.response.data instanceof Blob) {
+            // try {
+            const errorText = await error.response.data.text(); // Convert blob to text
+            // Optionally, you can try to parse it as JSON if the server sends JSON errors
+            const errorJson = JSON.parse(errorText);
+            console.error("Parsed error JSON:", errorJson);
+            console.error("concoleJSON:");
 
+            // Display the errorJson in a NativeBase toast message
+            Toast.show({
+                title: "Server Error",
+                description: errorJson.message || "Something went wrong",
+                bg: "red.500", // Set background color to red
+                status: "error",
+                duration: 4000,
+                placement: "top",
+            });
+            // return errorJson;
+            return Promise.reject(errorJson);
+            // } catch (parseError) {
+            //     console.error("Error parsing blob:", parseError);
+            //     // return Promise.reject(); // If parsing fails, return raw text
+            // }
+        } else {
+            // const errorText = await error.response.data;
+            // const errorJson = JSON.parse(errorText);
+            Toast.show({
+                title: "Server Error",
+                description:
+                    error.response.data.errors[0].message ||
+                    "Something went wrong",
+                bg: "red.500", // Set background color to red
+                status: "error",
+                duration: 4000,
+                placement: "top",
+            });
+            // console.error("firsterror");
+            // console.error(error.response);
+
+            console.error(error);
+            return error.response;
+        }
+        // console.error("seconderror");
+        // console.error(error);
+        // console.error(error.response);
         return error.response;
     }
 );
@@ -61,7 +118,11 @@ class ApiRequest {
         return response?.data;
     }
 
-    static async post<T>(endpoint: string, data?: any, cookieToken?: string): Promise<T> {
+    static async post<T>(
+        endpoint: string,
+        data?: any,
+        cookieToken?: string
+    ): Promise<T> {
         // const config: AxiosRequestConfig = {
         //     method: "POST",
         //     url: endpoint,
@@ -77,23 +138,22 @@ class ApiRequest {
             "Content-Type": "application/json",
             Authorization: `Bearer ${await AsyncStorage.getItem("token")}`,
         };
-    
-         // Conditionally add the Cookie header if cookieToken is provided
-    if (cookieToken) {
-        console.log("header")
-        console.log(cookieToken)
-        headers["Cookie"] = cookieToken;
-        headers["onboardToken"] = cookieToken;
-    }
 
+        // Conditionally add the Cookie header if cookieToken is provided
+        if (cookieToken) {
+            console.log("header");
+            console.log(cookieToken);
+            headers["Cookie"] = cookieToken;
+            headers["onboardToken"] = cookieToken;
+        }
 
-    const config: AxiosRequestConfig = {
-        method: "POST",
-        url: endpoint,
-        data: JSON.stringify(data),
-        headers: headers,
-        withCredentials: true, // Ensure cookies are sent
-    };
+        const config: AxiosRequestConfig = {
+            method: "POST",
+            url: endpoint,
+            data: JSON.stringify(data),
+            headers: headers,
+            withCredentials: true, // Ensure cookies are sent
+        };
         // console.log('post token', await AsyncStorage.getItem("token"));
 
         try {
@@ -101,7 +161,7 @@ class ApiRequest {
             // console.log('response', response);
             return response?.data;
         } catch (error) {
-            console.error('Error in POST request', error);
+            console.error("Error in POST request", error);
             throw error;
         }
 
@@ -163,7 +223,10 @@ class ApiRequest {
             },
         };
 
-        const response = await axiosInstance(config);
+        const response: any = await axiosInstance(config);
+        // console.log("patchresponse" + JSON.stringify(response))
+        // console.error("patchresponse" + response)
+        // console.log("patchresponse" + response)
         return response?.data;
     }
 

@@ -17,7 +17,7 @@ import CustomRadioButton from "../CustomForm/CustomRadioButton/CustomRadioButton
 import CalendarSinglePicker from "../CustomDatePicker/CalendarSinglePicker";
 import DropdownComponent from "../Dropdowns/NewDropDown";
 
-const panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]$/;
+const panRegex = /^([A-Z]){3}([ABCFGHJLPT])([A-Z]){1}([0-9]){4}([A-Z]){1}?$/;
 
 const validationSchema = Yup.object().shape({
     arnNumber: Yup.string()
@@ -182,7 +182,7 @@ const Professional = ({ onNext, initialValues, onPrevious }) => {
                                 <Text style={styles.label}>Assign Relationship Manager{" "}
                                 <Text className="text-red-500">*</Text></Text>
                                 <DropdownComponent
-                                    label="select role"
+                                    label="Select Relationship Manager"
                                     data={rolesOptions}
                                     value={values.assignedRole}
                                     setValue={(value) =>

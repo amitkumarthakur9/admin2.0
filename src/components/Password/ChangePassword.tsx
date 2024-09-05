@@ -8,6 +8,7 @@ import {
     Text,
     Input,
     useToast,
+    ScrollView,
 } from "native-base";
 import Icon from "react-native-vector-icons/FontAwesome";
 import RemoteApi from "../../../src/services/RemoteApi";
@@ -209,14 +210,8 @@ const ChangePassword = () => {
         const url = `https://vision-be.kcp.com.in/${endpoint}`;
         // const url = `https://vision-connect.azurewebsites.net/${endpoint}`;
 
-
-
         try {
-
-            const response: any = await RemoteApi.patch(
-                endpoint,
-                body
-            );
+            const response: any = await RemoteApi.patch(endpoint, body);
 
             // const response = await fetch(url, {
             //     method: "PATCH", // or "GET", "PUT", "DELETE", etc.
@@ -259,68 +254,20 @@ const ChangePassword = () => {
             // confirmPassword: formData.confirmPassword,
         };
 
+        console.log("SubmitFormdata");
+        console.log(data);
+
         try {
             console.log("SubmitFormdata");
             console.log(data);
-
-            // let token = null;
-
-            // if (Platform.OS == "web") {
-            //     token = await localStorage.getItem("token");
-            // } else {
-            //     token = await AsyncStorage.getItem("token");
-            // }
-
-            // try {
-
-             
-    
-            //     // const response = await fetch(url, {
-            //     //     method: "PATCH", // or "GET", "PUT", "DELETE", etc.
-            //     //     headers,
-            //     //     body,
-            //     // });
-    
-            //     // Check if the response is successful
-            //     if (!response || response?.message !== "Success") {
-            //         // Handle the error response
-    
-            //         await ApiError(true, "incorrect old Password");
-    
-            //         (newErrors.oldPassword = "Wrong old password"),
-            //             setErrors(newErrors);
-    
-            //         // Return validation result
-            //         return Object.values(newErrors).every(
-            //             (error) => error === null
-            //         ); // Return true if there are no errors
-            //         throw new Error(`HTTP error! Status: ${response.status}`);
-            //     }
-    
-            //     // Parse the JSON response
-            //     const responseData = await response.json();
-    
-            //     return responseData;
-            // } catch (error) {
-            //     // Handle any errors that occurred during the fetch request
-            //     console.error("Error:", error.message);
-            //     throw error;
-            // }
-
-            // const response = await makePatchRequest(
-            //     "user/change-password",
-            //     data,
-            //     token
-            // );
-
-            // const response = {
-            //     message: "Success",
-            // }
 
             const response: any = await RemoteApi.patch(
                 "user/change-password",
                 data
             );
+            console.log("firstpassword");
+
+            console.log("firstpassword" + JSON.stringify(response));
 
             if (response?.message == "Success") {
                 // const uniqueId = uuidv4();
@@ -352,10 +299,15 @@ const ChangePassword = () => {
 
                 setShowModal(true);
             } else {
-
+                // if (error) {
+                //     console.log("Error response data:", error);
+                // } else {
+                //     console.error("Unknown error occurred:", error);
+                // }
+                console.log("elsepassword" + response);
                 await ApiError(true, "incorrect old Password");
-    
-                (newErrors.oldPassword = "Wrong old password"),
+
+                (newErrors.oldPassword = response.errors[0].message),
                     setErrors(newErrors);
 
                 // Return validation result
@@ -379,6 +331,11 @@ const ChangePassword = () => {
                 // ]);
             }
         } catch (error) {
+            if (error) {
+                console.log("Error response data:", error);
+            } else {
+                console.error("Unknown error occurred:", error);
+            }
             const uniqueId = uuidv4();
             setToasts([
                 ...toasts,
@@ -423,282 +380,304 @@ const ChangePassword = () => {
                 <Modal
                     isOpen={showModal}
                     onClose={handleCloseModal}
-                    p="10"
-                    className=""
+                    className="w-1/2 mx-auto"
                 >
                     <Modal.Content className="bg-white p-8">
                         <Modal.Body>
-                            {isSubmitted == false ? (
-                                <>
-                                    <View className="flex flex-row w-11/12">
-                                        <View className="w-full">
-                                            <Text className="text-lg text-bold">
-                                                Change password
-                                            </Text>
-                                            <Text className="text-sm text-semibold text-[#898989]">
-                                                In order to keep your account
-                                                safe you need to create a strong
-                                                password.
-                                            </Text>
-                                        </View>
+                            <ScrollView
+                                className="h-2/12" // Set a fixed height to ensure the form is scrollable
+                                contentContainerStyle={{ flexGrow: 1 }}
+                            >
+                                {isSubmitted == false ? (
+                                    <>
+                                        <View className="flex flex-row w-11/12">
+                                            <View className="w-full">
+                                                <Text className="text-lg text-bold">
+                                                    Change password
+                                                </Text>
+                                                <Text className="text-sm text-semibold text-[#898989]">
+                                                    In order to keep your
+                                                    account safe you need to
+                                                    create a strong password.
+                                                </Text>
+                                            </View>
 
-                                        <Pressable
-                                            onPress={handleCloseModal}
-                                            className={
-                                                "flex flex-row justify-center items-center border-[1px] rounded px-2 h-[20px] border-slate-200"
+                                            <Pressable
+                                                onPress={handleCloseModal}
+                                                className={
+                                                    "flex flex-row justify-center items-center border-[1px] rounded px-2 h-[20px] border-slate-200"
+                                                }
+                                                aria-describedby="addNewClient"
+                                            >
+                                                <Icon
+                                                    name="close"
+                                                    size={14}
+                                                    color="#484848"
+                                                />
+                                            </Pressable>
+                                        </View>
+                                        <FormControl
+                                            isRequired
+                                            isInvalid={
+                                                errors.oldPassword !== null
                                             }
-                                            aria-describedby="addNewClient"
+                                            w="100%"
+                                            maxW="300px"
+                                            style={{ marginTop: 10 }}
                                         >
-                                            <Icon
-                                                name="close"
-                                                size={14}
-                                                color="#484848"
-                                            />
-                                        </Pressable>
-                                    </View>
-                                    <FormControl
-                                        isRequired
-                                        isInvalid={errors.oldPassword !== null}
-                                        w="100%"
-                                        maxW="300px"
-                                        style={{ marginTop: 10 }}
-                                    >
-                                        <FormControl.Label>
-                                            Old Password
-                                        </FormControl.Label>
-                                        <Input
-                                            size="lg"
-                                            variant="outline"
-                                            placeholder="Password"
-                                            value={formData.oldPassword}
-                                            onChangeText={(value) =>
-                                                handleChange(
-                                                    "oldPassword",
-                                                    value
-                                                )
-                                            }
-                                            secureTextEntry={
-                                                !passwordVisible.oldPassword
-                                            }
-                                            InputRightElement={
-                                                <Pressable
-                                                    onPress={() =>
-                                                        togglePasswordVisibility(
-                                                            "oldPassword"
-                                                        )
-                                                    }
-                                                    style={{ paddingRight: 4 }}
-                                                >
-                                                    <Icon
-                                                        name={
-                                                            passwordVisible.oldPassword
-                                                                ? "eye"
-                                                                : "eye-slash"
+                                            <FormControl.Label>
+                                                Old Password
+                                            </FormControl.Label>
+                                            <Input
+                                                size="lg"
+                                                variant="outline"
+                                                placeholder="Password"
+                                                value={formData.oldPassword}
+                                                onChangeText={(value) =>
+                                                    handleChange(
+                                                        "oldPassword",
+                                                        value
+                                                    )
+                                                }
+                                                secureTextEntry={
+                                                    !passwordVisible.oldPassword
+                                                }
+                                                InputRightElement={
+                                                    <Pressable
+                                                        onPress={() =>
+                                                            togglePasswordVisibility(
+                                                                "oldPassword"
+                                                            )
                                                         }
-                                                        size={20}
-                                                        color="#484848"
-                                                    />
-                                                </Pressable>
-                                            }
-                                        />
-                                        {/* {apiError.valid && (
+                                                        style={{
+                                                            paddingRight: 4,
+                                                        }}
+                                                    >
+                                                        <Icon
+                                                            name={
+                                                                passwordVisible.oldPassword
+                                                                    ? "eye"
+                                                                    : "eye-slash"
+                                                            }
+                                                            size={20}
+                                                            color="#484848"
+                                                        />
+                                                    </Pressable>
+                                                }
+                                            />
+                                            {/* {apiError.valid && (
                                     <Text className="text-red-400">
                                         {apiError.message}
                                     </Text>
                                 )} */}
-                                        {"oldPassword" in errors && (
-                                            <FormControl.ErrorMessage>
-                                                {errors.oldPassword}
-                                            </FormControl.ErrorMessage>
-                                        )}
-                                    </FormControl>
-                                    <FormControl
-                                        isRequired
-                                        isInvalid={false}
-                                        w="100%"
-                                        maxW="300px"
-                                        style={{ marginTop: 10 }}
-                                    >
-                                        <FormControl.Label>
-                                            New Password
-                                        </FormControl.Label>
-                                        <Input
-                                            size="lg"
-                                            variant="outline"
-                                            placeholder="New Password"
-                                            value={formData.newPassword}
-                                            onChangeText={(value) =>
-                                                handleChange(
-                                                    "newPassword",
-                                                    value
-                                                )
-                                            }
-                                            secureTextEntry={
-                                                !passwordVisible.newPassword
-                                            }
-                                            InputRightElement={
-                                                <Pressable
-                                                    onPress={() =>
-                                                        togglePasswordVisibility(
-                                                            "newPassword"
-                                                        )
-                                                    }
-                                                    style={{ paddingRight: 4 }}
-                                                >
-                                                    <Icon
-                                                        name={
-                                                            passwordVisible.newPassword
-                                                                ? "eye"
-                                                                : "eye-slash"
+                                            {"oldPassword" in errors && (
+                                                <FormControl.ErrorMessage>
+                                                    {errors.oldPassword}
+                                                </FormControl.ErrorMessage>
+                                            )}
+                                        </FormControl>
+                                        <FormControl
+                                            isRequired
+                                            isInvalid={false}
+                                            w="100%"
+                                            maxW="300px"
+                                            style={{ marginTop: 10 }}
+                                        >
+                                            <FormControl.Label>
+                                                New Password
+                                            </FormControl.Label>
+                                            <Input
+                                                size="lg"
+                                                variant="outline"
+                                                placeholder="New Password"
+                                                value={formData.newPassword}
+                                                onChangeText={(value) =>
+                                                    handleChange(
+                                                        "newPassword",
+                                                        value
+                                                    )
+                                                }
+                                                secureTextEntry={
+                                                    !passwordVisible.newPassword
+                                                }
+                                                InputRightElement={
+                                                    <Pressable
+                                                        onPress={() =>
+                                                            togglePasswordVisibility(
+                                                                "newPassword"
+                                                            )
                                                         }
-                                                        size={20}
-                                                        color="#484848"
-                                                    />
-                                                </Pressable>
+                                                        style={{
+                                                            paddingRight: 4,
+                                                        }}
+                                                    >
+                                                        <Icon
+                                                            name={
+                                                                passwordVisible.newPassword
+                                                                    ? "eye"
+                                                                    : "eye-slash"
+                                                            }
+                                                            size={20}
+                                                            color="#484848"
+                                                        />
+                                                    </Pressable>
+                                                }
+                                            />
+                                        </FormControl>
+                                        <FormControl
+                                            isRequired
+                                            isInvalid={
+                                                errors.confirmPassword !== null
                                             }
-                                        />
-                                    </FormControl>
-                                    <FormControl
-                                        isRequired
-                                        isInvalid={
-                                            errors.confirmPassword !== null
-                                        }
-                                        w="100%"
-                                        maxW="300px"
-                                        style={{ marginTop: 10 }}
-                                    >
-                                        <FormControl.Label>
-                                            Confirm Password
-                                        </FormControl.Label>
-                                        <Input
-                                            size="lg"
-                                            variant="outline"
-                                            placeholder="Confirm Password"
-                                            value={formData.confirmPassword}
-                                            onChangeText={(value) =>
-                                                handleChange(
-                                                    "confirmPassword",
-                                                    value
-                                                )
-                                            }
-                                            secureTextEntry={
-                                                !passwordVisible.confirmPassword
-                                            }
-                                            InputRightElement={
-                                                <Pressable
-                                                    onPress={() =>
-                                                        togglePasswordVisibility(
-                                                            "confirmPassword"
-                                                        )
-                                                    }
-                                                    style={{ paddingRight: 4 }}
-                                                >
-                                                    <Icon
-                                                        name={
-                                                            passwordVisible.confirmPassword
-                                                                ? "eye"
-                                                                : "eye-slash"
+                                            w="100%"
+                                            maxW="300px"
+                                            style={{ marginTop: 10 }}
+                                        >
+                                            <FormControl.Label>
+                                                Confirm Password
+                                            </FormControl.Label>
+                                            <Input
+                                                size="lg"
+                                                variant="outline"
+                                                placeholder="Confirm Password"
+                                                value={formData.confirmPassword}
+                                                onChangeText={(value) =>
+                                                    handleChange(
+                                                        "confirmPassword",
+                                                        value
+                                                    )
+                                                }
+                                                secureTextEntry={
+                                                    !passwordVisible.confirmPassword
+                                                }
+                                                InputRightElement={
+                                                    <Pressable
+                                                        onPress={() =>
+                                                            togglePasswordVisibility(
+                                                                "confirmPassword"
+                                                            )
                                                         }
-                                                        size={20}
-                                                        color="#484848"
-                                                    />
-                                                </Pressable>
-                                            }
-                                        />
-                                        {"confirmPassword" in errors && (
-                                            <FormControl.ErrorMessage>
-                                                {errors.confirmPassword}
-                                            </FormControl.ErrorMessage>
-                                        )}
-                                    </FormControl>
-                                    <View className="flex flex-col justify-start items-start pt-8">
-                                        <Text className="text-xs text-bold text-gray-500">
-                                            YOUR PASSWORD MUST CONTAIN
-                                        </Text>
-                                        <View
-                                            style={styles.validationContainer}
-                                        >
-                                            {renderValidationCircle(
-                                                validation.length
+                                                        style={{
+                                                            paddingRight: 4,
+                                                        }}
+                                                    >
+                                                        <Icon
+                                                            name={
+                                                                passwordVisible.confirmPassword
+                                                                    ? "eye"
+                                                                    : "eye-slash"
+                                                            }
+                                                            size={20}
+                                                            color="#484848"
+                                                        />
+                                                    </Pressable>
+                                                }
+                                            />
+                                            {"confirmPassword" in errors && (
+                                                <FormControl.ErrorMessage>
+                                                    {errors.confirmPassword}
+                                                </FormControl.ErrorMessage>
                                             )}
-                                            <Text className="text-sm text-gray-500 pl-2">
-                                                Between 8 and 20 characters
+                                        </FormControl>
+                                        <View className="flex flex-col justify-start items-start pt-8">
+                                            <Text className="text-xs text-bold text-gray-500">
+                                                YOUR PASSWORD MUST CONTAIN
                                             </Text>
+                                            <View
+                                                style={
+                                                    styles.validationContainer
+                                                }
+                                            >
+                                                {renderValidationCircle(
+                                                    validation.length
+                                                )}
+                                                <Text className="text-sm text-gray-500 pl-2">
+                                                    Between 8 and 20 characters
+                                                </Text>
+                                            </View>
+                                            <View
+                                                style={
+                                                    styles.validationContainer
+                                                }
+                                            >
+                                                {renderValidationCircle(
+                                                    validation.upperCase
+                                                )}
+                                                <Text className="text-sm text-gray-500 pl-2">
+                                                    1 upper case letter
+                                                </Text>
+                                            </View>
+                                            <View
+                                                style={
+                                                    styles.validationContainer
+                                                }
+                                            >
+                                                {renderValidationCircle(
+                                                    validation.number
+                                                )}
+                                                <Text className="text-sm text-gray-500 pl-2">
+                                                    1 or more numbers
+                                                </Text>
+                                            </View>
+                                            <View
+                                                style={
+                                                    styles.validationContainer
+                                                }
+                                            >
+                                                {renderValidationCircle(
+                                                    validation.specialChar
+                                                )}
+                                                <Text className="text-sm text-gray-500 pl-2">
+                                                    1 or more special characters
+                                                </Text>
+                                            </View>
                                         </View>
-                                        <View
-                                            style={styles.validationContainer}
-                                        >
-                                            {renderValidationCircle(
-                                                validation.upperCase
-                                            )}
-                                            <Text className="text-sm text-gray-500 pl-2">
-                                                1 upper case letter
-                                            </Text>
-                                        </View>
-                                        <View
-                                            style={styles.validationContainer}
-                                        >
-                                            {renderValidationCircle(
-                                                validation.number
-                                            )}
-                                            <Text className="text-sm text-gray-500 pl-2">
-                                                1 or more numbers
-                                            </Text>
-                                        </View>
-                                        <View
-                                            style={styles.validationContainer}
-                                        >
-                                            {renderValidationCircle(
-                                                validation.specialChar
-                                            )}
-                                            <Text className="text-sm text-gray-500 pl-2">
-                                                1 or more special characters
-                                            </Text>
-                                        </View>
-                                    </View>
-                                    <View className="flex flex-row justify-center pt-4">
-                                        <Pressable
-                                            className={`bg-[#114EA8] rounded w-8/12 ${
-                                                (!validation.length ||
+                                        <View className="flex flex-row justify-center pt-4">
+                                            <Pressable
+                                                className={`bg-[#114EA8] rounded w-8/12 ${
+                                                    (!validation.length ||
+                                                        !validation.upperCase ||
+                                                        !validation.number ||
+                                                        !validation.specialChar ||
+                                                        errors.oldPassword ||
+                                                        !formData.confirmPassword) &&
+                                                    "bg-gray-400 pointer-events-none"
+                                                }`}
+                                                onPress={() => handleSubmit()}
+                                                style={{ padding: 4 }}
+                                                disabled={
+                                                    !validation.length ||
                                                     !validation.upperCase ||
                                                     !validation.number ||
                                                     !validation.specialChar ||
-                                                    errors.oldPassword) &&
-                                                "bg-gray-400 pointer-events-none"
-                                            }`}
-                                            onPress={() => handleSubmit()}
-                                            style={{ padding: 4 }}
-                                            disabled={
-                                                !validation.length ||
-                                                !validation.upperCase ||
-                                                !validation.number ||
-                                                !validation.specialChar ||
-                                                errors.oldPassword
-                                            }
+                                                    errors.oldPassword ||
+                                                    !formData.confirmPassword
+                                                }
+                                            >
+                                                <Text className="text-white text-center">
+                                                    {" "}
+                                                    Change Password
+                                                </Text>
+                                            </Pressable>
+                                        </View>
+                                    </>
+                                ) : (
+                                    <View className="flex flex-col justify-center items-center pt-8 gap-4">
+                                        <Text className="text-center text-bold">
+                                            Password Changed Successfully
+                                        </Text>
+                                        <Pressable
+                                            onPress={handleSignIn}
+                                            className=""
+                                            aria-describedby="forgotPassword"
                                         >
-                                            <Text className="text-white text-center">
-                                                {" "}
-                                                Change Password
+                                            <Text className="underline decoration-solid pl-2 text-blue-400">
+                                                Click to Sign-in
                                             </Text>
                                         </Pressable>
                                     </View>
-                                </>
-                            ) : (
-                                <View className="flex flex-col justify-center items-center pt-8 gap-4">
-                                    <Text className="text-center text-bold">
-                                        Password Changed Successfully
-                                    </Text>
-                                    <Pressable
-                                        onPress={handleSignIn}
-                                        className=""
-                                        aria-describedby="forgotPassword"
-                                    >
-                                        <Text className="underline decoration-solid pl-2 text-blue-400">
-                                            Click to Sign-in
-                                        </Text>
-                                    </Pressable>
-                                </View>
-                            )}
+                                )}
+                            </ScrollView>
                         </Modal.Body>
                     </Modal.Content>
                 </Modal>

@@ -709,13 +709,13 @@ const MainComponent = () => {
                         onPress={() => router.push("/dashboard")}
                     >
                         <Icon name="angle-left" size={18} color={"black"} />
-                    </Pressable>
+                    </Pressable> */}
                     <Text
                         selectable
                         className="text-base flex flex-row text-center font-bold"
                     >
-                        DSA Form
-                    </Text> */}
+                        DSA Onboarding Form
+                    </Text> 
                 </View>
                 <View style={styles.stepContainer}>
                     <View style={styles.stepHeader}>

@@ -203,7 +203,7 @@ export const Cards = ({
                                             selectable
                                             className="text-black font-semibold break-all text-sm flex-wrap"
                                         >
-                                            {rta.mutualfund.fundhouse.name}
+                                            {rta?.mutualfund?.fundhouse?.name}
                                         </Text>
                                         <View className="flex flex-row items-center flex-wrap">
                                             <Text
@@ -212,8 +212,7 @@ export const Cards = ({
                                             >
                                                 BSE:{" "}
                                                 {
-                                                    rta.mutualfund
-                                                        .bseDematSchemeCode
+                                                    rta?.mutualfund?.bseDematSchemeCode
                                                 }
                                             </Text>
                                         </View>

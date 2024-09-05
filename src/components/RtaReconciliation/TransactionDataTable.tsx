@@ -93,6 +93,8 @@ const TransactionDataTable = () => {
             data.orderBy = appliedSorting;
         }
 
+        console.log("Transactiondata"+ JSON.stringify(data))
+
         const response: RTAResponseResponseInterface = await RemoteApi.post(
             "transaction/list",
             data
@@ -108,6 +110,10 @@ const TransactionDataTable = () => {
                         itemsPerPage
                 )
             );
+        }else{
+            setIsLoading(false);
+            window.alert(response.message)
+
         }
     }
 

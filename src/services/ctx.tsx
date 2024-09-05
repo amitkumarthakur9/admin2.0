@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useStorageState } from "./useStorageState";
 import RemoteApi from "./RemoteApi";
 import { router } from "expo-router";
+import { ActivityIndicator, View, Text } from "react-native";
+import { useToast } from "native-base";
+import { ToastAlert } from "src/helper/CustomToaster";
 
 const AuthContext = React.createContext<{
     signIn: (token: string, userData: UserData) => void;
@@ -42,9 +45,91 @@ export function useSession() {
 export function SessionProvider(props) {
     const [[isLoading, token], setToken] = useStorageState("token");
     // console.log('session provider', token);
-    const [[isLoadingUserData, userDataString], setUserData] = useStorageState("userData");
-    const userData: UserData | null = userDataString ? JSON.parse(userDataString) : null;
+    const [[isLoadingUserData, userDataString], setUserData] =
+        useStorageState("userData");
+    const userData: UserData | null = userDataString
+        ? JSON.parse(userDataString)
+        : null;
+    const [isLogout, setIsLogout] = useState(false);
+    const toast = useToast();
 
+    const handleSignout = async () => {
+        setIsLogout(true);
+        try {
+            const response: any = await RemoteApi.put("/user/logout", {});
+
+            // const response: any = await simulateApiResponse();
+            console.log("response", response);
+
+            if (response.message == "Success") {
+                // setIsErrorModalVisible(false);
+                setToken(null);
+                console.log("setlogouttoken");
+                console.log(token);
+                setUserData(null);
+                setIsLogout(false);
+                window.location.reload();
+
+                // router.push("/sign-in");
+            } else {
+                setIsLogout(false);
+                // setIsErrorModalVisible(false);
+                // setToken(null);
+                // setUserData(null);
+                // setIsErrorModalVisible(true);
+                if (response) {
+                    // response.errors.forEach((error, index) => {
+                    toast.show({
+                        render: ({ index }) => {
+                            return (
+                                <ToastAlert
+                                    id={index}
+                                    variant={"solid"}
+                                    title={"unable to logout try again"}
+                                    description={""}
+                                    isClosable={true}
+                                    toast={toast}
+                                    status={"error"}
+                                />
+                            );
+                        },
+                        placement: "top",
+                    });
+                    // });
+                }
+            }
+        } catch (err) {
+            setIsLogout(false);
+            console.log(err);
+            // setIsErrorModalVisible(false);
+            // setToken(null);
+            // setUserData(null);
+            // setIsErrorModalVisible(true);
+            toast.show({
+                render: ({ id }) => {
+                    return (
+                        <ToastAlert
+                            id={id}
+                            variant={"solid"}
+                            title="Unable to log out"
+                            description={err.message}
+                            isClosable={true}
+                            toast={toast}
+                            status={"error"}
+                        />
+                    );
+                },
+                placement: "top",
+            });
+        }
+    };
+
+    // useEffect(() => {
+    //     if (token === null && userData === null && isLogout) {
+    //         setIsLogout(false);
+    //         window.location.reload();
+    //     }
+    // }, [token, userData, isLogout]);
 
     return (
         <AuthContext.Provider
@@ -54,17 +139,26 @@ export function SessionProvider(props) {
                     setToken(token);
                     setUserData(JSON.stringify(data));
                 },
-                signOut: () => {
-                    setToken(null);
-                    setUserData(null); 
-                    router.push("/sign-in");
-                },
+                signOut: handleSignout,
                 token,
                 isLoading,
                 userData,
             }}
         >
-            {props.children}
+            {isLogout ? (
+                <View
+                    style={{
+                        flex: 1,
+                        justifyContent: "center",
+                        alignItems: "center",
+                    }}
+                >
+                    <ActivityIndicator size="large" color="#0000ff" />
+                    <Text>Logging off...</Text>
+                </View>
+            ) : (
+                props.children
+            )}
         </AuthContext.Provider>
     );
 }
