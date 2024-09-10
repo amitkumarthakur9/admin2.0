@@ -22,8 +22,8 @@ const validationSchema = Yup.object().shape({
         .max(300, "Address line 2 cannot exceed 300 characters")
         .required("Address line 2 is required"),
     city: Yup.string().required("City is required"),
-    state: Yup.string().required("State is required"),
-    district: Yup.string().required("District is required"),
+    // state: Yup.string().required("State is required"),
+    // district: Yup.string().required("District is required"),
     pincode: Yup.string()
         .matches(/^[0-9]{6}$/, "Please enter a valid Postal Code")
         .required("Pincode is required"),
@@ -31,57 +31,14 @@ const validationSchema = Yup.object().shape({
 
 const AddressDetailsForm = ({ onNext, onPrevious, initialValues }) => {
     const [isLoadingState, setIsLoadingState] = React.useState(false);
-    const [isLoadingDistrict, setIsLoadingDistrict] = React.useState(false);
-    const [stateOptions, setStateOptions] = React.useState([]);
-    const [districtOptions, setDistrictOptions] = React.useState([]);
     const [Address, setAddress] = React.useState({
+        stateId: "",
         state: "",
         district: "",
+        districtId: "",
         pincodeId: "",
     });
     const [isLoading, setIsLoading] = React.useState(false);
-    async function getStateList() {
-        setIsLoadingState(true);
-        try {
-            const response = await RemoteApi.get("state/");
-            if (response.code === 200) {
-                setStateOptions(
-                    response.data.map((state) => ({
-                        label: state.name,
-                        value: state.id,
-                    }))
-                );
-            } else {
-                alert("Failed to fetch state list");
-            }
-        } catch (error) {
-            alert("An error occurred while fetching the state list");
-        } finally {
-            setIsLoadingState(false);
-        }
-    }
-
-    async function getDistrictList(stateId) {
-        setIsLoadingDistrict(true);
-        try {
-            const response = await RemoteApi.get(`district/${stateId}`);
-            console.log("District API Response:", response); // Debugging line
-            if (response.code === 200) {
-                const mappedDistricts = response.data.map((district) => ({
-                    label: district.name,
-                    value: district.id,
-                }));
-                console.log("Mapped Districts:", mappedDistricts); // Debugging line
-                setDistrictOptions(mappedDistricts);
-            } else {
-                alert("Failed to fetch district list");
-            }
-        } catch (error) {
-            alert("An error occurred while fetching the district list");
-        } finally {
-            setIsLoadingDistrict(false);
-        }
-    }
 
     const fetchPincodeDetails = async (pincode, setFieldError) => {
         setIsLoading(true);
@@ -94,7 +51,9 @@ const AddressDetailsForm = ({ onNext, onPrevious, initialValues }) => {
                 const { state, district, pincodeId } = response.data;
                 setAddress({
                     state: state.name,
+                    stateId: state.id,
                     district: district.name,
+                    districtId: district.id,
                     pincodeId: pincodeId,
                 });
             } else if (response.code === 254) {
@@ -117,7 +76,7 @@ const AddressDetailsForm = ({ onNext, onPrevious, initialValues }) => {
         const data = {
             addressDetails: {
                 pincode: values.pincode,
-                districtId: values.district,
+                districtId: Number(Address.districtId),
                 addressLine1: values.addressLine1,
                 addressLine2: values.addressLine2,
                 // addressLine3: values.addressLine3 || "", // Optional field
@@ -160,13 +119,13 @@ const AddressDetailsForm = ({ onNext, onPrevious, initialValues }) => {
                 setFieldError,
             }) => {
                 useEffect(() => {
-                    if (initialValues.state) {
-                        setFieldValue("state", initialValues.state);
-                        getDistrictList(initialValues.state);
-                    }
-                    if (initialValues.district) {
-                        setFieldValue("district", initialValues.district);
-                    }
+                    // if (initialValues.state) {
+                    //     setFieldValue("state", initialValues.state);
+                    //     getDistrictList(initialValues.state);
+                    // }
+                    // if (initialValues.district) {
+                    //     setFieldValue("district", initialValues.district);
+                    // }
                 }, [initialValues, setFieldValue]);
 
                 return (
@@ -302,7 +261,9 @@ const AddressDetailsForm = ({ onNext, onPrevious, initialValues }) => {
                                             );
                                         } else {
                                             setAddress({
+                                                districtId: "",
                                                 district: "",
+                                                stateId: "",
                                                 state: "",
                                                 pincodeId: "",
                                             });

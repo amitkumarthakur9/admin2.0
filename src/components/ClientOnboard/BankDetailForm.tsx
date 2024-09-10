@@ -23,6 +23,8 @@ import { getResponse } from "src/helper/helper";
 import { v4 as uuidv4 } from "uuid";
 import * as DocumentPicker from "expo-document-picker";
 import { CheckIcon, FormControl, Select, Stack } from "native-base";
+import CustomRadioButton from "../CustomForm/CustomRadioButton/CustomRadioButton";
+import UploadBankDocument from "./UploadBankDocument";
 const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [modalFormData, setModalFormData] = useState({
@@ -47,8 +49,8 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
         bankName: "",
         address: "",
         pincode: "",
+        branchId:"",
     });
-    const [rta, setRta] = useState("");
     const [bankOptions, setBankOptions] = useState([]);
     const [selectedBank, setSelectedBank] = useState(null);
     const handleSelect = (item) => {
@@ -59,96 +61,9 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
         });
     };
     const [isLoading, setIsLoading] = useState(false);
-    const [showDocumentUpload, setShowDocumentUpload] = useState(false);
+    const [radioOption, setRadioOption] = useState("");
+    const [bankVerificationFailed, setBankVerificationFailed] = useState(false);
 
-    const [pickedDocument, setPickedDocument] = useState<any>(null);
-    const pickDocument = async () => {
-        if (pickedDocument == null) {
-            let result: any = await DocumentPicker.getDocumentAsync({
-                type: [".jpg", ".png", ".pdf", ".jpeg"],
-                copyToCacheDirectory: true,
-            });
-            // console.log('selected file', result);
-            if (result.assets.length > 0) {
-                let { name, size, uri } = result.assets[0];
-                let newUri = "file:///" + uri.split("data:/").join("");
-                let nameParts = name.split(".");
-                let fileType = nameParts[nameParts.length - 1];
-                var fileToUpload = {
-                    name: name,
-                    size: size,
-                    uri: newUri,
-                    type: "application/" + fileType,
-                };
-                // console.log(fileToUpload, '...............file')
-                setPickedDocument(result.assets[0].file);
-            }
-        } else {
-            setPickedDocument(null);
-        }
-    };
-
-    const [pickedDocuments, setPickedDocuments] = useState({
-        panCard: null,
-        aadharFront: null,
-        aadharBack: null,
-        bankCheck: null,
-        esignedAgreement: null,
-    });
-
-    const documentErrors = {
-        aadharFront: initialValues.aadharFrontDocumentError,
-        aadharBack: initialValues.aadharBackDocumentError,
-        panCard: initialValues.panCardDocumentError,
-        bankCheck: initialValues.cancelledChequeError,
-    };
-    const anyDocumentError = Object.values(documentErrors).some(
-        (error) => error
-    );
-
-    const uploadDocument = async () => {
-        setIsLoading(true);
-        let formData = new FormData();
-        formData.append("rta", rta);
-        formData.append("file", pickedDocument);
-
-        try {
-            const response: any = await RemoteApi.postWithFormData(
-                "/file/upload-transaction",
-                formData
-            );
-
-            if (response?.message == "Success") {
-                const uniqueId = uuidv4();
-                // Add the success toast to the toasts array in the component's state
-                // setToasts([
-                //     ...toasts,
-                //     {
-                //         id: uniqueId,
-                //         variant: "solid",
-                //         title: response?.data,
-                //         status: "success",
-                //     },
-                // ]);
-            } else {
-                // const uniqueId = uuidv4();
-                // setToasts([...toasts, { id: uniqueId, variant: "solid", title: "Upload Failed", status: "error" }]);
-            }
-        } catch (error) {
-            const uniqueId = uuidv4();
-            // setToasts([
-            //     ...toasts,
-            //     {
-            //         id: uniqueId,
-            //         variant: "solid",
-            //         title: "Upload Failed",
-            //         status: "error",
-            //     },
-            // ]);
-        }
-
-        setIsLoading(false);
-    };
     async function fetchBankOptions(query) {
         try {
             const response: any = await RemoteApi.get(`bank/?query=${query}`);
@@ -268,44 +183,6 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
         }
     }
 
-    async function getdocumentType() {
-        setIsLoadingDistrict(true);
-
-        try {
-            // const response: DropdownResponse = await RemoteApi.get(
-            //     `bank-account-type`
-            // );
-
-            const response = {
-                code: 200,
-                data: [
-                    {
-                        id: 1,
-                        name: "Passbook",
-                    },
-                    {
-                        id: 1,
-                        name: "Cancelled Cheque",
-                    },
-                ],
-            };
-            if (response.code === 200) {
-                const mappedAccount = response.data.map((item) => ({
-                    label: item.name,
-                    value: item.id,
-                }));
-
-                setDocumentTypeOptions(mappedAccount);
-            } else {
-                alert("Failed to fetch district list");
-            }
-        } catch (error) {
-            alert("An error occurred while fetching the district list");
-        } finally {
-            setIsLoadingDistrict(false);
-        }
-    }
-
     async function getIfseCode(branchId) {
         setIsLoadingDistrict(true);
 
@@ -358,13 +235,14 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
             const response: any = await RemoteApi.post("bank/address", data);
 
             if (response.code === 200) {
-                const { bankBranch, pincode, district, state } = response.data;
+                const { bankBranch, pincode, district, state, id } = response.data;
                 const address = `${bankBranch}, ${district}, ${state}, ${pincode}`;
 
                 setBankAddress({
                     bankName: response.data.bankName,
                     address: address,
                     pincode: response.data.pincode,
+                    branchId: response.data.id,
                 });
 
                 console.log(JSON.stringify(address));
@@ -394,11 +272,12 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
         setIsModalVisible(false);
     };
 
-    const handleDocumentSubmit = async (values) => {
-        console.log("document handle");
-        console.log(values);
-        onNext()
-        // uploadDocument();
+    const handleRadiooption = async (value) => {
+        if (value == "1") {
+            setBankVerificationFailed(false);
+        } else {
+            setRadioOption(value);
+        }
     };
 
     const handleSubmit = async (values) => {
@@ -406,128 +285,47 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
         console.log(JSON.stringify(values));
         setIsVerifing(true); // Start loading before the API call
         const data = {
-            pincode: bankAddress.pincode,
+            bankBranchId: bankAddress.branchId,
             accountNumber: values.accountNumber,
             ifscCode: values.ifsc,
-            bankAccountType: values.accountType,
+            token: values.token,
+            // bankAccountType: values.accountType,
         };
-
-        const bankData = {
-            accountNumber: values.accountNumber,
-            accountType: values.accountType,
-            ifscCode: values.ifsc,
-            bankName: bankAddress.bankName,
-            bankAddress: bankAddress.address,
-            pincode: bankAddress.pincode,
-        };
-
-        // onNext(values);
-
-        setIsVerifing(true);
-        // setIsModalVisible(true);
 
         try {
-            // const response: DropdownResponse = await RemoteApi.post(
-            //     "bank-account",
-            //     data
-            // );
+            const response: any = await RemoteApi.post(
+                "onboard/client/bank-details",
+                data
+            );
 
-            const response = {
-                code: 500,
-            };
+            // const response = {
+            //     code: 500,
+            // };
 
             console.log("response");
             console.log(response);
 
             if (response.code === 200) {
-                setIsVerifing(false); // Stop loading
-                onNext(values);
+                setIsVerifing(false);
+                const valuesWithToken = {
+                    ...values,
+                    token: response.data.token,
+                };
+                onNext(valuesWithToken);  // Stop loading
+                // onNext(values);
             } else {
                 setIsVerifing(false); // Stop loading
                 console.log("ElseError");
-                getdocumentType();
-                setShowDocumentUpload(true);
-                setMessage(
-                    "Verification Failed. Please upload supporting document for the verification."
-                );
+                setMessage("Bank Verification Failure!");
+                setBankVerificationFailed(true); // Set failure state
             }
         } catch (error) {
             setIsVerifing(false); // Stop loading
-            getdocumentType();
-            setShowDocumentUpload(true);
-            setMessage(
-                "Verification Failed. Please upload supporting document for the verification."
-            );
+            // setMessage("Bank Verification Failure!");
+            // setBankVerificationFailed(true); // Set failure state
         }
+        // }
     };
-
-    const renderDocumentUpload = (label, documentKey) => (
-        <View
-            className="flex flex-row justify-center items-center w-full mb-4"
-            key={documentKey}
-        >
-            <View className="flex flex-col justify-center items-start w-full">
-                <FormControl.Label>{label}*</FormControl.Label>
-                <TouchableOpacity
-                    className={`flex flex-row border-[#114EA8] border-[1px] rounded-[5px] px-3 py-2 items-center justify-between w-full 
-                        `}
-                    onPress={() => pickDocument(documentKey)}
-                    disabled={anyDocumentError && !documentErrors[documentKey]}
-                >
-                    <View className="flex flex-row justify-start items-center w-full space-x-2">
-                        {pickedDocuments[documentKey] ? (
-                            <>
-                                <View className="mr-[10px] bg-[#E8F1FF] p-2 rounded-full">
-                                    <Icon
-                                        name="file-multiple-outline"
-                                        size={16}
-                                        color="#396CB7"
-                                    />
-                                </View>
-                                <View className="flex flex-row justify-between w-11/12">
-                                    <Text className="text-[#ada9a9]">
-                                        {pickedDocuments[documentKey].name}
-                                    </Text>
-                                    <Icon
-                                        name="delete-forever-outline"
-                                        size={20}
-                                        color="#FF551F"
-                                    />
-                                </View>
-                            </>
-                        ) : !documentErrors[documentKey] ? (
-                            <>
-                                <View className="mr-[10px] bg-[#E8F1FF] p-2 rounded-full">
-                                    <Icon
-                                        name="file-multiple-outline"
-                                        size={16}
-                                        color="#396CB7"
-                                    />
-                                </View>
-                                <Text className="text-[#114EA8]">{`${label} Uploaded`}</Text>
-                            </>
-                        ) : (
-                            <>
-                                <View className="mr-[10px] bg-[#E8F1FF] p-2 rounded-full">
-                                    <Icon
-                                        name="file-multiple-outline"
-                                        size={16}
-                                        color="#396CB7"
-                                    />
-                                </View>
-                                <Text className="text-[#114EA8]">{`Upload ${label}`}</Text>
-                            </>
-                        )}
-                    </View>
-                </TouchableOpacity>
-                {documentErrors[documentKey] && (
-                    <Text className="text-red-500 mt-1">
-                        Please re-upload the {label}.
-                    </Text>
-                )}
-            </View>
-        </View>
-    );
 
     if (isVerifing) {
         <View style={styles.loadingContainer}>
@@ -540,9 +338,6 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
         <Formik
             initialValues={initialValues}
             validationSchema={Yup.object().shape({
-                // accountNumber: Yup.number().required(
-                //     "Account Number is required"
-                // ),
                 accountNumber: Yup.string()
                     .required("Account number is required")
                     .matches(/^\d+$/, "Account number must be Numeric"),
@@ -566,163 +361,71 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
                 setFieldValue,
             }) => (
                 <ScrollView contentContainerStyle={styles.container}>
-                     {!showDocumentUpload ? (
-                        <>
-                    <View style={styles.formRow}>
-                        <View style={styles.fieldContainer}>
-                            <Text style={styles.label}>Account Number*</Text>
-                            <TextInput
-                                style={styles.input}
-                                onChangeText={handleChange("accountNumber")}
-                                onBlur={handleBlur("accountNumber")}
-                                value={values.accountNumber}
-                                keyboardType="numeric"
-                            />
-                            {touched.accountNumber && errors.accountNumber && (
-                                <Text style={styles.error}>
-                                    {errors.accountNumber}
-                                </Text>
-                                // setFieldValue(va)
-                            )}
-                        </View>
-                        <View style={styles.fieldContainer}>
-                            <Text style={styles.label}>Bank IFSC*</Text>
-                            <TextInput
-                                style={styles.input}
-                                onChangeText={(value) => {
-                                    const uppercasedValue = value.toUpperCase();
-                                    handleChange("ifsc")(uppercasedValue);
-                                    if (uppercasedValue.length === 11) {
-                                        fetchBankDetails(uppercasedValue);
-                                    } else {
-                                        setBankAddress({
-                                            bankName: "",
-                                            address: "",
-                                            pincode: "",
-                                        });
-                                    }
-                                }}
-                                onBlur={handleBlur("ifsc")}
-                                // value={
-                                //     ifscCode !== "null" ? ifscCode : values.ifsc
-                                // }
-                                value={values.ifsc}
-                            />
-                            {touched.ifsc && errors.ifsc && (
-                                <Text style={styles.error}>{errors.ifsc}</Text>
-                            )}
-                            <TouchableOpacity
-                                onPress={() => setIsModalVisible(true)}
-                            >
-                                <Text style={styles.link}>
-                                    Don't know IFSC?
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-
-                    <View style={styles.formRow}>
-                        <View style={styles.fieldContainer}>
-                            <Text style={styles.label}>Account Type*</Text>
-                            <DropdownComponent
-                                label="Account Type"
-                                data={accountTypeOptions}
-                                value={values.accountType}
-                                setValue={(value) =>
-                                    setFieldValue("accountType", value)
-                                }
-                                containerStyle={styles.dropdown}
-                                noIcon={true}
-                            />
-                            {touched.accountType && errors.accountType && (
-                                <Text style={styles.error}>
-                                    {errors.accountType}
-                                </Text>
-                            )}
-                        </View>
-                        <View style={styles.fieldContainer}>
-                            {values.bankName && values.address && (
-                                <View style={styles.bankDetails}>
-                                    <Text>Bank name: {values.bankName}</Text>
-                                    <Text>Address: {values.address}</Text>
-                                </View>
-                            )}
-                            {bankAddress.bankName !== "" && (
-                                <>
-                                    <View className="flex flex-row py-1">
-                                        <Text className="pr-2 color-gray-600">
-                                            Bank Name:
-                                        </Text>
-                                        <Text className="">
-                                            {bankAddress.bankName}
-                                        </Text>
-                                    </View>
-                                    <View className="flex flex-row py-4">
-                                        <Text className="pr-2 color-gray-600">
-                                            Address:
-                                        </Text>
-                                        <Text className="">
-                                            {bankAddress.address}
-                                        </Text>
-                                    </View>
-                                </>
-                            )}
-                        </View>
-                    </View>
-                    <View className="flex flex-row justify-center gap-2">
-                        <View className="w-3/12">
-                            <Pressable
-                                style={({ pressed }) => [
-                                    styles.back,
-                                    {
-                                        borderColor: "#0066cc",
-                                        opacity: pressed ? 0.6 : 1,
-                                    },
-                                ]}
-                                onPress={onPrevious}
-                            >
-                                <Text
-                                    style={[
-                                        styles.buttonText,
-                                        { color: "#0066cc" },
-                                    ]}
-                                >
-                                    {"Save as Draft"}
-                                </Text>
-                            </Pressable>
-                        </View>
-
-                        <View className="w-3/12">
-                            <Pressable
-                                style={({ pressed }) => [
-                                    styles.proceed,
-                                    {
-                                        borderColor: "#0066cc",
-                                        opacity: pressed ? 0.6 : 1,
-                                    },
-                                ]}
-                                onPress={() => handleSubmit()}
-                                disabled={isVerifing === true}
-                            >
-                                <Text
-                                    style={[
-                                        styles.buttonText,
-                                        { color: "#ffffff" },
-                                    ]}
-                                >
-                                    {"Save and Continue"}
-                                </Text>
-                            </Pressable>
-                        </View>
-                    </View>
-                    </>
-                     )
-                   :
+                    {!bankVerificationFailed ? (
                         <>
                             <View style={styles.formRow}>
-                                <Text className="text-red-600 text-lg">
-                                    {message}
-                                </Text>
+                                <View style={styles.fieldContainer}>
+                                    <Text style={styles.label}>
+                                        Account Number*
+                                    </Text>
+                                    <TextInput
+                                        style={styles.input}
+                                        onChangeText={handleChange(
+                                            "accountNumber"
+                                        )}
+                                        onBlur={handleBlur("accountNumber")}
+                                        value={values.accountNumber}
+                                        keyboardType="numeric"
+                                    />
+                                    {touched.accountNumber &&
+                                        errors.accountNumber && (
+                                            <Text style={styles.error}>
+                                                {errors.accountNumber}
+                                            </Text>
+                                            // setFieldValue(va)
+                                        )}
+                                </View>
+                                <View style={styles.fieldContainer}>
+                                    <Text style={styles.label}>Bank IFSC*</Text>
+                                    <TextInput
+                                        style={styles.input}
+                                        onChangeText={(value) => {
+                                            const uppercasedValue =
+                                                value.toUpperCase();
+                                            handleChange("ifsc")(
+                                                uppercasedValue
+                                            );
+                                            if (uppercasedValue.length === 11) {
+                                                fetchBankDetails(
+                                                    uppercasedValue
+                                                );
+                                            } else {
+                                                setBankAddress({
+                                                    bankName: "",
+                                                    address: "",
+                                                    pincode: "",
+                                                });
+                                            }
+                                        }}
+                                        onBlur={handleBlur("ifsc")}
+                                        // value={
+                                        //     ifscCode !== "null" ? ifscCode : values.ifsc
+                                        // }
+                                        value={values.ifsc}
+                                    />
+                                    {touched.ifsc && errors.ifsc && (
+                                        <Text style={styles.error}>
+                                            {errors.ifsc}
+                                        </Text>
+                                    )}
+                                    <TouchableOpacity
+                                        onPress={() => setIsModalVisible(true)}
+                                    >
+                                        <Text style={styles.link}>
+                                            Don't know IFSC?
+                                        </Text>
+                                    </TouchableOpacity>
+                                </View>
                             </View>
 
                             <View style={styles.formRow}>
@@ -731,79 +434,146 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
                                         Account Type*
                                     </Text>
                                     <DropdownComponent
-                                        label="Document Type"
-                                        data={documentTypeOptions}
-                                        value={values.documentType}
+                                        label="Account Type"
+                                        data={accountTypeOptions}
+                                        value={values.accountType}
                                         setValue={(value) =>
-                                            setFieldValue("documentType", value)
+                                            setFieldValue("accountType", value)
                                         }
                                         containerStyle={styles.dropdown}
                                         noIcon={true}
                                     />
-                                    {touched.documentType &&
-                                        errors.documentType && (
+                                    {touched.accountType &&
+                                        errors.accountType && (
                                             <Text style={styles.error}>
-                                                {errors.documentType}
+                                                {errors.accountType}
                                             </Text>
                                         )}
                                 </View>
                                 <View style={styles.fieldContainer}>
-                                    {renderDocumentUpload(
-                                        "Pan Card",
-                                        "panCard"
+                                    {values.bankName && values.address && (
+                                        <View style={styles.bankDetails}>
+                                            <Text>
+                                                Bank name: {values.bankName}
+                                            </Text>
+                                            <Text>
+                                                Address: {values.address}
+                                            </Text>
+                                        </View>
+                                    )}
+                                    {bankAddress.bankName !== "" && (
+                                        <>
+                                            <View className="flex flex-row py-1">
+                                                <Text className="pr-2 color-gray-600">
+                                                    Bank Name:
+                                                </Text>
+                                                <Text className="">
+                                                    {bankAddress.bankName}
+                                                </Text>
+                                            </View>
+                                            <View className="flex flex-row py-4">
+                                                <Text className="pr-2 color-gray-600">
+                                                    Address:
+                                                </Text>
+                                                <Text className="">
+                                                    {bankAddress.address}
+                                                </Text>
+                                            </View>
+                                        </>
                                     )}
                                 </View>
                             </View>
                             <View className="flex flex-row justify-center gap-2">
-                        <View className="w-3/12">
-                            <Pressable
-                                style={({ pressed }) => [
-                                    styles.back,
-                                    {
-                                        borderColor: "#0066cc",
-                                        opacity: pressed ? 0.6 : 1,
-                                    },
-                                ]}
-                                onPress={onPrevious}
-                            >
-                                <Text
-                                    style={[
-                                        styles.buttonText,
-                                        { color: "#0066cc" },
-                                    ]}
-                                >
-                                    {"Save as Draft"}
-                                </Text>
-                            </Pressable>
-                        </View>
+                                <View className="w-3/12">
+                                    <Pressable
+                                        style={({ pressed }) => [
+                                            styles.back,
+                                            {
+                                                borderColor: "#0066cc",
+                                                opacity: pressed ? 0.6 : 1,
+                                            },
+                                        ]}
+                                        onPress={onPrevious}
+                                    >
+                                        <Text
+                                            style={[
+                                                styles.buttonText,
+                                                { color: "#0066cc" },
+                                            ]}
+                                        >
+                                            {"Save as Draft"}
+                                        </Text>
+                                    </Pressable>
+                                </View>
 
-                        <View className="w-3/12">
-                            <Pressable
-                                style={({ pressed }) => [
-                                    styles.proceed,
-                                    {
-                                        borderColor: "#0066cc",
-                                        opacity: pressed ? 0.6 : 1,
-                                    },
-                                ]}
-                                onPress={() => handleDocumentSubmit(values)}
-                                disabled={isVerifing === true}
-                            >
-                                <Text
-                                    style={[
-                                        styles.buttonText,
-                                        { color: "#ffffff" },
-                                    ]}
-                                >
-                                    {"Save and Continue"}
-                                </Text>
-                            </Pressable>
-                        </View>
-                    </View>
+                                <View className="w-3/12">
+                                    <Pressable
+                                        style={({ pressed }) => [
+                                            styles.proceed,
+                                            {
+                                                borderColor: "#0066cc",
+                                                opacity: pressed ? 0.6 : 1,
+                                            },
+                                        ]}
+                                        onPress={() => handleSubmit()}
+                                        disabled={isVerifing === true}
+                                    >
+                                        <Text
+                                            style={[
+                                                styles.buttonText,
+                                                { color: "#ffffff" },
+                                            ]}
+                                        >
+                                            {"Save and Continue"}
+                                        </Text>
+                                    </Pressable>
+                                </View>
+                            </View>
                         </>
-                    }
+                    ) : (
+                        <>
+                            <View style={styles.formRow}>
+                                <View className="flex flex-col">
+                                    <View style={styles.fieldContainer}>
+                                        <Text className="text-red-600 text-2xl">
+                                            {message}
+                                        </Text>
+                                    </View>
+                                    <View style={styles.fieldContainer}>
+                                        <Text>
+                                            Please verify the details enter by
+                                            you or upadte the details.
+                                        </Text>
+                                    </View>
+                                </View>
+                            </View>
 
-                   
+                            <View style={styles.formRow}>
+                                <View style={styles.radiofieldContainer}>
+                                    <CustomRadioButton
+                                        options={[
+                                            {
+                                                label: "Change Bank Details",
+                                                value: "1",
+                                            },
+                                            {
+                                                label: "Upload Supporting Documents",
+                                                value: "2",
+                                            },
+                                        ]}
+                                        value={radioOption}
+                                        setValue={(value) => {
+                                            handleRadiooption(value);
+                                        }}
+                                    />
+                                </View>
+                            </View>
+                            {radioOption === "2" && (
+                                <UploadBankDocument onPrevious={onPrevious} onNext={onNext} />
+                            )}
+                        </>
+                    )}
+
                     <Modal
                         visible={isModalVisible}
                         transparent
@@ -1000,6 +770,13 @@ const styles = StyleSheet.create({
         // marginRight: 10,
         paddingBottom: 10,
         paddingLeft: 20,
+        paddingRight: 20,
+    },
+    radiofieldContainer: {
+        flex: 1,
+        // marginRight: 10,
+        paddingBottom: 10,
+        paddingLeft: 10,
         paddingRight: 20,
     },
     label: {

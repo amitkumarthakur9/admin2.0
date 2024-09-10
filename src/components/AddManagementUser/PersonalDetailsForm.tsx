@@ -21,6 +21,7 @@ const emailRegexRFC5322 =
 const validationSchema = Yup.object().shape({
     fullName: Yup.string()
         .matches(/^[A-Za-z\s]+$/, "Full Name should contain only alphabets")
+        .min(3, "Full Name should contain at least 3 alphabets")
         .required("Full Name is required"),
     email: Yup.string()
         .matches(emailRegexRFC5322, "Invalid email address")
@@ -28,7 +29,7 @@ const validationSchema = Yup.object().shape({
     mobileNumber: Yup.string()
         .matches(/^\d{10}$/, "Mobile number must be exactly 10 digits")
         .required("Mobile number is required"),
-        employeeCode: Yup.string()
+    employeeCode: Yup.string()
         .min(3, "Employee Code must be at least 3 characters long")
         .matches(
             /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]+$/,

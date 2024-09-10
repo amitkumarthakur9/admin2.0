@@ -282,6 +282,8 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
             pincode: bankAddress.pincode,
         };
 
+        // Modify the values to set isBankVerified to true before proceeding
+
         // onNext(values);
 
         setIsVerifing(true);
@@ -299,8 +301,19 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
             console.log(response);
 
             if (response.code === 200) {
-                onNext(values);
+                // Modify the values to set isBankVerified to true before proceeding
+                const updatedValues = {
+                    ...values,
+                    isBankVerified: true, // Set isBankVerified to true
+                };
+                onNext(updatedValues);
             } else {
+                // Modify the values to set isBankVerified to true before proceeding
+                const updatedValues = {
+                    ...values,
+                    isBankVerified: false, // Set isBankVerified to true
+                };
+                onNext(updatedValues);
                 console.log("ElseError");
                 setMessage(
                     "Verification Failed. Check your account Number and Try again"
@@ -318,7 +331,7 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
             initialValues={{
                 accountNumber: "",
                 ifsc: "",
-                accountType: "Current",
+                accountType: "",
                 bankName: "",
                 address: "",
             }}
@@ -580,26 +593,26 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
                                             </Text>
                                         </Text>
                                         {modalFormData.state ? (
-                                        <DropdownComponent
-                                            label="District"
-                                            data={districtOptions}
-                                            value={modalFormData.district}
-                                            setValue={(value) => {
-                                                setModalFormData({
-                                                    ...modalFormData,
-                                                    district: value,
-                                                });
-                                                getBranchList(value);
-                                            }}
-                                            searchOn={true}
-                                            containerStyle={styles.dropdown}
-                                            noIcon={true}
-                                        />
-                                    ) : (
-                                        <View className="border border-gray-500 p-[10px] rounded mr-2">
-                                            <Text>Select state first</Text>
-                                        </View>
-                                    )}
+                                            <DropdownComponent
+                                                label="District"
+                                                data={districtOptions}
+                                                value={modalFormData.district}
+                                                setValue={(value) => {
+                                                    setModalFormData({
+                                                        ...modalFormData,
+                                                        district: value,
+                                                    });
+                                                    getBranchList(value);
+                                                }}
+                                                searchOn={true}
+                                                containerStyle={styles.dropdown}
+                                                noIcon={true}
+                                            />
+                                        ) : (
+                                            <View className="border border-gray-500 p-[10px] rounded mr-2">
+                                                <Text>Select state first</Text>
+                                            </View>
+                                        )}
                                     </View>
                                     <View style={styles.fieldContainer}>
                                         <Text style={styles.label}>
@@ -609,26 +622,28 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
                                             </Text>
                                         </Text>
                                         {modalFormData.district ? (
-                                        <DropdownComponent
-                                            label="Branch"
-                                            data={branchOptions}
-                                            value={modalFormData.branch}
-                                            setValue={(value) => {
-                                                setModalFormData({
-                                                    ...modalFormData,
-                                                    branch: value,
-                                                });
-                                                getIfseCode(value);
-                                            }}
-                                            searchOn={true}
-                                            containerStyle={styles.dropdown}
-                                            noIcon={true}
-                                        />
-                                    ) : (
-                                        <View className="border border-gray-500 p-[10px] rounded mr-2">
-                                            <Text>Select district first</Text>
-                                        </View>
-                                    )}
+                                            <DropdownComponent
+                                                label="Branch"
+                                                data={branchOptions}
+                                                value={modalFormData.branch}
+                                                setValue={(value) => {
+                                                    setModalFormData({
+                                                        ...modalFormData,
+                                                        branch: value,
+                                                    });
+                                                    getIfseCode(value);
+                                                }}
+                                                searchOn={true}
+                                                containerStyle={styles.dropdown}
+                                                noIcon={true}
+                                            />
+                                        ) : (
+                                            <View className="border border-gray-500 p-[10px] rounded mr-2">
+                                                <Text>
+                                                    Select district first
+                                                </Text>
+                                            </View>
+                                        )}
                                     </View>
                                     {ifscCode !== "null" && (
                                         <View className="flex flex-row py-4">

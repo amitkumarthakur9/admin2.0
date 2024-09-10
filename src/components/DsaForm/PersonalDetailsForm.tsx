@@ -21,8 +21,9 @@ const emailRegexRFC5322 =
 
 const validationSchema = Yup.object().shape({
     fullName: Yup.string()
-        .matches(/^[A-Za-z\s]+$/, "Full Name should contain only alphabets")
-        .required("Full Name is required"),
+    .matches(/^[A-Za-z\s]+$/, "Full Name should contain only alphabets")
+    .min(3, "Full Name should contain at least 3 alphabets")
+    .required("Full Name is required"),
     email: Yup.string()
         .matches(emailRegexRFC5322, "Invalid email address")
         .required("Email is required"),

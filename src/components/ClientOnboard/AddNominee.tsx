@@ -1,80 +1,241 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, StyleSheet, Pressable } from "react-native";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { Ionicons } from "@expo/vector-icons";
+import CalendarSinglePicker from "../CustomDatePicker/CalendarSinglePicker";
+import DropdownComponent from "../../components/Dropdowns/NewDropDown";
+import RemoteApi from "src/services/RemoteApi";
+const today = new Date();
+const eighteenYearsAgo = new Date(
+    today.getFullYear() - 18,
+    today.getMonth(),
+    today.getDate()
+);
 
 const nomineeValidationSchema = Yup.object().shape({
-    name: Yup.string().required("Name is required"),
+    nomineeName: Yup.string()
+    .matches(/^[A-Za-z\s]+$/, "Full Name should contain only alphabets")
+    .min(3, "Full Name should contain at least 3 alphabets")
+    .required("Full Name is required"),
+    nomineeDateOfBirth: Yup.date()
+        .max(today, "Date of birth cannot be in the future")
+        .test(
+            "age-check",
+            "Nominee is minor, provide guardian's details",
+            function (value) {
+                const nomineeDob = new Date(value);
+                return (
+                    nomineeDob <= eighteenYearsAgo || this.parent.guardianName
+                );
+            }
+        )
+        .required("Date of birth is required"),
     relationship: Yup.string().required("Relationship is required"),
-    dateOfBirth: Yup.string().required("Date of Birth is required"),
+    guardianName: Yup.string().when("nomineeDateOfBirth", {
+        is: (nomineeDateOfBirth) => {
+            const nomineeDob = new Date(nomineeDateOfBirth);
+            return nomineeDob > eighteenYearsAgo; // Nominee is younger than 18
+        },
+        then: (schema) =>
+            schema
+        .matches(/^[A-Za-z\s]+$/, "Full Name should contain only alphabets")
+        .min(3, "Full Name should contain at least 3 alphabets")
+        .required("Full Name is required"),
+        otherwise: (schema) => schema.notRequired(),
+    }),
+    guardianDateOfBirth: Yup.date().when("nomineeDateOfBirth", {
+        is: (nomineeDateOfBirth) => {
+            const nomineeDob = new Date(nomineeDateOfBirth);
+            return nomineeDob > eighteenYearsAgo; // Nominee is younger than 18
+        },
+        then: (schema) =>
+            schema
+                .required("Guardian's Date of birth is required")
+                .max(today, "Date of birth cannot be in the future")
+                .test(
+                    "guardian-age-check",
+                    "Guardian must be at least 18 years old",
+                    function (value) {
+                        const guardianDob = new Date(value);
+                        return guardianDob <= eighteenYearsAgo;
+                    }
+                ),
+        otherwise: (schema) => schema.notRequired(),
+    }),
+    country: Yup.string().when("isTaxpayer", {
+        is: (isTaxpayer) => isTaxpayer,
+        then: (schema) =>
+            schema
+                .required("Country is required")
+                .matches(
+                    /^[A-Za-z\s]+$/,
+                    "Country must contain only alphabets"
+                ),
+        otherwise: (schema) => schema.notRequired(),
+    }),
 });
 
 const AddNominee = ({ onNext, onPrevious, initialValues }) => {
     const [step, setStep] = useState(1);
+    const [relationshipOptions, setRelationshipOptions] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleSaveNominee = () => {
         setStep(2);
     };
 
+    const handleSubmit = async (values) => {
+        console.log(values);
+        console.log(JSON.stringify(values));
+        // setIsVerifing(true); // Start loading before the API call
+        const data = {
+            nomineeName: values.nomineeName,
+            guardianName: values.guardianName,
+            relationship: values.relationship,
+            nomineeDateOfBirth: values.nomineeDateOfBirth,
+            guardianDateOfBirth: values.guardianDateOfBirth,
+        };
+
+        console.log(data);
+
+        // onNext(values);
+
+        // setIsVerifing(true);
+        // setIsModalVisible(true);
+
+        try {
+            const response: any = await RemoteApi.post(
+                "onboard/client/add-nominee",
+                data
+            );
+
+            // const response = {
+            //     code: 200,
+            // };
+
+            console.log("response");
+            console.log(response);
+
+            if (response.code === 200) {
+                // setIsVerifing(false); // Stop loading
+                const valuesWithToken = {
+                    ...values,
+                    token: response.data.token,
+                };
+                onNext(valuesWithToken); 
+            } else {
+                // setIsVerifing(false); // Stop loading
+                console.log("ElseError");
+                // getdocumentType();
+                // setShowDocumentUpload(true);
+                // setMessage(
+                //     "Verification Failed. Please upload supporting document for the verification."
+                // );
+            }
+        } catch (error) {
+            // setIsVerifing(false); // Stop loading
+            // getdocumentType();
+            // setShowDocumentUpload(true);
+            // setMessage(
+            //     "Verification Failed. Please upload supporting document for the verification."
+            // );
+        }
+    };
+
+    // Function to fetch dropdown options
+    const getOptions = async (endpoint, setter) => {
+        setIsLoading(true);
+        try {
+            const response: DropdownResponse = await RemoteApi.get(
+                `${endpoint}`
+            );
+
+            if (response.code === 200) {
+                if (endpoint === "relationship/list") {
+                    setRelationshipOptions(
+                        response.data.map((state) => ({
+                            label: state.name,
+                            value: state.id,
+                        }))
+                    );
+                }
+            } else {
+                alert("Failed to fetch data list");
+            }
+        } catch (error) {
+            console.error(`Failed to fetch ${endpoint} options`, error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        getOptions("relationship/list", setRelationshipOptions);
+        // getOptions("countries", setCountryOptions);
+    }, []);
+
     return (
         <View style={styles.container}>
             <View style={styles.content}>
-                {step === 1 ? (
-                    <Formik
-                        initialValues={{
-                            name: "",
-                            relationship: "",
-                            dateOfBirth: "",
-                        }}
-                        validationSchema={nomineeValidationSchema}
-                        onSubmit={handleSaveNominee}
-                    >
-                        {({
-                            handleChange,
-                            handleBlur,
-                            handleSubmit,
-                            values,
-                            errors,
-                            touched,
-                        }) => (
-                            <>
-                                <Text style={styles.title}>
-                                    Add Nominee Details
+                <Formik
+                    // initialValues={{
+                    //     name: "",
+                    //     relationship: "",
+
+                    // }}
+                    initialValues={initialValues}
+                    validationSchema={nomineeValidationSchema}
+                    onSubmit={handleSubmit}
+                >
+                    {({
+                        handleChange,
+                        handleBlur,
+                        handleSubmit,
+                        values,
+                        errors,
+                        touched,
+                        setFieldValue,
+                    }) => (
+                        <>
+                            <Text style={styles.title}>
+                                Add Nominee Details
+                            </Text>
+                            <Text style={styles.subTitle}>
+                                Please complete all mandatory fields to
+                                successfully add a nominee.
+                            </Text>
+                            <View style={styles.fieldContainer}>
+                                <Text style={styles.label}>
+                                    Name <Text style={styles.required}>*</Text>
                                 </Text>
-                                <Text style={styles.subTitle}>
-                                    Please complete all mandatory fields to
-                                    successfully add a nominee.
-                                </Text>
-                                <View style={styles.formField}>
-                                    <Text style={styles.label}>
-                                        Name{" "}
-                                        <Text style={styles.required}>*</Text>
+                                <TextInput
+                                    style={styles.input}
+                                    onChangeText={handleChange("nomineeName")}
+                                    onBlur={handleBlur("nomineeName")}
+                                    value={values.nomineeName}
+                                />
+                                {touched.nomineeName && errors.nomineeName && (
+                                    <Text style={styles.errorText}>
+                                        {errors.nomineeName}
                                     </Text>
-                                    <TextInput
-                                        style={styles.input}
-                                        onChangeText={handleChange("name")}
-                                        onBlur={handleBlur("name")}
-                                        value={values.name}
-                                    />
-                                    {touched.name && errors.name && (
-                                        <Text style={styles.errorText}>
-                                            {errors.name}
-                                        </Text>
-                                    )}
-                                </View>
-                                <View style={styles.formField}>
+                                )}
+                            </View>
+                            <View style={styles.formRow}>
+                                <View style={styles.fieldContainer}>
                                     <Text style={styles.label}>
                                         Relationship{" "}
                                         <Text style={styles.required}>*</Text>
                                     </Text>
-                                    <TextInput
-                                        style={styles.input}
-                                        onChangeText={handleChange(
-                                            "relationship"
-                                        )}
-                                        onBlur={handleBlur("relationship")}
+                                    <DropdownComponent
+                                        label="Relationship"
+                                        data={relationshipOptions}
                                         value={values.relationship}
+                                        setValue={(value) =>
+                                            setFieldValue("relationship", value)
+                                        }
+                                        // containerStyle={styles.dropdown}
+                                        noIcon={true}
                                     />
                                     {touched.relationship &&
                                         errors.relationship && (
@@ -83,84 +244,100 @@ const AddNominee = ({ onNext, onPrevious, initialValues }) => {
                                             </Text>
                                         )}
                                 </View>
-                                <View style={styles.formField}>
+                                <View style={styles.fieldContainer}>
                                     <Text style={styles.label}>
                                         Date of Birth{" "}
                                         <Text style={styles.required}>*</Text>
                                     </Text>
-                                    <TextInput
-                                        style={styles.input}
-                                        onChangeText={handleChange(
-                                            "dateOfBirth"
-                                        )}
-                                        onBlur={handleBlur("dateOfBirth")}
-                                        value={values.dateOfBirth}
+                                    <CalendarSinglePicker
+                                        value={values.nomineeDateOfBirth}
+                                        handleFilterChange={(value) =>
+                                            setFieldValue(
+                                                "nomineeDateOfBirth",
+                                                value
+                                            )
+                                        }
                                     />
-                                    {touched.dateOfBirth &&
-                                        errors.dateOfBirth && (
+                                    {touched.nomineeDateOfBirth &&
+                                        errors.nomineeDateOfBirth && (
                                             <Text style={styles.errorText}>
-                                                {errors.dateOfBirth}
+                                                {errors.nomineeDateOfBirth}
                                             </Text>
                                         )}
                                 </View>
-
-                                <View style={styles.buttonContainer}>
-                                    {/* <Pressable
-                                        style={styles.skipButton}
-                                        onPress={onClose}
-                                    >
-                                        <Text style={styles.skipButtonText}>
-                                            Skip
+                            </View>
+                            {/* Conditional rendering for Guardian's fields */}
+                            {new Date(values.nomineeDateOfBirth) >
+                                eighteenYearsAgo && (
+                                <View style={styles.formRow}>
+                                    <View style={styles.fieldContainer}>
+                                        <Text style={styles.label}>
+                                            Guardian’s Name{" "}
+                                            <Text style={styles.required}>
+                                                *
+                                            </Text>
                                         </Text>
-                                    </Pressable> */}
-                                    <Pressable
-                                        style={styles.saveButton}
-                                        onPress={() => onNext()}
-                                    >
-                                        <Text style={styles.saveButtonText}>
-                                            Save Nominee
+                                        <TextInput
+                                            style={styles.input}
+                                            onChangeText={handleChange(
+                                                "guardianName"
+                                            )}
+                                            onBlur={handleBlur("guardianName")}
+                                            value={values.guardianName}
+                                        />
+                                        {touched.guardianName &&
+                                            errors.guardianName && (
+                                                <Text style={styles.errorText}>
+                                                    {errors.guardianName}
+                                                </Text>
+                                            )}
+                                    </View>
+                                    <View style={styles.fieldContainer}>
+                                        <Text style={styles.label}>
+                                            Guardian’s Date of Birth{" "}
+                                            <Text style={styles.required}>
+                                                *
+                                            </Text>
                                         </Text>
-                                    </Pressable>
+                                        <CalendarSinglePicker
+                                            value={values.guardianDateOfBirth}
+                                            handleFilterChange={(value) =>
+                                                setFieldValue(
+                                                    "guardianDateOfBirth",
+                                                    value
+                                                )
+                                            }
+                                        />
+                                        {touched.guardianDateOfBirth &&
+                                            errors.guardianDateOfBirth && (
+                                                <Text style={styles.errorText}>
+                                                    {errors.guardianDateOfBirth}
+                                                </Text>
+                                            )}
+                                    </View>
                                 </View>
-                            </>
-                        )}
-                    </Formik>
-                ) : (
-                    <>
-                        <Text style={styles.title}>Add Signature</Text>
-                        <Text style={styles.subTitle}>
-                            Please sign in the given area
-                        </Text>
-
-                        <View style={styles.uploadContainer}>
-                            <Ionicons
-                                name="cloud-upload-outline"
-                                size={64}
-                                color="#A0AEC0"
-                            />
-                            <Text style={styles.uploadText}>
-                                Maximum file size: 2 MB (PNG/JPG format only)
-                            </Text>
-                            <Text style={styles.uploadText}>
-                                You can also drag and drop the file
-                            </Text>
-                        </View>
-
-                        <View style={styles.buttonContainer}>
-                            <Pressable
-                                style={styles.skipButton}
-                                onPress={onClose}
-                            >
-                                <Text style={styles.skipButtonText}>Skip</Text>
-                            </Pressable>
-                            <Pressable style={styles.disabledButton}>
-                                <Text style={styles.disabledButtonText}>
-                                    Save and Continue
-                                </Text>
-                            </Pressable>
-                        </View>
-                    </>
-                )}
+                            )}
+                            <View style={styles.buttonContainer}>
+                                <Pressable
+                                    style={styles.skipButton}
+                                    // onPress={onClose}
+                                >
+                                    <Text style={styles.skipButtonText}>
+                                        Save As Draft
+                                    </Text>
+                                </Pressable>
+                                <Pressable
+                                    style={styles.saveButton}
+                                    onPress={() => handleSubmit()}
+                                >
+                                    <Text style={styles.saveButtonText}>
+                                        Save Nominee
+                                    </Text>
+                                </Pressable>
+                            </View>
+                        </>
+                    )}
+                </Formik>
             </View>
         </View>
     );
@@ -226,6 +403,8 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         marginTop: 20,
+        paddingLeft: 20,
+        paddingRight: 20,
     },
     skipButton: {
         padding: 10,
@@ -276,6 +455,18 @@ const styles = StyleSheet.create({
     disabledButtonText: {
         fontSize: 16,
         color: "#FFFFFF",
+    },
+    formRow: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        marginBottom: 20,
+    },
+    fieldContainer: {
+        flex: 1,
+        // marginRight: 10,
+        paddingBottom: 10,
+        paddingLeft: 20,
+        paddingRight: 20,
     },
 });
 

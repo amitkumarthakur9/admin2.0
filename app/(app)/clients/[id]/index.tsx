@@ -283,14 +283,14 @@ export default function ClientDetail() {
                                                 <Button
                                                     width="48"
                                                     bgColor={
-                                                        isDistributor
+                                                        (isDistributor && data?.isActive )
                                                             ? "#013974"
                                                             : "#ddd"
                                                     }
                                                     onPress={showModal(
                                                         "invest"
                                                     )}
-                                                    disabled={!isDistributor}
+                                                    disabled={!isDistributor || !data?.isActive}
                                                 >
                                                     Invest
                                                 </Button>
@@ -1180,11 +1180,11 @@ const LumpSumOrderTab = ({
                 IsMFSearch
                     ? !!mutualFund.maxInvestment
                         ? mutualFund.maxInvestment
-                        : 9999999
+                        : 99999999
                     : !!mutualFund.mutualfund.maxInvestment
                     ? mutualFund.mutualfund.maxInvestment
-                    : 9999999,
-                "Cannot be more than maximum investment allowed"
+                    : 99999999,
+                "Cannot be more than maximum investment allowed, maximum is 99999999"
             ),
     });
 
@@ -1380,11 +1380,11 @@ const SipOrderTab = ({
                 IsMFSearch
                     ? !!mutualFund.maxInvestment
                         ? mutualFund.maxInvestment
-                        : 9999999
+                        : 99999999
                     : !!mutualFund.mutualfund.maxInvestment
                     ? mutualFund.mutualfund.maxInvestment
-                    : 9999999,
-                "Cannot be more than maximum investment allowed"
+                    : 99999999,
+                "Cannot be more than maximum investment allowed, maximum is 99999999 "
             )
             .refine(
                 (value) => value % 1000 === 0,
@@ -2449,6 +2449,9 @@ const AccountDetailsCard = ({ data }: { data: ClientDetailedDataResponse }) => {
                             renderItem={renderItem}
                         />
                     )}
+                    {
+                        
+                    }
                 </View>
             ),
         },

@@ -65,9 +65,9 @@ const ProfessionalDetailsForm = ({
                 `${endpoint}`
             );
             if (response.code === 200) {
-                if (endpoint === "occupation") {
+                if (endpoint === "occupation/list") {
                     setOccupationOptions(
-                        response.data.data.map((state) => ({
+                        response.data.map((state) => ({
                             label: state.name,
                             value: state.id,
                         }))
@@ -98,7 +98,7 @@ const ProfessionalDetailsForm = ({
     }
 
     React.useEffect(() => {
-        getDropdownList("occupation");
+        getDropdownList("occupation/list");
         getDropdownList("income-slab");
         getDropdownList("education");
     }, []);

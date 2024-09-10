@@ -63,7 +63,7 @@ axiosInstance.interceptors.response.use(
 
             // Display the errorJson in a NativeBase toast message
             Toast.show({
-                title: "Server Error",
+                title: "",
                 description: errorJson.message || "Something went wrong",
                 bg: "red.500", // Set background color to red
                 status: "error",
@@ -80,7 +80,7 @@ axiosInstance.interceptors.response.use(
             // const errorText = await error.response.data;
             // const errorJson = JSON.parse(errorText);
             Toast.show({
-                title: "Server Error",
+                title: "",
                 description:
                     error.response.data.errors[0].message ||
                     "Something went wrong",

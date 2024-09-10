@@ -256,7 +256,7 @@ const ClientsDataTable = () => {
                     <View className="border-[0.2px] border-[#e4e4e4]">
                         {/* {data.length !== 0 && ( */}
                         <View className="flex flex-row justify-between items-center">
-                            <View className="w-[100%]">
+                            <View className="w-[80%]">
                                 <DynamicFilters
                                     appliedSorting={appliedSorting}
                                     setAppliedSorting={setAppliedSorting}
@@ -271,9 +271,9 @@ const ClientsDataTable = () => {
                                     // newComponent={<ClientOnboard />}
                                 />
                             </View>
-                            {/* <View className="w-[20%] px-2 pt-4">
+                            <View className="w-[20%] px-2 pt-4">
                                 <ClientOnboard />
-                          </View> */}
+                          </View>
                         </View>
                         {/* )} */}
                         {!isLoading ? (

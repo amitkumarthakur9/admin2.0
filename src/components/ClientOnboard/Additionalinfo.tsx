@@ -14,64 +14,58 @@ import * as Yup from "yup";
 import DropdownComponent from "../../components/Dropdowns/NewDropDown";
 import CustomRadioButton from "../CustomForm/CustomRadioButton/CustomRadioButton";
 import RemoteApi from "src/services/RemoteApi";
+import Success from "./Success";
 
 const validationSchema = Yup.object().shape({
-    panNumber: Yup.string()
-        .required("PAN number is required")
-        .matches(
-            /^[A-Z]{5}[0-9]{4}[A-Z]$/,
-            "Please enter a valid PAN number. Ex: AAAPZ1234C"
-        ),
     incomeRange: Yup.number().required("Income range is required"),
-    placeOfBirth: Yup.string().required("Place of Birth is required"),
+    placeOfBirth: Yup.string()
+        .matches(/^[A-Za-z\s]+$/, "Place of Birth must contain only alphabets")
+        .required("Place of Birth is required"),
     isPoliticalExposed: Yup.boolean().required("This field is required"),
-    isTaxpayer: Yup.boolean().required("This field is required"),
-    passportNumber: Yup.string().when("isPoliticalExposed", {
-        is: true,
-        then: Yup.string().required("Passport number is required"),
-    }),
-    country: Yup.string().when("isTaxpayer", {
-        is: true,
-        then: Yup.string().required("Country is required"),
-    }),
+    // isTaxpayer: Yup.boolean().required("This field is required"),
+    // passportNumber: Yup.string().when("isPoliticalExposed", {
+    //     is: (isPoliticalExposed) => isPoliticalExposed,
+    //     then: (schema) =>
+    //         schema
+    //             .required("PassPort Number is required")
+    //             .matches(
+    //                 /^[PDS][A-Z]{2}\d{4}[A-Z0-9]{2}$/,
+    //                 "Invalid passport number format. Example: PAA1234AB"
+    //             ),
+    //     otherwise: (schema) => schema.notRequired(),
+    // }),
+    // country: Yup.string().when("isTaxpayer", {
+    //     is: (isTaxpayer) => isTaxpayer,
+    //     then: (schema) =>
+    //         schema
+    //             .required("Country is required")
+    //             .matches(
+    //                 /^[A-Za-z\s]+$/,
+    //                 "Country must contain only alphabets"
+    //             ),
+    //     otherwise: (schema) => schema.notRequired(),
+    // }),
 });
 
-const Additonalinfo = ({ onNext, onPrevious, initialValues }) => {
+const Additonalinfo = ({
+    onNext,
+    onPrevious,
+    initialValues,
+    onSubmitSuccess,
+}) => {
     const [isLoading, setIsLoading] = useState(false);
-    const [occupationOptions, setOccupationOptions] = useState([]);
+    const [isSubmitted, setIsSubmitted] = useState(false);
+    const [isKYCSuccessful, setIsKYCSuccessful] = useState(false);
     const [incomeRangeOptions, setIncomeRangeOptions] = useState([]);
-    const [educationOptions, setEducationOptions] = useState([]);
-    const [countryOptions, setCountryOptions] = useState([]);
 
     async function getDropdownList(endpoint) {
         setIsLoading(true);
         try {
             const response = await RemoteApi.get(`${endpoint}`);
             if (response.code === 200) {
-                if (endpoint === "occupation") {
-                    setOccupationOptions(
-                        response.data.data.map((state) => ({
-                            label: state.name,
-                            value: state.id,
-                        }))
-                    );
-                } else if (endpoint === "income-slab") {
+                if (endpoint === "income-slab") {
                     setIncomeRangeOptions(
                         response.data.data.map((state) => ({
-                            label: state.name,
-                            value: state.id,
-                        }))
-                    );
-                } else if (endpoint === "education") {
-                    setEducationOptions(
-                        response.data.map((state) => ({
-                            label: state.name,
-                            value: state.id,
-                        }))
-                    );
-                } else if (endpoint === "countries") {
-                    setCountryOptions(
-                        response.data.map((state) => ({
                             label: state.name,
                             value: state.id,
                         }))
@@ -88,32 +82,35 @@ const Additonalinfo = ({ onNext, onPrevious, initialValues }) => {
     }
 
     useEffect(() => {
-        getDropdownList("occupation");
         getDropdownList("income-slab");
-        getDropdownList("education");
-        getDropdownList("countries"); // Fetch country list
     }, []);
 
     const handleSubmit = async (values) => {
         const data = {
-            panNumber: values.panNumber,
             incomeSlabId: values.incomeRange,
-            educationId: values.education,
-            occupationId: values.occupation,
             placeOfBirth: values.placeOfBirth,
             isPoliticalExposed: values.isPoliticalExposed,
-            passportNumber: values.passportNumber,
-            isTaxpayer: values.isTaxpayer,
-            country: values.country,
+            token: values.token,
+            // isTaxpayer: values.isTaxpayer,
+            // country: values.country,
         };
 
+        console.log(data);
+
         try {
-            const response = await RemoteApi.post(
-                "user/update-professional-details",
-                data
-            );
+            // const response = await RemoteApi.post(
+            //     "user/update-professional-details",
+            //     data
+            // );
+
+            const response = {
+                code: 200,
+            };
+
             if (response.code === 200) {
-                onNext(values);
+                setIsSubmitted(true);
+                setIsKYCSuccessful(true);
+                onSubmitSuccess(true);
             } else {
                 Alert.alert(
                     "Error",
@@ -153,71 +150,87 @@ const Additonalinfo = ({ onNext, onPrevious, initialValues }) => {
                 setFieldValue,
             }) => (
                 <ScrollView contentContainerStyle={styles.container}>
-                    <View style={styles.formRow}>
-                        <View style={styles.fieldContainer}>
-                            <Text style={styles.label}>
-                                Income Slab{" "}
-                                <Text style={styles.required}>*</Text>
-                            </Text>
-                            <DropdownComponent
-                                label="Income Slab"
-                                data={incomeRangeOptions}
-                                value={values.incomeRange}
-                                containerStyle={styles.dropdown}
-                                setValue={(value) =>
-                                    setFieldValue("incomeRange", value)
-                                }
-                            />
-                            {touched.incomeRange && errors.incomeRange && (
-                                <Text style={styles.error}>
-                                    {errors.incomeRange}
-                                </Text>
-                            )}
-                        </View>
-
-                        <View style={styles.fieldContainer}>
-                            <Text style={styles.label}>
-                                Place of Birth{" "}
-                                <Text style={styles.required}>*</Text>
-                            </Text>
-                            <TextInput
-                                style={styles.input}
-                                onChangeText={handleChange("placeOfBirth")}
-                                onBlur={handleBlur("placeOfBirth")}
-                                value={values.placeOfBirth}
-                            />
-                            {touched.placeOfBirth && errors.placeOfBirth && (
-                                <Text style={styles.error}>
-                                    {errors.placeOfBirth}
-                                </Text>
-                            )}
-                        </View>
-                    </View>
-
-                    <View style={styles.formRow}>
-                        <View style={styles.fieldContainer}>
-                            <Text style={styles.label}>
-                                Is your Client a politically exposed person?{" "}
-                                <Text style={styles.required}>*</Text>
-                            </Text>
-                            <CustomRadioButton
-                                options={[
-                                    { label: "Yes", value: true },
-                                    { label: "No", value: false },
-                                ]}
-                                value={values.isPoliticalExposed}
-                                setValue={(value) =>
-                                    setFieldValue("isPoliticalExposed", value)
-                                }
-                            />
-                            {touched.isPoliticalExposed &&
-                                errors.isPoliticalExposed && (
-                                    <Text style={styles.error}>
-                                        {errors.isPoliticalExposed}
+                    {isSubmitted ? (
+                        <Success
+                            onNext={onNext}
+                            isKYCSuccessful={isKYCSuccessful}
+                        />
+                    ) : (
+                        <>
+                            <View style={styles.formRow}>
+                                <View style={styles.fieldContainer}>
+                                    <Text style={styles.label}>
+                                        Income Slab{" "}
+                                        <Text style={styles.required}>*</Text>
                                     </Text>
-                                )}
-                        </View>
-                        {values.isPoliticalExposed && (
+                                    <DropdownComponent
+                                        label="Income Slab"
+                                        data={incomeRangeOptions}
+                                        value={values.incomeRange}
+                                        containerStyle={styles.dropdown}
+                                        setValue={(value) =>
+                                            setFieldValue("incomeRange", value)
+                                        }
+                                        noIcon={true}
+                                    />
+                                    {touched.incomeRange &&
+                                        errors.incomeRange && (
+                                            <Text style={styles.error}>
+                                                {errors.incomeRange}
+                                            </Text>
+                                        )}
+                                </View>
+
+                                <View style={styles.fieldContainer}>
+                                    <Text style={styles.label}>
+                                        Place of Birth{" "}
+                                        <Text style={styles.required}>*</Text>
+                                    </Text>
+                                    <TextInput
+                                        style={styles.input}
+                                        onChangeText={handleChange(
+                                            "placeOfBirth"
+                                        )}
+                                        onBlur={handleBlur("placeOfBirth")}
+                                        value={values.placeOfBirth}
+                                    />
+                                    {touched.placeOfBirth &&
+                                        errors.placeOfBirth && (
+                                            <Text style={styles.error}>
+                                                {errors.placeOfBirth}
+                                            </Text>
+                                        )}
+                                </View>
+                            </View>
+
+                            <View style={styles.formRow}>
+                                <View style={styles.fieldContainer}>
+                                    <Text style={styles.label}>
+                                        Is your Client a politically exposed
+                                        person?{" "}
+                                        <Text style={styles.required}>*</Text>
+                                    </Text>
+                                    <CustomRadioButton
+                                        options={[
+                                            { label: "Yes", value: true },
+                                            { label: "No", value: false },
+                                        ]}
+                                        value={values.isPoliticalExposed}
+                                        setValue={(value) =>
+                                            setFieldValue(
+                                                "isPoliticalExposed",
+                                                value
+                                            )
+                                        }
+                                    />
+                                    {touched.isPoliticalExposed &&
+                                        errors.isPoliticalExposed && (
+                                            <Text style={styles.error}>
+                                                {errors.isPoliticalExposed}
+                                            </Text>
+                                        )}
+                                </View>
+                                {/* {values.isPoliticalExposed && (
                             <View style={styles.fieldContainer}>
                                 <Text style={styles.label}>
                                     Passport Number{" "}
@@ -238,10 +251,10 @@ const Additonalinfo = ({ onNext, onPrevious, initialValues }) => {
                                         </Text>
                                     )}
                             </View>
-                        )}
-                    </View>
+                        )} */}
+                            </View>
 
-                    {values.isPoliticalExposed && (
+                            {/* {values.isPoliticalExposed && (
                         <View style={styles.formRow}>
                             <View style={styles.fieldContainer}>
                                 <Text style={styles.label}>
@@ -266,19 +279,36 @@ const Additonalinfo = ({ onNext, onPrevious, initialValues }) => {
                                 )}
                             </View>
                             {values.isTaxpayer && (
+                                // <View style={styles.fieldContainer}>
+                                //     <Text style={styles.label}>
+                                //         Country{" "}
+                                //         <Text style={styles.required}>*</Text>
+                                //     </Text>
+                                //     <DropdownComponent
+                                //         label="Country"
+                                //         data={countryOptions}
+                                //         value={values.country}
+                                //         containerStyle={styles.dropdown}
+                                //         setValue={(value) =>
+                                //             setFieldValue("country", value)
+                                //         }
+                                //     />
+                                //     {touched.country && errors.country && (
+                                //         <Text style={styles.error}>
+                                //             {errors.country}
+                                //         </Text>
+                                //     )}
+                                // </View>
                                 <View style={styles.fieldContainer}>
                                     <Text style={styles.label}>
                                         Country{" "}
                                         <Text style={styles.required}>*</Text>
                                     </Text>
-                                    <DropdownComponent
-                                        label="Country"
-                                        data={countryOptions}
+                                    <TextInput
+                                        style={styles.input}
+                                        onChangeText={handleChange("country")}
+                                        onBlur={handleBlur("country")}
                                         value={values.country}
-                                        containerStyle={styles.dropdown}
-                                        setValue={(value) =>
-                                            setFieldValue("country", value)
-                                        }
                                     />
                                     {touched.country && errors.country && (
                                         <Text style={styles.error}>
@@ -288,30 +318,34 @@ const Additonalinfo = ({ onNext, onPrevious, initialValues }) => {
                                 </View>
                             )}
                         </View>
-                    )}
+                    )} */}
 
-                    <View style={styles.buttonRow}>
-                        <Pressable
-                            style={({ pressed }) => [
-                                styles.skipButton,
-                                { opacity: pressed ? 0.6 : 1 },
-                            ]}
-                            onPress={onPrevious}
-                        >
-                            <Text style={styles.buttonText}>Skip</Text>
-                        </Pressable>
-                        <Pressable
-                            style={({ pressed }) => [
-                                styles.saveButton,
-                                { opacity: pressed ? 0.6 : 1 },
-                            ]}
-                            onPress={() => onNext()}
-                        >
-                            <Text style={styles.confirmButtonText}>
-                                Save and Continue
-                            </Text>
-                        </Pressable>
-                    </View>
+                            <View style={styles.buttonRow}>
+                                <Pressable
+                                    style={({ pressed }) => [
+                                        styles.skipButton,
+                                        { opacity: pressed ? 0.6 : 1 },
+                                    ]}
+                                    onPress={onPrevious}
+                                >
+                                    <Text style={styles.buttonText}>
+                                        Save as Draft
+                                    </Text>
+                                </Pressable>
+                                <Pressable
+                                    style={({ pressed }) => [
+                                        styles.saveButton,
+                                        { opacity: pressed ? 0.6 : 1 },
+                                    ]}
+                                    onPress={() => handleSubmit()}
+                                >
+                                    <Text style={styles.confirmButtonText}>
+                                        Save and Continue
+                                    </Text>
+                                </Pressable>
+                            </View>
+                        </>
+                    )}
                 </ScrollView>
             )}
         </Formik>

@@ -20,7 +20,11 @@ const panRegex = /^([A-Z]){3}([ABCFGHJLPT])([A-Z]){1}([0-9]){4}([A-Z]){1}?$/;
 const today = new Date();
 
 const validationSchema = Yup.object().shape({
-    fullName: Yup.string().required("Full Name is required"),
+    fullName: Yup.string()
+    .matches(/^[A-Za-z\s]+$/, "Full Name should contain only alphabets")
+    .min(3, "Full Name should contain at least 3 alphabets")
+    .required("Full Name is required"),
+
     dateOfBirth: Yup.date()
         .max(today, "Date of birth cannot be in the future")
         .required("Date of birth is required"),
@@ -63,9 +67,9 @@ const BasicDetails = ({ onNext, initialValues, onSaveDraft, onPrevious }) => {
             );
 
             if (response.code === 200) {
-                if (endpoint === "occupation") {
+                if (endpoint === "occupation/list") {
                     setOccupationOptions(
-                        response.data.data.map((state) => ({
+                        response.data.map((state) => ({
                             label: state.name,
                             value: state.id,
                         }))
@@ -104,7 +108,7 @@ const BasicDetails = ({ onNext, initialValues, onSaveDraft, onPrevious }) => {
     };
 
     useEffect(() => {
-        getOptions("occupation", setOccupationOptions);
+        getOptions("occupation/list", setOccupationOptions);
         // getOptions("countries", setCountryOptions);
     }, []);
 
@@ -136,22 +140,22 @@ const BasicDetails = ({ onNext, initialValues, onSaveDraft, onPrevious }) => {
         };
         try {
             console.log(data);
-            // const response:any = await RemoteApi.post(
-            //     "/onboard/client/basic-details",
-            //     data
-            // );
+            const response:any = await RemoteApi.post(
+                "/onboard/client/basic-details",
+                data
+            );
 
-            const response = {
-                code: 200,
-                message: "success",
-                data: {
-                    isNameMissMatch: false,
-                    isDOBMissMatch: false,
-                    isAddressPresent: false,
-                    token: "cookieToken",
-                },
-                errors: [],
-            };
+            // const response = {
+            //     code: 200,
+            //     message: "success",
+            //     data: {
+            //         isNameMissMatch: false,
+            //         isDOBMissMatch: false,
+            //         isAddressPresent: false,
+            //         token: "cookieToken",
+            //     },
+            //     errors: [],
+            // };
             if (
                 response.code === 200 &&
                 !response.data.isNameMissMatch &&
@@ -159,11 +163,11 @@ const BasicDetails = ({ onNext, initialValues, onSaveDraft, onPrevious }) => {
                 response.data.isAddressPresent &&
                 response.data.token
             ) {
-                const valuesWithFlag = {
+                const valuesWithToken = {
                     ...values,
-                    basicDetailSubmitted: true,
+                    token: response.data.token,
                 };
-                onNext(valuesWithFlag); // Include the submission flag
+                onNext(valuesWithToken); // Include the submission flag
                 // onNext(values)
             } else if (response.code === 200) {
                 setcookieToken(() =>  response.data.token);

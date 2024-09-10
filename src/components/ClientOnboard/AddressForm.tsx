@@ -27,15 +27,21 @@ const validationSchema = Yup.object().shape({
         .matches(/^[0-9]{6}$/, "Please enter a valid Postal Code"),
 });
 
-const AddressForm = ({ initialValues, onPrevious, onNext, formValues, cookieToken }) => {
+const AddressForm = ({
+    initialValues,
+    onPrevious,
+    onNext,
+    formValues,
+    cookieToken,
+}) => {
     const [isLoading, setIsLoading] = useState(false);
     const [Address, setAddress] = React.useState({
         state: "",
         district: "",
         pincodeId: "",
     });
-    console.log("cookieToken")
-    console.log(cookieToken)
+    console.log("cookieToken");
+    console.log(cookieToken);
     const handleSubmit = async (values, actions) => {
         console.log("handleSubmit");
         console.log(values);
@@ -45,30 +51,31 @@ const AddressForm = ({ initialValues, onPrevious, onNext, formValues, cookieToke
             line_1: values.addressLine1,
             line_2: values.addressLine2,
             pincodeId: Address.pincodeId,
+            token: cookieToken,
         };
         try {
-            const response = await RemoteApi.post(
-                "/onboard/client//address",
-                data,
-                cookieToken
-            );
+            // const response = await RemoteApi.post(
+            //     "/onboard/client/address",
+            //     data,
+            //     cookieToken
+            // );
 
             // const response = await RemoteApi.setCookieWithAxios(
             //     "/onboard/client//address",
             //     data,
             //     cookieToken
             // );
-            
-            console.log(response);
-            // const response = {
-            //     data: {
-            //         success: true,
-            //         mismatchDob: false,
-            //         panVerified: true,
-            //         addressMismatch: true,
-            //         mismatchName: false,
-            //     },
-            // };
+
+            // console.log(response);
+            const response = {
+                data: {
+                    success: true,
+                    mismatchDob: false,
+                    panVerified: true,
+                    addressMismatch: true,
+                    mismatchName: false,
+                },
+            };
             if (response.data.success) {
                 const valuesWithFlag = {
                     ...values,
@@ -78,7 +85,6 @@ const AddressForm = ({ initialValues, onPrevious, onNext, formValues, cookieToke
                 // onNext(values)
             } else if (response.data.addressMismatch) {
                 console.log("mismatch");
-                
             } else {
                 // actions.setErrors(response.data.errors);
             }
@@ -105,7 +111,6 @@ const AddressForm = ({ initialValues, onPrevious, onNext, formValues, cookieToke
                     district: response.data.district.name,
                     pincodeId: response.data.pincodeId,
                 });
-
             } else if (response.code === 254) {
                 setFieldError("pincode", "Pincode does not exist.");
             } else {
@@ -116,6 +121,18 @@ const AddressForm = ({ initialValues, onPrevious, onNext, formValues, cookieToke
         } finally {
             setIsLoading(false);
         }
+    };
+
+    const genderOptions = [
+        { label: "Male", value: 1 },
+        { label: "Female", value: 2 },
+        { label: "Other", value: 4 },
+    ];
+
+    // Function to get the label based on value
+    const getGenderLabel = (value) => {
+        const gender = genderOptions.find((option) => option.value === value);
+        return gender ? gender.label : "";
     };
 
     return (
@@ -133,7 +150,7 @@ const AddressForm = ({ initialValues, onPrevious, onNext, formValues, cookieToke
                 touched,
                 isValid,
                 isSubmitting,
-                setFieldError
+                setFieldError,
             }) => (
                 <View contentContainerStyle={styles.container}>
                     <View className="py-4">
@@ -190,7 +207,7 @@ const AddressForm = ({ initialValues, onPrevious, onNext, formValues, cookieToke
                                 style={[styles.input, styles.disabledInput]}
                                 onChangeText={handleChange("gender")}
                                 onBlur={handleBlur("gender")}
-                                value={formValues.gender}
+                                value={getGenderLabel(formValues.gender)} // Show label instead of value
                                 editable={false} // Autofilled and disabled
                             />
                             {touched.gender && errors.gender && (
@@ -294,10 +311,10 @@ const AddressForm = ({ initialValues, onPrevious, onNext, formValues, cookieToke
                         </View>
                     </View>
                     {isLoading && (
-                            <View style={styles.formRow}>
-                                <ActivityIndicator />
-                            </View>
-                        )}
+                        <View style={styles.formRow}>
+                            <ActivityIndicator />
+                        </View>
+                    )}
                     {Address.state && Address.district && !isLoading && (
                         <View style={styles.formRow}>
                             <View style={styles.fieldContainer}>

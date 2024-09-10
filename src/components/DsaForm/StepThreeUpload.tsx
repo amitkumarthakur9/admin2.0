@@ -178,8 +178,9 @@ const StepThreeUpload = ({ onSuccess, initialValues }) => {
             key={documentKey}
         >
             <View className="flex flex-col justify-center items-start w-full">
-                <FormControl.Label>{label}{" "}
-                <Text className="text-red-500">*</Text></FormControl.Label>
+                <FormControl.Label>
+                    {label} <Text className="text-red-500">*</Text>
+                </FormControl.Label>
                 <TouchableOpacity
                     className={`flex flex-row border-[#114EA8] border-[1px] rounded-[5px] px-3 py-2 items-center justify-between w-full 
                         `}
@@ -196,7 +197,7 @@ const StepThreeUpload = ({ onSuccess, initialValues }) => {
                                         color="#396CB7"
                                     />
                                 </View>
-                                <View className="flex flex-row justify-between w-11/12">
+                                <View className="flex flex-row justify-between w-10/12">
                                     <Text className="text-[#ada9a9]">
                                         {pickedDocuments[documentKey].name}
                                     </Text>
@@ -337,33 +338,38 @@ const StepThreeUpload = ({ onSuccess, initialValues }) => {
                             )}
                         </View>
                         <View className="flex flex-row justify-center items-center w-[50%] gap-2 ">
-                            <View className="flex flex-row justify-start items-start w-full pr-4 ">
-                                {initialValues.aadharFrontDocumentError ||
-                                initialValues.aadharBackDocumentError ||
-                                !initialValues.remark ? (
-                                    <View className="justify-start items-start w-full mb-4">
-                                        <View className="">
-                                            <CustomCheckbox
-                                                label="I provide my consent to use Aadhar document for address verification and I agree to have masked the first 8 numbers of Aadhar and I agree for the collection, storage, and use of my Aadhar number for the specified purposes."
-                                                isChecked={consentGiven}
-                                                onChange={() =>
-                                                    setConsentGiven(
-                                                        !consentGiven
-                                                    )
-                                                }
-                                            />
-                                        </View>
+                            {initialValues.aadharFrontDocumentError ||
+                            initialValues.aadharBackDocumentError ||
+                            !initialValues.remark ? (
+                                <View className="flex flex-row justify-center items-center w-full py-2">
+                                    <View className="">
+                                        <CustomCheckbox
+                                            label=""
+                                            isChecked={consentGiven}
+                                            onChange={() =>
+                                                setConsentGiven(!consentGiven)
+                                            }
+                                        />
                                     </View>
-                                ) : (
-                                    <></>
-                                )}
-                            </View>
-                            {renderDocumentUpload(
-                                "Cancelled Bank Check",
-                                "bankCheck"
+                                    <Text className="text-xs text-gray-600">
+                                        I provide my consent to use Aadhar
+                                        document for address verification and I
+                                        agree to have masked the first 8 numbers
+                                        of Aadhar and I agree for the
+                                        collection, storage, and use of my
+                                        Aadhar number for the specified
+                                        purposes.
+                                    </Text>
+                                </View>
+                            ) : (
+                                <></>
                             )}
+                            {!initialValues.accountNumber &&
+                                renderDocumentUpload(
+                                    "Cancelled Bank Check",
+                                    "bankCheck"
+                                )}
                         </View>
-
                         <View className="flex items-center w-1/3">
                             <Button
                                 w="100%"

@@ -302,7 +302,7 @@ const MandateDataTable = () => {
         <View className="bg-white">
             <View className="">
                 <TableBreadCrumb
-                    name={"Mandate"}
+                    name={"Mandates"}
                     url={"/Mandates"}
                     getDataList={getDataList}
                     icon={require("../../../assets/mandateReport.png")}

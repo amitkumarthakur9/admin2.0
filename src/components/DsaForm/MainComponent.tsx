@@ -75,6 +75,7 @@ const MainComponent = () => {
         cancelledChequeError: false,
         areDocumentsUploaded: false,
         isEsigned: false,
+        isBankVerified: null,
     });
     const [isResubmit, setIsResubmit] = useState(false);
 
@@ -86,7 +87,23 @@ const MainComponent = () => {
 
     const handleNext = (values) => {
         setFormData({ ...formData, ...values });
+        // console.log(formData.isBankVerified);
+        // console.log(values.isBankVerified);
+        // if (
+        //     formData.isBankVerified !== null ||
+        //     values.isBankVerified !== undefined
+        // ) {
+        //     if (values.isBankVerified === true) {
+        //         setStep(step + 1); // Proceed to next step
+        //     } else {
+        //         setStep(step + 2); // Skip one step
+        //     }
+        // } else {
+        //     setStep(step + 1); // Default behavior
+        // }
         setStep(step + 1);
+
+        console.log(step);
     };
 
     const handlePrevious = () => {
@@ -131,62 +148,62 @@ const MainComponent = () => {
             //     data: {
             //         name: "Saff",
             //         email: "saff",
-            //         mobileNumber: "9778686786",
+            //         mobileNumber: "876565",
             //         maritalStatus: {
             //             id: 2,
             //             name: "null",
             //         },
-            //         panNumber: "ABCDE1234G",
-            //         arn: "",
+            //         panNumber: "AAAPZ1234G",
+            //         arn: "ARN-14",
             //         euin: "E12345",
             //         dsaCode: null,
             //         remark: {
             //             id: 2,
-            //             remark: "",
+            //             remark: "Remark",
             //         },
             //         incomeSlab: {
             //             id: 2,
             //             name: null,
             //         },
             //         isOnBoarded: false,
-            //         isEsigned: false,
+            //         isEsigned: true,
             //         areDocumentsUploaded: false,
             //         educationalQualification: {
             //             id: 2,
             //             name: null,
             //         },
             //         bankAccount: [
-            //             // {
-            //             //     id: "42",
-            //             //     accountNumber: "45499388",
-            //             //     bankAccountType: {
-            //             //         id: 1,
-            //             //         name: "Savings Account",
-            //             //     },
-            //             //     bankBranch: {
-            //             //         ifscCode: "KKBK0008066",
-            //             //     },
-            //             //     bank: {
-            //             //         id: "107",
-            //             //         name: "KOTAK MAHINDRA BANK LIMITED",
-            //             //     },
-            //             // },
+            //             {
+            //                 id: "42",
+            //                 accountNumber: "45499388",
+            //                 bankAccountType: {
+            //                     id: 1,
+            //                     name: "Savings Account",
+            //                 },
+            //                 bankBranch: {
+            //                     ifscCode: "KKBK0008066",
+            //                 },
+            //                 bank: {
+            //                     id: "107",
+            //                     name: "KOTAK MAHINDRA BANK LIMITED",
+            //                 },
+            //             },
             //         ],
             //         address: [
-            //             // {
-            //             //     line1: "Bangalore",
-            //             //     line2: "Bangalore",
-            //             //     line3: null,
-            //             //     pincode: "560025",
-            //             //     district: {
-            //             //         id: "224",
-            //             //         name: "BENGALURU",
-            //             //     },
-            //             //     state: {
-            //             //         id: 15,
-            //             //         name: "KARNATAKA",
-            //             //     },
-            //             // },
+            //             {
+            //                 line1: "Bangalore",
+            //                 line2: "Bangalore",
+            //                 line3: null,
+            //                 pincode: "560025",
+            //                 district: {
+            //                     id: "224",
+            //                     name: "BENGALURU",
+            //                 },
+            //                 state: {
+            //                     id: 15,
+            //                     name: "KARNATAKA",
+            //                 },
+            //             },
             //         ],
             //         nameError: false,
             //         emailError: false,
@@ -201,9 +218,9 @@ const MainComponent = () => {
             //         panError: false,
             //         esignedDocumentError: false,
             //         aadharFrontDocumentError: true,
-            //         aadharBackDocumentError: false,
-            //         panCardDocumentError: false,
-            //         cancelledChequeError: false,
+            //         aadharBackDocumentError: true,
+            //         panCardDocumentError: true,
+            //         cancelledChequeError: true,
             //     },
             //     errors: [],
             // };
@@ -229,7 +246,9 @@ const MainComponent = () => {
                         pincode:
                             userData?.address?.[0]?.pincode ||
                             prevState.pincode,
-                        arnNumber: userData?.arn || prevState.arnNumber,
+                        arnNumber: userData?.arn
+                            ? userData.arn.replace("ARN-", "")
+                            : prevState.arnNumber,
                         euinNumber: userData?.euin || prevState.euinNumber,
                         maritalStatus:
                             userData?.maritalStatus?.id ||
@@ -541,26 +560,26 @@ const MainComponent = () => {
             });
         }
 
-        if (
-            !formData.remark ||
-            (formData.remark && formData.esignedDocumentError === true)
-        ) {
-            stepLabel.push("Proceed E-sign");
+        // if (
+        //     !formData.remark ||
+        //     (formData.remark && formData.esignedDocumentError === true)
+        // ) {
+        //     stepLabel.push("Proceed E-sign");
 
-            formSteps.push({
-                key: "5",
-                content: (
-                    <View>
-                        {/* {step === 5 && ( */}
-                        <ProceedSign
-                            onPrevious={handlePrevious}
-                            onNext={handleNext}
-                        />
-                        {/* )} */}
-                    </View>
-                ),
-            });
-        }
+        //     formSteps.push({
+        //         key: "5",
+        //         content: (
+        //             <View>
+        //                 {/* {step === 5 && ( */}
+        //                 <ProceedSign
+        //                     onPrevious={handlePrevious}
+        //                     onNext={handleNext}
+        //                 />
+        //                 {/* )} */}
+        //             </View>
+        //         ),
+        //     });
+        // }
 
         if (
             !formData.remark ||
@@ -715,7 +734,7 @@ const MainComponent = () => {
                         className="text-base flex flex-row text-center font-bold"
                     >
                         DSA Onboarding Form
-                    </Text> 
+                    </Text>
                 </View>
                 <View style={styles.stepContainer}>
                     <View style={styles.stepHeader}>
@@ -846,13 +865,10 @@ const MainComponent = () => {
                             ))}
                         </View> */}
                         <View className=" justify-center items-center">
-                        <View className="w-10/12">
-                        {renderCurrentStep()}
+                            <View className="w-10/12">
+                                {renderCurrentStep()}
+                            </View>
                         </View>
-                        </View>
-                       
-
-                        
 
                         {/* <View style={{ flex: 1, padding: 20 }}>
                  
@@ -947,13 +963,11 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "#ffffff",
-       
     },
     stepContainer: {
         padding: 20,
         position: "relative",
         zIndex: 1,
-        
     },
     stepHeader: {
         flexDirection: "row",

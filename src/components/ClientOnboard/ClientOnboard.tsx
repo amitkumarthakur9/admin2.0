@@ -7,6 +7,7 @@ import {
     TouchableOpacity,
     Pressable,
     ActivityIndicator,
+    ScrollView,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import BasicDetails from "./BasicDetails";
@@ -19,6 +20,7 @@ import ClientVerify from "./ClientVerify";
 import AddressForm from "./AddressForm";
 import PanVerify from "./PanVerify";
 import BankVerify from "./BankVerify";
+import Success from "./Success";
 
 const ClientOnboard = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -26,22 +28,24 @@ const ClientOnboard = () => {
     const [visible, setVisible] = useState(false);
     const [showDropdown, setShowDropdown] = useState(false);
     const [modalTitle, setModalTitle] = useState("Client Onboarding");
+    const [isAdditionalDetailsSubmitted, setIsAdditionalDetailsSubmitted] =
+        useState(false); // Track submission
 
     const [formData, setFormData] = useState({
         fullName: "Saffi",
         email: "saffi@gmail.com",
         mobileNumber: "9876543210",
-        isTaxpayer: "",
-        passportNumber: "0",
+        isTaxpayer: false,
+        passportNumber: "",
         dateOfBirth: "1997-04-30",
-        panNumber: "ABCDE1234G",
-        isPoliticalExposed: "",
+        panNumber: "ABCPZ1234G",
+        isPoliticalExposed: null,
         placeOfBirth: "Bangalore",
         gender: null,
         occupation: "",
         accountNumber: "20278353143",
-        accountType: "1",
-        ifsc: "SBI00007",
+        accountType: "",
+        ifsc: "SBI00007876",
         incomeRange: "",
         mismatchDob: false,
         panVerified: true,
@@ -52,103 +56,31 @@ const ClientOnboard = () => {
         addressLine1: "Bangalore",
         addressLine2: "Bangalore",
         postalCode: "751006",
+        country: "",
+        nomineeDateOfBirth: "2024-04-30",
+        guardianDateOfBirth: "1997-04-30",
+        relationship: "",
+        nomineeName: "",
+        guardianName: "",
+        token:"",
     });
     const [loading, setLoading] = useState(false);
 
     const handleNext = (values) => {
-        setFormData({ ...formData, ...values });
-        // if (values?.addressMismatch && values?.basicDetailSubmitted) {
-        //     setStep(step + 1);
-        // } else if (
-        //     values?.addressMismatch == false &&
-        //     values?.basicDetailSubmitted
-        // ) {
-        //     setStep(step + 2);
-        // } else {
-        //     setStep(step + 1);
-        // }
+        // setFormData({ ...formData, ...values });
+
+        setFormData(prevData => ({
+            ...prevData,
+            ...values
+        }));
 
         setStep(step + 1);
-    };
-
-    const mockVerifyDetails = (data) => {
-        console.log("Verifying details", data);
-        return new Promise((resolve) =>
-            setTimeout(
-                () =>
-                    resolve({
-                        panVerified: false,
-                        mismatchName: false,
-                        mismatchDob: false,
-                        addressMismatch: false,
-                    }),
-                2000
-            )
-        );
     };
 
     const saveAsDraft = async (values) => {
         console.log("Saving draft", values);
         // Simulate API call to save draft
         alert("Draft saved successfully");
-    };
-
-    const submitBasicDetails = async (values) => {
-        setIsLoading(true);
-        try {
-            // const response = await RemoteApi.post("/api/submitDetails", values);
-            console.log("handleSubmit");
-            const response = {
-                data: {
-                    mismatchDob: false,
-                    panVerified: true,
-                    addressMismatch: true,
-                    mismatchName: true,
-                },
-            };
-            if (response.data.success) {
-                handleNext(values);
-            } else if (response.data.addressMismatch) {
-                console.log("mismatch");
-                setStep(2);
-                // setShowAddressForm(true); // Show AddressForm if there is an address mismatch
-            } else {
-                // actions.setErrors(response.data.errors);
-            }
-        } catch (error) {
-            Alert.alert("Error", "Submission failed. Please try again.");
-        }
-        setIsLoading(false);
-        // actions.setSubmitting(false);
-    };
-
-    const submitBankDetails = async (values) => {
-        setIsLoading(true);
-        try {
-            // const response = await RemoteApi.post("/api/submitDetails", values);
-            console.log("handleSubmit");
-            const response = {
-                data: {
-                    mismatchDob: false,
-                    panVerified: true,
-                    addressMismatch: true,
-                    mismatchName: true,
-                },
-            };
-            if (response.data.success) {
-                handleNext(values);
-            } else if (response.data.addressMismatch) {
-                console.log("mismatch");
-                setStep(2);
-                // setShowAddressForm(true); // Show AddressForm if there is an address mismatch
-            } else {
-                // actions.setErrors(response.data.errors);
-            }
-        } catch (error) {
-            Alert.alert("Error", "Submission failed. Please try again.");
-        }
-        setIsLoading(false);
-        // actions.setSubmitting(false);
     };
 
     const handlePrevious = () => {
@@ -219,17 +151,19 @@ const ClientOnboard = () => {
                                         />
                                     </Pressable>
                                 </View>
-                                {(step === 1 || step === 2 || step === 3) && (
-                                    <StepProgressBar
-                                        step={step}
-                                        stepLabel={[
-                                            "Basic Details",
-                                            "Bank Details",
-                                            "Additional Info",
-                                        ]}
-                                    />
-                           )} 
-
+                                {!isAdditionalDetailsSubmitted &&
+                                    (step === 1 ||
+                                        step === 2 ||
+                                        step === 3) && (
+                                        <StepProgressBar
+                                            step={step}
+                                            stepLabel={[
+                                                "Basic Details",
+                                                "Bank Details",
+                                                "Additional Info",
+                                            ]}
+                                        />
+                                    )}
                                 <View style={{ flex: 1, width: "100%" }}>
                                     {step === 1 && (
                                         <BasicDetails
@@ -239,13 +173,7 @@ const ClientOnboard = () => {
                                             onPrevious={handlePrevious}
                                         />
                                     )}
-                                    {/* {step === 2 && (
-                                        <AddressForm
-                                            onPrevious={handlePrevious}
-                                            onNext={handleNext}
-                                            initialValues={formData}
-                                        />
-                                    )} */}
+
                                     {step === 2 && (
                                         <BankDetailForm
                                             onPrevious={handlePrevious}
@@ -258,6 +186,9 @@ const ClientOnboard = () => {
                                             onNext={handleNext}
                                             onPrevious={handlePrevious}
                                             initialValues={formData}
+                                            onSubmitSuccess={
+                                                setIsAdditionalDetailsSubmitted
+                                            } // Track when additional details are submitted
                                         />
                                     )}
                                     {step === 4 && (
@@ -285,16 +216,14 @@ const ClientOnboard = () => {
                                             submitText={"Verify"}
                                         />
                                     )}
-                                    {step === 8 && (
+                                    {step === 6 && (
                                         <ClientVerify
                                             apiEndpoint={"submit/otp"}
                                             clientEmail={"john@gmail.com"}
                                             clientNumber={"98765433"}
-                                            title={
-                                                "Account and Nominee Verification"
-                                            }
+                                            title={"E-log Verification"}
                                             subTitle={
-                                                "Please verify to move forward"
+                                                "Please verify to complete onboarding"
                                             }
                                             onClose
                                             onNext={handleNext}
@@ -303,21 +232,6 @@ const ClientOnboard = () => {
                                             submitText={"start Investing"}
                                         />
                                     )}
-                                    {/* {step === 2 && (
-                                        <PanVerify
-                                            onPrevious={handlePrevious}
-                                            onNext={handleNext}
-                                            initialValues={formData}
-                                        />
-                                    )} */}
-
-                                    {/* {step === 4 && (
-                                        <BankVerify
-                                            onPrevious
-                                            onNext={handleNext}
-                                            initialValues={formData}
-                                        />
-                                    )} */}
                                 </View>
                             </>
                         )}

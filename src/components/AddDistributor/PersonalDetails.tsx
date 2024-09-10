@@ -19,15 +19,20 @@ import CalendarSinglePicker from "../CustomDatePicker/CalendarSinglePicker";
 const panRegex = /^([A-Z]){3}([ABCFGHJLPT])([A-Z]){1}([0-9]){4}([A-Z]){1}?$/;
 const emailRegexRFC5322 =
     /^(?:[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-zA-Z0-9-]*[a-zA-Z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)])$/;
-const today = new Date();
+    const today = new Date();
+    const eighteenYearsAgo = new Date();
+    eighteenYearsAgo.setFullYear(today.getFullYear() - 18);
+    
 
 const validationSchema = Yup.object().shape({
     fullName: Yup.string()
-        .matches(/^[A-Za-z\s]+$/, "Full Name should contain only alphabets")
-        .required("Full Name is required"),
-    dateOfBirth: Yup.date()
+    .matches(/^[A-Za-z\s]+$/, "Full Name should contain only alphabets")
+    .min(3, "Full Name should contain at least 3 alphabets")
+    .required("Full Name is required"),
+        dateOfBirth: Yup.date()
         .max(today, "Date of birth cannot be in the future")
-        .required("Date of birth is required"),
+        .min(eighteenYearsAgo, "You must be at least 18 years old")
+        .required("Date of birth is required"),    
     email: Yup.string()
         .matches(emailRegexRFC5322, "Invalid email address")
         .required("Email is required"),

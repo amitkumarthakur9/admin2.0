@@ -31,12 +31,13 @@ const ClientVerify = ({
 }) => {
     const [otpValues, setOtpValues] = useState(["", "", "", "", "", ""]);
     const [resendEnabled, setResendEnabled] = useState(false);
-    const [resendTimer, setResendTimer] = useState(0);
+    const [resendTimer, setResendTimer] = useState(120);
     const [isVerifying, setIsVerifying] = useState(false);
     const [verified, setVerified] = useState(false);
-
+    const [apiError, setApiError] = useState(""); // New state for API error
     const otpRefs = useRef([]);
 
+    // Use useEffect to decrement the resend timer
     useEffect(() => {
         if (resendTimer > 0) {
             const timerId = setTimeout(
@@ -44,6 +45,8 @@ const ClientVerify = ({
                 1000
             );
             return () => clearTimeout(timerId);
+        } else {
+            setResendEnabled(true); // Enable resend button when timer reaches 0
         }
     }, [resendTimer]);
 
@@ -69,32 +72,114 @@ const ClientVerify = ({
     };
 
     const handleSubmit = async () => {
-        if(submitText=="Verify"){
-
-        }
-        if(submitText=="Start investing"){
-
-        }
         setIsVerifying(true);
-        setResendTimer(120); // Start resend timer for 2 minutes
-        setResendEnabled(true); // Enable resend button after verification attempt
+        setApiError(""); // Clear previous API error before submitting
+        if (submitText == "Verify") {
+            try {
+                // const response: DropdownResponse = await RemoteApi.post(
+                //     "bank-account",
+                //     data
+                // );
 
-        setTimeout(() => {
-            setIsVerifying(false);
-            setVerified(true);
+                const response = {
+                    code: 200,
+                    message: "Incorrect OTP", // Example API error message
+                };
 
-            // Show the verified message briefly before calling onNext
-            setTimeout(() => {
-                onNext(); // Trigger onNext after showing the success message
-            }, 2000); // Adjust the delay as needed to give time for the success message to be visible
-        }, 2000); // Mock API call for verification
+                console.log("response");
+                console.log(response);
+
+                if (response.code === 200) {
+                    setTimeout(() => {
+                        setIsVerifying(false);
+                        setVerified(true);
+
+                        // Show the verified message briefly before calling onNext
+                        setTimeout(() => {
+                            onNext(); // Trigger onNext after showing the success message
+                        }, 2000); // Adjust the delay as needed to give time for the success message to be visible
+                    }, 2000); // Mock API call for verification
+                    // setIsVerifing(false); // Stop loading
+                    onNext(values);
+                } else {
+                    // setIsVerifing(false); // Stop loading
+                    console.log("ElseError");
+
+                    setApiError(response.message); // Store the error message from the API
+                    setIsVerifying(false);
+                }
+            } catch (error) {}
+        }
+        if (submitText == "Start investing") {
+            try {
+                // const response: DropdownResponse = await RemoteApi.post(
+                //     "bank-account",
+                //     data
+                // );
+
+                const response = {
+                    code: 200,
+                    message: "Incorrect password", // Example API error message
+                };
+
+                console.log("response");
+                console.log(response);
+
+                if (response.code === 200) {
+                    setTimeout(() => {
+                        setIsVerifying(false);
+                        setVerified(true);
+
+                        // Show the verified message briefly before calling onNext
+                        setTimeout(() => {
+                            onNext(); // Trigger onNext after showing the success message
+                        }, 2000); // Adjust the delay as needed to give time for the success message to be visible
+                    }, 2000); // Mock API call for verification
+                    // setIsVerifing(false); // Stop loading
+                    onNext(values);
+                } else {
+                    console.log("ElseError");
+                    setApiError(response.message); // Store the error message from the API
+                    setIsVerifying(false);
+                }
+            } catch (error) {
+                setApiError("Something went wrong. Please try again."); // Handle unexpected errors
+                setIsVerifying(false);
+            }
+        }
     };
 
     const handleResendOtp = () => {
-        if (resendEnabled && resendTimer === 0) {
-            setResendTimer(120); // Restart the timer for 2 minutes
-            // Logic to resend OTP
+        try {
+            // const response: DropdownResponse = await RemoteApi.post(
+            //     "bank-account",
+            //     data
+            // );
+
+            const response = {
+                code: 200,
+                message: "Incorrect password", // Example API error message
+            };
+
+            console.log("response");
+            console.log(response);
+
+            if (response.code === 200) {
+                if (resendEnabled && resendTimer === 0) {
+                    setResendTimer(120); // Restart the timer for 2 minutes
+                    // Logic to resend OTP
+                }
+                
+            } else {
+                console.log("ElseError");
+                setApiError(response.message); // Store the error message from the API
+                setIsVerifying(false);
+            }
+        } catch (error) {
+            setApiError("Something went wrong. Please try again."); // Handle unexpected errors
+            setIsVerifying(false);
         }
+        
     };
 
     const isOtpComplete = otpValues.every((val) => val !== "");
@@ -132,13 +217,8 @@ const ClientVerify = ({
                     <Ionicons name="close" size={24} color="black" />
                 </Pressable> */}
 
-                <Text style={styles.title}>
-                    {title}
-                   
-                </Text>
-                <Text style={styles.subTitle}>
-                    {subTitle}
-                </Text>
+                <Text style={styles.title}>{title}</Text>
+                <Text style={styles.subTitle}>{subTitle}</Text>
 
                 <Formik
                     initialValues={{ otp: "" }}
@@ -150,7 +230,7 @@ const ClientVerify = ({
                             <Text style={styles.enterOtp}>Enter OTP</Text>
                             <Text style={styles.infoText}>
                                 A 6 digit code has been sent to {clientNumber} &
-                               {clientEmail}
+                                {clientEmail}
                             </Text>
                             <View style={styles.otpContainer}>
                                 {otpValues.map((value, index) => (
@@ -172,6 +252,10 @@ const ClientVerify = ({
                                     />
                                 ))}
                             </View>
+                            {/* Show API error message if exists */}
+                            {apiError ? (
+                                <Text style={styles.errorText}>{apiError}</Text>
+                            ) : null}
 
                             <Pressable
                                 style={[
@@ -199,7 +283,7 @@ const ClientVerify = ({
                                         : styles.disabledButton,
                                 ]}
                                 // onPress={handleSubmit}
-                                onPress = {() =>handleSubmit()}
+                                onPress={() => handleSubmit()}
                                 disabled={!isOtpComplete || isVerifying}
                             >
                                 {isVerifying ? (
@@ -302,7 +386,7 @@ const styles = StyleSheet.create({
     },
     resenddisabledButton: {
         backgroundColor: "",
-    },   
+    },
     verifiedTitle: {
         fontSize: 20,
         fontWeight: "bold",
@@ -325,6 +409,11 @@ const styles = StyleSheet.create({
     startInvestingButtonText: {
         fontSize: 16,
         color: "#ffffff",
+    },
+    errorText: {
+        color: "red",
+        textAlign: "center",
+        marginBottom: 10,
     },
 });
 
