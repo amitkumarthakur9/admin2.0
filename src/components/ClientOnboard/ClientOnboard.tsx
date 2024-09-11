@@ -32,20 +32,20 @@ const ClientOnboard = () => {
         useState(false); // Track submission
 
     const [formData, setFormData] = useState({
-        fullName: "Saffi",
-        email: "saffi@gmail.com",
-        mobileNumber: "9876543210",
+        fullName: "Harsh Mundhra",
+        email: "harshmundhra001@gmail.com",
+        mobileNumber: "9473351515",
         isTaxpayer: false,
         passportNumber: "",
-        dateOfBirth: "1997-04-30",
-        panNumber: "ABCPZ1234G",
+        dateOfBirth: "2000-09-23",
+        panNumber: "GHMPM1801C",
         isPoliticalExposed: null,
         placeOfBirth: "Bangalore",
         gender: null,
         occupation: "",
-        accountNumber: "20278353143",
+        accountNumber: "3047884268",
         accountType: "",
-        ifsc: "SBI00007876",
+        ifsc: "KkBK0008066",
         incomeRange: "",
         mismatchDob: false,
         panVerified: true,
@@ -63,6 +63,9 @@ const ClientOnboard = () => {
         nomineeName: "",
         guardianName: "",
         token:"",
+        branchId:"",
+        
+
     });
     const [loading, setLoading] = useState(false);
 
@@ -103,7 +106,7 @@ const ClientOnboard = () => {
                 style={styles.addButton}
                 onPress={() => setShowDropdown(!showDropdown)}
             >
-                <Icon name="account-plus" size={19} color="#fff" />
+                <Icon name="account-plus" size={16} color="#fff" />
                 <Text style={styles.addButtonText}>Add New Client</Text>
             </Pressable>
 
@@ -189,6 +192,7 @@ const ClientOnboard = () => {
                                             onSubmitSuccess={
                                                 setIsAdditionalDetailsSubmitted
                                             } // Track when additional details are submitted
+                                            setFormData={setFormData}
                                         />
                                     )}
                                     {step === 4 && (
@@ -196,6 +200,7 @@ const ClientOnboard = () => {
                                             onNext={handleNext}
                                             onPrevious={handlePrevious}
                                             initialValues={formData}
+                                           
                                         />
                                     )}
                                     {step === 5 && (
@@ -208,7 +213,8 @@ const ClientOnboard = () => {
                                             subTitle={
                                                 "Please verify to move forward"
                                             }
-                                            apiEndpoint={"submit/otp"}
+                                            generateOtpApi={"/onboard/client/generate-otp"}
+                                            verifyOtpApi={"/onboard/client/verify-otp"}
                                             onClose
                                             onNext={handleNext}
                                             onPrevious={handlePrevious}
@@ -218,7 +224,8 @@ const ClientOnboard = () => {
                                     )}
                                     {step === 6 && (
                                         <ClientVerify
-                                            apiEndpoint={"submit/otp"}
+                                        generateOtpApi={"/onboard/client/generate-otp"}
+                                        verifyOtpApi={"/onboard/client/verify-otp"}
                                             clientEmail={"john@gmail.com"}
                                             clientNumber={"98765433"}
                                             title={"E-log Verification"}
@@ -248,7 +255,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         backgroundColor: "#114EA8",
         paddingVertical: 10,
-        paddingHorizontal: 15,
+        paddingHorizontal: 4,
         borderRadius: 5,
     },
     addButtonText: {

@@ -42,7 +42,7 @@ export const getAllDatesInMonth = (year, month) => {
 export const dateFormat = (value) => {
     const formattedDate = value
         ? moment(new Date(value)).format("DD-MM-YYYY")
-        : "-";
+        : "NA";
     return formattedDate;
 };
 

@@ -15,9 +15,9 @@ const eighteenYearsAgo = new Date(
 
 const nomineeValidationSchema = Yup.object().shape({
     nomineeName: Yup.string()
-    .matches(/^[A-Za-z\s]+$/, "Full Name should contain only alphabets")
-    .min(3, "Full Name should contain at least 3 alphabets")
-    .required("Full Name is required"),
+        .matches(/^[A-Za-z\s]+$/, "Full Name should contain only alphabets")
+        .min(3, "Full Name should contain at least 3 alphabets")
+        .required("Full Name is required"),
     nomineeDateOfBirth: Yup.date()
         .max(today, "Date of birth cannot be in the future")
         .test(
@@ -39,9 +39,12 @@ const nomineeValidationSchema = Yup.object().shape({
         },
         then: (schema) =>
             schema
-        .matches(/^[A-Za-z\s]+$/, "Full Name should contain only alphabets")
-        .min(3, "Full Name should contain at least 3 alphabets")
-        .required("Full Name is required"),
+                .matches(
+                    /^[A-Za-z\s]+$/,
+                    "Full Name should contain only alphabets"
+                )
+                .min(3, "Full Name should contain at least 3 alphabets")
+                .required("Full Name is required"),
         otherwise: (schema) => schema.notRequired(),
     }),
     guardianDateOfBirth: Yup.date().when("nomineeDateOfBirth", {
@@ -89,12 +92,24 @@ const AddNominee = ({ onNext, onPrevious, initialValues }) => {
         console.log(values);
         console.log(JSON.stringify(values));
         // setIsVerifing(true); // Start loading before the API call
+        // const data = {
+        //     name: values.nomineeName,
+        //     guardianName: values.guardianName,
+        //     relationId: values.relationship,
+        //     dob: values.nomineeDateOfBirth,
+        //     guardianDateOfBirth: values.guardianDateOfBirth,
+        // };
+
         const data = {
-            nomineeName: values.nomineeName,
-            guardianName: values.guardianName,
-            relationship: values.relationship,
-            nomineeDateOfBirth: values.nomineeDateOfBirth,
-            guardianDateOfBirth: values.guardianDateOfBirth,
+            name: values.nomineeName,
+            dob: values.nomineeDateOfBirth,
+            relationId: 2,
+            guardian: {
+                name: values.guardianName,
+                dob: values.guardianDateOfBirth,
+                relationId: values.relationship,
+            },
+            token: values.token,
         };
 
         console.log(data);
@@ -123,7 +138,7 @@ const AddNominee = ({ onNext, onPrevious, initialValues }) => {
                     ...values,
                     token: response.data.token,
                 };
-                onNext(valuesWithToken); 
+                onNext(valuesWithToken);
             } else {
                 // setIsVerifing(false); // Stop loading
                 console.log("ElseError");

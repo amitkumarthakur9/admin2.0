@@ -15,9 +15,18 @@ import * as DocumentPicker from "expo-document-picker";
 import DropdownComponent from "../../components/Dropdowns/NewDropDown"; // Assuming you have DropdownComponent implemented
 import RemoteApi from "src/services/RemoteApi";
 
-const UploadBankDocument = ({ onPrevious, onNext }) => {
+const UploadBankDocument = ({ onPrevious, onNext, bankAddress }) => {
     const [pickedDocument, setPickedDocument] = useState(null);
-    const [documentTypeOptions, setDocumentTypeOptions] = React.useState([]);
+    const [documentTypeOptions, setDocumentTypeOptions] = React.useState([
+        {
+            value: "passbook",
+            label: "Passbook",
+        },
+        {
+            value: "chequebook",
+            label: "Cancelled Cheque",
+        },
+    ]);
     const [isLoading, setIsLoading] = React.useState(false);
     const pickDocument = async (setFieldValue) => {
         if (pickedDocument == null) {
@@ -50,22 +59,44 @@ const UploadBankDocument = ({ onPrevious, onNext }) => {
         let formData = new FormData();
         formData.append("documentType", values.documentType);
         formData.append("file", pickedDocument);
+        formData.append("token", bankAddress.uploadToken);
+        formData.append("bankBranchId", bankAddress.branchId);
+        formData.append("accountNumber", bankAddress.UploadAccountNumber);
+        formData.append("ifscCode", bankAddress.UploadIfsc);
 
+        const data = {
+            documentType: values.documentType,
+            file: pickedDocument,
+            token: bankAddress.uploadToken,
+            bankBranchId: bankAddress.branchId,
+            accountNumber: bankAddress.UploadAccountNumber,
+            ifscCode: bankAddress.UploadIfsc,
+        };
         try {
-            // const response: any = await RemoteApi.postWithFormData(
-            //     "/file/upload-transaction",
-            //     formData
-            // );
+            console.log("uploadsubmit");
+            console.log(data);
+            const response: any = await RemoteApi.postWithFormData(
+                "/file/upload-bank-verification-document",
+                formData
+            );
+            
 
-            console.log(formData);
-
-            const response = {
-                code: 200,
-                message: "Success",
-            };
+            console.log("uploadbankdoc")
+            console.log(response)
+            // const response = {
+            //     code: 200,
+            //     message: "Success",
+            // };
 
             if (response?.message == "Success") {
-                onNext();
+               
+               
+               
+                const valuesWithToken = {
+                    ...values,
+                    token: response.data.token,
+                };
+                onNext(valuesWithToken); 
                 // const uniqueId = uuidv4();
                 // Add the success toast to the toasts array in the component's state
                 // setToasts([
@@ -101,47 +132,47 @@ const UploadBankDocument = ({ onPrevious, onNext }) => {
         uploadDocument(values);
     };
 
-    async function getdocumentType() {
-        setIsLoading(true);
+    // async function getdocumentType() {
+    //     setIsLoading(true);
 
-        try {
-            // const response: DropdownResponse = await RemoteApi.get(
-            //     `bank-account-type`
-            // );
+    //     try {
+    //         // const response: DropdownResponse = await RemoteApi.get(
+    //         //     `bank-account-type`
+    //         // );
 
-            const response = {
-                code: 200,
-                data: [
-                    {
-                        id: 1,
-                        name: "Passbook",
-                    },
-                    {
-                        id: 1,
-                        name: "Cancelled Cheque",
-                    },
-                ],
-            };
-            if (response.code === 200) {
-                const mappedAccount = response.data.map((item) => ({
-                    label: item.name,
-                    value: item.id,
-                }));
+    //         const response = {
+    //             code: 200,
+    //             data: [
+    //                 {
+    //                     id: 1,
+    //                     name: "Passbook",
+    //                 },
+    //                 {
+    //                     id: 1,
+    //                     name: "Check",
+    //                 },
+    //             ],
+    //         };
+    //         if (response.code === 200) {
+    //             const mappedAccount = response.data.map((item) => ({
+    //                 label: item.name,
+    //                 value: item.id,
+    //             }));
 
-                setDocumentTypeOptions(mappedAccount);
-            } else {
-                alert("Failed to fetch district list");
-            }
-        } catch (error) {
-            alert("An error occurred while fetching the district list");
-        } finally {
-            setIsLoading(false);
-        }
-    }
+    //             setDocumentTypeOptions(mappedAccount);
+    //         } else {
+    //             alert("Failed to fetch district list");
+    //         }
+    //     } catch (error) {
+    //         alert("An error occurred while fetching the district list");
+    //     } finally {
+    //         setIsLoading(false);
+    //     }
+    // }
 
-    React.useEffect(() => {
-        getdocumentType();
-    }, []);
+    // React.useEffect(() => {
+    //     getdocumentType();
+    // }, []);
 
     return (
         <Formik

@@ -232,12 +232,12 @@ const FolioWiseDataTable = () => {
             {
                 key: "FolioNumber",
                 content: (
-                    <Pressable onPress={() => router.push(`folio/${item?.id}`)}>
+                    <Pressable onPress={() => router.push(`folio/${item?.id}`)} className="w-[98%]">
                         <Text
                             selectable
-                            className="text-[#686868] font-semibold w-11/12"
+                            className="text-[#686868] font-semibold "
                         >
-                            {item?.folioNumber ? item?.folioNumber : "-"}&nbsp;
+                            {item?.folioNumber ? item?.folioNumber : "NA"}
                         </Text>
                     </Pressable>
                 ),
@@ -390,7 +390,7 @@ const FolioWiseDataTable = () => {
                                             // "",
                                         ]}
                                         cellSize={[
-                                            2, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                                            2, 1, 1, 1, 2, 1, 1, 1, 1, 1,
                                         ]}
                                         rows={transformedData}
                                     />
@@ -408,7 +408,7 @@ const FolioWiseDataTable = () => {
                                             "Returns",
                                             // "",
                                         ]}
-                                        cellSize={[2, 1, 1, 1, 1, 1, 1, 1, 1]}
+                                        cellSize={[2, 1, 1, 2, 1, 1, 1, 1, 1]}
                                         rows={transformedData}
                                     />
                                 ) : (
@@ -424,7 +424,7 @@ const FolioWiseDataTable = () => {
                                             "Returns",
                                             // "",
                                         ]}
-                                        cellSize={[2, 2, 1, 1, 1, 1, 1, 1]}
+                                        cellSize={[2, 2, 2, 1, 1, 1, 1, 1]}
                                         rows={transformedData}
                                     />
                                 )}

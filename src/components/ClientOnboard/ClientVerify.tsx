@@ -10,6 +10,7 @@ import {
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { Ionicons } from "@expo/vector-icons";
+import RemoteApi from "src/services/RemoteApi";
 
 const otpValidationSchema = Yup.object().shape({
     otp: Yup.string()
@@ -22,12 +23,13 @@ const ClientVerify = ({
     onNext,
     onPrevious,
     initialValues,
-    apiEndpoint,
+    generateOtpApi,
     title,
     subTitle,
     clientEmail,
     clientNumber,
     submitText,
+    verifyOtpApi
 }) => {
     const [otpValues, setOtpValues] = useState(["", "", "", "", "", ""]);
     const [resendEnabled, setResendEnabled] = useState(false);
@@ -73,18 +75,23 @@ const ClientVerify = ({
 
     const handleSubmit = async () => {
         setIsVerifying(true);
-        setApiError(""); // Clear previous API error before submitting
+        setApiError(""); 
+        const data = {
+            otp: otpValues,
+            token: initialValues.token,
+        }
+        // Clear previous API error before submitting
         if (submitText == "Verify") {
             try {
-                // const response: DropdownResponse = await RemoteApi.post(
-                //     "bank-account",
-                //     data
-                // );
+                const response: any = await RemoteApi.post(
+                    verifyOtpApi,
+                    data
+                );
 
-                const response = {
-                    code: 200,
-                    message: "Incorrect OTP", // Example API error message
-                };
+                // const response = {
+                //     code: 200,
+                //     message: "Incorrect OTP", // Example API error message
+                // };
 
                 console.log("response");
                 console.log(response);
@@ -100,7 +107,11 @@ const ClientVerify = ({
                         }, 2000); // Adjust the delay as needed to give time for the success message to be visible
                     }, 2000); // Mock API call for verification
                     // setIsVerifing(false); // Stop loading
-                    onNext(values);
+                    const valuesWithToken = {
+                        ...initialValues,
+                        token: response.data.token,
+                    };
+                    onNext(valuesWithToken); 
                 } else {
                     // setIsVerifing(false); // Stop loading
                     console.log("ElseError");
@@ -112,15 +123,15 @@ const ClientVerify = ({
         }
         if (submitText == "Start investing") {
             try {
-                // const response: DropdownResponse = await RemoteApi.post(
-                //     "bank-account",
-                //     data
-                // );
+                const response: any = await RemoteApi.post(
+                    verifyOtpApi,
+                    data
+                );
 
-                const response = {
-                    code: 200,
-                    message: "Incorrect password", // Example API error message
-                };
+                // const response = {
+                //     code: 200,
+                //     message: "Incorrect password", // Example API error message
+                // };
 
                 console.log("response");
                 console.log(response);
@@ -136,7 +147,11 @@ const ClientVerify = ({
                         }, 2000); // Adjust the delay as needed to give time for the success message to be visible
                     }, 2000); // Mock API call for verification
                     // setIsVerifing(false); // Stop loading
-                    onNext(values);
+                    const valuesWithToken = {
+                        ...initialValues,
+                        token: response.data.token,
+                    };
+                    onNext(valuesWithToken); 
                 } else {
                     console.log("ElseError");
                     setApiError(response.message); // Store the error message from the API
@@ -149,26 +164,32 @@ const ClientVerify = ({
         }
     };
 
-    const handleResendOtp = () => {
+    const handleResendOtp = async () => {
+        const data = {
+            token: initialValues.token
+        }
         try {
-            // const response: DropdownResponse = await RemoteApi.post(
-            //     "bank-account",
-            //     data
-            // );
+            const response: any = await RemoteApi.post(
+                generateOtpApi,
+                data
+            );
 
-            const response = {
-                code: 200,
-                message: "Incorrect password", // Example API error message
-            };
+            // const response = {
+            //     code: 200,
+            //     message: "Incorrect password", // Example API error message
+            // };
 
             console.log("response");
             console.log(response);
 
             if (response.code === 200) {
-                if (resendEnabled && resendTimer === 0) {
-                    setResendTimer(120); // Restart the timer for 2 minutes
-                    // Logic to resend OTP
-                }
+
+
+
+                // if (resendEnabled && resendTimer === 0) {
+                //     setResendTimer(120); // Restart the timer for 2 minutes
+                //     // Logic to resend OTP
+                // }
                 
             } else {
                 console.log("ElseError");
@@ -229,8 +250,8 @@ const ClientVerify = ({
                         <>
                             <Text style={styles.enterOtp}>Enter OTP</Text>
                             <Text style={styles.infoText}>
-                                A 6 digit code has been sent to {clientNumber} &
-                                {clientEmail}
+                                A 6 digit code has been sent to {initialValues.mobileNumber} &
+                                {initialValues.email}
                             </Text>
                             <View style={styles.otpContainer}>
                                 {otpValues.map((value, index) => (

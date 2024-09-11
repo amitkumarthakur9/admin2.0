@@ -139,23 +139,24 @@ const BasicDetails = ({ onNext, initialValues, onSaveDraft, onPrevious }) => {
             isIndianResident: values.isResidentIndian,
         };
         try {
+            console.log("basicsubmit")
             console.log(data);
             const response:any = await RemoteApi.post(
                 "/onboard/client/basic-details",
                 data
             );
 
-            // const response = {
-            //     code: 200,
-            //     message: "success",
-            //     data: {
-            //         isNameMissMatch: false,
-            //         isDOBMissMatch: false,
-            //         isAddressPresent: false,
-            //         token: "cookieToken",
-            //     },
-            //     errors: [],
-            // };
+            const response = {
+                code: 200,
+                message: "success",
+                data: {
+                    isNameMissMatch: false,
+                    isDOBMissMatch: false,
+                    isAddressPresent: true,
+                    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE0NywiY3JlZGVudGlhbHNJZCI6MTM3LCJhY2NvdW50SWQiOjE1NSwiYWRkcmVzc0lkIjo0NCwiaWF0IjoxNzI0NjQ4NjQ0LCJleHAiOjE3MjQ3MzUwNDR9.CZrxO5Grq_B8ODiK3iMjt-KbhShUrPFtNUsCZ1oP9vo",
+                },
+                errors: [],
+            };
             if (
                 response.code === 200 &&
                 !response.data.isNameMissMatch &&
@@ -454,7 +455,7 @@ const BasicDetails = ({ onNext, initialValues, onSaveDraft, onPrevious }) => {
                                 <View style={styles.fieldContainer}></View>
                             </View>
                             <View style={styles.buttonRow}>
-                                <Pressable
+                                {/* <Pressable
                                     style={({ pressed }) => [
                                         styles.skipButton,
                                         { opacity: pressed ? 0.6 : 1 },
@@ -464,7 +465,7 @@ const BasicDetails = ({ onNext, initialValues, onSaveDraft, onPrevious }) => {
                                     <Text style={styles.buttonText}>
                                         Save as Draft
                                     </Text>
-                                </Pressable>
+                                </Pressable> */}
                                 {isLoading ? (
                                     <ActivityIndicator
                                         size="large"
@@ -550,7 +551,7 @@ const styles = StyleSheet.create({
     },
     buttonRow: {
         flexDirection: "row",
-        justifyContent: "space-between",
+        justifyContent: "center",
         marginTop: 20,
     },
     skipButton: {

@@ -74,11 +74,11 @@ const MutualLumpsumAccordion = ({ data, appliedFilers }) => {
                 ))}
 
                 <View style={styles.tableFooter}>
-                {renderCell("Total", "7.5%")}
+                    {renderCell("Total", "7.5%")}
                     {renderCell(totals.purchaseCount, "7.5%")}
-                    {renderCell(totals.purchaseAmount, "7.5%")}
+                    {renderCell(totals.purchaseAmount.toFixed(2), "7.5%")}
                     {renderCell(totals.redemptionCount, "7.5%")}
-                    {renderCell(totals.redemptionAmount, "7.5%")}
+                    {renderCell(totals.redemptionAmount.toFixed(2), "7.5%")}
                     {renderCell("NA", "7.5%")}
                     {renderCell("NA", "7.5%")}
                     {renderCell("NA", "7.5%")}
@@ -106,10 +106,21 @@ const RMRow = ({ rm, appliedFilers }) => {
         if (newExpanded) {
             setLoading(true);
 
-            const data = {
-                filters: appliedFilers,
+            const appliedFilters = () => {
+                if (appliedFilers[0].key === "") {
+                    return [
+                        {
+                            key: "createdAt",
+                            operator: "between",
+                            value: ["2024-01-01", "2024-12-31"],
+                        },
+                    ];
+                } else {
+                    return appliedFilers;
+                }
             };
 
+            const data = { filters: appliedFilters };
             try {
                 const response: any = await RemoteApi.post(
                     `mutualfund-analytics/transaction/rm/${rm.id}`,
@@ -138,7 +149,9 @@ const RMRow = ({ rm, appliedFilers }) => {
                     "7.5%"
                 )}
                 {renderCell(
-                    rm.info.find((i) => i.type === "Purchase")?.amount || 0,
+                    rm.info
+                        .find((i) => i.type === "Purchase")
+                        ?.amount.toFixed(2) || 0,
                     "7.5%"
                 )}
                 {renderCell(
@@ -146,7 +159,9 @@ const RMRow = ({ rm, appliedFilers }) => {
                     "7.5%"
                 )}
                 {renderCell(
-                    rm.info.find((i) => i.type === "Redemption")?.amount || 0,
+                    rm.info
+                        .find((i) => i.type === "Redemption")
+                        ?.amount.toFixed(2) || 0,
                     "7.5%"
                 )}
                 {renderCell("NA", "7.5%")} {/* CAMS Transfer-in Count */}
@@ -186,7 +201,7 @@ const RMAccordion = ({ ifalist, ifaTotal, appliedFilers }) => {
     return (
         <View style={styles.details}>
             <View style={styles.ifaTableHeader}>
-                {renderHeaderCell("RM Name", "7.5%")}
+                {renderHeaderCell("IFA Name", "7.5%")}
                 {renderHeaderCell("Lumpsum Count", "7.5%")}
                 {renderHeaderCell("Lumpsum Amount", "7.5%")}
                 {renderHeaderCell("Redemption Count", "7.5%")}
@@ -224,9 +239,21 @@ const IFAAccordion = ({ ifa, appliedFilers }) => {
         if (newExpanded) {
             setLoading(true);
 
-            const data = {
-                filters: appliedFilers,
+            const appliedFilters = () => {
+                if (appliedFilers[0].key === "") {
+                    return [
+                        {
+                            key: "createdAt",
+                            operator: "between",
+                            value: ["2024-01-01", "2024-12-31"],
+                        },
+                    ];
+                } else {
+                    return appliedFilers;
+                }
             };
+
+            const data = { filters: appliedFilters };
 
             try {
                 const response: any = await RemoteApi.post(
@@ -256,7 +283,9 @@ const IFAAccordion = ({ ifa, appliedFilers }) => {
                     "7.5%"
                 )}
                 {renderCell(
-                    ifa.info.find((i) => i.type === "Purchase")?.amount || 0,
+                    ifa.info
+                        .find((i) => i.type === "Purchase")
+                        ?.amount.toFixed(2) || 0,
                     "7.5%"
                 )}
                 {renderCell(
@@ -264,7 +293,9 @@ const IFAAccordion = ({ ifa, appliedFilers }) => {
                     "7.5%"
                 )}
                 {renderCell(
-                    ifa.info.find((i) => i.type === "Redemption")?.amount || 0,
+                    ifa.info
+                        .find((i) => i.type === "Redemption")
+                        ?.amount.toFixed(2) || 0,
                     "7.5%"
                 )}
                 {renderCell("NA", "7.5%")} {/* CAMS Transfer-in Count */}
@@ -313,7 +344,7 @@ const ClientTable = ({ clients }) => {
                     {renderCell(client?.account.id, "10%")}
                     {renderCell(client?.account.name, "20%")}
                     {renderCell(client?.mutualfund.name, "20%")}
-                    {renderCell(client?.amount, "10%")}
+                    {renderCell(client?.amount.toFixed(2), "10%")}
                     {renderCell(client?.type, "10%")}
                     {renderCell(dateTimeFormat(client?.initiationDate), "15%")}
                     {renderCell(dateTimeFormat(client?.allotmentDate), "15%")}

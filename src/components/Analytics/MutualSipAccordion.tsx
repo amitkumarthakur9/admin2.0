@@ -78,19 +78,19 @@ const MutualSipAccordion = ({ data, appliedFilers }) => {
                         {totals.successSipCount}
                     </Text>
                     <Text style={styles.footerCell}>
-                        {totals.successSipAmount}
+                        {totals.successSipAmount.toFixed(2)}
                     </Text>
                     <Text style={styles.footerCell}>
                         {totals.canceledSipCount}
                     </Text>
                     <Text style={styles.footerCell}>
-                        {totals.canceledSipAmount}
+                        {totals.canceledSipAmount.toFixed(2)}
                     </Text>
                     <Text style={styles.footerCell}>
                         {totals.failedSipCount}
                     </Text>
                     <Text style={styles.footerCell}>
-                        {totals.failedSipAmount}
+                        {totals.failedSipAmount.toFixed(2)}
                     </Text>
                     <View style={styles.iconCell}></View>
                 </View>
@@ -111,9 +111,21 @@ const RMRow = ({ rm, appliedFilers }) => {
         if (newExpanded) {
             setLoading(true);
 
-            const data = {
-                filters: appliedFilers,
+            const appliedFilters = () => {
+                if (appliedFilers[0].key === "") {
+                    return [
+                        {
+                            key: "createdAt",
+                            operator: "between",
+                            value: ["2024-01-01", "2024-12-31"],
+                        },
+                    ];
+                } else {
+                    return appliedFilers;
+                }
             };
+
+            const data = { filters: appliedFilters };
 
             try {
                 const response: any = await RemoteApi.post(
@@ -139,11 +151,11 @@ const RMRow = ({ rm, appliedFilers }) => {
             <TouchableOpacity onPress={handleExpand} style={styles.RmTableRow}>
                 <Text style={styles.cell}>{rm?.name}</Text>
                 <Text style={styles.cell}>{rm?.successSipCount}</Text>
-                <Text style={styles.cell}>{rm?.successSipAmount}</Text>
+                <Text style={styles.cell}>{rm?.successSipAmount.toFixed(2)}</Text>
                 <Text style={styles.cell}>{rm?.canceledSipCount}</Text>
-                <Text style={styles.cell}>{rm?.canceledSipAmount}</Text>
+                <Text style={styles.cell}>{rm?.canceledSipAmount.toFixed(2)}</Text>
                 <Text style={styles.cell}>{rm?.failedSipCount}</Text>
-                <Text style={styles.cell}>{rm?.failedSipAmount}</Text>
+                <Text style={styles.cell}>{rm?.failedSipAmount.toFixed(2)}</Text>
                 <View style={styles.iconCell}>
                     <Icon
                         name={!expanded ? "caret-down" : "caret-up"}
@@ -209,9 +221,21 @@ const IFAAccordion = ({ ifa, appliedFilers }) => {
         if (newExpanded) {
             setLoading(true);
 
-            const data = {
-                filters: appliedFilers,
+            const appliedFilters = () => {
+                if (appliedFilers[0].key === "") {
+                    return [
+                        {
+                            key: "createdAt",
+                            operator: "between",
+                            value: ["2024-01-01", "2024-12-31"],
+                        },
+                    ];
+                } else {
+                    return appliedFilers;
+                }
             };
+
+            const data = { filters: appliedFilters };
 
             try {
                 const response: any = await RemoteApi.post(
@@ -237,11 +261,11 @@ const IFAAccordion = ({ ifa, appliedFilers }) => {
             <TouchableOpacity onPress={handleExpand} style={styles.ifaTableRow}>
                 <Text style={styles.cell}>{ifa?.name}</Text>
                 <Text style={styles.cell}>{ifa?.successSipCount}</Text>
-                <Text style={styles.cell}>{ifa?.successSipAmount}</Text>
+                <Text style={styles.cell}>{ifa?.successSipAmount.toFixed(2)}</Text>
                 <Text style={styles.cell}>{ifa?.canceledSipCount}</Text>
-                <Text style={styles.cell}>{ifa?.canceledSipAmount}</Text>
+                <Text style={styles.cell}>{ifa?.canceledSipAmount.toFixed(2)}</Text>
                 <Text style={styles.cell}>{ifa?.failedSipCount}</Text>
-                <Text style={styles.cell}>{ifa?.failedSipAmount}</Text>
+                <Text style={styles.cell}>{ifa?.failedSipAmount.toFixed(2)}</Text>
                 <View style={styles.iconCell}>
                     <Icon
                         name={!expanded ? "caret-down" : "caret-up"}
@@ -281,15 +305,15 @@ const ClientTable = ({ clients }) => {
                     <Text style={styles.cell}>{client?.accounts?.id}</Text>
                     <Text style={styles.cell}>{client?.accounts?.name}</Text>
                     <Text style={styles.cell}>{client?.mutualfund?.name}</Text>
-                    <Text style={styles.cell}>{client?.amount}</Text>
-                    <Text style={styles.cell}>{client?.orderStatus?.name}</Text>
+                    <Text style={styles.cell}>{client?.amount.toFixed(2)}</Text>
+                    <Text style={styles.cell}>{client?.orderStatus ? client?.orderStatus : "NA"}</Text>
                     <Text style={styles.cell}>
                         {dateTimeFormat(client?.createdAt)}
                     </Text>
                     <Text style={styles.cell}>
                         {dateTimeFormat(client?.startDate)}
                     </Text>
-                    <Text style={styles.cell}>{client?.cancelledDate}</Text>
+                    <Text style={styles.cell}>{client?.cancelledDate ? client?.cancelledDate : "NA"}</Text>
                 </View>
             ))}
         </View>

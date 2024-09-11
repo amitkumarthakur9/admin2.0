@@ -45,12 +45,14 @@ import DataValue from "../../../src/components/DataValue/DataValue";
 import DataText from "../../../src/components/DataValue/DataText";
 import { dateFormat } from "../../../src/helper/DateUtils";
 import { getTransactionMessage } from "../../../src/helper/StatusInfo";
+import { useRouter } from "expo-router";
 
 export default function AUMDetail() {
     const { id } = useLocalSearchParams();
     const [data, setData] = useState<AUMDetailInterface>();
     const [isLoading, setIsLoading] = useState(true);
     const { height, width } = useWindowDimensions();
+    const router = useRouter();
 
     useEffect(() => {
         setIsLoading(true);
@@ -97,9 +99,7 @@ export default function AUMDetail() {
                             <View className="flex flex-row items-center">
                                 <Pressable
                                     className="mr-3"
-                                    onPress={() =>
-                                        console.log("This will go back ")
-                                    }
+                                    onPress={() => router.back()}
                                 >
                                     <Icon
                                         name="angle-left"
@@ -170,10 +170,7 @@ export default function AUMDetail() {
                                                     selectable
                                                     className="font-medium text-start text-black"
                                                 >
-                                                    {
-                                                        data?.account?.user
-                                                            ?.panNumber
-                                                    }
+                                                    {data?.account?.panNumber}
                                                 </Text>
                                             </View>
                                         </View>
@@ -186,7 +183,7 @@ export default function AUMDetail() {
                                                 StyleSheet.hairlineWidth,
                                         }}
                                     />
-                                    
+
                                     <View className="flex flex-row py-2 items-center w-full flex-wrap ">
                                         <View
                                             className={
@@ -225,11 +222,9 @@ export default function AUMDetail() {
                                                         className=" text-blacktext-xs"
                                                     >
                                                         {data?.mutualfund
-                                                            ?.category
-                                                            
-                                                             || "NA"}
+                                                            ?.category || ""}
                                                     </Text>
-                                                    <View className="mx-2">
+                                                    <View className="flex flex-row mx-2 justify-center items center">
                                                         <Icon
                                                             name="circle"
                                                             style={{
@@ -245,8 +240,7 @@ export default function AUMDetail() {
                                                         className="text-black text-xs"
                                                     >
                                                         {data?.mutualfund
-                                                            ?.Subcategory
-                                                            || "NA"}
+                                                            ?.subCategory || ""}
                                                     </Text>
                                                 </View>
                                             </View>
@@ -258,7 +252,9 @@ export default function AUMDetail() {
                                             <DataValue
                                                 key="optionType"
                                                 title="Option Type"
-                                                value={data?.mutualfund?.optionType }
+                                                value={
+                                                    data?.mutualfund?.optionType
+                                                }
                                             />
                                             <DataValue
                                                 key="currentValue"
@@ -266,7 +262,9 @@ export default function AUMDetail() {
                                                 value={
                                                     data.currentValue
                                                         ? RupeeSymbol +
-                                                          data.currentValue
+                                                          data.currentValue.toFixed(
+                                                              2
+                                                          )
                                                         : "NA"
                                                 }
                                             />
@@ -281,7 +279,10 @@ export default function AUMDetail() {
                                             <DataValue
                                                 key="dividendType"
                                                 title="Dividend Type"
-                                                value={data?.mutualfund?.dividendType}
+                                                value={
+                                                    data?.mutualfund
+                                                        ?.dividendType
+                                                }
                                             />
                                             <DataValue
                                                 key="investedValue"
@@ -289,7 +290,9 @@ export default function AUMDetail() {
                                                 value={
                                                     data.investedValue
                                                         ? RupeeSymbol +
-                                                          data.investedValue
+                                                          data.investedValue.toFixed(
+                                                              2
+                                                          )
                                                         : "NA"
                                                 }
                                             />
@@ -303,13 +306,23 @@ export default function AUMDetail() {
                                             <DataValue
                                                 key="rta"
                                                 title="RTA"
-                                                value={data?.mutualfund?.fundhouse?.rta?.name}
+                                                value={
+                                                    data?.mutualfund?.fundhouse
+                                                        ?.rta?.name
+                                                }
                                             />
                                             <DataValue
                                                 key="returns"
                                                 title="Returns"
-                                                value={data?.investedValue && data?.currentValue ? (data?.currentValue - data?.investedValue) : "NA"
-                            }
+                                                value={
+                                                    data?.investedValue &&
+                                                    data?.currentValue
+                                                        ? (
+                                                              data?.currentValue -
+                                                              data?.investedValue
+                                                          ).toFixed(2)
+                                                        : "NA"
+                                                }
                                             />
                                         </View>
                                     </View>
@@ -332,7 +345,6 @@ export default function AUMDetail() {
 }
 
 const TransactionsList = ({ data }: { data: AUMDetailInterface }) => {
-
     const transactionData = data?.transactions?.map((item) => {
         return [
             {
@@ -345,7 +357,7 @@ const TransactionsList = ({ data }: { data: AUMDetailInterface }) => {
             },
             {
                 key: "units",
-                content: <DataText value={item?.units} />,
+                content: <DataText value={item?.units.toFixed(2)} />,
             },
             {
                 key: "paymentDate",
@@ -353,38 +365,69 @@ const TransactionsList = ({ data }: { data: AUMDetailInterface }) => {
             },
             {
                 key: "nav",
-                content: <DataText value={item?.nav ? RupeeSymbol + item?.nav : "NA"} />,
+                content: (
+                    <DataText
+                        value={
+                            item?.nav
+                                ? RupeeSymbol + item?.nav.toFixed(2)
+                                : "NA"
+                        }
+                    />
+                ),
             },
             {
                 key: "status",
-                content:                     <View className='flex flex-row items-center w-12/12 justify-start'>
-                <View className='flex flex-col rounded-full w-8/12 items-center justify-center'>
-                    <View className='flex flex-row items-center justify-center w-11/12'>
-                        <Popover trigger={triggerProps => {
-                            return <TouchableOpacity {...triggerProps}>
-                                <Icon name="info-circle" size={12} color="black" />
-                            </TouchableOpacity>;
-                        }}>
-                            <Popover.Content accessibilityLabel="Order Details" w="56">
-                                <Popover.Arrow />
-                                <Popover.CloseButton />
-                                <Popover.Header>{item?.transactionStatus?.name}</Popover.Header>
-                                <Popover.Body>
-                                    <View>
-                                        <Text>{getTransactionMessage(item?.transactionStatus?.name)}</Text>
-                                    </View>
-                                </Popover.Body>
-                            </Popover.Content>
-                        </Popover>
-                        <Text selectable className='p-1 text-black text-end md:text-center text-xs'>{item?.transactionStatus?.name}&nbsp;</Text>
-
+                content: (
+                    <View className="flex flex-row items-center w-12/12 justify-start">
+                        <View className="flex flex-col rounded-full w-8/12 items-center justify-center">
+                            <View className="flex flex-row items-center justify-center w-11/12">
+                                <Popover
+                                    trigger={(triggerProps) => {
+                                        return (
+                                            <TouchableOpacity {...triggerProps}>
+                                                <Icon
+                                                    name="info-circle"
+                                                    size={12}
+                                                    color="black"
+                                                />
+                                            </TouchableOpacity>
+                                        );
+                                    }}
+                                >
+                                    <Popover.Content
+                                        accessibilityLabel="Order Details"
+                                        w="56"
+                                    >
+                                        <Popover.Arrow />
+                                        <Popover.CloseButton />
+                                        <Popover.Header>
+                                            {item?.transactionStatus?.name}
+                                        </Popover.Header>
+                                        <Popover.Body>
+                                            <View>
+                                                <Text>
+                                                    {getTransactionMessage(
+                                                        item?.transactionStatus
+                                                            ?.name
+                                                    )}
+                                                </Text>
+                                            </View>
+                                        </Popover.Body>
+                                    </Popover.Content>
+                                </Popover>
+                                <Text
+                                    selectable
+                                    className="p-1 text-black text-end md:text-center text-xs"
+                                >
+                                    {item?.transactionStatus?.name}&nbsp;
+                                </Text>
+                            </View>
+                        </View>
                     </View>
-                </View>
-            </View>,
+                ),
             },
         ];
     });
-
 
     return (
         <View className="flex-1 bg-white rounded shadow h-full overflow-auto p-2">

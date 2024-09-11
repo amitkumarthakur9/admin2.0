@@ -9,6 +9,7 @@ interface Account {
     clientId: string;
     name: string;
     user: User;
+    panNumber: string;
 }
 
 interface Distributor {

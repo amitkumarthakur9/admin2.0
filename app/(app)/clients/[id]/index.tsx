@@ -78,6 +78,7 @@ export default function ClientDetail() {
 
     const { roleId } = useUserRole();
     const isDistributor = roleId === 2;
+    const [firstInvest, setFirstInvest] = useState(false);
 
     useEffect(() => {
         if (width < 830) {
@@ -93,6 +94,7 @@ export default function ClientDetail() {
         setModalKey("");
         setCardPage(1);
         setSelectedFund(null);
+        setFirstInvest(false);
     };
 
     const showModal =
@@ -116,6 +118,7 @@ export default function ClientDetail() {
                 selectedFund={selectedFund}
                 changeSelectedFund={changeSelectedFund}
                 allowModalCardChange={allowModalCardChange}
+                firstInvest={firstInvest}
             />
         ),
         redeem: (
@@ -283,14 +286,19 @@ export default function ClientDetail() {
                                                 <Button
                                                     width="48"
                                                     bgColor={
-                                                        (isDistributor && data?.isActive )
+                                                        isDistributor &&
+                                                        data?.isActive
                                                             ? "#013974"
                                                             : "#ddd"
                                                     }
-                                                    onPress={showModal(
-                                                        "invest"
-                                                    )}
-                                                    disabled={!isDistributor || !data?.isActive}
+                                                    onPress={() => {
+                                                        setFirstInvest(true); // Track that the Invest button was pressed
+                                                        showModal("invest")();
+                                                    }}
+                                                    disabled={
+                                                        !isDistributor ||
+                                                        !data?.isActive
+                                                    }
                                                 >
                                                     Invest
                                                 </Button>
@@ -1002,12 +1010,14 @@ const InvestModalCard = ({
     selectedFund,
     changeSelectedFund,
     allowModalCardChange,
+    firstInvest,
 }: {
     hideDialog: () => void;
     card: number;
     selectedFund: MutualFundSearchResult | Holding | null;
     changeSelectedFund: (data: any, card: number, from?: string) => void;
     allowModalCardChange: boolean;
+    firstInvest: boolean;
 }) => {
     const [folios, setFolios] = useState<FolioSchema[]>([]);
     const [optionType, setOptionType] = useState<number | null>(null);
@@ -1088,6 +1098,8 @@ const InvestModalCard = ({
                     dividendType={dividendType}
                     setOptionType={setOptionType}
                     setDividendType={setDividendType}
+                    card={card}
+                    firstInvest={firstInvest}
                 />
             ),
         },
@@ -1684,6 +1696,7 @@ const InvestModalAction = ({
     setOptionType,
     dividendType,
     setDividendType,
+    firstInvest,
 }: {
     tabContent: {
         key: string;
@@ -1698,6 +1711,7 @@ const InvestModalAction = ({
     setOptionType?: any;
     dividendType?: any;
     setDividendType?: any;
+    firstInvest: boolean;
 }) => {
     const { id } = useLocalSearchParams();
     const [selectedTab, setSelectedTab] = useState(1);
@@ -1711,15 +1725,19 @@ const InvestModalAction = ({
     const fValue = IsMFSearch ? dividendType : selectedFund?.id;
 
     const fetchFolios = async () => {
-        try {
-            const response: ApiResponse<FolioSchema[]> = await RemoteApi.get(
-                `client/${id}/folioSchema?q=${qValue}&f=${fValue}`
-            );
-            changeFolio(response?.data);
-            return response;
-        } catch (error) {
-            // Handle errors, e.g., throw an error or return a default value
-            throw error;
+        console.log(firstInvest);
+        if (!firstInvest) {
+            try {
+                const response: ApiResponse<FolioSchema[]> =
+                    await RemoteApi.get(
+                        `client/${id}/folioSchema?q=${qValue}&f=${fValue}`
+                    );
+                changeFolio(response?.data);
+                return response;
+            } catch (error) {
+                // Handle errors, e.g., throw an error or return a default value
+                throw error;
+            }
         }
     };
 
@@ -1988,13 +2006,13 @@ const RedeemModalCard = ({
                             ? "Amount cannot exceed redeemable amount"
                             : "Units cannot exceed redeemable units",
                 }
-            )
-            .refine((value) => {
-                if (methodSelect === "amount") {
-                    return value % 1000 === 0; // Ensures amount is a multiple of 1000
-                }
-                return true; // No need for this check for units
-            }, "Amount should be in multiples of 1000"),
+            ),
+        // .refine((value) => {
+        //     if (methodSelect === "amount") {
+        //         return value % 1000 === 0; // Ensures amount is a multiple of 1000
+        //     }
+        //     return true; // No need for this check for units
+        // }, "Amount should be in multiples of 1000"),
     });
 
     const handleSubmit = () => {
@@ -2449,9 +2467,7 @@ const AccountDetailsCard = ({ data }: { data: ClientDetailedDataResponse }) => {
                             renderItem={renderItem}
                         />
                     )}
-                    {
-                        
-                    }
+                    {}
                 </View>
             ),
         },
@@ -3088,7 +3104,8 @@ const SwitchModalAction = ({
 
     useEffect(() => {
         mutate();
-    }, [query, selectedFolio]);
+        // }, [query, selectedFolio]);
+    }, [query]);
 
     const { isLoading } = useQuery({
         queryKey: ["folio", optionType, dividendType],

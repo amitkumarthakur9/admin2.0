@@ -52,6 +52,7 @@ const Additonalinfo = ({
     onPrevious,
     initialValues,
     onSubmitSuccess,
+    setFormData
 }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
@@ -87,7 +88,7 @@ const Additonalinfo = ({
 
     const handleSubmit = async (values) => {
         const data = {
-            incomeSlabId: values.incomeRange,
+            incomeSlabId: Number(values.incomeRange),
             placeOfBirth: values.placeOfBirth,
             isPoliticalExposed: values.isPoliticalExposed,
             token: values.token,
@@ -98,16 +99,21 @@ const Additonalinfo = ({
         console.log(data);
 
         try {
-            // const response = await RemoteApi.post(
-            //     "user/update-professional-details",
-            //     data
-            // );
+            const response = await RemoteApi.post(
+                "onboard/client/additional-details",
+                data
+            );
 
-            const response = {
-                code: 200,
-            };
+            // const response = {
+            //     code: 200,
+            // };
 
             if (response.code === 200) {
+
+                setFormData((prevData) => ({
+                    ...prevData,
+                    token: response.data.token,
+                }));
                 setIsSubmitted(true);
                 setIsKYCSuccessful(true);
                 onSubmitSuccess(true);
@@ -212,8 +218,8 @@ const Additonalinfo = ({
                                     </Text>
                                     <CustomRadioButton
                                         options={[
-                                            { label: "Yes", value: true },
-                                            { label: "No", value: false },
+                                            { label: "Yes", value: 1 },
+                                            { label: "No", value: 2 },
                                         ]}
                                         value={values.isPoliticalExposed}
                                         setValue={(value) =>
@@ -329,7 +335,7 @@ const Additonalinfo = ({
                                     onPress={onPrevious}
                                 >
                                     <Text style={styles.buttonText}>
-                                        Save as Draft
+                                    Back
                                     </Text>
                                 </Pressable>
                                 <Pressable
