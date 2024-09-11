@@ -215,7 +215,7 @@ const IFADataTable = () => {
     return (
         <View className="bg-white">
             <View className="">
-                <TableBreadCrumb name={"Distributor Report"} />
+                <TableBreadCrumb name={"Distributor Reports"} />
             </View>
             <View className="h-screen">
                 <>

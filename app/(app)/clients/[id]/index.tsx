@@ -674,15 +674,16 @@ const PortfolioCard = ({
                         <DataTable
                             key="holdings"
                             headers={["Scheme", "Current", "Invested", "XIRR"]}
-                            cellSize={[5, 2, 2, 3]}
-                            mobileCellSize={[5, 2, 2, 3]}
+                            cellSize={[4, 2, 2, 3]}
+                            mobileCellSize={[4, 2, 2, 3]}
                             rows={holdings?.map((holding) => {
                                 return [
                                     {
                                         key: "scheme",
                                         data: holding,
                                         content: (
-                                            <View className="flex flex-col md:flex-row items-start md:items-center gap-2 md:w-[95%]">
+                                            <View className="w-[90%]">
+                                            <View className="flex flex-col md:flex-row items-start md:items-center gap-2">
                                                 <Image
                                                     alt="fundHouse"
                                                     className="mr-2"
@@ -696,8 +697,8 @@ const PortfolioCard = ({
                                                             ?.logoUrl,
                                                     }}
                                                 />
-                                                <View className="w-[99%]">
-                                                    <Text className="text-xs text-wrap ">
+                                                <View className="w-[98%]">
+                                                    <Text className="text-xs  w-[98%]">
                                                         {
                                                             holding?.mutualfund
                                                                 ?.name
@@ -715,6 +716,7 @@ const PortfolioCard = ({
                                                         }
                                                     </Text>
                                                 </View>
+                                            </View>
                                             </View>
                                         ),
                                     },
@@ -767,7 +769,7 @@ const PortfolioCard = ({
                                 ];
                             })}
                             hasActions={isDistributor}
-                            options={[
+                            options={ isDistributor ? [
                                 {
                                     key: "invest",
                                     name: "Invest",
@@ -786,7 +788,7 @@ const PortfolioCard = ({
                                     onClick: (data) =>
                                         showModal("redeem", 2, data),
                                 },
-                            ]}
+                            ]: []}
                         />
                     </View>
                 </View>
@@ -898,7 +900,9 @@ const PortfolioCard = ({
                                 {
                                     key: "scheme",
                                     content: (
-                                        <View className="flex flex-col md:flex-row items-start md:items-center gap-2 w-11/12">
+                                        <View className="w-11/12">
+
+                                        <View className="flex flex-col md:flex-row items-start md:items-center gap-2 ">
                                             <Image
                                                 alt="fundHouse"
                                                 className="mr-2"
@@ -913,7 +917,7 @@ const PortfolioCard = ({
                                                 }}
                                             />
                                             <View className="w-11/12">
-                                                <Text className="text-xs text-wrap">
+                                                <Text className="text-xs">
                                                     {
                                                         transaction?.mutualfund
                                                             ?.name
@@ -931,6 +935,7 @@ const PortfolioCard = ({
                                                     }
                                                 </Text>
                                             </View>
+                                        </View>
                                         </View>
                                     ),
                                 },

@@ -141,7 +141,7 @@ export const Pagination = ({
                 <Box maxW="100">
                     <Select
                         onValueChange={(itemValue) =>
-                            setItemsPerPage(itemValue)
+                            setItemsPerPage(Number(itemValue))
                         }
                         selectedValue={"" + itemsPerPage}
                         minWidth="100"
