@@ -15,7 +15,12 @@ import * as DocumentPicker from "expo-document-picker";
 import DropdownComponent from "../../components/Dropdowns/NewDropDown"; // Assuming you have DropdownComponent implemented
 import RemoteApi from "src/services/RemoteApi";
 
-const UploadBankDocument = ({ onPrevious, onNext, bankAddress }) => {
+const UploadBankDocument = ({
+    onPrevious,
+    onNext,
+    bankAddress,
+    initialValues,
+}) => {
     const [pickedDocument, setPickedDocument] = useState(null);
     const [documentTypeOptions, setDocumentTypeOptions] = React.useState([
         {
@@ -54,7 +59,7 @@ const UploadBankDocument = ({ onPrevious, onNext, bankAddress }) => {
         }
     };
 
-    const uploadDocument = async (values) => {
+    const uploadDocument = async (values, actions) => {
         setIsLoading(true);
         let formData = new FormData();
         formData.append("documentType", values.documentType);
@@ -79,24 +84,23 @@ const UploadBankDocument = ({ onPrevious, onNext, bankAddress }) => {
                 "/file/upload-bank-verification-document",
                 formData
             );
-            
 
-            console.log("uploadbankdoc")
-            console.log(response)
+            console.log("uploadbankdoc");
+            // console.log(response)
             // const response = {
             //     code: 200,
             //     message: "Success",
+            //     data: {
+            //         token: "uploaddocTokenerererer",
+            //     },
             // };
 
             if (response?.message == "Success") {
-               
-               
-               
                 const valuesWithToken = {
                     ...values,
                     token: response.data.token,
                 };
-                onNext(valuesWithToken); 
+                onNext(valuesWithToken);
                 // const uniqueId = uuidv4();
                 // Add the success toast to the toasts array in the component's state
                 // setToasts([
@@ -109,10 +113,12 @@ const UploadBankDocument = ({ onPrevious, onNext, bankAddress }) => {
                 //     },
                 // ]);
             } else {
+                actions.setFieldError("pickedDocument", response.message);
                 // const uniqueId = uuidv4();
                 // setToasts([...toasts, { id: uniqueId, variant: "solid", title: "Upload Failed", status: "error" }]);
             }
         } catch (error) {
+            actions.setFieldError("pickedDocument", error.message);
             // const uniqueId = uuidv4();
             // setToasts([
             //     ...toasts,
@@ -128,8 +134,8 @@ const UploadBankDocument = ({ onPrevious, onNext, bankAddress }) => {
         setIsLoading(false);
     };
 
-    const handleSubmit = async (values) => {
-        uploadDocument(values);
+    const handleSubmit = async (values, actions) => {
+        uploadDocument(values, actions);
     };
 
     // async function getdocumentType() {

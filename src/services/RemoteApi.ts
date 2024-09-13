@@ -69,6 +69,10 @@ axiosInstance.interceptors.response.use(
                 status: "error",
                 duration: 4000,
                 placement: "top",
+                // style: {
+                //     zIndex: 10000000000000000, // Ensure a high z-index
+                //     position: 'relative', // Set position to absolute
+                // },
             });
             // return errorJson;
             return Promise.reject(errorJson);
@@ -99,6 +103,10 @@ axiosInstance.interceptors.response.use(
                 status: "error",
                 duration: 4000,
                 placement: "top",
+                // style: {
+                //     zIndex: 1000000000000000, // Ensure a high z-index
+                //     position: 'relative', // Set position to absolute
+                // },
             });
             // console.error("firsterror");
             // console.error(error.response);
@@ -167,20 +175,20 @@ class ApiRequest {
         };
         // console.log('post token', await AsyncStorage.getItem("token"));
 
-        try {
+        // try {
             const response = await axiosInstance(config);
             // console.log('response', response);
-            return response?.data;
-        } catch (error) {
-            console.error("Error in POST request", error);
-            throw error;
-        }
+        //     return response?.data;
+        // } catch (error) {
+        //     console.error("Error in POST request", error);
+        //     return response?.data;
+        // }
 
         // const response = await axiosInstance(config);
 
-        // // console.log('response', response);
+        console.log('response', response);
 
-        // return response?.data;
+        return response?.data;
     }
 
     // Function to set a cookie via Axios

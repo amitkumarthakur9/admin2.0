@@ -683,40 +683,45 @@ const PortfolioCard = ({
                                         data: holding,
                                         content: (
                                             <View className="w-[90%]">
-                                            <View className="flex flex-col md:flex-row items-start md:items-center gap-2">
-                                                <Image
-                                                    alt="fundHouse"
-                                                    className="mr-2"
-                                                    style={{
-                                                        width: 32,
-                                                        height: 32,
-                                                        objectFit: "contain",
-                                                    }}
-                                                    source={{
-                                                        uri: holding?.mutualfund
-                                                            ?.logoUrl,
-                                                    }}
-                                                />
-                                                <View className="w-[98%]">
-                                                    <Text className="text-xs  w-[98%]">
-                                                        {
-                                                            holding?.mutualfund
-                                                                ?.name
-                                                        }
-                                                    </Text>
-                                                    <Text className="text-xs text-gray-400">
-                                                        {
-                                                            holding?.mutualfund
-                                                                ?.category
-                                                        }{" "}
-                                                        |{" "}
-                                                        {
-                                                            holding?.mutualfund
-                                                                ?.subCategory
-                                                        }
-                                                    </Text>
+                                                <View className="flex flex-col md:flex-row items-start md:items-center gap-2">
+                                                    <Image
+                                                        alt="fundHouse"
+                                                        className="mr-2"
+                                                        style={{
+                                                            width: 32,
+                                                            height: 32,
+                                                            objectFit:
+                                                                "contain",
+                                                        }}
+                                                        source={{
+                                                            uri: holding
+                                                                ?.mutualfund
+                                                                ?.logoUrl,
+                                                        }}
+                                                    />
+                                                    <View className="w-11/12 ">
+                                                        <Text className="text-xs w-10/12 ">
+                                                            {
+                                                                holding
+                                                                    ?.mutualfund
+                                                                    ?.name
+                                                            }
+                                                        </Text>
+                                                        <Text className="text-xs text-gray-400">
+                                                            {
+                                                                holding
+                                                                    ?.mutualfund
+                                                                    ?.category
+                                                            }{" "}
+                                                            |{" "}
+                                                            {
+                                                                holding
+                                                                    ?.mutualfund
+                                                                    ?.subCategory
+                                                            }
+                                                        </Text>
+                                                    </View>
                                                 </View>
-                                            </View>
                                             </View>
                                         ),
                                     },
@@ -769,26 +774,30 @@ const PortfolioCard = ({
                                 ];
                             })}
                             hasActions={isDistributor}
-                            options={ isDistributor ? [
-                                {
-                                    key: "invest",
-                                    name: "Invest",
-                                    onClick: (data) =>
-                                        showModal("invest", 2, data),
-                                },
-                                {
-                                    key: "switch",
-                                    name: "Switch",
-                                    onClick: (data) =>
-                                        showModal("switch", 2, data),
-                                },
-                                {
-                                    key: "redeem",
-                                    name: "Redeem",
-                                    onClick: (data) =>
-                                        showModal("redeem", 2, data),
-                                },
-                            ]: []}
+                            options={
+                                isDistributor
+                                    ? [
+                                          {
+                                              key: "invest",
+                                              name: "Invest",
+                                              onClick: (data) =>
+                                                  showModal("invest", 2, data),
+                                          },
+                                          {
+                                              key: "switch",
+                                              name: "Switch",
+                                              onClick: (data) =>
+                                                  showModal("switch", 2, data),
+                                          },
+                                          {
+                                              key: "redeem",
+                                              name: "Redeem",
+                                              onClick: (data) =>
+                                                  showModal("redeem", 2, data),
+                                          },
+                                      ]
+                                    : []
+                            }
                         />
                     </View>
                 </View>
@@ -901,41 +910,44 @@ const PortfolioCard = ({
                                     key: "scheme",
                                     content: (
                                         <View className="w-11/12">
-
-                                        <View className="flex flex-col md:flex-row items-start md:items-center gap-2 ">
-                                            <Image
-                                                alt="fundHouse"
-                                                className="mr-2"
-                                                style={{
-                                                    width: 32,
-                                                    height: 32,
-                                                    objectFit: "contain",
-                                                }}
-                                                source={{
-                                                    uri: transaction?.mutualfund
-                                                        ?.logoUrl,
-                                                }}
-                                            />
-                                            <View className="w-11/12">
-                                                <Text className="text-xs">
-                                                    {
-                                                        transaction?.mutualfund
-                                                            ?.name
-                                                    }
-                                                </Text>
-                                                <Text className="text-xs text-gray-400 text-wrap">
-                                                    {
-                                                        transaction?.mutualfund
-                                                            ?.category
-                                                    }{" "}
-                                                    |{" "}
-                                                    {
-                                                        transaction?.mutualfund
-                                                            ?.subCategory
-                                                    }
-                                                </Text>
+                                            <View className="flex flex-col md:flex-row items-start md:items-center gap-2 ">
+                                                <Image
+                                                    alt="fundHouse"
+                                                    className="mr-2"
+                                                    style={{
+                                                        width: 32,
+                                                        height: 32,
+                                                        objectFit: "contain",
+                                                    }}
+                                                    source={{
+                                                        uri: transaction
+                                                            ?.mutualfund
+                                                            ?.logoUrl,
+                                                    }}
+                                                />
+                                                <View className="w-11/12">
+                                                    <Text className="text-xs w-10/12">
+                                                        {
+                                                            transaction
+                                                                ?.mutualfund
+                                                                ?.name
+                                                        }
+                                                    </Text>
+                                                    <Text className="text-xs text-gray-400 w-11/12">
+                                                        {
+                                                            transaction
+                                                                ?.mutualfund
+                                                                ?.category
+                                                        }{" "}
+                                                        |{" "}
+                                                        {
+                                                            transaction
+                                                                ?.mutualfund
+                                                                ?.subCategory
+                                                        }
+                                                    </Text>
+                                                </View>
                                             </View>
-                                        </View>
                                         </View>
                                     ),
                                 },
@@ -945,7 +957,7 @@ const PortfolioCard = ({
                                         <View className="w-11/12">
                                             <Text
                                                 selectable
-                                                className="text-xs text-black"
+                                                className="text-xs text-black w-11/12"
                                             >
                                                 {RupeeSymbol}{" "}
                                                 {transaction?.amount?.toFixed(
@@ -961,7 +973,7 @@ const PortfolioCard = ({
                                         <View className="w-11/12">
                                             <Text
                                                 selectable
-                                                className="text-xs text-gray-500"
+                                                className="text-xs text-gray-500 w-11/12"
                                             >
                                                 {transaction?.paymentDate
                                                     ? dateTimeFormat(
@@ -1103,7 +1115,7 @@ const InvestModalCard = ({
                     dividendType={dividendType}
                     setOptionType={setOptionType}
                     setDividendType={setDividendType}
-                    card={card}
+                    // card={card}
                     firstInvest={firstInvest}
                 />
             ),
@@ -1146,8 +1158,17 @@ const LumpSumOrderTab = ({
     const IsMFSearch = isMutualFundSearchResult(mutualFund);
     const [folioID, setFolioID] = useState(null);
     const investValue = IsMFSearch
-        ? mutualFund.minInvestment
-        : mutualFund.mutualfund.minAdditionalInvestment;
+        ? mutualFund?.mutualfund?.minInvestment
+        : mutualFund?.mutualfund?.minInvestment;
+
+    console.log("IsMFSearch");
+    console.log(IsMFSearch);
+    console.log("IsMFSearch");
+    console.log(mutualFund);
+    console.log("IsMFSearch");
+    console.log(mutualFund.mutualfund.minInvestment);
+    console.log("IsMFSearch");
+    console.log(mutualFund.mutualfund.minAdditionalInvestment);
 
     const [investmentAmount, setInvestmentAmount] = useState(
         investValue.toString()
@@ -1189,19 +1210,24 @@ const LumpSumOrderTab = ({
             .number()
             .min(
                 IsMFSearch
-                    ? mutualFund.minInvestment
-                    : mutualFund.mutualfund.minAdditionalInvestment,
-                "Should be more than minimum investment required"
+                    ? mutualFund.mutualfund.minInvestment
+                    : mutualFund.mutualfund.minInvestment,
+                `Should be more than minimum investment of ${mutualFund.mutualfund.minInvestment}`
             )
             .max(
                 IsMFSearch
                     ? !!mutualFund.maxInvestment
                         ? mutualFund.maxInvestment
-                        : 99999999
+                        : 9999999999
                     : !!mutualFund.mutualfund.maxInvestment
                     ? mutualFund.mutualfund.maxInvestment
-                    : 99999999,
-                "Cannot be more than maximum investment allowed, maximum is 99999999"
+                    : 9999999999,
+                "Cannot be more than maximum investment allowed, maximum is 9999999999"
+            )
+            .refine(
+                (value) =>
+                    value % mutualFund.mutualfund.minAdditionalInvestment === 0,
+                `Amount should be in multiples of ${mutualFund.mutualfund.minAdditionalInvestment}`
             ),
     });
 
@@ -1315,6 +1341,10 @@ const LumpSumOrderTab = ({
                     }}
                     keyboardType="numeric"
                 />
+                <Text className="w-full flex flex-row items-start justify-start text-xs text-gray-500">
+                    In multiples of {RupeeSymbol}{" "}
+                    {mutualFund.mutualfund.minAdditionalInvestment}
+                </Text>
             </View>
             <Button
                 width="50%"
@@ -1346,8 +1376,8 @@ const SipOrderTab = ({
     const IsMFSearch = isMutualFundSearchResult(mutualFund);
     const [folioID, setFolioID] = useState(null);
     const investValue = IsMFSearch
-        ? mutualFund.minInvestment
-        : mutualFund.mutualfund.minAdditionalInvestment;
+        ? mutualFund?.mutualfund?.minInvestment
+        : mutualFund?.mutualfund?.minInvestment;
     const [investmentAmount, setInvestmentAmount] = useState(
         investValue.toString()
     );
@@ -1389,23 +1419,24 @@ const SipOrderTab = ({
             .number()
             .min(
                 IsMFSearch
-                    ? mutualFund.minInvestment
-                    : mutualFund.mutualfund.minAdditionalInvestment,
-                "Should be more than minimum investment required"
+                    ? mutualFund.mutualfund.minInvestment
+                    : mutualFund.mutualfund.minInvestment,
+                `Should be more than minimum investment ${mutualFund.mutualfund.minInvestment}`
             )
             .max(
                 IsMFSearch
                     ? !!mutualFund.maxInvestment
                         ? mutualFund.maxInvestment
-                        : 99999999
+                        : 9999999999
                     : !!mutualFund.mutualfund.maxInvestment
                     ? mutualFund.mutualfund.maxInvestment
-                    : 99999999,
-                "Cannot be more than maximum investment allowed, maximum is 99999999 "
+                    : 9999999999,
+                "Cannot be more than maximum investment allowed, maximum is 9999999999 "
             )
             .refine(
-                (value) => value % 1000 === 0,
-                "Amount should be in multiples of 1000"
+                (value) =>
+                    value % mutualFund.mutualfund.minAdditionalInvestment === 0,
+                `Amount should be in multiples of ${mutualFund.mutualfund.minAdditionalInvestment}`
             ),
     });
     const handleSubmit = () => {
@@ -1513,7 +1544,8 @@ const SipOrderTab = ({
                     keyboardType="numeric"
                 />
                 <Text className="w-full flex flex-row items-start justify-start text-xs text-gray-500">
-                    In multiples of {RupeeSymbol}1000
+                    In multiples of {RupeeSymbol}{" "}
+                    {mutualFund.mutualfund.minAdditionalInvestment}
                 </Text>
             </View>
             <View className="w-1/2 flex flex-col items-center gap-y-2">
@@ -2451,6 +2483,30 @@ const AccountDetailsCard = ({ data }: { data: ClientDetailedDataResponse }) => {
         </View>
     );
 
+    const downloadBankDocument = async () => {
+        try {
+            const response = RemoteApi.get(
+                `bank-account/download-bank-documents?client_id=${data.id}`
+            );
+        } catch (error) {}
+    };
+
+    const verifyBankDocument = async (verify) => {
+        const data = {
+            accountId: 287,
+            isBankVerfied: verify,
+        };
+        try {
+            const response = RemoteApi.post(
+                `bank-account/update-bank-account-status`,
+                data
+            );
+
+            if (response.code == 200) {
+            }
+        } catch (error) {}
+    };
+
     const tabContent = [
         {
             key: "bankAccounts",
@@ -2458,19 +2514,71 @@ const AccountDetailsCard = ({ data }: { data: ClientDetailedDataResponse }) => {
             content: (
                 <View className="w-full p-2 flex flex-col justify-items items-center">
                     {data?.bankAccounts.length === 0 ? (
-                        <View className="flex flex-col items-center gap-8">
-                            <Text className="text-black font-bold">
-                                No Data Available
-                            </Text>
-                            <Image
-                                source={require("../../../../assets/images/noData.png")}
-                            />
-                        </View>
+                        <>
+                            <View className="flex flex-col items-center gap-8">
+                                <Text className="text-black font-bold">
+                                    No Data Available
+                                </Text>
+                                <Image
+                                    source={require("../../../../assets/images/noData.png")}
+                                />
+                            </View>
+                            {/* <View className="flex flex-row justify-between items-cente w-full p-4">
+                                <Pressable
+                                    onPress={() => downloadBankDocument()}
+                                    className="w-8/12"
+                                >
+                                    <View className="flex flex-row justify-start items-center ">
+                                        <Icon name="download" size={14} />
+                                        <Text
+                                            className="font-bold text-[#013974]"
+                                            style={{ marginLeft: 8 }}
+                                        >
+                                            Download Bank Document
+                                        </Text>
+                                    </View>
+                                </Pressable>
+                                <View className="flex flex-row justify-between w-4/12">
+                                    <Pressable
+                                        onPress={() => verifyBankDocument(true)}
+                                    >
+                                        <View
+                                            style={{
+                                                flexDirection: "row",
+                                                alignItems: "center",
+                                            }}
+                                        >
+                                            <Text className="font-bold text-green-500">
+                                                Approve
+                                            </Text>
+                                        </View>
+                                    </Pressable>
+                                    <Pressable
+                                        onPress={() =>
+                                            verifyBankDocument(false)
+                                        }
+                                    >
+                                        <View
+                                            style={{
+                                                flexDirection: "row",
+                                                alignItems: "center",
+                                            }}
+                                        >
+                                            <Text className="font-bold text-red-500">
+                                                Reject
+                                            </Text>
+                                        </View>
+                                    </Pressable>
+                                </View>
+                            </View> */}
+                        </>
                     ) : (
-                        <Accordion
-                            accordionData={accordionData}
-                            renderItem={renderItem}
-                        />
+                        <>
+                            <Accordion
+                                accordionData={accordionData}
+                                renderItem={renderItem}
+                            />
+                        </>
                     )}
                     {}
                 </View>
@@ -2859,92 +2967,94 @@ const ExternalPortfolioModalCard = ({
 
     return (
         <>
-            {apisuccess ? (
-                <View className="flex flex-col">
-                    <View className="flex flex-row justify-end items-center">
-                        <Pressable
-                            onPress={() => {
-                                console.log("pressed close");
-                                hideDialog();
-                            }}
-                        >
-                            <IonIcon name="close-outline" size={24} />
-                        </Pressable>
-                    </View>
+            <ScrollView>
+                {apisuccess ? (
+                    <View className="flex flex-col">
+                        <View className="flex flex-row justify-end items-center">
+                            <Pressable
+                                onPress={() => {
+                                    console.log("pressed close");
+                                    hideDialog();
+                                }}
+                            >
+                                <IonIcon name="close-outline" size={24} />
+                            </Pressable>
+                        </View>
 
-                    {importDate ? (
-                        <>
-                            <View className="flex flex-row  justify-center">
-                                <Image
-                                    className=""
-                                    alt="ico"
-                                    source={require("../../../../assets/images/successTick.svg")}
-                                    style={
-                                        {
-                                            // flex: 1,
-                                            // justifyContent: 'end',
-                                            // width: 300, // specify the desired width
-                                            // height: 300,
+                        {importDate ? (
+                            <View>
+                                <View className="flex flex-row  justify-center">
+                                    <Image
+                                        className=""
+                                        alt="ico"
+                                        source={require("../../../../assets/images/successTick.svg")}
+                                        style={
+                                            {
+                                                // flex: 1,
+                                                // justifyContent: 'end',
+                                                // width: 300, // specify the desired width
+                                                // height: 300,
+                                            }
                                         }
-                                    }
-                                />
+                                    />
+                                </View>
+                                <View className="flex flex-row justify-center pt-8">
+                                    <Text className="text-center font-semibold text-lg">
+                                        Portfolio request has been successfully
+                                        sent to {clientInfo.clientName}
+                                    </Text>
+                                </View>
                             </View>
-                            <View className="flex flex-row justify-center pt-8">
-                                <Text className="text-center font-semibold text-lg">
-                                    Portfolio request has been successfully sent
-                                    to {clientInfo.clientName}
-                                </Text>
-                            </View>
-                        </>
-                    ) : (
-                        <>
-                            <View className="flex flex-row  justify-center">
-                                <Image
-                                    className=""
-                                    alt="ico"
-                                    source={require("../../../../assets/images/warning.png")}
-                                    style={
-                                        {
-                                            // flex: 1,
-                                            // justifyContent: 'end',
-                                            // width: 200, // specify the desired width
-                                            // height: 200,
+                        ) : (
+                            <>
+                                <View className="flex flex-row  justify-center">
+                                    <Image
+                                        className=""
+                                        alt="ico"
+                                        source={require("../../../../assets/images/warning.png")}
+                                        style={
+                                            {
+                                                // flex: 1,
+                                                // justifyContent: 'end',
+                                                // width: 200, // specify the desired width
+                                                // height: 200,
+                                            }
                                         }
-                                    }
-                                />
-                            </View>
-                            <View className="flex flex-col justify-center pt-8 gap-4">
-                                <Text className="text-center font-semibold text-lg">
-                                    You can resend the request only after 7 days
-                                    of last request sent
-                                </Text>
-                                <Text className="text-center text-base">
-                                    Last request sent:{" "}
-                                    {dateTimeFormat(clientInfo.lastDate)}
-                                </Text>
-                            </View>
-                        </>
-                    )}
-                </View>
-            ) : (
-                <>
-                    <View className="flex flex-col justify-center items-center p-8 gap-4">
-                        <Text className="text-center font-semibold text-lg">
-                            Server Error! Request Failed!
-                        </Text>
+                                    />
+                                </View>
+                                <View className="flex flex-col justify-center pt-8 gap-4">
+                                    <Text className="text-center font-semibold text-lg">
+                                        You can resend the request only after 7
+                                        days of last request sent
+                                    </Text>
+                                    <Text className="text-center text-base">
+                                        Last request sent:{" "}
+                                        {dateTimeFormat(clientInfo.lastDate)}
+                                    </Text>
+                                </View>
+                            </>
+                        )}
                     </View>
-                    <View className="flex flex-row justify-center">
-                        <Pressable
-                            onPress={() => {
-                                console.log("pressed close");
-                                hideDialog();
-                            }}
-                        >
-                            <Text>Close</Text>
-                        </Pressable>
+                ) : (
+                    <View>
+                        <View className="flex flex-col justify-center items-center p-8 gap-4">
+                            <Text className="text-center font-semibold text-lg">
+                                Server Error! Request Failed!
+                            </Text>
+                        </View>
+                        <View className="flex flex-row justify-center">
+                            <Pressable
+                                onPress={() => {
+                                    console.log("pressed close");
+                                    hideDialog();
+                                }}
+                            >
+                                <Text>Close</Text>
+                            </Pressable>
+                        </View>
                     </View>
-                </>
-            )}
+                )}
+            </ScrollView>
         </>
     );
 };

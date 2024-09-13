@@ -127,6 +127,9 @@ const AddNominee = ({ onNext, onPrevious, initialValues }) => {
 
             // const response = {
             //     code: 200,
+            //     data:{
+            //         token:"nomieeToken"
+            //     }
             // };
 
             console.log("response");
@@ -333,14 +336,14 @@ const AddNominee = ({ onNext, onPrevious, initialValues }) => {
                                 </View>
                             )}
                             <View style={styles.buttonContainer}>
-                                <Pressable
+                                {/* <Pressable
                                     style={styles.skipButton}
                                     // onPress={onClose}
                                 >
                                     <Text style={styles.skipButtonText}>
                                         Save As Draft
                                     </Text>
-                                </Pressable>
+                                </Pressable> */}
                                 <Pressable
                                     style={styles.saveButton}
                                     onPress={() => handleSubmit()}
@@ -416,7 +419,7 @@ const styles = StyleSheet.create({
     },
     buttonContainer: {
         flexDirection: "row",
-        justifyContent: "space-between",
+        justifyContent: "center",
         marginTop: 20,
         paddingLeft: 20,
         paddingRight: 20,

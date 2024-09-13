@@ -120,6 +120,21 @@ export const DynamicFilters = ({
         // console.log('newArray', newArray);
 
         setFilterValues([...newArray]);
+        // Filter the remaining valid filters (non-empty values and operators)
+        const updatedFilterValues = newArray.filter((filter) => {
+            return (
+                (filter.value != null &&
+                    filter.value !== "" &&
+                    filter.operator) ||
+                (Array.isArray(filter.value) &&
+                    filter.value.length > 0 &&
+                    filter.operator)
+            );
+        });
+
+        // Set applied filters and filter values based on the updated values
+        setAppliedFilers(updatedFilterValues);
+        setFilterValues(updatedFilterValues);
     };
 
     const handleFilterChange = (key, value, operator) => {

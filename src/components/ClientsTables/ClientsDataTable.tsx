@@ -272,11 +272,11 @@ const ClientsDataTable = () => {
                                     // newComponent={<ClientOnboard />}
                                 />
                             </View>
-                            {/* {roleId == 2 && (
+                            {roleId == 2 && (
                                 <View className="w-[15%] px-2 pt-4">
                                     <ClientOnboard />
                                 </View>
-                            )} */}
+                            )}
                         </View>
                         {/* )} */}
                         {!isLoading ? (

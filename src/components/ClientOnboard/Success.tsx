@@ -3,6 +3,32 @@ import { View, Text, Pressable, StyleSheet } from "react-native";
 import { Image } from "native-base";
 
 const Success = ({ isKYCSuccessful, onNext }) => {
+    const handleSubmit = () => {
+        if (isKYCSuccessful) {
+            onNext();
+        } else {
+            try {
+                // const response: any = await RemoteApi.post(
+                //     verifyOtpApi,
+                //     data
+                // );
+
+                const response = {
+                    code: 200,
+                    message: "Incorrect OTP", // Example API error message
+                };
+
+                console.log("response");
+                console.log(response);
+
+                if (response.code === 200) {
+                } else {
+                    // setIsVerifing(false); // Stop loading
+                    console.log("ElseError");
+                }
+            } catch (error) {}
+        }
+    };
     return (
         <View
             style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
@@ -47,7 +73,8 @@ const Success = ({ isKYCSuccessful, onNext }) => {
                             KYC is Pending!
                         </Text>
                         <Text className="text-center text p-2">
-                            KYC Pending for approval
+                            Client’s KYC details does not exist, Please complete
+                            his/her KYC.
                         </Text>
                     </>
                 )}
@@ -70,10 +97,10 @@ const Success = ({ isKYCSuccessful, onNext }) => {
                     styles.saveButton,
                     { opacity: pressed ? 0.6 : 1 },
                 ]}
-                onPress={() => onNext()} // Keep onNext for both conditions
+                onPress={() => handleSubmit()} // Keep onNext for both conditions
             >
                 <Text style={styles.confirmButtonText}>
-                    {isKYCSuccessful ? "Add Nominee" : "Complete KYC"}
+                    {isKYCSuccessful ? "Add Nominee" : "Notify Client"}
                 </Text>
             </Pressable>
             {/* </View> */}

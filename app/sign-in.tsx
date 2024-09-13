@@ -92,7 +92,13 @@ export default function SignIn() {
                     });
                 }
 
-                setEmail({ ...email, error: response?.errors[0]?.message });
+                
+                if(response?.errors[0]?.message.includes("password")){
+                    setPassword({ ...email, error: response?.errors[0]?.message });
+                }else{
+                    setEmail({ ...email, error: response?.errors[0]?.message });
+                }
+               
             }
         } catch (err) {
             console.log(err);

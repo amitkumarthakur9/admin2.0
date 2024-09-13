@@ -285,7 +285,7 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
         }
     };
 
-    const handleSubmit = async (values) => {
+    const handleSubmit = async (values, actions) => {
         console.log(values);
         console.log(JSON.stringify(values));
         setIsVerifing(true); // Start loading before the API call
@@ -301,20 +301,20 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
         console.log(data);
 
         try {
-            // const response: any = await RemoteApi.post(
-            //     "onboard/client/bank-details",
-            //     data
-            // );
+            const response: any = await RemoteApi.post(
+                "onboard/client/bank-details",
+                data
+            );
 
-            const response = {
-                code: 400,
-                message: "success",
-                data: {
-                    isNameMissMatch: false,
-                    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIxMCwiY3JlZGVudGlhbHNJZCI6MjAwLCJhY2NvdW50SWQiOjI3NywiYWRkcmVzc0lkIjo3MywiYmFua0FjY291bnRJZCI6MTM3LCJpYXQiOjE3MjU2MDcwNzcsImV4cCI6MTcyNTY5MzQ3N30.IOOF6DHp1CWXdE0ynDoxi6GY8cUil52GpGWWB8pFLSA",
-                },
-                errors: [],
-            };
+            // const response = {
+            //     code: 400,
+            //     message: "success",
+            //     data: {
+            //         isNameMissMatch: false,
+            //         token: "BankDetailseyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIxMCwiY3JlZGVudGlhbHNJZCI6MjAwLCJhY2NvdW50SWQiOjI3NywiYWRkcmVzc0lkIjo3MywiYmFua0FjY291bnRJZCI6MTM3LCJpYXQiOjE3MjU2MDcwNzcsImV4cCI6MTcyNTY5MzQ3N30.IOOF6DHp1CWXdE0ynDoxi6GY8cUil52GpGWWB8pFLSA",
+            //     },
+            //     errors: [],
+            // };
 
             console.log("response");
             console.log(response);
@@ -324,7 +324,7 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
                 UploadAccountNumber: values.accountNumber,
                 UploadIfsc: values.ifsc,
                 branchId: Number(bankAddress.branchId),
-                uploadToken: response.data.token,
+                uploadToken: initialValues.token,
             });
 
             if (response.code === 200) {
@@ -344,10 +344,14 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
                 //     branchId: Number(bankAddress.branchId),
                 //     uploadToken: response.data.token,
                 // });
-                setIsVerifing(false); // Stop loading
-                console.log("ElseError");
-                setMessage("Bank Verification Failure!");
-                setBankVerificationFailed(true); // Set failure state
+                if (response.code == 425) {
+                    actions.setFieldError("accountNumber", response.message);
+                } else {
+                    setIsVerifing(false); // Stop loading
+                    console.log("ElseError");
+                    setMessage("Bank Verification Failure!");
+                    setBankVerificationFailed(true); // Set failure state
+                }
             }
         } catch (error) {
             setIsVerifing(false); // Stop loading
@@ -603,7 +607,7 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
                                     onPrevious={onPrevious}
                                     onNext={onNext}
                                     bankAddress={bankAddress}
-
+                                    initialValues={initialValues}
                                 />
                             )}
                         </>

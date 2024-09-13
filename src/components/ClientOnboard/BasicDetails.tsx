@@ -15,20 +15,21 @@ import CalendarSinglePicker from "../CustomDatePicker/CalendarSinglePicker";
 import DropdownComponent from "../../components/Dropdowns/NewDropDown";
 import RemoteApi from "src/services/RemoteApi";
 import AddressForm from "./AddressForm";
+import { Box, Toast } from "native-base";
 
 const panRegex = /^([A-Z]){3}([ABCFGHJLPT])([A-Z]){1}([0-9]){4}([A-Z]){1}?$/;
 const today = new Date();
 
 const validationSchema = Yup.object().shape({
     fullName: Yup.string()
-    .matches(/^[A-Za-z\s]+$/, "Full Name should contain only alphabets")
-    .min(3, "Full Name should contain at least 3 alphabets")
-    .required("Full Name is required"),
+        .matches(/^[A-Za-z\s]+$/, "Full Name should contain only alphabets")
+        .min(3, "Full Name should contain at least 3 alphabets")
+        .required("Full Name is required"),
 
     dateOfBirth: Yup.date()
         .max(today, "Date of birth cannot be in the future")
         .required("Date of birth is required"),
-   
+
     email: Yup.string().email("Invalid email").required("Email is required"),
     gender: Yup.number()
         .typeError("Gender is required")
@@ -39,8 +40,9 @@ const validationSchema = Yup.object().shape({
     panNumber: Yup.string()
         .required("PAN number is required")
         .matches(panRegex, "Please enter a valid PAN number. Ex: AAAPZ1234C"),
-    occupation: Yup.string().required("Occupation is required"),
+    // occupation: Yup.string().required("Occupation is required"),
     isResidentIndian: Yup.boolean().required("Resident status is required"),
+    // serverError: Yup.boolean().required("serverError"),
     // country: Yup.string().when("isResidentIndian", {
     //     is: (isResidentIndian) => isResidentIndian,
     //     then: (schema) =>
@@ -135,13 +137,13 @@ const BasicDetails = ({ onNext, initialValues, onSaveDraft, onPrevious }) => {
             panNumber: values.panNumber,
             dob: values.dateOfBirth,
             sexId: values.gender,
-            occupationId: values.occupation,
+            // occupationId: values.occupation,
             isIndianResident: values.isResidentIndian,
         };
         try {
-            console.log("basicsubmit")
+            console.log("basicsubmit");
             console.log(data);
-            const response:any = await RemoteApi.post(
+            const response: any = await RemoteApi.post(
                 "/onboard/client/basic-details",
                 data
             );
@@ -152,8 +154,8 @@ const BasicDetails = ({ onNext, initialValues, onSaveDraft, onPrevious }) => {
             //     data: {
             //         isNameMissMatch: false,
             //         isDOBMissMatch: false,
-            //         isAddressPresent: true,
-            //         token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE0NywiY3JlZGVudGlhbHNJZCI6MTM3LCJhY2NvdW50SWQiOjE1NSwiYWRkcmVzc0lkIjo0NCwiaWF0IjoxNzI0NjQ4NjQ0LCJleHAiOjE3MjQ3MzUwNDR9.CZrxO5Grq_B8ODiK3iMjt-KbhShUrPFtNUsCZ1oP9vo",
+            //         isAddressPresent: false,
+            //         token: "BasicTokeneyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE0NywiY3JlZGVudGlhbHNJZCI6MTM3LCJhY2NvdW50SWQiOjE1NSwiYWRkcmVzc0lkIjo0NCwiaWF0IjoxNzI0NjQ4NjQ0LCJleHAiOjE3MjQ3MzUwNDR9.CZrxO5Grq_B8ODiK3iMjt-KbhShUrPFtNUsCZ1oP9vo",
             //     },
             //     errors: [],
             // };
@@ -171,7 +173,7 @@ const BasicDetails = ({ onNext, initialValues, onSaveDraft, onPrevious }) => {
                 onNext(valuesWithToken); // Include the submission flag
                 // onNext(values)
             } else if (response.code === 200) {
-                setcookieToken(() =>  response.data.token);
+                setcookieToken(() => response.data.token);
                 console.log("mismatch");
 
                 if (
@@ -209,10 +211,37 @@ const BasicDetails = ({ onNext, initialValues, onSaveDraft, onPrevious }) => {
                 // onNext(values)
                 // setStep(2);
             } else {
-                // actions.setErrors(response.data.errors);
+                // actions.setFieldError("serverError", response.message);
+                actions.setFieldError("panNumber", response.message);
+
+                // Toast.show({
+                //     placement: "top",
+                //     render: () => (
+                //         <ErrorToaster message="Error while creating switch order" />
+                //     ),
+                // });
+                // Toast.show({
+                //     title: "",
+                //     description: response.message || "Something went wrong",
+                //     bg: "red.500", // Set background color to red
+                //     status: "error",
+                //     duration: 4000,
+                //     placement: "top",
+                //     // style: {
+                //     //     zIndex: 10000000000000000, // Ensure a high z-index
+                //     //     position: 'relative', // Set position to absolute
+                //     // },
+                // });
             }
         } catch (error) {
-            Alert.alert("Error", "Submission failed. Please try again.");
+            // actions.setFieldError(
+            //     "fullName",
+            //     error.message
+            // );
+            // actions.setFieldError(
+            //     "fullName",
+            //     error.data.message
+            // );
         }
         setIsLoading(false);
         actions.setSubmitting(false);
@@ -334,7 +363,7 @@ const BasicDetails = ({ onNext, initialValues, onSaveDraft, onPrevious }) => {
                                         )}
                                 </View>
 
-                                <View style={styles.fieldContainer}>
+                                {/* <View style={styles.fieldContainer}>
                                     <Text style={styles.label}>
                                         Client’s Occupation{" "}
                                         <Text style={styles.required}>*</Text>
@@ -355,10 +384,7 @@ const BasicDetails = ({ onNext, initialValues, onSaveDraft, onPrevious }) => {
                                                 {errors.occupation}
                                             </Text>
                                         )}
-                                </View>
-                            </View>
-
-                            <View style={styles.formRow}>
+                                </View> */}
                                 <View style={styles.fieldContainer}>
                                     <Text style={styles.label}>
                                         Client’s Gender{" "}
@@ -377,6 +403,9 @@ const BasicDetails = ({ onNext, initialValues, onSaveDraft, onPrevious }) => {
                                         </Text>
                                     )}
                                 </View>
+                            </View>
+
+                            <View style={styles.formRow}>
                                 <View style={styles.fieldContainer}>
                                     <Text style={styles.label}>
                                         Is your client a resident Indian?{" "}
@@ -390,12 +419,12 @@ const BasicDetails = ({ onNext, initialValues, onSaveDraft, onPrevious }) => {
                                                 "isResidentIndian",
                                                 value
                                             );
-                                            if (!value) {
-                                                getOptions(
-                                                    "countries",
-                                                    setCountryOptions
-                                                ); // Fetch countries if not resident
-                                            }
+                                            // if (!value) {
+                                            //     getOptions(
+                                            //         "countries",
+                                            //         setCountryOptions
+                                            //     ); // Fetch countries if not resident
+                                            // }
                                         }}
                                     />
                                     {touched.isResidentIndian &&
@@ -405,8 +434,6 @@ const BasicDetails = ({ onNext, initialValues, onSaveDraft, onPrevious }) => {
                                             </Text>
                                         )}
                                 </View>
-                            </View>
-                            <View style={styles.formRow}>
                                 {values.isResidentIndian === false && (
                                     <View style={styles.fieldContainer}>
                                         <Text style={styles.label}>
@@ -427,16 +454,7 @@ const BasicDetails = ({ onNext, initialValues, onSaveDraft, onPrevious }) => {
                                             value={values.taxStatus}
                                             editable={false}
                                         />
-                                        {/* <DropdownComponent
-                                            label="Country"
-                                            data={countryOptions}
-                                            value={values.country}
-                                            setValue={(value) =>
-                                                setFieldValue("country", value)
-                                            }
-                                            // containerStyle={styles.dropdown}
-                                            noIcon={true}
-                                        /> */}
+
                                         {touched.country &&
                                             errors.country &&
                                             typeof errors.country ===
@@ -452,8 +470,8 @@ const BasicDetails = ({ onNext, initialValues, onSaveDraft, onPrevious }) => {
                                         )}
                                     </View>
                                 )}
-                                <View style={styles.fieldContainer}></View>
                             </View>
+
                             <View style={styles.buttonRow}>
                                 {/* <Pressable
                                     style={({ pressed }) => [
@@ -466,6 +484,7 @@ const BasicDetails = ({ onNext, initialValues, onSaveDraft, onPrevious }) => {
                                         Save as Draft
                                     </Text>
                                 </Pressable> */}
+
                                 {isLoading ? (
                                     <ActivityIndicator
                                         size="large"
@@ -490,6 +509,11 @@ const BasicDetails = ({ onNext, initialValues, onSaveDraft, onPrevious }) => {
                                     </Pressable>
                                 )}
                             </View>
+                            {/* {errors.serverError && (
+                                       <>
+                                        <ErrorToaster message={"serverErrorNew"} />
+                                        </>
+                                    )} */}
                         </>
                     ) : (
                         <AddressForm
@@ -584,4 +608,11 @@ const styles = StyleSheet.create({
     },
 });
 
+const ErrorToaster = ({ message }) => {
+    return (
+        <Box bg="red.400" p="2" color="white" rounded="sm" mb={5}>
+            <Text className="text-white">{message}</Text>
+        </Box>
+    );
+};
 export default BasicDetails;

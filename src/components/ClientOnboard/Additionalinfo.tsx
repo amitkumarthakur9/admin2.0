@@ -22,6 +22,7 @@ const validationSchema = Yup.object().shape({
         .matches(/^[A-Za-z\s]+$/, "Place of Birth must contain only alphabets")
         .required("Place of Birth is required"),
     isPoliticalExposed: Yup.boolean().required("This field is required"),
+    occupation: Yup.string().required("Occupation is required"),
     // isTaxpayer: Yup.boolean().required("This field is required"),
     // passportNumber: Yup.string().when("isPoliticalExposed", {
     //     is: (isPoliticalExposed) => isPoliticalExposed,
@@ -52,12 +53,13 @@ const Additonalinfo = ({
     onPrevious,
     initialValues,
     onSubmitSuccess,
-    setFormData
+    setFormData,
 }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isKYCSuccessful, setIsKYCSuccessful] = useState(false);
     const [incomeRangeOptions, setIncomeRangeOptions] = useState([]);
+    const [occupationOptions, setOccupationOptions] = useState([]);
 
     async function getDropdownList(endpoint) {
         setIsLoading(true);
@@ -82,8 +84,58 @@ const Additonalinfo = ({
         }
     }
 
+    // Function to fetch dropdown options
+    const getOptions = async (endpoint, setter) => {
+        setIsLoading(true);
+        try {
+            const response: DropdownResponse = await RemoteApi.get(
+                `${endpoint}`
+            );
+
+            if (response.code === 200) {
+                if (endpoint === "occupation/list") {
+                    setOccupationOptions(
+                        response.data.map((state) => ({
+                            label: state.name,
+                            value: state.id,
+                        }))
+                    );
+                    // setCountryOptions(
+                    //     response.data.data.map((state) => ({
+                    //         label: state.name,
+                    //         value: state.id,
+                    //     }))
+                    // );
+                }
+
+                // else if (endpoint === "countries") {
+                //     setCountryOptions(
+                //         response.data.data.map((state) => ({
+                //             label: state.name,
+                //             value: state.id,
+                //         }))
+                //     );
+                // } else if (endpoint === "education") {
+                // setEducationOptions(
+                //     response.data.map((state) => ({
+                //         label: state.name,
+                //         value: state.id,
+                //     }))
+                // );
+                // }
+            } else {
+                alert("Failed to fetch data list");
+            }
+        } catch (error) {
+            console.error(`Failed to fetch ${endpoint} options`, error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     useEffect(() => {
         getDropdownList("income-slab");
+        getOptions("occupation/list", setOccupationOptions);
     }, []);
 
     const handleSubmit = async (values) => {
@@ -92,6 +144,7 @@ const Additonalinfo = ({
             placeOfBirth: values.placeOfBirth,
             isPoliticalExposed: values.isPoliticalExposed,
             token: values.token,
+            occupationId: Number(values.occupation),
             // isTaxpayer: values.isTaxpayer,
             // country: values.country,
         };
@@ -106,16 +159,22 @@ const Additonalinfo = ({
 
             // const response = {
             //     code: 200,
+            //     data: {
+            //         token: "additonalinfotoken",
+            //         isKycDone: true,
+            //     },
             // };
 
             if (response.code === 200) {
-
                 setFormData((prevData) => ({
                     ...prevData,
                     token: response.data.token,
                 }));
+                if (response.data.isKycDone) {
+                    setIsKYCSuccessful(true);
+                }
                 setIsSubmitted(true);
-                setIsKYCSuccessful(true);
+
                 onSubmitSuccess(true);
             } else {
                 Alert.alert(
@@ -218,8 +277,8 @@ const Additonalinfo = ({
                                     </Text>
                                     <CustomRadioButton
                                         options={[
-                                            { label: "Yes", value: 1 },
-                                            { label: "No", value: 2 },
+                                            { label: "Yes", value: 2 },
+                                            { label: "No", value: 1 },
                                         ]}
                                         value={values.isPoliticalExposed}
                                         setValue={(value) =>
@@ -233,6 +292,28 @@ const Additonalinfo = ({
                                         errors.isPoliticalExposed && (
                                             <Text style={styles.error}>
                                                 {errors.isPoliticalExposed}
+                                            </Text>
+                                        )}
+                                </View>
+                                <View style={styles.fieldContainer}>
+                                    <Text style={styles.label}>
+                                        Client’s Occupation{" "}
+                                        <Text style={styles.required}>*</Text>
+                                    </Text>
+                                    <DropdownComponent
+                                        label="Occupation"
+                                        data={occupationOptions}
+                                        value={values.occupation}
+                                        setValue={(value) =>
+                                            setFieldValue("occupation", value)
+                                        }
+                                        // containerStyle={styles.dropdown}
+                                        noIcon={true}
+                                    />
+                                    {touched.occupation &&
+                                        errors.occupation && (
+                                            <Text style={styles.error}>
+                                                {errors.occupation}
                                             </Text>
                                         )}
                                 </View>
@@ -334,9 +415,7 @@ const Additonalinfo = ({
                                     ]}
                                     onPress={onPrevious}
                                 >
-                                    <Text style={styles.buttonText}>
-                                    Back
-                                    </Text>
+                                    <Text style={styles.buttonText}>Back</Text>
                                 </Pressable>
                                 <Pressable
                                     style={({ pressed }) => [

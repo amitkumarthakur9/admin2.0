@@ -34,8 +34,8 @@ const HorizontalStackedBarChart = ({ data, colors }) => {
                                 {item.value}
                             </Text>
                         )} */}
-                         <Text className="text-white" selectable>
-                                {item.value}
+                         <Text className="text-black" selectable>
+                                {item.value != 0 ? item.value : ""}
                             </Text>
                     </Pressable>
                 ))}

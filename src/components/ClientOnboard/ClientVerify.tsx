@@ -11,6 +11,7 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import { Ionicons } from "@expo/vector-icons";
 import RemoteApi from "src/services/RemoteApi";
+import { router } from "expo-router";
 
 const otpValidationSchema = Yup.object().shape({
     otp: Yup.string()
@@ -29,7 +30,7 @@ const ClientVerify = ({
     clientEmail,
     clientNumber,
     submitText,
-    verifyOtpApi
+    verifyOtpApi,
 }) => {
     const [otpValues, setOtpValues] = useState(["", "", "", "", "", ""]);
     const [resendEnabled, setResendEnabled] = useState(false);
@@ -75,18 +76,15 @@ const ClientVerify = ({
 
     const handleSubmit = async () => {
         setIsVerifying(true);
-        setApiError(""); 
+        setApiError("");
         const data = {
-            otp: otpValues,
+            otp: otpValues.join(""),
             token: initialValues.token,
-        }
+        };
         // Clear previous API error before submitting
         if (submitText == "Verify") {
             try {
-                const response: any = await RemoteApi.post(
-                    verifyOtpApi,
-                    data
-                );
+                const response: any = await RemoteApi.post(verifyOtpApi, data);
 
                 // const response = {
                 //     code: 200,
@@ -97,21 +95,23 @@ const ClientVerify = ({
                 console.log(response);
 
                 if (response.code === 200) {
-                    setTimeout(() => {
-                        setIsVerifying(false);
-                        setVerified(true);
+                    // setTimeout(() => {
+                    //     setIsVerifying(false);
+                    //     setVerified(true);
 
-                        // Show the verified message briefly before calling onNext
-                        setTimeout(() => {
-                            onNext(); // Trigger onNext after showing the success message
-                        }, 2000); // Adjust the delay as needed to give time for the success message to be visible
-                    }, 2000); // Mock API call for verification
+                    //     // Show the verified message briefly before calling onNext
+                    //     setTimeout(() => {
+                    //         onNext(); // Trigger onNext after showing the success message
+                    //     }, 2000); // Adjust the delay as needed to give time for the success message to be visible
+                    // }, 2000); // Mock API call for verification
                     // setIsVerifing(false); // Stop loading
                     const valuesWithToken = {
                         ...initialValues,
                         token: response.data.token,
                     };
-                    onNext(valuesWithToken); 
+                    // onNext(valuesWithToken);
+
+                    setVerified(true);
                 } else {
                     // setIsVerifing(false); // Stop loading
                     console.log("ElseError");
@@ -123,10 +123,7 @@ const ClientVerify = ({
         }
         if (submitText == "Start investing") {
             try {
-                const response: any = await RemoteApi.post(
-                    verifyOtpApi,
-                    data
-                );
+                const response: any = await RemoteApi.post(verifyOtpApi, data);
 
                 // const response = {
                 //     code: 200,
@@ -137,21 +134,21 @@ const ClientVerify = ({
                 console.log(response);
 
                 if (response.code === 200) {
-                    setTimeout(() => {
-                        setIsVerifying(false);
-                        setVerified(true);
+                    // setTimeout(() => {
+                    //     setIsVerifying(false);
+                    //     setVerified(true);
 
-                        // Show the verified message briefly before calling onNext
-                        setTimeout(() => {
-                            onNext(); // Trigger onNext after showing the success message
-                        }, 2000); // Adjust the delay as needed to give time for the success message to be visible
-                    }, 2000); // Mock API call for verification
+                    //     // Show the verified message briefly before calling onNext
+                    //     setTimeout(() => {
+                    //         onNext(); // Trigger onNext after showing the success message
+                    //     }, 2000); // Adjust the delay as needed to give time for the success message to be visible
+                    // }, 2000); // Mock API call for verification
                     // setIsVerifing(false); // Stop loading
                     const valuesWithToken = {
                         ...initialValues,
                         token: response.data.token,
                     };
-                    onNext(valuesWithToken); 
+                    onNext(valuesWithToken);
                 } else {
                     console.log("ElseError");
                     setApiError(response.message); // Store the error message from the API
@@ -166,13 +163,10 @@ const ClientVerify = ({
 
     const handleResendOtp = async () => {
         const data = {
-            token: initialValues.token
-        }
+            token: initialValues.token,
+        };
         try {
-            const response: any = await RemoteApi.post(
-                generateOtpApi,
-                data
-            );
+            const response: any = await RemoteApi.post(generateOtpApi, data);
 
             // const response = {
             //     code: 200,
@@ -183,14 +177,10 @@ const ClientVerify = ({
             console.log(response);
 
             if (response.code === 200) {
-
-
-
                 // if (resendEnabled && resendTimer === 0) {
                 //     setResendTimer(120); // Restart the timer for 2 minutes
                 //     // Logic to resend OTP
                 // }
-                
             } else {
                 console.log("ElseError");
                 setApiError(response.message); // Store the error message from the API
@@ -200,10 +190,13 @@ const ClientVerify = ({
             setApiError("Something went wrong. Please try again."); // Handle unexpected errors
             setIsVerifying(false);
         }
-        
     };
 
     const isOtpComplete = otpValues.every((val) => val !== "");
+
+    useEffect(() => {
+        handleResendOtp();
+    }, []);
 
     if (verified) {
         return (
@@ -220,7 +213,7 @@ const ClientVerify = ({
                     </Text>
                     <Pressable
                         style={styles.startInvestingButton}
-                        onPress={onNext}
+                        onPress={() => router.push(`clients`)}
                     >
                         <Text style={styles.startInvestingButtonText}>
                             Start Investing
@@ -250,7 +243,8 @@ const ClientVerify = ({
                         <>
                             <Text style={styles.enterOtp}>Enter OTP</Text>
                             <Text style={styles.infoText}>
-                                A 6 digit code has been sent to {initialValues.mobileNumber} &
+                                A 6 digit code has been sent to{" "}
+                                {initialValues.mobileNumber} &
                                 {initialValues.email}
                             </Text>
                             <View style={styles.otpContainer}>

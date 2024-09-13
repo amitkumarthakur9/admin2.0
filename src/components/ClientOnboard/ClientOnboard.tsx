@@ -21,6 +21,7 @@ import AddressForm from "./AddressForm";
 import PanVerify from "./PanVerify";
 import BankVerify from "./BankVerify";
 import Success from "./Success";
+import { router } from "expo-router";
 
 const ClientOnboard = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -32,49 +33,84 @@ const ClientOnboard = () => {
         useState(false); // Track submission
 
     const [formData, setFormData] = useState({
-        fullName: "Harsh Mundhra",
-        email: "harshmundhra001@gmail.com",
-        mobileNumber: "9473351515",
+        fullName: "",
+        email: "",
+        mobileNumber: "",
         isTaxpayer: false,
         passportNumber: "",
-        dateOfBirth: "2000-09-23",
-        panNumber: "GHMPM1801C",
+        dateOfBirth: "",
+        panNumber: "",
         isPoliticalExposed: null,
-        placeOfBirth: "Bangalore",
+        placeOfBirth: "",
         gender: null,
         occupation: "",
-        accountNumber: "3047884268",
+        accountNumber: "",
         accountType: "",
-        ifsc: "KkBK0008066",
+        ifsc: "",
         incomeRange: "",
         mismatchDob: false,
         panVerified: true,
         addressMismatch: true,
         mismatchName: false,
         isResidentIndian: null,
-        taxStatus: "Non-Resident Indian ",
-        addressLine1: "Bangalore",
-        addressLine2: "Bangalore",
-        postalCode: "751006",
+        taxStatus: "Non-Resident Indian",
+        addressLine1: "",
+        addressLine2: "",
+        postalCode: "",
         country: "",
-        nomineeDateOfBirth: "2024-04-30",
-        guardianDateOfBirth: "1997-04-30",
+        nomineeDateOfBirth: "",
+        guardianDateOfBirth: "",
         relationship: "",
         nomineeName: "",
         guardianName: "",
-        token:"",
-        branchId:"",
-        
-
+        token: "",
+        branchId: "",
+        serverError: "",
     });
+
+    // const [formData, setFormData] = useState({
+    //     fullName: "Harsh Mundhra",
+    //     email: "harshmundhra001@gmail.com",
+    //     mobileNumber: "9473351515",
+    //     isTaxpayer: false,
+    //     passportNumber: "",
+    //     dateOfBirth: "2000-09-23",
+    //     panNumber: "GHMPM1801C",
+    //     isPoliticalExposed: null,
+    //     placeOfBirth: "Bangalore",
+    //     gender: null,
+    //     occupation: "",
+    //     accountNumber: "3047884268",
+    //     accountType: "",
+    //     ifsc: "KkBK0008066",
+    //     incomeRange: "",
+    //     mismatchDob: false,
+    //     panVerified: true,
+    //     addressMismatch: true,
+    //     mismatchName: false,
+    //     isResidentIndian: null,
+    //     taxStatus: "Non-Resident Indian ",
+    //     addressLine1: "Bangalore",
+    //     addressLine2: "Bangalore",
+    //     postalCode: "751006",
+    //     country: "",
+    //     nomineeDateOfBirth: "2024-04-30",
+    //     guardianDateOfBirth: "1997-04-30",
+    //     relationship: "",
+    //     nomineeName: "",
+    //     guardianName: "",
+    //     token: "",
+    //     branchId: "",
+    //     serverError: "",
+    // });
     const [loading, setLoading] = useState(false);
 
     const handleNext = (values) => {
         // setFormData({ ...formData, ...values });
 
-        setFormData(prevData => ({
+        setFormData((prevData) => ({
             ...prevData,
-            ...values
+            ...values,
         }));
 
         setStep(step + 1);
@@ -121,7 +157,10 @@ const ClientOnboard = () => {
                             Add Clients Details
                         </Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.dropdownItem}>
+                    <TouchableOpacity
+                        onPress={() => router.push(`invite-contact`)}
+                        style={styles.dropdownItem}
+                    >
                         <Text style={styles.dropdownItemText}>
                             Invite Client
                         </Text>
@@ -200,7 +239,6 @@ const ClientOnboard = () => {
                                             onNext={handleNext}
                                             onPrevious={handlePrevious}
                                             initialValues={formData}
-                                           
                                         />
                                     )}
                                     {step === 5 && (
@@ -213,8 +251,12 @@ const ClientOnboard = () => {
                                             subTitle={
                                                 "Please verify to move forward"
                                             }
-                                            generateOtpApi={"/onboard/client/generate-otp"}
-                                            verifyOtpApi={"/onboard/client/verify-otp"}
+                                            generateOtpApi={
+                                                "/onboard/client/generate-otp"
+                                            }
+                                            verifyOtpApi={
+                                                "/onboard/client/verify-otp"
+                                            }
                                             onClose
                                             onNext={handleNext}
                                             onPrevious={handlePrevious}
@@ -224,8 +266,12 @@ const ClientOnboard = () => {
                                     )}
                                     {step === 6 && (
                                         <ClientVerify
-                                        generateOtpApi={"/onboard/client/generate-otp"}
-                                        verifyOtpApi={"/onboard/client/verify-otp"}
+                                            generateOtpApi={
+                                                "/onboard/client/generate-otp"
+                                            }
+                                            verifyOtpApi={
+                                                "/onboard/client/verify-otp"
+                                            }
                                             clientEmail={"john@gmail.com"}
                                             clientNumber={"98765433"}
                                             title={"E-log Verification"}
@@ -255,7 +301,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         backgroundColor: "#114EA8",
         paddingVertical: 10,
-        paddingHorizontal: 4,
+        paddingHorizontal: 8,
         borderRadius: 5,
     },
     addButtonText: {

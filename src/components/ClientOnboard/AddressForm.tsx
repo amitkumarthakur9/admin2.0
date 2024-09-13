@@ -7,6 +7,7 @@ import {
     ScrollView,
     Pressable,
     ActivityIndicator,
+    Alert,
 } from "react-native";
 import { Formik } from "formik";
 import * as Yup from "yup";
@@ -54,11 +55,11 @@ const AddressForm = ({
             token: cookieToken,
         };
         try {
-            // const response = await RemoteApi.post(
-            //     "/onboard/client/address",
-            //     data,
-            //     cookieToken
-            // );
+            const response = await RemoteApi.post(
+                "/onboard/client/address",
+                data,
+                cookieToken
+            );
 
             // const response = await RemoteApi.setCookieWithAxios(
             //     "/onboard/client//address",
@@ -67,26 +68,31 @@ const AddressForm = ({
             // );
 
             // console.log(response);
-            const response = {
-                data: {
-                    success: true,
-                    mismatchDob: false,
-                    panVerified: true,
-                    addressMismatch: true,
-                    mismatchName: false,
-                },
-            };
-            if (response.data.success) {
+            // const response = {
+            //     code: 200,
+            //     data: {
+            //         message: "invalid address",
+            //         success: false,
+            //         mismatchDob: false,
+            //         panVerified: true,
+            //         addressMismatch: true,
+            //         mismatchName: false,
+            //         token: "AddressTokeneyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIwOSwiY3JlZGVudGlhbHNJZCI6MTk5LCJhY2NvdW50SWQiOjI3NiwiYWRkcmVzc0lkIjo3MiwiaWF0IjoxNzI1NjA2Mzg0LCJleHAiOjE3MjU2OTI3ODR9.PwJeEbsj84Frxu-z6AKdGSvEMh7bjyKeE_AgSFtxsZk",
+            //     },
+            // };
+            if (response.code == 200) {
                 const valuesWithFlag = {
                     ...values,
                     basicDetailSubmitted: true,
+                    token: response.data.token,
                 };
                 onNext(valuesWithFlag); // Include the submission flag
                 // onNext(values)
-            } else if (response.data.addressMismatch) {
+            } else if (!response.data.success) {
                 console.log("mismatch");
+                actions.setFieldError("postalCode", response.data.message);
             } else {
-                // actions.setErrors(response.data.errors);
+                actions.setFieldError("postalCode", response.data.message);
             }
         } catch (error) {
             Alert.alert("Error", "Submission failed. Please try again.");
@@ -169,14 +175,14 @@ const AddressForm = ({
                                 style={[styles.input, styles.disabledInput]}
                                 onChangeText={handleChange("panNumber")}
                                 onBlur={handleBlur("panNumber")}
-                                value={formValues.panNumber}
+                                value={initialValues.panNumber}
                                 editable={false} // Autofilled and disabled
                             />
-                            {touched.panNumber && errors.panNumber && (
+                            {/* {touched.panNumber && errors.panNumber && (
                                 <Text style={styles.error}>
                                     {errors.panNumber}
                                 </Text>
-                            )}
+                            )} */}
                         </View>
                         <View style={styles.fieldContainer}>
                             <Text style={styles.label}>
@@ -187,14 +193,14 @@ const AddressForm = ({
                                 style={[styles.input, styles.disabledInput]}
                                 onChangeText={handleChange("dateOfBirth")}
                                 onBlur={handleBlur("dateOfBirth")}
-                                value={formValues.dateOfBirth}
+                                value={initialValues.dateOfBirth}
                                 editable={false} // Autofilled and disabled
                             />
-                            {touched.dateOfBirth && errors.dateOfBirth && (
+                            {/* {touched.dateOfBirth && errors.dateOfBirth && (
                                 <Text style={styles.error}>
                                     {errors.dateOfBirth}
                                 </Text>
-                            )}
+                            )} */}
                         </View>
                     </View>
 
@@ -210,11 +216,11 @@ const AddressForm = ({
                                 value={getGenderLabel(formValues.gender)} // Show label instead of value
                                 editable={false} // Autofilled and disabled
                             />
-                            {touched.gender && errors.gender && (
+                            {/* {touched.gender && errors.gender && (
                                 <Text style={styles.error}>
                                     {errors.gender}
                                 </Text>
-                            )}
+                            )} */}
                         </View>
                         <View style={styles.fieldContainer}></View>
                     </View>
@@ -239,6 +245,11 @@ const AddressForm = ({
                                         : "Invalid input"}
                                 </Text>
                             )}
+                            {/* {touched.addressLine1 && errors.addressLine1 && (
+                                        <Text style={styles.error}>
+                                            {errors.addressLine1}
+                                        </Text>
+                                    )} */}
                         </View>
                         <View style={styles.fieldContainer}>
                             <Text style={styles.label}>
@@ -254,9 +265,16 @@ const AddressForm = ({
                             />
                             {touched.addressLine2 && errors.addressLine2 && (
                                 <Text style={styles.error}>
-                                    {errors.addressLine2}
+                                    {typeof errors.addressLine2 === "string"
+                                        ? errors.addressLine2
+                                        : "Invalid input"}
                                 </Text>
                             )}
+                            {/* {errors.addressLine2 && (
+                                <Text style={styles.error}>
+                                    {errors.addressLine2}
+                                </Text>
+                            )} */}
                         </View>
                     </View>
 

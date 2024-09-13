@@ -123,15 +123,15 @@ const IFADataTable = () => {
                     <View className="flex flex-row items-center justify-start w-full">
                         <View className="flex flex-col rounded-full bg-[#e60202] mr-2 h-10 w-10 mb-1 items-center justify-center flex-wrap">
                             <Text selectable className="text-white">
-                                {getInitials(item?.name || "Harsh Mundra")}
+                                {getInitials(item?.name || "")}
                             </Text>
                         </View>
                         <View className="flex flex-col flex-wrap w-9/12">
                             <View className="flex flex-row items-center text-black font-semibold flex-wrap w-11/12 mb-2">
                                 <Pressable
-                                    // onPress={() =>
-                                    //     router.push(`dashboard/${item?.id}`)
-                                    // }
+                                    onPress={() =>
+                                        router.push(`dashboard/${item?.id}`)
+                                    }
                                 >
                                     <Text
                                         selectable
