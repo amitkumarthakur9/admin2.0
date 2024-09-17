@@ -96,7 +96,7 @@ const Sip = () => {
                             label="Time Period (months)"
                             value={timePeriod}
                             minValue={1}
-                            maxValue={600}
+                            maxValue={420}
                             step={1}
                             onChange={setTimePeriod}
                             prefix="Months"

@@ -7,7 +7,7 @@ import RemoteApi from '../../services/RemoteApi';
 const validationSchema = Yup.object().shape({
   fullName: Yup.string().required('Full Name is required'),
   email: Yup.string().email('Invalid email').required('Email is required'),
-  mobileNumber: Yup.string().matches(/^\d{10}$/, 'Mobile number must be exactly 10 digits').required('Mobile number is required'),
+  mobileNumber: Yup.string().matches(/^(?!00)(?!.*(\d)\1{9}$)\d{10}$/, "Invalid mobile number").required('Mobile number is required'),
   panNumber: Yup.string().required('PAN is required'),
   pincode: Yup.string().matches(/^\d{6}$/, 'Pincode must be exactly 6 digits').required('Pincode is required'),
   country: Yup.string().required('Country is required'),

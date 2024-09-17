@@ -327,7 +327,7 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
                 uploadToken: initialValues.token,
             });
 
-            if (response.code === 200) {
+            if (response.code === 200 && !response?.data?.isNameMissMatch) {
                 setIsVerifing(false);
                 const valuesWithToken = {
                     ...values,

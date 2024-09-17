@@ -201,7 +201,7 @@ export default function ClientDetail() {
                             <View className="flex flex-row items-center">
                                 <Pressable
                                     className="mr-3"
-                                    onPress={() => router.push("/clients")}
+                                    onPress={() => router.back()}
                                 >
                                     <Icon
                                         name="angle-left"
@@ -213,7 +213,7 @@ export default function ClientDetail() {
                                     selectable
                                     className="text-base flex flex-row text-center font-bold"
                                 >
-                                    Clients Details
+                                    Client Details
                                 </Text>
                             </View>
                             <View
@@ -1157,18 +1157,21 @@ const LumpSumOrderTab = ({
 }) => {
     const IsMFSearch = isMutualFundSearchResult(mutualFund);
     const [folioID, setFolioID] = useState(null);
-    const investValue = IsMFSearch
-        ? mutualFund?.mutualfund?.minInvestment
-        : mutualFund?.mutualfund?.minInvestment;
+    const [minInvestment, setMinInvestment] = useState(
+        IsMFSearch
+            ? mutualFund?.minInvestment
+            : mutualFund?.mutualfund?.minInvestment
+    );
+    const investValue = minInvestment;
 
     console.log("IsMFSearch");
     console.log(IsMFSearch);
-    console.log("IsMFSearch");
+
     console.log(mutualFund);
-    console.log("IsMFSearch");
-    console.log(mutualFund.mutualfund.minInvestment);
-    console.log("IsMFSearch");
-    console.log(mutualFund.mutualfund.minAdditionalInvestment);
+
+    // console.log(mutualFund.mutualfund.minInvestment);
+    console.log("investValue" + investValue);
+    // console.log(mutualFund.mutualfund.minAdditionalInvestment);
 
     const [investmentAmount, setInvestmentAmount] = useState(
         investValue.toString()
@@ -1209,10 +1212,8 @@ const LumpSumOrderTab = ({
         input: z
             .number()
             .min(
-                IsMFSearch
-                    ? mutualFund.mutualfund.minInvestment
-                    : mutualFund.mutualfund.minInvestment,
-                `Should be more than minimum investment of ${mutualFund.mutualfund.minInvestment}`
+                minInvestment,
+                `Should be more than minimum investment of ${minInvestment}`
             )
             .max(
                 IsMFSearch
@@ -1226,8 +1227,17 @@ const LumpSumOrderTab = ({
             )
             .refine(
                 (value) =>
-                    value % mutualFund.mutualfund.minAdditionalInvestment === 0,
-                `Amount should be in multiples of ${mutualFund.mutualfund.minAdditionalInvestment}`
+                    value %
+                        (IsMFSearch
+                            ? mutualFund.minAdditionalInvestment
+                            : mutualFund?.mutualfund
+                                  ?.minAdditionalInvestment) ===
+                    0,
+                `Amount should be in multiples of ${
+                    IsMFSearch
+                        ? mutualFund.minAdditionalInvestment
+                        : mutualFund?.mutualfund?.minAdditionalInvestment
+                }`
             ),
     });
 
@@ -1272,6 +1282,7 @@ const LumpSumOrderTab = ({
     });
 
     const handleSubmit = () => {
+        console.log("investClicked");
         try {
             textInputSchema.parse({ input: Number(investmentAmount) });
             // If validation passes, execute the mutation
@@ -1343,7 +1354,8 @@ const LumpSumOrderTab = ({
                 />
                 <Text className="w-full flex flex-row items-start justify-start text-xs text-gray-500">
                     In multiples of {RupeeSymbol}{" "}
-                    {mutualFund.mutualfund.minAdditionalInvestment}
+                    {mutualFund?.mutualfund?.minAdditionalInvestment ||
+                        mutualFund?.minAdditionalInvestment}
                 </Text>
             </View>
             <Button
@@ -1352,7 +1364,7 @@ const LumpSumOrderTab = ({
                 opacity={mutateLoading ? "50" : "100"}
                 onPress={() => handleSubmit()}
                 className="rounded-lg"
-                disabled={isButtonDisabled}
+                // disabled={isButtonDisabled}
             >
                 {mutateLoading ? "Investing..." : "Invest"}
             </Button>
@@ -1375,12 +1387,21 @@ const SipOrderTab = ({
 }) => {
     const IsMFSearch = isMutualFundSearchResult(mutualFund);
     const [folioID, setFolioID] = useState(null);
-    const investValue = IsMFSearch
-        ? mutualFund?.mutualfund?.minInvestment
-        : mutualFund?.mutualfund?.minInvestment;
+    const [minInvestment, setMinInvestment] = useState(
+        IsMFSearch
+            ? mutualFund?.minInvestment
+            : mutualFund?.mutualfund?.minInvestment
+    );
+    const [minAdditionalInvestment, setMinAdditionalInvestment] = useState(
+        IsMFSearch
+            ? mutualFund?.minAdditionalInvestment
+            : mutualFund?.mutualfund?.minAdditionalInvestment
+    );
+    const investValue = minInvestment;
     const [investmentAmount, setInvestmentAmount] = useState(
         investValue.toString()
     );
+    console.log("investValue" + investValue);
     const [sipDate, setSipDate] = useState();
     const toast = useToast();
 
@@ -1418,25 +1439,18 @@ const SipOrderTab = ({
         input: z
             .number()
             .min(
-                IsMFSearch
-                    ? mutualFund.mutualfund.minInvestment
-                    : mutualFund.mutualfund.minInvestment,
-                `Should be more than minimum investment ${mutualFund.mutualfund.minInvestment}`
+                minInvestment,
+                `Should be more than minimum investment ${minInvestment}`
             )
             .max(
                 IsMFSearch
-                    ? !!mutualFund.maxInvestment
-                        ? mutualFund.maxInvestment
-                        : 9999999999
-                    : !!mutualFund.mutualfund.maxInvestment
-                    ? mutualFund.mutualfund.maxInvestment
-                    : 9999999999,
+                    ? mutualFund.maxInvestment || 9999999999
+                    : mutualFund?.mutualfund?.maxInvestment || 9999999999,
                 "Cannot be more than maximum investment allowed, maximum is 9999999999 "
             )
             .refine(
-                (value) =>
-                    value % mutualFund.mutualfund.minAdditionalInvestment === 0,
-                `Amount should be in multiples of ${mutualFund.mutualfund.minAdditionalInvestment}`
+                (value) => value % minAdditionalInvestment === 0,
+                `Amount should be in multiples of ${minAdditionalInvestment}`
             ),
     });
     const handleSubmit = () => {
@@ -1545,7 +1559,8 @@ const SipOrderTab = ({
                 />
                 <Text className="w-full flex flex-row items-start justify-start text-xs text-gray-500">
                     In multiples of {RupeeSymbol}{" "}
-                    {mutualFund.mutualfund.minAdditionalInvestment}
+                    {mutualFund?.mutualfund?.minAdditionalInvestment ||
+                        mutualFund?.minAdditionalInvestment}
                 </Text>
             </View>
             <View className="w-1/2 flex flex-col items-center gap-y-2">

@@ -49,7 +49,7 @@ const validationSchema = Yup.object().shape({
         .typeError("Gender is required")
         .required("Gender is required"),
     mobileNumber: Yup.string()
-        .matches(/^\d{10}$/, "Mobile number must be exactly 10 digits")
+    .matches(/^(?!00)(?!.*(\d)\1{9}$)\d{10}$/, "Invalid mobile number")
         .required("Mobile number is required"),
     panNumber: Yup.string()
         .required("PAN number is required")

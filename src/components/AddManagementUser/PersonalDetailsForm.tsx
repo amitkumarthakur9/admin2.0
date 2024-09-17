@@ -27,7 +27,7 @@ const validationSchema = Yup.object().shape({
         .matches(emailRegexRFC5322, "Invalid email address")
         .required("Email is required"),
     mobileNumber: Yup.string()
-        .matches(/^\d{10}$/, "Mobile number must be exactly 10 digits")
+    .matches(/^(?!00)(?!.*(\d)\1{9}$)\d{10}$/, "Invalid mobile number")
         .required("Mobile number is required"),
     employeeCode: Yup.string()
         .min(3, "Employee Code must be at least 3 characters long")

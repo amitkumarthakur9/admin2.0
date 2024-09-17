@@ -186,7 +186,7 @@ const RTAReconciliation = () => {
                 setItemsPerPage={setItemsPerPage}
                 getDataList={getDataList}
                 currentPageNumber={currentPageNumber}
-                totalPages={totalPages}
+                totalItems={totalItems}
                 setCurrentPageNumber={setCurrentPageNumber}
             />
         }

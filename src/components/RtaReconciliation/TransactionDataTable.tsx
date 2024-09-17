@@ -112,7 +112,7 @@ const TransactionDataTable = () => {
             );
         }else{
             setIsLoading(false);
-            window.alert(response.message)
+            // window.alert(response.message)
 
         }
     }
@@ -617,7 +617,7 @@ const TransactionDataTable = () => {
                         setItemsPerPage={setItemsPerPage}
                         getDataList={getDataList}
                         currentPageNumber={currentPageNumber}
-                        totalPages={totalPages}
+                        totalItems={totalItems}
                         setCurrentPageNumber={setCurrentPageNumber}
                     />
                     {/* )} */}

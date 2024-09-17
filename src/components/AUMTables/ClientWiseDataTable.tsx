@@ -71,12 +71,12 @@ const ClientWiseDataTable = () => {
                 // setItemsPerPage(response.count)
                 setTotalItems(response.filterCount);
                 setIsLoading(false);
-                setTotalPages(
-                    Math.ceil(
-                        (response.filterCount || response.data.length) /
-                            itemsPerPage
-                    )
-                );
+                // setTotalPages(
+                //     Math.ceil(
+                //         (response.filterCount) /
+                //             itemsPerPage
+                //     )
+                // );
             } else {
                 setIsLoading(false);
 
@@ -387,8 +387,8 @@ const ClientWiseDataTable = () => {
                     setItemsPerPage={setItemsPerPage}
                     getDataList={getDataList}
                     currentPageNumber={currentPageNumber}
-                    totalPages={totalPages}
                     setCurrentPageNumber={setCurrentPageNumber}
+                    totalItems={totalItems}
                 />
                 {/* )} */}
             </View>

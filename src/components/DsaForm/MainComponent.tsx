@@ -227,116 +227,104 @@ const MainComponent = () => {
 
             if (response.code === 200) {
                 const userData = response.data;
-                const alreadySet = () => {
-                    console.log("setStated");
+                // const alreadySet = () => {
+                //     console.log("setStated");
 
-                    if (userData.arn)
-                        setFormData((prevState) => ({
-                            ...prevState,
-                            isArnHolder: true,
-                        }));
-
+                if (userData.arn)
                     setFormData((prevState) => ({
                         ...prevState,
-                        fullName: userData?.name || prevState.fullName,
-                        email: userData?.email || prevState.email,
-                        mobileNumber:
-                            userData?.mobileNumber || prevState.mobileNumber,
-                        panNumber: userData?.panNumber || prevState.panNumber,
-                        pincode:
-                            userData?.address?.[0]?.pincode ||
-                            prevState.pincode,
-                        arnNumber: userData?.arn
-                            ? userData.arn.replace("ARN-", "")
-                            : prevState.arnNumber,
-                        euinNumber: userData?.euin || prevState.euinNumber,
-                        maritalStatus:
-                            userData?.maritalStatus?.id ||
-                            prevState.maritalStatus,
-
-                        incomeRange:
-                            userData?.incomeSlab?.id || prevState.incomeRange,
-                        education:
-                            userData?.educationalQualification?.name ||
-                            prevState.education,
-                        addressLine1:
-                            userData?.address?.[0]?.line1 ||
-                            prevState.addressLine1,
-                        addressLine2:
-                            userData?.address?.[0]?.line2 ||
-                            prevState.addressLine2,
-                        addressLine3:
-                            userData?.address?.[0]?.line3 ||
-                            prevState.addressLine3,
-                        city:
-                            userData?.address?.[0]?.district?.name ||
-                            prevState.city,
-                        state:
-                            userData?.address?.[0]?.state?.id ||
-                            prevState.state,
-                        accountNumber:
-                            userData?.bankAccount?.[0]?.accountNumber ||
-                            prevState.accountNumber,
-                        accountType:
-                            userData?.bankAccount?.[0]?.bankAccountType?.name ||
-                            prevState.accountType,
-                        ifscCode:
-                            userData?.bankAccount?.[0]?.bankBranch?.ifscCode ||
-                            prevState.ifscCode,
-                        bankName:
-                            userData?.bankAccount?.[0]?.bank?.name ||
-                            prevState.bankName,
-                        district:
-                            userData?.address?.[0]?.district?.id ||
-                            prevState.district,
-                        dsaCode: userData?.dsaCode || prevState.dsaCode,
-                        remark: userData?.remark?.remark || prevState.remark,
-                        nameError: userData?.nameError || prevState.nameError,
-                        emailError:
-                            userData?.emailError || prevState.emailError,
-                        mobileNumberError:
-                            userData?.mobileNumberError ||
-                            prevState.mobileNumberError,
-                        arnNumberError:
-                            userData?.arnNumberError ||
-                            prevState.arnNumberError,
-                        euinNumberError:
-                            userData?.euinNumberError ||
-                            prevState.euinNumberError,
-                        addressLineError:
-                            userData?.addressLineError ||
-                            prevState.addressLineError,
-                        countryError:
-                            userData?.countryError || prevState.countryError,
-                        stateError:
-                            userData?.stateError || prevState.stateError,
-                        cityError: userData?.cityError || prevState.cityError,
-                        pinCodeError:
-                            userData?.pinCodeError || prevState.pinCodeError,
-                        panError: userData?.panError || prevState.panError,
-                        esignedDocumentError:
-                            userData?.esignedDocumentError ||
-                            prevState.esignedDocumentError,
-                        aadharFrontDocumentError:
-                            userData?.aadharFrontDocumentError ||
-                            prevState.aadharFrontDocumentError,
-                        aadharBackDocumentError:
-                            userData?.aadharBackDocumentError ||
-                            prevState.aadharBackDocumentError,
-                        panCardDocumentError:
-                            userData?.panCardDocumentError ||
-                            prevState.panCardDocumentError,
-                        cancelledChequeError:
-                            userData?.cancelledChequeError ||
-                            prevState.cancelledChequeError,
-                        isOnBoarded:
-                            userData?.isOnBoarded || prevState.isOnBoarded,
+                        isArnHolder: true,
                     }));
-                };
 
-                alreadySet();
+                setFormData((prevState) => ({
+                    ...prevState,
+                    fullName: userData?.name || prevState.fullName,
+                    email: userData?.email || prevState.email,
+                    mobileNumber:
+                        userData?.mobileNumber || prevState.mobileNumber,
+                    panNumber: userData?.panNumber || prevState.panNumber,
+                    pincode:
+                        userData?.address?.[0]?.pincode || prevState.pincode,
+                    arnNumber: userData?.arn
+                        ? userData.arn.replace("ARN-", "")
+                        : prevState.arnNumber,
+                    euinNumber: userData?.euin || prevState.euinNumber,
+                    maritalStatus:
+                        userData?.maritalStatus?.id || prevState.maritalStatus,
 
-                console.log("setEnd");
+                    incomeRange:
+                        userData?.incomeSlab?.id || prevState.incomeRange,
+                    education:
+                        userData?.educationalQualification?.name ||
+                        prevState.education,
+                    addressLine1:
+                        userData?.address?.[0]?.line1 || prevState.addressLine1,
+                    addressLine2:
+                        userData?.address?.[0]?.line2 || prevState.addressLine2,
+                    addressLine3:
+                        userData?.address?.[0]?.line3 || prevState.addressLine3,
+                    city:
+                        userData?.address?.[0]?.district?.name ||
+                        prevState.city,
+                    state: userData?.address?.[0]?.state?.id || prevState.state,
+                    accountNumber:
+                        userData?.bankAccount?.[0]?.accountNumber ||
+                        prevState.accountNumber,
+                    accountType:
+                        userData?.bankAccount?.[0]?.bankAccountType?.name ||
+                        prevState.accountType,
+                    ifscCode:
+                        userData?.bankAccount?.[0]?.bankBranch?.ifscCode ||
+                        prevState.ifscCode,
+                    bankName:
+                        userData?.bankAccount?.[0]?.bank?.name ||
+                        prevState.bankName,
+                    district:
+                        userData?.address?.[0]?.district?.id ||
+                        prevState.district,
+                    dsaCode: userData?.dsaCode || prevState.dsaCode,
+                    remark: userData?.remark?.remark || prevState.remark,
+                    nameError: userData?.nameError || prevState.nameError,
+                    emailError: userData?.emailError || prevState.emailError,
+                    mobileNumberError:
+                        userData?.mobileNumberError ||
+                        prevState.mobileNumberError,
+                    arnNumberError:
+                        userData?.arnNumberError || prevState.arnNumberError,
+                    euinNumberError:
+                        userData?.euinNumberError || prevState.euinNumberError,
+                    addressLineError:
+                        userData?.addressLineError ||
+                        prevState.addressLineError,
+                    countryError:
+                        userData?.countryError || prevState.countryError,
+                    stateError: userData?.stateError || prevState.stateError,
+                    cityError: userData?.cityError || prevState.cityError,
+                    pinCodeError:
+                        userData?.pinCodeError || prevState.pinCodeError,
+                    panError: userData?.panError || prevState.panError,
+                    esignedDocumentError:
+                        userData?.esignedDocumentError ||
+                        prevState.esignedDocumentError,
+                    aadharFrontDocumentError:
+                        userData?.aadharFrontDocumentError ||
+                        prevState.aadharFrontDocumentError,
+                    aadharBackDocumentError:
+                        userData?.aadharBackDocumentError ||
+                        prevState.aadharBackDocumentError,
+                    panCardDocumentError:
+                        userData?.panCardDocumentError ||
+                        prevState.panCardDocumentError,
+                    cancelledChequeError:
+                        userData?.cancelledChequeError ||
+                        prevState.cancelledChequeError,
+                    isOnBoarded: userData?.isOnBoarded || prevState.isOnBoarded,
+                }));
+                // };
+
+                // alreadySet();
+
+                // console.log("setEnd");
 
                 setFormDataSet(true);
 

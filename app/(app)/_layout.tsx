@@ -388,7 +388,7 @@ export default function AppLayout() {
                     options={{
                         drawerLabel: "Clients",
                         title: "Clients",
-                        unmountOnBlur: true,
+                        // unmountOnBlur: true,
                     }}
                     initialParams={{}}
                     component={ClientsScreen}
@@ -403,7 +403,7 @@ export default function AppLayout() {
                     options={{
                         drawerLabel: "AUM",
                         title: "AUM",
-                        unmountOnBlur: true,
+                        // unmountOnBlur: true,
                     }}
                     initialParams={{}}
                     component={AUMTabScreen}

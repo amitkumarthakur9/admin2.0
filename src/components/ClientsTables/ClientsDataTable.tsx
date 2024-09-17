@@ -359,7 +359,7 @@ const ClientsDataTable = () => {
                         setItemsPerPage={setItemsPerPage}
                         getDataList={getDataList}
                         currentPageNumber={currentPageNumber}
-                        totalPages={totalPages}
+                        totalItems={totalItems}
                         setCurrentPageNumber={setCurrentPageNumber}
                     />
                     {/* )} */}

@@ -19,12 +19,24 @@ const FilterComponent = ({
     let { title, key, fieldType, valueConfig, operator } = filter;
     let initialFilterValue = filterValues.find((f) => f.key === key);
 
+    // Determine the operator
+    let operatorValue;
+    if (Array.isArray(filter.operator)) {
+        // If operator is an array, get the selected operator from initialFilterValue or default to the first
+        operatorValue =
+            initialFilterValue?.operator || filter.operator[0].subKey;
+    } else {
+        // If operator is a string, use it directly
+        operatorValue = filter.operator;
+    }
+
     const removeSingleFilter = () => {
         removeFilter(key);
         initialFilterValue = filterValues.find((f) => f.key === key);
     };
 
     const handleOperatorChange = (operatorValue) => {
+        // operatorValue = operatorVal; // Update the operatorValue
         onFilterChange(key, initialFilterValue?.value, operatorValue);
         initialFilterValue = filterValues.find((f) => f.key === key);
         // console.log('initialFilterValue', initialFilterValue);
@@ -32,6 +44,12 @@ const FilterComponent = ({
 
     const handleFilterChange = (newValue) => {
         // console.log('value', newValue);
+        let value = valueType(newValue);
+
+        // If operator is "in" and value is not an array, wrap it in an array
+        if (operator === "in" && !Array.isArray(value)) {
+            value = [value];
+        }
 
         onFilterChange(key, valueType(newValue), operator);
         // console.log(key, valueType(newValue), operator);
@@ -45,6 +63,9 @@ const FilterComponent = ({
 
         switch (valueConfig.valueType) {
             case "string":
+                if (operatorValue === "in") {
+                    return Array.isArray(newValue) ? newValue : [newValue + ""];
+                }
                 return newValue + "";
             case "number":
                 return typeof newValue === "string"

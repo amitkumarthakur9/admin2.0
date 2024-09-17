@@ -35,7 +35,7 @@ const validationSchema = Yup.object().shape({
         .typeError("Gender is required")
         .required("Gender is required"),
     mobileNumber: Yup.string()
-        .matches(/^\d{10}$/, "Mobile number must be exactly 10 digits")
+        .matches(/^(?!00)(?!.*(\d)\1{9}$)\d{10}$/, "Invalid mobile number")
         .required("Mobile number is required"),
     panNumber: Yup.string()
         .required("PAN number is required")
@@ -193,19 +193,19 @@ const BasicDetails = ({ onNext, initialValues, onSaveDraft, onPrevious }) => {
                 if (response.data.isDOBMissMatch) {
                     actions.setFieldError(
                         "dateOfBirth",
-                        "Mismatch in Date of Birth."
+                        "Please Enter Date of Birth as per PAN Card"
                     );
                 }
-                if (!response.data.token) {
-                    actions.setFieldError(
-                        "panNumber",
-                        "PAN number verification failed."
-                    );
-                }
+                // if (!response.data.token) {
+                //     actions.setFieldError(
+                //         "panNumber",
+                //         "PAN number verification failed."
+                //     );
+                // }
                 if (response.data.isNameMissMatch) {
                     actions.setFieldError(
                         "fullName",
-                        "Name does not match records."
+                        "Please Enter Name as per PAN Card"
                     );
                 }
                 // onNext(values)
@@ -213,25 +213,6 @@ const BasicDetails = ({ onNext, initialValues, onSaveDraft, onPrevious }) => {
             } else {
                 // actions.setFieldError("serverError", response.message);
                 actions.setFieldError("panNumber", response.message);
-
-                // Toast.show({
-                //     placement: "top",
-                //     render: () => (
-                //         <ErrorToaster message="Error while creating switch order" />
-                //     ),
-                // });
-                // Toast.show({
-                //     title: "",
-                //     description: response.message || "Something went wrong",
-                //     bg: "red.500", // Set background color to red
-                //     status: "error",
-                //     duration: 4000,
-                //     placement: "top",
-                //     // style: {
-                //     //     zIndex: 10000000000000000, // Ensure a high z-index
-                //     //     position: 'relative', // Set position to absolute
-                //     // },
-                // });
             }
         } catch (error) {
             // actions.setFieldError(
@@ -267,7 +248,7 @@ const BasicDetails = ({ onNext, initialValues, onSaveDraft, onPrevious }) => {
                             <View style={styles.formRow}>
                                 <View style={styles.fieldContainer}>
                                     <Text style={styles.label}>
-                                        Client’s Name{" "}
+                                        Name as per PAN Card{" "}
                                         <Text style={styles.required}>*</Text>
                                     </Text>
                                     <TextInput
@@ -304,7 +285,7 @@ const BasicDetails = ({ onNext, initialValues, onSaveDraft, onPrevious }) => {
                             <View style={styles.formRow}>
                                 <View style={styles.fieldContainer}>
                                     <Text style={styles.label}>
-                                        Date of Birth{" "}
+                                        Date of Birth as per PAN Card{" "}
                                         <Text style={styles.required}>*</Text>
                                     </Text>
                                     <CalendarSinglePicker

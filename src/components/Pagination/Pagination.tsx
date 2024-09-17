@@ -5,114 +5,66 @@ import Icon from "react-native-vector-icons/FontAwesome";
 
 export const Pagination = ({
     currentPageNumber,
-    totalPages,
     setCurrentPageNumber,
     getDataList,
     setItemsPerPage,
     itemsPerPage,
+    totalItems,
 }) => {
-    // const generatePagesToShow = (currentPage: number) => {
-    //     const pagesToShow = [];
+    // Calculate totalPages inside the Pagination component
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
 
-    //     if (currentPage > 1) {
-    //         for (let i = 0; i < (currentPage > 2 ? 2 : currentPage - 1); i++) {
-    //             pagesToShow.push(i + 1);
-    //         }
-    //     }
+    // Standard options for items per page
+    const standardOptions = [10, 20, 30, 40, 50];
 
-    //     if (currentPage > 5) {
-    //         pagesToShow.push("...");
-    //     }
+    // Generate items per page options based on totalItems
+    let itemsPerPageOptions = standardOptions.filter(
+        (option) => option <= totalItems
+    );
 
-    //     if (currentPage >= 4) {
-    //         for (let i = 0; i < (currentPage == 4 ? 1 : 2); i++) {
-    //             pagesToShow.push(
-    //                 currentPage == 4
-    //                     ? currentPage - (1 - i)
-    //                     : currentPage - (2 - i)
-    //             );
-    //         }
-    //     }
-
-    //     for (
-    //         let i = currentPage;
-    //         i <= currentPage + 2 && i <= totalPages - 2;
-    //         i++
-    //     ) {
-    //         pagesToShow.push(i);
-    //     }
-
-    //     if (pagesToShow[pagesToShow.length - 1] < totalPages - 1) {
-    //         pagesToShow.push("...");
-    //     }
-
-    //     for (
-    //         let i = Math.max(currentPage, totalPages - 1);
-    //         i <= totalPages;
-    //         i++
-    //     ) {
-    //         pagesToShow.push(i);
-    //     }
-
-    //     return pagesToShow;
-    // };
-
+    // Include totalItems as an option if it's larger than the largest standard option
+    // If totalItems is less than the smallest standard option (10), include totalItems as the only option
+    if (itemsPerPageOptions.length === 0 && totalItems > 0) {
+        itemsPerPageOptions = [totalItems];
+    }
 
     const generatePagesToShow = (currentPage: number) => {
         const pagesToShow = [];
-    
-        // Check if total pages is less than or equal to 5
-        if (totalPages <= 5) {
-            // If so, add all pages without ellipses
-            for (let i = 1; i <= totalPages; i++) {
-                pagesToShow.push(i);
-            }
+        const totalPageNumbersToShow = 7; // Adjust this to show more or fewer page numbers
+      
+        if (totalPages <= totalPageNumbersToShow) {
+          // Show all pages if total pages is less than or equal to totalPageNumbersToShow
+          for (let i = 1; i <= totalPages; i++) {
+            pagesToShow.push(i);
+          }
         } else {
-            // Existing logic for handling ellipses when total pages is greater than 5
-            if (currentPage > 1) {
-                for (let i = 0; i < (currentPage > 2 ? 2 : currentPage - 1); i++) {
-                    pagesToShow.push(i + 1);
-                }
-            }
-    
-            if (currentPage > 5) {
-                pagesToShow.push("...");
-            }
-    
-            if (currentPage >= 4) {
-                for (let i = 0; i < (currentPage == 4 ? 1 : 2); i++) {
-                    pagesToShow.push(
-                        currentPage == 4
-                            ? currentPage - (1 - i)
-                            : currentPage - (2 - i)
-                    );
-                }
-            }
-    
-            for (
-                let i = currentPage;
-                i <= currentPage + 2 && i <= totalPages - 2;
-                i++
-            ) {
-                pagesToShow.push(i);
-            }
-    
-            if (pagesToShow[pagesToShow.length - 1] < totalPages - 1) {
-                pagesToShow.push("...");
-            }
-    
-            for (
-                let i = Math.max(currentPage, totalPages - 1);
-                i <= totalPages;
-                i++
-            ) {
-                pagesToShow.push(i);
-            }
+          const leftSiblingIndex = Math.max(currentPage - 2, 2);
+          const rightSiblingIndex = Math.min(currentPage + 2, totalPages - 1);
+      
+          const shouldShowLeftEllipsis = leftSiblingIndex > 2;
+          const shouldShowRightEllipsis = rightSiblingIndex < totalPages - 1;
+      
+          pagesToShow.push(1); // Always show first page
+      
+          if (shouldShowLeftEllipsis) {
+            pagesToShow.push("..."); // Ellipsis after first page
+          }
+      
+          // Pages between ellipses or edges
+          for (let i = leftSiblingIndex; i <= rightSiblingIndex; i++) {
+            pagesToShow.push(i);
+          }
+      
+          if (shouldShowRightEllipsis) {
+            pagesToShow.push("..."); // Ellipsis before last page
+          }
+      
+          pagesToShow.push(totalPages); // Always show last page
         }
-    
+      
         return pagesToShow;
-    };
-    
+      };
+      
 
     const handleNextPage = () => {
         if (currentPageNumber < totalPages) {
@@ -128,7 +80,12 @@ export const Pagination = ({
 
     useEffect(() => {
         getDataList();
-    }, [currentPageNumber, itemsPerPage]);
+    }, [currentPageNumber]);
+
+    useEffect(() => {
+        getDataList();
+        setCurrentPageNumber(1);
+    }, [itemsPerPage]);
 
     return (
         <View className="flex flex-row items-center justify-between mt-[20px] mb-[80px] z-[-1] mx-2 flex-wrap">
@@ -159,11 +116,18 @@ export const Pagination = ({
                             />
                         }
                     >
-                        <Select.Item label="10" value={"10"} />
+                        {/* <Select.Item label="10" value={"10"} />
                         <Select.Item label="20" value="20" />
                         <Select.Item label="30" value="30" />
                         <Select.Item label="40" value="40" />
-                        <Select.Item label="50" value="50" />
+                        <Select.Item label="50" value="50" /> */}
+                        {itemsPerPageOptions.map((option) => (
+                            <Select.Item
+                                key={option}
+                                label={`${option}`}
+                                value={`${option}`}
+                            />
+                        ))}
                     </Select>
                 </Box>
                 <View className="flex flex-row justify-center items-center">
