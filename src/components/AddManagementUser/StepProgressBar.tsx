@@ -35,23 +35,24 @@ const StepProgressBar = ({ step, stepLabel }) => {
                                 {step > index + 1 ? (
                                     <FontAwesome
                                         name="check"
-                                        size={18}
+                                        size={6}
                                         color="#fff"
                                     />
                                 ) : (
-                                    <Text
-                                        style={[
-                                            styles.stepNumber,
-                                            step >= index + 1 &&
-                                                styles.stepNumberActive,
-                                        ]}
-                                    >
-                                        {`0${index + 1}`}
-                                    </Text>
+                                    <></>
+                                    // <Text
+                                    //     style={[
+                                    //         styles.stepNumber,
+                                    //         step >= index + 1 &&
+                                    //             styles.stepNumberActive,
+                                    //     ]}
+                                    // >
+                                    //     {`0${index + 1}`}
+                                    // </Text>
                                 )}
                             </View>
                             <View>
-                                {index < (stepLabel.length - 1) && (
+                                {index < stepLabel.length - 1 && (
                                     <View
                                         style={[
                                             styles.line,
@@ -60,7 +61,7 @@ const StepProgressBar = ({ step, stepLabel }) => {
                                         ]}
                                     ></View>
                                 )}
-                                {index == (stepLabel.length - 1) && (
+                                {index == stepLabel.length - 1 && (
                                     <View style={[styles.firstLine]}></View>
                                 )}
                             </View>
@@ -86,7 +87,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     stepText: {
-        fontSize: 18,
+        fontSize: 12,
         fontWeight: "bold",
         color: "#0066cc",
         marginRight: 5,
@@ -101,18 +102,19 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     step: {
-        backgroundColor: "#fff",
-        borderColor: "#d3d3d3",
+        backgroundColor: "#E0E0E7",
+        borderColor: "#ffffff",
         borderWidth: 2,
-        padding: 10,
+        padding: 4,
         borderRadius: 20,
         justifyContent: "center",
         alignItems: "center",
-        width: 40,
-        height: 40,
+        width: 5,
+        height: 5,
     },
     stepActive: {
         borderColor: "#0066cc",
+        backgroundColor: "#ffffff",
     },
     stepCompleted: {
         backgroundColor: "#0066cc",
@@ -128,8 +130,8 @@ const styles = StyleSheet.create({
         backgroundColor: "#d3d3d3",
         alignSelf: "center",
         marginHorizontal: 10,
-        paddingTop: 2,
-        paddingBottom: 2,
+        paddingTop: 0,
+        paddingBottom: 0,
         width: "100%",
         borderColor: "#d3d3d3",
         borderWidth: 1,
@@ -153,7 +155,7 @@ const styles = StyleSheet.create({
     stepLabel: {
         marginTop: 5,
         fontSize: 12,
-        color: "#333",
+        color: "#898F8F",
         textAlign: "center",
     },
 });

@@ -228,7 +228,7 @@ const CalendarSinglePicker = ({
                         style={{ marginRight: 8 }}
                     />
                 )}
-                <Text>{value ? value : "YYYY-MM-DD"}</Text>
+                <Text className="text-[#404249] text-[12px]">{value ? value : "YYYY-MM-DD"}</Text>
             </TouchableOpacity>
             {/* <TouchableOpacity
                             // {...triggerProps}

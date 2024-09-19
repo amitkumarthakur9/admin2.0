@@ -3339,7 +3339,7 @@ const SwitchModalAction = ({
                                     }}
                                 />
                                 <Text selectable className="mt-2 text-sm">
-                                    Redeem all
+                                    Switch all
                                 </Text>
                             </View>
                         </View>

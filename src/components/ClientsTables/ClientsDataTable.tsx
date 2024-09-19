@@ -242,7 +242,8 @@ const ClientsDataTable = () => {
         return itemStructure;
     });
 
-    const filterWidth = roleId == 2 ? `w-[85%]` : `w-full`;
+    // const filterWidth = roleId == 2 ? `w-[85%]` : `w-full`;
+    const filterWidth = `w-full`;
     return (
         <View className="bg-white">
             <View className="">
@@ -272,11 +273,11 @@ const ClientsDataTable = () => {
                                     // newComponent={<ClientOnboard />}
                                 />
                             </View>
-                            {roleId == 2 && (
+                            {/* {roleId == 2 && (
                                 <View className="w-[15%] px-2 pt-4">
                                     <ClientOnboard />
                                 </View>
-                            )}
+                            )} */}
                         </View>
                         {/* )} */}
                         {!isLoading ? (

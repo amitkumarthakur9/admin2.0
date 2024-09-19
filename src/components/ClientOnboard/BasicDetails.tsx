@@ -16,6 +16,8 @@ import DropdownComponent from "../../components/Dropdowns/NewDropDown";
 import RemoteApi from "src/services/RemoteApi";
 import AddressForm from "./AddressForm";
 import { Box, Toast } from "native-base";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import CustomButton from "../Buttons/CustomButton";
 
 const panRegex = /^([A-Z]){3}([ABCFGHJLPT])([A-Z]){1}([0-9]){4}([A-Z]){1}?$/;
 const today = new Date();
@@ -53,12 +55,18 @@ const validationSchema = Yup.object().shape({
     // }),
 });
 
-const BasicDetails = ({ onNext, initialValues, onSaveDraft, onPrevious }) => {
+const BasicDetails = ({
+    onNext,
+    initialValues,
+    onSaveDraft,
+    onPrevious,
+    closeModal,
+}) => {
     const [isLoading, setIsLoading] = useState(false);
     const [occupationOptions, setOccupationOptions] = useState([]);
     const [countryOptions, setCountryOptions] = useState([]);
     const [showAddressForm, setShowAddressForm] = useState(false);
-    const [cookieToken, setcookieToken] = useState("");
+    const [addressToken, setAddressToken] = useState("");
 
     // Function to fetch dropdown options
     const getOptions = async (endpoint, setter) => {
@@ -109,6 +117,10 @@ const BasicDetails = ({ onNext, initialValues, onSaveDraft, onPrevious }) => {
         }
     };
 
+    const handleBack = () => {
+        setShowAddressForm(false);
+    };
+
     useEffect(() => {
         getOptions("occupation/list", setOccupationOptions);
         // getOptions("countries", setCountryOptions);
@@ -143,22 +155,31 @@ const BasicDetails = ({ onNext, initialValues, onSaveDraft, onPrevious }) => {
         try {
             console.log("basicsubmit");
             console.log(data);
-            const response: any = await RemoteApi.post(
-                "/onboard/client/basic-details",
-                data
-            );
+            // const response: any = await RemoteApi.post(
+            //     "/onboard/client/basic-details",
+            //     data
+            // );
 
-            // const response = {
-            //     code: 200,
-            //     message: "success",
-            //     data: {
-            //         isNameMissMatch: false,
-            //         isDOBMissMatch: false,
-            //         isAddressPresent: false,
-            //         token: "BasicTokeneyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE0NywiY3JlZGVudGlhbHNJZCI6MTM3LCJhY2NvdW50SWQiOjE1NSwiYWRkcmVzc0lkIjo0NCwiaWF0IjoxNzI0NjQ4NjQ0LCJleHAiOjE3MjQ3MzUwNDR9.CZrxO5Grq_B8ODiK3iMjt-KbhShUrPFtNUsCZ1oP9vo",
-            //     },
-            //     errors: [],
-            // };
+            function sendResponse() {
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        resolve({
+                            code: 200,
+                            message: "success",
+                            data: {
+                                isNameMissMatch: false,
+                                isDOBMissMatch: false,
+                                isAddressPresent: false,
+                                // token: "BasicTokene",
+                                token: "null",
+                            },
+                            errors: [],
+                        });
+                    }, 2000);
+                });
+            }
+
+            const response: any = await sendResponse();
             if (
                 response.code === 200 &&
                 !response.data.isNameMissMatch &&
@@ -173,8 +194,19 @@ const BasicDetails = ({ onNext, initialValues, onSaveDraft, onPrevious }) => {
                 onNext(valuesWithToken); // Include the submission flag
                 // onNext(values)
             } else if (response.code === 200) {
-                setcookieToken(() => response.data.token);
-                console.log("mismatch");
+                // setAddressToken(() => response?.data?.token);
+                if (response.data.isDOBMissMatch) {
+                    actions.setFieldError(
+                        "dateOfBirth",
+                        "Please Enter Date of Birth as per PAN Card"
+                    );
+                }
+                if (response.data.isNameMissMatch) {
+                    actions.setFieldError(
+                        "fullName",
+                        "Please Enter Name as per PAN Card"
+                    );
+                }
 
                 if (
                     !response.data.isAddressPresent &&
@@ -182,34 +214,14 @@ const BasicDetails = ({ onNext, initialValues, onSaveDraft, onPrevious }) => {
                     !response.data.isDOBMissMatch &&
                     response.data.token
                 ) {
-                    const valuesWithFlag = {
+                    const valuesWithToken = {
                         ...values,
-                        basicDetailSubmitted: true,
+                        token: response.data.token,
+                        isAddressNeeded: true,
                     };
-                    // onNext(valuesWithFlag);
-                    setShowAddressForm(true); // Show AddressForm if there is an address mismatch
+                    onNext(valuesWithToken);
+                    // setShowAddressForm(true); // Show AddressForm if there is an address mismatch
                 }
-
-                if (response.data.isDOBMissMatch) {
-                    actions.setFieldError(
-                        "dateOfBirth",
-                        "Please Enter Date of Birth as per PAN Card"
-                    );
-                }
-                // if (!response.data.token) {
-                //     actions.setFieldError(
-                //         "panNumber",
-                //         "PAN number verification failed."
-                //     );
-                // }
-                if (response.data.isNameMissMatch) {
-                    actions.setFieldError(
-                        "fullName",
-                        "Please Enter Name as per PAN Card"
-                    );
-                }
-                // onNext(values)
-                // setStep(2);
             } else {
                 // actions.setFieldError("serverError", response.message);
                 actions.setFieldError("panNumber", response.message);
@@ -242,8 +254,9 @@ const BasicDetails = ({ onNext, initialValues, onSaveDraft, onPrevious }) => {
                 touched,
                 setFieldValue,
             }) => (
-                <ScrollView contentContainerStyle={styles.container}>
-                    {!showAddressForm && !cookieToken ? (
+                <>
+                    <ScrollView contentContainerStyle={styles.container}>
+                        {/* {!showAddressForm ? ( */}
                         <>
                             <View style={styles.formRow}>
                                 <View style={styles.fieldContainer}>
@@ -453,8 +466,25 @@ const BasicDetails = ({ onNext, initialValues, onSaveDraft, onPrevious }) => {
                                 )}
                             </View>
 
-                            <View style={styles.buttonRow}>
-                                {/* <Pressable
+                            {/* {errors.serverError && (
+                                       <>
+                                        <ErrorToaster message={"serverErrorNew"} />
+                                        </>
+                                    )} */}
+                        </>
+                        {/* ) : (
+                        <AddressForm
+                            initialValues={initialValues}
+                            formValues={values}
+                            onPrevious={onPrevious}
+                            onNext={onNext}
+                            handleBack={handleBack}
+                            addressToken={addressToken}
+                        />
+                    )} */}
+                    </ScrollView>
+                    <View style={styles.buttonRow}>
+                        {/* <Pressable
                                     style={({ pressed }) => [
                                         styles.skipButton,
                                         { opacity: pressed ? 0.6 : 1 },
@@ -466,46 +496,46 @@ const BasicDetails = ({ onNext, initialValues, onSaveDraft, onPrevious }) => {
                                     </Text>
                                 </Pressable> */}
 
-                                {isLoading ? (
-                                    <ActivityIndicator
-                                        size="large"
-                                        color="#0000ff"
+                        {isLoading ? (
+                            <ActivityIndicator size="large" color="#0000ff" />
+                        ) : (
+                            <View className="flex flex-row justify-center w-full ">
+                                {/* <View className="w-[48%]">
+                                    <CustomButton
+                                        onPress={handleSubmit}
+                                        title="Save and Continue"
+                                        disabled={false}
+                                        buttonStyle={"outline"}
                                     />
-                                ) : (
-                                    <Pressable
-                                        style={({ pressed }) => [
-                                            styles.saveButton,
-                                            { opacity: pressed ? 0.6 : 1 },
-                                        ]}
-                                        // onPress={() => {
-                                        //     handleSubmit(values);
-                                        //     console.log("pressedhandle");
-                                        // }}
-
-                                        onPress={() => handleSubmit()}
-                                    >
-                                        <Text style={styles.savebuttonText}>
-                                            Save and Continue
-                                        </Text>
-                                    </Pressable>
-                                )}
+                                </View> */}
+                                <View className="w-[48%]">
+                                    <CustomButton
+                                        onPress={handleSubmit}
+                                        title="Save and Continue"
+                                        disabled={false}
+                                        buttonStyle={"full"}
+                                    />
+                                </View>
                             </View>
-                            {/* {errors.serverError && (
-                                       <>
-                                        <ErrorToaster message={"serverErrorNew"} />
-                                        </>
-                                    )} */}
-                        </>
-                    ) : (
-                        <AddressForm
-                            initialValues={initialValues}
-                            formValues={values}
-                            onPrevious={onPrevious}
-                            onNext={onNext}
-                            cookieToken={cookieToken}
-                        />
-                    )}
-                </ScrollView>
+                            // <Pressable
+                            //     style={({ pressed }) => [
+                            //         styles.saveButton,
+                            //         { opacity: pressed ? 0.6 : 1 },
+                            //     ]}
+                            //     // onPress={() => {
+                            //     //     handleSubmit(values);
+                            //     //     console.log("pressedhandle");
+                            //     // }}
+
+                            //     onPress={() => handleSubmit()}
+                            // >
+                            //     <Text style={styles.savebuttonText}>
+                            //         Save and Continue
+                            //     </Text>
+                            // </Pressable>
+                        )}
+                    </View>
+                </>
             )}
         </Formik>
     );
@@ -514,7 +544,7 @@ const BasicDetails = ({ onNext, initialValues, onSaveDraft, onPrevious }) => {
 const styles = StyleSheet.create({
     container: {
         flexGrow: 1,
-        padding: 20,
+        paddingTop: 20,
         backgroundColor: "#ffffff",
         width: "100%", // Full width
     },
@@ -531,12 +561,14 @@ const styles = StyleSheet.create({
     label: {
         fontSize: 12,
         marginBottom: 5,
-        color: "#333",
+        color: "#97989B",
     },
     required: {
         color: "red",
     },
     input: {
+        color: "#404249",
+        fontSize: 12,
         borderWidth: 1,
         borderColor: "#ccc",
         padding: 10,

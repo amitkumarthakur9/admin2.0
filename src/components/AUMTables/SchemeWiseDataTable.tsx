@@ -253,14 +253,14 @@ const SchemeWiseDataTable = () => {
                 )}
             </View>
             {/* {data.length !== 0 && */}
-            <Pagination
+            {/* <Pagination
                 itemsPerPage={itemsPerPage}
                 setItemsPerPage={setItemsPerPage}
                 getDataList={getDataList}
                 currentPageNumber={currentPageNumber}
                 totalItems={totalItems}
                 setCurrentPageNumber={setCurrentPageNumber}
-            />
+            /> */}
 {/* } */}
         </View>
 

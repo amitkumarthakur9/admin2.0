@@ -25,6 +25,7 @@ import * as DocumentPicker from "expo-document-picker";
 import { CheckIcon, FormControl, Select, Stack } from "native-base";
 import CustomRadioButton from "../CustomForm/CustomRadioButton/CustomRadioButton";
 import UploadBankDocument from "./UploadBankDocument";
+import CustomButton from "../Buttons/CustomButton";
 const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [modalFormData, setModalFormData] = useState({
@@ -61,6 +62,9 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
         setModalFormData({
             ...modalFormData,
             bank: item.value,
+            state: "",
+            district: "",
+            branch: "",
         });
     };
     const [isLoading, setIsLoading] = useState(false);
@@ -78,10 +82,10 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
                     }))
                 );
             } else {
-                alert("Failed to fetch bank options");
+                // alert("Failed to fetch bank options");
             }
         } catch (error) {
-            alert("An error occurred while fetching the bank options");
+            // alert("An error occurred while fetching the bank options");
         }
     }
 
@@ -103,10 +107,10 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
                     }))
                 );
             } else {
-                alert("Failed to fetch state list");
+                // alert("Failed to fetch state list");
             }
         } catch (error) {
-            alert("An error occurred while fetching the state list");
+            // alert("An error occurred while fetching the state list");
         } finally {
             setIsLoadingState(false);
         }
@@ -127,10 +131,10 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
 
                 setDistrictOptions(mappedDistricts);
             } else {
-                alert("Failed to fetch district list");
+                // alert("Failed to fetch district list");
             }
         } catch (error) {
-            alert("An error occurred while fetching the district list");
+            // alert("An error occurred while fetching the district list");
         } finally {
             setIsLoadingDistrict(false);
         }
@@ -152,10 +156,10 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
 
                 setBranchOptions(mappedBranch);
             } else {
-                alert("Failed to fetch district list");
+                // alert("Failed to fetch district list");
             }
         } catch (error) {
-            alert("An error occurred while fetching the district list");
+            // alert("An error occurred while fetching the district list");
         } finally {
             setIsLoadingDistrict(false);
         }
@@ -177,16 +181,16 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
 
                 setAccountTypeOptions(mappedAccount);
             } else {
-                alert("Failed to fetch district list");
+                // alert("Failed to fetch district list");
             }
         } catch (error) {
-            alert("An error occurred while fetching the district list");
+            // alert("An error occurred while fetching the district list");
         } finally {
             setIsLoadingDistrict(false);
         }
     }
 
-    async function getIfseCode(branchId) {
+    async function getIfseCode(branchId, setFieldError) {
         setIsLoadingDistrict(true);
 
         try {
@@ -209,10 +213,12 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
                 console.log("label" + bankName); // Output: "HDFC Bank"
                 console.log("label" + BranchName); // Output: "HDFC Bank"
             } else {
-                alert("Failed to fetch district list");
+                setFieldError("ifsc", response.message);
+                // alert("Failed to fetch district list");
             }
         } catch (error) {
-            alert("An error occurred while fetching the district list");
+            setFieldError("ifsc", error.message);
+            // alert("An error occurred while fetching the district list");
         } finally {
             setIsLoadingDistrict(false);
         }
@@ -227,7 +233,7 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
         }
     }, [bankAddress]);
 
-    const fetchBankDetails = async (ifsc) => {
+    const fetchBankDetails = async (ifsc, setFieldError) => {
         setIsLoadingDistrict(true);
 
         const data = {
@@ -238,8 +244,15 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
             const response: any = await RemoteApi.post("bank/address", data);
 
             if (response.code === 200) {
-                const { bankBranch, pincode, district, state, id } =
-                    response.data;
+                const {
+                    bankBranch = "",
+                    pincode = "",
+                    district = "",
+                    state = "",
+                    id = null,
+                    bankName = "",
+                } = response.data;
+
                 const address = `${bankBranch}, ${district}, ${state}, ${pincode}`;
 
                 setBankAddress({
@@ -253,10 +266,16 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
                 console.log(JSON.stringify(address));
                 console.log(JSON.stringify(response));
             } else {
-                alert("Failed to fetch district list");
+                setFieldError(
+                    "ifsc",
+                    response.message ? response.message : "IFSC not found"
+                );
             }
         } catch (error) {
-            alert("An error occurred while fetching the district list");
+            setFieldError(
+                "ifsc",
+                error.message ? error.message : "IFSC not found"
+            );
         } finally {
             setIsLoadingDistrict(false);
         }
@@ -272,9 +291,17 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
         return bank ? bank.label : null;
     };
 
-    const handleModalConfirm = async () => {
-        fetchBankDetails(ifscCode);
+    const handleModalConfirm = async (setFieldError) => {
+        fetchBankDetails(ifscCode, setFieldError);
         setIsModalVisible(false);
+        setModalFormData({
+            bank: "",
+            state: "",
+            district: "",
+            branch: "",
+        });
+        setSelectedBank(null);
+        setifscCode(null);
     };
 
     const handleRadiooption = async (value) => {
@@ -301,20 +328,20 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
         console.log(data);
 
         try {
-            const response: any = await RemoteApi.post(
-                "onboard/client/bank-details",
-                data
-            );
+            // const response: any = await RemoteApi.post(
+            //     "onboard/client/bank-details",
+            //     data
+            // );
 
-            // const response = {
-            //     code: 400,
-            //     message: "success",
-            //     data: {
-            //         isNameMissMatch: false,
-            //         token: "BankDetailseyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIxMCwiY3JlZGVudGlhbHNJZCI6MjAwLCJhY2NvdW50SWQiOjI3NywiYWRkcmVzc0lkIjo3MywiYmFua0FjY291bnRJZCI6MTM3LCJpYXQiOjE3MjU2MDcwNzcsImV4cCI6MTcyNTY5MzQ3N30.IOOF6DHp1CWXdE0ynDoxi6GY8cUil52GpGWWB8pFLSA",
-            //     },
-            //     errors: [],
-            // };
+            const response = {
+                code: 400,
+                message: "success",
+                data: {
+                    isNameMissMatch: true,
+                    token: "BankDetailseyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIxMCwiY3JlZGVudGlhbHNJZCI6MjAwLCJhY2NvdW50SWQiOjI3NywiYWRkcmVzc0lkIjo3MywiYmFua0FjY291bnRJZCI6MTM3LCJpYXQiOjE3MjU2MDcwNzcsImV4cCI6MTcyNTY5MzQ3N30.IOOF6DHp1CWXdE0ynDoxi6GY8cUil52GpGWWB8pFLSA",
+                },
+                errors: [],
+            };
 
             console.log("response");
             console.log(response);
@@ -337,6 +364,7 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
                 onNext(valuesWithToken); // Stop loading
                 // onNext(values);
             } else {
+                setIsVerifing(false);
                 // setBankAddress({
                 //     ...bankAddress,
                 //     UploadAccountNumber: values.accountNumber,
@@ -344,13 +372,33 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
                 //     branchId: Number(bankAddress.branchId),
                 //     uploadToken: response.data.token,
                 // });
+
                 if (response.code == 425) {
                     actions.setFieldError("accountNumber", response.message);
+                } else if (
+                    response.code == 200 &&
+                    response.data.isNameMissMatch
+                ) {
+                    setMessage("Name mismatch in Bank and PAN");
+                    const valuesWithToken = {
+                        ...values,
+                        // token: response.data.token,
+                        branchId: Number(bankAddress.branchId),
+                        isBankVerificationFailed: true,
+                        bankVerifyFailMessage: "Name mismatch in Bank and PAN",
+                    };
+                    onNext(valuesWithToken); // Stop loading
+                    // setBankVerificationFailed(true); // Set failure state
                 } else {
-                    setIsVerifing(false); // Stop loading
                     console.log("ElseError");
-                    setMessage("Bank Verification Failure!");
-                    setBankVerificationFailed(true); // Set failure state
+                    const valuesWithToken = {
+                        ...values,
+                        // token: response.data.token,
+                        branchId: Number(bankAddress.branchId),
+                        isBankVerificationFailed: true,
+                        bankVerifyFailMessage: "Bank Verification Failed!",
+                    };
+                    onNext(valuesWithToken); // Stop loading
                 }
             }
         } catch (error) {
@@ -361,12 +409,12 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
         // }
     };
 
-    if (isVerifing) {
-        <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color="#0000ff" />
-            <Text style={styles.loadingText}>Verifying Bank Account...</Text>
-        </View>;
-    }
+    // if (isVerifing) {
+    //     <View style={styles.loadingContainer}>
+    //         <ActivityIndicator size="large" color="#0000ff" />
+    //         <Text style={styles.loadingText}>Verifying Bank Account...</Text>
+    //     </View>;
+    // }
 
     return (
         <Formik
@@ -374,7 +422,8 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
             validationSchema={Yup.object().shape({
                 accountNumber: Yup.string()
                     .required("Account number is required")
-                    .matches(/^\d+$/, "Account number must be Numeric"),
+                    .matches(/^\d+$/, "Account number must be numeric")
+                    .min(9, "Account number must be at least 9 digits"),
                 ifsc: Yup.string()
                     .required("IFSC is required")
                     .length(11, "IFSC must be 11 characters"),
@@ -393,9 +442,11 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
                 errors,
                 touched,
                 setFieldValue,
+                setFieldError,
             }) => (
-                <ScrollView contentContainerStyle={styles.container}>
-                    {!bankVerificationFailed ? (
+                <>
+                    <ScrollView contentContainerStyle={styles.container}>
+                        {/* {!bankVerificationFailed ? ( */}
                         <>
                             <View style={styles.formRow}>
                                 <View style={styles.fieldContainer}>
@@ -431,10 +482,12 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
                                             );
                                             if (uppercasedValue.length === 11) {
                                                 fetchBankDetails(
-                                                    uppercasedValue
+                                                    uppercasedValue,
+                                                    setFieldError
                                                 );
                                             } else {
                                                 setBankAddress({
+                                                    ...bankAddress,
                                                     bankName: "",
                                                     address: "",
                                                     pincode: "",
@@ -517,281 +570,233 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
                                     )}
                                 </View>
                             </View>
-                            <View className="flex flex-row justify-center gap-2">
-                                <View className="w-3/12">
-                                    <Pressable
-                                        style={({ pressed }) => [
-                                            styles.back,
-                                            {
-                                                borderColor: "#0066cc",
-                                                opacity: pressed ? 0.6 : 1,
-                                            },
-                                        ]}
-                                        onPress={onPrevious}
-                                    >
-                                        <Text
-                                            style={[
-                                                styles.buttonText,
-                                                { color: "#0066cc" },
-                                            ]}
-                                        >
-                                            {"Back"}
-                                        </Text>
-                                    </Pressable>
-                                </View>
+                        </>
 
-                                <View className="w-3/12">
-                                    <Pressable
-                                        style={({ pressed }) => [
-                                            styles.proceed,
-                                            {
-                                                borderColor: "#0066cc",
-                                                opacity: pressed ? 0.6 : 1,
-                                            },
-                                        ]}
-                                        onPress={() => handleSubmit()}
-                                        disabled={isVerifing === true}
+                        <Modal
+                            visible={isModalVisible}
+                            transparent
+                            onRequestClose={() => {
+                                setIsModalVisible(false);
+                                setModalFormData({
+                                    ...modalFormData,
+                                    bank: "",
+                                    state: "",
+                                    district: "",
+                                    branch: "",
+                                });
+                            }}
+                        >
+                            <View style={styles.modalContainer}>
+                                <View style={styles.modalContent}>
+                                    <TouchableOpacity
+                                        style={styles.closeButton}
+                                        onPress={() => {
+                                            setIsModalVisible(false);
+                                            setModalFormData({
+                                                bank: "",
+                                                state: "",
+                                                district: "",
+                                                branch: "",
+                                            });
+                                            setSelectedBank(null);
+                                            setifscCode(null);
+                                        }}
                                     >
-                                        <Text
+                                        <Icon
+                                            name="close"
+                                            size={20}
+                                            color="#7C899C"
+                                        />
+                                    </TouchableOpacity>
+                                    <Text style={styles.modalTitle}>
+                                        Find your IFSC
+                                    </Text>
+
+                                    <ScrollView className="w-full p-16">
+                                        <View className="px-5">
+                                            <Text style={styles.label}>
+                                                Bank name*
+                                            </Text>
+                                        </View>
+                                        <SearchableDropdown
+                                            endpoint="bank"
+                                            onSelect={handleSelect}
+                                        />
+                                        {selectedBank && (
+                                            <View style={styles.fieldContainer}>
+                                                <Text style={styles.label}>
+                                                    State*
+                                                </Text>
+                                                <DropdownComponent
+                                                    label="State"
+                                                    data={stateOptions}
+                                                    value={modalFormData.state}
+                                                    setValue={(value) => {
+                                                        setModalFormData({
+                                                            ...modalFormData,
+                                                            state: value,
+                                                        });
+                                                        getDistrictList(value);
+                                                    }}
+                                                    searchOn={true}
+                                                    containerStyle={
+                                                        styles.dropdown
+                                                    }
+                                                    noIcon={true}
+                                                />
+                                            </View>
+                                        )}
+                                        {modalFormData.state && (
+                                            <View style={styles.fieldContainer}>
+                                                <Text style={styles.label}>
+                                                    District*
+                                                </Text>
+                                                <DropdownComponent
+                                                    label="District"
+                                                    data={districtOptions}
+                                                    value={
+                                                        modalFormData.district
+                                                    }
+                                                    setValue={(value) => {
+                                                        setModalFormData({
+                                                            ...modalFormData,
+                                                            district: value,
+                                                        });
+                                                        getBranchList(value);
+                                                    }}
+                                                    searchOn={true}
+                                                    containerStyle={
+                                                        styles.dropdown
+                                                    }
+                                                    noIcon={true}
+                                                />
+                                            </View>
+                                        )}
+                                        {modalFormData.district && (
+                                            <View style={styles.fieldContainer}>
+                                                <Text style={styles.label}>
+                                                    Branch*
+                                                </Text>
+                                                <DropdownComponent
+                                                    label="Branch"
+                                                    data={branchOptions}
+                                                    value={modalFormData.branch}
+                                                    setValue={(value) => {
+                                                        setModalFormData({
+                                                            ...modalFormData,
+                                                            branch: value,
+                                                        });
+                                                        setBankAddress({
+                                                            ...bankAddress,
+                                                            branchId: value,
+                                                        });
+                                                        getIfseCode(
+                                                            value,
+                                                            setFieldError
+                                                        );
+                                                    }}
+                                                    searchOn={true}
+                                                    containerStyle={
+                                                        styles.dropdown
+                                                    }
+                                                    noIcon={true}
+                                                />
+                                            </View>
+                                        )}
+                                        {ifscCode !== "null" && (
+                                            <View className="flex flex-row py-4">
+                                                <Text className="pr-2 color-gray-600">
+                                                    IFSC Code:
+                                                </Text>
+                                                <Text className="">
+                                                    {ifscCode}
+                                                </Text>
+                                            </View>
+                                        )}
+
+                                        <Pressable
                                             style={[
-                                                styles.buttonText,
-                                                { color: "#ffffff" },
+                                                styles.confirmButton,
+                                                ifscCode === null &&
+                                                    styles.confirmButtonDisabled,
                                             ]}
+                                            onPress={() => {
+                                                handleModalConfirm(
+                                                    setFieldError
+                                                );
+                                                setFieldValue("ifsc", ifscCode);
+                                            }}
+                                            disabled={ifscCode === null}
                                         >
-                                            {"Save and Continue"}
-                                        </Text>
-                                    </Pressable>
+                                            <Text
+                                                style={[
+                                                    styles.confirmButtonText,
+                                                    ifscCode === null &&
+                                                        styles.confirmButtonTextDisabled,
+                                                ]}
+                                            >
+                                                Confirm
+                                            </Text>
+                                        </Pressable>
+                                    </ScrollView>
                                 </View>
+                            </View>
+                        </Modal>
+                    </ScrollView>
+                    {!isVerifing ? (
+                        <>
+                            <View className="flex flex-row justify-center w-full ">
+                                {/* <View className="w-[48%]">
+                                    <CustomButton
+                                        onPress={handleSubmit}
+                                        title="Save and Continue"
+                                        disabled={false}
+                                        buttonStyle={"outline"}
+                                    />
+                                </View> */}
+                                <View className="w-[48%]">
+                                    <CustomButton
+                                        onPress={handleSubmit}
+                                        title="Save and Continue"
+                                        disabled={isVerifing === true}
+                                        buttonStyle={"full"}
+                                    />
+                                </View>
+                            </View>
+                            <View className="flex flex-row justify-center gap-2">
+                                {/* <View className="w-3/12">
+                                <Pressable
+                                    style={({ pressed }) => [
+                                        styles.proceed,
+                                        {
+                                            borderColor: "#0066cc",
+                                            opacity: pressed ? 0.6 : 1,
+                                        },
+                                    ]}
+                                    onPress={() => handleSubmit()}
+                                    disabled={isVerifing === true}
+                                >
+                                    <Text
+                                        style={[
+                                            styles.buttonText,
+                                            { color: "#ffffff" },
+                                        ]}
+                                    >
+                                        {"Save and Continue"}
+                                    </Text>
+                                </Pressable>
+                            </View> */}
                             </View>
                         </>
                     ) : (
-                        <>
-                            <View style={styles.formRow}>
-                                <View className="flex flex-col">
-                                    <View style={styles.fieldContainer}>
-                                        <Text className="text-red-600 text-2xl">
-                                            {message}
-                                        </Text>
-                                    </View>
-                                    <View style={styles.fieldContainer}>
-                                        <Text>
-                                            Please verify the details enter by
-                                            you or upadte the details.
-                                        </Text>
-                                    </View>
-                                </View>
-                            </View>
-
-                            <View style={styles.formRow}>
-                                <View style={styles.radiofieldContainer}>
-                                    <CustomRadioButton
-                                        options={[
-                                            {
-                                                label: "Change Bank Details",
-                                                value: "1",
-                                            },
-                                            {
-                                                label: "Upload Supporting Documents",
-                                                value: "2",
-                                            },
-                                        ]}
-                                        value={radioOption}
-                                        setValue={(value) => {
-                                            handleRadiooption(value);
-                                        }}
-                                    />
-                                </View>
-                            </View>
-                            {radioOption === "2" && (
-                                <UploadBankDocument
-                                    onPrevious={onPrevious}
-                                    onNext={onNext}
-                                    bankAddress={bankAddress}
-                                    initialValues={initialValues}
-                                />
-                            )}
-                        </>
+                        <View style={styles.loadingContainer}>
+                            <ActivityIndicator size="large" color="#0000ff" />
+                            <Text style={styles.loadingText}>
+                                Verifying Bank Account...
+                            </Text>
+                        </View>
                     )}
-
-                    <Modal
-                        visible={isModalVisible}
-                        transparent
-                        onRequestClose={() => setIsModalVisible(false)}
-                    >
-                        <View style={styles.modalContainer}>
-                            <View style={styles.modalContent}>
-                                <TouchableOpacity
-                                    style={styles.closeButton}
-                                    onPress={() => setIsModalVisible(false)}
-                                >
-                                    <Icon
-                                        name="close"
-                                        size={20}
-                                        color="#7C899C"
-                                    />
-                                </TouchableOpacity>
-                                <Text style={styles.modalTitle}>
-                                    Find your IFSC
-                                </Text>
-
-                                <ScrollView className="w-full p-16">
-                                    <View className="px-5">
-                                        <Text style={styles.label}>
-                                            Bank name*
-                                        </Text>
-                                    </View>
-                                    <SearchableDropdown
-                                        endpoint="bank"
-                                        onSelect={handleSelect}
-                                    />
-
-                                    {/* {selectedBank && (
-                                            <Text>
-                                                Selected Bank:{" "}
-                                                {selectedBank.label}
-                                            </Text>
-                                        )} */}
-
-                                    <View style={styles.fieldContainer}>
-                                        <Text style={styles.label}>State*</Text>
-                                        <DropdownComponent
-                                            label="State"
-                                            data={stateOptions}
-                                            value={modalFormData.state}
-                                            setValue={(value) => {
-                                                setModalFormData({
-                                                    ...modalFormData,
-                                                    state: value,
-                                                });
-                                                getDistrictList(value);
-                                            }}
-                                            searchOn={true}
-                                            containerStyle={styles.dropdown}
-                                            noIcon={true}
-                                        />
-                                    </View>
-                                    <View style={styles.fieldContainer}>
-                                        <Text style={styles.label}>
-                                            District*
-                                        </Text>
-                                        <DropdownComponent
-                                            label="District"
-                                            data={districtOptions}
-                                            value={modalFormData.district}
-                                            setValue={(value) => {
-                                                setModalFormData({
-                                                    ...modalFormData,
-                                                    district: value,
-                                                });
-                                                getBranchList(value);
-                                            }}
-                                            searchOn={true}
-                                            containerStyle={styles.dropdown}
-                                            noIcon={true}
-                                        />
-                                    </View>
-                                    <View style={styles.fieldContainer}>
-                                        <Text style={styles.label}>
-                                            Branch*
-                                        </Text>
-                                        <DropdownComponent
-                                            label="Branch"
-                                            data={branchOptions}
-                                            value={modalFormData.branch}
-                                            setValue={(value) => {
-                                                setModalFormData({
-                                                    ...modalFormData,
-                                                    branch: value,
-                                                });
-                                                setBankAddress({
-                                                    ...bankAddress,
-                                                    branchId: value,
-                                                });
-                                                getIfseCode(value);
-                                            }}
-                                            searchOn={true}
-                                            containerStyle={styles.dropdown}
-                                            noIcon={true}
-                                        />
-                                    </View>
-                                    {ifscCode !== "null" && (
-                                        <View className="flex flex-row py-4">
-                                            <Text className="pr-2 color-gray-600">
-                                                IFSC Code:
-                                            </Text>
-                                            <Text className="">{ifscCode}</Text>
-                                        </View>
-                                    )}
-
-                                    <Pressable
-                                        style={[
-                                            styles.confirmButton,
-                                            ifscCode === "null" &&
-                                                styles.confirmButtonDisabled,
-                                        ]}
-                                        onPress={() => {
-                                            handleModalConfirm();
-                                            setFieldValue("ifsc", ifscCode);
-                                        }}
-                                        disabled={ifscCode === "null"}
-                                    >
-                                        <Text
-                                            style={[
-                                                styles.confirmButtonText,
-                                                ifscCode === "null" &&
-                                                    styles.confirmButtonTextDisabled,
-                                            ]}
-                                        >
-                                            Confirm
-                                        </Text>
-                                    </Pressable>
-                                </ScrollView>
-                            </View>
-                        </View>
-                    </Modal>
-                    <Modal
-                        visible={isVerifing}
-                        transparent
-                        onRequestClose={() => {
-                            setIsVerifing(false);
-                            setMessage(null);
-                        }}
-                    >
-                        <View style={styles.modalContainer}>
-                            <View style={styles.modalContent}>
-                                <TouchableOpacity
-                                    style={styles.closeButton}
-                                    onPress={() => {
-                                        setIsVerifing(false);
-                                        setMessage(null);
-                                    }}
-                                >
-                                    <Icon
-                                        name="close"
-                                        size={20}
-                                        color="#7C899C"
-                                    />
-                                </TouchableOpacity>
-                                {message ? (
-                                    <>
-                                        <View>
-                                            <Text className="text-red-600 text-lg">
-                                                {message}
-                                            </Text>
-                                        </View>
-                                    </>
-                                ) : (
-                                    <>
-                                        <ActivityIndicator />
-                                        <Text style={styles.modalTitle}>
-                                            Verifying Bank Account
-                                        </Text>
-                                    </>
-                                )}
-                            </View>
-                        </View>
-                    </Modal>
-                </ScrollView>
+                </>
             )}
         </Formik>
     );
@@ -800,7 +805,7 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
 const styles = StyleSheet.create({
     container: {
         flexGrow: 1,
-        padding: 20,
+        paddingTop: 20,
         backgroundColor: "#ffffff",
     },
     formRow: {
@@ -810,10 +815,10 @@ const styles = StyleSheet.create({
     },
     fieldContainer: {
         flex: 1,
-        // marginRight: 10,
+        marginRight: 10,
         paddingBottom: 10,
-        paddingLeft: 20,
-        paddingRight: 20,
+        // paddingLeft: 20,
+        // paddingRight: 20,
     },
     radiofieldContainer: {
         flex: 1,
@@ -823,9 +828,9 @@ const styles = StyleSheet.create({
         paddingRight: 20,
     },
     label: {
-        fontSize: 16,
+        fontSize: 12,
         marginBottom: 5,
-        color: "#333",
+        color: "#97989B",
     },
     input: {
         borderWidth: 1,
@@ -833,6 +838,8 @@ const styles = StyleSheet.create({
         padding: 10,
         borderRadius: 5,
         backgroundColor: "#fff",
+        fontSize: 12,
+        color: "#404249",
     },
     link: {
         color: "#0066cc",

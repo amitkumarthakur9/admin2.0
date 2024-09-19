@@ -12,6 +12,7 @@ import * as Yup from "yup";
 import { Ionicons } from "@expo/vector-icons";
 import RemoteApi from "src/services/RemoteApi";
 import { router } from "expo-router";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 const otpValidationSchema = Yup.object().shape({
     otp: Yup.string()
@@ -31,6 +32,7 @@ const ClientVerify = ({
     clientNumber,
     submitText,
     verifyOtpApi,
+    closeModal,
 }) => {
     const [otpValues, setOtpValues] = useState(["", "", "", "", "", ""]);
     const [resendEnabled, setResendEnabled] = useState(false);
@@ -84,12 +86,15 @@ const ClientVerify = ({
         // Clear previous API error before submitting
         if (submitText == "Verify") {
             try {
-                const response: any = await RemoteApi.post(verifyOtpApi, data);
+                // const response: any = await RemoteApi.post(verifyOtpApi, data);
 
-                // const response = {
-                //     code: 200,
-                //     message: "Incorrect OTP", // Example API error message
-                // };
+                const response = {
+                    code: 200,
+                    message: "Incorrect OTP",
+                    data: {
+                        token: "otpnonieetoken",
+                    }, // Example API error message
+                };
 
                 console.log("response");
                 console.log(response);
@@ -108,7 +113,9 @@ const ClientVerify = ({
                     const valuesWithToken = {
                         ...initialValues,
                         token: response.data.token,
+                        currentStep: 7,
                     };
+                    onNext(valuesWithToken);
                     // onNext(valuesWithToken);
 
                     setVerified(true);
@@ -123,12 +130,12 @@ const ClientVerify = ({
         }
         if (submitText == "Start investing") {
             try {
-                const response: any = await RemoteApi.post(verifyOtpApi, data);
+                // const response: any = await RemoteApi.post(verifyOtpApi, data);
 
-                // const response = {
-                //     code: 200,
-                //     message: "Incorrect password", // Example API error message
-                // };
+                const response = {
+                    code: 200,
+                    message: "Incorrect password", // Example API error message
+                };
 
                 console.log("response");
                 console.log(response);
@@ -159,6 +166,7 @@ const ClientVerify = ({
                 setIsVerifying(false);
             }
         }
+        setIsVerifying(false);
     };
 
     const handleResendOtp = async () => {
@@ -166,12 +174,15 @@ const ClientVerify = ({
             token: initialValues.token,
         };
         try {
-            const response: any = await RemoteApi.post(generateOtpApi, data);
+            // const response: any = await RemoteApi.post(generateOtpApi, data);
 
-            // const response = {
-            //     code: 200,
-            //     message: "Incorrect password", // Example API error message
-            // };
+            const response = {
+                code: 200,
+                message: "Incorrect OTP",
+                data: {
+                    token: "otpnonieetoken",
+                }, // Example API error message
+            };
 
             console.log("response");
             console.log(response);
@@ -181,6 +192,12 @@ const ClientVerify = ({
                 //     setResendTimer(120); // Restart the timer for 2 minutes
                 //     // Logic to resend OTP
                 // }
+                // const valuesWithToken = {
+                //     ...initialValues,
+                //     token: response.data.token,
+                //     currentStep: 7,
+                // };
+                // onNext(valuesWithToken);
             } else {
                 console.log("ElseError");
                 setApiError(response.message); // Store the error message from the API
@@ -225,95 +242,104 @@ const ClientVerify = ({
     }
 
     return (
-        <View style={styles.container}>
-            <View style={styles.content}>
-                {/* <Pressable style={styles.closeButton} onPress={onClose}>
-                    <Ionicons name="close" size={24} color="black" />
-                </Pressable> */}
+        <>
+            <View className="w-full gap-y-2">
+                <View className="flex flex-row justify-between items-center">
+                    <Text className="text-[18px] font-bold">{title}</Text>
 
-                <Text style={styles.title}>{title}</Text>
-                <Text style={styles.subTitle}>{subTitle}</Text>
+                    <Pressable onPress={closeModal}>
+                        <Icon name="close" size={14} color="#000" />
+                    </Pressable>
+                </View>
 
-                <Formik
-                    initialValues={{ otp: "" }}
-                    // validationSchema={otpValidationSchema}
-                    onSubmit={handleSubmit}
-                >
-                    {({ handleSubmit }) => (
-                        <>
-                            <Text style={styles.enterOtp}>Enter OTP</Text>
-                            <Text style={styles.infoText}>
-                                A 6 digit code has been sent to{" "}
-                                {initialValues.mobileNumber} &
-                                {initialValues.email}
-                            </Text>
-                            <View style={styles.otpContainer}>
-                                {otpValues.map((value, index) => (
-                                    <TextInput
-                                        key={index}
-                                        style={styles.otpInput}
-                                        onChangeText={(text) =>
-                                            handleOtpChange(text, index)
-                                        }
-                                        onKeyPress={(e) =>
-                                            handleOtpKeyPress(e, index)
-                                        }
-                                        value={value}
-                                        maxLength={1}
-                                        keyboardType="numeric"
-                                        ref={(ref) =>
-                                            (otpRefs.current[index] = ref)
-                                        }
-                                    />
-                                ))}
-                            </View>
-                            {/* Show API error message if exists */}
-                            {apiError ? (
-                                <Text style={styles.errorText}>{apiError}</Text>
-                            ) : null}
-
-                            <Pressable
-                                style={[
-                                    styles.resendButton,
-                                    resendEnabled && resendTimer === 0
-                                        ? null
-                                        : styles.resenddisabledButton,
-                                ]}
-                                onPress={handleResendOtp}
-                                disabled={!resendEnabled || resendTimer > 0}
-                            >
-                                <Text style={styles.resendText}>
-                                    Resend OTP
-                                    {resendTimer > 0
-                                        ? ` in ${resendTimer}s`
-                                        : ""}
-                                </Text>
-                            </Pressable>
-
-                            <Pressable
-                                style={[
-                                    styles.verifyButton,
-                                    isOtpComplete
-                                        ? null
-                                        : styles.disabledButton,
-                                ]}
-                                // onPress={handleSubmit}
-                                onPress={() => handleSubmit()}
-                                disabled={!isOtpComplete || isVerifying}
-                            >
-                                {isVerifying ? (
-                                    <ActivityIndicator color="#ffffff" />
-                                ) : (
-                                    <Text style={styles.verifyButtonText}>
-                                        {submitText}
-                                    </Text>
-                                )}
-                            </Pressable>
-                        </>
-                    )}
-                </Formik>
+                <Text className="text-[12px]">{subTitle}</Text>
             </View>
-        </View>
+
+            <View style={styles.container}>
+                <View style={styles.content}>
+                    <Formik
+                        initialValues={{ otp: "" }}
+                        // validationSchema={otpValidationSchema}
+                        onSubmit={handleSubmit}
+                    >
+                        {({ handleSubmit }) => (
+                            <>
+                                <Text style={styles.enterOtp}>Enter OTP</Text>
+                                <Text style={styles.infoText}>
+                                    A 6 digit code has been sent to{" "}
+                                    {initialValues.mobileNumber} &
+                                    {initialValues.email}
+                                </Text>
+                                <View style={styles.otpContainer}>
+                                    {otpValues.map((value, index) => (
+                                        <TextInput
+                                            key={index}
+                                            style={styles.otpInput}
+                                            onChangeText={(text) =>
+                                                handleOtpChange(text, index)
+                                            }
+                                            onKeyPress={(e) =>
+                                                handleOtpKeyPress(e, index)
+                                            }
+                                            value={value}
+                                            maxLength={1}
+                                            keyboardType="numeric"
+                                            ref={(ref) =>
+                                                (otpRefs.current[index] = ref)
+                                            }
+                                        />
+                                    ))}
+                                </View>
+                                {/* Show API error message if exists */}
+                                {apiError ? (
+                                    <Text style={styles.errorText}>
+                                        {apiError}
+                                    </Text>
+                                ) : null}
+
+                                <Pressable
+                                    style={[
+                                        styles.resendButton,
+                                        resendEnabled && resendTimer === 0
+                                            ? null
+                                            : styles.resenddisabledButton,
+                                    ]}
+                                    onPress={handleResendOtp}
+                                    disabled={!resendEnabled || resendTimer > 0}
+                                >
+                                    <Text style={styles.resendText}>
+                                        Resend OTP
+                                        {resendTimer > 0
+                                            ? ` in ${resendTimer}s`
+                                            : ""}
+                                    </Text>
+                                </Pressable>
+
+                                <Pressable
+                                    style={[
+                                        styles.verifyButton,
+                                        isOtpComplete
+                                            ? null
+                                            : styles.disabledButton,
+                                    ]}
+                                    // onPress={handleSubmit}
+                                    onPress={() => handleSubmit()}
+                                    disabled={!isOtpComplete || isVerifying}
+                                >
+                                    {isVerifying ? (
+                                        <ActivityIndicator color="#ffffff" />
+                                    ) : (
+                                        <Text style={styles.verifyButtonText}>
+                                            {submitText}
+                                        </Text>
+                                    )}
+                                </Pressable>
+                            </>
+                        )}
+                    </Formik>
+                </View>
+            </View>
+        </>
     );
 };
 

@@ -15,46 +15,18 @@ import DropdownComponent from "../../components/Dropdowns/NewDropDown";
 import CustomRadioButton from "../CustomForm/CustomRadioButton/CustomRadioButton";
 import RemoteApi from "src/services/RemoteApi";
 import Success from "./Success";
+import CustomButton from "../Buttons/CustomButton";
 
 const validationSchema = Yup.object().shape({
     incomeRange: Yup.number().required("Income range is required"),
     placeOfBirth: Yup.string()
         .matches(/^[A-Za-z\s]+$/, "Place of Birth must contain only alphabets")
         .required("Place of Birth is required"),
-    isPoliticalExposed: Yup.boolean().required("This field is required"),
+    isPoliticalExposed: Yup.string().required("This field is required"),
     occupation: Yup.string().required("Occupation is required"),
-    // isTaxpayer: Yup.boolean().required("This field is required"),
-    // passportNumber: Yup.string().when("isPoliticalExposed", {
-    //     is: (isPoliticalExposed) => isPoliticalExposed,
-    //     then: (schema) =>
-    //         schema
-    //             .required("PassPort Number is required")
-    //             .matches(
-    //                 /^[PDS][A-Z]{2}\d{4}[A-Z0-9]{2}$/,
-    //                 "Invalid passport number format. Example: PAA1234AB"
-    //             ),
-    //     otherwise: (schema) => schema.notRequired(),
-    // }),
-    // country: Yup.string().when("isTaxpayer", {
-    //     is: (isTaxpayer) => isTaxpayer,
-    //     then: (schema) =>
-    //         schema
-    //             .required("Country is required")
-    //             .matches(
-    //                 /^[A-Za-z\s]+$/,
-    //                 "Country must contain only alphabets"
-    //             ),
-    //     otherwise: (schema) => schema.notRequired(),
-    // }),
 });
 
-const Additonalinfo = ({
-    onNext,
-    onPrevious,
-    initialValues,
-    onSubmitSuccess,
-    setFormData,
-}) => {
+const Additonalinfo = ({ onNext, onPrevious, initialValues, closeModal }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isKYCSuccessful, setIsKYCSuccessful] = useState(false);
@@ -143,7 +115,7 @@ const Additonalinfo = ({
             incomeSlabId: Number(values.incomeRange),
             placeOfBirth: values.placeOfBirth,
             isPoliticalExposed: values.isPoliticalExposed,
-            token: values.token,
+            token: initialValues.token,
             occupationId: Number(values.occupation),
             // isTaxpayer: values.isTaxpayer,
             // country: values.country,
@@ -152,30 +124,45 @@ const Additonalinfo = ({
         console.log(data);
 
         try {
-            const response = await RemoteApi.post(
-                "onboard/client/additional-details",
-                data
-            );
+            // const response = await RemoteApi.post(
+            //     "onboard/client/additional-details",
+            //     data
+            // );
 
-            // const response = {
-            //     code: 200,
-            //     data: {
-            //         token: "additonalinfotoken",
-            //         isKycDone: true,
-            //     },
-            // };
+            const response = {
+                code: 200,
+                data: {
+                    token: "additonalinfotoken",
+                    isKycDone: true,
+                },
+            };
 
             if (response.code === 200) {
-                setFormData((prevData) => ({
-                    ...prevData,
+                // setFormData((prevData) => ({
+                //     ...prevData,
+                //     token: response.data.token,
+                // }));
+                const valuesWithToken = {
+                    ...values,
                     token: response.data.token,
-                }));
-                if (response.data.isKycDone) {
-                    setIsKYCSuccessful(true);
-                }
+                    currentStep: 4,
+                    isKYCSuccessful: response.data.isKycDone,
+                };
+                onNext(valuesWithToken);
+                // if (response.data.isKycDone) {
+
+                // }else{
+                //     const valuesWithToken = {
+                //         ...values,
+                //         token: response.data.token,
+                //         currentStep: 3,
+                //     };
+                //     onNext(valuesWithToken);
+
+                // }
                 setIsSubmitted(true);
 
-                onSubmitSuccess(true);
+                // onSubmitSuccess(true);
             } else {
                 Alert.alert(
                     "Error",
@@ -214,110 +201,103 @@ const Additonalinfo = ({
                 touched,
                 setFieldValue,
             }) => (
-                <ScrollView contentContainerStyle={styles.container}>
-                    {isSubmitted ? (
-                        <Success
-                            onNext={onNext}
-                            isKYCSuccessful={isKYCSuccessful}
-                        />
-                    ) : (
-                        <>
-                            <View style={styles.formRow}>
-                                <View style={styles.fieldContainer}>
-                                    <Text style={styles.label}>
-                                        Income Slab{" "}
-                                        <Text style={styles.required}>*</Text>
-                                    </Text>
-                                    <DropdownComponent
-                                        label="Income Slab"
-                                        data={incomeRangeOptions}
-                                        value={values.incomeRange}
-                                        containerStyle={styles.dropdown}
-                                        setValue={(value) =>
-                                            setFieldValue("incomeRange", value)
-                                        }
-                                        noIcon={true}
-                                    />
-                                    {touched.incomeRange &&
-                                        errors.incomeRange && (
-                                            <Text style={styles.error}>
-                                                {errors.incomeRange}
-                                            </Text>
-                                        )}
-                                </View>
+                <>
+                    <ScrollView contentContainerStyle={styles.container}>
+                        {/* {isSubmitted ? ( */}
 
-                                <View style={styles.fieldContainer}>
-                                    <Text style={styles.label}>
-                                        Place of Birth{" "}
-                                        <Text style={styles.required}>*</Text>
+                        {/* ) : ( */}
+
+                        <View style={styles.formRow}>
+                            <View style={styles.fieldContainer}>
+                                <Text style={styles.label}>
+                                    Income Slab{" "}
+                                    <Text style={styles.required}>*</Text>
+                                </Text>
+                                <DropdownComponent
+                                    label="Income Slab"
+                                    data={incomeRangeOptions}
+                                    value={values.incomeRange}
+                                    containerStyle={styles.dropdown}
+                                    setValue={(value) =>
+                                        setFieldValue("incomeRange", value)
+                                    }
+                                    noIcon={true}
+                                />
+                                {touched.incomeRange && errors.incomeRange && (
+                                    <Text style={styles.error}>
+                                        {errors.incomeRange}
                                     </Text>
-                                    <TextInput
-                                        style={styles.input}
-                                        onChangeText={handleChange(
-                                            "placeOfBirth"
-                                        )}
-                                        onBlur={handleBlur("placeOfBirth")}
-                                        value={values.placeOfBirth}
-                                    />
-                                    {touched.placeOfBirth &&
-                                        errors.placeOfBirth && (
-                                            <Text style={styles.error}>
-                                                {errors.placeOfBirth}
-                                            </Text>
-                                        )}
-                                </View>
+                                )}
                             </View>
 
-                            <View style={styles.formRow}>
-                                <View style={styles.fieldContainer}>
-                                    <Text style={styles.label}>
-                                        Is your Client a politically exposed
-                                        person?{" "}
-                                        <Text style={styles.required}>*</Text>
+                            <View style={styles.fieldContainer}>
+                                <Text style={styles.label}>
+                                    Place of Birth{" "}
+                                    <Text style={styles.required}>*</Text>
+                                </Text>
+                                <TextInput
+                                    style={styles.input}
+                                    onChangeText={handleChange("placeOfBirth")}
+                                    onBlur={handleBlur("placeOfBirth")}
+                                    value={values.placeOfBirth}
+                                />
+                                {touched.placeOfBirth &&
+                                    errors.placeOfBirth && (
+                                        <Text style={styles.error}>
+                                            {errors.placeOfBirth}
+                                        </Text>
+                                    )}
+                            </View>
+                        </View>
+
+                        <View style={styles.formRow}>
+                            <View style={styles.fieldContainer}>
+                                <Text style={styles.label}>
+                                    Is your Client a politically exposed person?{" "}
+                                    <Text style={styles.required}>*</Text>
+                                </Text>
+                                <CustomRadioButton
+                                    options={[
+                                        { label: "Yes", value: 2 },
+                                        { label: "No", value: 1 },
+                                    ]}
+                                    value={values.isPoliticalExposed}
+                                    setValue={(value) =>
+                                        setFieldValue(
+                                            "isPoliticalExposed",
+                                            value
+                                        )
+                                    }
+                                />
+                                {touched.isPoliticalExposed &&
+                                    errors.isPoliticalExposed && (
+                                        <Text style={styles.error}>
+                                            {errors.isPoliticalExposed}
+                                        </Text>
+                                    )}
+                            </View>
+                            <View style={styles.fieldContainer}>
+                                <Text style={styles.label}>
+                                    Client’s Occupation{" "}
+                                    <Text style={styles.required}>*</Text>
+                                </Text>
+                                <DropdownComponent
+                                    label="Occupation"
+                                    data={occupationOptions}
+                                    value={values.occupation}
+                                    setValue={(value) =>
+                                        setFieldValue("occupation", value)
+                                    }
+                                    // containerStyle={styles.dropdown}
+                                    noIcon={true}
+                                />
+                                {touched.occupation && errors.occupation && (
+                                    <Text style={styles.error}>
+                                        {errors.occupation}
                                     </Text>
-                                    <CustomRadioButton
-                                        options={[
-                                            { label: "Yes", value: 2 },
-                                            { label: "No", value: 1 },
-                                        ]}
-                                        value={values.isPoliticalExposed}
-                                        setValue={(value) =>
-                                            setFieldValue(
-                                                "isPoliticalExposed",
-                                                value
-                                            )
-                                        }
-                                    />
-                                    {touched.isPoliticalExposed &&
-                                        errors.isPoliticalExposed && (
-                                            <Text style={styles.error}>
-                                                {errors.isPoliticalExposed}
-                                            </Text>
-                                        )}
-                                </View>
-                                <View style={styles.fieldContainer}>
-                                    <Text style={styles.label}>
-                                        Client’s Occupation{" "}
-                                        <Text style={styles.required}>*</Text>
-                                    </Text>
-                                    <DropdownComponent
-                                        label="Occupation"
-                                        data={occupationOptions}
-                                        value={values.occupation}
-                                        setValue={(value) =>
-                                            setFieldValue("occupation", value)
-                                        }
-                                        // containerStyle={styles.dropdown}
-                                        noIcon={true}
-                                    />
-                                    {touched.occupation &&
-                                        errors.occupation && (
-                                            <Text style={styles.error}>
-                                                {errors.occupation}
-                                            </Text>
-                                        )}
-                                </View>
-                                {/* {values.isPoliticalExposed && (
+                                )}
+                            </View>
+                            {/* {values.isPoliticalExposed && (
                             <View style={styles.fieldContainer}>
                                 <Text style={styles.label}>
                                     Passport Number{" "}
@@ -339,9 +319,9 @@ const Additonalinfo = ({
                                     )}
                             </View>
                         )} */}
-                            </View>
+                        </View>
 
-                            {/* {values.isPoliticalExposed && (
+                        {/* {values.isPoliticalExposed && (
                         <View style={styles.formRow}>
                             <View style={styles.fieldContainer}>
                                 <Text style={styles.label}>
@@ -407,31 +387,28 @@ const Additonalinfo = ({
                         </View>
                     )} */}
 
-                            <View style={styles.buttonRow}>
-                                <Pressable
-                                    style={({ pressed }) => [
-                                        styles.skipButton,
-                                        { opacity: pressed ? 0.6 : 1 },
-                                    ]}
-                                    onPress={onPrevious}
-                                >
-                                    <Text style={styles.buttonText}>Back</Text>
-                                </Pressable>
-                                <Pressable
-                                    style={({ pressed }) => [
-                                        styles.saveButton,
-                                        { opacity: pressed ? 0.6 : 1 },
-                                    ]}
-                                    onPress={() => handleSubmit()}
-                                >
-                                    <Text style={styles.confirmButtonText}>
-                                        Save and Continue
-                                    </Text>
-                                </Pressable>
-                            </View>
-                        </>
-                    )}
-                </ScrollView>
+                        {/* )} */}
+                    </ScrollView>
+
+                    <View className="flex flex-row justify-center w-full ">
+                        {/* <View className="w-[48%]">
+                                    <CustomButton
+                                        onPress={onPrevious}
+                                        title="Save and Continue"
+                                        disabled={false}
+                                        buttonStyle={"outline"}
+                                    />
+                                </View> */}
+                        <View className="w-[48%]">
+                            <CustomButton
+                                onPress={handleSubmit}
+                                title="Save and Continue"
+                                // disabled={isVerifing === true}
+                                buttonStyle={"full"}
+                            />
+                        </View>
+                    </View>
+                </>
             )}
         </Formik>
     );
@@ -440,7 +417,7 @@ const Additonalinfo = ({
 const styles = StyleSheet.create({
     container: {
         flexGrow: 1,
-        padding: 20,
+        paddingTop: 20,
         backgroundColor: "#ffffff",
     },
     formRow: {
@@ -453,9 +430,9 @@ const styles = StyleSheet.create({
         marginRight: 10,
     },
     label: {
-        fontSize: 16,
+        fontSize: 12,
         marginBottom: 5,
-        color: "#333",
+        color: "#97989B",
     },
     required: {
         color: "red",
@@ -466,6 +443,8 @@ const styles = StyleSheet.create({
         padding: 10,
         borderRadius: 5,
         backgroundColor: "#fff",
+        fontSize: 12,
+        color: "#404249",
     },
     dropdown: {
         borderWidth: 1,
@@ -480,7 +459,7 @@ const styles = StyleSheet.create({
     },
     buttonRow: {
         flexDirection: "row",
-        justifyContent: "space-between",
+        justifyContent: "center",
         marginTop: 20,
     },
     skipButton: {

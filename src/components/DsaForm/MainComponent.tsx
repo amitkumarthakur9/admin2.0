@@ -159,7 +159,7 @@ const MainComponent = () => {
             //         dsaCode: null,
             //         remark: {
             //             id: 2,
-            //             remark: "Remark",
+            //             remark: "",
             //         },
             //         incomeSlab: {
             //             id: 2,
@@ -331,10 +331,10 @@ const MainComponent = () => {
                 // setStep(initialStep);
                 console.log(formData);
             } else {
-                alert("Failed to fetch user details");
+                // alert("Failed to fetch user details");
             }
         } catch (error) {
-            alert("An error occurred while fetching the user details");
+            // alert("An error occurred while fetching the user details");
         } finally {
             setIsLoading(false);
         }

@@ -77,7 +77,7 @@ const SearchableDropdown = ({ endpoint, onSelect }) => {
                 <View style={styles.dropdown}>
                     <TextInput
                         style={styles.input}
-                        placeholder="Search..."
+                        placeholder="Enter atleast 3 character to search"
                         value={searchQuery}
                         onChangeText={setSearchQuery}
                     />
@@ -112,11 +112,11 @@ const styles = StyleSheet.create({
         width: "100%",
         zIndex: 10000,
         // paddingHorizontal: 20,
-        paddingLeft: 20,
-        paddingRight: 28,
+        // paddingLeft: 20,
+        // paddingRight: 28,
         // borderColor: "gray",
         // borderWidth: 0.5,
-        paddingBottom:8,
+        paddingBottom: 8,
     },
     button: {
         height: 40,
@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
         width: "100%",
         backgroundColor: "#fff",
         borderColor: "#ccc",
-        borderWidth: 1,
+        // borderWidth: 1,
         borderRadius: 4,
         zIndex: 10000,
     },

@@ -12,6 +12,8 @@ import {
 import { Formik } from "formik";
 import * as Yup from "yup";
 import RemoteApi from "src/services/RemoteApi";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import CustomButton from "../Buttons/CustomButton";
 
 const validationSchema = Yup.object().shape({
     // panNumber: Yup.string()
@@ -32,59 +34,63 @@ const AddressForm = ({
     initialValues,
     onPrevious,
     onNext,
-    formValues,
-    cookieToken,
+    closeModal,
+    // formValues,
+    // addressToken,
+    // handleBack,
 }) => {
     const [isLoading, setIsLoading] = useState(false);
+    const [isAddressSubmit, setIsAddressSubmit] = useState(false);
     const [Address, setAddress] = React.useState({
         state: "",
         district: "",
         pincodeId: "",
     });
-    console.log("cookieToken");
-    console.log(cookieToken);
+
     const handleSubmit = async (values, actions) => {
         console.log("handleSubmit");
         console.log(values);
-        setIsLoading(true);
+        setIsAddressSubmit(true);
 
         const data = {
             line_1: values.addressLine1,
             line_2: values.addressLine2,
             pincodeId: Address.pincodeId,
-            token: cookieToken,
+            token: initialValues.token,
         };
         try {
-            const response = await RemoteApi.post(
-                "/onboard/client/address",
-                data,
-                cookieToken
-            );
-
-            // const response = await RemoteApi.setCookieWithAxios(
-            //     "/onboard/client//address",
+            // const response = await RemoteApi.post(
+            //     "/onboard/client/address",
             //     data,
-            //     cookieToken
             // );
 
-            // console.log(response);
-            // const response = {
-            //     code: 200,
-            //     data: {
-            //         message: "invalid address",
-            //         success: false,
-            //         mismatchDob: false,
-            //         panVerified: true,
-            //         addressMismatch: true,
-            //         mismatchName: false,
-            //         token: "AddressTokeneyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIwOSwiY3JlZGVudGlhbHNJZCI6MTk5LCJhY2NvdW50SWQiOjI3NiwiYWRkcmVzc0lkIjo3MiwiaWF0IjoxNzI1NjA2Mzg0LCJleHAiOjE3MjU2OTI3ODR9.PwJeEbsj84Frxu-z6AKdGSvEMh7bjyKeE_AgSFtxsZk",
-            //     },
-            // };
+            function sendResponse() {
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        resolve({
+                            code: 200,
+                            data: {
+                                message: "invalid address",
+                                success: false,
+                                mismatchDob: false,
+                                panVerified: true,
+                                addressMismatch: true,
+                                mismatchName: false,
+                                token: "AddressTokene",
+                            },
+                        });
+                    }, 2000);
+                });
+            }
+
+            const response: any = await sendResponse();
             if (response.code == 200) {
                 const valuesWithFlag = {
                     ...values,
                     basicDetailSubmitted: true,
                     token: response.data.token,
+                    isAddressNeeded: false,
+                    currentStep: 2,
                 };
                 onNext(valuesWithFlag); // Include the submission flag
                 // onNext(values)
@@ -97,7 +103,7 @@ const AddressForm = ({
         } catch (error) {
             Alert.alert("Error", "Submission failed. Please try again.");
         }
-        setIsLoading(false);
+        setIsAddressSubmit(false);
         actions.setSubmitting(false);
     };
 
@@ -117,13 +123,16 @@ const AddressForm = ({
                     district: response.data.district.name,
                     pincodeId: response.data.pincodeId,
                 });
-            } else if (response.code === 254) {
-                setFieldError("pincode", "Pincode does not exist.");
             } else {
-                alert("Failed to fetch pincode details");
+                setFieldError("postalCode", response?.message);
             }
         } catch (error) {
-            alert("An error occurred while fetching the district list");
+            setFieldError(
+                "postalCode",
+                error?.message
+                    ? error?.message
+                    : "Failed to fetch pincode Details"
+            );
         } finally {
             setIsLoading(false);
         }
@@ -158,250 +167,293 @@ const AddressForm = ({
                 isSubmitting,
                 setFieldError,
             }) => (
-                <View contentContainerStyle={styles.container}>
-                    <View className="py-4">
-                        <Text style={styles.modalTitle}>
-                            Address Confirmation
+                <>
+                    <View className="w-full gap-y-2">
+                        <View className="flex flex-row justify-between items-center">
+                            <Text className="text-[18px] font-bold">
+                                Address Confirmation
+                            </Text>
+
+                            <Pressable onPress={closeModal}>
+                                <Icon name="close" size={14} color="#000" />
+                            </Pressable>
+                        </View>
+
+                        <Text className="text-[12px]">
+                            Please add client’s Address
                         </Text>
-                        <Text>Please add client’s Address</Text>
-                    </View>
-                    <View style={styles.formRow}>
-                        <View style={styles.fieldContainer}>
-                            <Text style={styles.label}>
-                                PAN Number{" "}
-                                <Text style={styles.required}>*</Text>
-                            </Text>
-                            <TextInput
-                                style={[styles.input, styles.disabledInput]}
-                                onChangeText={handleChange("panNumber")}
-                                onBlur={handleBlur("panNumber")}
-                                value={initialValues.panNumber}
-                                editable={false} // Autofilled and disabled
-                            />
-                            {/* {touched.panNumber && errors.panNumber && (
-                                <Text style={styles.error}>
-                                    {errors.panNumber}
-                                </Text>
-                            )} */}
-                        </View>
-                        <View style={styles.fieldContainer}>
-                            <Text style={styles.label}>
-                                Date of Birth{" "}
-                                <Text style={styles.required}>*</Text>
-                            </Text>
-                            <TextInput
-                                style={[styles.input, styles.disabledInput]}
-                                onChangeText={handleChange("dateOfBirth")}
-                                onBlur={handleBlur("dateOfBirth")}
-                                value={initialValues.dateOfBirth}
-                                editable={false} // Autofilled and disabled
-                            />
-                            {/* {touched.dateOfBirth && errors.dateOfBirth && (
-                                <Text style={styles.error}>
-                                    {errors.dateOfBirth}
-                                </Text>
-                            )} */}
-                        </View>
                     </View>
 
-                    <View style={styles.formRow}>
-                        <View style={styles.fieldContainer}>
-                            <Text style={styles.label}>
-                                Gender <Text style={styles.required}>*</Text>
-                            </Text>
-                            <TextInput
-                                style={[styles.input, styles.disabledInput]}
-                                onChangeText={handleChange("gender")}
-                                onBlur={handleBlur("gender")}
-                                value={getGenderLabel(formValues.gender)} // Show label instead of value
-                                editable={false} // Autofilled and disabled
-                            />
-                            {/* {touched.gender && errors.gender && (
-                                <Text style={styles.error}>
-                                    {errors.gender}
-                                </Text>
-                            )} */}
-                        </View>
-                        <View style={styles.fieldContainer}></View>
-                    </View>
-
-                    <View style={styles.formRow}>
-                        <View style={styles.fieldContainer}>
-                            <Text style={styles.label}>
-                                Address Line 1{" "}
-                                <Text style={styles.required}>*</Text>
-                            </Text>
-                            <TextInput
-                                style={styles.input}
-                                onChangeText={handleChange("addressLine1")}
-                                onBlur={handleBlur("addressLine1")}
-                                value={values.addressLine1}
-                                maxLength={150}
-                            />
-                            {touched.addressLine1 && errors.addressLine1 && (
-                                <Text style={styles.error}>
-                                    {typeof errors.addressLine1 === "string"
-                                        ? errors.addressLine1
-                                        : "Invalid input"}
-                                </Text>
-                            )}
-                            {/* {touched.addressLine1 && errors.addressLine1 && (
-                                        <Text style={styles.error}>
-                                            {errors.addressLine1}
-                                        </Text>
-                                    )} */}
-                        </View>
-                        <View style={styles.fieldContainer}>
-                            <Text style={styles.label}>
-                                Address Line 2{" "}
-                                <Text style={styles.required}>*</Text>
-                            </Text>
-                            <TextInput
-                                style={styles.input}
-                                onChangeText={handleChange("addressLine2")}
-                                onBlur={handleBlur("addressLine2")}
-                                value={values.addressLine2}
-                                maxLength={150}
-                            />
-                            {touched.addressLine2 && errors.addressLine2 && (
-                                <Text style={styles.error}>
-                                    {typeof errors.addressLine2 === "string"
-                                        ? errors.addressLine2
-                                        : "Invalid input"}
-                                </Text>
-                            )}
-                            {/* {errors.addressLine2 && (
-                                <Text style={styles.error}>
-                                    {errors.addressLine2}
-                                </Text>
-                            )} */}
-                        </View>
-                    </View>
-
-                    <View style={styles.formRow}>
-                        <View style={styles.fieldContainer}>
-                            <Text style={styles.label}>
-                                Address Line 3 (Option)
-                            </Text>
-                            <TextInput
-                                style={styles.input}
-                                onChangeText={handleChange("addressLine3")}
-                                onBlur={handleBlur("addressLine3")}
-                                value={values.addressLine3}
-                            />
-                        </View>
-                        <View style={styles.fieldContainer}>
-                            <Text style={styles.label}>
-                                Postal Code{" "}
-                                <Text style={styles.required}>*</Text>
-                            </Text>
-
-                            <TextInput
-                                style={styles.input}
-                                // onChangeText={handleChange("postalCode")}
-                                onChangeText={(value) => {
-                                    handleChange("postalCode")(value);
-                                    console.log("postal");
-                                    console.log(value);
-                                    if (value.length === 6) {
-                                        fetchPincodeDetails(
-                                            value,
-                                            setFieldError
-                                        );
-                                    } else {
-                                        setAddress({
-                                            district: "",
-                                            state: "",
-                                            pincodeId: "",
-                                        });
-                                    }
-                                }}
-                                onBlur={handleBlur("postalCode")}
-                                value={values.postalCode}
-                                keyboardType="numeric" // Restrict input to numeric characters
-                                maxLength={6}
-                            />
-                            {touched.postalCode && errors.postalCode && (
-                                <Text style={styles.error}>
-                                    {errors.postalCode}
-                                </Text>
-                            )}
-                        </View>
-                    </View>
-                    {isLoading && (
-                        <View style={styles.formRow}>
-                            <ActivityIndicator />
-                        </View>
-                    )}
-                    {Address.state && Address.district && !isLoading && (
+                    <ScrollView className="pt-8">
                         <View style={styles.formRow}>
                             <View style={styles.fieldContainer}>
                                 <Text style={styles.label}>
-                                    District{" "}
+                                    PAN Number{" "}
                                     <Text style={styles.required}>*</Text>
                                 </Text>
                                 <TextInput
                                     style={[styles.input, styles.disabledInput]}
-                                    onChangeText={handleChange("district")}
-                                    // onBlur={handleBlur("city")}
-                                    value={Address.district}
+                                    onChangeText={handleChange("panNumber")}
+                                    onBlur={handleBlur("panNumber")}
+                                    value={initialValues.panNumber}
+                                    editable={false} // Autofilled and disabled
                                 />
-                                {/* {touched.city && errors.city && (
-                                <Text style={styles.error}>{errors.city}</Text>
+                                {/* {touched.panNumber && errors.panNumber && (
+                                <Text style={styles.error}>
+                                    {errors.panNumber}
+                                </Text>
                             )} */}
                             </View>
                             <View style={styles.fieldContainer}>
                                 <Text style={styles.label}>
-                                    State <Text style={styles.required}>*</Text>
+                                    Date of Birth{" "}
+                                    <Text style={styles.required}>*</Text>
                                 </Text>
                                 <TextInput
                                     style={[styles.input, styles.disabledInput]}
-                                    onChangeText={handleChange("state")}
-                                    // onBlur={handleBlur("state")}
-                                    value={Address.state}
+                                    onChangeText={handleChange("dateOfBirth")}
+                                    onBlur={handleBlur("dateOfBirth")}
+                                    value={initialValues.dateOfBirth}
+                                    editable={false} // Autofilled and disabled
                                 />
-                                {/* {touched.state && errors.state && (
-                                <Text style={styles.error}>{errors.state}</Text>
+                                {/* {touched.dateOfBirth && errors.dateOfBirth && (
+                                <Text style={styles.error}>
+                                    {errors.dateOfBirth}
+                                </Text>
                             )} */}
                             </View>
                         </View>
-                    )}
 
-                    <View style={styles.buttonRow}>
-                        <Pressable
-                            style={({ pressed }) => [
-                                styles.skipButton,
-                                { opacity: pressed ? 0.6 : 1 },
-                            ]}
-                            // onPress={onPrevious}
-                            onPress={() => onPrevious()}
-                        >
-                            <Text style={styles.buttonText}>Save As Draft</Text>
-                        </Pressable>
-                        <Pressable
-                            style={({ pressed }) => [
-                                styles.saveButton,
-                                { opacity: pressed ? 0.6 : 1 },
-                                !isValid || isSubmitting
-                                    ? styles.disabledButton
-                                    : {},
-                            ]}
-                            onPress={() => handleSubmit()}
-                            disabled={!isValid || isSubmitting} // Disable the button if the form is invalid or submitting
-                        >
-                            <Text
-                                style={[
-                                    styles.saveButtonText,
-                                    !isValid || isSubmitting
-                                        ? styles.disabledButtonText
-                                        : {},
-                                ]}
+                        <View style={styles.formRow}>
+                            <View style={styles.fieldContainer}>
+                                <Text style={styles.label}>
+                                    Gender{" "}
+                                    <Text style={styles.required}>*</Text>
+                                </Text>
+                                <TextInput
+                                    style={[styles.input, styles.disabledInput]}
+                                    onChangeText={handleChange("gender")}
+                                    onBlur={handleBlur("gender")}
+                                    value={getGenderLabel(initialValues.gender)} // Show label instead of value
+                                    editable={false} // Autofilled and disabled
+                                />
+                                {/* {touched.gender && errors.gender && (
+                                <Text style={styles.error}>
+                                    {errors.gender}
+                                </Text>
+                            )} */}
+                            </View>
+                            <View style={styles.fieldContainer}></View>
+                        </View>
+
+                        <View style={styles.formRow}>
+                            <View style={styles.fieldContainer}>
+                                <Text style={styles.label}>
+                                    Address Line 1{" "}
+                                    <Text style={styles.required}>*</Text>
+                                </Text>
+                                <TextInput
+                                    style={styles.input}
+                                    onChangeText={handleChange("addressLine1")}
+                                    onBlur={handleBlur("addressLine1")}
+                                    value={values.addressLine1}
+                                    maxLength={150}
+                                />
+                                {touched.addressLine1 &&
+                                    errors.addressLine1 && (
+                                        <Text style={styles.error}>
+                                            {typeof errors.addressLine1 ===
+                                            "string"
+                                                ? errors.addressLine1
+                                                : "Invalid input"}
+                                        </Text>
+                                    )}
+                                {/* {touched.addressLine1 && errors.addressLine1 && (
+                                        <Text style={styles.error}>
+                                            {errors.addressLine1}
+                                        </Text>
+                                    )} */}
+                            </View>
+                            <View style={styles.fieldContainer}>
+                                <Text style={styles.label}>
+                                    Address Line 2{" "}
+                                    <Text style={styles.required}>*</Text>
+                                </Text>
+                                <TextInput
+                                    style={styles.input}
+                                    onChangeText={handleChange("addressLine2")}
+                                    onBlur={handleBlur("addressLine2")}
+                                    value={values.addressLine2}
+                                    maxLength={150}
+                                />
+                                {touched.addressLine2 &&
+                                    errors.addressLine2 && (
+                                        <Text style={styles.error}>
+                                            {typeof errors.addressLine2 ===
+                                            "string"
+                                                ? errors.addressLine2
+                                                : "Invalid input"}
+                                        </Text>
+                                    )}
+                                {/* {errors.addressLine2 && (
+                                <Text style={styles.error}>
+                                    {errors.addressLine2}
+                                </Text>
+                            )} */}
+                            </View>
+                        </View>
+
+                        <View style={styles.formRow}>
+                            <View style={styles.fieldContainer}>
+                                <Text style={styles.label}>
+                                    Address Line 3 (Option)
+                                </Text>
+                                <TextInput
+                                    style={styles.input}
+                                    onChangeText={handleChange("addressLine3")}
+                                    onBlur={handleBlur("addressLine3")}
+                                    value={values.addressLine3}
+                                />
+                            </View>
+                            <View style={styles.fieldContainer}>
+                                <Text style={styles.label}>
+                                    Postal Code{" "}
+                                    <Text style={styles.required}>*</Text>
+                                </Text>
+
+                                <TextInput
+                                    style={styles.input}
+                                    // onChangeText={handleChange("postalCode")}
+                                    onChangeText={(value) => {
+                                        handleChange("postalCode")(value);
+                                        console.log("postal");
+                                        console.log(value);
+                                        if (value.length === 6) {
+                                            fetchPincodeDetails(
+                                                value,
+                                                setFieldError
+                                            );
+                                        } else {
+                                            setAddress({
+                                                district: "",
+                                                state: "",
+                                                pincodeId: "",
+                                            });
+                                        }
+                                    }}
+                                    onBlur={handleBlur("postalCode")}
+                                    value={values.postalCode}
+                                    keyboardType="numeric" // Restrict input to numeric characters
+                                    maxLength={6}
+                                />
+                                {touched.postalCode && errors.postalCode && (
+                                    <Text style={styles.error}>
+                                        {errors.postalCode}
+                                    </Text>
+                                )}
+                            </View>
+                        </View>
+                        {isLoading && (
+                            <View
+                                style={styles.formRow}
+                                className="flex flex-row justify-center items-center"
                             >
-                                Save and Continue
-                            </Text>
-                        </Pressable>
-                    </View>
-                </View>
+                                <ActivityIndicator />
+                            </View>
+                        )}
+                        {Address.state && Address.district && !isLoading && (
+                            <View style={styles.formRow}>
+                                <View style={styles.fieldContainer}>
+                                    <Text style={styles.label}>
+                                        District{" "}
+                                        <Text style={styles.required}>*</Text>
+                                    </Text>
+                                    <TextInput
+                                        style={[
+                                            styles.input,
+                                            styles.disabledInput,
+                                        ]}
+                                        onChangeText={handleChange("district")}
+                                        // onBlur={handleBlur("city")}
+                                        value={Address.district}
+                                    />
+                                    {/* {touched.city && errors.city && (
+                                <Text style={styles.error}>{errors.city}</Text>
+                            )} */}
+                                </View>
+                                <View style={styles.fieldContainer}>
+                                    <Text style={styles.label}>
+                                        State{" "}
+                                        <Text style={styles.required}>*</Text>
+                                    </Text>
+                                    <TextInput
+                                        style={[
+                                            styles.input,
+                                            styles.disabledInput,
+                                        ]}
+                                        onChangeText={handleChange("state")}
+                                        // onBlur={handleBlur("state")}
+                                        value={Address.state}
+                                    />
+                                    {/* {touched.state && errors.state && (
+                                <Text style={styles.error}>{errors.state}</Text>
+                            )} */}
+                                </View>
+                            </View>
+                        )}
+                        
+                    </ScrollView>
+                    {isAddressSubmit ? (
+                            <ActivityIndicator size="large" color="#0000ff" />
+                        ) : (
+                            <>
+                             <View className="flex flex-row justify-center w-full ">
+                                {/* <View className="w-[48%]">
+                                    <CustomButton
+                                        onPress={handleSubmit}
+                                        title="Save and Continue"
+                                        disabled={false}
+                                        buttonStyle={"outline"}
+                                    />
+                                </View> */}
+                                <View className="w-[48%]">
+                                    <CustomButton
+                                        onPress={handleSubmit}
+                                        title="Save and Continue"
+                                        disabled={!isValid || isSubmitting} // Disable the button if the form is invalid or submitting
+                                        buttonStyle={"full"}
+                                    />
+                                </View>
+                            </View>
+                            
+                            {/* <View style={styles.buttonRow}>
+                                
+                                <Pressable
+                                    style={({ pressed }) => [
+                                        styles.saveButton,
+                                        { opacity: pressed ? 0.6 : 1 },
+                                        !isValid || isSubmitting
+                                            ? styles.disabledButton
+                                            : {},
+                                    ]}
+                                    onPress={() => handleSubmit()}
+                                    disabled={!isValid || isSubmitting} // Disable the button if the form is invalid or submitting
+                                >
+                                    <Text
+                                        style={[
+                                            styles.saveButtonText,
+                                            !isValid || isSubmitting
+                                                ? styles.disabledButtonText
+                                                : {},
+                                        ]}
+                                    >
+                                        Save and Continue
+                                    </Text>
+                                </Pressable>
+                            </View> */}
+                            </>
+                        )}
+                </>
             )}
         </Formik>
     );
@@ -410,7 +462,7 @@ const AddressForm = ({
 const styles = StyleSheet.create({
     container: {
         flexGrow: 1,
-        padding: 20,
+        paddingTop: 20,
         backgroundColor: "#ffffff",
     },
     formRow: {
@@ -425,16 +477,18 @@ const styles = StyleSheet.create({
     label: {
         fontSize: 12,
         marginBottom: 5,
-        color: "#333",
+        color: "#97989B",
     },
     required: {
         color: "red",
     },
     input: {
+        color: "#404249",
         borderWidth: 1,
         borderColor: "#ccc",
         padding: 10,
         borderRadius: 5,
+        fontSize: 12,
         // backgroundColor: "#f5f5f5", // to represent the disabled state
     },
     error: {
@@ -444,7 +498,7 @@ const styles = StyleSheet.create({
     },
     buttonRow: {
         flexDirection: "row",
-        justifyContent: "space-between",
+        justifyContent: "center",
         marginTop: 20,
     },
     skipButton: {

@@ -42,7 +42,7 @@ const NewDropdownComponent = ({
     return (
         <View
             style={{ ...styles.container, ...containerStyle }}
-            className="lg:mr-2"
+            className=""
         >
             {renderLabel()}
             <Dropdown
@@ -95,6 +95,7 @@ export default NewDropdownComponent;
 const styles = StyleSheet.create({
     container: {
         backgroundColor: "white",
+       
     },
     dropdown: {
         height: 39,
@@ -104,6 +105,7 @@ const styles = StyleSheet.create({
         paddingLeft: 16,
         paddingRight: 12,
         fontSize: 12,
+       
         // zIndex: -1,
     },
     icon: {
@@ -117,12 +119,15 @@ const styles = StyleSheet.create({
         // zIndex: 999,
         paddingHorizontal: 8,
         fontSize: 12,
+        color: "#404249",
     },
     placeholderStyle: {
         fontSize: 12,
+        color: "#404249",
     },
     selectedTextStyle: {
         fontSize: 12,
+        color: "#404249",
     },
     iconStyle: {
         width: 20,
@@ -134,6 +139,7 @@ const styles = StyleSheet.create({
         paddingLeft: 10,
         // fontWeight: 600,
         borderWidth: 1,
+        color: "#404249",
         // borderWidth: ,
     },
     inputSearchStyleFocus: {

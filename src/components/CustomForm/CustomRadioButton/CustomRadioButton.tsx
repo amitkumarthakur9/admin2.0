@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#114EA8',
   },
   radioText: {
-    fontSize: 16,
+    fontSize: 14,
   },
 });
 

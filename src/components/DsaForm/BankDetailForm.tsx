@@ -52,7 +52,11 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
         setModalFormData({
             ...modalFormData,
             bank: item.value,
+            state: "",
+            district: "",
+            branch: "",
         });
+        setifscCode(null);
     };
 
     async function fetchBankOptions(query) {
@@ -66,10 +70,10 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
                     }))
                 );
             } else {
-                alert("Failed to fetch bank options");
+                // alert("Failed to fetch bank options");
             }
         } catch (error) {
-            alert("An error occurred while fetching the bank options");
+            // alert("An error occurred while fetching the bank options");
         }
     }
 
@@ -91,10 +95,10 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
                     }))
                 );
             } else {
-                alert("Failed to fetch state list");
+                // alert("Failed to fetch state list");
             }
         } catch (error) {
-            alert("An error occurred while fetching the state list");
+            // alert("An error occurred while fetching the state list");
         } finally {
             setIsLoadingState(false);
         }
@@ -115,10 +119,10 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
 
                 setDistrictOptions(mappedDistricts);
             } else {
-                alert("Failed to fetch district list");
+                // alert("Failed to fetch district list");
             }
         } catch (error) {
-            alert("An error occurred while fetching the district list");
+            // alert("An error occurred while fetching the district list");
         } finally {
             setIsLoadingDistrict(false);
         }
@@ -140,10 +144,10 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
 
                 setBranchOptions(mappedBranch);
             } else {
-                alert("Failed to fetch district list");
+                // alert("Failed to fetch district list");
             }
         } catch (error) {
-            alert("An error occurred while fetching the district list");
+            // alert("An error occurred while fetching the district list");
         } finally {
             setIsLoadingDistrict(false);
         }
@@ -165,10 +169,10 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
 
                 setAccountTypeOptions(mappedAccount);
             } else {
-                alert("Failed to fetch district list");
+                // alert("Failed to fetch district list");
             }
         } catch (error) {
-            alert("An error occurred while fetching the district list");
+            // alert("An error occurred while fetching the district list");
         } finally {
             setIsLoadingDistrict(false);
         }
@@ -197,10 +201,10 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
                 console.log("label" + bankName); // Output: "HDFC Bank"
                 console.log("label" + BranchName); // Output: "HDFC Bank"
             } else {
-                alert("Failed to fetch district list");
+                // alert("Failed to fetch district list");
             }
         } catch (error) {
-            alert("An error occurred while fetching the district list");
+            // alert("An error occurred while fetching the district list");
         } finally {
             setIsLoadingDistrict(false);
         }
@@ -238,10 +242,10 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
                 console.log(JSON.stringify(address));
                 console.log(JSON.stringify(response));
             } else {
-                alert("Failed to fetch district list");
+                // alert("Failed to fetch district list");
             }
         } catch (error) {
-            alert("An error occurred while fetching the district list");
+            // alert("An error occurred while fetching the district list");
         } finally {
             setIsLoadingDistrict(false);
         }
@@ -260,6 +264,14 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
     const handleModalConfirm = async () => {
         fetchBankDetails(ifscCode);
         setIsModalVisible(false);
+        setModalFormData({
+            bank: "",
+            state: "",
+            district: "",
+            branch: "",
+        });
+        setSelectedBank(null);
+        setifscCode(null);
     };
 
     const handleSubmit = async (values) => {
@@ -360,7 +372,7 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
             }) => (
                 <ScrollView contentContainerStyle={styles.container}>
                     <View style={styles.formRow}>
-                        <View style={styles.fieldContainer}>
+                        <View style={styles.bankfieldContainer}>
                             <Text style={styles.label}>
                                 Account Number{" "}
                                 <Text className="text-red-500">*</Text>
@@ -379,7 +391,7 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
                                 // setFieldValue(va)
                             )}
                         </View>
-                        <View style={styles.fieldContainer}>
+                        <View style={styles.bankfieldContainer}>
                             <Text style={styles.label}>
                                 Bank IFSC{" "}
                                 <Text className="text-red-500">*</Text>
@@ -419,7 +431,7 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
                     </View>
 
                     <View style={styles.formRow}>
-                        <View style={styles.fieldContainer}>
+                        <View style={styles.dropdownfieldContainer}>
                             <Text style={styles.label}>
                                 Account Type{" "}
                                 <Text className="text-red-500">*</Text>
@@ -657,19 +669,19 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
                                     <Pressable
                                         style={[
                                             styles.confirmButton,
-                                            ifscCode === "null" &&
+                                            ifscCode === null &&
                                                 styles.confirmButtonDisabled,
                                         ]}
                                         onPress={() => {
                                             handleModalConfirm();
                                             setFieldValue("ifsc", ifscCode);
                                         }}
-                                        disabled={ifscCode === "null"}
+                                        disabled={ifscCode === null}
                                     >
                                         <Text
                                             style={[
                                                 styles.confirmButtonText,
-                                                ifscCode === "null" &&
+                                                ifscCode === null &&
                                                     styles.confirmButtonTextDisabled,
                                             ]}
                                         >
@@ -747,6 +759,21 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     fieldContainer: {
+        flex: 1,
+        // marginRight: 10,
+        paddingBottom: 10,
+        // paddingLeft: 20,
+        // paddingRight: 10,
+    },
+    dropdownfieldContainer: {
+        flex: 1,
+        // marginRight: 10,
+        paddingBottom: 10,
+        paddingLeft: 20,
+        paddingRight: 60,
+    },
+
+    bankfieldContainer: {
         flex: 1,
         // marginRight: 10,
         paddingBottom: 10,
