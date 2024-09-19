@@ -242,8 +242,8 @@ const ClientsDataTable = () => {
         return itemStructure;
     });
 
-    // const filterWidth = roleId == 2 ? `w-[85%]` : `w-full`;
-    const filterWidth = `w-full`;
+    const filterWidth = roleId == 2 ? `w-[85%]` : `w-full`;
+    // const filterWidth = `w-full`;
     return (
         <View className="bg-white">
             <View className="">

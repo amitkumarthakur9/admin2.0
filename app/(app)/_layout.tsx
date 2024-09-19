@@ -111,9 +111,8 @@ const LoadingSpinner = () => (
 
 const getUserDetail = async () => {
     try {
-
         const response: UserMeData = await RemoteApi.get("user/me");
-        console.log("useEffectlayouttoken" + "userme" )
+        console.log("useEffectlayouttoken" + "userme");
         // const response = {
         //     code: 200,
         //     message: "Success",
@@ -230,7 +229,7 @@ export default function AppLayout() {
         };
 
         if (token) {
-            console.log("useEffectlayouttoken" + token )
+            console.log("useEffectlayouttoken" + token);
             fetchUserDetail();
         }
     }, [token]);
@@ -270,28 +269,28 @@ export default function AppLayout() {
                         // drawerItemStyle: {
                         //     display: "none",
                         // },
-                        unmountOnBlur: true,
+                        // unmountOnBlur: true,
                     }}
                     initialParams={{}}
                     component={DsaFormScreen}
                 />
             ),
         });
-        drawerStructure.push({
-            key: "marketing",
-            content: (
-                <Drawer.Screen
-                    name="marketing/index"
-                    options={{
-                        drawerLabel: "Marketing",
-                        title: "Marketing",
-                        unmountOnBlur: true,
-                    }}
-                    initialParams={{}}
-                    component={MarketingScreen}
-                />
-            ),
-        });
+        // drawerStructure.push({
+        //     key: "marketing",
+        //     content: (
+        //         <Drawer.Screen
+        //             name="marketing/index"
+        //             options={{
+        //                 drawerLabel: "Marketing",
+        //                 title: "Marketing",
+        //                 unmountOnBlur: true,
+        //             }}
+        //             initialParams={{}}
+        //             component={MarketingScreen}
+        //         />
+        //     ),
+        // });
         drawerStructure.push({
             key: "invite-contact",
             content: (
@@ -303,7 +302,7 @@ export default function AppLayout() {
                         drawerItemStyle: {
                             display: inviteDisplay,
                         },
-                        unmountOnBlur: true,
+                        // unmountOnBlur: true,
                     }}
                     initialParams={{}}
                     component={SendInvite}
@@ -356,7 +355,7 @@ export default function AppLayout() {
                     options={{
                         drawerLabel: "Dashboard",
                         title: "Dashboard",
-                        unmountOnBlur: true,
+                        // unmountOnBlur: true,
                     }}
                     initialParams={{}}
                     component={DashboardIFA}
@@ -372,7 +371,7 @@ export default function AppLayout() {
                         drawerLabel: "IFA Dashboard",
                         title: "IFA Dashboard",
                         drawerItemStyle: { display: "none" },
-                        unmountOnBlur: true,
+                        // unmountOnBlur: true,
                     }}
                     initialParams={{}}
                     component={DistributorDashboardScreen}
@@ -418,7 +417,7 @@ export default function AppLayout() {
                     options={{
                         drawerLabel: "SIP Reports",
                         title: "SIP Reports",
-                        unmountOnBlur: true,
+                        // unmountOnBlur: true,
                     }}
                     initialParams={{}}
                     component={SIPReportsScreen}
@@ -433,7 +432,7 @@ export default function AppLayout() {
                     options={{
                         drawerLabel: "Mandates",
                         title: "Mandates",
-                        unmountOnBlur: true,
+                        // unmountOnBlur: true,
                     }}
                     initialParams={{}}
                     component={MandatesScreen}
@@ -448,7 +447,7 @@ export default function AppLayout() {
                     options={{
                         drawerLabel: "Transactions",
                         title: "Transactions",
-                        unmountOnBlur: true,
+                        // unmountOnBlur: true,
                     }}
                     initialParams={{}}
                     component={RTAReconciliationScreen}
@@ -464,7 +463,7 @@ export default function AppLayout() {
                         drawerLabel: "MandateDetail",
                         title: "MandateDetail",
                         drawerItemStyle: { display: "none" },
-                        unmountOnBlur: true,
+                        // unmountOnBlur: true,
                     }}
                     initialParams={{}}
                     component={MandateDetail}
@@ -480,7 +479,7 @@ export default function AppLayout() {
                         drawerLabel: "OrderDetail",
                         title: "OrderDetail",
                         drawerItemStyle: { display: "none" },
-                        unmountOnBlur: true,
+                        // unmountOnBlur: true,
                     }}
                     initialParams={{}}
                     component={OrderDetail}
@@ -496,7 +495,7 @@ export default function AppLayout() {
                         drawerLabel: "HoldingDetail",
                         title: "HoldingDetail",
                         drawerItemStyle: { display: "none" },
-                        unmountOnBlur: true,
+                        // unmountOnBlur: true,
                     }}
                     initialParams={{}}
                     component={HoldingDetail}
@@ -512,7 +511,7 @@ export default function AppLayout() {
                         drawerLabel: "ClientDetail",
                         title: "ClientDetail",
                         drawerItemStyle: { display: "none" },
-                        unmountOnBlur: true,
+                        // unmountOnBlur: true,
                     }}
                     initialParams={{}}
                     component={ClientDetail}
@@ -528,7 +527,7 @@ export default function AppLayout() {
                         drawerLabel: "SipReportsDetail",
                         title: "SipReportsDetail",
                         drawerItemStyle: { display: "none" },
-                        unmountOnBlur: true,
+                        // unmountOnBlur: true,
                     }}
                     initialParams={{}}
                     component={SIPReportsDetail}
@@ -544,7 +543,7 @@ export default function AppLayout() {
                         drawerLabel: "FolioDetail",
                         title: "FolioDetail",
                         drawerItemStyle: { display: "none" },
-                        unmountOnBlur: true,
+                        // unmountOnBlur: true,
                     }}
                     initialParams={{}}
                     component={AUMDetail}
@@ -576,7 +575,7 @@ export default function AppLayout() {
                         drawerLabel: "Brokerage",
                         title: "Brokerage",
                         drawerItemStyle: { display: "none" },
-                        unmountOnBlur: true,
+                        // unmountOnBlur: true,
                     }}
                     initialParams={{}}
                     component={BrokerageScreen}
@@ -592,7 +591,7 @@ export default function AppLayout() {
                         drawerLabel: "mutualfunddetail",
                         title: "mutualfunddetail",
                         drawerItemStyle: { display: "none" },
-                        unmountOnBlur: true,
+                        // unmountOnBlur: true,
                     }}
                     initialParams={{}}
                     component={MutualFundDetail}
@@ -671,7 +670,7 @@ export default function AppLayout() {
                         drawerLabel: "ClientArnDetail",
                         title: "ClientArnDetail",
                         drawerItemStyle: { display: "none" },
-                        unmountOnBlur: true,
+                        // unmountOnBlur: true,
                     }}
                     initialParams={{}}
                     component={ClientARNDetail}
@@ -689,7 +688,7 @@ export default function AppLayout() {
                         drawerItemStyle: {
                             display: "none",
                         },
-                        unmountOnBlur: true,
+                        // unmountOnBlur: true,
                     }}
                     initialParams={{}}
                     component={DistributorDashboardScreen}
@@ -722,7 +721,7 @@ export default function AppLayout() {
                     options={{
                         drawerLabel: "Requests",
                         title: "Requests",
-                        unmountOnBlur: true,
+                        // unmountOnBlur: true,
                         drawerItemStyle: {
                             display: "none",
                         },
@@ -740,7 +739,7 @@ export default function AppLayout() {
                     options={{
                         drawerLabel: "AI Assitant",
                         title: "AI Assitant",
-                        unmountOnBlur: true,
+                        // unmountOnBlur: true,
                         drawerItemStyle: {
                             display: "none",
                         },
@@ -761,7 +760,7 @@ export default function AppLayout() {
                         options={{
                             drawerLabel: "Add Distributor",
                             title: "AddDistributorUserForm",
-                            unmountOnBlur: true,
+                            // unmountOnBlur: true,
                             // drawerItemStyle: { display: "none" },
                         }}
                         initialParams={{}}
@@ -781,7 +780,7 @@ export default function AppLayout() {
                     options={{
                         drawerLabel: "Distributor",
                         title: "Distributor",
-                        unmountOnBlur: true,
+                        // unmountOnBlur: true,
                     }}
                     initialParams={{}}
                     component={IFAReportsScreen}
@@ -801,7 +800,7 @@ export default function AppLayout() {
                             // drawerItemStyle: {
                             //     display: "none",
                             // },
-                            unmountOnBlur: true,
+                            // unmountOnBlur: true,
                         }}
                         initialParams={{}}
                         component={AnalyticsScreen}
@@ -818,7 +817,7 @@ export default function AppLayout() {
                         options={{
                             drawerLabel: "Add Management User",
                             title: "addManagementUser",
-                            unmountOnBlur: true,
+                            // unmountOnBlur: true,
                             // drawerItemStyle: { display: "none" },
                         }}
                         initialParams={{}}
@@ -843,7 +842,7 @@ export default function AppLayout() {
                             // drawerItemStyle: {
                             //     display: "none",
                             // },
-                            unmountOnBlur: true,
+                            // unmountOnBlur: true,
                         }}
                         initialParams={{}}
                         component={DsaRequestScreen}
@@ -860,7 +859,7 @@ export default function AppLayout() {
                     options={{
                         drawerLabel: "RTA Sync",
                         title: "RTA Sync",
-                        unmountOnBlur: true,
+                        // unmountOnBlur: true,
                         // drawerItemStyle: {
                         //     display: "none",
                         // },
@@ -879,7 +878,7 @@ export default function AppLayout() {
                     options={{
                         drawerLabel: "AUM Reconcile",
                         title: "AUM Reconcile",
-                        unmountOnBlur: true,
+                        // unmountOnBlur: true,
                         // drawerItemStyle: {
                         //     display: "none",
                         // },
@@ -897,7 +896,7 @@ export default function AppLayout() {
                         options={{
                             drawerLabel: "Cancelled SIP Upload",
                             title: "sipCancelUpload",
-                            unmountOnBlur: true,
+                            // unmountOnBlur: true,
                             // drawerItemStyle: { display: "none" },
                         }}
                         initialParams={{}}
@@ -925,16 +924,23 @@ export default function AppLayout() {
                                 </Center>
                             }
                         >
-                             {roleId === 2 && (!dsaForm?.userDetails?.arn ||
-                            !dsaForm?.userDetails?.isOnBoarded) ? (
+                            {roleId === 2 &&
+                            (!dsaForm?.userDetails?.arn ||
+                                !dsaForm?.userDetails?.isOnBoarded) ? (
                                 !dsaForm?.userDetails?.isOnBoarded ? (
                                     <>
-                                        <TopHeader navigation={""} logo={true} />
+                                        <TopHeader
+                                            navigation={""}
+                                            logo={true}
+                                        />
                                         <DsaFormScreen />
                                     </>
                                 ) : (
                                     <>
-                                        <TopHeader navigation={""}  logo={true} />
+                                        <TopHeader
+                                            navigation={""}
+                                            logo={true}
+                                        />
                                         <TrainingArnExamScreen />
                                     </>
                                 )

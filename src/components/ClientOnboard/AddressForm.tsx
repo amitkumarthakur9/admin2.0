@@ -59,31 +59,31 @@ const AddressForm = ({
             token: initialValues.token,
         };
         try {
-            // const response = await RemoteApi.post(
-            //     "/onboard/client/address",
-            //     data,
-            // );
+            const response = await RemoteApi.post(
+                "/onboard/client/address",
+                data
+            );
 
-            function sendResponse() {
-                return new Promise((resolve) => {
-                    setTimeout(() => {
-                        resolve({
-                            code: 200,
-                            data: {
-                                message: "invalid address",
-                                success: false,
-                                mismatchDob: false,
-                                panVerified: true,
-                                addressMismatch: true,
-                                mismatchName: false,
-                                token: "AddressTokene",
-                            },
-                        });
-                    }, 2000);
-                });
-            }
+            // function sendResponse() {
+            //     return new Promise((resolve) => {
+            //         setTimeout(() => {
+            //             resolve({
+            //                 code: 200,
+            //                 data: {
+            //                     message: "invalid address",
+            //                     success: false,
+            //                     mismatchDob: false,
+            //                     panVerified: true,
+            //                     addressMismatch: true,
+            //                     mismatchName: false,
+            //                     token: "AddressTokene",
+            //                 },
+            //             });
+            //         }, 2000);
+            //     });
+            // }
 
-            const response: any = await sendResponse();
+            // const response: any = await sendResponse();
             if (response.code == 200) {
                 const valuesWithFlag = {
                     ...values,
@@ -150,6 +150,17 @@ const AddressForm = ({
         return gender ? gender.label : "";
     };
 
+    if (isAddressSubmit) {
+        return (
+            <View className="h-[400px]  w-full flex flex-col justify-center items-center">
+                <ActivityIndicator size={100} color="#0000ff" />
+                <Text className="text-bold text-lg pt-8">
+                    Verifying Details
+                </Text>
+            </View>
+        );
+    }
+
     return (
         <Formik
             initialValues={initialValues}
@@ -175,7 +186,7 @@ const AddressForm = ({
                             </Text>
 
                             <Pressable onPress={closeModal}>
-                                <Icon name="close" size={14} color="#000" />
+                                <Icon name="close" size={20} color="#000" />
                             </Pressable>
                         </View>
 
@@ -185,8 +196,8 @@ const AddressForm = ({
                     </View>
 
                     <ScrollView className="pt-8">
-                        <View style={styles.formRow}>
-                            <View style={styles.fieldContainer}>
+                        <View className="flex flex-row justify-between items-center w-full  mb-4">
+                            <View className="w-[48%]">
                                 <Text style={styles.label}>
                                     PAN Number{" "}
                                     <Text style={styles.required}>*</Text>
@@ -204,7 +215,7 @@ const AddressForm = ({
                                 </Text>
                             )} */}
                             </View>
-                            <View style={styles.fieldContainer}>
+                            <View className="w-[48%]">
                                 <Text style={styles.label}>
                                     Date of Birth{" "}
                                     <Text style={styles.required}>*</Text>
@@ -224,8 +235,8 @@ const AddressForm = ({
                             </View>
                         </View>
 
-                        <View style={styles.formRow}>
-                            <View style={styles.fieldContainer}>
+                        <View className="flex flex-row justify-between items-center w-full  mb-4">
+                            <View className="w-[48%]">
                                 <Text style={styles.label}>
                                     Gender{" "}
                                     <Text style={styles.required}>*</Text>
@@ -243,11 +254,11 @@ const AddressForm = ({
                                 </Text>
                             )} */}
                             </View>
-                            <View style={styles.fieldContainer}></View>
+                            <View className="w-[48%]"></View>
                         </View>
 
-                        <View style={styles.formRow}>
-                            <View style={styles.fieldContainer}>
+                        <View className="flex flex-row justify-between items-center w-full  mb-4">
+                            <View className="w-[48%]">
                                 <Text style={styles.label}>
                                     Address Line 1{" "}
                                     <Text style={styles.required}>*</Text>
@@ -274,7 +285,7 @@ const AddressForm = ({
                                         </Text>
                                     )} */}
                             </View>
-                            <View style={styles.fieldContainer}>
+                            <View className="w-[48%]">
                                 <Text style={styles.label}>
                                     Address Line 2{" "}
                                     <Text style={styles.required}>*</Text>
@@ -303,8 +314,8 @@ const AddressForm = ({
                             </View>
                         </View>
 
-                        <View style={styles.formRow}>
-                            <View style={styles.fieldContainer}>
+                        <View className="flex flex-row justify-between items-center w-full  mb-4">
+                            <View className="w-[48%]">
                                 <Text style={styles.label}>
                                     Address Line 3 (Option)
                                 </Text>
@@ -315,7 +326,7 @@ const AddressForm = ({
                                     value={values.addressLine3}
                                 />
                             </View>
-                            <View style={styles.fieldContainer}>
+                            <View className="w-[48%]">
                                 <Text style={styles.label}>
                                     Postal Code{" "}
                                     <Text style={styles.required}>*</Text>
@@ -355,15 +366,15 @@ const AddressForm = ({
                         </View>
                         {isLoading && (
                             <View
-                                style={styles.formRow}
+                                className="flex flex-row justify-between items-center w-full  mb-4"
                                 className="flex flex-row justify-center items-center"
                             >
                                 <ActivityIndicator />
                             </View>
                         )}
                         {Address.state && Address.district && !isLoading && (
-                            <View style={styles.formRow}>
-                                <View style={styles.fieldContainer}>
+                            <View className="flex flex-row justify-between items-center w-full  mb-4">
+                                <View className="w-[48%]">
                                     <Text style={styles.label}>
                                         District{" "}
                                         <Text style={styles.required}>*</Text>
@@ -381,7 +392,7 @@ const AddressForm = ({
                                 <Text style={styles.error}>{errors.city}</Text>
                             )} */}
                                 </View>
-                                <View style={styles.fieldContainer}>
+                                <View className="w-[48%]">
                                     <Text style={styles.label}>
                                         State{" "}
                                         <Text style={styles.required}>*</Text>
@@ -401,58 +412,26 @@ const AddressForm = ({
                                 </View>
                             </View>
                         )}
-                        
                     </ScrollView>
-                    {isAddressSubmit ? (
-                            <ActivityIndicator size="large" color="#0000ff" />
-                        ) : (
-                            <>
-                             <View className="flex flex-row justify-center w-full ">
-                                {/* <View className="w-[48%]">
-                                    <CustomButton
-                                        onPress={handleSubmit}
-                                        title="Save and Continue"
-                                        disabled={false}
-                                        buttonStyle={"outline"}
-                                    />
-                                </View> */}
-                                <View className="w-[48%]">
-                                    <CustomButton
-                                        onPress={handleSubmit}
-                                        title="Save and Continue"
-                                        disabled={!isValid || isSubmitting} // Disable the button if the form is invalid or submitting
-                                        buttonStyle={"full"}
-                                    />
-                                </View>
-                            </View>
-                            
-                            {/* <View style={styles.buttonRow}>
-                                
-                                <Pressable
-                                    style={({ pressed }) => [
-                                        styles.saveButton,
-                                        { opacity: pressed ? 0.6 : 1 },
-                                        !isValid || isSubmitting
-                                            ? styles.disabledButton
-                                            : {},
-                                    ]}
-                                    onPress={() => handleSubmit()}
-                                    disabled={!isValid || isSubmitting} // Disable the button if the form is invalid or submitting
-                                >
-                                    <Text
-                                        style={[
-                                            styles.saveButtonText,
-                                            !isValid || isSubmitting
-                                                ? styles.disabledButtonText
-                                                : {},
-                                        ]}
-                                    >
-                                        Save and Continue
-                                    </Text>
-                                </Pressable>
-                            </View> */}
-                            </>
-                        )}
+
+                    <View className="flex flex-row justify-between w-full ">
+                        <View className="w-[48%]">
+                            <CustomButton
+                                onPress={closeModal}
+                                title="Save and Continue"
+                                disabled={false}
+                                buttonStyle={"outline"}
+                            />
+                        </View>
+                        <View className="w-[48%]">
+                            <CustomButton
+                                onPress={handleSubmit}
+                                title="Save and Continue"
+                                disabled={!isValid || isSubmitting} // Disable the button if the form is invalid or submitting
+                                buttonStyle={"full"}
+                            />
+                        </View>
+                    </View>
                 </>
             )}
         </Formik>

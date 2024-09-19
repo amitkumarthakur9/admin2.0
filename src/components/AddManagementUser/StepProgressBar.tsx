@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
     line: {
         backgroundColor: "#d3d3d3",
         alignSelf: "center",
-        marginHorizontal: 10,
+        marginHorizontal: 14,
         paddingTop: 0,
         paddingBottom: 0,
         width: "100%",

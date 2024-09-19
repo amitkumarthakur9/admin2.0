@@ -42,17 +42,7 @@ const validationSchema = Yup.object().shape({
     panNumber: Yup.string()
         .required("PAN number is required")
         .matches(panRegex, "Please enter a valid PAN number. Ex: AAAPZ1234C"),
-    // occupation: Yup.string().required("Occupation is required"),
     isResidentIndian: Yup.boolean().required("Resident status is required"),
-    // serverError: Yup.boolean().required("serverError"),
-    // country: Yup.string().when("isResidentIndian", {
-    //     is: (isResidentIndian) => isResidentIndian,
-    //     then: (schema) =>
-    //         schema.required(
-    //             "Country is required when not a resident of India."
-    //         ),
-    //     otherwise: (schema) => schema.notRequired(),
-    // }),
 });
 
 const BasicDetails = ({
@@ -63,68 +53,6 @@ const BasicDetails = ({
     closeModal,
 }) => {
     const [isLoading, setIsLoading] = useState(false);
-    const [occupationOptions, setOccupationOptions] = useState([]);
-    const [countryOptions, setCountryOptions] = useState([]);
-    const [showAddressForm, setShowAddressForm] = useState(false);
-    const [addressToken, setAddressToken] = useState("");
-
-    // Function to fetch dropdown options
-    const getOptions = async (endpoint, setter) => {
-        setIsLoading(true);
-        try {
-            const response: DropdownResponse = await RemoteApi.get(
-                `${endpoint}`
-            );
-
-            if (response.code === 200) {
-                if (endpoint === "occupation/list") {
-                    setOccupationOptions(
-                        response.data.map((state) => ({
-                            label: state.name,
-                            value: state.id,
-                        }))
-                    );
-                    // setCountryOptions(
-                    //     response.data.data.map((state) => ({
-                    //         label: state.name,
-                    //         value: state.id,
-                    //     }))
-                    // );
-                }
-
-                // else if (endpoint === "countries") {
-                //     setCountryOptions(
-                //         response.data.data.map((state) => ({
-                //             label: state.name,
-                //             value: state.id,
-                //         }))
-                //     );
-                // } else if (endpoint === "education") {
-                // setEducationOptions(
-                //     response.data.map((state) => ({
-                //         label: state.name,
-                //         value: state.id,
-                //     }))
-                // );
-                // }
-            } else {
-                alert("Failed to fetch data list");
-            }
-        } catch (error) {
-            console.error(`Failed to fetch ${endpoint} options`, error);
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    const handleBack = () => {
-        setShowAddressForm(false);
-    };
-
-    useEffect(() => {
-        getOptions("occupation/list", setOccupationOptions);
-        // getOptions("countries", setCountryOptions);
-    }, []);
 
     const genderOptions = [
         { label: "Male", value: 1 },
@@ -149,37 +77,36 @@ const BasicDetails = ({
             panNumber: values.panNumber,
             dob: values.dateOfBirth,
             sexId: values.gender,
-            // occupationId: values.occupation,
             isIndianResident: values.isResidentIndian,
         };
         try {
             console.log("basicsubmit");
             console.log(data);
-            // const response: any = await RemoteApi.post(
-            //     "/onboard/client/basic-details",
-            //     data
-            // );
+            const response: any = await RemoteApi.post(
+                "/onboard/client/basic-details",
+                data
+            );
 
-            function sendResponse() {
-                return new Promise((resolve) => {
-                    setTimeout(() => {
-                        resolve({
-                            code: 200,
-                            message: "success",
-                            data: {
-                                isNameMissMatch: false,
-                                isDOBMissMatch: false,
-                                isAddressPresent: false,
-                                // token: "BasicTokene",
-                                token: "null",
-                            },
-                            errors: [],
-                        });
-                    }, 2000);
-                });
-            }
+            // function sendResponse() {
+            //     return new Promise((resolve) => {
+            //         setTimeout(() => {
+            //             resolve({
+            //                 code: 200,
+            //                 message: "success",
+            //                 data: {
+            //                     isNameMissMatch: false,
+            //                     isDOBMissMatch: false,
+            //                     isAddressPresent: false,
+            //                     // token: "BasicTokene",
+            //                     token: "null",
+            //                 },
+            //                 errors: [],
+            //             });
+            //         }, 2000);
+            //     });
+            // }
 
-            const response: any = await sendResponse();
+            // const response: any = await sendResponse();
             if (
                 response.code === 200 &&
                 !response.data.isNameMissMatch &&
@@ -191,10 +118,8 @@ const BasicDetails = ({
                     ...values,
                     token: response.data.token,
                 };
-                onNext(valuesWithToken); // Include the submission flag
-                // onNext(values)
+                onNext(valuesWithToken);
             } else if (response.code === 200) {
-                // setAddressToken(() => response?.data?.token);
                 if (response.data.isDOBMissMatch) {
                     actions.setFieldError(
                         "dateOfBirth",
@@ -220,22 +145,11 @@ const BasicDetails = ({
                         isAddressNeeded: true,
                     };
                     onNext(valuesWithToken);
-                    // setShowAddressForm(true); // Show AddressForm if there is an address mismatch
                 }
             } else {
-                // actions.setFieldError("serverError", response.message);
                 actions.setFieldError("panNumber", response.message);
             }
-        } catch (error) {
-            // actions.setFieldError(
-            //     "fullName",
-            //     error.message
-            // );
-            // actions.setFieldError(
-            //     "fullName",
-            //     error.data.message
-            // );
-        }
+        } catch (error) {}
         setIsLoading(false);
         actions.setSubmitting(false);
     };
@@ -253,13 +167,19 @@ const BasicDetails = ({
                 errors,
                 touched,
                 setFieldValue,
-            }) => (
-                <>
-                    <ScrollView contentContainerStyle={styles.container}>
-                        {/* {!showAddressForm ? ( */}
-                        <>
-                            <View style={styles.formRow}>
-                                <View style={styles.fieldContainer}>
+            }) =>
+                isLoading ? (
+                    <View className="h-[400px]  w-full flex flex-col justify-center items-center">
+                        <ActivityIndicator size={100} color="#0000ff" />
+                        <Text className="text-bold text-lg pt-8">
+                            Verifying Details
+                        </Text>
+                    </View>
+                ) : (
+                    <>
+                        <ScrollView contentContainerStyle={styles.container}>
+                            <View className="flex flex-row justify-between items-center w-full  mb-4">
+                                <View className="w-[48%]">
                                     <Text style={styles.label}>
                                         Name as per PAN Card{" "}
                                         <Text style={styles.required}>*</Text>
@@ -276,7 +196,7 @@ const BasicDetails = ({
                                         </Text>
                                     )}
                                 </View>
-                                <View style={styles.fieldContainer}>
+                                <View className="w-[48%]">
                                     <Text style={styles.label}>
                                         Email ID{" "}
                                         <Text style={styles.required}>*</Text>
@@ -295,8 +215,8 @@ const BasicDetails = ({
                                 </View>
                             </View>
 
-                            <View style={styles.formRow}>
-                                <View style={styles.fieldContainer}>
+                            <View className="flex flex-row justify-between items-center w-full  mb-4">
+                                <View className="w-[48%]">
                                     <Text style={styles.label}>
                                         Date of Birth as per PAN Card{" "}
                                         <Text style={styles.required}>*</Text>
@@ -314,7 +234,7 @@ const BasicDetails = ({
                                             </Text>
                                         )}
                                 </View>
-                                <View style={styles.fieldContainer}>
+                                <View className="w-[48%]">
                                     <Text style={styles.label}>
                                         PAN Number{" "}
                                         <Text style={styles.required}>*</Text>
@@ -333,8 +253,8 @@ const BasicDetails = ({
                                 </View>
                             </View>
 
-                            <View style={styles.formRow}>
-                                <View style={styles.fieldContainer}>
+                            <View className="flex flex-row justify-between items-center w-full  mb-4">
+                                <View className="w-[48%]">
                                     <Text style={styles.label}>
                                         Mobile Number{" "}
                                         <Text style={styles.required}>*</Text>
@@ -357,29 +277,7 @@ const BasicDetails = ({
                                         )}
                                 </View>
 
-                                {/* <View style={styles.fieldContainer}>
-                                    <Text style={styles.label}>
-                                        Client’s Occupation{" "}
-                                        <Text style={styles.required}>*</Text>
-                                    </Text>
-                                    <DropdownComponent
-                                        label="Occupation"
-                                        data={occupationOptions}
-                                        value={values.occupation}
-                                        setValue={(value) =>
-                                            setFieldValue("occupation", value)
-                                        }
-                                        // containerStyle={styles.dropdown}
-                                        noIcon={true}
-                                    />
-                                    {touched.occupation &&
-                                        errors.occupation && (
-                                            <Text style={styles.error}>
-                                                {errors.occupation}
-                                            </Text>
-                                        )}
-                                </View> */}
-                                <View style={styles.fieldContainer}>
+                                <View className="w-[48%]">
                                     <Text style={styles.label}>
                                         Client’s Gender{" "}
                                         <Text style={styles.required}>*</Text>
@@ -399,8 +297,8 @@ const BasicDetails = ({
                                 </View>
                             </View>
 
-                            <View style={styles.formRow}>
-                                <View style={styles.fieldContainer}>
+                            <View className="flex flex-row justify-between items-center w-full mb-4">
+                                <View className="w-[48%]">
                                     <Text style={styles.label}>
                                         Is your client a resident Indian?{" "}
                                         <Text style={styles.required}>*</Text>
@@ -465,49 +363,18 @@ const BasicDetails = ({
                                     </View>
                                 )}
                             </View>
+                        </ScrollView>
 
-                            {/* {errors.serverError && (
-                                       <>
-                                        <ErrorToaster message={"serverErrorNew"} />
-                                        </>
-                                    )} */}
-                        </>
-                        {/* ) : (
-                        <AddressForm
-                            initialValues={initialValues}
-                            formValues={values}
-                            onPrevious={onPrevious}
-                            onNext={onNext}
-                            handleBack={handleBack}
-                            addressToken={addressToken}
-                        />
-                    )} */}
-                    </ScrollView>
-                    <View style={styles.buttonRow}>
-                        {/* <Pressable
-                                    style={({ pressed }) => [
-                                        styles.skipButton,
-                                        { opacity: pressed ? 0.6 : 1 },
-                                    ]}
-                                    onPress={() => onSaveDraft(values)}
-                                >
-                                    <Text style={styles.buttonText}>
-                                        Save as Draft
-                                    </Text>
-                                </Pressable> */}
-
-                        {isLoading ? (
-                            <ActivityIndicator size="large" color="#0000ff" />
-                        ) : (
-                            <View className="flex flex-row justify-center w-full ">
-                                {/* <View className="w-[48%]">
+                        <View style={styles.buttonRow}>
+                            <View className="flex flex-row justify-between w-full">
+                                <View className="w-[48%]">
                                     <CustomButton
-                                        onPress={handleSubmit}
-                                        title="Save and Continue"
+                                        onPress={closeModal}
+                                        title="Close"
                                         disabled={false}
                                         buttonStyle={"outline"}
                                     />
-                                </View> */}
+                                </View>
                                 <View className="w-[48%]">
                                     <CustomButton
                                         onPress={handleSubmit}
@@ -517,26 +384,10 @@ const BasicDetails = ({
                                     />
                                 </View>
                             </View>
-                            // <Pressable
-                            //     style={({ pressed }) => [
-                            //         styles.saveButton,
-                            //         { opacity: pressed ? 0.6 : 1 },
-                            //     ]}
-                            //     // onPress={() => {
-                            //     //     handleSubmit(values);
-                            //     //     console.log("pressedhandle");
-                            //     // }}
-
-                            //     onPress={() => handleSubmit()}
-                            // >
-                            //     <Text style={styles.savebuttonText}>
-                            //         Save and Continue
-                            //     </Text>
-                            // </Pressable>
-                        )}
-                    </View>
-                </>
-            )}
+                        </View>
+                    </>
+                )
+            }
         </Formik>
     );
 };
@@ -556,7 +407,7 @@ const styles = StyleSheet.create({
     },
     fieldContainer: {
         flex: 1,
-        marginRight: 10,
+        // marginRight: 10,
     },
     label: {
         fontSize: 12,
@@ -621,11 +472,4 @@ const styles = StyleSheet.create({
     },
 });
 
-const ErrorToaster = ({ message }) => {
-    return (
-        <Box bg="red.400" p="2" color="white" rounded="sm" mb={5}>
-            <Text className="text-white">{message}</Text>
-        </Box>
-    );
-};
 export default BasicDetails;

@@ -84,20 +84,20 @@ const UploadBankDocument = ({
         try {
             console.log("uploadsubmit");
             console.log(data);
-            // const response: any = await RemoteApi.postWithFormData(
-            //     "/file/upload-bank-verification-document",
-            //     formData
-            // );
+            const response: any = await RemoteApi.postWithFormData(
+                "/file/upload-bank-verification-document",
+                formData
+            );
 
-            console.log("uploadbankdoc");
-            // console.log(response)
-            const response = {
-                code: 200,
-                message: "Success",
-                data: {
-                    token: "uploaddocTokenerererer",
-                },
-            };
+            // console.log("uploadbankdoc");
+            // // console.log(response)
+            // const response = {
+            //     code: 200,
+            //     message: "Success",
+            //     data: {
+            //         token: "uploaddocTokenerererer",
+            //     },
+            // };
 
             if (response?.message == "Success") {
                 const valuesWithToken = {
@@ -106,34 +106,11 @@ const UploadBankDocument = ({
                     currentStep: 3,
                 };
                 onNext(valuesWithToken);
-                // const uniqueId = uuidv4();
-                // Add the success toast to the toasts array in the component's state
-                // setToasts([
-                //     ...toasts,
-                //     {
-                //         id: uniqueId,
-                //         variant: "solid",
-                //         title: response?.data,
-                //         status: "success",
-                //     },
-                // ]);
             } else {
                 actions.setFieldError("pickedDocument", response.message);
-                // const uniqueId = uuidv4();
-                // setToasts([...toasts, { id: uniqueId, variant: "solid", title: "Upload Failed", status: "error" }]);
             }
         } catch (error) {
             actions.setFieldError("pickedDocument", error.message);
-            // const uniqueId = uuidv4();
-            // setToasts([
-            //     ...toasts,
-            //     {
-            //         id: uniqueId,
-            //         variant: "solid",
-            //         title: "Upload Failed",
-            //         status: "error",
-            //     },
-            // ]);
         }
 
         setIsLoading(false);
@@ -177,140 +154,155 @@ const UploadBankDocument = ({
                 errors,
                 touched,
                 setFieldValue,
-            }) => (
-                <>
-                    <View className="w-full gap-y-2">
-                        <View className="flex flex-row justify-between items-center">
-                            <Text className="text-[18px] font-bold">
-                                Bank Details Verification
-                            </Text>
-
-                            <Pressable onPress={closeModal}>
-                                <Icon name="close" size={14} color="#000" />
-                            </Pressable>
-                        </View>
-
-                        <Text className="text-[12px]">
-                            Verify and correct the highlighted information
+            }) =>
+                isLoading ? (
+                    <View className="h-[400px]  w-full flex flex-col justify-center items-center">
+                        <ActivityIndicator size={100} color="#0000ff" />
+                        <Text className="text-bold text-lg pt-8">
+                            Verifying Details
                         </Text>
                     </View>
-
-                    <ScrollView className="pt-8 w-full">
-                        <View style={styles.formRow}>
-                            <View className="flex flex-col">
-                                <View style={styles.fieldContainer}>
-                                    <Text className="text-red-600 text-2xl">
-                                        {initialValues.bankVerifyFailMessage}
-                                    </Text>
-                                </View>
-                                <View style={styles.fieldContainer}>
-                                    <Text>
-                                        Please verify the details enter by you
-                                        or update the details.
-                                    </Text>
-                                </View>
-                            </View>
-                        </View>
-                        <View style={styles.formRow}>
-                            <View style={styles.radiofieldContainer}>
-                                <CustomRadioButton
-                                    options={[
-                                        {
-                                            label: "Change Bank Details",
-                                            value: "1",
-                                        },
-                                        {
-                                            label: "Upload Supporting Documents",
-                                            value: "2",
-                                        },
-                                    ]}
-                                    value={radioOption ? radioOption : "2"}
-                                    setValue={(value) => {
-                                        handleRadiooption(value);
-                                    }}
-                                />
-                            </View>
-                        </View>
-
-                        <View style={styles.formRow}>
-                            <View style={styles.fieldContainer}>
-                                <Text style={styles.label}>Document Type*</Text>
-                                <DropdownComponent
-                                    label="Document Type"
-                                    data={documentTypeOptions}
-                                    value={values.documentType}
-                                    setValue={(value) =>
-                                        setFieldValue("documentType", value)
-                                    }
-                                    containerStyle={styles.dropdown}
-                                    noIcon={true}
-                                />
-                                {touched.documentType &&
-                                    errors.documentType && (
-                                        <Text style={styles.error}>
-                                            {errors.documentType}
-                                        </Text>
-                                    )}
-                            </View>
-                            <View style={styles.fieldContainer}>
-                                <Text style={styles.label}>
-                                    Document upload*
+                ) : (
+                    <>
+                        <View className="w-full gap-y-2">
+                            <View className="flex flex-row justify-between items-center">
+                                <Text className="text-[18px] font-bold">
+                                    Bank Details Verification
                                 </Text>
-                                <TouchableOpacity
-                                    className="flex flex-row border-gray-400 border rounded px-3 py-[11px] items-center justify-between"
-                                    onPress={() => pickDocument(setFieldValue)}
-                                >
-                                    <View className="mr-[10px] flex flex-row">
-                                        <Icon
-                                            name="file-multiple-outline"
-                                            size={16}
-                                            color="#396CB7"
-                                        />
-                                        <Text className="text-[#ada9a9]">
-                                            {" "}
-                                            {pickedDocument
-                                                ? pickedDocument.name
-                                                : "Upload Document"}
+
+                                <Pressable onPress={closeModal}>
+                                    <Icon name="close" size={20} color="#000" />
+                                </Pressable>
+                            </View>
+
+                            <Text className="text-[12px]">
+                                Verify and correct the highlighted information
+                            </Text>
+                        </View>
+
+                        <ScrollView className="pt-8 w-full">
+                            <View className="flex flex-row justify-between items-center w-full  mb-4">
+                                <View className="flex flex-col">
+                                    <View className="w-full">
+                                        <Text className="text-red-600 text-2xl">
+                                            {
+                                                initialValues.bankVerifyFailMessage
+                                            }
                                         </Text>
                                     </View>
-
-                                    {pickedDocument && (
-                                        <Icon
-                                            name="delete-forever-outline"
-                                            size={16}
-                                            color="#FF551F"
-                                        />
-                                    )}
-                                </TouchableOpacity>
-                                {touched.pickedDocument &&
-                                    errors.pickedDocument && (
-                                        <Text style={styles.error}>
-                                            {errors.pickedDocument}
+                                    <View className="w-full">
+                                        <Text>
+                                            Please verify the details enter by
+                                            you or update the details.
                                         </Text>
-                                    )}
+                                    </View>
+                                </View>
+                            </View>
+                            <View className="flex flex-row justify-between items-center w-full  mb-4">
+                                <View style={styles.radiofieldContainer}>
+                                    <CustomRadioButton
+                                        options={[
+                                            {
+                                                label: "Change Bank Details",
+                                                value: "1",
+                                            },
+                                            {
+                                                label: "Upload Supporting Documents",
+                                                value: "2",
+                                            },
+                                        ]}
+                                        value={radioOption ? radioOption : "2"}
+                                        setValue={(value) => {
+                                            handleRadiooption(value);
+                                        }}
+                                    />
+                                </View>
+                            </View>
+
+                            <View className="flex flex-row justify-between items-center w-full  mb-4">
+                                <View className="w-[48%]">
+                                    <Text style={styles.label}>
+                                        Document Type*
+                                    </Text>
+                                    <DropdownComponent
+                                        label="Document Type"
+                                        data={documentTypeOptions}
+                                        value={values.documentType}
+                                        setValue={(value) =>
+                                            setFieldValue("documentType", value)
+                                        }
+                                        containerStyle={styles.dropdown}
+                                        noIcon={true}
+                                    />
+                                    {touched.documentType &&
+                                        errors.documentType && (
+                                            <Text style={styles.error}>
+                                                {errors.documentType}
+                                            </Text>
+                                        )}
+                                </View>
+                                <View className="w-[48%]">
+                                    <Text style={styles.label}>
+                                        Document upload*
+                                    </Text>
+                                    <TouchableOpacity
+                                        className="flex flex-row border-gray-400 border rounded px-3 py-[11px] items-center justify-between"
+                                        onPress={() =>
+                                            pickDocument(setFieldValue)
+                                        }
+                                    >
+                                        <View className=" flex flex-row">
+                                            <Icon
+                                                name="file-multiple-outline"
+                                                size={16}
+                                                color="#396CB7"
+                                            />
+                                            <Text className="text-[#ada9a9]">
+                                                {" "}
+                                                {pickedDocument
+                                                    ? pickedDocument.name
+                                                    : "Upload Document"}
+                                            </Text>
+                                        </View>
+
+                                        {pickedDocument && (
+                                            <Icon
+                                                name="delete-forever-outline"
+                                                size={16}
+                                                color="#FF551F"
+                                            />
+                                        )}
+                                    </TouchableOpacity>
+                                    {touched.pickedDocument &&
+                                        errors.pickedDocument && (
+                                            <Text style={styles.error}>
+                                                {errors.pickedDocument}
+                                            </Text>
+                                        )}
+                                </View>
+                            </View>
+                        </ScrollView>
+                        <View className="flex flex-row justify-between w-full ">
+                            <View className="w-[48%]">
+                                <CustomButton
+                                    onPress={closeModal}
+                                    title="Close"
+                                    disabled={false}
+                                    buttonStyle={"outline"}
+                                />
+                            </View>
+                            <View className="w-[48%]">
+                                <CustomButton
+                                    onPress={handleSubmit}
+                                    title="Save and Continue"
+                                    // disabled={isVerifing === true}
+                                    buttonStyle={"full"}
+                                />
                             </View>
                         </View>
-                    </ScrollView>
-                    <View className="flex flex-row justify-center w-full ">
-                        {/* <View className="w-[48%]">
-                                    <CustomButton
-                                        onPress={onPrevious}
-                                        title="Save and Continue"
-                                        disabled={false}
-                                        buttonStyle={"outline"}
-                                    />
-                                </View> */}
-                        <View className="w-[48%]">
-                            <CustomButton
-                                onPress={handleSubmit}
-                                title="Save and Continue"
-                                // disabled={isVerifing === true}
-                                buttonStyle={"full"}
-                            />
-                        </View>
-                    </View>
-                </>
-            )}
+                    </>
+                )
+            }
         </Formik>
     );
 };

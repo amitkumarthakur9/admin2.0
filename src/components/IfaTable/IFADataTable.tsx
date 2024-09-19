@@ -129,9 +129,9 @@ const IFADataTable = () => {
                         <View className="flex flex-col flex-wrap w-9/12">
                             <View className="flex flex-row items-center text-black font-semibold flex-wrap w-11/12 mb-2">
                                 <Pressable
-                                    onPress={() =>
-                                        router.push(`dashboard/${item?.id}`)
-                                    }
+                                    // onPress={() =>
+                                    //     router.push(`ifa/${item?.id}`)
+                                    // }
                                 >
                                     <Text
                                         selectable

@@ -72,29 +72,7 @@ const Additonalinfo = ({ onNext, onPrevious, initialValues, closeModal }) => {
                             value: state.id,
                         }))
                     );
-                    // setCountryOptions(
-                    //     response.data.data.map((state) => ({
-                    //         label: state.name,
-                    //         value: state.id,
-                    //     }))
-                    // );
                 }
-
-                // else if (endpoint === "countries") {
-                //     setCountryOptions(
-                //         response.data.data.map((state) => ({
-                //             label: state.name,
-                //             value: state.id,
-                //         }))
-                //     );
-                // } else if (endpoint === "education") {
-                // setEducationOptions(
-                //     response.data.map((state) => ({
-                //         label: state.name,
-                //         value: state.id,
-                //     }))
-                // );
-                // }
             } else {
                 alert("Failed to fetch data list");
             }
@@ -124,18 +102,18 @@ const Additonalinfo = ({ onNext, onPrevious, initialValues, closeModal }) => {
         console.log(data);
 
         try {
-            // const response = await RemoteApi.post(
-            //     "onboard/client/additional-details",
-            //     data
-            // );
+            const response = await RemoteApi.post(
+                "onboard/client/additional-details",
+                data
+            );
 
-            const response = {
-                code: 200,
-                data: {
-                    token: "additonalinfotoken",
-                    isKycDone: true,
-                },
-            };
+            // const response = {
+            //     code: 200,
+            //     data: {
+            //         token: "additonalinfotoken",
+            //         isKycDone: true,
+            //     },
+            // };
 
             if (response.code === 200) {
                 // setFormData((prevData) => ({
@@ -164,24 +142,17 @@ const Additonalinfo = ({ onNext, onPrevious, initialValues, closeModal }) => {
 
                 // onSubmitSuccess(true);
             } else {
-                Alert.alert(
-                    "Error",
-                    response.message || "Failed to submit the details"
-                );
             }
-        } catch (error) {
-            Alert.alert(
-                "Error",
-                error.message ||
-                    "An error occurred while submitting the details"
-            );
-        }
+        } catch (error) {}
     };
 
     if (isLoading) {
         return (
-            <View>
-                <ActivityIndicator size="large" color="#0066cc" />
+            <View className="h-[400px]  w-full flex flex-col justify-center items-center">
+                <ActivityIndicator size={100} color="#0000ff" />
+                <Text className="text-bold text-lg pt-8">
+                    Verifying Details
+                </Text>
             </View>
         );
     }
@@ -203,12 +174,8 @@ const Additonalinfo = ({ onNext, onPrevious, initialValues, closeModal }) => {
             }) => (
                 <>
                     <ScrollView contentContainerStyle={styles.container}>
-                        {/* {isSubmitted ? ( */}
-
-                        {/* ) : ( */}
-
-                        <View style={styles.formRow}>
-                            <View style={styles.fieldContainer}>
+                        <View className="flex flex-row justify-between items-center w-full  mb-4">
+                            <View className="w-[48%]">
                                 <Text style={styles.label}>
                                     Income Slab{" "}
                                     <Text style={styles.required}>*</Text>
@@ -230,7 +197,7 @@ const Additonalinfo = ({ onNext, onPrevious, initialValues, closeModal }) => {
                                 )}
                             </View>
 
-                            <View style={styles.fieldContainer}>
+                            <View className="w-[48%]">
                                 <Text style={styles.label}>
                                     Place of Birth{" "}
                                     <Text style={styles.required}>*</Text>
@@ -250,8 +217,8 @@ const Additonalinfo = ({ onNext, onPrevious, initialValues, closeModal }) => {
                             </View>
                         </View>
 
-                        <View style={styles.formRow}>
-                            <View style={styles.fieldContainer}>
+                        <View className="flex flex-row justify-between items-center w-full  mb-4">
+                            <View className="w-[48%]">
                                 <Text style={styles.label}>
                                     Is your Client a politically exposed person?{" "}
                                     <Text style={styles.required}>*</Text>
@@ -276,7 +243,7 @@ const Additonalinfo = ({ onNext, onPrevious, initialValues, closeModal }) => {
                                         </Text>
                                     )}
                             </View>
-                            <View style={styles.fieldContainer}>
+                            <View className="w-[48%]">
                                 <Text style={styles.label}>
                                     Client’s Occupation{" "}
                                     <Text style={styles.required}>*</Text>
@@ -288,7 +255,7 @@ const Additonalinfo = ({ onNext, onPrevious, initialValues, closeModal }) => {
                                     setValue={(value) =>
                                         setFieldValue("occupation", value)
                                     }
-                                    // containerStyle={styles.dropdown}
+                                    containerStyle={styles.dropdown}
                                     noIcon={true}
                                 />
                                 {touched.occupation && errors.occupation && (
@@ -298,7 +265,7 @@ const Additonalinfo = ({ onNext, onPrevious, initialValues, closeModal }) => {
                                 )}
                             </View>
                             {/* {values.isPoliticalExposed && (
-                            <View style={styles.fieldContainer}>
+                            <View className="w-[48%]">
                                 <Text style={styles.label}>
                                     Passport Number{" "}
                                     <Text style={styles.required}>*</Text>
@@ -322,8 +289,8 @@ const Additonalinfo = ({ onNext, onPrevious, initialValues, closeModal }) => {
                         </View>
 
                         {/* {values.isPoliticalExposed && (
-                        <View style={styles.formRow}>
-                            <View style={styles.fieldContainer}>
+                        <View className="flex flex-row justify-between items-center w-full  mb-4">
+                            <View className="w-[48%]">
                                 <Text style={styles.label}>
                                     Are you a taxpayer of any country, except
                                     India?{" "}
@@ -346,7 +313,7 @@ const Additonalinfo = ({ onNext, onPrevious, initialValues, closeModal }) => {
                                 )}
                             </View>
                             {values.isTaxpayer && (
-                                // <View style={styles.fieldContainer}>
+                                // <View className="w-[48%]">
                                 //     <Text style={styles.label}>
                                 //         Country{" "}
                                 //         <Text style={styles.required}>*</Text>
@@ -366,7 +333,7 @@ const Additonalinfo = ({ onNext, onPrevious, initialValues, closeModal }) => {
                                 //         </Text>
                                 //     )}
                                 // </View>
-                                <View style={styles.fieldContainer}>
+                                <View className="w-[48%]">
                                     <Text style={styles.label}>
                                         Country{" "}
                                         <Text style={styles.required}>*</Text>
@@ -390,15 +357,15 @@ const Additonalinfo = ({ onNext, onPrevious, initialValues, closeModal }) => {
                         {/* )} */}
                     </ScrollView>
 
-                    <View className="flex flex-row justify-center w-full ">
-                        {/* <View className="w-[48%]">
-                                    <CustomButton
-                                        onPress={onPrevious}
-                                        title="Save and Continue"
-                                        disabled={false}
-                                        buttonStyle={"outline"}
-                                    />
-                                </View> */}
+                    <View className="flex flex-row justify-between w-full ">
+                        <View className="w-[48%]">
+                            <CustomButton
+                                onPress={closeModal}
+                                title="Close"
+                                disabled={false}
+                                buttonStyle={"outline"}
+                            />
+                        </View>
                         <View className="w-[48%]">
                             <CustomButton
                                 onPress={handleSubmit}

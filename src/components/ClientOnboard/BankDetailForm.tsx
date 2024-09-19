@@ -26,7 +26,7 @@ import { CheckIcon, FormControl, Select, Stack } from "native-base";
 import CustomRadioButton from "../CustomForm/CustomRadioButton/CustomRadioButton";
 import UploadBankDocument from "./UploadBankDocument";
 import CustomButton from "../Buttons/CustomButton";
-const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
+const BankDetailForm = ({ onNext, onPrevious, initialValues, closeModal }) => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [modalFormData, setModalFormData] = useState({
         bank: "",
@@ -68,8 +68,6 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
         });
     };
     const [isLoading, setIsLoading] = useState(false);
-    const [radioOption, setRadioOption] = useState("");
-    const [bankVerificationFailed, setBankVerificationFailed] = useState(false);
 
     async function fetchBankOptions(query) {
         try {
@@ -304,14 +302,6 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
         setifscCode(null);
     };
 
-    const handleRadiooption = async (value) => {
-        if (value == "1") {
-            setBankVerificationFailed(false);
-        } else {
-            setRadioOption(value);
-        }
-    };
-
     const handleSubmit = async (values, actions) => {
         console.log(values);
         console.log(JSON.stringify(values));
@@ -328,20 +318,20 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
         console.log(data);
 
         try {
-            // const response: any = await RemoteApi.post(
-            //     "onboard/client/bank-details",
-            //     data
-            // );
+            const response: any = await RemoteApi.post(
+                "onboard/client/bank-details",
+                data
+            );
 
-            const response = {
-                code: 400,
-                message: "success",
-                data: {
-                    isNameMissMatch: true,
-                    token: "BankDetailseyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIxMCwiY3JlZGVudGlhbHNJZCI6MjAwLCJhY2NvdW50SWQiOjI3NywiYWRkcmVzc0lkIjo3MywiYmFua0FjY291bnRJZCI6MTM3LCJpYXQiOjE3MjU2MDcwNzcsImV4cCI6MTcyNTY5MzQ3N30.IOOF6DHp1CWXdE0ynDoxi6GY8cUil52GpGWWB8pFLSA",
-                },
-                errors: [],
-            };
+            // const response = {
+            //     code: 400,
+            //     message: "success",
+            //     data: {
+            //         isNameMissMatch: true,
+            //         token: "BankDetailseyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIxMCwiY3JlZGVudGlhbHNJZCI6MjAwLCJhY2NvdW50SWQiOjI3NywiYWRkcmVzc0lkIjo3MywiYmFua0FjY291bnRJZCI6MTM3LCJpYXQiOjE3MjU2MDcwNzcsImV4cCI6MTcyNTY5MzQ3N30.IOOF6DHp1CWXdE0ynDoxi6GY8cUil52GpGWWB8pFLSA",
+            //     },
+            //     errors: [],
+            // };
 
             console.log("response");
             console.log(response);
@@ -365,13 +355,6 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
                 // onNext(values);
             } else {
                 setIsVerifing(false);
-                // setBankAddress({
-                //     ...bankAddress,
-                //     UploadAccountNumber: values.accountNumber,
-                //     UploadIfsc: values.ifsc,
-                //     branchId: Number(bankAddress.branchId),
-                //     uploadToken: response.data.token,
-                // });
 
                 if (response.code == 425) {
                     actions.setFieldError("accountNumber", response.message);
@@ -403,18 +386,8 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
             }
         } catch (error) {
             setIsVerifing(false); // Stop loading
-            // setMessage("Bank Verification Failure!");
-            // setBankVerificationFailed(true); // Set failure state
         }
-        // }
     };
-
-    // if (isVerifing) {
-    //     <View style={styles.loadingContainer}>
-    //         <ActivityIndicator size="large" color="#0000ff" />
-    //         <Text style={styles.loadingText}>Verifying Bank Account...</Text>
-    //     </View>;
-    // }
 
     return (
         <Formik
@@ -429,9 +402,6 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
                     .length(11, "IFSC must be 11 characters"),
                 accountType: Yup.string().required("Account Type is required"),
             })}
-            // onSubmit={(values) => {
-            //     onNext(values);
-            // }}
             onSubmit={handleSubmit}
         >
             {({
@@ -443,361 +413,374 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
                 touched,
                 setFieldValue,
                 setFieldError,
-            }) => (
-                <>
-                    <ScrollView contentContainerStyle={styles.container}>
-                        {/* {!bankVerificationFailed ? ( */}
-                        <>
-                            <View style={styles.formRow}>
-                                <View style={styles.fieldContainer}>
-                                    <Text style={styles.label}>
-                                        Account Number*
-                                    </Text>
-                                    <TextInput
-                                        style={styles.input}
-                                        onChangeText={handleChange(
-                                            "accountNumber"
-                                        )}
-                                        onBlur={handleBlur("accountNumber")}
-                                        value={values.accountNumber}
-                                        keyboardType="numeric"
-                                    />
-                                    {touched.accountNumber &&
-                                        errors.accountNumber && (
-                                            <Text style={styles.error}>
-                                                {errors.accountNumber}
-                                            </Text>
-                                            // setFieldValue(va)
-                                        )}
-                                </View>
-                                <View style={styles.fieldContainer}>
-                                    <Text style={styles.label}>Bank IFSC*</Text>
-                                    <TextInput
-                                        style={styles.input}
-                                        onChangeText={(value) => {
-                                            const uppercasedValue =
-                                                value.toUpperCase();
-                                            handleChange("ifsc")(
-                                                uppercasedValue
-                                            );
-                                            if (uppercasedValue.length === 11) {
-                                                fetchBankDetails(
-                                                    uppercasedValue,
-                                                    setFieldError
-                                                );
-                                            } else {
-                                                setBankAddress({
-                                                    ...bankAddress,
-                                                    bankName: "",
-                                                    address: "",
-                                                    pincode: "",
-                                                });
-                                            }
-                                        }}
-                                        onBlur={handleBlur("ifsc")}
-                                        // value={
-                                        //     ifscCode !== "null" ? ifscCode : values.ifsc
-                                        // }
-                                        value={values.ifsc}
-                                    />
-                                    {touched.ifsc && errors.ifsc && (
-                                        <Text style={styles.error}>
-                                            {errors.ifsc}
+            }) =>
+                isLoading ? (
+                    <View className="h-[400px]  w-full flex flex-col justify-center items-center">
+                        <ActivityIndicator size={100} color="#0000ff" />
+                        <Text className="text-bold text-lg pt-8">
+                            Verifying Details
+                        </Text>
+                    </View>
+                ) : (
+                    <>
+                        <ScrollView contentContainerStyle={styles.container}>
+                            {/* {!bankVerificationFailed ? ( */}
+                            <>
+                                <View className="flex flex-row justify-between items-start w-full  mb-4">
+                                    <View className="w-[48%]">
+                                        <Text style={styles.label}>
+                                            Account Number*
                                         </Text>
-                                    )}
-                                    <TouchableOpacity
-                                        onPress={() => setIsModalVisible(true)}
-                                    >
-                                        <Text style={styles.link}>
-                                            Don't know IFSC?
-                                        </Text>
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
-
-                            <View style={styles.formRow}>
-                                <View style={styles.fieldContainer}>
-                                    <Text style={styles.label}>
-                                        Account Type*
-                                    </Text>
-                                    <DropdownComponent
-                                        label="Account Type"
-                                        data={accountTypeOptions}
-                                        value={values.accountType}
-                                        setValue={(value) =>
-                                            setFieldValue("accountType", value)
-                                        }
-                                        containerStyle={styles.dropdown}
-                                        noIcon={true}
-                                    />
-                                    {touched.accountType &&
-                                        errors.accountType && (
-                                            <Text style={styles.error}>
-                                                {errors.accountType}
-                                            </Text>
-                                        )}
-                                </View>
-                                <View style={styles.fieldContainer}>
-                                    {values.bankName && values.address && (
-                                        <View style={styles.bankDetails}>
-                                            <Text>
-                                                Bank name: {values.bankName}
-                                            </Text>
-                                            <Text>
-                                                Address: {values.address}
-                                            </Text>
-                                        </View>
-                                    )}
-                                    {bankAddress.bankName !== "" && (
-                                        <>
-                                            <View className="flex flex-row py-1">
-                                                <Text className="pr-2 color-gray-600">
-                                                    Bank Name:
-                                                </Text>
-                                                <Text className="">
-                                                    {bankAddress.bankName}
-                                                </Text>
-                                            </View>
-                                            <View className="flex flex-row py-4">
-                                                <Text className="pr-2 color-gray-600">
-                                                    Address:
-                                                </Text>
-                                                <Text className="">
-                                                    {bankAddress.address}
-                                                </Text>
-                                            </View>
-                                        </>
-                                    )}
-                                </View>
-                            </View>
-                        </>
-
-                        <Modal
-                            visible={isModalVisible}
-                            transparent
-                            onRequestClose={() => {
-                                setIsModalVisible(false);
-                                setModalFormData({
-                                    ...modalFormData,
-                                    bank: "",
-                                    state: "",
-                                    district: "",
-                                    branch: "",
-                                });
-                            }}
-                        >
-                            <View style={styles.modalContainer}>
-                                <View style={styles.modalContent}>
-                                    <TouchableOpacity
-                                        style={styles.closeButton}
-                                        onPress={() => {
-                                            setIsModalVisible(false);
-                                            setModalFormData({
-                                                bank: "",
-                                                state: "",
-                                                district: "",
-                                                branch: "",
-                                            });
-                                            setSelectedBank(null);
-                                            setifscCode(null);
-                                        }}
-                                    >
-                                        <Icon
-                                            name="close"
-                                            size={20}
-                                            color="#7C899C"
+                                        <TextInput
+                                            style={styles.input}
+                                            onChangeText={handleChange(
+                                                "accountNumber"
+                                            )}
+                                            onBlur={handleBlur("accountNumber")}
+                                            value={values.accountNumber}
+                                            keyboardType="numeric"
                                         />
-                                    </TouchableOpacity>
-                                    <Text style={styles.modalTitle}>
-                                        Find your IFSC
-                                    </Text>
+                                        {touched.accountNumber &&
+                                            errors.accountNumber && (
+                                                <Text style={styles.error}>
+                                                    {errors.accountNumber}
+                                                </Text>
+                                                // setFieldValue(va)
+                                            )}
+                                    </View>
 
-                                    <ScrollView className="w-full p-16">
-                                        <View className="px-5">
+                                    <View className="w-[48%]">
+                                        <View>
                                             <Text style={styles.label}>
-                                                Bank name*
+                                                Bank IFSC*
                                             </Text>
-                                        </View>
-                                        <SearchableDropdown
-                                            endpoint="bank"
-                                            onSelect={handleSelect}
-                                        />
-                                        {selectedBank && (
-                                            <View style={styles.fieldContainer}>
-                                                <Text style={styles.label}>
-                                                    State*
-                                                </Text>
-                                                <DropdownComponent
-                                                    label="State"
-                                                    data={stateOptions}
-                                                    value={modalFormData.state}
-                                                    setValue={(value) => {
-                                                        setModalFormData({
-                                                            ...modalFormData,
-                                                            state: value,
-                                                        });
-                                                        getDistrictList(value);
-                                                    }}
-                                                    searchOn={true}
-                                                    containerStyle={
-                                                        styles.dropdown
-                                                    }
-                                                    noIcon={true}
-                                                />
-                                            </View>
-                                        )}
-                                        {modalFormData.state && (
-                                            <View style={styles.fieldContainer}>
-                                                <Text style={styles.label}>
-                                                    District*
-                                                </Text>
-                                                <DropdownComponent
-                                                    label="District"
-                                                    data={districtOptions}
-                                                    value={
-                                                        modalFormData.district
-                                                    }
-                                                    setValue={(value) => {
-                                                        setModalFormData({
-                                                            ...modalFormData,
-                                                            district: value,
-                                                        });
-                                                        getBranchList(value);
-                                                    }}
-                                                    searchOn={true}
-                                                    containerStyle={
-                                                        styles.dropdown
-                                                    }
-                                                    noIcon={true}
-                                                />
-                                            </View>
-                                        )}
-                                        {modalFormData.district && (
-                                            <View style={styles.fieldContainer}>
-                                                <Text style={styles.label}>
-                                                    Branch*
-                                                </Text>
-                                                <DropdownComponent
-                                                    label="Branch"
-                                                    data={branchOptions}
-                                                    value={modalFormData.branch}
-                                                    setValue={(value) => {
-                                                        setModalFormData({
-                                                            ...modalFormData,
-                                                            branch: value,
-                                                        });
-                                                        setBankAddress({
-                                                            ...bankAddress,
-                                                            branchId: value,
-                                                        });
-                                                        getIfseCode(
-                                                            value,
+                                            <TextInput
+                                                style={styles.input}
+                                                onChangeText={(value) => {
+                                                    const uppercasedValue =
+                                                        value.toUpperCase();
+                                                    handleChange("ifsc")(
+                                                        uppercasedValue
+                                                    );
+                                                    if (
+                                                        uppercasedValue.length ===
+                                                        11
+                                                    ) {
+                                                        fetchBankDetails(
+                                                            uppercasedValue,
                                                             setFieldError
                                                         );
-                                                    }}
-                                                    searchOn={true}
-                                                    containerStyle={
-                                                        styles.dropdown
+                                                    } else {
+                                                        setBankAddress({
+                                                            ...bankAddress,
+                                                            bankName: "",
+                                                            address: "",
+                                                            pincode: "",
+                                                        });
                                                     }
-                                                    noIcon={true}
-                                                />
-                                            </View>
-                                        )}
-                                        {ifscCode !== "null" && (
-                                            <View className="flex flex-row py-4">
-                                                <Text className="pr-2 color-gray-600">
-                                                    IFSC Code:
+                                                }}
+                                                onBlur={handleBlur("ifsc")}
+                                                // value={
+                                                //     ifscCode !== "null" ? ifscCode : values.ifsc
+                                                // }
+                                                value={values.ifsc}
+                                            />
+                                            {touched.ifsc && errors.ifsc && (
+                                                <Text style={styles.error}>
+                                                    {errors.ifsc}
                                                 </Text>
-                                                <Text className="">
-                                                    {ifscCode}
-                                                </Text>
-                                            </View>
-                                        )}
-
-                                        <Pressable
-                                            style={[
-                                                styles.confirmButton,
-                                                ifscCode === null &&
-                                                    styles.confirmButtonDisabled,
-                                            ]}
-                                            onPress={() => {
-                                                handleModalConfirm(
-                                                    setFieldError
-                                                );
-                                                setFieldValue("ifsc", ifscCode);
-                                            }}
-                                            disabled={ifscCode === null}
-                                        >
-                                            <Text
-                                                style={[
-                                                    styles.confirmButtonText,
-                                                    ifscCode === null &&
-                                                        styles.confirmButtonTextDisabled,
-                                                ]}
+                                            )}
+                                            <TouchableOpacity
+                                                onPress={() =>
+                                                    setIsModalVisible(true)
+                                                }
                                             >
-                                                Confirm
-                                            </Text>
-                                        </Pressable>
-                                    </ScrollView>
+                                                <Text className="text-[#114EA8] text-xs">
+                                                    Don't know IFSC?
+                                                </Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                    </View>
                                 </View>
-                            </View>
-                        </Modal>
-                    </ScrollView>
-                    {!isVerifing ? (
-                        <>
-                            <View className="flex flex-row justify-center w-full ">
-                                {/* <View className="w-[48%]">
-                                    <CustomButton
-                                        onPress={handleSubmit}
-                                        title="Save and Continue"
-                                        disabled={false}
-                                        buttonStyle={"outline"}
-                                    />
-                                </View> */}
-                                <View className="w-[48%]">
-                                    <CustomButton
-                                        onPress={handleSubmit}
-                                        title="Save and Continue"
-                                        disabled={isVerifing === true}
-                                        buttonStyle={"full"}
-                                    />
+
+                                <View className="flex flex-row justify-between items-center w-full  mb-4">
+                                    <View className="w-[48%]">
+                                        <Text style={styles.label}>
+                                            Account Type*
+                                        </Text>
+                                        <DropdownComponent
+                                            label="Account Type"
+                                            data={accountTypeOptions}
+                                            value={values.accountType}
+                                            setValue={(value) =>
+                                                setFieldValue(
+                                                    "accountType",
+                                                    value
+                                                )
+                                            }
+                                            containerStyle={styles.dropdown}
+                                            noIcon={true}
+                                        />
+                                        {touched.accountType &&
+                                            errors.accountType && (
+                                                <Text style={styles.error}>
+                                                    {errors.accountType}
+                                                </Text>
+                                            )}
+                                    </View>
+                                    <View className="w-[48%]">
+                                        {values.bankName && values.address && (
+                                            <View style={styles.bankDetails}>
+                                                <Text>
+                                                    Bank name: {values.bankName}
+                                                </Text>
+                                                <Text>
+                                                    Address: {values.address}
+                                                </Text>
+                                            </View>
+                                        )}
+                                        {bankAddress.bankName !== "" && (
+                                            <>
+                                                <View className="flex flex-row py-1">
+                                                    <Text className="pr-2 color-gray-600">
+                                                        Bank Name:
+                                                    </Text>
+                                                    <Text className="">
+                                                        {bankAddress.bankName}
+                                                    </Text>
+                                                </View>
+                                                <View className="flex flex-row py-4">
+                                                    <Text className="pr-2 color-gray-600">
+                                                        Address:
+                                                    </Text>
+                                                    <Text className="">
+                                                        {bankAddress.address}
+                                                    </Text>
+                                                </View>
+                                            </>
+                                        )}
+                                    </View>
                                 </View>
+                            </>
+
+                            <Modal
+                                visible={isModalVisible}
+                                transparent
+                                onRequestClose={() => {
+                                    setIsModalVisible(false);
+                                    setModalFormData({
+                                        ...modalFormData,
+                                        bank: "",
+                                        state: "",
+                                        district: "",
+                                        branch: "",
+                                    });
+                                }}
+                            >
+                                <View style={styles.modalContainer}>
+                                    <View style={styles.modalContent}>
+                                        <TouchableOpacity
+                                            style={styles.closeButton}
+                                            onPress={() => {
+                                                setIsModalVisible(false);
+                                                setModalFormData({
+                                                    bank: "",
+                                                    state: "",
+                                                    district: "",
+                                                    branch: "",
+                                                });
+                                                setSelectedBank(null);
+                                                setifscCode(null);
+                                            }}
+                                        >
+                                            <Icon
+                                                name="close"
+                                                size={20}
+                                                color="#7C899C"
+                                            />
+                                        </TouchableOpacity>
+                                        <Text style={styles.modalTitle}>
+                                            Find your IFSC
+                                        </Text>
+
+                                        <ScrollView className="w-full p-16">
+                                            <View className="">
+                                                <Text style={styles.label}>
+                                                    Bank name*
+                                                </Text>
+                                            </View>
+
+                                            <SearchableDropdown
+                                                endpoint="bank"
+                                                onSelect={handleSelect}
+                                            />
+
+                                            {selectedBank && (
+                                                <View
+                                                    style={
+                                                        styles.fieldContainer
+                                                    }
+                                                >
+                                                    <Text style={styles.label}>
+                                                        State*
+                                                    </Text>
+                                                    <DropdownComponent
+                                                        label="State"
+                                                        data={stateOptions}
+                                                        value={
+                                                            modalFormData.state
+                                                        }
+                                                        setValue={(value) => {
+                                                            setModalFormData({
+                                                                ...modalFormData,
+                                                                state: value,
+                                                            });
+                                                            getDistrictList(
+                                                                value
+                                                            );
+                                                        }}
+                                                        searchOn={true}
+                                                        containerStyle={
+                                                            styles.dropdown
+                                                        }
+                                                        noIcon={true}
+                                                    />
+                                                </View>
+                                            )}
+                                            {modalFormData.state && (
+                                                <View
+                                                    style={
+                                                        styles.fieldContainer
+                                                    }
+                                                >
+                                                    <Text style={styles.label}>
+                                                        District*
+                                                    </Text>
+                                                    <DropdownComponent
+                                                        label="District"
+                                                        data={districtOptions}
+                                                        value={
+                                                            modalFormData.district
+                                                        }
+                                                        setValue={(value) => {
+                                                            setModalFormData({
+                                                                ...modalFormData,
+                                                                district: value,
+                                                            });
+                                                            getBranchList(
+                                                                value
+                                                            );
+                                                        }}
+                                                        searchOn={true}
+                                                        containerStyle={
+                                                            styles.dropdown
+                                                        }
+                                                        noIcon={true}
+                                                    />
+                                                </View>
+                                            )}
+                                            {modalFormData.district && (
+                                                <View
+                                                    style={
+                                                        styles.fieldContainer
+                                                    }
+                                                >
+                                                    <Text style={styles.label}>
+                                                        Branch*
+                                                    </Text>
+                                                    <DropdownComponent
+                                                        label="Branch"
+                                                        data={branchOptions}
+                                                        value={
+                                                            modalFormData.branch
+                                                        }
+                                                        setValue={(value) => {
+                                                            setModalFormData({
+                                                                ...modalFormData,
+                                                                branch: value,
+                                                            });
+                                                            setBankAddress({
+                                                                ...bankAddress,
+                                                                branchId: value,
+                                                            });
+                                                            getIfseCode(
+                                                                value,
+                                                                setFieldError
+                                                            );
+                                                        }}
+                                                        searchOn={true}
+                                                        containerStyle={
+                                                            styles.dropdown
+                                                        }
+                                                        noIcon={true}
+                                                    />
+                                                </View>
+                                            )}
+                                            {ifscCode !== "null" && (
+                                                <View className="flex flex-row py-4">
+                                                    <Text className="pr-2 color-gray-600">
+                                                        IFSC Code:
+                                                    </Text>
+                                                    <Text className="">
+                                                        {ifscCode}
+                                                    </Text>
+                                                </View>
+                                            )}
+
+                                            <Pressable
+                                                style={[
+                                                    styles.confirmButton,
+                                                    ifscCode === null &&
+                                                        styles.confirmButtonDisabled,
+                                                ]}
+                                                onPress={() => {
+                                                    handleModalConfirm(
+                                                        setFieldError
+                                                    );
+                                                    setFieldValue(
+                                                        "ifsc",
+                                                        ifscCode
+                                                    );
+                                                }}
+                                                disabled={ifscCode === null}
+                                            >
+                                                <Text
+                                                    style={[
+                                                        styles.confirmButtonText,
+                                                        ifscCode === null &&
+                                                            styles.confirmButtonTextDisabled,
+                                                    ]}
+                                                >
+                                                    Confirm
+                                                </Text>
+                                            </Pressable>
+                                        </ScrollView>
+                                    </View>
+                                </View>
+                            </Modal>
+                        </ScrollView>
+
+                        <View className="flex flex-row justify-between w-full ">
+                            <View className="w-[48%]">
+                                <CustomButton
+                                    onPress={closeModal}
+                                    title="Close"
+                                    disabled={false}
+                                    buttonStyle={"outline"}
+                                />
                             </View>
-                            <View className="flex flex-row justify-center gap-2">
-                                {/* <View className="w-3/12">
-                                <Pressable
-                                    style={({ pressed }) => [
-                                        styles.proceed,
-                                        {
-                                            borderColor: "#0066cc",
-                                            opacity: pressed ? 0.6 : 1,
-                                        },
-                                    ]}
-                                    onPress={() => handleSubmit()}
+                            <View className="w-[48%]">
+                                <CustomButton
+                                    onPress={handleSubmit}
+                                    title="Save and Continue"
                                     disabled={isVerifing === true}
-                                >
-                                    <Text
-                                        style={[
-                                            styles.buttonText,
-                                            { color: "#ffffff" },
-                                        ]}
-                                    >
-                                        {"Save and Continue"}
-                                    </Text>
-                                </Pressable>
-                            </View> */}
+                                    buttonStyle={"full"}
+                                />
                             </View>
-                        </>
-                    ) : (
-                        <View style={styles.loadingContainer}>
-                            <ActivityIndicator size="large" color="#0000ff" />
-                            <Text style={styles.loadingText}>
-                                Verifying Bank Account...
-                            </Text>
                         </View>
-                    )}
-                </>
-            )}
+                    </>
+                )
+            }
         </Formik>
     );
 };

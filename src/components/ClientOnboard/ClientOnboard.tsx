@@ -26,70 +26,34 @@ const ClientOnboard = () => {
     const [visible, setVisible] = useState(false);
     const [showDropdown, setShowDropdown] = useState(false);
 
-    // const [formData, setFormData] = useState({
-    //     fullName: "",
-    //     email: "",
-    //     mobileNumber: "",
-    //     isTaxpayer: false,
-    //     passportNumber: "",
-    //     dateOfBirth: "",
-    //     panNumber: "",
-    //     isPoliticalExposed: null,
-    //     placeOfBirth: "",
-    //     gender: null,
-    //     occupation: "",
-    //     accountNumber: "",
-    //     accountType: "",
-    //     ifsc: "",
-    //     incomeRange: "",
-    //     mismatchDob: false,
-    //     panVerified: true,
-    //     addressMismatch: true,
-    //     mismatchName: false,
-    //     isResidentIndian: null,
-    //     taxStatus: "Non-Resident Indian",
-    //     addressLine1: "",
-    //     addressLine2: "",
-    //     postalCode: "",
-    //     country: "",
-    //     nomineeDateOfBirth: "",
-    //     guardianDateOfBirth: "",
-    //     relationship: "",
-    //     nomineeName: "",
-    //     guardianName: "",
-    //     token: "",
-    //     branchId: "",
-    //     serverError: "",
-    // });
-
     const [formData, setFormData] = useState({
-        fullName: "Harsh Mundhra",
-        email: "harshmundhra001@gmail.com",
-        mobileNumber: "9473351515",
+        fullName: "",
+        email: "",
+        mobileNumber: "",
         isTaxpayer: false,
         passportNumber: "",
-        dateOfBirth: "2000-09-23",
-        panNumber: "GHMPM1801C",
+        dateOfBirth: "",
+        panNumber: "",
         isPoliticalExposed: null,
-        placeOfBirth: "Bangalore",
+        placeOfBirth: "",
         gender: null,
         occupation: "",
-        accountNumber: "3047884268",
+        accountNumber: "",
         accountType: "",
-        ifsc: "KkBK0008066",
+        ifsc: "",
         incomeRange: "",
         mismatchDob: false,
         panVerified: true,
         addressMismatch: true,
         mismatchName: false,
         isResidentIndian: null,
-        taxStatus: "Non-Resident Indian ",
-        addressLine1: "Bangalore",
-        addressLine2: "Bangalore",
-        postalCode: "751006",
+        taxStatus: "Non-Resident Indian",
+        addressLine1: "",
+        addressLine2: "",
+        postalCode: "",
         country: "",
-        nomineeDateOfBirth: "2024-04-30",
-        guardianDateOfBirth: "1997-04-30",
+        nomineeDateOfBirth: "",
+        guardianDateOfBirth: "",
         relationship: "",
         nomineeName: "",
         guardianName: "",
@@ -102,10 +66,49 @@ const ClientOnboard = () => {
         showUploadDocument: false,
         currentStep: 1,
         isKYCSuccessful: true,
-        modalTitle: "Add New Client",
-        modalSubTitle:
-            "Please fill all mandatory field to successfully add client.",
     });
+
+    // const [formData, setFormData] = useState({
+    //     fullName: "Harsh Mundhra",
+    //     email: "harshmundhra001@gmail.com",
+    //     mobileNumber: "9473351515",
+    //     isTaxpayer: false,
+    //     passportNumber: "",
+    //     dateOfBirth: "2000-09-23",
+    //     panNumber: "GHMPM1801C",
+    //     isPoliticalExposed: null,
+    //     placeOfBirth: "Bangalore",
+    //     gender: null,
+    //     occupation: "",
+    //     accountNumber: "3047884268",
+    //     accountType: "",
+    //     ifsc: "KkBK0008066",
+    //     incomeRange: "",
+    //     mismatchDob: false,
+    //     panVerified: true,
+    //     addressMismatch: true,
+    //     mismatchName: false,
+    //     isResidentIndian: null,
+    //     taxStatus: "Non-Resident Indian ",
+    //     addressLine1: "Bangalore",
+    //     addressLine2: "Bangalore",
+    //     postalCode: "751006",
+    //     country: "",
+    //     nomineeDateOfBirth: "2024-04-30",
+    //     guardianDateOfBirth: "1997-04-30",
+    //     relationship: "",
+    //     nomineeName: "",
+    //     guardianName: "",
+    //     token: "",
+    //     branchId: "",
+    //     serverError: "",
+    //     isAddressNeeded: false,
+    //     isBankVerificationFailed: false,
+    //     bankVerifyFailMessage: "",
+    //     showUploadDocument: false,
+    //     currentStep: 1,
+    //     isKYCSuccessful: true,
+    // });
     const [loading, setLoading] = useState(false);
 
     const handleNext = (values) => {
@@ -278,7 +281,7 @@ const ClientOnboard = () => {
                                                 <Pressable onPress={closeModal}>
                                                     <Icon
                                                         name="close"
-                                                        size={14}
+                                                        size={20}
                                                         color="#000"
                                                     />
                                                 </Pressable>
@@ -289,14 +292,16 @@ const ClientOnboard = () => {
                                                 to successfully add client.
                                             </Text>
                                         </View>
-                                        <StepProgressBar
-                                            step={formData.currentStep}
-                                            stepLabel={[
-                                                "Basic Details",
-                                                "Bank Details",
-                                                "Additional Info",
-                                            ]}
-                                        />
+                                        <View className="w-full py-4">
+                                            <StepProgressBar
+                                                step={formData.currentStep}
+                                                stepLabel={[
+                                                    "Basic Details",
+                                                    "Bank Details",
+                                                    "Additional Info",
+                                                ]}
+                                            />
+                                        </View>
                                     </>
                                 )}
 
@@ -315,12 +320,12 @@ const ClientOnboard = () => {
                                     {formData.currentStep === 2 &&
                                         !formData.isBankVerificationFailed && (
                                             <BankDetailForm
-                                                // onPrevious={handlePrevious}
                                                 onPrevious={() =>
                                                     handlePrevious
                                                 }
                                                 onNext={handleNext}
                                                 initialValues={formData}
+                                                closeModal={closeModal}
                                             />
                                         )}
                                     {formData.isAddressNeeded &&
@@ -407,10 +412,10 @@ const ClientOnboard = () => {
                                                 "Please verify to move forward"
                                             }
                                             generateOtpApi={
-                                                "/onboard/client/generate-"
+                                                "/onboard/client/generate-otp"
                                             }
                                             verifyOtpApi={
-                                                "/onboard/client/verify-"
+                                                "/onboard/client/verify-otp"
                                             }
                                             onClose
                                             onNext={handleNext}

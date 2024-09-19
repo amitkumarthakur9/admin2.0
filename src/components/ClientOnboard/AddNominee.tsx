@@ -6,6 +6,7 @@ import {
     StyleSheet,
     Pressable,
     ScrollView,
+    ActivityIndicator,
 } from "react-native";
 import { Formik } from "formik";
 import * as Yup from "yup";
@@ -95,14 +96,7 @@ const AddNominee = ({ onNext, onPrevious, initialValues, closeModal }) => {
     const handleSubmit = async (values) => {
         console.log(values);
         console.log(JSON.stringify(values));
-        // setIsVerifing(true); // Start loading before the API call
-        // const data = {
-        //     name: values.nomineeName,
-        //     guardianName: values.guardianName,
-        //     relationId: values.relationship,
-        //     dob: values.nomineeDateOfBirth,
-        //     guardianDateOfBirth: values.guardianDateOfBirth,
-        // };
+        setIsLoading(true);
 
         const data = {
             name: values.nomineeName,
@@ -118,23 +112,18 @@ const AddNominee = ({ onNext, onPrevious, initialValues, closeModal }) => {
 
         console.log(data);
 
-        // onNext(values);
-
-        // setIsVerifing(true);
-        // setIsModalVisible(true);
-
         try {
-            // const response: any = await RemoteApi.post(
-            //     "onboard/client/add-nominee",
-            //     data
-            // );
+            const response: any = await RemoteApi.post(
+                "onboard/client/add-nominee",
+                data
+            );
 
-            const response = {
-                code: 200,
-                data: {
-                    token: "nomieeToken",
-                },
-            };
+            // const response = {
+            //     code: 200,
+            //     data: {
+            //         token: "nomieeToken",
+            //     },
+            // };
 
             console.log("response");
             console.log(response);
@@ -150,25 +139,13 @@ const AddNominee = ({ onNext, onPrevious, initialValues, closeModal }) => {
             } else {
                 // setIsVerifing(false); // Stop loading
                 console.log("ElseError");
-                // getdocumentType();
-                // setShowDocumentUpload(true);
-                // setMessage(
-                //     "Verification Failed. Please upload supporting document for the verification."
-                // );
             }
-        } catch (error) {
-            // setIsVerifing(false); // Stop loading
-            // getdocumentType();
-            // setShowDocumentUpload(true);
-            // setMessage(
-            //     "Verification Failed. Please upload supporting document for the verification."
-            // );
-        }
+        } catch (error) {}
+        setIsLoading(false);
     };
 
     // Function to fetch dropdown options
     const getOptions = async (endpoint, setter) => {
-        setIsLoading(true);
         try {
             const response: DropdownResponse = await RemoteApi.get(
                 `${endpoint}`
@@ -189,14 +166,23 @@ const AddNominee = ({ onNext, onPrevious, initialValues, closeModal }) => {
         } catch (error) {
             console.error(`Failed to fetch ${endpoint} options`, error);
         } finally {
-            setIsLoading(false);
         }
     };
 
     useEffect(() => {
         getOptions("relationship/list", setRelationshipOptions);
-        // getOptions("countries", setCountryOptions);
     }, []);
+
+    if (isLoading) {
+        return (
+            <View className="h-[100px]  w-full flex flex-col justify-center items-center">
+                <ActivityIndicator size={50} color="#0000ff" />
+                <Text className="text-bold text-lg pt-8">
+                    Verifying Details
+                </Text>
+            </View>
+        );
+    }
 
     return (
         <Formik
@@ -221,7 +207,7 @@ const AddNominee = ({ onNext, onPrevious, initialValues, closeModal }) => {
                             </Text>
 
                             <Pressable onPress={closeModal}>
-                                <Icon name="close" size={14} color="#000" />
+                                <Icon name="close" size={20} color="#000" />
                             </Pressable>
                         </View>
 
@@ -231,8 +217,8 @@ const AddNominee = ({ onNext, onPrevious, initialValues, closeModal }) => {
                         </Text>
                     </View>
                     <ScrollView className="pt-4">
-                        <View style={styles.formRow}>
-                            <View style={styles.fieldContainer}>
+                        <View className="flex flex-row justify-between items-center w-full  mb-4">
+                            <View className="w-[100%]">
                                 <Text style={styles.label}>
                                     Name <Text style={styles.required}>*</Text>
                                 </Text>
@@ -249,8 +235,8 @@ const AddNominee = ({ onNext, onPrevious, initialValues, closeModal }) => {
                                 )}
                             </View>
                         </View>
-                        <View style={styles.formRow}>
-                            <View style={styles.fieldContainer}>
+                        <View className="flex flex-row justify-between items-center w-full  mb-4">
+                            <View className="w-[48%]">
                                 <Text style={styles.label}>
                                     Relationship{" "}
                                     <Text style={styles.required}>*</Text>
@@ -262,7 +248,7 @@ const AddNominee = ({ onNext, onPrevious, initialValues, closeModal }) => {
                                     setValue={(value) =>
                                         setFieldValue("relationship", value)
                                     }
-                                    // containerStyle={styles.dropdown}
+                                    containerStyle={styles.dropdown}
                                     noIcon={true}
                                 />
                                 {touched.relationship &&
@@ -272,7 +258,7 @@ const AddNominee = ({ onNext, onPrevious, initialValues, closeModal }) => {
                                         </Text>
                                     )}
                             </View>
-                            <View style={styles.fieldContainer}>
+                            <View className="w-[48%]">
                                 <Text style={styles.label}>
                                     Date of Birth{" "}
                                     <Text style={styles.required}>*</Text>
@@ -297,8 +283,8 @@ const AddNominee = ({ onNext, onPrevious, initialValues, closeModal }) => {
                         {/* Conditional rendering for Guardian's fields */}
                         {new Date(values.nomineeDateOfBirth) >
                             eighteenYearsAgo && (
-                            <View style={styles.formRow}>
-                                <View style={styles.fieldContainer}>
+                            <View className="flex flex-row justify-between items-center w-full  mb-4">
+                                <View className="w-[48%]">
                                     <Text style={styles.label}>
                                         Guardian’s Name{" "}
                                         <Text style={styles.required}>*</Text>
@@ -318,7 +304,7 @@ const AddNominee = ({ onNext, onPrevious, initialValues, closeModal }) => {
                                             </Text>
                                         )}
                                 </View>
-                                <View style={styles.fieldContainer}>
+                                <View className="w-[48%]">
                                     <Text style={styles.label}>
                                         Guardian’s Date of Birth{" "}
                                         <Text style={styles.required}>*</Text>
@@ -341,36 +327,25 @@ const AddNominee = ({ onNext, onPrevious, initialValues, closeModal }) => {
                                 </View>
                             </View>
                         )}
-                        <View className="flex flex-row justify-center w-full ">
-                            {/* <View className="w-[48%]">
-                                    <CustomButton
-                                        onPress={handleSubmit}
-                                        title="Save and Continue"
-                                        disabled={false}
-                                        buttonStyle={"outline"}
-                                    />
-                                </View> */}
-                            <View className="w-[48%]">
-                                <CustomButton
-                                    onPress={() => handleSubmit()}
-                                    title="Save Nominee"
-                                    // disabled={isVerifing === true}
-                                    buttonStyle={"full"}
-                                />
-                            </View>
-                        </View>
-                        {/* <View style={styles.buttonContainer}>
-                            
-                            <Pressable
-                                style={styles.saveButton}
-                                onPress={() => handleSubmit()}
-                            >
-                                <Text style={styles.saveButtonText}>
-                                    Save Nominee
-                                </Text>
-                            </Pressable>
-                        </View> */}
                     </ScrollView>
+                    <View className="flex flex-row justify-between w-full ">
+                        <View className="w-[48%]">
+                            <CustomButton
+                                onPress={closeModal}
+                                title="Close"
+                                disabled={false}
+                                buttonStyle={"outline"}
+                            />
+                        </View>
+                        <View className="w-[48%]">
+                            <CustomButton
+                                onPress={() => handleSubmit()}
+                                title="Save Nominee"
+                                // disabled={isVerifing === true}
+                                buttonStyle={"full"}
+                            />
+                        </View>
+                    </View>
                 </>
             )}
         </Formik>
@@ -378,24 +353,6 @@ const AddNominee = ({ onNext, onPrevious, initialValues, closeModal }) => {
 };
 
 const styles = StyleSheet.create({
-    // container: {
-    //     flexGrow: 1,
-    //     width:"100%"
-    //     // padding: 20,
-    //     // backgroundColor: "#ffffff",
-    // },
-    // content: {
-    //     width: "100%",
-    //     backgroundColor: "white",
-    //     borderRadius: 10,
-    //     padding: 20,
-    //     // position: "relative",
-    //     // elevation: 3, // Add shadow on Android
-    //     // shadowColor: "#000", // Add shadow on iOS
-    //     // shadowOffset: { width: 0, height: 2 },
-    //     // shadowOpacity: 0.25,
-    //     // shadowRadius: 3.84,
-    // },
     closeButton: {
         position: "absolute",
         right: 15,
@@ -504,6 +461,12 @@ const styles = StyleSheet.create({
         paddingBottom: 10,
         // paddingLeft: 20,
         // paddingRight: 20,
+    },
+    dropdown: {
+        borderWidth: 1,
+        borderColor: "#ccc",
+        borderRadius: 5,
+        backgroundColor: "#fff",
     },
 });
 

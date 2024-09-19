@@ -100,13 +100,12 @@ const styles = StyleSheet.create({
     dropdown: {
         height: 39,
         borderColor: "gray",
-        borderWidth: 0.5,
+        // borderWidth: 0.5,
         borderRadius: 3,
         paddingLeft: 16,
         paddingRight: 12,
         fontSize: 12,
-       
-        // zIndex: -1,
+        zIndex: -1,
     },
     icon: {
         marginRight: 5,

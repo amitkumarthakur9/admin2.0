@@ -56,68 +56,6 @@ export default function IFADetail() {
     const [isLoading, setIsLoading] = useState(true);
     const { height, width } = useWindowDimensions();
 
-    const dummyData = {
-        id: "1",
-        name: "EESHAN SHUKLAA",
-        panNumber: "MALPS3268K",
-        arn: "ARNS3268K",
-        euin: "EUINS3268K",
-        activeAccountCount: 20,
-        activeSipCount: 37,
-        aum: {
-            total: 3968.7522999999997,
-            breakDown: [
-                {
-                    category: "Debt",
-                    currentValue: 2154.6,
-                },
-                {
-                    category: "Equity",
-                    currentValue: 1814.1522999999997,
-                },
-            ],
-        },
-        clientCount: 337,
-        transaction: {
-            purchase: 5278,
-            redemption: 0,
-            totalSipTransactions: 1,
-            totalSipTransactionsFailed: 34,
-        },
-        order: {
-            lumpsum: {
-                total: 14600,
-            },
-            sip: {
-                monthlySipAmount: 278098,
-                sipCount: 37,
-                breakDown: [
-                    {
-                        category: "Debt",
-                        count: 4,
-                    },
-                    {
-                        category: "Equity",
-                        count: 33,
-                    },
-                    {
-                        category: "Hybrid",
-                        count: 0,
-                    },
-                    {
-                        category: "Other",
-                        count: 0,
-                    },
-                    {
-                        category: "Solution Oriented",
-                        count: 0,
-                    },
-                ],
-                newSip: 34,
-            },
-        },
-    };
-
     useEffect(() => {
         setIsLoading(true);
         async function getOrderDetails() {
@@ -128,7 +66,7 @@ export default function IFADetail() {
                 setData(response.data);
                 setIsLoading(false);
             } else {
-                setData(dummyData);
+                // setData(dummyData);
                 setIsLoading(false);
             }
         }
@@ -195,8 +133,7 @@ export default function IFADetail() {
                                             selectable
                                             className="text-lg font-bold text-start"
                                         >
-                                            IFA Name:{" "}
-                                            {data?.name || "EESHAN SHUKLAA"}
+                                            IFA Name: {data?.name || "NA"}
                                         </Text>
                                     </View>
                                     <View className="flex flex-row justify-between items-start w-full">
@@ -212,7 +149,7 @@ export default function IFADetail() {
                                                     selectable
                                                     className="font-medium text-start text-black"
                                                 >
-                                                    {data?.arn || "ARN23456"}
+                                                    {data?.arn || "NA"}
                                                 </Text>
                                             </View>
                                             <View className="flex flex-row items-center">
@@ -226,7 +163,7 @@ export default function IFADetail() {
                                                     selectable
                                                     className="font-medium text-start text-black"
                                                 >
-                                                    {data?.euin || "EUIN23456"}
+                                                    {data?.euin || "NA"}
                                                 </Text>
                                             </View>
                                             <View className="flex flex-row items-center">
@@ -240,8 +177,7 @@ export default function IFADetail() {
                                                     selectable
                                                     className="font-medium text-start text-black"
                                                 >
-                                                    {data?.panNumber ||
-                                                        "PAN23456"}
+                                                    {data?.panNumber || "NA"}
                                                 </Text>
                                             </View>
                                         </View>
@@ -260,7 +196,6 @@ export default function IFADetail() {
                                                 "flex flex-row items-center justify-start w-8/12"
                                             }
                                         >
-                                            
                                             <View
                                                 className={
                                                     "flex flex-col justify-end items-start"
@@ -269,11 +204,7 @@ export default function IFADetail() {
                                                 <Text
                                                     selectable
                                                     className="text-black font-semibold break-all text-sm flex-wrap"
-                                                >
-
-                                                </Text>
-
-                                                
+                                                ></Text>
                                             </View>
                                         </View>
                                     </View>
@@ -283,51 +214,86 @@ export default function IFADetail() {
                                             <DataValue
                                                 key="purchase"
                                                 title="Purchase"
-                                                value={data?.transaction?.purchase ? RupeeSymbol + data?.transaction?.purchase : "5278"}
+                                                value={
+                                                    data?.transaction?.purchase
+                                                        ? RupeeSymbol +
+                                                          data?.transaction
+                                                              ?.purchase
+                                                        : "NA"
+                                                }
                                             />
                                             <DataValue
                                                 key="redemption"
                                                 title="Redemption"
-                                                value={data?.transaction?.redemption ? RupeeSymbol + data?.transaction?.redemption : "0"}
+                                                value={
+                                                    data?.transaction
+                                                        ?.redemption
+                                                        ? RupeeSymbol +
+                                                          data?.transaction
+                                                              ?.redemption
+                                                        : "NA"
+                                                }
                                             />
-                                             <DataValue
+                                            <DataValue
                                                 key="totalLumpsum"
                                                 title="Total Lumpsum"
-                                                value={data?.order?.lumpsum?.total ? RupeeSymbol + data?.order?.lumpsum?.total : "14600"}
+                                                value={
+                                                    data?.order?.lumpsum?.total
+                                                        ? RupeeSymbol +
+                                                          data?.order?.lumpsum
+                                                              ?.total
+                                                        : "NA"
+                                                }
                                             />
                                         </View>
                                         <View className="w-4/12 flex-flex-col gap-4 px-2">
                                             <DataValue
                                                 key="totalSipTransactions"
                                                 title="Total Sip Transactions"
-                                                value={data?.transaction?.totalSipTransactions || "1"}
+                                                value={
+                                                    data?.transaction
+                                                        ?.totalSipTransactions ||
+                                                    "NA"
+                                                }
                                             />
                                             <DataValue
                                                 key="totalSipTransactionsFailed"
                                                 title="Total Sip Transactions Failed"
-                                                value={data?.transaction?.totalSipTransactionsFailed || "34"}
+                                                value={
+                                                    data?.transaction
+                                                        ?.totalSipTransactionsFailed ||
+                                                    "NA"
+                                                }
                                             />
-                                          
                                         </View>
                                         <View className="w-4/12 flex-flex-col gap-4 px-2">
-                                           
                                             <DataValue
                                                 key="monthlySipAmount"
                                                 title="Monthly Sip Amount"
-                                                value={data?.order?.sip?.monthlySipAmount ? RupeeSymbol + data?.order?.sip?.monthlySipAmount : "278098"}
-
+                                                value={
+                                                    data?.order?.sip
+                                                        ?.monthlySipAmount
+                                                        ? RupeeSymbol +
+                                                          data?.order?.sip
+                                                              ?.monthlySipAmount
+                                                        : "NA"
+                                                }
                                             />
-                                                                                        <DataValue
+                                            <DataValue
                                                 key="sipCount"
                                                 title="SIP Count"
-                                                value={data?.order?.sip?.sipCount ||  "37"}
-
+                                                value={
+                                                    data?.order?.sip
+                                                        ?.sipCount || "37"
+                                                }
                                             />
                                             <DataValue
                                                 key="newSip"
                                                 title="New SIP"
-                                                value={data?.order?.sip?.newSip ||  "34"}
-
+                                                value={
+                                                    data?.order?.sip?.newSip ||
+                                                    "NA"
+                                                }
                                             />
                                         </View>
                                     </View>
@@ -434,8 +400,6 @@ const SIPBreakDown = (data) => {
             },
         ];
     });
-
-    
 
     return (
         <View className="flex-1 bg-white rounded shadow h-full overflow-auto p-2">

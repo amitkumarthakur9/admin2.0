@@ -86,15 +86,15 @@ const ClientVerify = ({
         // Clear previous API error before submitting
         if (submitText == "Verify") {
             try {
-                // const response: any = await RemoteApi.post(verifyOtpApi, data);
+                const response: any = await RemoteApi.post(verifyOtpApi, data);
 
-                const response = {
-                    code: 200,
-                    message: "Incorrect OTP",
-                    data: {
-                        token: "otpnonieetoken",
-                    }, // Example API error message
-                };
+                // const response = {
+                //     code: 200,
+                //     message: "Incorrect OTP",
+                //     data: {
+                //         token: "otpnonieetoken",
+                //     }, // Example API error message
+                // };
 
                 console.log("response");
                 console.log(response);
@@ -174,15 +174,15 @@ const ClientVerify = ({
             token: initialValues.token,
         };
         try {
-            // const response: any = await RemoteApi.post(generateOtpApi, data);
+            const response: any = await RemoteApi.post(generateOtpApi, data);
 
-            const response = {
-                code: 200,
-                message: "Incorrect OTP",
-                data: {
-                    token: "otpnonieetoken",
-                }, // Example API error message
-            };
+            // const response = {
+            //     code: 200,
+            //     message: "Incorrect OTP",
+            //     data: {
+            //         token: "otpnonieetoken",
+            //     }, // Example API error message
+            // };
 
             console.log("response");
             console.log(response);
@@ -248,7 +248,7 @@ const ClientVerify = ({
                     <Text className="text-[18px] font-bold">{title}</Text>
 
                     <Pressable onPress={closeModal}>
-                        <Icon name="close" size={14} color="#000" />
+                        <Icon name="close" size={20} color="#000" />
                     </Pressable>
                 </View>
 
@@ -267,8 +267,13 @@ const ClientVerify = ({
                                 <Text style={styles.enterOtp}>Enter OTP</Text>
                                 <Text style={styles.infoText}>
                                     A 6 digit code has been sent to{" "}
-                                    {initialValues.mobileNumber} &
-                                    {initialValues.email}
+                                    <Text className="text-semibold">
+                                        {initialValues.mobileNumber}
+                                    </Text>{" "}
+                                    &{" "}
+                                    <Text className="text-semibold">
+                                        {initialValues.email}
+                                    </Text>
                                 </Text>
                                 <View style={styles.otpContainer}>
                                     {otpValues.map((value, index) => (
@@ -307,11 +312,13 @@ const ClientVerify = ({
                                     onPress={handleResendOtp}
                                     disabled={!resendEnabled || resendTimer > 0}
                                 >
-                                    <Text style={styles.resendText}>
+                                    <Text>
                                         Resend OTP
-                                        {resendTimer > 0
-                                            ? ` in ${resendTimer}s`
-                                            : ""}
+                                        <Text style={styles.resendText}>
+                                            {resendTimer > 0
+                                                ? ` in ${resendTimer}s`
+                                                : ""}
+                                        </Text>
                                     </Text>
                                 </Pressable>
 
@@ -410,6 +417,7 @@ const styles = StyleSheet.create({
     },
     resendText: {
         color: "#0066cc",
+        fontSize: 14,
     },
     verifyButton: {
         padding: 15,
