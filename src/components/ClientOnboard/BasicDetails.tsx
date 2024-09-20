@@ -117,6 +117,7 @@ const BasicDetails = ({
                 const valuesWithToken = {
                     ...values,
                     token: response.data.token,
+                    currentStep: 2,
                 };
                 onNext(valuesWithToken);
             } else if (response.code === 200) {

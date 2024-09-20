@@ -89,10 +89,11 @@ const Additonalinfo = ({ onNext, onPrevious, initialValues, closeModal }) => {
     }, []);
 
     const handleSubmit = async (values) => {
+        setIsLoading(true);
         const data = {
             incomeSlabId: Number(values.incomeRange),
             placeOfBirth: values.placeOfBirth,
-            isPoliticalExposed: values.isPoliticalExposed,
+            politicalExposureId: values.isPoliticalExposed,
             token: initialValues.token,
             occupationId: Number(values.occupation),
             // isTaxpayer: values.isTaxpayer,
@@ -138,12 +139,21 @@ const Additonalinfo = ({ onNext, onPrevious, initialValues, closeModal }) => {
                 //     onNext(valuesWithToken);
 
                 // }
-                setIsSubmitted(true);
+                // setIsSubmitted(true);
 
                 // onSubmitSuccess(true);
             } else {
+                // remove this code just for testing
+//                 const valuesWithToken = {
+//                     ...values,
+//                     // token: response.data.token,
+//                     currentStep: 4,
+//                     isKYCSuccessful: true,
+//                 };
+//                 onNext(valuesWithToken);
             }
         } catch (error) {}
+        setIsLoading(false);
     };
 
     if (isLoading) {

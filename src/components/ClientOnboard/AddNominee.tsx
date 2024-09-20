@@ -98,17 +98,29 @@ const AddNominee = ({ onNext, onPrevious, initialValues, closeModal }) => {
         console.log(JSON.stringify(values));
         setIsLoading(true);
 
-        const data = {
-            name: values.nomineeName,
-            dob: values.nomineeDateOfBirth,
-            relationId: 2,
-            guardian: {
-                name: values.guardianName,
-                dob: values.guardianDateOfBirth,
-                relationId: values.relationship,
-            },
-            token: values.token,
-        };
+        let data = {};
+
+        if (values.guardianName) {
+            data = {
+                name: values.nomineeName,
+                dob: values.nomineeDateOfBirth,
+                relationId: Number(values.relationship),
+                guardian: {
+                    name: values.guardianName,
+                    dob: values.guardianDateOfBirth,
+                    relationId: Number(values.relationship),
+                },
+                token: values.token,
+            };
+        } else {
+            data = {
+                name: values.nomineeName,
+                dob: values.nomineeDateOfBirth,
+                relationId: Number(values.relationship),
+
+                token: values.token,
+            };
+        }
 
         console.log(data);
 

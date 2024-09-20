@@ -99,14 +99,21 @@ const UploadBankDocument = ({
             //     },
             // };
 
-            if (response?.message == "Success") {
+            if (response?.code == 200) {
                 const valuesWithToken = {
                     ...values,
                     token: response.data.token,
                     currentStep: 3,
                 };
                 onNext(valuesWithToken);
-            } else {
+            } else if(response?.message == "Document already uploaded."){
+                const valuesWithToken = {
+                    ...values,
+                    // token: response.data.token,
+                    currentStep: 3,
+                };
+                onNext(valuesWithToken);
+            }else{
                 actions.setFieldError("pickedDocument", response.message);
             }
         } catch (error) {
