@@ -303,7 +303,7 @@ const ClientsDataTable = () => {
                                                 "Last Investment",
                                                 "External Fund Update Date",
                                             ]}
-                                            cellSize={[3, 1, 1, 1, 1, 1, 1, 2]}
+                                            cellSize={[3, 1, 1, 1, 1, 1, 2, 2]}
                                             rows={transformedData}
                                         />
                                     ) : roleId > 2 ? (

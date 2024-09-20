@@ -11,7 +11,7 @@ interface DropdownItem {
 const NewDropdownComponent = ({
     label = "",
     data = [],
-    containerStyle,
+    containerStyle = {},
     noIcon,
     value,
     setValue,
@@ -41,7 +41,7 @@ const NewDropdownComponent = ({
 
     return (
         <View
-            style={{ ...styles.container, ...containerStyle }}
+        style={[styles.container,  containerStyle]} // merge default and custom styles
             className=""
         >
             {renderLabel()}
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     dropdown: {
         height: 39,
         borderColor: "gray",
-        // borderWidth: 0.5,
+        borderWidth: 0.5,
         borderRadius: 3,
         paddingLeft: 16,
         paddingRight: 12,

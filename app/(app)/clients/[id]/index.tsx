@@ -2034,7 +2034,7 @@ const RedeemModalCard = ({
     const toast = useToast();
 
     useEffect(() => {
-        setValue("0");
+        setValue("");
         setRedeemAll(false);
     }, [methodSelect]);
 
@@ -3099,7 +3099,7 @@ const SwitchModalAction = ({
     const [targetMutualfund, setTargetMutualfund] =
         useState<MutualFundSearchResult | null>(null);
 
-    const [switchValue, setSwitchValue] = useState("0");
+    const [switchValue, setSwitchValue] = useState("");
 
     const [allUnits, setAllUnits] = useState(false);
 
@@ -3207,6 +3207,14 @@ const SwitchModalAction = ({
                     placement: "top",
                     render: () => <ErrorToaster message={res.message} />,
                 });
+            } else if (res.error) {
+                hideDialog();
+                toast.show({
+                    placement: "top",
+                    render: () => {
+                        return <ErrorToaster message={res.error.message} />;
+                    },
+                });
             } else {
                 // success
                 hideDialog();
@@ -3233,7 +3241,9 @@ const SwitchModalAction = ({
     });
 
     useEffect(() => {
-        mutate();
+        if (query) {
+            mutate();
+        }
         // }, [query, selectedFolio]);
     }, [query]);
 
@@ -3273,7 +3283,7 @@ const SwitchModalAction = ({
                         <View className="w-full flex flex-col">
                             <View>
                                 <Text className="w-full flex flex-row items-start justify-start text-xs text-gray-400 mb-2">
-                                    Units{" "}
+                                    Minimum 1 Unit required{" "}
                                     {!!selectedFolio &&
                                         `(Units: ${folio.redeemableUnits.toString()} - Amount: ${folio.redeemableAmount.toString()})`}
                                 </Text>

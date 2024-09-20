@@ -390,7 +390,7 @@ const FolioWiseDataTable = () => {
                                             // "",
                                         ]}
                                         cellSize={[
-                                            2, 1, 1, 1, 2, 1, 1, 1, 1, 1,
+                                            2, 2, 1, 1, 1, 1, 1, 1, 1, 1,
                                         ]}
                                         rows={transformedData}
                                     />
@@ -408,7 +408,7 @@ const FolioWiseDataTable = () => {
                                             "Returns",
                                             // "",
                                         ]}
-                                        cellSize={[2, 1, 1, 2, 1, 1, 1, 1, 1]}
+                                        cellSize={[2, 2, 1, 2, 1, 1, 1, 1, 1]}
                                         rows={transformedData}
                                     />
                                 ) : (

@@ -230,7 +230,7 @@ const SchemeWiseDataTable = () => {
                                 "Current Value",
                                 // "",
                             ]}
-                            cellSize={[2, 2, 2, 2, 2, 2,]}
+                            cellSize={[3, 1, 1, 1, 2, 2,]}
                             rows={transformedData}
                         />
                     </ScrollView>
