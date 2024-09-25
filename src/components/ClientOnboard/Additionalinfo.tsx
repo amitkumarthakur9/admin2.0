@@ -16,6 +16,7 @@ import CustomRadioButton from "../CustomForm/CustomRadioButton/CustomRadioButton
 import RemoteApi from "src/services/RemoteApi";
 import Success from "./Success";
 import CustomButton from "../Buttons/CustomButton";
+import { showToast } from "../Toaster/Toaster";
 
 const validationSchema = Yup.object().shape({
     incomeRange: Yup.number().required("Income range is required"),
@@ -143,6 +144,7 @@ const Additonalinfo = ({ onNext, onPrevious, initialValues, closeModal }) => {
 
                 // onSubmitSuccess(true);
             } else {
+                showToast(response?.message || "Something wrong");
                 // remove this code just for testing
 //                 const valuesWithToken = {
 //                     ...values,

@@ -336,11 +336,6 @@ const FilterForm = ({
     };
 
     useEffect(() => {
-        // const hasValue = filterValues.some((filter) => filter.value);
-        // console.log("hasValue" + hasValue)
-        console.log("hasValue" + JSON.stringify(filterValues));
-        console.log("hasValue" + JSON.stringify(filterValues[0]?.value));
-
         const hasValue = filterValues.some((filter) => {
             if (filter.key === "isActive") {
                 // Convert isActive value to string and check if it exists
@@ -351,12 +346,19 @@ const FilterForm = ({
                 );
             } else {
                 // For all other filters, keep the same logic
-                return filter.value;
+                // return filter.value && filter?.value?.length > 0;
+                console.log("filter.value");
+                console.log(filter.value);
+                return (
+                    filter.value !== undefined &&
+                    filter.value.toString().trim().length > 0
+                );
             }
         });
 
         const hasError = Object.values(errorState).some((error) => error); // Check if any error exists
         console.log("hasError" + hasError);
+        console.log("hasValue" + hasValue);
         setApplyEnabled(hasValue && !hasError); // Only enable if there are no errors and at least one value is filled
     }, [filterValues, errorState]);
 

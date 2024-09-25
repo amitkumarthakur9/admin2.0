@@ -14,6 +14,7 @@ import * as Yup from "yup";
 import RemoteApi from "src/services/RemoteApi";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import CustomButton from "../Buttons/CustomButton";
+import { showToast } from "../Toaster/Toaster";
 
 const validationSchema = Yup.object().shape({
     // panNumber: Yup.string()
@@ -98,6 +99,7 @@ const AddressForm = ({
                 console.log("mismatch");
                 actions.setFieldError("postalCode", response.data.message);
             } else {
+                showToast(response?.message || "Something wrong");
                 actions.setFieldError("postalCode", response.data.message);
             }
         } catch (error) {

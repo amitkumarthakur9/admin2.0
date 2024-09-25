@@ -76,6 +76,8 @@ const MainComponent = () => {
         areDocumentsUploaded: false,
         isEsigned: false,
         isBankVerified: null,
+        districtId: null,
+        pincodeId: null,
     });
     const [isResubmit, setIsResubmit] = useState(false);
 
@@ -87,20 +89,7 @@ const MainComponent = () => {
 
     const handleNext = (values) => {
         setFormData({ ...formData, ...values });
-        // console.log(formData.isBankVerified);
-        // console.log(values.isBankVerified);
-        // if (
-        //     formData.isBankVerified !== null ||
-        //     values.isBankVerified !== undefined
-        // ) {
-        //     if (values.isBankVerified === true) {
-        //         setStep(step + 1); // Proceed to next step
-        //     } else {
-        //         setStep(step + 2); // Skip one step
-        //     }
-        // } else {
-        //     setStep(step + 1); // Default behavior
-        // }
+
         setStep(step + 1);
 
         console.log(step);
@@ -147,7 +136,7 @@ const MainComponent = () => {
             //     message: "Success",
             //     data: {
             //         name: "Saff",
-            //         email: "saff",
+            //         email: "saff@gmai.com",
             //         mobileNumber: "876565",
             //         maritalStatus: {
             //             id: 2,
@@ -191,10 +180,10 @@ const MainComponent = () => {
             //         ],
             //         address: [
             //             {
-            //                 line1: "Bangalore",
-            //                 line2: "Bangalore",
+            //                 line1: "BENGALURU",
+            //                 line2: "BENGALURU",
             //                 line3: null,
-            //                 pincode: "560025",
+            //                 pincode: "560062",
             //                 district: {
             //                     id: "224",
             //                     name: "BENGALURU",
@@ -266,7 +255,8 @@ const MainComponent = () => {
                     city:
                         userData?.address?.[0]?.district?.name ||
                         prevState.city,
-                    state: userData?.address?.[0]?.state?.id || prevState.state,
+                    state:
+                        userData?.address?.[0]?.state?.name || prevState.state,
                     accountNumber:
                         userData?.bankAccount?.[0]?.accountNumber ||
                         prevState.accountNumber,
@@ -280,7 +270,7 @@ const MainComponent = () => {
                         userData?.bankAccount?.[0]?.bank?.name ||
                         prevState.bankName,
                     district:
-                        userData?.address?.[0]?.district?.id ||
+                        userData?.address?.[0]?.district?.name ||
                         prevState.district,
                     dsaCode: userData?.dsaCode || prevState.dsaCode,
                     remark: userData?.remark?.remark || prevState.remark,
@@ -501,6 +491,7 @@ const MainComponent = () => {
                             onNext={handleNext}
                             onPrevious={handlePrevious}
                             initialValues={formData}
+                            setFormData={setFormData}
                         />
                     </View>
                 ),
@@ -711,12 +702,6 @@ const MainComponent = () => {
         <View style={styles.container}>
             <View className="flex flex-col p-4 gap-4">
                 <View className="flex flex-row items-center">
-                    {/* <Pressable
-                        className="mr-3"
-                        onPress={() => router.push("/dashboard")}
-                    >
-                        <Icon name="angle-left" size={18} color={"black"} />
-                    </Pressable> */}
                     <Text
                         selectable
                         className="text-base flex flex-row text-center font-bold"
@@ -759,188 +744,17 @@ const MainComponent = () => {
                     )}
 
                     <StepProgressBar step={step} stepLabel={stepLabel} />
-                    {/* <View style={styles.steps}>
-                        {[
-                            "Personal Details",
-                            "Address",
-                            "Professional Details",
-                            "Bank Details",
-                            "Sign Document",
-                            "Upload Documents",
-                        ].map((label, index) => (
-                            <React.Fragment key={index}>
-                                <View className="">
-                                    <View className="flex flex-row w-full justify-center items-center">
-                                        <View className="">
-                                            {index == 0 && (
-                                                <View
-                                                    style={[styles.firstLine]}
-                                                ></View>
-                                            )}
-                                            {index < 6 && index > 0 && (
-                                                <View
-                                                    style={[
-                                                        styles.line,
-                                                        step >= index + 1 &&
-                                                            styles.lineActive,
-                                                    ]}
-                                                ></View>
-                                            )}
-                                        </View>
-                                        <View
-                                            style={[
-                                                styles.step,
-                                                step >= index + 1 &&
-                                                    styles.stepActive,
-                                                step > index + 1 &&
-                                                    styles.stepCompleted,
-                                            ]}
-                                        >
-                                            {step > index + 1 ? (
-                                                <FontAwesome
-                                                    name="check"
-                                                    size={18}
-                                                    color="#fff"
-                                                />
-                                            ) : (
-                                                <Text
-                                                    style={[
-                                                        styles.stepNumber,
-                                                        step >= index + 1 &&
-                                                            styles.stepNumberActive,
-                                                    ]}
-                                                >
-                                                    {`0${index + 1}`}
-                                                </Text>
-                                            )}
-                                        </View>
-                                        <View>
-                                            {index < 5 && (
-                                                <View
-                                                    style={[
-                                                        styles.line,
-                                                        step >= index + 2 &&
-                                                            styles.lineActive,
-                                                    ]}
-                                                ></View>
-                                            )}
-                                            {index == 5 && (
-                                                <View
-                                                    style={[styles.firstLine]}
-                                                ></View>
-                                            )}
-                                        </View>
-                                    </View>
-                                    <View>
-                                        <Text style={styles.stepLabel}>
-                                            {label}
-                                        </Text>
-                                    </View>
-                                </View>
-                            </React.Fragment>
-                        ))}
-                    </View> */}
                 </View>
                 {isLoading || step == 0 ? (
                     <ActivityIndicator />
                 ) : (
-                    <>
-                        {/* <View style={{ flex: 1, padding: 20 }}>
-                            {formSteps.map((formStep, index) => (
-                                <View key={formStep.key}>
-                                    {step === index + 1 && formStep.content}
-                                </View>
-                            ))}
-                        </View> */}
-                        <View className=" justify-center items-center">
-                            <View className="w-10/12">
+                    
+                        <View className="flex flex-row justify-center items-center">
+                            <View className="w-[700px] h-[500px]">
                                 {renderCurrentStep()}
                             </View>
                         </View>
-
-                        {/* <View style={{ flex: 1, padding: 20 }}>
-                 
-                            {step === 1 && (
-                                <PersonalDetailsForm
-                                    onNext={handleNext}
-                                    initialValues={formData}
-                                />
-                            )}
-                            {step === 2 && (
-                                <AddressDetailsForm
-                                    onNext={handleNext}
-                                    onPrevious={handlePrevious}
-                                    initialValues={formData}
-                                />
-                            )}
-                            {step === 3 && (
-                                <ProfessionalDetailsForm
-                                    onSubmit={handleSubmit}
-                                    onNext={handleNext}
-                                    onPrevious={handlePrevious}
-                                    initialValues={formData}
-                                />
-                            )}
-                            {step === 4 && (
-                                <BankDetailForm
-                                    onPrevious={handlePrevious}
-                                    onNext={handleNext}
-                                    initialValues={formData}
-                                />
-                            )}
-                            {step === 5 && (
-                                <ProceedSign
-                                    onPrevious={handlePrevious}
-                                    onNext={handleNext}
-                                />
-                            )}
-                            {step === 6 && (
-                                <DigioFlowComponent onNext={handleNext} />
-                            )}
-
-                            {step === 7 && (
-                                <StepThreeUpload onSuccess={handleSuccess} />
-                            )}
-                            {step === 8 && (
-                                <Success
-                                    successMessages={[
-                                        "Application successfully submitted.",
-                                        "Approval Pending.",
-                                    ]}
-                                />
-                            )}
-                            {step === 9 &&
-                                (formData.dsaCode != null ? (
-                                    <Success
-                                        successMessages={[
-                                            "Your DSE Code is",
-                                            `${formData.dsaCode}`,
-                                        ]}
-                                    />
-                                ) : (
-                                    <>
-                                        <View style={styles.buttonContainer}>
-                                            <Pressable
-                                                style={styles.proceed}
-                                                onPress={handleResubmit}
-                                            >
-                                                <Text style={styles.buttonText}>
-                                                    Resubmit
-                                                </Text>
-                                            </Pressable>
-                                        </View>
-                                        <View>
-                                            <Text className="text-center color-black text-lg font-bold p-4">
-                                                Remarks
-                                            </Text>
-                                            <Text className="text-center color-black text-lg font-bold p-4">
-                                                {formData.remark}
-                                            </Text>
-                                        </View>
-                                    </>
-                                ))}
-                        </View> */}
-                    </>
+                    
                 )}
             </View>
         </View>
@@ -1075,6 +889,20 @@ const styles = StyleSheet.create({
         alignItems: "center",
         marginBottom: 20,
         backgroundColor: "#0066cc",
+    },
+    modalContainer: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "rgba(0,0,0,0.5)",
+    },
+    modalContent: {
+        height:  700,
+        width:  780,
+        backgroundColor: "white",
+        borderRadius: 10,
+        padding: 40,
+        alignItems: "center",
     },
 });
 

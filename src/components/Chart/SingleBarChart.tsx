@@ -1,10 +1,20 @@
 import React from "react";
 import { Text } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { Image, Spinner, VStack, View } from "native-base";
+import { View, VStack, Image, Spinner } from "native-base";
 
-const GradientBar = ({ labels, value }) => {
-    const unfilledHeight = value ? `${(1 - value / 10) * 100}%` : "100%";
+const labelPositions = {
+    Aggressive: 100, // Fill to the top
+    "Moderately Aggressive": 80, // 80% fill
+    Moderate: 60, // 60% fill
+    "Moderate Conservative": 40, // 40% fill
+    Conservative: 20, // 20% fill
+};
+
+const GradientBar = ({ labels, riskLevel }) => {
+    // Calculate the unfilled height based on the risk level
+    const filledHeight = labelPositions[riskLevel] || 0;
+    const unfilledHeight = `${100 - filledHeight}%`;
 
     return (
         <View
@@ -30,7 +40,7 @@ const GradientBar = ({ labels, value }) => {
                     height: unfilledHeight,
                     backgroundColor: "rgba(255, 255, 255, 0.8)",
                 }}
-            ></View>
+            />
             <View
                 style={{
                     position: "absolute",
@@ -43,9 +53,11 @@ const GradientBar = ({ labels, value }) => {
                 }}
             >
                 {labels.map((el, index) => (
-                    <View className="w-full h-1/5 flex flex-row items-center justify-center">
+                    <View
+                        key={index}
+                        className="w-full h-1/5 flex flex-row items-center justify-center"
+                    >
                         <Text
-                            key={index}
                             style={{
                                 color: "white",
                                 paddingVertical: 2,
@@ -61,7 +73,12 @@ const GradientBar = ({ labels, value }) => {
     );
 };
 
-export const SingleBarChart = ({ title, data, labels, loading = false }) => {
+export const SingleBarChart = ({
+    title,
+    labels,
+    riskLevel,
+    loading = false,
+}) => {
     return (
         <View className="h-fit flex flex-col gap-y-4">
             <Text className="font-bold text-lg text-center">{title}</Text>
@@ -77,25 +94,10 @@ export const SingleBarChart = ({ title, data, labels, loading = false }) => {
                         accessibilityLabel="Loading order"
                     />
                 </View>
-            ) : data?.length ? (
-                <VStack className="h-full">
-                    {data?.map((item, index) => (
-                        <GradientBar
-                            key={index}
-                            labels={labels}
-                            value={item.value}
-                        />
-                    ))}
-                </VStack>
             ) : (
-                <View className="h-full flex flex-col items-center justify-center gap-8">
-                    <Image
-                        width="72px"
-                        height="72px"
-                        source={require("../../../assets/images/noData.png")}
-                    />
-                    <Text className="text-md font-bold">No Data Available</Text>
-                </View>
+                <VStack className="h-full">
+                    <GradientBar labels={labels} riskLevel={riskLevel} />
+                </VStack>
             )}
         </View>
     );

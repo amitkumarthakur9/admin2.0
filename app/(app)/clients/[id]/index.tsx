@@ -1348,7 +1348,18 @@ const LumpSumOrderTab = ({
                     onChangeText={(text) => {
                         // Only allow numeric values
                         const numericValue = text.replace(/[^0-9]/g, "");
-                        setInvestmentAmount(numericValue);
+
+                        // Determine the maximum allowed value
+                        const maxValue =
+                            mutualFund?.maxInvestment || 9999999999;
+
+                        // Restrict the numeric value to the maximum allowed value
+                        const restrictedValue = Math.min(
+                            Number(numericValue),
+                            maxValue
+                        );
+
+                        setInvestmentAmount(restrictedValue.toString());
                     }}
                     keyboardType="numeric"
                 />
@@ -1553,7 +1564,18 @@ const SipOrderTab = ({
                     onChangeText={(text) => {
                         // Only allow numeric values
                         const numericValue = text.replace(/[^0-9]/g, "");
-                        setInvestmentAmount(numericValue);
+
+                        // Determine the maximum allowed value
+                        const maxValue =
+                            mutualFund?.maxInvestment || 9999999999;
+
+                        // Restrict the numeric value to the maximum allowed value
+                        const restrictedValue = Math.min(
+                            Number(numericValue),
+                            maxValue
+                        );
+
+                        setInvestmentAmount(restrictedValue.toString());
                     }}
                     keyboardType="numeric"
                 />

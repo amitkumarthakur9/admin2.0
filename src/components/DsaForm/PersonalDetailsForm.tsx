@@ -16,19 +16,20 @@ import { Checkbox } from "react-native-paper";
 import DropdownComponent from "../../components/Dropdowns/NewDropDown";
 import RemoteApi from "src/services/RemoteApi";
 import { MaterialIcons } from "@expo/vector-icons"; // Make sure to install expo/vector-icons
+import CustomButton from "../Buttons/CustomButton";
 const emailRegexRFC5322 =
     /^(?:[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-zA-Z0-9-]*[a-zA-Z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)])$/;
 
 const validationSchema = Yup.object().shape({
     fullName: Yup.string()
-    .matches(/^[A-Za-z\s]+$/, "Full Name should contain only alphabets")
-    .min(3, "Full Name should contain at least 3 alphabets")
-    .required("Full Name is required"),
+        .matches(/^[A-Za-z\s]+$/, "Full Name should contain only alphabets")
+        .min(3, "Full Name should contain at least 3 alphabets")
+        .required("Full Name is required"),
     email: Yup.string()
         .matches(emailRegexRFC5322, "Invalid email address")
         .required("Email is required"),
     mobileNumber: Yup.string()
-    .matches(/^(?!00)(?!.*(\d)\1{9}$)\d{10}$/, "Invalid mobile number")
+        .matches(/^(?!00)(?!.*(\d)\1{9}$)\d{10}$/, "Invalid mobile number")
         .required("Mobile number is required"),
     maritalStatus: Yup.number().required("Marital status is required"),
     isArnHolder: Yup.boolean(),
@@ -117,6 +118,10 @@ const PersonalDetailsForm = ({ onNext, initialValues, onPrevious }) => {
                 "user/update-personal-details",
                 data
             );
+
+            // const response = {
+            //     code: 200,
+            // };
             if (response.code === 200) {
                 onNext(values);
             } else if (response.code === 254) {
@@ -181,312 +186,355 @@ const PersonalDetailsForm = ({ onNext, initialValues, onPrevious }) => {
                 }
 
                 return (
-                    <ScrollView contentContainerStyle={styles.container}>
-                        <View style={styles.formRow}>
-                            <View style={styles.fieldContainer}>
-                                <View style={styles.fieldContainer}>
-                                    <Text style={styles.label}>
-                                        Enter your full name as per AMFI{" "}
-                                        <Text className="text-red-500">*</Text>
-                                    </Text>
-                                    <TextInput
-                                        style={styles.input}
-                                        onChangeText={handleChange("fullName")}
-                                        onBlur={handleBlur("fullName")}
-                                        value={values.fullName}
-                                    />
+                    <View>
+                        <ScrollView className="h-[450px]">
+                            <View className="flex flex-row justify-between mb-4 w-full">
+                                <View className="w-[48%]">
                                     <View style={styles.fieldContainer}>
-                                        {touched.fullName &&
-                                            errors.fullName &&
-                                            typeof errors.fullName ===
-                                                "string" && (
-                                                <Text style={styles.error}>
-                                                    {errors.fullName}
-                                                </Text>
-                                            )}
-                                    </View>
-                                    <View style={styles.fieldContainer}>
-                                        {initialValues.nameError && (
-                                            <Text style={styles.error}>
-                                                Please correct it as per remarks
+                                        <Text style={styles.label}>
+                                            Enter your full name as per AMFI{" "}
+                                            <Text className="text-red-500">
+                                                *
                                             </Text>
-                                        )}
-                                    </View>
-                                </View>
-                            </View>
-                            <View style={styles.fieldContainer}>
-                                <View style={styles.fieldContainer}>
-                                    <Text style={styles.label}>
-                                        Enter your Email{" "}
-                                        <Text className="text-red-500">*</Text>
-                                    </Text>
-                                    <TextInput
-                                        style={styles.input}
-                                        onChangeText={handleChange("email")}
-                                        onBlur={handleBlur("email")}
-                                        value={values.email}
-                                    />
-                                    <View style={styles.fieldContainer}>
-                                        {touched.email &&
-                                            errors.email &&
-                                            typeof errors.email ===
-                                                "string" && (
-                                                <Text style={styles.error}>
-                                                    {errors.email}
-                                                </Text>
-                                            )}
-                                    </View>
-                                    <View style={styles.fieldContainer}>
-                                        {initialValues.emailError && (
-                                            <Text style={styles.error}>
-                                                Please correct it as per remarks
-                                            </Text>
-                                        )}
-                                    </View>
-                                </View>
-                            </View>
-                        </View>
-
-                        <View style={styles.formRow}>
-                            <View style={styles.fieldContainer}>
-                                <View style={styles.fieldContainer}>
-                                    <Text style={styles.label}>
-                                        Enter your Mobile number{" "}
-                                        <Text className="text-red-500">*</Text>
-                                    </Text>
-                                    <TextInput
-                                        style={styles.input}
-                                        onChangeText={handleChange(
-                                            "mobileNumber"
-                                        )}
-                                        onBlur={handleBlur("mobileNumber")}
-                                        value={values.mobileNumber}
-                                        keyboardType="numeric"
-                                        maxLength={10} // Restrict input to 10 digits
-                                    />
-                                    <View style={styles.fieldContainer}>
-                                        {touched.mobileNumber &&
-                                            errors.mobileNumber &&
-                                            typeof errors.mobileNumber ===
-                                                "string" && (
-                                                <Text style={styles.error}>
-                                                    {errors.mobileNumber}
-                                                </Text>
-                                            )}
-                                    </View>
-                                    <View style={styles.fieldContainer}>
-                                        {initialValues.mobileNumberError && (
-                                            <Text style={styles.error}>
-                                                Please correct it as per remarks
-                                            </Text>
-                                        )}
-                                    </View>
-                                </View>
-                            </View>
-                            <View style={styles.fieldContainer}>
-                                <Text style={styles.label}>
-                                    Enter Marital Status{" "}
-                                    <Text className="text-red-500">*</Text>
-                                </Text>
-                                <DropdownComponent
-                                    label="Marital Status"
-                                    data={maritalStatusOptions}
-                                    value={values.maritalStatus}
-                                    // setValue={handleChange("incomeRange")}
-                                    noIcon={true}
-                                    setValue={(value) =>
-                                        setFieldValue("maritalStatus", value)
-                                    }
-                                />
-                                {touched.maritalStatus &&
-                                    errors.maritalStatus &&
-                                    typeof errors.maritalStatus ===
-                                        "string" && (
-                                        <Text style={styles.error}>
-                                            {errors.maritalStatus}
                                         </Text>
-                                    )}
-                            </View>
-                        </View>
-                        <View style={styles.checkboxContainer}>
-                            <Pressable
-                                onPress={() =>
-                                    setFieldValue(
-                                        "isArnHolder",
-                                        !values.isArnHolder
-                                    )
-                                }
-                                style={[
-                                    styles.checkboxBase,
-                                    values.isArnHolder &&
-                                        styles.checkboxChecked,
-                                ]}
-                            >
-                                {values.isArnHolder && (
-                                    <MaterialIcons
-                                        name="check"
-                                        size={18}
-                                        color="white"
-                                    />
-                                )}
-                            </Pressable>
-                            <Text style={styles.checkboxLabel}>
-                                I am an ARN holder
-                            </Text>
-                        </View>
-
-                        {values.isArnHolder && (
-                            <View style={styles.formRow}>
-                                <View style={styles.fieldContainer}>
-                                    <Text style={styles.label}>
-                                        Enter your ARN number{" "}
-                                        <Text className="text-red-500">*</Text>
-                                    </Text>
-                                    <View className="flex flex-row items-center justify-center">
-                                        <View className="p-[10px] bg-gray-100 border-gray-300 border-l border-t border-b rounded-l">
-                                            <Text style={styles.prefix}>
-                                                ARN-
-                                            </Text>
-                                        </View>
                                         <TextInput
-                                            style={styles.inputArn}
-                                            // onChangeText={handleChange(
-                                            //     "arnNumber"
-                                            // )}
-                                            onBlur={handleBlur("arnNumber")}
-                                            value={values.arnNumber}
-                                            onChangeText={(text) => {
-                                                // Only allow numeric values
-                                                const numericValue =
-                                                    text.replace(/[^0-9]/g, "");
-
-                                                handleChange("arnNumber")(
-                                                    numericValue
-                                                );
-                                            }}
-                                            keyboardType="numeric"
+                                            style={styles.input}
+                                            onChangeText={handleChange(
+                                                "fullName"
+                                            )}
+                                            onBlur={handleBlur("fullName")}
+                                            value={values.fullName}
                                         />
-                                    </View>
-                                    <View style={styles.fieldContainer}>
-                                        {touched.arnNumber &&
-                                            errors.arnNumber &&
-                                            typeof errors.arnNumber ===
-                                                "string" && (
+                                        <View style={styles.fieldContainer}>
+                                            {touched.fullName &&
+                                                errors.fullName &&
+                                                typeof errors.fullName ===
+                                                    "string" && (
+                                                    <Text style={styles.error}>
+                                                        {errors.fullName}
+                                                    </Text>
+                                                )}
+                                        </View>
+                                        <View style={styles.fieldContainer}>
+                                            {initialValues.nameError && (
                                                 <Text style={styles.error}>
-                                                    {errors.arnNumber}
+                                                    Please correct it as per
+                                                    remarks
                                                 </Text>
                                             )}
-                                    </View>
-                                    <View style={styles.fieldContainer}>
-                                        {initialValues.arnNumberError && (
-                                            <Text style={styles.error}>
-                                                Please correct it as per remarks
-                                            </Text>
-                                        )}
-                                    </View>
-                                    <View style={styles.fieldContainer}>
-                                        {isVerified.ArnNumber && (
-                                            <Text style={styles.error}>
-                                                {isVerified.ArnNumber}
-                                            </Text>
-                                        )}
+                                        </View>
                                     </View>
                                 </View>
-                                <View style={styles.fieldContainer}>
-                                    <Text style={styles.label}>
-                                        Enter your EUIN number{" "}
-                                        <Text className="text-red-500">*</Text>
-                                    </Text>
-
-                                    <TextInput
-                                        style={styles.input}
-                                        onChangeText={handleChange(
-                                            "euinNumber"
-                                        )}
-                                        onBlur={handleBlur("euinNumber")}
-                                        value={values.euinNumber}
-                                    />
-
+                                <View className="w-[48%]">
                                     <View style={styles.fieldContainer}>
-                                        {touched.euinNumber &&
-                                            errors.euinNumber &&
-                                            typeof errors.euinNumber ===
-                                                "string" && (
+                                        <Text style={styles.label}>
+                                            Enter your Email{" "}
+                                            <Text className="text-red-500">
+                                                *
+                                            </Text>
+                                        </Text>
+                                        <TextInput
+                                            style={styles.input}
+                                            onChangeText={handleChange("email")}
+                                            onBlur={handleBlur("email")}
+                                            value={values.email}
+                                        />
+                                        <View style={styles.fieldContainer}>
+                                            {touched.email &&
+                                                errors.email &&
+                                                typeof errors.email ===
+                                                    "string" && (
+                                                    <Text style={styles.error}>
+                                                        {errors.email}
+                                                    </Text>
+                                                )}
+                                        </View>
+                                        <View style={styles.fieldContainer}>
+                                            {initialValues.emailError && (
                                                 <Text style={styles.error}>
-                                                    {errors.euinNumber}
+                                                    Please correct it as per
+                                                    remarks
                                                 </Text>
                                             )}
-                                    </View>
-                                    <View style={styles.fieldContainer}>
-                                        {initialValues.euinNumberError && (
-                                            <Text style={styles.error}>
-                                                Please correct it as per remarks
-                                            </Text>
-                                        )}
-                                    </View>
-                                    <View style={styles.fieldContainer}>
-                                        {isVerified.euin && (
-                                            <Text style={styles.error}>
-                                                {isVerified.euin}
-                                            </Text>
-                                        )}
+                                        </View>
                                     </View>
                                 </View>
                             </View>
-                        )}
-                        <View className="flex flex-row justify-center gap-2">
-                            {initialValues.remark && (
+
+                            <View className="flex flex-row justify-between mb-4 w-full">
+                                <View className="w-[48%]">
+                                    <View style={styles.fieldContainer}>
+                                        <Text style={styles.label}>
+                                            Enter your Mobile number{" "}
+                                            <Text className="text-red-500">
+                                                *
+                                            </Text>
+                                        </Text>
+                                        <TextInput
+                                            style={styles.input}
+                                            onChangeText={handleChange(
+                                                "mobileNumber"
+                                            )}
+                                            onBlur={handleBlur("mobileNumber")}
+                                            value={values.mobileNumber}
+                                            keyboardType="numeric"
+                                            maxLength={10} // Restrict input to 10 digits
+                                        />
+                                        <View style={styles.fieldContainer}>
+                                            {touched.mobileNumber &&
+                                                errors.mobileNumber &&
+                                                typeof errors.mobileNumber ===
+                                                    "string" && (
+                                                    <Text style={styles.error}>
+                                                        {errors.mobileNumber}
+                                                    </Text>
+                                                )}
+                                        </View>
+                                        <View style={styles.fieldContainer}>
+                                            {initialValues.mobileNumberError && (
+                                                <Text style={styles.error}>
+                                                    Please correct it as per
+                                                    remarks
+                                                </Text>
+                                            )}
+                                        </View>
+                                    </View>
+                                </View>
+                                <View className="w-[48%]">
+                                    <Text style={styles.label}>
+                                        Enter Marital Status{" "}
+                                        <Text className="text-red-500">*</Text>
+                                    </Text>
+                                    <DropdownComponent
+                                        label="Marital Status"
+                                        data={maritalStatusOptions}
+                                        value={values.maritalStatus}
+                                        // setValue={handleChange("incomeRange")}
+                                        noIcon={true}
+                                        setValue={(value) =>
+                                            setFieldValue(
+                                                "maritalStatus",
+                                                value
+                                            )
+                                        }
+                                    />
+                                    {touched.maritalStatus &&
+                                        errors.maritalStatus &&
+                                        typeof errors.maritalStatus ===
+                                            "string" && (
+                                            <Text style={styles.error}>
+                                                {errors.maritalStatus}
+                                            </Text>
+                                        )}
+                                </View>
+                            </View>
+                            <View style={styles.checkboxContainer}>
+                                <Pressable
+                                    onPress={() =>
+                                        setFieldValue(
+                                            "isArnHolder",
+                                            !values.isArnHolder
+                                        )
+                                    }
+                                    style={[
+                                        styles.checkboxBase,
+                                        values.isArnHolder &&
+                                            styles.checkboxChecked,
+                                    ]}
+                                >
+                                    {values.isArnHolder && (
+                                        <MaterialIcons
+                                            name="check"
+                                            size={18}
+                                            color="white"
+                                        />
+                                    )}
+                                </Pressable>
+                                <Text style={styles.checkboxLabel}>
+                                    I am an ARN holder
+                                </Text>
+                            </View>
+
+                            {values.isArnHolder && (
+                                <View className="flex flex-row justify-between mb-4 w-full">
+                                    <View className="w-[48%]">
+                                        <Text style={styles.label}>
+                                            Enter your ARN number{" "}
+                                            <Text className="text-red-500">
+                                                *
+                                            </Text>
+                                        </Text>
+                                        <View className="flex flex-row items-center justify-center">
+                                            <View className="p-[10px] bg-gray-100 border-gray-300 border-l border-t border-b rounded-l">
+                                                <Text style={styles.prefix}>
+                                                    ARN-
+                                                </Text>
+                                            </View>
+                                            <TextInput
+                                                style={styles.inputArn}
+                                                // onChangeText={handleChange(
+                                                //     "arnNumber"
+                                                // )}
+                                                onBlur={handleBlur("arnNumber")}
+                                                value={values.arnNumber}
+                                                onChangeText={(text) => {
+                                                    // Only allow numeric values
+                                                    const numericValue =
+                                                        text.replace(
+                                                            /[^0-9]/g,
+                                                            ""
+                                                        );
+
+                                                    handleChange("arnNumber")(
+                                                        numericValue
+                                                    );
+                                                }}
+                                                keyboardType="numeric"
+                                            />
+                                        </View>
+                                        <View style={styles.fieldContainer}>
+                                            {touched.arnNumber &&
+                                                errors.arnNumber &&
+                                                typeof errors.arnNumber ===
+                                                    "string" && (
+                                                    <Text style={styles.error}>
+                                                        {errors.arnNumber}
+                                                    </Text>
+                                                )}
+                                        </View>
+                                        <View style={styles.fieldContainer}>
+                                            {initialValues.arnNumberError && (
+                                                <Text style={styles.error}>
+                                                    Please correct it as per
+                                                    remarks
+                                                </Text>
+                                            )}
+                                        </View>
+                                        <View style={styles.fieldContainer}>
+                                            {isVerified.ArnNumber && (
+                                                <Text style={styles.error}>
+                                                    {isVerified.ArnNumber}
+                                                </Text>
+                                            )}
+                                        </View>
+                                    </View>
+                                    <View className="w-[48%]">
+                                        <Text style={styles.label}>
+                                            Enter your EUIN number{" "}
+                                            <Text className="text-red-500">
+                                                *
+                                            </Text>
+                                        </Text>
+
+                                        <TextInput
+                                            style={styles.input}
+                                            onChangeText={handleChange(
+                                                "euinNumber"
+                                            )}
+                                            onBlur={handleBlur("euinNumber")}
+                                            value={values.euinNumber}
+                                        />
+
+                                        <View style={styles.fieldContainer}>
+                                            {touched.euinNumber &&
+                                                errors.euinNumber &&
+                                                typeof errors.euinNumber ===
+                                                    "string" && (
+                                                    <Text style={styles.error}>
+                                                        {errors.euinNumber}
+                                                    </Text>
+                                                )}
+                                        </View>
+                                        <View style={styles.fieldContainer}>
+                                            {initialValues.euinNumberError && (
+                                                <Text style={styles.error}>
+                                                    Please correct it as per
+                                                    remarks
+                                                </Text>
+                                            )}
+                                        </View>
+                                        <View style={styles.fieldContainer}>
+                                            {isVerified.euin && (
+                                                <Text style={styles.error}>
+                                                    {isVerified.euin}
+                                                </Text>
+                                            )}
+                                        </View>
+                                    </View>
+                                </View>
+                            )}
+                            {/* <View className="flex flex-row justify-center gap-2">
+                                {initialValues.remark && (
+                                    <View className="w-3/12">
+                                        <Pressable
+                                            style={({ pressed }) => [
+                                                styles.back,
+                                                {
+                                                    borderColor: "#0066cc",
+                                                    opacity: pressed ? 0.6 : 1,
+                                                },
+                                            ]}
+                                            onPress={onPrevious}
+                                        >
+                                            <Text
+                                                style={[
+                                                    styles.buttonText,
+                                                    { color: "#0066cc" },
+                                                ]}
+                                            >
+                                                {"Back"}
+                                            </Text>
+                                        </Pressable>
+                                    </View>
+                                )}
+
                                 <View className="w-3/12">
                                     <Pressable
                                         style={({ pressed }) => [
-                                            styles.back,
+                                            styles.proceed,
                                             {
                                                 borderColor: "#0066cc",
                                                 opacity: pressed ? 0.6 : 1,
                                             },
                                         ]}
-                                        onPress={onPrevious}
+                                        onPress={() => handleSubmit()}
                                     >
                                         <Text
                                             style={[
                                                 styles.buttonText,
-                                                { color: "#0066cc" },
+                                                { color: "#ffffff" },
                                             ]}
                                         >
-                                            {"Back"}
+                                            {"Proceed"}
                                         </Text>
                                     </Pressable>
                                 </View>
-                            )}
+                            </View> */}
+                        </ScrollView>
 
-                            <View className="w-3/12">
-                                <Pressable
-                                    style={({ pressed }) => [
-                                        styles.proceed,
-                                        {
-                                            borderColor: "#0066cc",
-                                            opacity: pressed ? 0.6 : 1,
-                                        },
-                                    ]}
-                                    onPress={() => handleSubmit()}
-                                >
-                                    <Text
-                                        style={[
-                                            styles.buttonText,
-                                            { color: "#ffffff" },
-                                        ]}
-                                    >
-                                        {"Proceed"}
-                                    </Text>
-                                </Pressable>
+                        <View className="flex flex-row">
+                            <View className="flex flex-row justify-center w-full">
+                                {initialValues.remark && (
+                                    <View className="w-[48%]">
+                                        <CustomButton
+                                            onPress={onPrevious}
+                                            title="Back"
+                                            disabled={false}
+                                            buttonStyle={"outline"}
+                                        />
+                                    </View>
+                                )}
+                                <View className="w-[48%]">
+                                    <CustomButton
+                                        onPress={handleSubmit}
+                                        title="Proceed"
+                                        disabled={false}
+                                        buttonStyle={"full"}
+                                    />
+                                </View>
                             </View>
                         </View>
-                        {/* <Button
-                            title="Proceed"
-                            onPress={() => handleSubmit()}
-                            color="#0066cc"
-                        /> */}
-                    </ScrollView>
+                    </View>
                 );
             }}
         </Formik>
@@ -496,8 +544,9 @@ const PersonalDetailsForm = ({ onNext, initialValues, onPrevious }) => {
 const styles = StyleSheet.create({
     container: {
         flexGrow: 1,
-        padding: 20,
+        paddingTop: 20,
         backgroundColor: "#ffffff",
+        width: "100%", // Full width
     },
     formRow: {
         flexDirection: "row",
@@ -506,12 +555,12 @@ const styles = StyleSheet.create({
     },
     fieldContainer: {
         flex: 1,
-        marginRight: 10,
+        // marginRight: 10,
     },
     label: {
-        fontSize: 16,
+        fontSize: 12,
         marginBottom: 5,
-        color: "#333",
+        color: "#97989B",
     },
     input: {
         borderWidth: 1,
@@ -519,7 +568,8 @@ const styles = StyleSheet.create({
         padding: 10,
         borderRadius: 5,
         backgroundColor: "#fff",
-        flex: 1, // Make input take full width of its container
+        flex: 1,
+        fontSize: 12,
     },
     inputArn: {
         // borderWidth: 1,
@@ -532,6 +582,7 @@ const styles = StyleSheet.create({
         borderTopWidth: 1,
         borderBottomWidth: 1,
         borderRightWidth: 1,
+        fontSize: 12,
     },
     dropdown: {
         borderWidth: 1,
@@ -576,6 +627,7 @@ const styles = StyleSheet.create({
     },
     prefix: {
         color: "#6b7280",
+        fontSize: 12,
     },
     checkbox: {
         width: 24,

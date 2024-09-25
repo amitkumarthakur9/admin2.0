@@ -7,6 +7,7 @@ import {
     ScrollView,
     ActivityIndicator,
     Pressable,
+    Modal,
 } from "react-native";
 import { Formik } from "formik";
 import * as Yup from "yup";
@@ -18,6 +19,7 @@ import AddressForm from "./AddressForm";
 import { Box, Toast } from "native-base";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import CustomButton from "../Buttons/CustomButton";
+import Toaster, { showToast } from "../Toaster/Toaster";
 
 const panRegex = /^([A-Z]){3}([ABCFGHJLPT])([A-Z]){1}([0-9]){4}([A-Z]){1}?$/;
 const today = new Date();
@@ -37,7 +39,10 @@ const validationSchema = Yup.object().shape({
         .typeError("Gender is required")
         .required("Gender is required"),
     mobileNumber: Yup.string()
-        .matches(/^(?!00)(?!.*(\d)\1{9}$)\d{10}$/, "Invalid mobile number")
+        .matches(
+            /^(?!00)(?!.*(\d)\1{9}$)([6-9]\d{9})$/,
+            "Invalid mobile number"
+        )
         .required("Mobile number is required"),
     panNumber: Yup.string()
         .required("PAN number is required")
@@ -148,7 +153,8 @@ const BasicDetails = ({
                     onNext(valuesWithToken);
                 }
             } else {
-                actions.setFieldError("panNumber", response.message);
+                showToast(response?.message || "Something wrong");
+                actions.setFieldError("panNumber", response?.message);
             }
         } catch (error) {}
         setIsLoading(false);

@@ -14,38 +14,18 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import DropdownComponent from "../../components/Dropdowns/NewDropDown";
 import RemoteApi from "src/services/RemoteApi";
+import CustomButton from "../Buttons/CustomButton";
 
 const panRegex = /^([A-Z]){3}([ABCFGHJLPT])([A-Z]){1}([0-9]){4}([A-Z]){1}?$/;
 
 const validationSchema = Yup.object().shape({
-    // panNumber: Yup.string().required("PAN is required"),
     panNumber: Yup.string()
         .required("PAN number is required")
         .matches(panRegex, "Please enter a valid PAN number. Ex: AAAPZ1234C"),
-
-    // country: Yup.string().required("Country is required"),
-    // arn: Yup.string().required("ARN is required"),
     incomeRange: Yup.number().required("Income range is required"),
     education: Yup.number().required("Education is required"),
     occupation: Yup.number().required("Occupation is required"),
 });
-
-// const incomeRangeOptions = [
-//   { label: "0-10 Lacs", value: "0-10 Lacs" },
-//   { label: "10-15 Lacs", value: "10-15 Lacs" },
-//   { label: "15+ Lacs", value: "15+ Lacs" },
-// ];
-
-// const educationOptions = [
-//     { label: "10th", value: "10th" },
-//     { label: "Graduation", value: "Graduation" },
-//     { label: "Post Graduation", value: "Post Graduation" },
-// ];
-
-// const occupationOptions = [
-//   { label: "Service", value: "Service" },
-//   { label: "Business", value: "Business" },
-// ];
 
 const ProfessionalDetailsForm = ({
     onNext,
@@ -88,10 +68,8 @@ const ProfessionalDetailsForm = ({
                     );
                 }
             } else {
-                alert("Failed to fetch data list");
             }
         } catch (error) {
-            alert("An error occurred while fetching the data list");
         } finally {
             setIsLoading(false);
         }
@@ -124,18 +102,8 @@ const ProfessionalDetailsForm = ({
             if (response.code === 200) {
                 onNext(values);
             } else {
-                Alert.alert(
-                    "Error",
-                    response.message || "Failed to submit the address"
-                );
             }
-        } catch (error) {
-            Alert.alert(
-                "Error",
-                error.message ||
-                    "An error occurred while submitting the address"
-            );
-        }
+        } catch (error) {}
     };
 
     if (isLoading) {
@@ -162,155 +130,178 @@ const ProfessionalDetailsForm = ({
                 touched,
                 setFieldValue,
             }) => (
-                <ScrollView contentContainerStyle={styles.container}>
-                    <View style={styles.formRow}>
-                        <View style={styles.fieldContainer}>
-                            <Text style={styles.label}>
-                                Enter PAN{" "}
-                                <Text className="text-red-500">*</Text>
-                            </Text>
-                            <TextInput
-                                style={styles.input}
-                                onChangeText={handleChange("panNumber")}
-                                onBlur={handleBlur("panNumber")}
-                                value={values.panNumber}
-                            />
-                            {touched.panNumber &&
-                                errors.panNumber &&
-                                typeof errors.panNumber === "string" && (
-                                    <Text style={styles.error}>
-                                        {errors.panNumber}
-                                    </Text>
-                                )}
-                            {initialValues.panError && (
-                                <Text style={styles.error}>
-                                    Please correct it as per remarks
+                <>
+                    <ScrollView className="h-[450px]">
+                        <View className="flex flex-row justify-between mb-4 w-full">
+                            <View className="w-[48%]">
+                                <Text style={styles.label}>
+                                    Enter PAN{" "}
+                                    <Text className="text-red-500">*</Text>
                                 </Text>
-                            )}
-                        </View>
-
-                        <View style={styles.fieldContainer}>
-                            <Text style={styles.label}>
-                                Income Range{" "}
-                                <Text className="text-red-500">*</Text>
-                            </Text>
-                            <DropdownComponent
-                                label="Income Range"
-                                data={incomeRangeOptions}
-                                value={values.incomeRange}
-                                // setValue={handleChange("incomeRange")}
-                                containerStyle={styles.dropdown}
-                                noIcon={true}
-                                setValue={(value) =>
-                                    setFieldValue("incomeRange", value)
-                                }
-                            />
-                            {touched.incomeRange &&
-                                errors.incomeRange &&
-                                typeof errors.incomeRange === "string" && (
+                                <TextInput
+                                    style={styles.input}
+                                    onChangeText={handleChange("panNumber")}
+                                    onBlur={handleBlur("panNumber")}
+                                    value={values.panNumber}
+                                />
+                                {touched.panNumber &&
+                                    errors.panNumber &&
+                                    typeof errors.panNumber === "string" && (
+                                        <Text style={styles.error}>
+                                            {errors.panNumber}
+                                        </Text>
+                                    )}
+                                {initialValues.panError && (
                                     <Text style={styles.error}>
-                                        {errors.incomeRange}
+                                        Please correct it as per remarks
                                     </Text>
                                 )}
-                        </View>
-                    </View>
+                            </View>
 
-                    <View style={styles.formRow}>
-                        <View style={styles.fieldContainer}>
-                            <Text style={styles.label}>
-                                Enter Education{" "}
-                                <Text className="text-red-500">*</Text>
-                            </Text>
-                            <DropdownComponent
-                                label="Education"
-                                data={educationOptions}
-                                value={values.education}
-                                // setValue={handleChange("incomeRange")}
-                                containerStyle={styles.dropdown}
-                                noIcon={true}
-                                setValue={(value) =>
-                                    setFieldValue("education", value)
-                                }
-                            />
-                            {touched.education &&
-                                errors.education &&
-                                typeof errors.education === "string" && (
-                                    <Text style={styles.error}>
-                                        {errors.education}
-                                    </Text>
-                                )}
+                            <View className="w-[48%]">
+                                <Text style={styles.label}>
+                                    Income Range{" "}
+                                    <Text className="text-red-500">*</Text>
+                                </Text>
+                                <DropdownComponent
+                                    label="Income Range"
+                                    data={incomeRangeOptions}
+                                    value={values.incomeRange}
+                                    // setValue={handleChange("incomeRange")}
+                                    // containerStyle={styles.dropdown}
+                                    noIcon={true}
+                                    setValue={(value) =>
+                                        setFieldValue("incomeRange", value)
+                                    }
+                                />
+                                {touched.incomeRange &&
+                                    errors.incomeRange &&
+                                    typeof errors.incomeRange === "string" && (
+                                        <Text style={styles.error}>
+                                            {errors.incomeRange}
+                                        </Text>
+                                    )}
+                            </View>
                         </View>
-                        <View style={styles.fieldContainer}>
-                            <Text style={styles.label}>
-                                Enter Occupation{" "}
-                                <Text className="text-red-500">*</Text>
-                            </Text>
-                            <DropdownComponent
-                                label="Occupation"
-                                data={occupationOptions}
-                                value={values.occupation}
-                                // setValue={handleChange("occupation")}
-                                containerStyle={styles.dropdown}
-                                noIcon={true}
-                                setValue={(value) =>
-                                    setFieldValue("occupation", value)
-                                }
-                            />
-                            {touched.occupation &&
-                                errors.occupation &&
-                                typeof errors.occupation === "string" && (
-                                    <Text style={styles.error}>
-                                        {errors.occupation}
-                                    </Text>
-                                )}
-                        </View>
-                    </View>
 
-                    <View className="flex flex-row justify-center gap-2">
-                        <View className="w-3/12">
-                            <Pressable
-                                style={({ pressed }) => [
-                                    styles.back,
-                                    {
-                                        borderColor: "#0066cc",
-                                        opacity: pressed ? 0.6 : 1,
-                                    },
-                                ]}
-                                onPress={onPrevious}
-                            >
-                                <Text
-                                    style={[
-                                        styles.buttonText,
-                                        { color: "#0066cc" },
+                        <View className="flex flex-row justify-between mb-4 w-full">
+                            <View className="w-[48%]">
+                                <Text style={styles.label}>
+                                    Enter Education{" "}
+                                    <Text className="text-red-500">*</Text>
+                                </Text>
+                                <DropdownComponent
+                                    label="Education"
+                                    data={educationOptions}
+                                    value={values.education}
+                                    // setValue={handleChange("incomeRange")}
+                                    // containerStyle={styles.dropdown}
+                                    noIcon={true}
+                                    setValue={(value) =>
+                                        setFieldValue("education", value)
+                                    }
+                                />
+                                {touched.education &&
+                                    errors.education &&
+                                    typeof errors.education === "string" && (
+                                        <Text style={styles.error}>
+                                            {errors.education}
+                                        </Text>
+                                    )}
+                            </View>
+                            <View className="w-[48%]">
+                                <Text style={styles.label}>
+                                    Enter Occupation{" "}
+                                    <Text className="text-red-500">*</Text>
+                                </Text>
+                                <DropdownComponent
+                                    label="Occupation"
+                                    data={occupationOptions}
+                                    value={values.occupation}
+                                    // setValue={handleChange("occupation")}
+                                    // containerStyle={styles.dropdown}
+                                    noIcon={true}
+                                    setValue={(value) =>
+                                        setFieldValue("occupation", value)
+                                    }
+                                />
+                                {touched.occupation &&
+                                    errors.occupation &&
+                                    typeof errors.occupation === "string" && (
+                                        <Text style={styles.error}>
+                                            {errors.occupation}
+                                        </Text>
+                                    )}
+                            </View>
+                        </View>
+
+                        {/* <View className="flex flex-row justify-center gap-2">
+                            <View className="w-3/12">
+                                <Pressable
+                                    style={({ pressed }) => [
+                                        styles.back,
+                                        {
+                                            borderColor: "#0066cc",
+                                            opacity: pressed ? 0.6 : 1,
+                                        },
                                     ]}
+                                    onPress={onPrevious}
                                 >
-                                    {"Back"}
-                                </Text>
-                            </Pressable>
-                        </View>
-                        <View className="w-3/12">
-                            <Pressable
-                                style={({ pressed }) => [
-                                    styles.proceed,
-                                    {
-                                        borderColor: "#0066cc",
-                                        opacity: pressed ? 0.6 : 1,
-                                    },
-                                ]}
-                                onPress={() => handleSubmit()}
-                            >
-                                <Text
-                                    style={[
-                                        styles.buttonText,
-                                        { color: "#ffffff" },
+                                    <Text
+                                        style={[
+                                            styles.buttonText,
+                                            { color: "#0066cc" },
+                                        ]}
+                                    >
+                                        {"Back"}
+                                    </Text>
+                                </Pressable>
+                            </View>
+                            <View className="w-3/12">
+                                <Pressable
+                                    style={({ pressed }) => [
+                                        styles.proceed,
+                                        {
+                                            borderColor: "#0066cc",
+                                            opacity: pressed ? 0.6 : 1,
+                                        },
                                     ]}
+                                    onPress={() => handleSubmit()}
                                 >
-                                    {"Proceed"}
-                                </Text>
-                            </Pressable>
+                                    <Text
+                                        style={[
+                                            styles.buttonText,
+                                            { color: "#ffffff" },
+                                        ]}
+                                    >
+                                        {"Proceed"}
+                                    </Text>
+                                </Pressable>
+                            </View>
+                        </View> */}
+                    </ScrollView>
+                    <View className="flex flex-row">
+                        <View className="flex flex-row justify-between w-full">
+                            <View className="w-[48%]">
+                                <CustomButton
+                                    onPress={onPrevious}
+                                    title="Back"
+                                    disabled={false}
+                                    buttonStyle={"outline"}
+                                />
+                            </View>
+
+                            <View className="w-[48%]">
+                                <CustomButton
+                                    onPress={handleSubmit}
+                                    title="Proceed"
+                                    disabled={false}
+                                    buttonStyle={"full"}
+                                />
+                            </View>
                         </View>
                     </View>
-                </ScrollView>
+                </>
             )}
         </Formik>
     );
@@ -319,7 +310,7 @@ const ProfessionalDetailsForm = ({
 const styles = StyleSheet.create({
     container: {
         flexGrow: 1,
-        padding: 20,
+        // padding: 20,
         backgroundColor: "#ffffff",
     },
     formRow: {
@@ -332,9 +323,9 @@ const styles = StyleSheet.create({
         marginRight: 10,
     },
     label: {
-        fontSize: 16,
+        fontSize: 12,
         marginBottom: 5,
-        color: "#333",
+        color: "#97989B",
     },
     input: {
         borderWidth: 1,
@@ -342,6 +333,8 @@ const styles = StyleSheet.create({
         padding: 10,
         borderRadius: 5,
         backgroundColor: "#fff",
+        flex: 1,
+        fontSize: 12,
     },
     dropdown: {
         borderWidth: 1,

@@ -357,13 +357,13 @@ const ClientTable = ({ clients }) => {
 
 const renderHeaderCell = (text, width) => (
     <View style={[styles.headerCell, { width }]}>
-        <Text className="font-semibold">{text}</Text>
+        <Text className="font-semibold" style={styles.text}>{text}</Text>
     </View>
 );
 
 const renderCell = (text, width) => (
     <View style={[styles.cell, { width }]}>
-        <Text>{text}</Text>
+        <Text style={styles.text}>{text}</Text>
     </View>
 );
 
@@ -407,9 +407,13 @@ const styles = StyleSheet.create({
         paddingVertical: 14,
     },
     cell: {
-        justifyContent: "center",
+        justifyContent: "flex-start",
         alignItems: "center",
         padding: 5,
+    },
+    text: {
+        textAlign: "left", // Align text to the left
+        width: "100%", // Ensure the text occupies the full width of the cell
     },
     headerCell: {
         justifyContent: "center",

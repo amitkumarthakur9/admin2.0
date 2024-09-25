@@ -510,13 +510,12 @@ const RiskProfile = () => {
                                     "Moderate Conservative",
                                     "Conservative",
                                 ]}
-                                data={[
-                                    {
-                                        label: "Risk Meter",
-                                        value:
-                                            calculateAverage(answerPoints) * 2,
-                                    },
-                                ]}
+                                riskLevel={getRiskProfile(
+                                    answerPoints.reduce(
+                                        (partialSum, a) => partialSum + a,
+                                        0
+                                    )
+                                )}
                             />
                         </View>
                     </View>

@@ -112,28 +112,15 @@ const LoadingSpinner = () => (
 const getUserDetail = async () => {
     try {
         const response: UserMeData = await RemoteApi.get("user/me");
-        console.log("useEffectlayouttoken" + "userme");
-        // const response = {
-        //     code: 200,
-        //     message: "Success",
-        //     data: {
-        //         name: "Saffiulla",
-        //         email: "sm@gmail.com",
-        //         mobileNumber: "9778686786",
-        //         isOnBoarded: false,
-        //         dsaCode: "null",
-        //         arn: "ARN",
-        //     },
-        // };
 
         if (response.code === 200) {
             const userData = response.data;
             return userData;
         } else {
-            alert("Failed to fetch user details");
+            // alert("Failed to fetch user details");
         }
     } catch (error) {
-        alert("An error occurred while fetching the user details");
+        // alert("An error occurred while fetching the user details");
     }
     return null;
 };

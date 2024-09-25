@@ -26,6 +26,7 @@ import { CheckIcon, FormControl, Select, Stack } from "native-base";
 import CustomRadioButton from "../CustomForm/CustomRadioButton/CustomRadioButton";
 import UploadBankDocument from "./UploadBankDocument";
 import CustomButton from "../Buttons/CustomButton";
+import { showToast } from "../Toaster/Toaster";
 const BankDetailForm = ({ onNext, onPrevious, initialValues, closeModal }) => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [modalFormData, setModalFormData] = useState({
@@ -45,7 +46,7 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues, closeModal }) => {
     const [accountTypeOptions, setAccountTypeOptions] = React.useState([]);
     const [documentTypeOptions, setDocumentTypeOptions] = React.useState([]);
     const [searchQuery, setSearchQuery] = useState("");
-    const [ifscCode, setifscCode] = React.useState("null");
+    const [ifscCode, setifscCode] = React.useState(null);
     const [bankAddress, setBankAddress] = React.useState({
         bankName: "",
         address: "",
@@ -66,6 +67,7 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues, closeModal }) => {
             district: "",
             branch: "",
         });
+        setifscCode(null)
     };
     const [isLoading, setIsLoading] = useState(false);
 
@@ -251,7 +253,9 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues, closeModal }) => {
                     bankName = "",
                 } = response.data;
 
-                const address = `${bankBranch}, ${district}, ${state}, ${pincode}`;
+                const address = `${bankBranch}${`, ` + district}${
+                    `, ` + state
+                }${`, ` + pincode}`;
 
                 setBankAddress({
                     ...bankAddress,
@@ -373,6 +377,7 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues, closeModal }) => {
                     onNext(valuesWithToken); // Stop loading
                     // setBankVerificationFailed(true); // Set failure state
                 } else {
+                    showToast(response?.message || "Something wrong");
                     console.log("ElseError");
                     const valuesWithToken = {
                         ...values,
@@ -414,7 +419,7 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues, closeModal }) => {
                 setFieldValue,
                 setFieldError,
             }) =>
-                isLoading ? (
+                isVerifing ? (
                     <View className="h-[400px]  w-full flex flex-col justify-center items-center">
                         <ActivityIndicator size={100} color="#0000ff" />
                         <Text className="text-bold text-lg pt-8">

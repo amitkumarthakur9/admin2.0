@@ -20,6 +20,7 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import RemoteApi from "src/services/RemoteApi";
 import SearchableDropdown from "../Dropdowns/SearchableDropdown";
 import { getResponse } from "src/helper/helper";
+import CustomButton from "../Buttons/CustomButton";
 
 const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -230,8 +231,18 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
             const response: any = await RemoteApi.post("bank/address", data);
 
             if (response.code === 200) {
-                const { bankBranch, pincode, district, state } = response.data;
-                const address = `${bankBranch}, ${district}, ${state}, ${pincode}`;
+                const {
+                    bankBranch = "",
+                    pincode = "",
+                    district = "",
+                    state = "",
+                    id = null,
+                    bankName = "",
+                } = response.data;
+
+                const address = `${bankBranch}${`, ` + district}${
+                    `, ` + state
+                }${`, ` + pincode}`;
 
                 setBankAddress({
                     bankName: response.data.bankName,
@@ -370,118 +381,125 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
                 touched,
                 setFieldValue,
             }) => (
-                <ScrollView contentContainerStyle={styles.container}>
-                    <View style={styles.formRow}>
-                        <View style={styles.bankfieldContainer}>
-                            <Text style={styles.label}>
-                                Account Number{" "}
-                                <Text className="text-red-500">*</Text>
-                            </Text>
-                            <TextInput
-                                style={styles.input}
-                                onChangeText={handleChange("accountNumber")}
-                                onBlur={handleBlur("accountNumber")}
-                                value={values.accountNumber}
-                                keyboardType="numeric"
-                            />
-                            {touched.accountNumber && errors.accountNumber && (
-                                <Text style={styles.error}>
-                                    {errors.accountNumber}
+                <>
+                    <ScrollView className="h-[450px]">
+                        <View className="flex flex-row justify-between mb-4 w-full">
+                            <View className="w-[48%]">
+                                <Text style={styles.label}>
+                                    Account Number{" "}
+                                    <Text className="text-red-500">*</Text>
                                 </Text>
-                                // setFieldValue(va)
-                            )}
-                        </View>
-                        <View style={styles.bankfieldContainer}>
-                            <Text style={styles.label}>
-                                Bank IFSC{" "}
-                                <Text className="text-red-500">*</Text>
-                            </Text>
-                            <TextInput
-                                style={styles.input}
-                                onChangeText={(value) => {
-                                    const uppercasedValue = value.toUpperCase();
-                                    handleChange("ifsc")(uppercasedValue);
-                                    if (uppercasedValue.length === 11) {
-                                        fetchBankDetails(uppercasedValue);
-                                    } else {
-                                        setBankAddress({
-                                            bankName: "",
-                                            address: "",
-                                            pincode: "",
-                                        });
-                                    }
-                                }}
-                                onBlur={handleBlur("ifsc")}
-                                // value={
-                                //     ifscCode !== "null" ? ifscCode : values.ifsc
-                                // }
-                                value={values.ifsc}
-                            />
-                            {touched.ifsc && errors.ifsc && (
-                                <Text style={styles.error}>{errors.ifsc}</Text>
-                            )}
-                            <TouchableOpacity
-                                onPress={() => setIsModalVisible(true)}
-                            >
-                                <Text style={styles.link}>
-                                    Don't know IFSC?
+                                <TextInput
+                                    style={styles.input}
+                                    onChangeText={handleChange("accountNumber")}
+                                    onBlur={handleBlur("accountNumber")}
+                                    value={values.accountNumber}
+                                    keyboardType="numeric"
+                                />
+                                {touched.accountNumber &&
+                                    errors.accountNumber && (
+                                        <Text style={styles.error}>
+                                            {errors.accountNumber}
+                                        </Text>
+                                        // setFieldValue(va)
+                                    )}
+                            </View>
+                            <View className="w-[48%]">
+                                <Text style={styles.label}>
+                                    Bank IFSC{" "}
+                                    <Text className="text-red-500">*</Text>
                                 </Text>
-                            </TouchableOpacity>
+                                <TextInput
+                                    style={styles.input}
+                                    onChangeText={(value) => {
+                                        const uppercasedValue =
+                                            value.toUpperCase();
+                                        handleChange("ifsc")(uppercasedValue);
+                                        if (uppercasedValue.length === 11) {
+                                            fetchBankDetails(uppercasedValue);
+                                        } else {
+                                            setBankAddress({
+                                                bankName: "",
+                                                address: "",
+                                                pincode: "",
+                                            });
+                                        }
+                                    }}
+                                    onBlur={handleBlur("ifsc")}
+                                    // value={
+                                    //     ifscCode !== "null" ? ifscCode : values.ifsc
+                                    // }
+                                    value={values.ifsc}
+                                />
+                                {touched.ifsc && errors.ifsc && (
+                                    <Text style={styles.error}>
+                                        {errors.ifsc}
+                                    </Text>
+                                )}
+                                <TouchableOpacity
+                                    onPress={() => setIsModalVisible(true)}
+                                >
+                                    <Text style={styles.link}>
+                                        Don't know IFSC?
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
                         </View>
-                    </View>
 
-                    <View style={styles.formRow}>
-                        <View style={styles.dropdownfieldContainer}>
-                            <Text style={styles.label}>
-                                Account Type{" "}
-                                <Text className="text-red-500">*</Text>
-                            </Text>
-                            <DropdownComponent
-                                label="Account Type"
-                                data={accountTypeOptions}
-                                value={values.accountType}
-                                setValue={(value) =>
-                                    setFieldValue("accountType", value)
-                                }
-                                containerStyle={styles.dropdown}
-                                noIcon={true}
-                            />
-                            {touched.accountType && errors.accountType && (
-                                <Text style={styles.error}>
-                                    {errors.accountType}
+                        <View className="flex flex-row justify-between mb-4 w-full">
+                            <View className="w-[48%]">
+                                <Text style={styles.label}>
+                                    Account Type{" "}
+                                    <Text className="text-red-500">*</Text>
                                 </Text>
-                            )}
-                        </View>
-                        <View style={styles.fieldContainer}>
-                            {values.bankName && values.address && (
-                                <View style={styles.bankDetails}>
-                                    <Text>Bank name: {values.bankName}</Text>
-                                    <Text>Address: {values.address}</Text>
-                                </View>
-                            )}
-                            {bankAddress.bankName !== "" && (
-                                <>
-                                    <View className="flex flex-row py-1">
-                                        <Text className="pr-2 color-gray-600">
-                                            Bank Name:
+                                <DropdownComponent
+                                    label="Account Type"
+                                    data={accountTypeOptions}
+                                    value={values.accountType}
+                                    setValue={(value) =>
+                                        setFieldValue("accountType", value)
+                                    }
+                                    // containerStyle={styles.dropdown}
+                                    noIcon={true}
+                                />
+                                {touched.accountType && errors.accountType && (
+                                    <Text style={styles.error}>
+                                        {errors.accountType}
+                                    </Text>
+                                )}
+                            </View>
+                            <View style={styles.fieldContainer}>
+                                {values.bankName && values.address && (
+                                    <View style={styles.bankDetails}>
+                                        <Text>
+                                            Bank name: {values.bankName}
                                         </Text>
-                                        <Text className="">
-                                            {bankAddress.bankName}
-                                        </Text>
+                                        <Text>Address: {values.address}</Text>
                                     </View>
-                                    <View className="flex flex-row py-4">
-                                        <Text className="pr-2 color-gray-600">
-                                            Address:
-                                        </Text>
-                                        <Text className="">
-                                            {bankAddress.address}
-                                        </Text>
-                                    </View>
-                                </>
-                            )}
+                                )}
+                                {bankAddress.bankName !== "" && (
+                                    <>
+                                        <View className="flex flex-row py-1">
+                                            <Text className="pr-2 color-gray-600">
+                                                Bank Name:
+                                            </Text>
+                                            <Text className="">
+                                                {bankAddress.bankName}
+                                            </Text>
+                                        </View>
+                                        <View className="flex flex-row py-4">
+                                            <Text className="pr-2 color-gray-600">
+                                                Address:
+                                            </Text>
+                                            <Text className="">
+                                                {bankAddress.address}
+                                            </Text>
+                                        </View>
+                                    </>
+                                )}
+                            </View>
                         </View>
-                    </View>
-                    <View className="flex flex-row justify-center gap-2">
+                        {/* <View className="flex flex-row justify-center gap-2">
                         <View className="w-3/12">
                             <Pressable
                                 style={({ pressed }) => [
@@ -525,6 +543,28 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
                                 </Text>
                             </Pressable>
                         </View>
+                    </View> */}
+                    </ScrollView>
+                    <View className="flex flex-row">
+                        <View className="flex flex-row justify-between w-full">
+                            <View className="w-[48%]">
+                                <CustomButton
+                                    onPress={onPrevious}
+                                    title="Back"
+                                    disabled={false}
+                                    buttonStyle={"outline"}
+                                />
+                            </View>
+
+                            <View className="w-[48%]">
+                                <CustomButton
+                                    onPress={handleSubmit}
+                                    title="Verify"
+                                    disabled={isVerifing === true}
+                                    buttonStyle={"full"}
+                                />
+                            </View>
+                        </View>
                     </View>
                     <Modal
                         visible={isModalVisible}
@@ -562,11 +602,11 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
                                     />
 
                                     {/* {selectedBank && (
-                                            <Text>
-                                                Selected Bank:{" "}
-                                                {selectedBank.label}
-                                            </Text>
-                                        )} */}
+                                    <Text>
+                                        Selected Bank:{" "}
+                                        {selectedBank.label}
+                                    </Text>
+                                )} */}
 
                                     <View style={styles.fieldContainer}>
                                         <Text style={styles.label}>
@@ -690,11 +730,11 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
                                     </Pressable>
 
                                     {/* {selectedBank && (
-                                        <Text>
-                                            Selected Bank: {selectedBank.label}
-                                            Selected Bank: {selectedBank.value}
-                                        </Text>
-                                    )} */}
+                                <Text>
+                                    Selected Bank: {selectedBank.label}
+                                    Selected Bank: {selectedBank.value}
+                                </Text>
+                            )} */}
                                 </ScrollView>
                             </View>
                         </View>
@@ -741,7 +781,7 @@ const BankDetailForm = ({ onNext, onPrevious, initialValues }) => {
                             </View>
                         </View>
                     </Modal>
-                </ScrollView>
+                </>
             )}
         </Formik>
     );
@@ -781,9 +821,9 @@ const styles = StyleSheet.create({
         paddingRight: 20,
     },
     label: {
-        fontSize: 16,
+        fontSize: 12,
         marginBottom: 5,
-        color: "#333",
+        color: "#97989B",
     },
     input: {
         borderWidth: 1,
@@ -791,6 +831,7 @@ const styles = StyleSheet.create({
         padding: 10,
         borderRadius: 5,
         backgroundColor: "#fff",
+        fontSize: 12,
     },
     link: {
         color: "#0066cc",

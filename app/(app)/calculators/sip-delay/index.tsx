@@ -35,23 +35,57 @@ const SIPDelay = () => {
 
     const downloadPDF = () => {
         const doc = new jsPDF();
+    
+        // Use the Unicode for the rupee symbol (\u20B9)
+        const rupeeSymbol = "Rs ";
+    
         doc.text("SIP Delay Calculator", 10, 10);
         doc.text("This is your detailed report.", 10, 20);
+        doc.text(`Monthly Investment: ${rupeeSymbol}${rupeeCurrencyFormatter(monthlyInvestment)}`, 10, 30);
+        doc.text(`Annual Return Rate: ${annualReturnRate}%`, 10, 40);
+        doc.text(`Investment Period: ${investmentPeriod} months`, 10, 50);
+        doc.text(`Delay: ${delayMonths} months`, 10, 60);
+        doc.text(`Future Value Without Delay: ${rupeeSymbol}${rupeeCurrencyFormatter(maturityWithoutDelay)} (${formatAmountInWords(maturityWithoutDelay)})`, 10, 70);
+        doc.text(`Future Value With Delay: ${rupeeSymbol}${rupeeCurrencyFormatter(maturityWithDelay)} (${formatAmountInWords(maturityWithDelay)})`, 10, 80);
+        doc.text(`Loss Due to Delay: ${rupeeSymbol}${rupeeCurrencyFormatter(lossDueToDelay)} (${formatAmountInWords(lossDueToDelay)})`, 10, 90);
+        doc.text(`Improved SIP: ${rupeeSymbol}${rupeeCurrencyFormatter(improvedSIP)} (${formatAmountInWords(improvedSIP)})`, 10, 100);
+    
         doc.save("SIPDelayCalculator.pdf");
     };
+    
 
     const downloadImage = () => {
         const canvas = document.createElement("canvas");
-        canvas.width = 200;
-        canvas.height = 100;
+        canvas.width = 400;
+        canvas.height = 200;
         const ctx = canvas.getContext("2d");
+
+        // Background
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Text
         ctx.fillStyle = "#000000";
-        ctx.fillText("SIP Delay Calculator", 10, 50);
+        ctx.font = "16px Arial";
+        ctx.fillText("SIP Delay Calculator", 10, 30);
+        ctx.fillText(
+            `Monthly Investment: ₹${rupeeCurrencyFormatter(monthlyInvestment)}`,
+            10,
+            50
+        );
+        ctx.fillText(`Annual Return Rate: ${annualReturnRate}%`, 10, 70);
+        ctx.fillText(`Investment Period: ${investmentPeriod} months`, 10, 90);
+        ctx.fillText(`Delay: ${delayMonths} months`, 10, 110);
+        ctx.fillText(
+            `Loss Due to Delay: ₹${rupeeCurrencyFormatter(lossDueToDelay)}`,
+            10,
+            130
+        );
 
         const image = canvas.toDataURL("image/png");
         const link = document.createElement("a");
         link.href = image;
-        link.download = "SIPCalculatorImage.jpg";
+        link.download = "SIPCalculatorImage.png";
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
