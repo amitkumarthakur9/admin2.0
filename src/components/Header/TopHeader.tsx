@@ -61,7 +61,8 @@ const TopHeader = ({ navigation, logo = false }) => {
                         {logo && (
                             <TouchableOpacity>
                                 <Image
-                                    source={require("../../../assets/images/kotak.png")} // Ensure this path is correct
+                                    // source={require("../../../assets/images/kotak.png")} // Ensure this path is correct
+                                    source={require("../../../assets/Fundexpertlogo.png")} // Ensure this path is correct
                                     style={{
                                         width: 100,
                                         height: 40,
@@ -76,7 +77,7 @@ const TopHeader = ({ navigation, logo = false }) => {
                 <View className="flex flex-row w-4/12 items-center justify-center ">
                     <TouchableOpacity className="">
                         <Image
-                            source={require("../../../assets/images/kotak.png")}
+                            source={require("../../../assets/Fundexpertlogo.png")}
                             style={{ width: 100, height: 40 }}
                         />
                     </TouchableOpacity>

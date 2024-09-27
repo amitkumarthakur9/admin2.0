@@ -7,7 +7,13 @@ import {
     getMonthName,
     monthNames,
 } from "../../helper/DateUtils";
-import { Text, TouchableOpacity, FlatList, StyleSheet } from "react-native";
+import {
+    Text,
+    TouchableOpacity,
+    FlatList,
+    StyleSheet,
+    TouchableWithoutFeedback,
+} from "react-native";
 import {
     Box,
     Popover,
@@ -347,161 +353,186 @@ const CalendarPicker = ({
                             {/* <Popover.Arrow /> */}
                             {/* <Popover.CloseButton /> */}
                             {/* <Popover.Header>Delete Customer</Popover.Header> */}
-                            <Popover.Body>
-                                <View h={"xs"}>
-                                    <View className="flex flex-row p-2 justify-between mb-4">
-                                        <View>
-                                            <Pressable onPress={handleBack}>
-                                                <ChevronLeftIcon />
-                                            </Pressable>
-                                        </View>
-                                        <Pressable
-                                            onPress={() =>
-                                                setMonthChangeOpened(true)
-                                            }
-                                        >
-                                            <Text className="font-bold">
-                                                {getMonthName(selectedMonth)}{" "}
-                                                {selectedYear}
-                                            </Text>
-                                        </Pressable>
-                                        <View>
-                                            <Pressable onPress={handleForward}>
-                                                <ChevronRightIcon />
-                                            </Pressable>
-                                        </View>
-                                    </View>
-                                    {monthChangeOpened ? (
-                                        <View className="flex flex-col items-center">
-                                            <View className="flex flex-row justify-center mb-10">
-                                                <View className="mr-2">
-                                                    <Select
-                                                        selectedValue={
-                                                            "" + selectedMonth
-                                                        }
-                                                        minWidth="100"
-                                                        accessibilityLabel="Month"
-                                                        placeholder="Month"
-                                                        _selectedItem={{
-                                                            bg: "gray.50",
-                                                            endIcon: (
-                                                                <CheckIcon size="5" />
-                                                            ),
-                                                        }}
-                                                        mt={1}
-                                                        onValueChange={(
-                                                            itemValue
-                                                        ) =>
-                                                            setSelectedMonth(
-                                                                Number(
-                                                                    itemValue
-                                                                )
-                                                            )
-                                                        }
-                                                    >
-                                                        {monthNames().map(
-                                                            (month, index) => (
-                                                                <Select.Item
-                                                                    label={
-                                                                        month
-                                                                    }
-                                                                    value={
-                                                                        "" +
-                                                                        (index +
-                                                                            1)
-                                                                    }
-                                                                    key={index}
-                                                                />
-                                                            )
-                                                        )}
-                                                    </Select>
-                                                </View>
-                                                <View>
-                                                    <Select
-                                                        minWidth="100"
-                                                        accessibilityLabel="Year"
-                                                        placeholder="Year"
-                                                        _selectedItem={{
-                                                            bg: "gray.50",
-                                                            endIcon: (
-                                                                <CheckIcon size="5" />
-                                                            ),
-                                                        }}
-                                                        mt={1}
-                                                        selectedValue={
-                                                            "" + selectedYear
-                                                        }
-                                                        onValueChange={(
-                                                            itemValue
-                                                        ) =>
-                                                            setSelectedYear(
-                                                                Number(
-                                                                    itemValue
-                                                                )
-                                                            )
-                                                        }
-                                                    >
-                                                        {Array.from(
-                                                            {
-                                                                length:
-                                                                    2051 - 1970,
-                                                            },
-                                                            (_, index) =>
-                                                                1970 + index
-                                                        ).map((year, index) => (
-                                                            <Select.Item
-                                                                key={index}
-                                                                label={
-                                                                    "" + year
-                                                                }
-                                                                value={
-                                                                    "" + year
-                                                                }
-                                                            />
-                                                        ))}
-                                                    </Select>
-                                                </View>
+                            <TouchableWithoutFeedback
+                                onPress={(e) => e.stopPropagation()}
+                            >
+                                <Popover.Body>
+                                    <View h={"xs"}>
+                                        <View className="flex flex-row p-2 justify-between mb-4">
+                                            <View>
+                                                <Pressable onPress={handleBack}>
+                                                    <ChevronLeftIcon />
+                                                </Pressable>
                                             </View>
-                                            <View className="flex flex-col">
-                                                <Button
-                                                    width={"xs"}
-                                                    size={"md"}
-                                                    bgColor={"#000000"}
-                                                    onPress={() =>
-                                                        setMonthChangeOpened(
-                                                            false
-                                                        )
-                                                    }
+                                            <Pressable
+                                                onPress={() =>
+                                                    setMonthChangeOpened(true)
+                                                }
+                                            >
+                                                <Text className="font-bold">
+                                                    {getMonthName(
+                                                        selectedMonth
+                                                    )}{" "}
+                                                    {selectedYear}
+                                                </Text>
+                                            </Pressable>
+                                            <View>
+                                                <Pressable
+                                                    onPress={handleForward}
                                                 >
-                                                    Select Date
-                                                </Button>
+                                                    <ChevronRightIcon />
+                                                </Pressable>
                                             </View>
                                         </View>
-                                    ) : (
-                                        <View>
-                                            <View className="flex flex-row items-center justify-center mb-2">
-                                                {[
-                                                    "Sun",
-                                                    "Mon",
-                                                    "Tue",
-                                                    "Wed",
-                                                    "Thu",
-                                                    "Fri",
-                                                    "Sat",
-                                                ].map((day) => (
-                                                    <Text
-                                                        key={day}
-                                                        className="w-[15%] text-center font-bold"
+                                        {monthChangeOpened ? (
+                                            <View className="flex flex-col items-center">
+                                                <View className="flex flex-row justify-center mb-10">
+                                                    <View className="mr-2">
+                                                        <Select
+                                                            selectedValue={
+                                                                "" +
+                                                                selectedMonth
+                                                            }
+                                                            minWidth="100"
+                                                            accessibilityLabel="Month"
+                                                            placeholder="Month"
+                                                            _selectedItem={{
+                                                                bg: "gray.50",
+                                                                endIcon: (
+                                                                    <CheckIcon size="5" />
+                                                                ),
+                                                            }}
+                                                            mt={1}
+                                                            onValueChange={(
+                                                                itemValue
+                                                            ) =>
+                                                                setSelectedMonth(
+                                                                    Number(
+                                                                        itemValue
+                                                                    )
+                                                                )
+                                                            }
+                                                        >
+                                                            {monthNames().map(
+                                                                (
+                                                                    month,
+                                                                    index
+                                                                ) => (
+                                                                    <Select.Item
+                                                                        label={
+                                                                            month
+                                                                        }
+                                                                        value={
+                                                                            "" +
+                                                                            (index +
+                                                                                1)
+                                                                        }
+                                                                        key={
+                                                                            index
+                                                                        }
+                                                                    />
+                                                                )
+                                                            )}
+                                                        </Select>
+                                                    </View>
+                                                    <View>
+                                                        <Select
+                                                            minWidth="100"
+                                                            accessibilityLabel="Year"
+                                                            placeholder="Year"
+                                                            _selectedItem={{
+                                                                bg: "gray.50",
+                                                                endIcon: (
+                                                                    <CheckIcon size="5" />
+                                                                ),
+                                                            }}
+                                                            mt={1}
+                                                            selectedValue={
+                                                                "" +
+                                                                selectedYear
+                                                            }
+                                                            onValueChange={(
+                                                                itemValue
+                                                            ) =>
+                                                                setSelectedYear(
+                                                                    Number(
+                                                                        itemValue
+                                                                    )
+                                                                )
+                                                            }
+                                                        >
+                                                            {Array.from(
+                                                                {
+                                                                    length:
+                                                                        2051 -
+                                                                        1970,
+                                                                },
+                                                                (_, index) =>
+                                                                    1970 + index
+                                                            ).map(
+                                                                (
+                                                                    year,
+                                                                    index
+                                                                ) => (
+                                                                    <Select.Item
+                                                                        key={
+                                                                            index
+                                                                        }
+                                                                        label={
+                                                                            "" +
+                                                                            year
+                                                                        }
+                                                                        value={
+                                                                            "" +
+                                                                            year
+                                                                        }
+                                                                    />
+                                                                )
+                                                            )}
+                                                        </Select>
+                                                    </View>
+                                                </View>
+                                                <View className="flex flex-col">
+                                                    <Button
+                                                        width={"xs"}
+                                                        size={"md"}
+                                                        bgColor={"#000000"}
+                                                        onPress={() =>
+                                                            setMonthChangeOpened(
+                                                                false
+                                                            )
+                                                        }
                                                     >
-                                                        {day}
-                                                    </Text>
-                                                ))}
+                                                        Select Date
+                                                    </Button>
+                                                </View>
                                             </View>
-                                            {renderCalendarGrid()}
-                                        </View>
-                                    )}
-                                </View>
-                            </Popover.Body>
+                                        ) : (
+                                            <View>
+                                                <View className="flex flex-row items-center justify-center mb-2">
+                                                    {[
+                                                        "Sun",
+                                                        "Mon",
+                                                        "Tue",
+                                                        "Wed",
+                                                        "Thu",
+                                                        "Fri",
+                                                        "Sat",
+                                                    ].map((day) => (
+                                                        <Text
+                                                            key={day}
+                                                            className="w-[15%] text-center font-bold"
+                                                        >
+                                                            {day}
+                                                        </Text>
+                                                    ))}
+                                                </View>
+                                                {renderCalendarGrid()}
+                                            </View>
+                                        )}
+                                    </View>
+                                </Popover.Body>
+                            </TouchableWithoutFeedback>
                         </Popover.Content>
                     </Popover>
                 </View>

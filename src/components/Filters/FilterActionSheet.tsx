@@ -76,6 +76,7 @@ export const FilterActionSheet = ({
                                 filtersSchema={filtersSchema}
                                 onFilterChange={handleFilterChange}
                                 filterValues={filterValues}
+                                applyFilters={applyFilters}
                             />
                         </View>
                         <View

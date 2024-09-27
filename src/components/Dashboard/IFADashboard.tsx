@@ -280,13 +280,13 @@ const IFADashboard = () => {
     function convertToWord(totalValue) {
         if (totalValue >= 10000000) {
             // If the total value is in crores (10,000,000 or more)
-            return (totalValue / 10000000).toFixed(1) + " cr";
+            return (totalValue / 10000000).toFixed(2) + " cr";
         } else if (totalValue >= 100000) {
             // If the total value is in lakhs (100,000 or more)
-            return (totalValue / 100000).toFixed(1) + " lac";
+            return (totalValue / 100000).toFixed(2) + " lac";
         } else if (totalValue >= 1000) {
             // If the total value is in thousands (1,000 or more)
-            return (totalValue / 1000).toFixed(1) + " k";
+            return (totalValue / 1000).toFixed(2) + " k";
         } else {
             // If the total value is less than 1,000
             return totalValue;

@@ -25,7 +25,7 @@ const CustomSidebarMenu = (props) => {
         <SafeAreaView style={{ flex: 1 }}>
             {/*Top Large Image */}
             <Image
-                source={require("../../assets/images/kotak.png")}
+                source={require("../../assets/Fundexpertlogo.png")}
                 style={styles.sideMenuProfileIcon}
             />
             {/* <View className='flex flex-row justify-start pl-3'>

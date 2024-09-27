@@ -229,9 +229,9 @@ export default function RTAConciliationDetail() {
                                                 title="Transaction, Order Type"
                                                 value={
                                                     data?.transactionType
-                                                        ?.name +
+                                                        ?.name || "" +
                                                     ", " +
-                                                    data?.order.orderType?.name
+                                                    data?.order.orderType?.name || ""
                                                 }
                                             />
                                             <DataValue

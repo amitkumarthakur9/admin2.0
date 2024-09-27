@@ -5,7 +5,7 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 
 interface DropdownItem {
     label: string;
-    value: string;
+    value: string | number;
 }
 
 const NewDropdownComponent = ({

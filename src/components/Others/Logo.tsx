@@ -5,7 +5,7 @@ export default function Logo() {
     // return <View></View>
     return (
         <Image
-            source={require("../../../assets/images/kotak.png")}
+            source={require("../../../assets/Fundexpertlogo.png")}
             style={styles.image}
         />
     );

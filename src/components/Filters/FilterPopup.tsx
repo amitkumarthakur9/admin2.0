@@ -99,30 +99,7 @@ export const FilterPopup = ({
                                     filterValues={filterValues}
                                     applyFilters={applyFilters}
                                 />
-                            </View>
-                            {/* <View
-                                className="bg-[#000000]"
-                                style={{ borderRadius: 5 }}
-                            >
-                                <TouchableRipple
-                                    className="py-3"
-                                    onPress={applyFilters}
-                                >
-                                    <View className="flex flex-row justify-center items-center">
-                                        <Text
-                                            selectable
-                                            className="text-center text-sm mr-2 text-white"
-                                        >
-                                            Apply Filters
-                                        </Text>
-                                        <Icon
-                                            name="filter"
-                                            size={15}
-                                            color="#ffffff"
-                                        />
-                                    </View>
-                                </TouchableRipple>
-                            </View> */}
+                            </View>                          
                         </View>
                     </Box>
                 </View>

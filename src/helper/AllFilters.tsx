@@ -69,18 +69,24 @@ const FilterComponent = ({
             case "string":
                 return newValue + "";
             case "number":
-                return typeof newValue === "string"
-                    ? newValue.length == 0
-                        ? newValue
-                        : Number(newValue)
-                    : newValue;
+                // return typeof newValue === "string"
+                //     ? newValue.length == 0
+                //         ? newValue
+                //         : Number(newValue)
+                //     : newValue;
+                return isNaN(newValue) || newValue === ""
+                    ? newValue
+                    : Number(newValue);
             case "number[]":
                 if (!Array.isArray(newValue)) {
                     newValue = [newValue];
                 } else {
                     let newArr = [];
                     newValue.forEach((val) => {
-                        newArr.push(Number(val));
+                        // newArr.push(Number(val));
+                        newArr.push(
+                            isNaN(val) || val === "" ? val : Number(val)
+                        );
                     });
                     newValue = newArr;
                 }
@@ -111,12 +117,24 @@ const FilterComponent = ({
                         ml="3"
                         value={initialFilterValue?.value?.toString() || ""}
                         keyboardType={
-                            valueConfig.valueType == "number"
+                            valueConfig.valueType === "number"
                                 ? "numeric"
                                 : "default"
                         }
                         placeholder={title}
-                        onChangeText={handleFilterChange}
+                        onChangeText={(text) => {
+                            // Check if valueConfig requires numeric input
+                            if (valueConfig.valueType === "number") {
+                                const numericValue = text.replace(
+                                    /[^0-9.]/g,
+                                    ""
+                                );
+                                handleFilterChange(numericValue);
+                            } else {
+                                // Allow alphanumeric input
+                                handleFilterChange(text);
+                            }
+                        }}
                     />
                 );
             case "select":
@@ -218,7 +236,10 @@ const FilterComponent = ({
                         value={initialFilterValue?.value?.toString() || ""}
                         keyboardType="numeric"
                         placeholder={title}
-                        onChangeText={handleFilterChange}
+                        onChangeText={(text) => {
+                            const numericValue = text.replace(/[^0-9.]/g, "");
+                            handleFilterChange(numericValue);
+                        }}
                     />
                 );
             case "date":

@@ -65,7 +65,7 @@ const DonutPieChart = ({ pieData, totalValue="NA", width = 400, children=<></> }
                                 </View>
                                 <View >
                                     <Text className="text-xs text-slate-800">{`${item.y.toFixed(
-                                        1
+                                        2
                                     )}%`}</Text>
                                 </View>
                             </View>
