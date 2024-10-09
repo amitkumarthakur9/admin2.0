@@ -9,6 +9,7 @@ import React, {
 
 interface UserRoleContextType {
     roleId: number | null;
+    userId: number | null;
 }
 
 const UserRoleContext = createContext<UserRoleContextType | undefined>(
@@ -23,17 +24,20 @@ export const UserRoleProvider: React.FC<UserRoleProviderProps> = ({
     children,
 }) => {
     const [roleId, setRoleId] = useState<number | null>(null);
+    const [userId, setUserId] = useState<number | null>(null);
 
     useEffect(() => {
         const token = localStorage.getItem("token");
         if (token) {
             const decoded: any = jwtDecode(token);
+            console.log("decoded", decoded)
             setRoleId(decoded.roleId);
+            setUserId(decoded._id);
         }
     }, []);
 
     return (
-        <UserRoleContext.Provider value={{ roleId }}>
+        <UserRoleContext.Provider value={{ roleId,userId  }}>
             {children}
         </UserRoleContext.Provider>
     );

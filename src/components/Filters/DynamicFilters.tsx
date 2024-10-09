@@ -61,6 +61,19 @@ export const DynamicFilters = ({
     const [elementPosition, setElementPosition] = useState<any>({});
     const outsideClickRef = useRef(null);
     const { height, width } = useWindowDimensions();
+    const [localSorting, setLocalSorting] = useState(appliedSorting);
+
+    console.log("Dyanmic appliedSorting:", appliedSorting);
+    console.log("Dyanmic sorting:", sorting);
+
+    useEffect(() => {
+        // Sync Redux `appliedFilters` with the local state when it changes
+        setFilterValues(appliedFilers); // Populate the local state with applied filters from Redux
+    }, [appliedFilers]);
+
+    useEffect(() => {
+        setLocalSorting(appliedSorting);
+    }, [appliedSorting]);
 
     const handleLayout = (event) => {
         // console.log(event);
@@ -219,12 +232,24 @@ export const DynamicFilters = ({
         setIsDownloadProcessing(false);
     };
 
+    // const handleSortingChange = (e, name) => {
+    //     // console.log(e);
+    //     setAppliedSorting((prevSelectSorting) => ({
+    //         ...prevSelectSorting,
+    //         [name]: e,
+    //     }));
+    // };
+
     const handleSortingChange = (e, name) => {
-        // console.log(e);
-        setAppliedSorting((prevSelectSorting) => ({
-            ...prevSelectSorting,
+        // Update the local sorting state
+        const updatedSorting = {
+            ...localSorting,
             [name]: e,
-        }));
+        };
+        setLocalSorting(updatedSorting);
+
+        // Dispatch the sorting to the parent component
+        setAppliedSorting(updatedSorting);
     };
 
     const determineDisplayValue = () => {
@@ -508,7 +533,7 @@ export const DynamicFilters = ({
                                         setSortingOpen={setSortingOpen}
                                         setFilterOpen={setFilterOpen}
                                         sortingOpen={sortingOpen}
-                                        appliedSorting={appliedSorting}
+                                        appliedSorting={localSorting}
                                         setAppliedSorting={setAppliedSorting}
                                         sorting={sorting}
                                         handleSortingChange={
@@ -520,7 +545,7 @@ export const DynamicFilters = ({
                                         setSortingOpen={setSortingOpen}
                                         setFilterOpen={setFilterOpen}
                                         sortingOpen={sortingOpen}
-                                        appliedSorting={appliedSorting}
+                                        appliedSorting={localSorting}
                                         setAppliedSorting={setAppliedSorting}
                                         sorting={sorting}
                                         handleSortingChange={

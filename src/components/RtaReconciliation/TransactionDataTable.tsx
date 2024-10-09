@@ -136,6 +136,7 @@ const TransactionDataTable = () => {
     }, [appliedSorting]);
 
     const transformedData = data?.map((rta) => {
+        console.log("rta", rta)
         const itemStructure = [
             {
                 key: "clientName",
@@ -235,7 +236,7 @@ const TransactionDataTable = () => {
                                         selectable
                                         className=" text-gray-800 text-sm"
                                     >
-                                        {rta.account.user[0].panNumber}
+                                        {rta?.account?.user[0]?.panNumber}
                                     </Text>
                                     {/* <View className='rounded-full bg-[#6C6A6A] h-2 w-2 mx-1'></View> */}
                                 </View>

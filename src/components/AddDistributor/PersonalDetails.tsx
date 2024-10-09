@@ -28,9 +28,10 @@ const eighteenYearsAgo = new Date(
 
 const validationSchema = Yup.object().shape({
     fullName: Yup.string()
-        .matches(/^[A-Za-z\s]+$/, "Full Name should contain only alphabets")
-        .min(3, "Full Name should contain at least 3 alphabets")
-        .required("Full Name is required"),
+    .matches(/^[A-Za-z]+(?:\s[A-Za-z]+)*$/, "Full Name should only contain alphabets and single spaces between words")
+    .trim() // Automatically removes leading and trailing spaces
+    .min(3, "Full Name should contain at least 3 characters")
+    .required("Full Name is required"),
     dateOfBirth: Yup.date()
         .max(today, "Date of birth cannot be in the future")
         .test(
@@ -83,6 +84,7 @@ const PersonalDetails = ({ onNext, initialValues }) => {
                 touched,
                 setFieldValue,
                 setValues,
+                validateField
             }) => {
                 if (isLoading) {
                     return (
@@ -103,8 +105,14 @@ const PersonalDetails = ({ onNext, initialValues }) => {
                                     </Text>
                                     <TextInput
                                         style={styles.input}
-                                        onChangeText={handleChange("fullName")}
-                                        onBlur={handleBlur("fullName")}
+                                        onChangeText={(text) =>
+                                            handleChange("fullName")(
+                                                text
+                                                    .replace(/^\s+/g, "") // Remove leading spaces
+                                                    .replace(/\s{2,}/g, " ") // Replace multiple spaces with a single space
+                                            )
+                                        }
+                                        onBlur={(e) => handleChange("fullName")(values.fullName.trim())} // Trim trailing spaces when the input loses focus
                                         value={values.fullName}
                                     />
                                     <View style={styles.fieldContainer}>
@@ -182,7 +190,9 @@ const PersonalDetails = ({ onNext, initialValues }) => {
                                     </Text>
                                     <TextInput
                                         style={styles.input}
-                                        onChangeText={handleChange("panNumber")}
+                                        onChangeText={(text) =>
+                                            handleChange("panNumber")(text.toUpperCase())
+                                        }                                    
                                         onBlur={handleBlur("panNumber")}
                                         value={values.panNumber}
                                         maxLength={10} // Restrict input to 10 digits
@@ -244,9 +254,10 @@ const PersonalDetails = ({ onNext, initialValues }) => {
                                     </Text>
                                     <CalendarSinglePicker
                                         value={values.dateOfBirth}
-                                        handleFilterChange={(value) =>
+                                        handleFilterChange={(value) =>{
                                             setFieldValue("dateOfBirth", value)
-                                        }
+                                            validateField("dateOfBirth");
+                                        }}
                                     />
                                     <View style={styles.fieldContainer}>
                                         {touched.dateOfBirth &&

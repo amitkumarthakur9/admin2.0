@@ -35,21 +35,51 @@ const SIPDelay = () => {
 
     const downloadPDF = () => {
         const doc = new jsPDF();
-    
+
         // Use the Unicode for the rupee symbol (\u20B9)
         const rupeeSymbol = "Rs ";
-    
+
         doc.text("SIP Delay Calculator", 10, 10);
         doc.text("This is your detailed report.", 10, 20);
-        doc.text(`Monthly Investment: ${rupeeSymbol}${rupeeCurrencyFormatter(monthlyInvestment)}`, 10, 30);
+        doc.text(
+            `Monthly Investment: ${rupeeSymbol}${rupeeCurrencyFormatter(
+                monthlyInvestment
+            )}`,
+            10,
+            30
+        );
         doc.text(`Annual Return Rate: ${annualReturnRate}%`, 10, 40);
         doc.text(`Investment Period: ${investmentPeriod} months`, 10, 50);
         doc.text(`Delay: ${delayMonths} months`, 10, 60);
-        doc.text(`Future Value Without Delay: ${rupeeSymbol}${rupeeCurrencyFormatter(maturityWithoutDelay)} (${formatAmountInWords(maturityWithoutDelay)})`, 10, 70);
-        doc.text(`Future Value With Delay: ${rupeeSymbol}${rupeeCurrencyFormatter(maturityWithDelay)} (${formatAmountInWords(maturityWithDelay)})`, 10, 80);
-        doc.text(`Loss Due to Delay: ${rupeeSymbol}${rupeeCurrencyFormatter(lossDueToDelay)} (${formatAmountInWords(lossDueToDelay)})`, 10, 90);
-        doc.text(`Improved SIP: ${rupeeSymbol}${rupeeCurrencyFormatter(improvedSIP)} (${formatAmountInWords(improvedSIP)})`, 10, 100);
-    
+        doc.text(
+            `Future Value Without Delay: ${rupeeSymbol}${rupeeCurrencyFormatter(
+                maturityWithoutDelay
+            )} (${formatAmountInWords(maturityWithoutDelay)})`,
+            10,
+            70
+        );
+        doc.text(
+            `Future Value With Delay: ${rupeeSymbol}${rupeeCurrencyFormatter(
+                maturityWithDelay
+            )} (${formatAmountInWords(maturityWithDelay)})`,
+            10,
+            80
+        );
+        doc.text(
+            `Loss Due to Delay: ${rupeeSymbol}${rupeeCurrencyFormatter(
+                lossDueToDelay
+            )} (${formatAmountInWords(lossDueToDelay)})`,
+            10,
+            90
+        );
+        doc.text(
+            `Improved SIP: ${rupeeSymbol}${rupeeCurrencyFormatter(
+                improvedSIP
+            )} (${formatAmountInWords(improvedSIP)})`,
+            10,
+            100
+        );
+
         doc.save("SIPDelayCalculator.pdf");
     };
     
@@ -57,7 +87,7 @@ const SIPDelay = () => {
     const downloadImage = () => {
         const canvas = document.createElement("canvas");
         canvas.width = 400;
-        canvas.height = 200;
+        canvas.height = 300;
         const ctx = canvas.getContext("2d");
 
         // Background
@@ -77,9 +107,32 @@ const SIPDelay = () => {
         ctx.fillText(`Investment Period: ${investmentPeriod} months`, 10, 90);
         ctx.fillText(`Delay: ${delayMonths} months`, 10, 110);
         ctx.fillText(
-            `Loss Due to Delay: ₹${rupeeCurrencyFormatter(lossDueToDelay)}`,
+            `Future Value Without Delay: ${rupeeCurrencyFormatter(
+                maturityWithoutDelay
+            )} (${formatAmountInWords(maturityWithoutDelay)})`,
             10,
             130
+        );
+        ctx.fillText(
+            `Future Value With Delay: ${rupeeCurrencyFormatter(
+                maturityWithDelay
+            )} (${formatAmountInWords(maturityWithDelay)})`,
+            10,
+            150
+        );
+        ctx.fillText(
+            `Loss Due to Delay: ${rupeeCurrencyFormatter(
+                lossDueToDelay
+            )} (${formatAmountInWords(lossDueToDelay)})`,
+            10,
+            170
+        );
+        ctx.fillText(
+            `Improved SIP: ${rupeeCurrencyFormatter(
+                improvedSIP
+            )} (${formatAmountInWords(improvedSIP)})`,
+            10,
+            190
         );
 
         const image = canvas.toDataURL("image/png");

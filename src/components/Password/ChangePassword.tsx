@@ -31,6 +31,7 @@ const ChangePassword = () => {
     const [validation, setValidation] = useState({
         length: false,
         upperCase: false,
+        lowerCase: false,
         number: false,
         specialChar: false,
     });
@@ -161,12 +162,14 @@ const ChangePassword = () => {
     const validatePassword = (password) => {
         const lengthRegex = /.{8,20}/;
         const upperCaseRegex = /[A-Z]/;
+        const lowerCaseRegex = /[a-z]/;
         const numberRegex = /[0-9]/;
         const specialCharRegex = /[^A-Za-z0-9]/;
 
         setValidation({
             length: lengthRegex.test(password),
             upperCase: upperCaseRegex.test(password),
+            lowerCase: lowerCaseRegex.test(password),
             number: numberRegex.test(password),
             specialChar: specialCharRegex.test(password),
         });
@@ -293,6 +296,7 @@ const ChangePassword = () => {
                 setValidation({
                     length: false,
                     upperCase: false,
+                    lowerCase: false,
                     number: false,
                     specialChar: false,
                 });
@@ -613,6 +617,18 @@ const ChangePassword = () => {
                                                 }
                                             >
                                                 {renderValidationCircle(
+                                                    validation.lowerCase
+                                                )}
+                                                <Text className="text-sm text-gray-500 pl-2">
+                                                    1 lower case letter
+                                                </Text>
+                                            </View>
+                                            <View
+                                                style={
+                                                    styles.validationContainer
+                                                }
+                                            >
+                                                {renderValidationCircle(
                                                     validation.number
                                                 )}
                                                 <Text className="text-sm text-gray-500 pl-2">
@@ -640,6 +656,7 @@ const ChangePassword = () => {
                                                         !validation.number ||
                                                         !validation.specialChar ||
                                                         errors.oldPassword ||
+                                                        errors.confirmPassword ||
                                                         !formData.confirmPassword) &&
                                                     "bg-gray-400 pointer-events-none"
                                                 }`}
@@ -651,6 +668,7 @@ const ChangePassword = () => {
                                                     !validation.number ||
                                                     !validation.specialChar ||
                                                     errors.oldPassword ||
+                                                    errors.confirmPassword ||
                                                     !formData.confirmPassword
                                                 }
                                             >

@@ -225,6 +225,11 @@ export const getResponselate = (code) =>  {
     });
 }
 
+export const isIndividualPAN = (pan: string): boolean => {
+    const panType = pan.charAt(3).toUpperCase();
+    // Return true if the 4th character is 'P' for individual
+    return panType === 'P';
+};
 
 
     

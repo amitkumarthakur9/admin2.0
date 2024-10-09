@@ -18,8 +18,9 @@ const emailRegexRFC5322 =
 
 const validationSchema = Yup.object().shape({
     fullName: Yup.string()
-    .matches(/^[A-Za-z\s]+$/, "Full Name should contain only alphabets")
-    .min(3, "Full Name should contain at least 3 alphabets")
+    .matches(/^[A-Za-z]+(?:\s[A-Za-z]+)*$/, "Full Name should only contain alphabets and single spaces between words")
+    .trim() // Automatically removes leading and trailing spaces
+    .min(3, "Full Name should contain at least 3 characters")
     .required("Full Name is required"),
     email: Yup.string()
         .matches(emailRegexRFC5322, "Invalid email address")
@@ -182,12 +183,14 @@ export default function ManualInvite({ getlist = () => {}, children }) {
                                                                 size="lg"
                                                                 variant="outline"
                                                                 placeholder="Name"
-                                                                onChangeText={handleChange(
-                                                                    "fullName"
-                                                                )}
-                                                                onBlur={handleBlur(
-                                                                    "fullName"
-                                                                )}
+                                                                onChangeText={(text) =>
+                                                                    handleChange("fullName")(
+                                                                        text
+                                                                            .replace(/^\s+/g, "") // Remove leading spaces
+                                                                            .replace(/\s{2,}/g, " ") // Replace multiple spaces with a single space
+                                                                    )
+                                                                }
+                                                                onBlur={(e) => handleChange("fullName")(values.fullName.trim())} // Trim trailing spaces when the input loses focus
                                                                 value={
                                                                     values.fullName
                                                                 }

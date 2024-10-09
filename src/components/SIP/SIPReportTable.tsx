@@ -76,7 +76,7 @@ const SIPReportTable = () => {
                         itemsPerPage
                 )
             );
-        }else{
+        } else {
             setData([]);
             setTotalItems(response.filterCount);
             setIsLoading(false);
@@ -125,7 +125,9 @@ const SIPReportTable = () => {
                                 <View className="w-11/12">
                                     <Pressable
                                         onPress={() =>
-                                            router.push(`clients/${item?.client?.id}`)
+                                            router.push(
+                                                `clients/${item?.client?.id}`
+                                            )
                                         }
                                     >
                                         <Text

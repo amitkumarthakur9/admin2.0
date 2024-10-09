@@ -33,6 +33,9 @@ const RemarkCheckModal = ({ visible, onClose, onNext }) => {
         panCard: false,
         cancelledCheque: false,
         other: false,
+        arn_certificate: false,
+        nism_certificate: false,
+        euin_certificate: false,
     });
 
     const handleCheckboxChange = (key) => {
@@ -40,7 +43,7 @@ const RemarkCheckModal = ({ visible, onClose, onNext }) => {
     };
 
     return (
-        <Modal visible={visible} transparent={true} >
+        <Modal visible={visible} transparent={true}>
             <View style={styles.modalContainer}>
                 <View style={styles.modalContent}>
                     <View className="flex flex-row items-center justify-between">
@@ -52,7 +55,9 @@ const RemarkCheckModal = ({ visible, onClose, onNext }) => {
                         </Pressable>
                     </View>
 
-                    <ScrollView contentContainerStyle={styles.scrollViewContent}>
+                    <ScrollView
+                        contentContainerStyle={styles.scrollViewContent}
+                    >
                         <Text style={styles.sectionTitle}>
                             Error in Personal Details
                         </Text>
@@ -156,9 +161,7 @@ const RemarkCheckModal = ({ visible, onClose, onNext }) => {
                                 <CustomCheckbox
                                     label="PAN"
                                     isChecked={checkedItems.pan}
-                                    onChange={() =>
-                                        handleCheckboxChange("pan")
-                                    }
+                                    onChange={() => handleCheckboxChange("pan")}
                                 />
                             </View>
                         </View>
@@ -208,13 +211,40 @@ const RemarkCheckModal = ({ visible, onClose, onNext }) => {
                                     }
                                 />
                             </View>
+                            <View style={styles.checkboxColumn}>
+                                <CustomCheckbox
+                                    label="ARN Certificate"
+                                    isChecked={checkedItems.arn_certificate}
+                                    onChange={() =>
+                                        handleCheckboxChange("arn_certificate")
+                                    }
+                                />
+                            </View>
+                            <View style={styles.checkboxColumn}>
+                                <CustomCheckbox
+                                    label="EUIN Certificate"
+                                    isChecked={checkedItems.euin_certificate}
+                                    onChange={() =>
+                                        handleCheckboxChange("euin_certificate")
+                                    }
+                                />
+                            </View>
+                            <View style={styles.checkboxColumn}>
+                                <CustomCheckbox
+                                    label="NISM Certificate"
+                                    isChecked={checkedItems.nism_certificate}
+                                    onChange={() =>
+                                        handleCheckboxChange("nism_certificate")
+                                    }
+                                />
+                            </View>
                         </View>
                     </ScrollView>
                     <View className="flex flex-row justify-center">
-                    <Pressable style={styles.nextButton} onPress={onNext}>
-                        <Text style={styles.nextButtonText}>Next</Text>
-                    </Pressable>
-                    </View>               
+                        <Pressable style={styles.nextButton} onPress={onNext}>
+                            <Text style={styles.nextButtonText}>Next</Text>
+                        </Pressable>
+                    </View>
                 </View>
             </View>
         </Modal>
@@ -263,7 +293,7 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         alignItems: "center",
         marginTop: 20,
-        width: "50%"
+        width: "50%",
     },
     nextButtonText: {
         color: "white",

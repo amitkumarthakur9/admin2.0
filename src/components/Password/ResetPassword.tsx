@@ -25,6 +25,7 @@ const ResetPassword = ({authToken}) => {
     const [validation, setValidation] = useState({
         length: false,
         upperCase: false,
+        lowerCase: false,
         number: false,
         specialChar: false,
     });
@@ -67,6 +68,7 @@ const ResetPassword = ({authToken}) => {
     const validatePassword = (key, password) => {
         const lengthRegex = /.{8,20}/;
         const upperCaseRegex = /[A-Z]/;
+        const lowerCaseRegex = /[a-z]/;
         const numberRegex = /[0-9]/;
         const specialCharRegex = /[^A-Za-z0-9]/;
         console.log(formData.confirmPassword);
@@ -75,6 +77,7 @@ const ResetPassword = ({authToken}) => {
         setValidation({
             length: lengthRegex.test(password),
             upperCase: upperCaseRegex.test(password),
+            lowerCase: lowerCaseRegex.test(password),
             number: numberRegex.test(password),
             specialChar: specialCharRegex.test(password),
         });
@@ -104,6 +107,7 @@ const ResetPassword = ({authToken}) => {
             upperCaseRegex.test(password) &&
             numberRegex.test(password) &&
             specialCharRegex.test(password) &&
+            lowerCaseRegex.test(password) &&
             formData.newPassword === formData.confirmPassword // Check if passwords match
         ) {
             setConfirmButtonDisabled(false);
@@ -199,6 +203,7 @@ const ResetPassword = ({authToken}) => {
                     setValidation({
                         length: false,
                         upperCase: false,
+                        lowerCase: false,
                         number: false,
                         specialChar: false,
                     });
@@ -376,6 +381,16 @@ const ResetPassword = ({authToken}) => {
                                             )}
                                             <Text className="text-sm text-gray-500 pl-2">
                                                 1 upper case letter
+                                            </Text>
+                                        </View>
+                                        <View
+                                            style={styles.validationContainer}
+                                        >
+                                            {renderValidationCircle(
+                                                validation.lowerCase
+                                            )}
+                                            <Text className="text-sm text-gray-500 pl-2">
+                                                1 lower case letter
                                             </Text>
                                         </View>
                                         <View

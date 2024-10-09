@@ -105,7 +105,7 @@ const HoldingWiseDataTable = () => {
         ) {
             getDataList();
         }
-    }, [appliedSorting]);
+    }, [appliedSorting, currentPageNumber, itemsPerPage]);
 
     const transformedData = data?.map((item) => {
         const itemStructure = [
@@ -163,9 +163,9 @@ const HoldingWiseDataTable = () => {
                 content: (
                     <View className="flex flex-col justify-start w-11/12">
                         <Pressable
-                            // onPress={() =>
-                            //     router.push(`clients/${item?.mutualfund?.id}`)
-                            // }
+                        // onPress={() =>
+                        //     router.push(`clients/${item?.mutualfund?.id}`)
+                        // }
                         >
                             <Text
                                 selectable
@@ -409,7 +409,7 @@ const HoldingWiseDataTable = () => {
                 <Pagination
                     itemsPerPage={itemsPerPage}
                     setItemsPerPage={setItemsPerPage}
-                    getDataList={getDataList}
+                    // getDataList={"getDataList"}
                     currentPageNumber={currentPageNumber}
                     totalItems={totalItems}
                     setCurrentPageNumber={setCurrentPageNumber}

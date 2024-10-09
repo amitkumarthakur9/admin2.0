@@ -7,6 +7,7 @@ import RemoteApi from "../../services/RemoteApi";
 import { ToastAlert } from "../../helper/CustomToaster";
 import { v4 as uuidv4 } from "uuid";
 import CustomCheckbox from "../Checkbox/NativeCheckbox";
+import { isIndividualPAN } from "src/helper/helper";
 
 const StepThreeUpload = ({ onSuccess, initialValues }) => {
     const [pickedDocuments, setPickedDocuments] = useState({
@@ -15,6 +16,9 @@ const StepThreeUpload = ({ onSuccess, initialValues }) => {
         aadharBack: null,
         bankCheck: null,
         esignedAgreement: null,
+        nismCertificate: null,
+        arnCertificate: null,
+        euinertificate: null,
     });
     const [isLoading, setIsLoading] = useState(false);
     const toast = useToast();
@@ -45,6 +49,9 @@ const StepThreeUpload = ({ onSuccess, initialValues }) => {
           !pickedDocuments.aadharFront ||
           !pickedDocuments.aadharBack ||
           !pickedDocuments.bankCheck ||
+          !pickedDocuments.nismCertificate ||
+          !pickedDocuments.arnCertificate ||
+          !pickedDocuments.euinCertificate ||
           !consentGiven;
 
     useEffect(() => {
@@ -112,6 +119,12 @@ const StepThreeUpload = ({ onSuccess, initialValues }) => {
                     fileKey = "esigned_document";
                 } else if (key === "bankCheck") {
                     fileKey = "cancelled_check";
+                } else if (key === "nismCertificate") {
+                    fileKey = "nism_certificate";
+                } else if (key === "arnCertificate") {
+                    fileKey = "arn_certificate";
+                } else if (key === "euinCertificate") {
+                    fileKey = "euin_certificate";
                 }
                 formData.append(fileKey, pickedDocuments[key]);
             }
@@ -327,50 +340,64 @@ const StepThreeUpload = ({ onSuccess, initialValues }) => {
                             </View>
                             {renderDocumentUpload("Pan Card", "panCard")}
                         </View>
-                        <View className="flex flex-row justify-center items-start w-[50%] gap-2">
-                            {renderDocumentUpload(
-                                "Aadhar Card front",
-                                "aadharFront"
-                            )}
-                            {renderDocumentUpload(
-                                "Aadhar Card back",
-                                "aadharBack"
-                            )}
-                        </View>
-                        <View className="flex flex-row justify-center items-center w-[50%] gap-2 ">
-                            {initialValues.aadharFrontDocumentError ||
-                            initialValues.aadharBackDocumentError ||
-                            !initialValues.remark ? (
-                                <View className="flex flex-row justify-center items-center w-full py-2">
-                                    <View className="">
-                                        <CustomCheckbox
-                                            label=""
-                                            isChecked={consentGiven}
-                                            onChange={() =>
-                                                setConsentGiven(!consentGiven)
-                                            }
-                                        />
-                                    </View>
-                                    <Text className="text-xs text-gray-600">
-                                        I provide my consent to use Aadhar
-                                        document for address verification and I
-                                        agree to have masked the first 8 numbers
-                                        of Aadhar and I agree for the
-                                        collection, storage, and use of my
-                                        Aadhar number for the specified
-                                        purposes.
-                                    </Text>
-                                </View>
-                            ) : (
-                                <></>
-                            )}
-                            {!initialValues.accountNumber &&
-                                renderDocumentUpload(
-                                    "Cancelled Bank Check",
-                                    "bankCheck"
+                        {initialValues.arnNumber && (
+                            <View className="flex flex-row justify-center items-start w-[50%] gap-2">
+                                {renderDocumentUpload(
+                                    "NISM Certificate",
+                                    "nismCertificate"
                                 )}
+                                {renderDocumentUpload(
+                                    "ARN Certificate",
+                                    "arnCertificate"
+                                )}
+                            </View>
+                        )}
+                        <View className="flex flex-col justify-center items-center">
+                            <View className="flex flex-row justify-center items-start w-[50%] gap-2">
+                                {renderDocumentUpload(
+                                    "Aadhar Card front",
+                                    "aadharFront"
+                                )}
+                                {renderDocumentUpload(
+                                    "Aadhar Card back",
+                                    "aadharBack"
+                                )}
+                            </View>
+                            <View className="flex flex-row justify-center items-start w-full">
+                                <CustomCheckbox
+                                    label=""
+                                    isChecked={consentGiven}
+                                    onChange={() =>
+                                        setConsentGiven(!consentGiven)
+                                    }
+                                />
+                                <Text className="text-[8px] text-black">
+                                    I provide my consent to use Aadhar document
+                                    for address verification and I agree to have
+                                    masked the first 8 numbers of Aadhar and I
+                                    agree for the collection, storage, and use
+                                    of my Aadhar number for the specified
+                                    purposes.
+                                </Text>
+                            </View>
                         </View>
-                        <View className="flex items-center w-1/3">
+                        <View className="flex flex-row justify-center items-center w-full gap-2 ">
+                            <View className="w-[50%]">
+                                {initialValues.accountNumber &&
+                                    renderDocumentUpload(
+                                        "Cancelled Bank Check",
+                                        "bankCheck"
+                                    )}
+                            </View>
+                            <View className="w-[50%]">
+                                {isIndividualPAN(initialValues.panNumber) &&
+                                    renderDocumentUpload(
+                                        "EUIN Certificate",
+                                        "euinCertificate"
+                                    )}
+                            </View>
+                        </View>
+                        <View className="flex items-center w-1/2">
                             <Button
                                 w="100%"
                                 isLoading={isLoading}

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 import {
     View,
     Text,
@@ -56,83 +56,11 @@ const roldID = () => {
 };
 
 const AUMDataTable = () => {
-    // console.log("role");
-    // console.log(role);
-    // const [[isLoading, token], setToken] = useStorageState("token");
-
     const roles: number = roldID();
-
     const [isLoading, setIsLoading] = React.useState(false);
-
-    const [currentPageNumber, setCurrentPageNumber] = useState(1);
-    const [totalItems, setTotalItems] = useState(0);
-    const [itemsPerPage, setItemsPerPage] = useState(10);
     const [data, setData] = useState<AccountItem[]>([]);
-    const [totalPages, setTotalPages] = useState(1);
-    const [appliedFilers, setAppliedFilers] = useState([]);
-    const [filtersSchema, setFiltersSchema] = useState([]);
-    const [sorting, setSorting] = useState([]);
-    const [appliedSorting, setAppliedSorting] = useState({
-        key: "",
-        direction: "",
-    });
+
     const { width } = useWindowDimensions();
-
-    // async function getDataList(
-    //     updatedFilterValues = [],
-    //     applyDirectly = false
-    // ) {
-    //     setIsLoading(true);
-    //     let data: any = {
-    //         page: currentPageNumber,
-    //         limit: itemsPerPage,
-    //         filters: applyDirectly ? updatedFilterValues : appliedFilers,
-    //     };
-
-    //     if (appliedSorting.key != "") {
-    //         data.orderBy = appliedSorting;
-    //     }
-
-    //     const response: AccountsResponse = await RemoteApi.post(
-    //         "client/list",
-    //         data
-    //     );
-
-    //     if (response.code == 200) {
-    //         setData(response.data);
-    //         // setItemsPerPage(response.count)
-    //         setTotalItems(response.filterCount);
-    //         setIsLoading(false);
-    //         setTotalPages(
-    //             Math.ceil(
-    //                 (response.filterCount || response.data.length) /
-    //                     itemsPerPage
-    //             )
-    //         );
-    //     }else{
-    //         setIsLoading(false);
-
-    //         alert("Internal Server Error");
-    //     }
-    // }
-
-    // React.useEffect(() => {
-    //     async function getSchema() {
-    //         const response: any = await RemoteApi.get("client/schema");
-    //         setFiltersSchema(response);
-    //         setSorting(response.sort);
-    //     }
-    //     getSchema();
-    // }, []);
-
-    // React.useEffect(() => {
-    //     if (
-    //         (appliedSorting.direction != "" && appliedSorting.key != "") ||
-    //         (appliedSorting.direction == "" && appliedSorting.key == "")
-    //     ) {
-    //         getDataList();
-    //     }
-    // }, [appliedSorting]);
 
     const AUMCard = ({ data }) => {
         const [selectedTab, setSelectedTab] = useState(1);
@@ -141,86 +69,81 @@ const AUMDataTable = () => {
             setSelectedTab(tab);
         };
 
-        const assetBifurcation = [
-            { label: "Equity", value: 20 },
-            { label: "Hybrid", value: 20 },
-            { label: "Debt", value: 20 },
-            { label: "Others", value: 40 },
-        ];
+        const tabContent = useMemo(() => {
+            const baseTabs = [
+                {
+                    key: "client-wise",
+                    name: "Client Wise",
+                    content: <ClientWiseDataTable />,
+                },
+                {
+                    key: "holding-wise",
+                    name: "Holding Wise",
+                    content: <HoldingWiseDataTable />,
+                },
+                {
+                    key: "folio-wise",
+                    name: "Folio Wise",
+                    content: <FolioWiseDataTable />,
+                },
+                {
+                    key: "amc-wise",
+                    name: "AMC Wise",
+                    content: <AMCWiseDataTable />,
+                },
+                {
+                    key: "scheme-wise",
+                    name: "Scheme Wise",
+                    content: <SchemeWiseDataTable />,
+                },
+                {
+                    key: "category",
+                    name: "Category",
+                    content: <SchemeTypeWiseDataTable />,
+                },
+                {
+                    key: "rta-wise",
+                    name: "RTA Wise",
+                    content: <RTAWiseDataTable />,
+                },
+                // {
+                //     key: "ifa-wise",
+                //     name: "IFA Wise",
+                //     content: <IFAWiseDataTable />,
+                // },
+                // {
+                //     key: "rm-wise",
+                //     name: "RM Wise",
+                //     content: <RMWiseDataTable />,
+                // },
+            ];
+            console.log("aumrole");
 
-        const assetBifurcationColors = [
-            "#715CFA",
-            "#69E1AB",
-            "#39C3E2",
-            "#FA8B5C",
-        ];
+            console.log(roles);
 
-        const tabContent = [
-            {
-                key: "client-wise",
-                name: "Client Wise",
-                content: <ClientWiseDataTable />,
-            },
-            {
-                key: "holding-wise",
-                name: "Holding Wise",
-                content: <HoldingWiseDataTable />,
-            },
-            {
-                key: "folio-wise",
-                name: "Folio Wise",
-                content: <FolioWiseDataTable />,
-            },
-            {
-                key: "amc-wise",
-                name: "AMC Wise",
-                content: <AMCWiseDataTable />,
-            },
-            {
-                key: "scheme-wise",
-                name: "Scheme Wise",
-                content: <SchemeWiseDataTable />,
-            },
-            {
-                key: "category",
-                name: "Category",
-                content: <SchemeTypeWiseDataTable />,
-            },
-            {
-                key: "rta-wise",
-                name: "RTA Wise",
-                content: <RTAWiseDataTable />,
-            },
-            // {
-            //     key: "ifa-wise",
-            //     name: "IFA Wise",
-            //     content: <IFAWiseDataTable />,
-            // },
-            // {
-            //     key: "rm-wise",
-            //     name: "RM Wise",
-            //     content: <RMWiseDataTable />,
-            // },
-        ];
-        console.log("aumrole");
+            if (roles == 3 || roles == 4) {
+                tabContent.push({
+                    key: "ifa-wise",
+                    name: "IFA Wise",
+                    content: <IFAWiseDataTable />,
+                });
+            }
 
-        console.log(roles);
+            if (roles == 4) {
+                tabContent.push({
+                    key: "rm-wise",
+                    name: "RM Wise",
+                    content: <RMWiseDataTable />,
+                });
+            }
 
-        if (roles == 3 || roles == 4) {
-            tabContent.push({
-                key: "ifa-wise",
-                name: "IFA Wise",
-                content: <IFAWiseDataTable />,
-            });
-        }
+            return baseTabs;
+        }, [roles]);
 
-        if (roles == 4) {
-            tabContent.push({
-                key: "rm-wise",
-                name: "RM Wise",
-                content: <RMWiseDataTable />,
-            });
-        }
+        // Memoize each tab's content to avoid unnecessary re-renders
+        const renderTabContent = useMemo(() => {
+            return tabContent[selectedTab - 1]?.content;
+        }, [selectedTab, tabContent]);
 
         const AUMCardWithTabs = ({
             selectedTab,
@@ -278,10 +201,10 @@ const AUMDataTable = () => {
                                             </Text>
                                         </Pressable>
                                     );
-                                })}                              
+                                })}
                             </ScrollView>
                         </View>
-
+                        {/* <View>{renderTabContent()}</View> */}
                         {tabContent[selectedTab - 1]?.content}
                     </View>
                 </View>
@@ -306,22 +229,12 @@ const AUMDataTable = () => {
     return (
         <View className="bg-white">
             <View className="">
-                <TableBreadCrumb name={"AUM Reports"} icon={require("../../../assets/aumReport.png")}/>
+                <TableBreadCrumb
+                    name={"AUM Reports"}
+                    icon={require("../../../assets/aumReport.png")}
+                />
             </View>
             <View className="border-[0.2px]  border-[#e4e4e4]">
-                {/* <DynamicFilters
-                    appliedSorting={appliedSorting}
-                    setAppliedSorting={setAppliedSorting}
-                    sorting={sorting}
-                    fileName="Clients"
-                    downloadApi={"client/download-report"}
-                    schemaResponse={filtersSchema}
-                    setCurrentPageNumber={setCurrentPageNumber}
-                    getList={getDataList}
-                    appliedFilers={appliedFilers}
-                    setAppliedFilers={setAppliedFilers}
-                /> */}
-
                 {!isLoading ? (
                     // <ScrollView className={"mt-0 z-[-1] "}>
                     <View className="w-12/12 h-full rounded">
@@ -345,15 +258,6 @@ const AUMDataTable = () => {
                     </HStack>
                 )}
             </View>
-
-            {/* <Pagination
-                itemsPerPage={itemsPerPage}
-                setItemsPerPage={setItemsPerPage}
-                getDataList={getDataList}
-                currentPageNumber={currentPageNumber}
-                totalItems={totalItems}
-                setCurrentPageNumber={setCurrentPageNumber}
-            /> */}
         </View>
     );
 };

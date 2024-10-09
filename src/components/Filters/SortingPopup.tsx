@@ -66,12 +66,15 @@ export const SortingPopup = ({
                             <View className="flex flex-row-reverse mb-2">
                                 <TouchableRipple
                                     rippleColor={"#e4e4e4"}
-                                    onPress={() =>
+                                    onPress={() =>{
+                                        console.log("setAppliedSorting", setAppliedSorting)
+                                        console.log("appliedSorting", appliedSorting)
+                                        
                                         setAppliedSorting({
                                             key: "",
                                             direction: "",
                                         })
-                                    }
+                                    }}
                                 >
                                     <Text
                                         selectable

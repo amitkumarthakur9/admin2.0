@@ -16,6 +16,7 @@ import RemoteApi from "src/services/RemoteApi";
 import CustomRadioButton from "../CustomForm/CustomRadioButton/CustomRadioButton";
 import CalendarSinglePicker from "../CustomDatePicker/CalendarSinglePicker";
 import DropdownComponent from "../Dropdowns/NewDropDown";
+import { useUserRole } from "src/context/useRoleContext";
 
 const panRegex = /^([A-Z]){3}([ABCFGHJLPT])([A-Z]){1}([0-9]){4}([A-Z]){1}?$/;
 
@@ -34,7 +35,7 @@ const validationSchema = Yup.object().shape({
         .required("EUIN Number is required"),
     email: Yup.string().email("Invalid email").required("Email is required"),
     mobileNumber: Yup.string()
-    .matches(/^(?!00)(?!.*(\d)\1{9}$)\d{10}$/, "Invalid mobile number")
+        .matches(/^(?!00)(?!.*(\d)\1{9}$)\d{10}$/, "Invalid mobile number")
         .required("Mobile number is required"),
     panNumber: Yup.string()
         .required("PAN number is required")
@@ -50,34 +51,35 @@ const validationSchema = Yup.object().shape({
 const Professional = ({ onNext, initialValues, onPrevious }) => {
     const [isLoading, setIsLoading] = React.useState(false);
     const [rolesOptions, setRolesOptions] = useState([]);
-
-    const options = [
-        { label: "Option 1", value: "option1" },
-        { label: "Option 2", value: "option2" },
-        { label: "Option 3", value: "option3" },
-    ];
-
+    const { roleId, userId } = useUserRole();
     async function getRoles() {
-        setIsLoading(true);
-        try {
-            const response = await RemoteApi.get("user/juniorManagementUser");
-            if (response.message === "Success") {
-                setRolesOptions(
-                    response.data.map((status) => ({
-                        label: status.name,
-                        value: status.id,
-                    }))
+        
+        if (roleId === 3) {
+            setRolesOptions([{ label: "self", value: `${userId}` }]);
+        } else {
+            setIsLoading(true);
+            try {
+                const response = await RemoteApi.get(
+                    "user/juniorManagementUser"
                 );
+                if (response.message === "Success") {
+                    setRolesOptions(
+                        response.data.map((status) => ({
+                            label: status.name,
+                            value: status.id,
+                        }))
+                    );
 
-                setIsLoading(false);
-            } else {
-                Alert.alert("Error", "Failed to fetch marital status list");
+                    setIsLoading(false);
+                } else {
+                    Alert.alert("Error", "Failed to fetch marital status list");
+                }
+            } catch (error) {
+                Alert.alert(
+                    "Error",
+                    "An error occurred while fetching the marital status list"
+                );
             }
-        } catch (error) {
-            Alert.alert(
-                "Error",
-                "An error occurred while fetching the marital status list"
-            );
         }
     }
 
@@ -179,8 +181,10 @@ const Professional = ({ onNext, initialValues, onPrevious }) => {
 
                         <View style={styles.formRow}>
                             <View style={styles.fieldContainer}>
-                                <Text style={styles.label}>Assign Relationship Manager{" "}
-                                <Text className="text-red-500">*</Text></Text>
+                                <Text style={styles.label}>
+                                    Assign Relationship Manager{" "}
+                                    <Text className="text-red-500">*</Text>
+                                </Text>
                                 <DropdownComponent
                                     label="Select Relationship Manager"
                                     data={rolesOptions}

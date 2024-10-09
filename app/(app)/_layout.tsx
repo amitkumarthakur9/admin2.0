@@ -48,6 +48,7 @@ NativeWindStyleSheet.setOutput({
 });
 
 const DashboardIFA = lazy(() => import("./dashboard"));
+const DsaDashboard = lazy(() => import("./dashboard/dsaDashboard"));
 const ClientsScreen = lazy(() => import("./clients"));
 const OrdersScreen = lazy(() => import("./orders"));
 const OrderDetail = lazy(() => import("./orders/[id]"));
@@ -245,6 +246,24 @@ export default function AppLayout() {
 
     // RoldeID == 2, is for Distributor.
     if (roleId == 2) {
+        drawerStructure.push({
+            key: "DsaDashboard",
+            content: (
+                <Drawer.Screen
+                    name="dashboard/dsaDashboard/index"
+                    options={{
+                        drawerLabel: "DsaDashboard",
+                        title: "DsaDashboard",
+                        drawerItemStyle: {
+                            display: "none",
+                        },
+                        // unmountOnBlur: true,
+                    }}
+                    initialParams={{}}
+                    component={DsaDashboard}
+                />
+            ),
+        });
         drawerStructure.push({
             key: "DsaOnboarding",
             content: (

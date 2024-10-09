@@ -35,6 +35,9 @@ const RejectModal = ({ visible, onClose, clientId, getDataList, onBack }) => {
         aadharBackDocument: false,
         panCardDocument: false,
         cancelledCheque: false,
+        arn_certificate: false,
+        nism_certificate: false,
+        euin_certificate: false,
         // other: false,
     });
     const [rejectInput, setRejectInput] = useState("");
@@ -64,6 +67,9 @@ const RejectModal = ({ visible, onClose, clientId, getDataList, onBack }) => {
                 aadharBackDocument: false,
                 panCardDocument: false,
                 cancelledCheque: false,
+                arn_certificate: false,
+                nism_certificate: false,
+                euin_certificate: false,
                 // other: false,
             });
             setRejectInput("");
@@ -322,6 +328,43 @@ const RejectModal = ({ visible, onClose, clientId, getDataList, onBack }) => {
                                         onChange={() =>
                                             handleCheckboxChange(
                                                 "cancelledCheque"
+                                            )
+                                        }
+                                    />
+                                </View>
+                                <View style={styles.checkboxColumn}>
+                                    <CustomCheckbox
+                                        label="ARN Certificate"
+                                        isChecked={checkedItems.arn_certificate}
+                                        onChange={() =>
+                                            handleCheckboxChange(
+                                                "arn_certificate"
+                                            )
+                                        }
+                                    />
+                                </View>
+                                <View style={styles.checkboxColumn}>
+                                    <CustomCheckbox
+                                        label="EUIN Certificate"
+                                        isChecked={
+                                            checkedItems.euin_certificate
+                                        }
+                                        onChange={() =>
+                                            handleCheckboxChange(
+                                                "euin_certificate"
+                                            )
+                                        }
+                                    />
+                                </View>
+                                <View style={styles.checkboxColumn}>
+                                    <CustomCheckbox
+                                        label="NISM Certificate"
+                                        isChecked={
+                                            checkedItems.nism_certificate
+                                        }
+                                        onChange={() =>
+                                            handleCheckboxChange(
+                                                "nism_certificate"
                                             )
                                         }
                                     />

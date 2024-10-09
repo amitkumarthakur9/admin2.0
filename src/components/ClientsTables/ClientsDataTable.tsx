@@ -29,15 +29,18 @@ import { useUserRole } from "../../../src/context/useRoleContext";
 import NoDataAvailable from "../Others/NoDataAvailable";
 import { dateTimeFormat } from "../../../src/helper/DateUtils";
 import ClientOnboard from "../ClientOnboard/ClientOnboard";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchClients } from "../../redux/slices/clientsSlice";
+import { RootState, AppDispatch } from "../../redux/store";
 
 const ClientsDataTable = () => {
     const { roleId } = useUserRole();
-    const [isLoading, setIsLoading] = React.useState(false);
+    // const [isLoading, setIsLoading] = React.useState(false);
     const [currentPageNumber, setCurrentPageNumber] = useState(1);
-    const [totalItems, setTotalItems] = useState(0);
+    // const [totalItems, setTotalItems] = useState(0);
     const [itemsPerPage, setItemsPerPage] = useState(10);
-    const [data, setData] = useState<ClientDataResponse[]>([]);
-    const [totalPages, setTotalPages] = useState(1);
+    // const [data, setData] = useState<ClientDataResponse[]>([]);
+    // const [totalPages, setTotalPages] = useState(1);
     const [appliedFilers, setAppliedFilers] = useState([]);
     const [filtersSchema, setFiltersSchema] = useState([]);
     const [sorting, setSorting] = useState([]);
@@ -46,42 +49,35 @@ const ClientsDataTable = () => {
         direction: "",
     });
     const { width } = useWindowDimensions();
+    const dispatch = useDispatch<AppDispatch>();
 
-    async function getDataList(
-        updatedFilterValues = [],
-        applyDirectly = false
-    ) {
-        setIsLoading(true);
-        let data: any = {
+    // Redux state
+    const clients = useSelector((state: RootState) => state.clients.clients);
+    const isLoading = useSelector(
+        (state: RootState) => state.clients.isLoading
+    );
+    const totalItems = useSelector(
+        (state: RootState) => state.clients.totalItems
+    );
+    const totalPages = useSelector(
+        (state: RootState) => state.clients.totalPages
+    );
+
+    const getDataList = () => {
+        const payload: any = {
             page: currentPageNumber,
             limit: itemsPerPage,
-            filters: applyDirectly ? updatedFilterValues : appliedFilers,
+            filters: appliedFilers,
         };
-
-        if (appliedSorting.key != "") {
-            data.orderBy = appliedSorting;
+    
+        // Only include `orderBy` if both key and direction are not empty
+        if (appliedSorting.key && appliedSorting.direction) {
+            payload.orderBy = appliedSorting;
         }
-
-        const response: ApiResponse<ClientDataResponse[]> =
-            await RemoteApi.post("client/list", data);
-
-        if (response?.code == 200) {
-            setData(response.data);
-            // setItemsPerPage(response.count)
-            setTotalItems(response.filterCount);
-            setIsLoading(false);
-            setTotalPages(
-                Math.ceil(
-                    (response.filterCount || response.data.length) /
-                        itemsPerPage
-                )
-            );
-        } else {
-            setIsLoading(false);
-
-            alert("Internal Server Error");
-        }
-    }
+    
+        dispatch(fetchClients(payload));
+    };
+    
 
     React.useEffect(() => {
         async function getSchema() {
@@ -94,14 +90,20 @@ const ClientsDataTable = () => {
 
     React.useEffect(() => {
         if (
-            (appliedSorting.direction != "" && appliedSorting.key != "") ||
-            (appliedSorting.direction == "" && appliedSorting.key == "")
+            (appliedSorting.direction !== "" && appliedSorting.key !== "") ||
+            (appliedSorting.direction === "" && appliedSorting.key === "")
         ) {
             getDataList();
         }
-    }, [appliedSorting]);
+    }, [
+        appliedSorting,
+        // currentPageNumber,
+        // itemsPerPage,
+        // appliedFilers,
+        // dispatch,
+    ]);
 
-    const transformedData = data?.map((item) => {
+    const transformedData = clients?.map((item) => {
         const itemStructure = [
             {
                 key: "clientName",

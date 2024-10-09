@@ -28,9 +28,9 @@ const validationSchema = Yup.object().shape({
     email: Yup.string()
         .matches(emailRegexRFC5322, "Invalid email address")
         .required("Email is required"),
-    mobileNumber: Yup.string()
+   mobileNumber: Yup.string()
         .matches(/^(?!00)(?!.*(\d)\1{9}$)\d{10}$/, "Invalid mobile number")
-        .required("Mobile number is required"),
+        .required("Mobile number is required"), 
     maritalStatus: Yup.number().required("Marital status is required"),
     isArnHolder: Yup.boolean(),
     arnNumber: Yup.string().when("isArnHolder", {

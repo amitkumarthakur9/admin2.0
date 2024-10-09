@@ -6,7 +6,7 @@ import Icon from "react-native-vector-icons/FontAwesome";
 export const Pagination = ({
     currentPageNumber,
     setCurrentPageNumber,
-    getDataList,
+    // getDataList,
     setItemsPerPage,
     itemsPerPage,
     totalItems,
@@ -78,14 +78,14 @@ export const Pagination = ({
         }
     };
 
-    useEffect(() => {
-        getDataList();
-    }, [currentPageNumber]);
+    // useEffect(() => {
+    //     getDataList();
+    // }, [currentPageNumber]);
 
-    useEffect(() => {
-        getDataList();
-        setCurrentPageNumber(1);
-    }, [itemsPerPage]);
+    // useEffect(() => {
+    //     getDataList();
+    //     setCurrentPageNumber(1);
+    // }, [itemsPerPage]);
 
     return (
         <View className="flex flex-row items-center justify-between mt-[20px] mb-[80px] z-[-1] mx-2 flex-wrap">

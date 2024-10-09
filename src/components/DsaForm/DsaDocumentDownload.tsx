@@ -12,6 +12,9 @@ const DsaDocumentDownload = ({ requestId }) => {
         aadhaarfront: false,
         aadhaarback: false,
         esigneddocument: false,
+        arn_certificate: false,
+        nism_certificate: false,
+        euin_certificate: false,
     });
     const [isDownloadProcessing, setIsDownloadProcessing] = useState(false);
     const [successMessages, setSuccessMessages] = useState([]);
@@ -25,6 +28,9 @@ const DsaDocumentDownload = ({ requestId }) => {
             aadhaarfront: false,
             aadhaarback: false,
             esigneddocument: false,
+            arn_certificate: false,
+            nism_certificate: false,
+            euin_certificate: false,
         });
         setModalVisible(false);
     };

@@ -23,6 +23,7 @@ import { ActivityIndicator } from "react-native-paper";
 import { getResponse } from "src/helper/helper";
 import { UserMeData } from "src/interfaces/DsaFormApproveInterface";
 import StepProgressBar from "../AddManagementUser/StepProgressBar";
+import AddNominee from "./AddNominee";
 
 const MainComponent = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -78,6 +79,21 @@ const MainComponent = () => {
         isBankVerified: null,
         districtId: null,
         pincodeId: null,
+        nomineeName: "",
+        nomineePanNumber: "",
+        nomineeDateOfBirth: "",
+        nomineeAddress: "",
+        nomineePincode: "",
+        nomineePhone: "",
+        nomineeEmail: "",
+        nomieeRelationship: "",
+        guardianName: "",
+        guardianDateOfBirth: "",
+        guardianAddress: "",
+        guardianPincode: "",
+        guardianPhone: "",
+        guardianEmail: "",
+        guadianRelationship: "",
     });
     const [isResubmit, setIsResubmit] = useState(false);
 
@@ -206,10 +222,10 @@ const MainComponent = () => {
             //         pinCodeError: false,
             //         panError: false,
             //         esignedDocumentError: false,
-            //         aadharFrontDocumentError: true,
-            //         aadharBackDocumentError: true,
-            //         panCardDocumentError: true,
-            //         cancelledChequeError: true,
+            //         aadharFrontDocumentError: false,
+            //         aadharBackDocumentError: false,
+            //         panCardDocumentError: false,
+            //         cancelledChequeError: false,
             //     },
             //     errors: [],
             // };
@@ -614,10 +630,28 @@ const MainComponent = () => {
             });
         }
 
-        if (!formData.remark || formData.remark) {
-            // stepLabel.push("Submit");
+        if (!formData.remark) {
+            stepLabel.push("Nominee");
             formSteps.push({
                 key: "8",
+                content: (
+                    <View>
+                        {/* {step === 8 && ( */}
+                        <AddNominee
+                            onPrevious={handlePrevious}
+                            onNext={handleNext}
+                            initialValues={formData}
+                        />
+                        {/* )} */}
+                    </View>
+                ),
+            });
+        }
+
+        if (!formData.remark) {
+            // stepLabel.push("Submit");
+            formSteps.push({
+                key: "11",
                 content: (
                     <View>
                         {/* {step === 8 && ( */}
@@ -748,13 +782,11 @@ const MainComponent = () => {
                 {isLoading || step == 0 ? (
                     <ActivityIndicator />
                 ) : (
-                    
-                        <View className="flex flex-row justify-center items-center">
-                            <View className="w-[700px] h-[500px]">
-                                {renderCurrentStep()}
-                            </View>
+                    <View className="flex flex-row justify-center items-center">
+                        <View className="w-[700px] h-[500px]">
+                            {renderCurrentStep()}
                         </View>
-                    
+                    </View>
                 )}
             </View>
         </View>
@@ -897,8 +929,8 @@ const styles = StyleSheet.create({
         backgroundColor: "rgba(0,0,0,0.5)",
     },
     modalContent: {
-        height:  700,
-        width:  780,
+        height: 700,
+        width: 780,
         backgroundColor: "white",
         borderRadius: 10,
         padding: 40,
