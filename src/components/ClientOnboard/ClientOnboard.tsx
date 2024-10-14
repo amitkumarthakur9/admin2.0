@@ -225,14 +225,15 @@ const ClientOnboard = () => {
             {/* Button to add a new client */}
             <Pressable
                 style={styles.addButton}
-                onPress={() => setShowDropdown(!showDropdown)}
+                // onPress={() => setShowDropdown(!showDropdown)}
+                onPress={handleAddClientDetails}
             >
                 <Icon name="account-plus" size={16} color="#fff" />
                 <Text style={styles.addButtonText}>Add New Client</Text>
             </Pressable>
 
             {/* Dropdown menu */}
-            {showDropdown && (
+            {/* {showDropdown && (
                 <View style={styles.dropdown}>
                     <TouchableOpacity
                         style={styles.dropdownItem}
@@ -251,7 +252,7 @@ const ClientOnboard = () => {
                         </Text>
                     </TouchableOpacity>
                 </View>
-            )}
+            )} */}
 
             {/* Modal to show BasicDetails component */}
             <Modal

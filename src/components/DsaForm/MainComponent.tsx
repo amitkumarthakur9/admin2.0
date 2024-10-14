@@ -24,6 +24,8 @@ import { getResponse } from "src/helper/helper";
 import { UserMeData } from "src/interfaces/DsaFormApproveInterface";
 import StepProgressBar from "../AddManagementUser/StepProgressBar";
 import AddNominee from "./AddNominee";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState, AppDispatch } from "src/redux/store";
 
 const MainComponent = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -39,7 +41,7 @@ const MainComponent = () => {
         country: "",
         arnNumber: "",
         euinNumber: "",
-        isArnHolder: false,
+        isArnHolder: null,
         maritalStatus: null,
         incomeRange: null,
         education: null,
@@ -96,7 +98,9 @@ const MainComponent = () => {
         guadianRelationship: "",
     });
     const [isResubmit, setIsResubmit] = useState(false);
-
+    const userDetails = useSelector(
+        (state: RootState) => state.user.userDetails
+    );
     const [dsaData, setDsaData] = useState(null);
     const formSteps = [];
 
@@ -145,26 +149,25 @@ const MainComponent = () => {
         setIsLoading(true);
         try {
             const response: UserMeData = await RemoteApi.get("user/me");
-            // const response = await getResponse(200);
 
             // const response = {
             //     code: 200,
             //     message: "Success",
             //     data: {
-            //         name: "Saff",
-            //         email: "saff@gmai.com",
-            //         mobileNumber: "876565",
+            //         name: "Saffi",
+            //         email: "Saffi@gail.com",
+            //         mobileNumber: "1234567898",
             //         maritalStatus: {
             //             id: 2,
             //             name: "null",
             //         },
-            //         panNumber: "AAAPZ1234G",
-            //         arn: "ARN-14",
-            //         euin: "E12345",
+            //         panNumber: "CXNMPN1234G",
+            //         arn: "arn-14",
+            //         euin: "E1234",
             //         dsaCode: null,
             //         remark: {
             //             id: 2,
-            //             remark: "",
+            //             remark: "remark",
             //         },
             //         incomeSlab: {
             //             id: 2,
@@ -196,10 +199,10 @@ const MainComponent = () => {
             //         ],
             //         address: [
             //             {
-            //                 line1: "BENGALURU",
-            //                 line2: "BENGALURU",
+            //                 line1: "",
+            //                 line2: "",
             //                 line3: null,
-            //                 pincode: "560062",
+            //                 pincode: "",
             //                 district: {
             //                     id: "224",
             //                     name: "BENGALURU",
@@ -232,6 +235,8 @@ const MainComponent = () => {
 
             if (response.code === 200) {
                 const userData = response.data;
+                // const userData = userDetails;
+
                 // const alreadySet = () => {
                 //     console.log("setStated");
 
@@ -631,6 +636,7 @@ const MainComponent = () => {
         }
 
         if (!formData.remark) {
+        // if (formData.remark) {
             stepLabel.push("Nominee");
             formSteps.push({
                 key: "8",
@@ -648,24 +654,24 @@ const MainComponent = () => {
             });
         }
 
-        if (!formData.remark) {
-            // stepLabel.push("Submit");
-            formSteps.push({
-                key: "11",
-                content: (
-                    <View>
-                        {/* {step === 8 && ( */}
-                        <Success
-                            successMessages={[
-                                "Application successfully submitted.",
-                                "Approval Pending.",
-                            ]}
-                        />
-                        {/* )} */}
-                    </View>
-                ),
-            });
-        }
+        // if (!formData.remark) {
+        // stepLabel.push("Submit");
+        formSteps.push({
+            key: "11",
+            content: (
+                <View>
+                    {/* {step === 8 && ( */}
+                    <Success
+                        successMessages={[
+                            "Application successfully submitted.",
+                            "Approval Pending.",
+                        ]}
+                    />
+                    {/* )} */}
+                </View>
+            ),
+        });
+        // }
 
         // let currentStep = formSteps[step - 1];
         console.log("steps");

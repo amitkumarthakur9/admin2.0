@@ -159,7 +159,7 @@ const AddNominee = ({ onNext, onPrevious, initialValues }) => {
                 }
             } else {
                 if (key === "nomieePincodeId") {
-                    setFieldError("nomieePincode", response?.message);
+                    setFieldError("nomineePincode", response?.message);
                 } else {
                     setFieldError("guardianPincode", response?.message);
                 }
@@ -177,39 +177,56 @@ const AddNominee = ({ onNext, onPrevious, initialValues }) => {
     };
 
     const handleSubmit = async (values) => {
-        console.log(values);
-        console.log(JSON.stringify(values));
+        console.log("nomieevalues", values);
+
         setIsLoading(true);
 
-        let data = {};
+        let data = null;
 
-        if (values.guardianName) {
+        if (guardianPincodeId.pincodeId) {
+            console.log("IFNomieedata", data);
             data = {
-                name: values.nomineeName,
-                dob: values.nomineeDateOfBirth,
-                relationId: Number(values.relationship),
-                guardian: {
-                    name: values.guardianName,
-                    dob: values.guardianDateOfBirth,
-                    relationId: Number(values.relationship),
+                name: values?.nomineeName,
+                dob: values?.nomineeDateOfBirth,
+                address: values?.nomineeAddress,
+                pincodeId: nomieePincodeId?.pincodeId,
+                mobileNumber: values?.nomineePhone,
+                email: values?.nomineeEmail,
+                panNumber: values?.nomineePanNumber,
+                isMinor: true,
+                relationshipId: Number(values?.nomieeRelationship),
+                guardianDetails: {
+                    guardianName: values?.guardianName,
+                    guardianDob: values?.guardianDateOfBirth,
+                    guardianAddress: values?.guardianAddress,
+                    guardianPincodeId: guardianPincodeId?.pincodeId,
+                    guardianRelationshipId: Number(values?.guadianRelationship),
+                    guardianMobile: values?.guardianPhone,
+                    guardianEmail: values?.guardianEmail,
                 },
-                token: values.token,
             };
+
+            console.log("IFNomieedata", data);
         } else {
             data = {
-                name: values.nomineeName,
-                dob: values.nomineeDateOfBirth,
-                relationId: Number(values.relationship),
-
-                token: values.token,
+                name: values?.nomineeName,
+                dob: values?.nomineeDateOfBirth,
+                address: values?.nomineeAddress,
+                pincodeId: nomieePincodeId?.pincodeId,
+                mobileNumber: values?.nomineePhone,
+                email: values?.nomineeEmail,
+                panNumber: values?.nomineePanNumber,
+                isMinor: false,
+                relationshipId: Number(values?.nomieeRelationship),
             };
+            console.log("elseNomieedata", data);
         }
 
-        console.log(data);
+        console.log("Nomieedata", data);
 
         try {
             const response: any = await RemoteApi.post(
-                "onboard/client/add-nominee",
+                "distributor-onboard/add-nominee",
                 data
             );
 
@@ -225,12 +242,12 @@ const AddNominee = ({ onNext, onPrevious, initialValues }) => {
 
             if (response.code === 200) {
                 // setIsVerifing(false); // Stop loading
-                const valuesWithToken = {
-                    ...values,
-                    token: response.data.token,
-                    currentStep: 6,
-                };
-                onNext(valuesWithToken);
+                // const valuesWithToken = {
+                //     ...values,
+                //     token: response.data.token,
+                //     currentStep: 6,
+                // };
+                onNext();
             } else {
                 // setIsVerifing(false); // Stop loading
                 console.log("ElseError");
@@ -320,11 +337,14 @@ const AddNominee = ({ onNext, onPrevious, initialValues }) => {
                                     onBlur={handleBlur("nomineeName")}
                                     value={values.nomineeName}
                                 />
-                                {touched.nomineeName && errors.nomineeName && (
-                                    <Text style={styles.errorText}>
-                                        {errors.nomineeName}
-                                    </Text>
-                                )}
+                                <View style={{ minHeight: 20 }}>
+                                    {touched.nomineeName &&
+                                        errors.nomineeName && (
+                                            <Text style={styles.errorText}>
+                                                {errors.nomineeName}
+                                            </Text>
+                                        )}
+                                </View>
                             </View>
                             <View className="w-[48%]">
                                 <Text style={styles.label}>
@@ -339,12 +359,14 @@ const AddNominee = ({ onNext, onPrevious, initialValues }) => {
                                     onBlur={handleBlur("nomineePanNumber")}
                                     value={values.nomineePanNumber}
                                 />
-                                {touched.nomineePanNumber &&
-                                    errors.nomineePanNumber && (
-                                        <Text style={styles.errorText}>
-                                            {errors.nomineePanNumber}
-                                        </Text>
-                                    )}
+                                <View style={{ minHeight: 20 }}>
+                                    {touched.nomineePanNumber &&
+                                        errors.nomineePanNumber && (
+                                            <Text style={styles.errorText}>
+                                                {errors.nomineePanNumber}
+                                            </Text>
+                                        )}
+                                </View>
                             </View>
                         </View>
                         <View className="flex flex-row justify-between items-center w-full  mb-4">
@@ -366,12 +388,14 @@ const AddNominee = ({ onNext, onPrevious, initialValues }) => {
                                     // containerStyle={styles.dropdown}
                                     noIcon={true}
                                 />
-                                {touched.nomieeRelationship &&
-                                    errors.nomieeRelationship && (
-                                        <Text style={styles.errorText}>
-                                            {errors.nomieeRelationship}
-                                        </Text>
-                                    )}
+                                <View style={{ minHeight: 20 }}>
+                                    {touched.nomieeRelationship &&
+                                        errors.nomieeRelationship && (
+                                            <Text style={styles.errorText}>
+                                                {errors.nomieeRelationship}
+                                            </Text>
+                                        )}
+                                </View>
                             </View>
                             <View className="w-[48%]">
                                 <Text style={styles.label}>
@@ -387,12 +411,14 @@ const AddNominee = ({ onNext, onPrevious, initialValues }) => {
                                         )
                                     }
                                 />
-                                {touched.nomineeDateOfBirth &&
-                                    errors.nomineeDateOfBirth && (
-                                        <Text style={styles.errorText}>
-                                            {errors.nomineeDateOfBirth}
-                                        </Text>
-                                    )}
+                                <View style={{ minHeight: 20 }}>
+                                    {touched.nomineeDateOfBirth &&
+                                        errors.nomineeDateOfBirth && (
+                                            <Text style={styles.errorText}>
+                                                {errors.nomineeDateOfBirth}
+                                            </Text>
+                                        )}
+                                </View>
                             </View>
                         </View>
                         <View className="flex flex-row justify-between items-center w-full  mb-4">
@@ -407,12 +433,14 @@ const AddNominee = ({ onNext, onPrevious, initialValues }) => {
                                     onBlur={handleBlur("nomineePhone")}
                                     value={values.nomineePhone}
                                 />
-                                {touched.nomineePhone &&
-                                    errors.nomineePhone && (
-                                        <Text style={styles.errorText}>
-                                            {errors.nomineePhone}
-                                        </Text>
-                                    )}
+                                <View style={{ minHeight: 20 }}>
+                                    {touched.nomineePhone &&
+                                        errors.nomineePhone && (
+                                            <Text style={styles.errorText}>
+                                                {errors.nomineePhone}
+                                            </Text>
+                                        )}
+                                </View>
                             </View>
                             <View className="w-[48%]">
                                 <Text style={styles.label}>
@@ -424,12 +452,14 @@ const AddNominee = ({ onNext, onPrevious, initialValues }) => {
                                     onBlur={handleBlur("nomineeEmail")}
                                     value={values.nomineeEmail}
                                 />
-                                {touched.nomineeEmail &&
-                                    errors.nomineeEmail && (
-                                        <Text style={styles.errorText}>
-                                            {errors.nomineeEmail}
-                                        </Text>
-                                    )}
+                                <View style={{ minHeight: 20 }}>
+                                    {touched.nomineeEmail &&
+                                        errors.nomineeEmail && (
+                                            <Text style={styles.errorText}>
+                                                {errors.nomineeEmail}
+                                            </Text>
+                                        )}
+                                </View>
                             </View>
                         </View>
                         <View className="flex flex-row justify-between items-center w-full  mb-4">
@@ -464,12 +494,14 @@ const AddNominee = ({ onNext, onPrevious, initialValues }) => {
                                     keyboardType="numeric" // Restrict input to numeric characters
                                     maxLength={6}
                                 />
-                                {touched.nomineePincode &&
-                                    errors.nomineePincode && (
-                                        <Text style={styles.errorText}>
-                                            {errors.nomineePincode}
-                                        </Text>
-                                    )}
+                                <View style={{ minHeight: 20 }}>
+                                    {touched.nomineePincode &&
+                                        errors.nomineePincode && (
+                                            <Text style={styles.errorText}>
+                                                {errors.nomineePincode}
+                                            </Text>
+                                        )}
+                                </View>
                             </View>
                             <View className="w-[48%]">
                                 <Text style={styles.label}>
@@ -484,12 +516,14 @@ const AddNominee = ({ onNext, onPrevious, initialValues }) => {
                                     onBlur={handleBlur("nomineeAddress")}
                                     value={values.nomineeAddress}
                                 />
-                                {touched.nomineeAddress &&
-                                    errors.nomineeAddress && (
-                                        <Text style={styles.errorText}>
-                                            {errors.nomineeAddress}
-                                        </Text>
-                                    )}
+                                <View style={{ minHeight: 20 }}>
+                                    {touched.nomineeAddress &&
+                                        errors.nomineeAddress && (
+                                            <Text style={styles.errorText}>
+                                                {errors.nomineeAddress}
+                                            </Text>
+                                        )}
+                                </View>
                             </View>
                         </View>
                         {isLoading && (
@@ -571,12 +605,16 @@ const AddNominee = ({ onNext, onPrevious, initialValues }) => {
                                             onBlur={handleBlur("guardianName")}
                                             value={values.guardianName}
                                         />
-                                        {touched.guardianName &&
-                                            errors.guardianName && (
-                                                <Text style={styles.errorText}>
-                                                    {errors.guardianName}
-                                                </Text>
-                                            )}
+                                        <View style={{ minHeight: 20 }}>
+                                            {touched.guardianName &&
+                                                errors.guardianName && (
+                                                    <Text
+                                                        style={styles.errorText}
+                                                    >
+                                                        {errors.guardianName}
+                                                    </Text>
+                                                )}
+                                        </View>
                                     </View>
                                     <View className="w-[48%]">
                                         <Text style={styles.label}>
@@ -594,12 +632,18 @@ const AddNominee = ({ onNext, onPrevious, initialValues }) => {
                                                 )
                                             }
                                         />
-                                        {touched.guardianDateOfBirth &&
-                                            errors.guardianDateOfBirth && (
-                                                <Text style={styles.errorText}>
-                                                    {errors.guardianDateOfBirth}
-                                                </Text>
-                                            )}
+                                        <View style={{ minHeight: 20 }}>
+                                            {touched.guardianDateOfBirth &&
+                                                errors.guardianDateOfBirth && (
+                                                    <Text
+                                                        style={styles.errorText}
+                                                    >
+                                                        {
+                                                            errors.guardianDateOfBirth
+                                                        }
+                                                    </Text>
+                                                )}
+                                        </View>
                                     </View>
                                 </View>
                                 <View className="flex flex-row justify-between items-center w-full  mb-4">
@@ -618,12 +662,16 @@ const AddNominee = ({ onNext, onPrevious, initialValues }) => {
                                             onBlur={handleBlur("guardianPhone")}
                                             value={values.guardianPhone}
                                         />
-                                        {touched.guardianPhone &&
-                                            errors.guardianPhone && (
-                                                <Text style={styles.errorText}>
-                                                    {errors.guardianPhone}
-                                                </Text>
-                                            )}
+                                        <View style={{ minHeight: 20 }}>
+                                            {touched.guardianPhone &&
+                                                errors.guardianPhone && (
+                                                    <Text
+                                                        style={styles.errorText}
+                                                    >
+                                                        {errors.guardianPhone}
+                                                    </Text>
+                                                )}
+                                        </View>
                                     </View>
                                     <View className="w-[48%]">
                                         <Text style={styles.label}>
@@ -640,12 +688,16 @@ const AddNominee = ({ onNext, onPrevious, initialValues }) => {
                                             onBlur={handleBlur("guardianEmail")}
                                             value={values.guardianEmail}
                                         />
-                                        {touched.guardianEmail &&
-                                            errors.guardianEmail && (
-                                                <Text style={styles.errorText}>
-                                                    {errors.guardianEmail}
-                                                </Text>
-                                            )}
+                                        <View style={{ minHeight: 20 }}>
+                                            {touched.guardianEmail &&
+                                                errors.guardianEmail && (
+                                                    <Text
+                                                        style={styles.errorText}
+                                                    >
+                                                        {errors.guardianEmail}
+                                                    </Text>
+                                                )}
+                                        </View>
                                     </View>
                                 </View>
                                 <View className="flex flex-row justify-between items-center w-full  mb-4">
@@ -669,12 +721,18 @@ const AddNominee = ({ onNext, onPrevious, initialValues }) => {
                                             // containerStyle={styles.dropdown}
                                             noIcon={true}
                                         />
-                                        {touched.guadianRelationship &&
-                                            errors.guadianRelationship && (
-                                                <Text style={styles.errorText}>
-                                                    {errors.guadianRelationship}
-                                                </Text>
-                                            )}
+                                        <View style={{ minHeight: 20 }}>
+                                            {touched.guadianRelationship &&
+                                                errors.guadianRelationship && (
+                                                    <Text
+                                                        style={styles.errorText}
+                                                    >
+                                                        {
+                                                            errors.guadianRelationship
+                                                        }
+                                                    </Text>
+                                                )}
+                                        </View>
                                     </View>
                                     <View className="w-[48%]">
                                         <Text style={styles.label}>
@@ -713,12 +771,16 @@ const AddNominee = ({ onNext, onPrevious, initialValues }) => {
                                             keyboardType="numeric" // Restrict input to numeric characters
                                             maxLength={6}
                                         />
-                                        {touched.guardianPincode &&
-                                            errors.guardianPincode && (
-                                                <Text style={styles.errorText}>
-                                                    {errors.guardianPincode}
-                                                </Text>
-                                            )}
+                                        <View style={{ minHeight: 20 }}>
+                                            {touched.guardianPincode &&
+                                                errors.guardianPincode && (
+                                                    <Text
+                                                        style={styles.errorText}
+                                                    >
+                                                        {errors.guardianPincode}
+                                                    </Text>
+                                                )}
+                                        </View>
                                     </View>
                                 </View>
                                 <View className="flex flex-row justify-between items-center w-full  mb-4">
@@ -739,12 +801,16 @@ const AddNominee = ({ onNext, onPrevious, initialValues }) => {
                                             )}
                                             value={values.guardianAddress}
                                         />
-                                        {touched.guardianAddress &&
-                                            errors.guardianAddress && (
-                                                <Text style={styles.errorText}>
-                                                    {errors.guardianAddress}
-                                                </Text>
-                                            )}
+                                        <View style={{ minHeight: 20 }}>
+                                            {touched.guardianAddress &&
+                                                errors.guardianAddress && (
+                                                    <Text
+                                                        style={styles.errorText}
+                                                    >
+                                                        {errors.guardianAddress}
+                                                    </Text>
+                                                )}
+                                        </View>
                                     </View>
                                 </View>
                                 {isLoading && (
@@ -824,7 +890,10 @@ const AddNominee = ({ onNext, onPrevious, initialValues }) => {
                         </View>
                         <View className="w-[48%]">
                             <CustomButton
-                                onPress={() => handleSubmit()}
+                                onPress={() => {
+                                    console.log("pressed habdle");
+                                    handleSubmit();
+                                }}
                                 title="Save Nominee"
                                 // disabled={isVerifing === true}
                                 buttonStyle={"full"}

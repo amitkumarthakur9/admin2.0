@@ -65,8 +65,11 @@ const AddressDetailsForm = ({
                 //     currentStep: 2,
                 // };
                 // setFormData({ ...formData, ...newValues });
-            } else if (response.code === 254) {
-                setFieldError("pincode", "Pincode does not exist.");
+            // } else if (response.success == false) {
+            //     setFieldError(
+            //         "pincode",
+            //         response?.message || "Pincode does not exist."
+            //     );
             } else {
                 setFieldError(
                     "pincode",
@@ -154,18 +157,20 @@ const AddressDetailsForm = ({
                                         value={values.addressLine1}
                                         maxLength={300}
                                     />
-                                    {touched.addressLine1 &&
-                                        typeof errors.addressLine1 ===
-                                            "string" && (
+                                    <View style={{ minHeight: 20 }}>
+                                        {touched.addressLine1 &&
+                                            typeof errors.addressLine1 ===
+                                                "string" && (
+                                                <Text style={styles.error}>
+                                                    {errors.addressLine1}
+                                                </Text>
+                                            )}
+                                        {initialValues.addressLineError && (
                                             <Text style={styles.error}>
-                                                {errors.addressLine1}
+                                                Please correct it as per remarks
                                             </Text>
                                         )}
-                                    {initialValues.addressLineError && (
-                                        <Text style={styles.error}>
-                                            Please correct it as per remarks
-                                        </Text>
-                                    )}
+                                    </View>
                                 </View>
 
                                 <View className="w-[48%]">
@@ -182,18 +187,20 @@ const AddressDetailsForm = ({
                                         value={values.addressLine2}
                                         maxLength={300}
                                     />
-                                    {touched.addressLine2 &&
-                                        typeof errors.addressLine2 ===
-                                            "string" && (
+                                    <View style={{ minHeight: 20 }}>
+                                        {touched.addressLine2 &&
+                                            typeof errors.addressLine2 ===
+                                                "string" && (
+                                                <Text style={styles.error}>
+                                                    {errors.addressLine2}
+                                                </Text>
+                                            )}
+                                        {initialValues.addressLineError && (
                                             <Text style={styles.error}>
-                                                {errors.addressLine2}
+                                                Please correct it as per remarks
                                             </Text>
                                         )}
-                                    {initialValues.addressLineError && (
-                                        <Text style={styles.error}>
-                                            Please correct it as per remarks
-                                        </Text>
-                                    )}
+                                    </View>
                                 </View>
                             </View>
 
@@ -209,17 +216,19 @@ const AddressDetailsForm = ({
                                         onBlur={handleBlur("city")}
                                         value={values.city}
                                     />
-                                    {touched.city &&
-                                        typeof errors.city === "string" && (
+                                    <View style={{ minHeight: 20 }}>
+                                        {touched.city &&
+                                            typeof errors.city === "string" && (
+                                                <Text style={styles.error}>
+                                                    {errors.city}
+                                                </Text>
+                                            )}
+                                        {initialValues.cityError && (
                                             <Text style={styles.error}>
-                                                {errors.city}
+                                                Please correct it as per remarks
                                             </Text>
                                         )}
-                                    {initialValues.cityError && (
-                                        <Text style={styles.error}>
-                                            Please correct it as per remarks
-                                        </Text>
-                                    )}
+                                    </View>
                                 </View>
                                 <View className="w-[48%]">
                                     <Text style={styles.label}>
@@ -254,17 +263,20 @@ const AddressDetailsForm = ({
                                         keyboardType="numeric" // Restrict input to numeric characters
                                         maxLength={6}
                                     />
-                                    {touched.pincode &&
-                                        typeof errors.pincode === "string" && (
+                                    <View style={{ minHeight: 20 }}>
+                                        {touched.pincode &&
+                                            typeof errors.pincode ===
+                                                "string" && (
+                                                <Text style={styles.error}>
+                                                    {errors.pincode}
+                                                </Text>
+                                            )}
+                                        {initialValues.pinCodeError && (
                                             <Text style={styles.error}>
-                                                {errors.pincode}
+                                                Please correct it as per remarks
                                             </Text>
                                         )}
-                                    {initialValues.pinCodeError && (
-                                        <Text style={styles.error}>
-                                            Please correct it as per remarks
-                                        </Text>
-                                    )}
+                                    </View>
                                 </View>
                             </View>
 

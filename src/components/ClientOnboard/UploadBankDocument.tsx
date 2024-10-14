@@ -106,14 +106,14 @@ const UploadBankDocument = ({
                     currentStep: 3,
                 };
                 onNext(valuesWithToken);
-            } else if(response?.message == "Document already uploaded."){
+            } else if (response?.message == "Document already uploaded.") {
                 const valuesWithToken = {
                     ...values,
                     // token: response.data.token,
                     currentStep: 3,
                 };
                 onNext(valuesWithToken);
-            }else{
+            } else {
                 actions.setFieldError("pickedDocument", response.message);
             }
         } catch (error) {

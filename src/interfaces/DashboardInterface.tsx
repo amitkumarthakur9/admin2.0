@@ -38,6 +38,7 @@ export interface DashboardData{
     panNumber: string;
     arn: string;
     euin: string;
+    arnValidTill: string;
     aum: AUMData;
         clientCount: number;
         transaction: TransactionData;

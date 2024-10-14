@@ -202,6 +202,7 @@ export default function SignIn() {
                                 }
                                 placeholder="Password"
                                 onKeyPress={handleKeyPress}
+                                className="bg-white"
                             />
                             <FormControl.ErrorMessage
                                 leftIcon={<WarningOutlineIcon size="xs" />}

@@ -38,6 +38,7 @@ import { useStorageState } from "../../services/useStorageState";
 import DataValue from "../DataValue/DataValue";
 import { BreadcrumbShadow } from "../Styles/Shadow";
 import NoDataAvailable from "../Others/NoDataAvailable";
+import DisableDistributor from "../IfaTable/DisableDistributor";
 
 const DistributorDashboard = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -580,6 +581,23 @@ const DistributorDashboard = () => {
                                                             className="text-bold font-medium text-gray-500 w-1/2"
                                                             selectable
                                                         >
+                                                            ARN Expire Date:
+                                                        </Text>
+                                                        <Text
+                                                            selectable
+                                                            className="text-base font-bold text-start"
+                                                        >
+                                                            {data?.arnValidTill ||
+                                                                "NA"}
+                                                        </Text>
+                                                    </View>
+                                                    <View
+                                                        className={`flex flex-row items-center w-full justify-start`}
+                                                    >
+                                                        <Text
+                                                            className="text-bold font-medium text-gray-500 w-1/2"
+                                                            selectable
+                                                        >
                                                             EUIN:
                                                         </Text>
                                                         <Text
@@ -643,6 +661,9 @@ const DistributorDashboard = () => {
                                                 </View>
                                             </View>
                                         </View>
+                                        <DisableDistributor
+                                            distributorId={data?.id}
+                                        />
                                     </View>
                                 </View>
                             </View>

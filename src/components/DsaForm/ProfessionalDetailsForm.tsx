@@ -81,7 +81,7 @@ const ProfessionalDetailsForm = ({
         getDropdownList("education");
     }, []);
 
-    const handleSubmit = async (values) => {
+    const handleSubmit = async (values, actions) => {
         const data = {
             panNumber: values.panNumber,
             incomeSlabId: values.incomeRange,
@@ -102,6 +102,10 @@ const ProfessionalDetailsForm = ({
             if (response.code === 200) {
                 onNext(values);
             } else {
+                actions.setFieldError(
+                    "panNumber",
+                    response?.message || "Pincode does not exist."
+                );
             }
         } catch (error) {}
     };
@@ -129,6 +133,7 @@ const ProfessionalDetailsForm = ({
                 errors,
                 touched,
                 setFieldValue,
+                setFieldError,
             }) => (
                 <>
                     <ScrollView className="h-[450px]">
@@ -144,6 +149,7 @@ const ProfessionalDetailsForm = ({
                                     onBlur={handleBlur("panNumber")}
                                     value={values.panNumber}
                                 />
+                                 <View style={{ minHeight: 20 }}>
                                 {touched.panNumber &&
                                     errors.panNumber &&
                                     typeof errors.panNumber === "string" && (
@@ -156,6 +162,7 @@ const ProfessionalDetailsForm = ({
                                         Please correct it as per remarks
                                     </Text>
                                 )}
+                                </View>
                             </View>
 
                             <View className="w-[48%]">
@@ -174,6 +181,7 @@ const ProfessionalDetailsForm = ({
                                         setFieldValue("incomeRange", value)
                                     }
                                 />
+                                 <View style={{ minHeight: 20 }}>
                                 {touched.incomeRange &&
                                     errors.incomeRange &&
                                     typeof errors.incomeRange === "string" && (
@@ -181,6 +189,7 @@ const ProfessionalDetailsForm = ({
                                             {errors.incomeRange}
                                         </Text>
                                     )}
+                                    </View>
                             </View>
                         </View>
 
@@ -201,6 +210,7 @@ const ProfessionalDetailsForm = ({
                                         setFieldValue("education", value)
                                     }
                                 />
+                                  <View style={{ minHeight: 20 }}>
                                 {touched.education &&
                                     errors.education &&
                                     typeof errors.education === "string" && (
@@ -208,6 +218,7 @@ const ProfessionalDetailsForm = ({
                                             {errors.education}
                                         </Text>
                                     )}
+                                    </View>
                             </View>
                             <View className="w-[48%]">
                                 <Text style={styles.label}>

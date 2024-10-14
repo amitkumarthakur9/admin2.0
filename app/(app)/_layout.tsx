@@ -96,6 +96,14 @@ import AddManagementUserForm from "./add-user/management";
 import AddDistributorUserForm from "./add-user/distributor";
 import { UserMeData } from "src/interfaces/DsaFormApproveInterface";
 import RemoteApi from "src/services/RemoteApi";
+import TrailIncomeCalculator from "./calculators/trail-income";
+import ARNExpiry from "src/components/DsaForm/ARNExpiry";
+import { checkARNExpiry } from "src/helper/helper";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState, AppDispatch } from "src/redux/store";
+import { fetchUserDetail } from "src/redux/slices/userSlice";
+import ArnExamScreen from "./arn-exam";
+import CustomRadioButton from "src/components/CustomForm/CustomRadioButton/CustomRadioButton";
 
 const queryClient = new QueryClient();
 
@@ -110,40 +118,38 @@ const LoadingSpinner = () => (
     </Center>
 );
 
-const getUserDetail = async () => {
-    try {
-        const response: UserMeData = await RemoteApi.get("user/me");
+// const getUserDetail = async () => {
+//     try {
+//         const response: UserMeData = await RemoteApi.get("user/me");
 
-        if (response.code === 200) {
-            const userData = response.data;
-            return userData;
-        } else {
-            // alert("Failed to fetch user details");
-        }
-    } catch (error) {
-        // alert("An error occurred while fetching the user details");
-    }
-    return null;
-};
+//         if (response.code === 200) {
+//             const userData = response.data;
+//             return userData;
+//         } else {
+//             // alert("Failed to fetch user details");
+//         }
+//     } catch (error) {
+//         // alert("An error occurred while fetching the user details");
+//     }
+//     return null;
+// };
 
 export default function AppLayout() {
     const [isOpen, setIsOpen] = useState(false);
     const [showLoader, setShowLoader] = useState(false);
     const [[isLoading, token], setToken] = useStorageState("token");
     const { height, width } = useWindowDimensions();
-    // const [roleId, setRoleId] = useState(null);
     const [inviteDisplay, setinviteDisplay] = useState("");
     const CoRoverURL =
         "https://builder.corover.ai/params/?appid=f525521d-c54f-4723-8d41-592f5497b460&partnerKey=c65ed7c2-a07f-4a46-a161-3ed104d7ab57&token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik5FUCIsImNvbXBhbnlOYW1lIjoiQ29Sb3ZlciIsImVtYWlsSWQiOiJuZXAuc3VwcG9ydEBjb3JvdmVyLmFpIiwiaWF0IjoxNzE1MTcwMDcyLCJleHAiOjE3MTUyNTY0NzJ9.KSBawWk-TC0ykqBMZOY4mIuQjm-xHeSGmkLfnd5cYnE#/";
     const ViewHeight = height * 0.6;
-    // const [renderDsaForm, setRenderDsaForm] = useState(false);
-    // const [userDetails, setUserDetails] = useState(null);
-    const [dsaForm, setDsaForm] = useState({
-        userDetails: null,
-        renderDsaForm: false,
-    });
-
+    const dispatch = useDispatch<AppDispatch>();
+    const userDetails = useSelector(
+        (state: RootState) => state.user.userDetails
+    );
+    const arnExpire = useSelector((state: RootState) => state.user.arnExpire);
     const shakeAnimation = useRef(new Animated.Value(0)).current;
+    const [radioOption, setRadioOption] = useState(null);
 
     const startShake = () => {
         Animated.sequence([
@@ -179,6 +185,10 @@ export default function AppLayout() {
         transform: [{ translateX: shakeAnimation }],
     };
 
+    const handleRadiooption = async (value) => {
+        setRadioOption(value);
+    };
+
     const handleClick = () => {
         if (!isOpen) {
             startShake();
@@ -196,31 +206,21 @@ export default function AppLayout() {
     };
 
     useEffect(() => {
-        const fetchUserDetail = async () => {
+        const fetchDetails = async () => {
             const decoded: any = jwtDecode(token);
             console.log(decoded.roleId);
 
             const roleId = decoded.roleId;
             if (roleId == 2) {
-                const userData = await getUserDetail();
-                console.log("userData" + JSON.stringify(userData));
-                if (userData != null) {
-                    setDsaForm((prevState) => ({
-                        ...prevState,
-                        userDetails: userData,
-                        renderDsaForm: true,
-                    }));
-
-                    console.log(dsaForm.renderDsaForm + dsaForm.userDetails);
-                }
+                dispatch(fetchUserDetail());
             }
         };
 
         if (token) {
             console.log("useEffectlayouttoken" + token);
-            fetchUserDetail();
+            fetchDetails();
         }
-    }, [token]);
+    }, [token, dispatch]);
 
     if (isLoading) {
         return <LoadingSpinner />;
@@ -246,6 +246,42 @@ export default function AppLayout() {
 
     // RoldeID == 2, is for Distributor.
     if (roleId == 2) {
+        // drawerStructure.push({
+        //     key: "ArnExamScreen",
+        //     content: (
+        //         <Drawer.Screen
+        //             name="arn-exam/index"
+        //             options={{
+        //                 drawerLabel: "ArnExamScreen",
+        //                 title: "ArnExamScreen",
+        //                 drawerItemStyle: {
+        //                     display: "none",
+        //                 },
+        //                 // unmountOnBlur: true,
+        //             }}
+        //             initialParams={{}}
+        //             component={ArnExamScreen}
+        //         />
+        //     ),
+        // });
+        // drawerStructure.push({
+        //     key: "DsaDashboard",
+        //     content: (
+        //         <Drawer.Screen
+        //             name="dashboard/dsaDashboard/index"
+        //             options={{
+        //                 drawerLabel: "DsaDashboard",
+        //                 title: "DsaDashboard",
+        //                 drawerItemStyle: {
+        //                     display: "none",
+        //                 },
+        //                 // unmountOnBlur: true,
+        //             }}
+        //             initialParams={{}}
+        //             component={DsaDashboard}
+        //         />
+        //     ),
+        // });
         drawerStructure.push({
             key: "DsaDashboard",
             content: (
@@ -297,24 +333,24 @@ export default function AppLayout() {
         //         />
         //     ),
         // });
-        drawerStructure.push({
-            key: "invite-contact",
-            content: (
-                <Drawer.Screen
-                    name="invite-contact"
-                    options={{
-                        drawerLabel: "Invite Client",
-                        title: "Invite Client",
-                        drawerItemStyle: {
-                            display: inviteDisplay,
-                        },
-                        // unmountOnBlur: true,
-                    }}
-                    initialParams={{}}
-                    component={SendInvite}
-                />
-            ),
-        });
+        // drawerStructure.push({
+        //     key: "invite-contact",
+        //     content: (
+        //         <Drawer.Screen
+        //             name="invite-contact"
+        //             options={{
+        //                 drawerLabel: "Invite Client",
+        //                 title: "Invite Client",
+        //                 drawerItemStyle: {
+        //                     display: inviteDisplay,
+        //                 },
+        //                 // unmountOnBlur: true,
+        //             }}
+        //             initialParams={{}}
+        //             component={SendInvite}
+        //         />
+        //     ),
+        // });
         drawerStructure.push({
             key: "ModuleLearningCenter",
             content: (
@@ -368,6 +404,7 @@ export default function AppLayout() {
                 />
             ),
         });
+
         drawerStructure.push({
             key: "IFADashboard",
             content: (
@@ -668,6 +705,22 @@ export default function AppLayout() {
             ),
         });
         drawerStructure.push({
+            key: "calculators-trail-income",
+            content: (
+                <Drawer.Screen
+                    name="calculators/trail-income/index"
+                    options={{
+                        drawerLabel: "Calculators",
+                        title: "Calculators",
+                        unmountOnBlur: true,
+                        drawerItemStyle: { display: "none" },
+                    }}
+                    initialParams={{}}
+                    component={TrailIncomeCalculator}
+                />
+            ),
+        });
+        drawerStructure.push({
             key: "ClientArnDetail",
             content: (
                 <Drawer.Screen
@@ -777,7 +830,7 @@ export default function AppLayout() {
         });
     }
 
-    if (roleId == 4) {
+    if (roleId == 3 || roleId == 4) {
         drawerStructure.splice(1, 0, {
             key: "distributor",
             content: (
@@ -793,7 +846,9 @@ export default function AppLayout() {
                 />
             ),
         });
+    }
 
+    if (roleId == 4) {
         drawerStructure.push({
             key: "Analytics",
             content: (
@@ -913,8 +968,6 @@ export default function AppLayout() {
         });
     }
 
-    console.log("renderDsaForm" + dsaForm.renderDsaForm);
-    console.log("userDetails" + JSON.stringify(dsaForm.userDetails));
     return (
         <SafeAreaProvider style={{ backgroundColor: "white" }}>
             <QueryClientProvider client={queryClient}>
@@ -930,64 +983,97 @@ export default function AppLayout() {
                                 </Center>
                             }
                         >
-                            {roleId === 2 &&
-                            (!dsaForm?.userDetails?.arn ||
-                                !dsaForm?.userDetails?.isOnBoarded) ? (
-                                !dsaForm?.userDetails?.isOnBoarded ? (
+                            {(roleId === 2 && userDetails?.isOnBoarded) ||
+                            roleId > 2 ? (
+                                roleId === 2 && arnExpire?.expired ? (
                                     <>
                                         <TopHeader
                                             navigation={""}
                                             logo={true}
                                         />
-                                        <DsaFormScreen />
+                                        <ARNExpiry
+                                            arnDate={arnExpire?.toBeExpired}
+                                        />
                                     </>
                                 ) : (
-                                    <>
-                                        <TopHeader
-                                            navigation={""}
-                                            logo={true}
-                                        />
-                                        <TrainingArnExamScreen />
-                                    </>
-                                )
-                            ) : (
-                                <Drawer.Navigator
-                                    screenOptions={({ navigation }) => ({
-                                        drawerActiveTintColor: "#000000",
-                                        drawerStyle: {
-                                            width: width < 830 ? "60%" : "15%",
-                                        },
-                                        drawerType:
-                                            width <= 768 ? "back" : "permanent",
-                                        header: (props) => (
-                                            <TopHeader
-                                                navigation={navigation}
-                                            />
-                                        ),
-                                        headerLeft: (props) => (
-                                            <View className="ml-4">
-                                                <Icon
-                                                    size={18}
-                                                    name={"bars"}
-                                                    onPress={
-                                                        navigation.toggleDrawer
-                                                    }
+                                    <Drawer.Navigator
+                                        screenOptions={({ navigation }) => ({
+                                            drawerActiveTintColor: "#000000",
+                                            drawerStyle: {
+                                                width:
+                                                    width < 830 ? "60%" : "15%",
+                                            },
+                                            drawerType:
+                                                width <= 768
+                                                    ? "back"
+                                                    : "permanent",
+                                            header: (props) => (
+                                                <TopHeader
+                                                    navigation={navigation}
                                                 />
-                                            </View>
-                                        ),
-                                    })}
-                                    backBehavior="history"
-                                    detachInactiveScreens={true}
-                                    initialRouteName="clients/index"
-                                    drawerContent={(props) => (
-                                        <CustomSidebarMenu {...props} />
+                                            ),
+                                            headerLeft: (props) => (
+                                                <View className="ml-4">
+                                                    <Icon
+                                                        size={18}
+                                                        name={"bars"}
+                                                        onPress={
+                                                            navigation.toggleDrawer
+                                                        }
+                                                    />
+                                                </View>
+                                            ),
+                                        })}
+                                        backBehavior="history"
+                                        detachInactiveScreens={true}
+                                        initialRouteName="clients/index"
+                                        drawerContent={(props) => (
+                                            <CustomSidebarMenu {...props} />
+                                        )}
+                                    >
+                                        {drawerStructure.map(
+                                            (item) => item.content
+                                        )}
+                                    </Drawer.Navigator>
+                                )
+                            ) : userDetails?.arn ? (
+                                <>
+                                    {" "}
+                                    <TopHeader navigation={""} logo={true} />
+                                    <DsaFormScreen />
+                                </>
+                            ) : (
+                                <>
+                                    <TopHeader navigation={""} logo={true} />
+                                    <View className="flex flex-col justify-center items-center">
+                                        <Text className="font-bold text-lg">
+                                            I am an ARN holder
+                                        </Text>
+                                        <CustomRadioButton
+                                            options={[
+                                                {
+                                                    label: "Yes",
+                                                    value: true,
+                                                },
+                                                {
+                                                    label: "No",
+                                                    value: false,
+                                                },
+                                            ]}
+                                            value={radioOption}
+                                            setValue={(value) => {
+                                                handleRadiooption(value);
+                                            }}
+                                        />
+                                    </View>
+                                    {radioOption === true ? (
+                                        <DsaFormScreen />
+                                    ) : (
+                                        <TrainingArnExamScreen />
                                     )}
-                                >
-                                    {drawerStructure.map(
-                                        (item) => item.content
-                                    )}
-                                </Drawer.Navigator>
+                                </>
                             )}
+
                             {/* <Fab
                                 renderInPortal={false}
                                 shadow={2}

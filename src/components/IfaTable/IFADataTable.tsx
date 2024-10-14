@@ -221,63 +221,63 @@ const IFADataTable = () => {
                 <>
                     <View className="border-[0.2px]  border-[#e4e4e4]">
                         {/* {data.length !== 0 && ( */}
-                            <DynamicFilters
-                                appliedSorting={appliedSorting}
-                                setAppliedSorting={setAppliedSorting}
-                                sorting={sorting}
-                                fileName="distributor"
-                                downloadApi={""}
-                                schemaResponse={filtersSchema}
-                                setCurrentPageNumber={setCurrentPageNumber}
-                                getList={getDataList}
-                                appliedFilers={appliedFilers}
-                                setAppliedFilers={setAppliedFilers}
-                                // newComponent={<AddNewClient />}
-                            />
+                        <DynamicFilters
+                            appliedSorting={appliedSorting}
+                            setAppliedSorting={setAppliedSorting}
+                            sorting={sorting}
+                            fileName="distributor"
+                            downloadApi={""}
+                            schemaResponse={filtersSchema}
+                            setCurrentPageNumber={setCurrentPageNumber}
+                            getList={getDataList}
+                            appliedFilers={appliedFilers}
+                            setAppliedFilers={setAppliedFilers}
+                            // newComponent={<AddNewClient />}
+                        />
                         {/* )} */}
                         {!isLoading ? (
                             // data.length === 0 ? (
                             //     <NoDataAvailable />
                             // ) : (
-                                <>
-                                    <ScrollView className={"mt-4 z-[-1] "}>
-                                        {width < 830 ? (
-                                            <MobileClientsRows
-                                                data={data}
-                                                schema={null}
-                                            />
-                                        ) : roleId > 3 ? (
-                                            <DataTable
-                                                headers={[
-                                                    "Name",
-                                                    "PAN No.",
-                                                    "Manager",
-                                                    "ARN No.",
-                                                    "EUIN No.",
-                                                    "No. of Clients",
-                                                    "Active SIP Count",
-                                                ]}
-                                                cellSize={[2, 2, 2, 2, 2, 1, 1]}
-                                                rows={transformedData}
-                                            />
-                                        ) : (
-                                            <DataTable
-                                                headers={[
-                                                    "Name",
-                                                    "PAN No.",
-                                                    "ARN No.",
-                                                    "EUIN No.",
-                                                    "No. of Clients",
-                                                    "Active SIP Count",
-                                                ]}
-                                                cellSize={[2, 2, 2, 2, 2, 2]}
-                                                rows={transformedData}
-                                            />
-                                        )}
-                                    </ScrollView>
-                                </>
-                            // )
+                            <>
+                                <ScrollView className={"mt-4 z-[-1] "}>
+                                    {width < 830 ? (
+                                        <MobileClientsRows
+                                            data={data}
+                                            schema={null}
+                                        />
+                                    ) : roleId > 3 ? (
+                                        <DataTable
+                                            headers={[
+                                                "Name",
+                                                "PAN No.",
+                                                "Manager",
+                                                "ARN No.",
+                                                "EUIN No.",
+                                                "No. of Clients",
+                                                "Active SIP Count",
+                                            ]}
+                                            cellSize={[2, 2, 2, 2, 2, 1, 1]}
+                                            rows={transformedData}
+                                        />
+                                    ) : (
+                                        <DataTable
+                                            headers={[
+                                                "Name",
+                                                "PAN No.",
+                                                "ARN No.",
+                                                "EUIN No.",
+                                                "No. of Clients",
+                                                "Active SIP Count",
+                                            ]}
+                                            cellSize={[2, 2, 2, 2, 2, 2]}
+                                            rows={transformedData}
+                                        />
+                                    )}
+                                </ScrollView>
+                            </>
                         ) : (
+                            // )
                             <HStack
                                 space={"md"}
                                 marginTop={20}
@@ -295,14 +295,14 @@ const IFADataTable = () => {
                         )}
                     </View>
                     {/* {data.length !== 0 && ( */}
-                        <Pagination
-                            itemsPerPage={itemsPerPage}
-                            setItemsPerPage={setItemsPerPage}
-                            getDataList={getDataList}
-                            currentPageNumber={currentPageNumber}
-                            totalItems={totalItems}
-                            setCurrentPageNumber={setCurrentPageNumber}
-                        />
+                    <Pagination
+                        itemsPerPage={itemsPerPage}
+                        setItemsPerPage={setItemsPerPage}
+                        getDataList={getDataList}
+                        currentPageNumber={currentPageNumber}
+                        totalItems={totalItems}
+                        setCurrentPageNumber={setCurrentPageNumber}
+                    />
                     {/* )} */}
                 </>
             </View>

@@ -64,7 +64,7 @@ axiosInstance.interceptors.response.use(
             // Display the errorJson in a NativeBase toast message
             Toast.show({
                 title: "",
-                description: errorJson.message || "Something went wrong",
+                description: errorJson.message || "Internal Server Error",
                 bg: "red.500", // Set background color to red
                 status: "error",
                 duration: 4000,

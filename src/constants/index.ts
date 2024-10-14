@@ -19,5 +19,12 @@ export const calculators = [
             "Calculate your risk profile based on our customised psychometric evaluation",
         link: "/calculators/risk-profile",
     },
+    {
+        key: "trail-income",
+        title: "Trail Income",
+        description:
+            "Calculate your Brokerage income based on our customised psychometric evaluation",
+        link: "/calculators/trail-income",
+    },
     // Add more calculators here as needed
 ];

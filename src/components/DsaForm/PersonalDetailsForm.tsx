@@ -9,6 +9,7 @@ import {
     Alert,
     ActivityIndicator,
     Pressable,
+    Modal,
 } from "react-native";
 import { Formik, FormikProps } from "formik";
 import * as Yup from "yup";
@@ -17,6 +18,12 @@ import DropdownComponent from "../../components/Dropdowns/NewDropDown";
 import RemoteApi from "src/services/RemoteApi";
 import { MaterialIcons } from "@expo/vector-icons"; // Make sure to install expo/vector-icons
 import CustomButton from "../Buttons/CustomButton";
+import ClientVerify from "../ClientOnboard/ClientVerify";
+import RadioButton from "../Radio/Radio";
+import CustomRadioButton from "../CustomForm/CustomRadioButton/CustomRadioButton";
+import { router } from "expo-router";
+import TrainingArnExamScreen from "app/(app)/dsa-form/training-arn-exam";
+import OtpVerify from "./OtpVerify";
 const emailRegexRFC5322 =
     /^(?:[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-zA-Z0-9-]*[a-zA-Z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)])$/;
 
@@ -32,29 +39,41 @@ const validationSchema = Yup.object().shape({
         .matches(/^(?!00)(?!.*(\d)\1{9}$)\d{10}$/, "Invalid mobile number")
         .required("Mobile number is required"), 
     maritalStatus: Yup.number().required("Marital status is required"),
-    isArnHolder: Yup.boolean(),
-    arnNumber: Yup.string().when("isArnHolder", {
-        is: (isArnHolder) => isArnHolder,
-        then: (schema) =>
-            schema
-                .required("ARN Number is required")
-                .matches(
-                    /^\d{1,6}$/,
-                    "Enter only the digits of the ARN-Number. example: ARN-123456"
-                ),
-        otherwise: (schema) => schema.notRequired(),
-    }),
-    euinNumber: Yup.string().when("isArnHolder", {
-        is: (isArnHolder) => isArnHolder,
-        then: (schema) =>
-            schema
-                .required("EUIN Number is required")
-                .matches(
-                    /^E\d{1,6}$/,
-                    "EUIN Number must be in the format 'E' followed by up to 6 digits"
-                ),
-        otherwise: (schema) => schema.notRequired(),
-    }),
+    arnNumber: Yup.string()
+        .matches(
+            /^\d{1,6}$/,
+            "Enter only the digits of the ARN-Number. example: ARN-123456"
+        )
+        .required("ARN Number is required"),
+    euinNumber: Yup.string()
+        .matches(
+            /^E\d{1,6}$/,
+            "EUIN Number must be in the format 'E' followed by up to 6 digits"
+        )
+        .required("EUIN Number is required"),
+    // isArnHolder: Yup.boolean(),
+    // arnNumber: Yup.string().when("isArnHolder", {
+    //     is: (isArnHolder) => isArnHolder,
+    //     then: (schema) =>
+    //         schema
+    //             .required("ARN Number is required")
+    //             .matches(
+    //                 /^\d{1,6}$/,
+    //                 "Enter only the digits of the ARN-Number. example: ARN-123456"
+    //             ),
+    //     otherwise: (schema) => schema.notRequired(),
+    // }),
+    // euinNumber: Yup.string().when("isArnHolder", {
+    //     is: (isArnHolder) => isArnHolder,
+    //     then: (schema) =>
+    //         schema
+    //             .required("EUIN Number is required")
+    //             .matches(
+    //                 /^E\d{1,6}$/,
+    //                 "EUIN Number must be in the format 'E' followed by up to 6 digits"
+    //             ),
+    //     otherwise: (schema) => schema.notRequired(),
+    // }),
 });
 
 const PersonalDetailsForm = ({ onNext, initialValues, onPrevious }) => {
@@ -64,6 +83,16 @@ const PersonalDetailsForm = ({ onNext, initialValues, onPrevious }) => {
         ArnNumber: "",
         euin: "",
     });
+    const [visible, setVisible] = useState(false);
+
+    const closeModal = () => {
+        setVisible(false);
+    };
+
+    const handleNext = (values) => {
+        // setVisible(false);
+        // onNext(values);
+    };
 
     async function getMaritalStatus() {
         setIsLoading(true);
@@ -96,22 +125,34 @@ const PersonalDetailsForm = ({ onNext, initialValues, onPrevious }) => {
     const handleSubmit = async (values, { setErrors }) => {
         console.log("handlesubmit");
 
-        let data = {};
+        // let data = {};
 
-        {
-            values.isArnHolder === true
-                ? (data = {
-                      isArnHolder: values.isArnHolder,
-                      arnNumber: values.arnNumber,
-                      euin: values.euinNumber,
-                      maritalStatusId: values.maritalStatus,
-                  })
-                : (data = {
-                      isArnHolder: values.isArnHolder,
+        const data = {
+            isArnHolder: true,
+            arnNumber: values.arnNumber,
+            euin: values.euinNumber,
+            maritalStatusId: values.maritalStatus,
+        };
 
-                      maritalStatusId: values.maritalStatus,
-                  });
-        }
+        // {
+        //     values.isArnHolder === true
+        //         ? (data = {
+        //               isArnHolder:true,
+        //               arnNumber: values.arnNumber,
+        //               euin: values.euinNumber,
+        //               maritalStatusId: values.maritalStatus,
+        //           })
+        //         : (data = {
+        //               isArnHolder:false,
+
+        //               maritalStatusId: values.maritalStatus,
+        //           });
+        // }
+
+        const newErrors = {
+            euinNumber: "",
+            arnNumber: "",
+        };
 
         try {
             const response: any = await RemoteApi.post(
@@ -120,23 +161,21 @@ const PersonalDetailsForm = ({ onNext, initialValues, onPrevious }) => {
             );
 
             // const response = {
-            //     code: 200,
+            //     success: 200,
+            //     message: "",
             // };
-            if (response.code === 200) {
-                onNext(values);
-            } else if (response.code === 254) {
-                // if(response.message == "Wrong EUIN Number provided for the given ARN Number."){
-                //     setIsVerified({ ...isVerified, euin: response.message });
-                // }
 
-                // if(response.message == "ARN Number does not exist."){
-                //     setIsVerified({ ...isVerified, ArnNumber: response.message });
-                // }
-
-                const newErrors = {
-                    euinNumber: "",
-                    arnNumber: "",
-                };
+            if (response.success === 200) {
+                setVisible(true);
+                // } else if (!response.data.foundArn) {
+                //     newErrors.arnNumber = response.data.message;
+                // } else if (!response.data.foundEuin) {
+                //     newErrors.euinNumber = response.data.message;
+                // } else if (response.data.arnEuinMismatch) {
+                //     newErrors.arnNumber = response.data.message;
+                // } else if (response.data.arnHolderNameMismatch) {
+                //     newErrors.arnNumber = response.data.message;
+            } else {
                 if (
                     response.message ===
                     "Wrong EUIN Number provided for the given ARN Number."
@@ -144,15 +183,31 @@ const PersonalDetailsForm = ({ onNext, initialValues, onPrevious }) => {
                     newErrors.euinNumber = response.message;
                 } else if (response.message === "ARN Number does not exist.") {
                     newErrors.arnNumber = response.message;
+                } else if (
+                    response.message === "Name mismatch with Arn Holder Name. "
+                ) {
+                    newErrors.arnNumber = response.message;
+                } else {
+                    newErrors.arnNumber = response.message;
                 }
-                setErrors(newErrors);
             }
+
+            setErrors(newErrors);
         } catch (error) {
             Alert.alert(
                 "Error",
                 error.message ||
                     "An error occurred while submitting the address"
             );
+        }
+    };
+
+    const handleRadiooption = async (value, setFieldValue) => {
+        if (!value) {
+            setFieldValue("isArnHolder", value);
+            router.push(`arn-exam`);
+        } else {
+            setFieldValue("isArnHolder", value);
         }
     };
 
@@ -172,11 +227,6 @@ const PersonalDetailsForm = ({ onNext, initialValues, onPrevious }) => {
                 setFieldValue,
                 setValues,
             }) => {
-                // React.useEffect(() => {
-                //     console.log("called get detail");
-                //     getPersonalDetail(setValues);
-                // }, []);
-
                 if (isLoading) {
                     return (
                         <View style={styles.loadingContainer}>
@@ -186,284 +236,425 @@ const PersonalDetailsForm = ({ onNext, initialValues, onPrevious }) => {
                 }
 
                 return (
-                    <View>
-                        <ScrollView className="h-[450px]">
-                            <View className="flex flex-row justify-between mb-4 w-full">
-                                <View className="w-[48%]">
-                                    <View style={styles.fieldContainer}>
-                                        <Text style={styles.label}>
-                                            Enter your full name as per AMFI{" "}
-                                            <Text className="text-red-500">
-                                                *
-                                            </Text>
-                                        </Text>
-                                        <TextInput
-                                            style={styles.input}
-                                            onChangeText={handleChange(
-                                                "fullName"
-                                            )}
-                                            onBlur={handleBlur("fullName")}
-                                            value={values.fullName}
-                                        />
-                                        <View style={styles.fieldContainer}>
-                                            {touched.fullName &&
-                                                errors.fullName &&
-                                                typeof errors.fullName ===
-                                                    "string" && (
-                                                    <Text style={styles.error}>
-                                                        {errors.fullName}
-                                                    </Text>
-                                                )}
-                                        </View>
-                                        <View style={styles.fieldContainer}>
-                                            {initialValues.nameError && (
-                                                <Text style={styles.error}>
-                                                    Please correct it as per
-                                                    remarks
-                                                </Text>
-                                            )}
-                                        </View>
-                                    </View>
-                                </View>
-                                <View className="w-[48%]">
-                                    <View style={styles.fieldContainer}>
-                                        <Text style={styles.label}>
-                                            Enter your Email{" "}
-                                            <Text className="text-red-500">
-                                                *
-                                            </Text>
-                                        </Text>
-                                        <TextInput
-                                            style={styles.input}
-                                            onChangeText={handleChange("email")}
-                                            onBlur={handleBlur("email")}
-                                            value={values.email}
-                                        />
-                                        <View style={styles.fieldContainer}>
-                                            {touched.email &&
-                                                errors.email &&
-                                                typeof errors.email ===
-                                                    "string" && (
-                                                    <Text style={styles.error}>
-                                                        {errors.email}
-                                                    </Text>
-                                                )}
-                                        </View>
-                                        <View style={styles.fieldContainer}>
-                                            {initialValues.emailError && (
-                                                <Text style={styles.error}>
-                                                    Please correct it as per
-                                                    remarks
-                                                </Text>
-                                            )}
-                                        </View>
-                                    </View>
-                                </View>
-                            </View>
-
-                            <View className="flex flex-row justify-between mb-4 w-full">
-                                <View className="w-[48%]">
-                                    <View style={styles.fieldContainer}>
-                                        <Text style={styles.label}>
-                                            Enter your Mobile number{" "}
-                                            <Text className="text-red-500">
-                                                *
-                                            </Text>
-                                        </Text>
-                                        <TextInput
-                                            style={styles.input}
-                                            onChangeText={handleChange(
-                                                "mobileNumber"
-                                            )}
-                                            onBlur={handleBlur("mobileNumber")}
-                                            value={values.mobileNumber}
-                                            keyboardType="numeric"
-                                            maxLength={10} // Restrict input to 10 digits
-                                        />
-                                        <View style={styles.fieldContainer}>
-                                            {touched.mobileNumber &&
-                                                errors.mobileNumber &&
-                                                typeof errors.mobileNumber ===
-                                                    "string" && (
-                                                    <Text style={styles.error}>
-                                                        {errors.mobileNumber}
-                                                    </Text>
-                                                )}
-                                        </View>
-                                        <View style={styles.fieldContainer}>
-                                            {initialValues.mobileNumberError && (
-                                                <Text style={styles.error}>
-                                                    Please correct it as per
-                                                    remarks
-                                                </Text>
-                                            )}
-                                        </View>
-                                    </View>
-                                </View>
-                                <View className="w-[48%]">
-                                    <Text style={styles.label}>
-                                        Enter Marital Status{" "}
-                                        <Text className="text-red-500">*</Text>
-                                    </Text>
-                                    <DropdownComponent
-                                        label="Marital Status"
-                                        data={maritalStatusOptions}
-                                        value={values.maritalStatus}
-                                        // setValue={handleChange("incomeRange")}
-                                        noIcon={true}
-                                        setValue={(value) =>
-                                            setFieldValue(
-                                                "maritalStatus",
-                                                value
-                                            )
-                                        }
-                                    />
-                                    {touched.maritalStatus &&
-                                        errors.maritalStatus &&
-                                        typeof errors.maritalStatus ===
-                                            "string" && (
-                                            <Text style={styles.error}>
-                                                {errors.maritalStatus}
-                                            </Text>
-                                        )}
-                                </View>
-                            </View>
-                            <View style={styles.checkboxContainer}>
-                                <Pressable
-                                    onPress={() =>
-                                        setFieldValue(
-                                            "isArnHolder",
-                                            !values.isArnHolder
-                                        )
-                                    }
-                                    style={[
-                                        styles.checkboxBase,
-                                        values.isArnHolder &&
-                                            styles.checkboxChecked,
-                                    ]}
-                                >
-                                    {values.isArnHolder && (
-                                        <MaterialIcons
-                                            name="check"
-                                            size={18}
-                                            color="white"
-                                        />
-                                    )}
-                                </Pressable>
-                                <Text style={styles.checkboxLabel}>
+                    <>
+                        <View>
+                            {/* <View style={styles.checkboxContainer}> */}
+                            {/* <Text style={styles.checkboxLabel}>
                                     I am an ARN holder
                                 </Text>
-                            </View>
-
-                            {values.isArnHolder && (
-                                <View className="flex flex-row justify-between mb-4 w-full">
-                                    <View className="w-[48%]">
-                                        <Text style={styles.label}>
-                                            Enter your ARN number{" "}
-                                            <Text className="text-red-500">
-                                                *
-                                            </Text>
-                                        </Text>
-                                        <View className="flex flex-row items-center justify-center">
-                                            <View className="p-[10px] bg-gray-100 border-gray-300 border-l border-t border-b rounded-l">
-                                                <Text style={styles.prefix}>
-                                                    ARN-
-                                                </Text>
+                                <CustomRadioButton
+                                    options={[
+                                        {
+                                            label: "Yes",
+                                            value: true,
+                                        },
+                                        {
+                                            label: "No",
+                                            value: false,
+                                        },
+                                    ]}
+                                    value={values?.isArnHolder}
+                                    setValue={(value) => {
+                                        handleRadiooption(value, setFieldValue);
+                                    }}
+                                />
+                            </View> */}
+                            {/* {values.isArnHolder ? ( */}
+                            <>
+                                <ScrollView className="h-[450px]">
+                                    <>
+                                        <View className="flex flex-row justify-between mb-4 w-full">
+                                            <View className="w-[48%]">
+                                                <View
+                                                    style={
+                                                        styles.fieldContainer
+                                                    }
+                                                >
+                                                    <Text style={styles.label}>
+                                                        Enter your full name as
+                                                        per AMFI{" "}
+                                                        <Text className="text-red-500">
+                                                            *
+                                                        </Text>
+                                                    </Text>
+                                                    <TextInput
+                                                        style={styles.input}
+                                                        onChangeText={handleChange(
+                                                            "fullName"
+                                                        )}
+                                                        onBlur={handleBlur(
+                                                            "fullName"
+                                                        )}
+                                                        value={values.fullName}
+                                                    />
+                                                    <View
+                                                        style={
+                                                            styles.fieldContainer
+                                                        }
+                                                    >
+                                                        {touched.fullName &&
+                                                            errors.fullName &&
+                                                            typeof errors.fullName ===
+                                                                "string" && (
+                                                                <Text
+                                                                    style={
+                                                                        styles.error
+                                                                    }
+                                                                >
+                                                                    {
+                                                                        errors.fullName
+                                                                    }
+                                                                </Text>
+                                                            )}
+                                                    </View>
+                                                    <View
+                                                        style={
+                                                            styles.fieldContainer
+                                                        }
+                                                    >
+                                                        {initialValues.nameError && (
+                                                            <Text
+                                                                style={
+                                                                    styles.error
+                                                                }
+                                                            >
+                                                                Please correct
+                                                                it as per
+                                                                remarks
+                                                            </Text>
+                                                        )}
+                                                    </View>
+                                                </View>
                                             </View>
-                                            <TextInput
-                                                style={styles.inputArn}
-                                                // onChangeText={handleChange(
-                                                //     "arnNumber"
-                                                // )}
-                                                onBlur={handleBlur("arnNumber")}
-                                                value={values.arnNumber}
-                                                onChangeText={(text) => {
-                                                    // Only allow numeric values
-                                                    const numericValue =
-                                                        text.replace(
-                                                            /[^0-9]/g,
-                                                            ""
-                                                        );
-
-                                                    handleChange("arnNumber")(
-                                                        numericValue
-                                                    );
-                                                }}
-                                                keyboardType="numeric"
-                                            />
-                                        </View>
-                                        <View style={styles.fieldContainer}>
-                                            {touched.arnNumber &&
-                                                errors.arnNumber &&
-                                                typeof errors.arnNumber ===
-                                                    "string" && (
-                                                    <Text style={styles.error}>
-                                                        {errors.arnNumber}
+                                            <View className="w-[48%]">
+                                                <View
+                                                    style={
+                                                        styles.fieldContainer
+                                                    }
+                                                >
+                                                    <Text style={styles.label}>
+                                                        Enter your Email{" "}
+                                                        <Text className="text-red-500">
+                                                            *
+                                                        </Text>
                                                     </Text>
-                                                )}
+                                                    <TextInput
+                                                        style={styles.input}
+                                                        onChangeText={handleChange(
+                                                            "email"
+                                                        )}
+                                                        onBlur={handleBlur(
+                                                            "email"
+                                                        )}
+                                                        value={values.email}
+                                                    />
+                                                    <View
+                                                        style={
+                                                            styles.fieldContainer
+                                                        }
+                                                    >
+                                                        {touched.email &&
+                                                            errors.email &&
+                                                            typeof errors.email ===
+                                                                "string" && (
+                                                                <Text
+                                                                    style={
+                                                                        styles.error
+                                                                    }
+                                                                >
+                                                                    {
+                                                                        errors.email
+                                                                    }
+                                                                </Text>
+                                                            )}
+                                                    </View>
+                                                    <View
+                                                        style={
+                                                            styles.fieldContainer
+                                                        }
+                                                    >
+                                                        {initialValues.emailError && (
+                                                            <Text
+                                                                style={
+                                                                    styles.error
+                                                                }
+                                                            >
+                                                                Please correct
+                                                                it as per
+                                                                remarks
+                                                            </Text>
+                                                        )}
+                                                    </View>
+                                                </View>
+                                            </View>
                                         </View>
-                                        <View style={styles.fieldContainer}>
-                                            {initialValues.arnNumberError && (
-                                                <Text style={styles.error}>
-                                                    Please correct it as per
-                                                    remarks
-                                                </Text>
-                                            )}
-                                        </View>
-                                        <View style={styles.fieldContainer}>
-                                            {isVerified.ArnNumber && (
-                                                <Text style={styles.error}>
-                                                    {isVerified.ArnNumber}
-                                                </Text>
-                                            )}
-                                        </View>
-                                    </View>
-                                    <View className="w-[48%]">
-                                        <Text style={styles.label}>
-                                            Enter your EUIN number{" "}
-                                            <Text className="text-red-500">
-                                                *
-                                            </Text>
-                                        </Text>
 
-                                        <TextInput
-                                            style={styles.input}
-                                            onChangeText={handleChange(
-                                                "euinNumber"
-                                            )}
-                                            onBlur={handleBlur("euinNumber")}
-                                            value={values.euinNumber}
-                                        />
-
-                                        <View style={styles.fieldContainer}>
-                                            {touched.euinNumber &&
-                                                errors.euinNumber &&
-                                                typeof errors.euinNumber ===
-                                                    "string" && (
-                                                    <Text style={styles.error}>
-                                                        {errors.euinNumber}
+                                        <View className="flex flex-row justify-between mb-4 w-full">
+                                            <View className="w-[48%]">
+                                                <View
+                                                    style={
+                                                        styles.fieldContainer
+                                                    }
+                                                >
+                                                    <Text style={styles.label}>
+                                                        Enter your Mobile number{" "}
+                                                        <Text className="text-red-500">
+                                                            *
+                                                        </Text>
                                                     </Text>
-                                                )}
-                                        </View>
-                                        <View style={styles.fieldContainer}>
-                                            {initialValues.euinNumberError && (
-                                                <Text style={styles.error}>
-                                                    Please correct it as per
-                                                    remarks
+                                                    <TextInput
+                                                        style={styles.input}
+                                                        onChangeText={handleChange(
+                                                            "mobileNumber"
+                                                        )}
+                                                        onBlur={handleBlur(
+                                                            "mobileNumber"
+                                                        )}
+                                                        value={
+                                                            values.mobileNumber
+                                                        }
+                                                        keyboardType="numeric"
+                                                        maxLength={10} // Restrict input to 10 digits
+                                                    />
+                                                    <View
+                                                        style={
+                                                            styles.fieldContainer
+                                                        }
+                                                    >
+                                                        {touched.mobileNumber &&
+                                                            errors.mobileNumber &&
+                                                            typeof errors.mobileNumber ===
+                                                                "string" && (
+                                                                <Text
+                                                                    style={
+                                                                        styles.error
+                                                                    }
+                                                                >
+                                                                    {
+                                                                        errors.mobileNumber
+                                                                    }
+                                                                </Text>
+                                                            )}
+                                                    </View>
+                                                    <View
+                                                        style={
+                                                            styles.fieldContainer
+                                                        }
+                                                    >
+                                                        {initialValues.mobileNumberError && (
+                                                            <Text
+                                                                style={
+                                                                    styles.error
+                                                                }
+                                                            >
+                                                                Please correct
+                                                                it as per
+                                                                remarks
+                                                            </Text>
+                                                        )}
+                                                    </View>
+                                                </View>
+                                            </View>
+                                            <View className="w-[48%]">
+                                                <Text style={styles.label}>
+                                                    Enter Marital Status{" "}
+                                                    <Text className="text-red-500">
+                                                        *
+                                                    </Text>
                                                 </Text>
-                                            )}
+                                                <DropdownComponent
+                                                    label="Marital Status"
+                                                    data={maritalStatusOptions}
+                                                    value={values.maritalStatus}
+                                                    // setValue={handleChange("incomeRange")}
+                                                    noIcon={true}
+                                                    setValue={(value) =>
+                                                        setFieldValue(
+                                                            "maritalStatus",
+                                                            value
+                                                        )
+                                                    }
+                                                />
+                                                {touched.maritalStatus &&
+                                                    errors.maritalStatus &&
+                                                    typeof errors.maritalStatus ===
+                                                        "string" && (
+                                                        <Text
+                                                            style={styles.error}
+                                                        >
+                                                            {
+                                                                errors.maritalStatus
+                                                            }
+                                                        </Text>
+                                                    )}
+                                            </View>
                                         </View>
-                                        <View style={styles.fieldContainer}>
-                                            {isVerified.euin && (
-                                                <Text style={styles.error}>
-                                                    {isVerified.euin}
+
+                                        <View className="flex flex-row justify-between mb-4 w-full">
+                                            <View className="w-[48%]">
+                                                <Text style={styles.label}>
+                                                    Enter your ARN number{" "}
+                                                    <Text className="text-red-500">
+                                                        *
+                                                    </Text>
                                                 </Text>
-                                            )}
+                                                <View className="flex flex-row items-center justify-center">
+                                                    <View className="p-[10px] bg-gray-100 border-gray-300 border-l border-t border-b rounded-l">
+                                                        <Text
+                                                            style={
+                                                                styles.prefix
+                                                            }
+                                                        >
+                                                            ARN-
+                                                        </Text>
+                                                    </View>
+                                                    <TextInput
+                                                        style={styles.inputArn}
+                                                        // onChangeText={handleChange(
+                                                        //     "arnNumber"
+                                                        // )}
+                                                        onBlur={handleBlur(
+                                                            "arnNumber"
+                                                        )}
+                                                        value={values.arnNumber}
+                                                        onChangeText={(
+                                                            text
+                                                        ) => {
+                                                            // Only allow numeric values
+                                                            const numericValue =
+                                                                text.replace(
+                                                                    /[^0-9]/g,
+                                                                    ""
+                                                                );
+
+                                                            handleChange(
+                                                                "arnNumber"
+                                                            )(numericValue);
+                                                        }}
+                                                        keyboardType="numeric"
+                                                    />
+                                                </View>
+                                                <View
+                                                    style={
+                                                        styles.fieldContainer
+                                                    }
+                                                >
+                                                    {touched.arnNumber &&
+                                                        errors.arnNumber &&
+                                                        typeof errors.arnNumber ===
+                                                            "string" && (
+                                                            <Text
+                                                                style={
+                                                                    styles.error
+                                                                }
+                                                            >
+                                                                {
+                                                                    errors.arnNumber
+                                                                }
+                                                            </Text>
+                                                        )}
+                                                </View>
+                                                <View
+                                                    style={
+                                                        styles.fieldContainer
+                                                    }
+                                                >
+                                                    {initialValues.arnNumberError && (
+                                                        <Text
+                                                            style={styles.error}
+                                                        >
+                                                            Please correct it as
+                                                            per remarks
+                                                        </Text>
+                                                    )}
+                                                </View>
+                                                <View
+                                                    style={
+                                                        styles.fieldContainer
+                                                    }
+                                                >
+                                                    {isVerified.ArnNumber && (
+                                                        <Text
+                                                            style={styles.error}
+                                                        >
+                                                            {
+                                                                isVerified.ArnNumber
+                                                            }
+                                                        </Text>
+                                                    )}
+                                                </View>
+                                            </View>
+                                            <View className="w-[48%]">
+                                                <Text style={styles.label}>
+                                                    Enter your EUIN number{" "}
+                                                    <Text className="text-red-500">
+                                                        *
+                                                    </Text>
+                                                </Text>
+
+                                                <TextInput
+                                                    style={styles.input}
+                                                    onChangeText={handleChange(
+                                                        "euinNumber"
+                                                    )}
+                                                    onBlur={handleBlur(
+                                                        "euinNumber"
+                                                    )}
+                                                    value={values.euinNumber}
+                                                />
+
+                                                <View
+                                                    style={
+                                                        styles.fieldContainer
+                                                    }
+                                                >
+                                                    {touched.euinNumber &&
+                                                        errors.euinNumber &&
+                                                        typeof errors.euinNumber ===
+                                                            "string" && (
+                                                            <Text
+                                                                style={
+                                                                    styles.error
+                                                                }
+                                                            >
+                                                                {
+                                                                    errors.euinNumber
+                                                                }
+                                                            </Text>
+                                                        )}
+                                                </View>
+                                                <View
+                                                    style={
+                                                        styles.fieldContainer
+                                                    }
+                                                >
+                                                    {initialValues.euinNumberError && (
+                                                        <Text
+                                                            style={styles.error}
+                                                        >
+                                                            Please correct it as
+                                                            per remarks
+                                                        </Text>
+                                                    )}
+                                                </View>
+                                                <View
+                                                    style={
+                                                        styles.fieldContainer
+                                                    }
+                                                >
+                                                    {isVerified.euin && (
+                                                        <Text
+                                                            style={styles.error}
+                                                        >
+                                                            {isVerified.euin}
+                                                        </Text>
+                                                    )}
+                                                </View>
+                                            </View>
                                         </View>
-                                    </View>
-                                </View>
-                            )}
-                            {/* <View className="flex flex-row justify-center gap-2">
+                                    </>
+
+                                    {/* <View className="flex flex-row justify-center gap-2">
                                 {initialValues.remark && (
                                     <View className="w-3/12">
                                         <Pressable
@@ -510,31 +701,77 @@ const PersonalDetailsForm = ({ onNext, initialValues, onPrevious }) => {
                                     </Pressable>
                                 </View>
                             </View> */}
-                        </ScrollView>
+                                </ScrollView>
 
-                        <View className="flex flex-row">
-                            <View className="flex flex-row justify-center w-full">
-                                {initialValues.remark && (
-                                    <View className="w-[48%]">
-                                        <CustomButton
-                                            onPress={onPrevious}
-                                            title="Back"
-                                            disabled={false}
-                                            buttonStyle={"outline"}
+                                <View className="flex flex-row">
+                                    <View className="flex flex-row justify-center w-full">
+                                        {initialValues.remark && (
+                                            <View className="w-[48%]">
+                                                <CustomButton
+                                                    onPress={onPrevious}
+                                                    title="Back"
+                                                    disabled={false}
+                                                    buttonStyle={"outline"}
+                                                />
+                                            </View>
+                                        )}
+                                        <View className="w-[48%]">
+                                            <CustomButton
+                                                onPress={handleSubmit}
+                                                title="Proceed"
+                                                disabled={false}
+                                                buttonStyle={"full"}
+                                            />
+                                        </View>
+                                    </View>
+                                </View>
+                            </>
+                            {/* ):
+                            <TrainingArnExamScreen />
+                            } */}
+                        </View>
+
+                        <Modal
+                            visible={visible}
+                            transparent={true}
+                            animationType="fade"
+                            onRequestClose={closeModal}
+                        >
+                            <View
+                                className="flex-1 justify-center items-center"
+                                style={{
+                                    backgroundColor: "rgba(128, 128, 128, 0.5)",
+                                }}
+                            >
+                                <View className=" justify-center items-center bg-white p-4 rounded  ">
+                                    <View>
+                                        <OtpVerify
+                                            clientEmail={
+                                                "Email registered with AMFI"
+                                            }
+                                            arnNumber={values.arnNumber}
+                                            title={"AMFI Email Verification"}
+                                            subTitle={
+                                                "Please verify to move forward"
+                                            }
+                                            generateOtpApi={
+                                                "/distributor-onboard/generate-otp"
+                                            }
+                                            verifyOtpApi={
+                                                "/distributor-onboard/verify-otp"
+                                            }
+                                            onClose
+                                            onNext={onNext}
+                                            onPrevious={handleNext(values)}
+                                            initialValues={values}
+                                            submitText={"Verify"}
+                                            closeModal={closeModal}
                                         />
                                     </View>
-                                )}
-                                <View className="w-[48%]">
-                                    <CustomButton
-                                        onPress={handleSubmit}
-                                        title="Proceed"
-                                        disabled={false}
-                                        buttonStyle={"full"}
-                                    />
                                 </View>
                             </View>
-                        </View>
-                    </View>
+                        </Modal>
+                    </>
                 );
             }}
         </Formik>

@@ -231,6 +231,36 @@ export const isIndividualPAN = (pan: string): boolean => {
     return panType === 'P';
 };
 
+export const checkARNExpiry = (arnDate: string) => {
+    const expiryDate = new Date(arnDate);
+    const currentDate = new Date();
+    const threeMonthsLater = new Date(currentDate);
+    threeMonthsLater.setMonth(currentDate.getMonth() + 3);
+  
+    // Check if the ARN is expired
+    if (expiryDate.getTime() < currentDate.getTime()) {
+      return {
+        expired: true,
+        toBeExpired: expiryDate.toISOString().split('T')[0],
+      };
+    }
+  
+    // Check if the ARN will expire within 3 months
+    if (expiryDate.getTime() < threeMonthsLater.getTime()) {
+      return {
+        expired: false,
+        toBeExpired: expiryDate.toISOString().split('T')[0], // Format as YYYY-MM-DD
+      };
+    }
+  
+    // If the ARN is neither expired nor expiring soon
+    return {
+      expired: false,
+      toBeExpired: expiryDate.toISOString().split('T')[0],
+    };
+  };
+  
+
 
     
     

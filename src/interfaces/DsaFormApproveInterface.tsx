@@ -38,6 +38,7 @@ interface UserDataDetails {
     aadharBackDocumentError: boolean;
     panCardDocumentError: boolean;
     cancelledChequeError: boolean;
+    arnValidTill: string;
 }
 
 interface MaritalStatus {
