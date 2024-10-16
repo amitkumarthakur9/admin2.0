@@ -69,76 +69,72 @@ const AUMDataTable = () => {
             setSelectedTab(tab);
         };
 
-        const tabContent = useMemo(() => {
-            const baseTabs = [
-                {
-                    key: "client-wise",
-                    name: "Client Wise",
-                    content: <ClientWiseDataTable />,
-                },
-                {
-                    key: "holding-wise",
-                    name: "Holding Wise",
-                    content: <HoldingWiseDataTable />,
-                },
-                {
-                    key: "folio-wise",
-                    name: "Folio Wise",
-                    content: <FolioWiseDataTable />,
-                },
-                {
-                    key: "amc-wise",
-                    name: "AMC Wise",
-                    content: <AMCWiseDataTable />,
-                },
-                {
-                    key: "scheme-wise",
-                    name: "Scheme Wise",
-                    content: <SchemeWiseDataTable />,
-                },
-                {
-                    key: "category",
-                    name: "Category",
-                    content: <SchemeTypeWiseDataTable />,
-                },
-                {
-                    key: "rta-wise",
-                    name: "RTA Wise",
-                    content: <RTAWiseDataTable />,
-                },
-                // {
-                //     key: "ifa-wise",
-                //     name: "IFA Wise",
-                //     content: <IFAWiseDataTable />,
-                // },
-                // {
-                //     key: "rm-wise",
-                //     name: "RM Wise",
-                //     content: <RMWiseDataTable />,
-                // },
-            ];
-            console.log("aumrole");
+        const tabContent = [
+            {
+                key: "client-wise",
+                name: "Client Wise",
+                content: <ClientWiseDataTable />,
+            },
+            {
+                key: "holding-wise",
+                name: "Holding Wise",
+                content: <HoldingWiseDataTable />,
+            },
+            {
+                key: "folio-wise",
+                name: "Folio Wise",
+                content: <FolioWiseDataTable />,
+            },
+            {
+                key: "amc-wise",
+                name: "AMC Wise",
+                content: <AMCWiseDataTable />,
+            },
+            {
+                key: "scheme-wise",
+                name: "Scheme Wise",
+                content: <SchemeWiseDataTable />,
+            },
+            {
+                key: "category",
+                name: "Category",
+                content: <SchemeTypeWiseDataTable />,
+            },
+            {
+                key: "rta-wise",
+                name: "RTA Wise",
+                content: <RTAWiseDataTable />,
+            },
+            // {
+            //     key: "ifa-wise",
+            //     name: "IFA Wise",
+            //     content: <IFAWiseDataTable />,
+            // },
+            // {
+            //     key: "rm-wise",
+            //     name: "RM Wise",
+            //     content: <RMWiseDataTable />,
+            // },
+        ];
+        console.log("aumrole");
 
-            console.log(roles);
+        console.log(roles);
 
-            if (roles == 3 || roles == 4) {
-                tabContent.push({
-                    key: "ifa-wise",
-                    name: "IFA Wise",
-                    content: <IFAWiseDataTable />,
-                });
-            }
+        if (roles == 3 || roles == 4) {
+            tabContent.push({
+                key: "ifa-wise",
+                name: "IFA Wise",
+                content: <IFAWiseDataTable />,
+            });
+        }
 
-            if (roles == 4) {
-                tabContent.push({
-                    key: "rm-wise",
-                    name: "RM Wise",
-                    content: <RMWiseDataTable />,
-                });
-            }
-
-            return baseTabs;
-        }, [roles]);
+        if (roles == 4) {
+            tabContent.push({
+                key: "rm-wise",
+                name: "RM Wise",
+                content: <RMWiseDataTable />,
+            });
+        }
 
         // Memoize each tab's content to avoid unnecessary re-renders
         const renderTabContent = useMemo(() => {

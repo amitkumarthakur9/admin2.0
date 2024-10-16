@@ -282,24 +282,24 @@ export default function AppLayout() {
         //         />
         //     ),
         // });
-        drawerStructure.push({
-            key: "DsaDashboard",
-            content: (
-                <Drawer.Screen
-                    name="dashboard/dsaDashboard/index"
-                    options={{
-                        drawerLabel: "DsaDashboard",
-                        title: "DsaDashboard",
-                        drawerItemStyle: {
-                            display: "none",
-                        },
-                        // unmountOnBlur: true,
-                    }}
-                    initialParams={{}}
-                    component={DsaDashboard}
-                />
-            ),
-        });
+        // drawerStructure.push({
+        //     key: "DsaDashboard",
+        //     content: (
+        //         <Drawer.Screen
+        //             name="dashboard/dsaDashboard/index"
+        //             options={{
+        //                 drawerLabel: "DsaDashboard",
+        //                 title: "DsaDashboard",
+        //                 drawerItemStyle: {
+        //                     display: "none",
+        //                 },
+        //                 // unmountOnBlur: true,
+        //             }}
+        //             initialParams={{}}
+        //             component={DsaDashboard}
+        //         />
+        //     ),
+        // });
         drawerStructure.push({
             key: "DsaOnboarding",
             content: (
@@ -983,7 +983,7 @@ export default function AppLayout() {
                                 </Center>
                             }
                         >
-                            {(roleId === 2 && userDetails?.isOnBoarded) ||
+                            {/* {(roleId === 2 && userDetails?.isOnBoarded) ||
                             roleId > 2 ? (
                                 roleId === 2 && arnExpire?.expired ? (
                                     <>
@@ -995,47 +995,40 @@ export default function AppLayout() {
                                             arnDate={arnExpire?.toBeExpired}
                                         />
                                     </>
-                                ) : (
-                                    <Drawer.Navigator
-                                        screenOptions={({ navigation }) => ({
-                                            drawerActiveTintColor: "#000000",
-                                            drawerStyle: {
-                                                width:
-                                                    width < 830 ? "60%" : "15%",
-                                            },
-                                            drawerType:
-                                                width <= 768
-                                                    ? "back"
-                                                    : "permanent",
-                                            header: (props) => (
-                                                <TopHeader
-                                                    navigation={navigation}
-                                                />
-                                            ),
-                                            headerLeft: (props) => (
-                                                <View className="ml-4">
-                                                    <Icon
-                                                        size={18}
-                                                        name={"bars"}
-                                                        onPress={
-                                                            navigation.toggleDrawer
-                                                        }
-                                                    />
-                                                </View>
-                                            ),
-                                        })}
-                                        backBehavior="history"
-                                        detachInactiveScreens={true}
-                                        initialRouteName="clients/index"
-                                        drawerContent={(props) => (
-                                            <CustomSidebarMenu {...props} />
-                                        )}
-                                    >
-                                        {drawerStructure.map(
-                                            (item) => item.content
-                                        )}
-                                    </Drawer.Navigator>
-                                )
+                                ) : ( */}
+                            <Drawer.Navigator
+                                screenOptions={({ navigation }) => ({
+                                    drawerActiveTintColor: "#000000",
+                                    drawerStyle: {
+                                        width: width < 830 ? "60%" : "15%",
+                                    },
+                                    drawerType:
+                                        width <= 768 ? "back" : "permanent",
+                                    header: (props) => (
+                                        <TopHeader navigation={navigation} />
+                                    ),
+                                    headerLeft: (props) => (
+                                        <View className="ml-4">
+                                            <Icon
+                                                size={18}
+                                                name={"bars"}
+                                                onPress={
+                                                    navigation.toggleDrawer
+                                                }
+                                            />
+                                        </View>
+                                    ),
+                                })}
+                                backBehavior="history"
+                                detachInactiveScreens={true}
+                                initialRouteName="clients/index"
+                                drawerContent={(props) => (
+                                    <CustomSidebarMenu {...props} />
+                                )}
+                            >
+                                {drawerStructure.map((item) => item.content)}
+                            </Drawer.Navigator>
+                            {/* )
                             ) : userDetails?.arn ? (
                                 <>
                                     {" "}
@@ -1072,7 +1065,7 @@ export default function AppLayout() {
                                         <TrainingArnExamScreen />
                                     )}
                                 </>
-                            )}
+                            )} */}
 
                             {/* <Fab
                                 renderInPortal={false}
